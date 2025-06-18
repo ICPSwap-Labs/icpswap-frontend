@@ -6,7 +6,13 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import type { Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
 import { AlertTriangle } from "react-feather";
-import { BigNumber, isNullArgs, nonNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  BigNumber,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { useGlobalContext } from "hooks/index";
 import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
@@ -83,7 +89,7 @@ export function ReclaimTokensInPool({
   }, [token0, token1, balances]);
 
   const handleRefresh = useCallback(() => {
-    if (setRefreshTriggers && nonNullArgs(refreshKey)) {
+    if (setRefreshTriggers && nonUndefinedOrNull(refreshKey)) {
       setRefreshTriggers(refreshKey);
     }
   }, [setRefreshTriggers, refreshKey]);
@@ -95,7 +101,7 @@ export function ReclaimTokensInPool({
 
   const handleTokenClick = useCallback(
     (token: Token, tokenAmount: string | undefined) => {
-      if (isNullArgs(inputToken) || isNullArgs(tokenAmount)) return;
+      if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(tokenAmount)) return;
 
       if (inputToken.address === token.address) {
         if (onInputTokenClick) onInputTokenClick(tokenAmount);
@@ -105,7 +111,12 @@ export function ReclaimTokensInPool({
   );
 
   const availableWithdrawTokens = useMemo(() => {
-    if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(token0TotalAmount) || isNullArgs(token1TotalAmount))
+    if (
+      isUndefinedOrNull(token0) ||
+      isUndefinedOrNull(token1) ||
+      isUndefinedOrNull(token0TotalAmount) ||
+      isUndefinedOrNull(token1TotalAmount)
+    )
       return [];
 
     const __availableWithdrawTokens: Array<{ token: Token; amount: string }> = [];
@@ -121,7 +132,7 @@ export function ReclaimTokensInPool({
     return __availableWithdrawTokens;
   }, [token0, token1, token0TotalAmount, token1TotalAmount]);
 
-  return nonNullArgs(pool) ? (
+  return nonUndefinedOrNull(pool) ? (
     <>
       {availableWithdrawTokens.length > 0 ? (
         <MainCard

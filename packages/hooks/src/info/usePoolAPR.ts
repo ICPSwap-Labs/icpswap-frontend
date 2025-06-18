@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import type { Null } from "@icpswap/types";
 
 interface UsePoolAPRProps {
@@ -10,12 +10,12 @@ interface UsePoolAPRProps {
 
 export function usePoolAPR({ volumeUSD, tvlUSD, timeBase = "24H" }: UsePoolAPRProps) {
   const allFees = useMemo(() => {
-    if (isNullArgs(volumeUSD)) return null;
+    if (isUndefinedOrNull(volumeUSD)) return null;
     return new BigNumber(volumeUSD.toString()).multipliedBy(3).dividedBy(1000);
   }, [volumeUSD]);
 
   return useMemo(() => {
-    if (isNullArgs(allFees) || isNullArgs(tvlUSD)) return undefined;
+    if (isUndefinedOrNull(allFees) || isUndefinedOrNull(tvlUSD)) return undefined;
     if (new BigNumber(tvlUSD.toString()).isEqualTo(0)) return null;
     if (new BigNumber(allFees.toString()).isEqualTo(0)) return null;
 

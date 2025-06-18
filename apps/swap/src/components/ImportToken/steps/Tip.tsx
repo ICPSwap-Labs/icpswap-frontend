@@ -1,7 +1,7 @@
 import { useTheme, Typography, Box, makeStyles, Theme, CircularProgress } from "components/Mui";
 import { useCallback, useState } from "react";
 import { getTokenStandard } from "hooks/token/index";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
 import { useTranslation } from "react-i18next";
@@ -41,7 +41,7 @@ export function ImportTokenTip({ canisterId, onOk }: ImportTokenTipProps) {
     setLoading(true);
     const standard = await getTokenStandard({ canisterId });
 
-    if (isNullArgs(standard)) {
+    if (isUndefinedOrNull(standard)) {
       setNoStandard(true);
     } else {
       updateTokenStandard([{ canisterId, standard }]);

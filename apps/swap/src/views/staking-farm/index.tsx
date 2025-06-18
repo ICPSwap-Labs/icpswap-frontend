@@ -3,7 +3,7 @@ import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { NoData, MainCard, Flex, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
 import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { LoadingRow } from "@icpswap/ui";
 import { useHistory } from "react-router-dom";
 import { FarmListHeader, GlobalData, FarmRow } from "components/farm/index";
@@ -82,7 +82,7 @@ function MainContent() {
   });
 
   const slicedFarms = useMemo(() => {
-    if (isNullArgs(farms)) return undefined;
+    if (isUndefinedOrNull(farms)) return undefined;
 
     return farms.slice(0, PAGE_SIZE * page);
   }, [farms, page]);

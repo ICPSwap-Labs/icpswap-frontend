@@ -10,7 +10,7 @@ import {
   BigNumber,
   isValidPrincipal,
   formatAmount,
-  nonNullArgs,
+  nonUndefinedOrNull,
 } from "@icpswap/utils";
 import { PlusCircle } from "react-feather";
 import { useTaggedTokenManager } from "store/wallet/hooks";
@@ -205,7 +205,7 @@ export function TokenItem({
                   },
                 }}
               >
-                {nonNullArgs(interfacePrice) && nonNullArgs(balance) && nonNullArgs(token)
+                {nonUndefinedOrNull(interfacePrice) && nonUndefinedOrNull(balance) && nonUndefinedOrNull(token)
                   ? formatDollarAmount(
                       new BigNumber(interfacePrice).multipliedBy(parseTokenAmount(balance, token.decimals)).toString(),
                     )

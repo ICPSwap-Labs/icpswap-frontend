@@ -2,7 +2,7 @@ import { useTheme, Box, Typography, BoxProps } from "components/Mui";
 import { Flex, Link } from "@icpswap/ui";
 import { useSubnetBlockRate, useNodeMachinesOfSubnet } from "@icpswap/hooks";
 import { useMemo } from "react";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { ArrowUpRight } from "react-feather";
 import { ICPSwapSubnet, ICPSwapStableBlockRate } from "constants/index";
 import { NetworkStateIcon } from "components/NetworkStateIcon";
@@ -21,12 +21,12 @@ export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
   const { result: subnet } = useSubnetBlockRate({ subnet: ICPSwapSubnet });
 
   const totalNodeMachines = useMemo(() => {
-    if (isNullArgs(nodeMachines)) return null;
+    if (isUndefinedOrNull(nodeMachines)) return null;
     return nodeMachines.nodes.length;
   }, [nodeMachines]);
 
   const blockRateLevel = useMemo(() => {
-    if (isNullArgs(subnet)) return null;
+    if (isUndefinedOrNull(subnet)) return null;
     const val = subnet.block_rate[0];
     const block_rate = val ? val[1] : null;
     if (!block_rate) return null;

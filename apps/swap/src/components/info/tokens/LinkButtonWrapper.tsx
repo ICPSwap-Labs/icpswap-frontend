@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useTheme, Typography } from "components/Mui";
 import { Flex, Image, Link } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 export type LinkButtonProps = { k: string; l?: string; v: string; i: string };
 
@@ -44,7 +44,7 @@ export interface LinkButtonsProps {
 export function LinkButtons({ linkButtons }: LinkButtonsProps) {
   return (
     <>
-      {nonNullArgs(linkButtons) && linkButtons.length > 0
+      {nonUndefinedOrNull(linkButtons) && linkButtons.length > 0
         ? linkButtons.map((linkButton) => <LinkButton key={linkButton.k} linkButton={linkButton} />)
         : null}
     </>

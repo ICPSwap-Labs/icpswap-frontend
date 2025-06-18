@@ -22,7 +22,7 @@ import { usePool, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
 import { JSBI, tryParseAmount, inputNumberCheck, tryParseTick } from "utils/index";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { getTokenStandard } from "store/token/cache/hooks";
-import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { getTokenInsufficient, useAllBalanceMaxSpend } from "hooks/swap/index";
 import { useTokenAllBalance } from "hooks/liquidity/index";
 import { useAllowance } from "hooks/token";
@@ -465,7 +465,7 @@ export function useMintInfo(
   });
 
   const error = useMemo(() => {
-    if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(hasPairWithBaseToken))
+    if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(hasPairWithBaseToken))
       return t("error.liquidity.loading");
     if (hasPairWithBaseToken === false) return t("swap.error.pair.with.icp");
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
@@ -667,7 +667,7 @@ export function useRangeCallbacks(
 
   const getRangeByPercent = useCallback(
     (value: string | number) => {
-      if (isNullArgs(baseToken) || isNullArgs(pool)) return undefined;
+      if (isUndefinedOrNull(baseToken) || isUndefinedOrNull(pool)) return undefined;
 
       const basePrice = pool.priceOf(baseToken).toFixed(baseToken.decimals);
 

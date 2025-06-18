@@ -1,5 +1,5 @@
 import { Token } from "@icpswap/swap-sdk";
-import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { isUseTransfer } from "utils/token";
 
@@ -29,11 +29,11 @@ export function getTokenInsufficient({
   allowance,
 }: GetTokenInsufficientProps) {
   if (
-    isNullArgs(token) ||
-    isNullArgs(subAccountBalance) ||
-    isNullArgs(unusedBalance) ||
-    isNullArgs(balance) ||
-    isNullArgs(formatTokenAmount)
+    isUndefinedOrNull(token) ||
+    isUndefinedOrNull(subAccountBalance) ||
+    isUndefinedOrNull(unusedBalance) ||
+    isUndefinedOrNull(balance) ||
+    isUndefinedOrNull(formatTokenAmount)
   )
     return undefined;
 
@@ -76,7 +76,7 @@ export function getTokenInsufficient({
 
   // For token use approve
   if (hasEnoughToken) {
-    if (!isUseTransfer(token) && nonNullArgs(allowance)) {
+    if (!isUseTransfer(token) && nonUndefinedOrNull(allowance)) {
       if (new BigNumber(allowance.toString()).isGreaterThan(depositAmount)) {
         return TokenInsufficient.NO_APPROVE;
       }

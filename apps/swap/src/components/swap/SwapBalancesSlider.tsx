@@ -1,5 +1,12 @@
 import { Box, useTheme } from "components/Mui";
-import { BigNumber, nonNullArgs, isNullArgs, parseTokenAmount, percentToNum, numToPercent } from "@icpswap/utils";
+import {
+  BigNumber,
+  nonUndefinedOrNull,
+  isUndefinedOrNull,
+  parseTokenAmount,
+  percentToNum,
+  numToPercent,
+} from "@icpswap/utils";
 import { Flex, Image } from "@icpswap/ui";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
@@ -104,7 +111,12 @@ export function SwapBalancesSlider({
   const [arrowPositionByMouse, setArrowPosition] = useState<string | null>(null);
 
   const { totalAmount, totalCanisterAmount } = useMemo(() => {
-    if (isNullArgs(balance) || isNullArgs(unusedBalance) || isNullArgs(subAccountBalance) || isNullArgs(token))
+    if (
+      isUndefinedOrNull(balance) ||
+      isUndefinedOrNull(unusedBalance) ||
+      isUndefinedOrNull(subAccountBalance) ||
+      isUndefinedOrNull(token)
+    )
       return {};
 
     const totalCanisterAmount = parseTokenAmount(subAccountBalance, token.decimals).plus(
@@ -120,13 +132,13 @@ export function SwapBalancesSlider({
 
   const { balancePercent, canisterPercent, canisterWidth, balanceWidth } = useMemo(() => {
     if (
-      isNullArgs(balance) ||
-      isNullArgs(unusedBalance) ||
-      isNullArgs(subAccountBalance) ||
-      isNullArgs(token) ||
-      isNullArgs(maxSpentAmount) ||
-      isNullArgs(totalAmount) ||
-      isNullArgs(totalCanisterAmount)
+      isUndefinedOrNull(balance) ||
+      isUndefinedOrNull(unusedBalance) ||
+      isUndefinedOrNull(subAccountBalance) ||
+      isUndefinedOrNull(token) ||
+      isUndefinedOrNull(maxSpentAmount) ||
+      isUndefinedOrNull(totalAmount) ||
+      isUndefinedOrNull(totalCanisterAmount)
     )
       return {};
 
@@ -165,11 +177,11 @@ export function SwapBalancesSlider({
 
   const arrowPosition = useMemo(() => {
     if (
-      isNullArgs(balanceWidth) ||
-      isNullArgs(canisterWidth) ||
-      isNullArgs(canisterPercent) ||
-      isNullArgs(balancePercent) ||
-      isNullArgs(wrapperWidth)
+      isUndefinedOrNull(balanceWidth) ||
+      isUndefinedOrNull(canisterWidth) ||
+      isUndefinedOrNull(canisterPercent) ||
+      isUndefinedOrNull(balancePercent) ||
+      isUndefinedOrNull(wrapperWidth)
     )
       return "0%";
 
@@ -226,12 +238,12 @@ export function SwapBalancesSlider({
   const handleCanisterBalanceClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       if (
-        isNullArgs(balance) ||
-        isNullArgs(unusedBalance) ||
-        isNullArgs(subAccountBalance) ||
-        isNullArgs(token) ||
-        isNullArgs(wrapperWidth) ||
-        isNullArgs(maxSpentAmount)
+        isUndefinedOrNull(balance) ||
+        isUndefinedOrNull(unusedBalance) ||
+        isUndefinedOrNull(subAccountBalance) ||
+        isUndefinedOrNull(token) ||
+        isUndefinedOrNull(wrapperWidth) ||
+        isUndefinedOrNull(maxSpentAmount)
       )
         return;
 
@@ -256,12 +268,12 @@ export function SwapBalancesSlider({
   const handleWalletBalanceClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       if (
-        isNullArgs(balance) ||
-        isNullArgs(unusedBalance) ||
-        isNullArgs(subAccountBalance) ||
-        isNullArgs(token) ||
-        isNullArgs(wrapperWidth) ||
-        isNullArgs(maxSpentAmount)
+        isUndefinedOrNull(balance) ||
+        isUndefinedOrNull(unusedBalance) ||
+        isUndefinedOrNull(subAccountBalance) ||
+        isUndefinedOrNull(token) ||
+        isUndefinedOrNull(wrapperWidth) ||
+        isUndefinedOrNull(maxSpentAmount)
       )
         return;
 
@@ -295,14 +307,14 @@ export function SwapBalancesSlider({
 
   const onArrowPositionChange = (position: string) => {
     if (
-      nonNullArgs(wrapperWidth) &&
-      nonNullArgs(balance) &&
-      nonNullArgs(subAccountBalance) &&
-      nonNullArgs(unusedBalance) &&
-      nonNullArgs(token) &&
-      nonNullArgs(canisterPercent) &&
-      nonNullArgs(balancePercent) &&
-      nonNullArgs(maxSpentAmount)
+      nonUndefinedOrNull(wrapperWidth) &&
+      nonUndefinedOrNull(balance) &&
+      nonUndefinedOrNull(subAccountBalance) &&
+      nonUndefinedOrNull(unusedBalance) &&
+      nonUndefinedOrNull(token) &&
+      nonUndefinedOrNull(canisterPercent) &&
+      nonUndefinedOrNull(balancePercent) &&
+      nonUndefinedOrNull(maxSpentAmount)
     ) {
       const canisterWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(canisterPercent));
       const balanceWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(balancePercent));
@@ -344,7 +356,7 @@ export function SwapBalancesSlider({
 
   useEffect(() => {
     const move = (event: MouseEvent) => {
-      if (mouseDown && MouseDownX && nonNullArgs(wrapperWidth)) {
+      if (mouseDown && MouseDownX && nonUndefinedOrNull(wrapperWidth)) {
         const screenX = event.screenX;
         const moveX = screenX - MouseDownX;
 
@@ -394,8 +406,8 @@ export function SwapBalancesSlider({
         height: "12px",
       }}
     >
-      {nonNullArgs(balancePercent) &&
-      nonNullArgs(canisterPercent) &&
+      {nonUndefinedOrNull(balancePercent) &&
+      nonUndefinedOrNull(canisterPercent) &&
       (new BigNumber(percentToNum(balancePercent)).isGreaterThan(0) ||
         new BigNumber(percentToNum(canisterPercent)).isGreaterThan(0)) ? (
         <>
@@ -406,7 +418,7 @@ export function SwapBalancesSlider({
               height: "4px",
             }}
           >
-            {nonNullArgs(canisterPercent) && new BigNumber(percentToNum(canisterPercent)).isGreaterThan(0) ? (
+            {nonUndefinedOrNull(canisterPercent) && new BigNumber(percentToNum(canisterPercent)).isGreaterThan(0) ? (
               <Box
                 ref={canisterRef}
                 sx={{
@@ -434,7 +446,7 @@ export function SwapBalancesSlider({
               </Box>
             ) : null}
 
-            {nonNullArgs(balancePercent) && new BigNumber(percentToNum(balancePercent)).isGreaterThan(0) ? (
+            {nonUndefinedOrNull(balancePercent) && new BigNumber(percentToNum(balancePercent)).isGreaterThan(0) ? (
               <Box
                 sx={{
                   position: "relative",

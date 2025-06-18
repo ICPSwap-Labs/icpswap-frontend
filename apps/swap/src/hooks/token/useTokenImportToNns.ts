@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { Null } from "@icpswap/types";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { ckBTC, ckETH, ckUSDC, ICP } from "@icpswap/tokens";
 import { useTokenStandard } from "store/token/cache/hooks";
 
@@ -13,7 +13,7 @@ export function useTokenImportToNns(tokenId: string | Null) {
   const tokenStandard = useTokenStandard(tokenId);
 
   return useMemo(() => {
-    if (isNullArgs(isSnsToken) || isNullArgs(tokenStandard) || isNullArgs(tokenId)) return false;
+    if (isUndefinedOrNull(isSnsToken) || isUndefinedOrNull(tokenStandard) || isUndefinedOrNull(tokenId)) return false;
 
     return isSnsToken === false && tokenStandard.includes("ICRC") && !ImportedTokens.includes(tokenId);
   }, [tokenId, isSnsToken, tokenStandard]);

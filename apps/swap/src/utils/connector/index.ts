@@ -4,7 +4,7 @@ import { Connector } from "constants/wallet";
 import { host } from "constants/server";
 import { updateAuth } from "store/auth/hooks";
 import { getDelegationIds } from "constants/connector";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 import type { ConnectorAbstract } from "./connectors";
 
@@ -34,7 +34,7 @@ export class WalletConnector {
 
     // For only Me wallet app
     if (isMeWebview()) {
-      if (nonNullArgs(this.connector?.getPrincipal)) {
+      if (nonUndefinedOrNull(this.connector?.getPrincipal)) {
         updateAuth({ walletType: this.connectorType, principal: this.connector.getPrincipal });
       }
     }
@@ -75,7 +75,7 @@ export class WalletConnector {
 
     window.icConnector = this.connector;
 
-    if (nonNullArgs(window.icConnector.getPrincipal)) {
+    if (nonUndefinedOrNull(window.icConnector.getPrincipal)) {
       updateAuth({ walletType: this.connectorType, principal: window.icConnector.getPrincipal });
     }
 

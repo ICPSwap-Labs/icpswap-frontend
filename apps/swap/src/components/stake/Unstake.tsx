@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { UnstakeModal } from "components/stake/UnstakeModal";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 
 export interface UnstakeProps {
@@ -39,7 +39,7 @@ export function Unstake({
         size="large"
         sx={{ height: "48px" }}
         onClick={handleUnstake}
-        disabled={isNullArgs(stakeAmount) || stakeAmount === BigInt(0)}
+        disabled={isUndefinedOrNull(stakeAmount) || stakeAmount === BigInt(0)}
       >
         {t("common.unstake")}
       </Button>

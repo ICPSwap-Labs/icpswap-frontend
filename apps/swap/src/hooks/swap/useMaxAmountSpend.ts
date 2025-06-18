@@ -1,5 +1,5 @@
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { useAllowance } from "hooks/token";
 import { useMemo } from "react";
@@ -14,7 +14,7 @@ export interface UseMaxPoolBalanceSpendProps {
 
 export function usePoolBalanceMaxSpend({ token, subBalance, unusedBalance }: UseMaxPoolBalanceSpendProps) {
   return useMemo(() => {
-    if (!token || isNullArgs(unusedBalance) || isNullArgs(subBalance)) return undefined;
+    if (!token || isUndefinedOrNull(unusedBalance) || isUndefinedOrNull(subBalance)) return undefined;
 
     const totalPoolBalance = new BigNumber(unusedBalance.toString()).plus(subBalance);
 
@@ -54,14 +54,14 @@ export function useBalanceMaxSpend({ token, balance, poolId, allowance: __allowa
   const principal = useAccountPrincipalString();
 
   const allowanceCanisterId = useMemo(() => {
-    if (!token || nonNullArgs(__allowance)) return undefined;
+    if (!token || nonUndefinedOrNull(__allowance)) return undefined;
     return isUseTransfer(token) ? undefined : token.address;
   }, [token, __allowance]);
 
   const { result: allowance } = useAllowance({ canisterId: allowanceCanisterId, owner: principal, spender: poolId });
 
   return useMemo(() => {
-    if (isNullArgs(balance) || isNullArgs(token)) return undefined;
+    if (isUndefinedOrNull(balance) || isUndefinedOrNull(token)) return undefined;
 
     if (new BigNumber(balance).isEqualTo(0)) return CurrencyAmount.fromRawAmount(token, 0);
 
@@ -110,7 +110,8 @@ export function useAllBalanceMaxSpend({
   const maxPoolBalanceSpent = usePoolBalanceMaxSpend({ token, subBalance, unusedBalance });
 
   return useMemo(() => {
-    if (isNullArgs(maxBalanceSpend) || isNullArgs(maxPoolBalanceSpent) || isNullArgs(token)) return undefined;
+    if (isUndefinedOrNull(maxBalanceSpend) || isUndefinedOrNull(maxPoolBalanceSpent) || isUndefinedOrNull(token))
+      return undefined;
     if (!maxBalanceSpend.currency.equals(maxPoolBalanceSpent.currency)) return undefined;
 
     return maxBalanceSpend.add(maxPoolBalanceSpent);

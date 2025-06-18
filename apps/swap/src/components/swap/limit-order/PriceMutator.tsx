@@ -1,7 +1,7 @@
 import { useMemo, ReactNode } from "react";
 import { Box, Typography, useTheme, BoxProps, TypographyProps } from "components/Mui";
 import { Flex, Tooltip } from "@icpswap/ui";
-import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, numToPercent } from "@icpswap/utils";
 import { X } from "react-feather";
 import { Null } from "@icpswap/types";
 import { inputValueFormat } from "utils/swap/limit-order";
@@ -108,13 +108,13 @@ export function PriceMutator({
 
   // The percent of  input value / current price
   const percent = useMemo(() => {
-    if (isNullArgs(currentPrice) || isNullArgs(inputValue) || inputValue === "") return null;
+    if (isUndefinedOrNull(currentPrice) || isUndefinedOrNull(inputValue) || inputValue === "") return null;
     const invertedCurrentPrice = inverted ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
     return new BigNumber(inputValue).minus(invertedCurrentPrice).dividedBy(invertedCurrentPrice);
   }, [inputValue, inverted]);
 
   const activePercent = useMemo(() => {
-    if (isNullArgs(percent)) return null;
+    if (isUndefinedOrNull(percent)) return null;
     if (new BigNumber(percent.abs()).isLessThan(MIN_STEP)) return null;
 
     const activePercent = inverted
@@ -131,7 +131,8 @@ export function PriceMutator({
   }, [percent, inverted]);
 
   const isMinMaxPrice = useMemo(() => {
-    if (isNullArgs(inputValue) || isNullArgs(isInputTokenSorted) || isNullArgs(minPrice)) return null;
+    if (isUndefinedOrNull(inputValue) || isUndefinedOrNull(isInputTokenSorted) || isUndefinedOrNull(minPrice))
+      return null;
 
     const invertedMaxPrice = new BigNumber(1).dividedBy(minPrice).toString();
 
@@ -140,10 +141,10 @@ export function PriceMutator({
 
   const showPercent = useMemo(() => {
     return (
-      isNullArgs(activePercent) &&
-      nonNullArgs(percent) &&
+      isUndefinedOrNull(activePercent) &&
+      nonUndefinedOrNull(percent) &&
       !new BigNumber(percent.abs()).isLessThan(MIN_STEP) &&
-      nonNullArgs(isMinMaxPrice) &&
+      nonUndefinedOrNull(isMinMaxPrice) &&
       !isMinMaxPrice
     );
   }, [activePercent, isMinMaxPrice, percent]);
@@ -154,7 +155,7 @@ export function PriceMutator({
         key="Min"
         onClick={onMinMax}
         onClose={onMinMax}
-        active={isNullArgs(activePercent) || (nonNullArgs(isMinMaxPrice) && isMinMaxPrice)}
+        active={isUndefinedOrNull(activePercent) || (nonUndefinedOrNull(isMinMaxPrice) && isMinMaxPrice)}
         showClose={showPercent}
         tips={t("limit.price.specified.description")}
         textSx={{
@@ -162,12 +163,12 @@ export function PriceMutator({
           textDecorationStyle: "dashed",
           textDecorationColor: theme.colors.darkTextSecondary,
           color:
-            isNullArgs(activePercent) || (nonNullArgs(isMinMaxPrice) && isMinMaxPrice)
+            isUndefinedOrNull(activePercent) || (nonUndefinedOrNull(isMinMaxPrice) && isMinMaxPrice)
               ? "text.primary"
               : "text.secondary",
         }}
       >
-        {showPercent && nonNullArgs(percent)
+        {showPercent && nonUndefinedOrNull(percent)
           ? `${percent.isGreaterThan(0) ? "+" : ""}${numToPercent(percent.toFixed(2))}`
           : inverted
           ? t("common.max")
@@ -178,7 +179,7 @@ export function PriceMutator({
         <Mutator
           key={val}
           onClick={() => onChange(val)}
-          active={nonNullArgs(activePercent) && new BigNumber(activePercent).isEqualTo(val)}
+          active={nonUndefinedOrNull(activePercent) && new BigNumber(activePercent).isEqualTo(val)}
         >
           {inverted ? "-" : "+"}
           {numToPercent(val)}

@@ -1,7 +1,7 @@
 import { Flex, BodyCell } from "@icpswap/ui";
 import { useMemo } from "react";
 import { useToken } from "hooks/useCurrency";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import type { FarmInfo, Null } from "@icpswap/types";
 import { TokenImage } from "components/index";
 
@@ -11,7 +11,7 @@ interface PoolCellProps {
 
 export function PoolCell({ farmInfo }: PoolCellProps) {
   const { poolToken0Id, poolToken1Id } = useMemo(() => {
-    if (isNullArgs(farmInfo)) return {};
+    if (isUndefinedOrNull(farmInfo)) return {};
 
     return {
       poolId: farmInfo.pool.toString(),

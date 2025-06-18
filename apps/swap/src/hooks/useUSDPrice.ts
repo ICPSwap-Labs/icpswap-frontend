@@ -1,4 +1,4 @@
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
 import { useMemo } from "react";
@@ -15,7 +15,7 @@ export function useICPPrice(): number | undefined {
 
 export function useUSDPrice(token: Token | undefined): string | number | undefined {
   const tokenId = useMemo(() => {
-    if (isNullArgs(token)) return null;
+    if (isUndefinedOrNull(token)) return null;
 
     if (token.address === WRAPPED_ICP.address) return ICP.address;
 

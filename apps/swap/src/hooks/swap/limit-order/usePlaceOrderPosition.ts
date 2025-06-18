@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Price, TICK_SPACINGS, Pool, Position, Token, CurrencyAmount, priceToClosestTick } from "@icpswap/swap-sdk";
-import { BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { priceToClosestUseableTick } from "utils/swap/limit-order";
 
@@ -29,7 +29,7 @@ export function usePlaceOrderPosition({
       !token0 ||
       !token1 ||
       new BigNumber(orderPrice).isEqualTo(0) ||
-      isNullArgs(isInputTokenSorted)
+      isUndefinedOrNull(isInputTokenSorted)
     )
       return {};
 
@@ -56,7 +56,8 @@ export function usePlaceOrderPosition({
   }, [orderPrice, inputToken, token0, token1, pool]);
 
   const { tickLower, tickUpper } = useMemo(() => {
-    if (isNullArgs(closetUseableTick) || isNullArgs(feeAmount) || isNullArgs(isInputTokenSorted)) return {};
+    if (isUndefinedOrNull(closetUseableTick) || isUndefinedOrNull(feeAmount) || isUndefinedOrNull(isInputTokenSorted))
+      return {};
 
     return {
       tickLower: isInputTokenSorted ? closetUseableTick - TICK_SPACINGS[feeAmount] * 2 : closetUseableTick,
@@ -65,7 +66,13 @@ export function usePlaceOrderPosition({
   }, [closetUseableTick, isInputTokenSorted, feeAmount]);
 
   const { amount0, amount1 } = useMemo(() => {
-    if (isNullArgs(inputAmount) || isNullArgs(inputToken) || isNullArgs(token0) || isNullArgs(token1)) return {};
+    if (
+      isUndefinedOrNull(inputAmount) ||
+      isUndefinedOrNull(inputToken) ||
+      isUndefinedOrNull(token0) ||
+      isUndefinedOrNull(token1)
+    )
+      return {};
 
     const formattedAmount = formatTokenAmount(inputAmount, inputToken.decimals).toString();
 
@@ -78,11 +85,11 @@ export function usePlaceOrderPosition({
   return useMemo(() => {
     if (
       !pool ||
-      isNullArgs(tickLower) ||
-      isNullArgs(tickUpper) ||
-      isNullArgs(amount0) ||
-      isNullArgs(amount1) ||
-      isNullArgs(orderPriceTick)
+      isUndefinedOrNull(tickLower) ||
+      isUndefinedOrNull(tickUpper) ||
+      isUndefinedOrNull(amount0) ||
+      isUndefinedOrNull(amount1) ||
+      isUndefinedOrNull(orderPriceTick)
     )
       return {};
 

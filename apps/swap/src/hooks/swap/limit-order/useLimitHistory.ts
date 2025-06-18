@@ -1,6 +1,6 @@
 import { tickToPrice } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { LimitTransaction } from "@icpswap/types";
 import { useToken } from "hooks/index";
 
@@ -41,7 +41,7 @@ export function useLimitHistory({ transaction }: UseLimitHistoryProps) {
   }, [inputToken, outputToken, transaction]);
 
   const receiveAmount = useMemo(() => {
-    if (isNullArgs(inputAmount) || isNullArgs(limitPrice)) return undefined;
+    if (isUndefinedOrNull(inputAmount) || isUndefinedOrNull(limitPrice)) return undefined;
     return new BigNumber(inputAmount).multipliedBy(limitPrice).toString();
   }, [inputAmount, limitPrice]);
 

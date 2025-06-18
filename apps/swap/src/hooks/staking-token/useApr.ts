@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { isNullArgs, parseTokenAmount, BigNumber } from "@icpswap/utils";
+import { isUndefinedOrNull, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { StakingPoolInfo } from "@icpswap/types";
 
@@ -27,7 +27,12 @@ export function useApr({ poolInfo, rewardToken, stakeToken, rewardTokenPrice, st
   }, [poolInfo, stakeToken, stakeTokenPrice]);
 
   return useMemo(() => {
-    if (isNullArgs(totalDepositUSD) || isNullArgs(poolInfo) || isNullArgs(stakeToken) || isNullArgs(rewardToken))
+    if (
+      isUndefinedOrNull(totalDepositUSD) ||
+      isUndefinedOrNull(poolInfo) ||
+      isUndefinedOrNull(stakeToken) ||
+      isUndefinedOrNull(rewardToken)
+    )
       return undefined;
 
     const poolInfoPerSecond = Number(poolInfo.rewardPerTime);

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { nonNullArgs, resultFormat } from "@icpswap/utils";
+import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { Null, ResultStatus } from "@icpswap/types";
 import { swapPool } from "@icpswap/actor";
 
@@ -16,7 +16,7 @@ export function useLimitSupported({ canisterId }: UseLimitSupportedProps) {
       setLimitAvailableState(null);
       setAvailable(null);
 
-      if (nonNullArgs(canisterId)) {
+      if (nonUndefinedOrNull(canisterId)) {
         const result = resultFormat(await (await swapPool(canisterId)).getLimitOrders());
 
         if ("message" in result && result.message.includes(`has no query method 'getLimitOrders'`)) {
@@ -26,14 +26,14 @@ export function useLimitSupported({ canisterId }: UseLimitSupportedProps) {
         }
       }
 
-      if (nonNullArgs(canisterId)) {
+      if (nonUndefinedOrNull(canisterId)) {
         const result = resultFormat<boolean>(await (await swapPool(canisterId)).getLimitOrderAvailabilityState());
 
         if ("message" in result && result.message.includes(`has no query method`)) {
           setLimitAvailableState(false);
         }
 
-        if (nonNullArgs(result.data)) {
+        if (nonUndefinedOrNull(result.data)) {
           setLimitAvailableState(result.data);
         }
       }
@@ -45,7 +45,7 @@ export function useLimitSupported({ canisterId }: UseLimitSupportedProps) {
   // available by default
   return useMemo(
     () =>
-      nonNullArgs(available) && nonNullArgs(limitAvailableState)
+      nonUndefinedOrNull(available) && nonUndefinedOrNull(limitAvailableState)
         ? available === true && limitAvailableState === true
         : true,
     [available, limitAvailableState],

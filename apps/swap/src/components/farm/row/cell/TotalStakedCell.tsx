@@ -2,7 +2,7 @@ import { Flex, BodyCell } from "@icpswap/ui";
 import { useMemo } from "react";
 import { useFarmTvlValue } from "hooks/staking-farm";
 import { useToken } from "hooks/useCurrency";
-import { formatDollarAmount, isNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, isUndefinedOrNull } from "@icpswap/utils";
 import type { FarmInfo, Null } from "@icpswap/types";
 
 interface TotalStakedCellProps {
@@ -12,7 +12,7 @@ interface TotalStakedCellProps {
 
 export function TotalStakedCell({ farmId, farmInfo }: TotalStakedCellProps) {
   const { poolToken0Id, poolToken1Id } = useMemo(() => {
-    if (isNullArgs(farmInfo)) return {};
+    if (isUndefinedOrNull(farmInfo)) return {};
 
     return {
       poolId: farmInfo.pool.toString(),

@@ -3,7 +3,7 @@ import { useStakeIntervalGlobalData, useUserStakedTokens, useInfoAllTokens } fro
 import { Tooltip, Flex } from "components/index";
 import React, { useMemo } from "react";
 import { useICPPrice } from "store/global/hooks";
-import { formatDollarAmount, BigNumber, nonNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUserAvailableTokensValue } from "hooks/staking-token/useUserAvailableTokens";
 import { useTranslation } from "react-i18next";
@@ -112,7 +112,7 @@ export function GlobalData() {
       <Item
         label0={t("stake.your.available.tokens")}
         value0={
-          nonNullArgs(userAvailableTokensValue) && nonNullArgs(availableTokensNumber) ? (
+          nonUndefinedOrNull(userAvailableTokensValue) && nonUndefinedOrNull(availableTokensNumber) ? (
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
               <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }} component="span">
                 {formatDollarAmount(userAvailableTokensValue)}
@@ -130,7 +130,7 @@ export function GlobalData() {
         tooltip0={t`The number of tokens currently available in your account for staking.`}
         label1={t("stake.your.staked.tokens")}
         value1={
-          nonNullArgs(allStakedTokensUSDValue) && nonNullArgs(userStakedTokens) ? (
+          nonUndefinedOrNull(allStakedTokensUSDValue) && nonUndefinedOrNull(userStakedTokens) ? (
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
               <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }} component="span">
                 {formatDollarAmount(allStakedTokensUSDValue)}

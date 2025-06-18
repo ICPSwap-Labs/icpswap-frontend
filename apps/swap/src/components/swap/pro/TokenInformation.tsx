@@ -1,6 +1,6 @@
 import React, { ReactNode, useMemo, useState } from "react";
 import { Box, BoxProps, Typography, useTheme } from "components/Mui";
-import { BigNumber, formatDollarAmount, formatAmount, parseTokenAmount, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatAmount, parseTokenAmount, nonUndefinedOrNull } from "@icpswap/utils";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { useTokenSupply, useTokenAnalysis, useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
@@ -60,13 +60,13 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
   const { result: tokenAnalysis } = useTokenAnalysis(tokenId);
 
   const marketCap = useMemo(() => {
-    if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenPrice)) {
+    if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(tokenPrice)) {
       return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(tokenPrice).toString();
     }
   }, [tokenAnalysis, tokenPrice]);
 
   const circulating = useMemo(() => {
-    if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenSupply) && nonNullArgs(token)) {
+    if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(tokenSupply) && nonUndefinedOrNull(token)) {
       return `${new BigNumber(
         new BigNumber(tokenAnalysis.marketAmount).dividedBy(parseTokenAmount(tokenSupply, token.decimals)).toFixed(4),
       ).multipliedBy(100)}%`;
@@ -116,7 +116,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
             </Card>
             <Card title={t("common.circulating.supply")} fontSize="12px" tips={t("swap.pro.circulation.tips")}>
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {nonNullArgs(tokenAnalysis) ? formatAmount(tokenAnalysis.marketAmount) : "--"}
+                {nonUndefinedOrNull(tokenAnalysis) ? formatAmount(tokenAnalysis.marketAmount) : "--"}
               </Typography>
             </Card>
             <Card
@@ -134,7 +134,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
               }
             >
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {nonNullArgs(marketCap) ? formatDollarAmount(marketCap) : "--"}
+                {nonUndefinedOrNull(marketCap) ? formatDollarAmount(marketCap) : "--"}
               </Typography>
             </Card>
             <Card
@@ -152,7 +152,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
               }
             >
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {nonNullArgs(circulating) ? circulating : "--"}
+                {nonUndefinedOrNull(circulating) ? circulating : "--"}
               </Typography>
             </Card>
             <Card title={t`Holders`} fontSize="12px">

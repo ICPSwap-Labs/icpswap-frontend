@@ -1,6 +1,6 @@
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 import { useCallback } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 
@@ -15,7 +15,7 @@ export function useLoadLiquidityPageCallback({ poolId, positionId, page }: useLo
   const location = useLocation();
 
   return useCallback(() => {
-    if (nonNullArgs(poolId) && nonNullArgs(positionId)) {
+    if (nonUndefinedOrNull(poolId) && nonUndefinedOrNull(positionId)) {
       history.push(`/liquidity/${page}/${positionId.toString()}/${poolId}?path=${window.btoa(location.pathname)}`);
     }
   }, [history, poolId, positionId, location, page]);
@@ -31,7 +31,7 @@ export function useLoadAddLiquidityCallback({ token0, token1 }: useLoadAddLiquid
   const location = useLocation();
 
   return useCallback(() => {
-    if (nonNullArgs(token0) && nonNullArgs(token1)) {
+    if (nonUndefinedOrNull(token0) && nonUndefinedOrNull(token1)) {
       const token0Address = typeof token0 === "string" ? token0 : token0.address;
       const token1Address = typeof token1 === "string" ? token1 : token1.address;
 

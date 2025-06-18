@@ -1,4 +1,4 @@
-import { isNullArgs, resultFormat } from "@icpswap/utils";
+import { isUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { useCallback } from "react";
 import type {
   Null,
@@ -36,7 +36,7 @@ export async function getPositionValueChartData(poolId: string, positionId: bigi
 export function usePositionValueChartData(poolId: string | Null, positionId: bigint | Null) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(poolId) || isNullArgs(positionId)) return undefined;
+      if (isUndefinedOrNull(poolId) || isUndefinedOrNull(positionId)) return undefined;
       return await getPositionValueChartData(poolId, positionId);
     }, [poolId, positionId]),
   );
@@ -50,7 +50,7 @@ export async function getPositionFeesChartData(poolId: string, positionId: bigin
 export function usePositionFeesChartData(poolId: string | Null, positionId: bigint | Null) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(poolId) || isNullArgs(positionId)) return undefined;
+      if (isUndefinedOrNull(poolId) || isUndefinedOrNull(positionId)) return undefined;
       return await getPositionFeesChartData(poolId, positionId);
     }, [poolId, positionId]),
   );
@@ -64,7 +64,7 @@ export async function getPositionAPRChartData(poolId: string, positionId: bigint
 export function usePositionAPRChartData(poolId: string | Null, positionId: bigint | Null) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(poolId) || isNullArgs(positionId)) return undefined;
+      if (isUndefinedOrNull(poolId) || isUndefinedOrNull(positionId)) return undefined;
       return await getPositionAPRChartData(poolId, positionId);
     }, [poolId, positionId]),
   );
@@ -78,7 +78,7 @@ export async function getPoolAPRChartData(poolId: string | Null) {
 export function usePoolAPRChartData(poolId: string | Null) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(poolId)) return undefined;
+      if (isUndefinedOrNull(poolId)) return undefined;
       return await getPoolAPRChartData(poolId);
     }, [poolId]),
   );
@@ -92,7 +92,7 @@ export async function getPoolAPRs(poolId: string | Null) {
 export function usePoolAPRs(poolId: string | Null) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(poolId)) return undefined;
+      if (isUndefinedOrNull(poolId)) return undefined;
       return await getPoolAPRs(poolId);
     }, [poolId]),
   );

@@ -4,7 +4,7 @@ import { TokenImage } from "components/index";
 import { FeeTierPercentLabel, Flex, Proportion } from "@icpswap/ui";
 import { Pool } from "@icpswap/swap-sdk";
 import { usePoolAPR, useAllPoolsTVL } from "@icpswap/hooks";
-import { formatDollarAmount, nonNullArgs, calcPoolFees } from "@icpswap/utils";
+import { formatDollarAmount, nonUndefinedOrNull, calcPoolFees } from "@icpswap/utils";
 import { useInfoPool } from "hooks/info/useInfoPool";
 import { PoolTvlTooltip } from "components/swap";
 import { useTranslation } from "react-i18next";
@@ -49,7 +49,7 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
 
   const apr24h = usePoolAPR({ volumeUSD: infoPool?.volumeUSD, tvlUSD: poolTvlUSD });
 
-  return nonNullArgs(token0) && nonNullArgs(token1) && nonNullArgs(fee) ? (
+  return nonUndefinedOrNull(token0) && nonUndefinedOrNull(token1) && nonUndefinedOrNull(fee) ? (
     <Box
       sx={{
         border: `1px solid ${theme.palette.background.level4}`,

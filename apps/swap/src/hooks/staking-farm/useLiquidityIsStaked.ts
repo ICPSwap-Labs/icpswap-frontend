@@ -1,4 +1,4 @@
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useFarmInfo, useUserFarmInfo } from "@icpswap/hooks";
 import { useMemo } from "react";
 import { Null } from "@icpswap/types";
@@ -15,7 +15,7 @@ export function useLiquidityIsStakedByOwner({ positionId, farmId }: UseLiquidity
   const { result: userFarmInfo } = useUserFarmInfo(farmId, principal);
 
   return useMemo(() => {
-    if (isNullArgs(userFarmInfo)) return null;
+    if (isUndefinedOrNull(userFarmInfo)) return null;
 
     return !!userFarmInfo.positionIds.find((e) => e.toString() === positionId);
   }, [userFarmInfo, positionId]);
@@ -30,7 +30,7 @@ export function useLiquidityIsStaked({ positionId, farmId }: UseLiquidityIsStake
   const { result: farmInfo } = useFarmInfo(farmId);
 
   return useMemo(() => {
-    if (isNullArgs(farmInfo)) return false;
+    if (isUndefinedOrNull(farmInfo)) return false;
 
     return !!farmInfo.positionIds.find((e) => e.toString() === positionId);
   }, [farmInfo, positionId]);

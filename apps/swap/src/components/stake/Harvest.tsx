@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Button, CircularProgress, Box } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
@@ -54,7 +54,7 @@ export function Harvest({ rewardToken, rewardAmount, poolId, onHarvestSuccess }:
   };
 
   const noRewardToken = useMemo(() => {
-    if (isNullArgs(rewardToken) || isNullArgs(rewardAmount)) return true;
+    if (isUndefinedOrNull(rewardToken) || isUndefinedOrNull(rewardAmount)) return true;
 
     if (rewardAmount.toString() === "0") return true;
 

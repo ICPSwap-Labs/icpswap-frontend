@@ -7,7 +7,7 @@ import { TokenToggle } from "components/TokenToggle";
 import { isDarkTheme } from "utils/index";
 import { NumberTextField } from "components/index";
 import { Flex } from "@icpswap/ui";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { Null, ChartTimeEnum } from "@icpswap/types";
 import { usePoolPricePeriodRange } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
@@ -177,7 +177,7 @@ export const PriceRange = memo(
     }, [rangeValue, fullRangeWaring]);
 
     const { poolPriceLower, poolPriceUpper } = useMemo(() => {
-      if (isNullArgs(periodPriceRange)) return {};
+      if (isUndefinedOrNull(periodPriceRange)) return {};
 
       let poolPriceLower: number | string | Null = null;
       let poolPriceUpper: number | string | Null = null;

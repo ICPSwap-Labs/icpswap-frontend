@@ -4,7 +4,7 @@ import { Principal } from "@dfinity/principal";
 import { useSwapPools, getUserUnusedBalance, getTokenBalance } from "@icpswap/hooks";
 import type { SwapPoolData } from "@icpswap/types";
 import { SubAccount } from "@dfinity/ledger-icp";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 export type UserSwapPoolsBalance = Override<
   SwapPoolData,
@@ -27,7 +27,7 @@ export function useUserUnDepositBalance(
 
   useEffect(() => {
     const _fetch = async (pool: SwapPoolData) => {
-      if (isNullArgs(principal) || isNullArgs(pool)) return;
+      if (isUndefinedOrNull(principal) || isUndefinedOrNull(pool)) return;
 
       const sub = SubAccount.fromPrincipal(Principal.fromText(principal)).toUint8Array();
 
@@ -104,14 +104,14 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
 
   useEffect(() => {
     const _fetch = async (poolId: string) => {
-      if (isNullArgs(principal)) return;
+      if (isUndefinedOrNull(principal)) return;
 
       getUserUnusedBalance(poolId, Principal.fromText(principal))
         .then((result) => {
           if (result) {
             setBalances((prevState) => {
               const pool = pools?.filter((pool) => pool.canisterId.toString() === poolId)[0];
-              if (isNullArgs(pool)) return prevState;
+              if (isUndefinedOrNull(pool)) return prevState;
               return [...prevState, { ...pool, type: "unUsed", ...result }];
             });
           } else {

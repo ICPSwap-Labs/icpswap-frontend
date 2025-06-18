@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { BigNumber, formatDollarAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { ArrowUpRight } from "react-feather";
 import { Position } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
@@ -36,19 +36,19 @@ export function LiquidityLock({
   const theme = useTheme();
 
   const percent = useMemo(() => {
-    if (!poolTvlValue || isNullArgs(positionsValue)) return undefined;
+    if (!poolTvlValue || isUndefinedOrNull(positionsValue)) return undefined;
 
     return new BigNumber(positionsValue ?? 0).dividedBy(poolTvlValue).multipliedBy(100).toFixed(2);
   }, [poolTvlValue, positionsValue]);
 
   useEffect(() => {
-    if (name && nonNullArgs(positionsValue)) {
+    if (name && nonUndefinedOrNull(positionsValue)) {
       if (setLocksValue) setLocksValue(name, positionsValue ?? "0");
     }
   }, [setLocksValue, positionsValue, name]);
 
   const infoUrl = useMemo(() => {
-    if (isNullArgs(poolId)) return null;
+    if (isUndefinedOrNull(poolId)) return null;
 
     if (name === FREE_LIQUIDITY_NAME) {
       return `${INFO_URL}/info-tools/positions?pair=${poolId}`;
@@ -87,7 +87,7 @@ export function LiquidityLock({
               {percent ? `${percent}%` : "--"}
             </Typography>
             <Typography sx={{ fontSize: "12px" }} color="text.success">
-              ({nonNullArgs(positionsValue) ? formatDollarAmount(positionsValue) : "--"})
+              ({nonUndefinedOrNull(positionsValue) ? formatDollarAmount(positionsValue) : "--"})
             </Typography>
           </Flex>
 

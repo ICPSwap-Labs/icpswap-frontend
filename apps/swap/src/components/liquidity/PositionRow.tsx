@@ -1,7 +1,14 @@
 import { useMemo } from "react";
 import { Typography, useTheme } from "components/Mui";
 import { PositionDetails } from "types/swap";
-import { numberToString, formatDollarAmount, shorten, BigNumber, formatAmount, isNullArgs } from "@icpswap/utils";
+import {
+  numberToString,
+  formatDollarAmount,
+  shorten,
+  BigNumber,
+  formatAmount,
+  isUndefinedOrNull,
+} from "@icpswap/utils";
 import { useAddressAlias, useSwapPositionOwner } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
 import { Pool, CurrencyAmount } from "@icpswap/swap-sdk";
@@ -77,7 +84,7 @@ export function PositionRow({
   const isSneed = useIsSneedOwner({ owner, sneedLedger });
 
   const isLimitOrder = useMemo(() => {
-    if (isNullArgs(allLimitOrders)) return false;
+    if (isUndefinedOrNull(allLimitOrders)) return false;
     return allLimitOrders.includes(BigInt(positionInfo.id));
   }, [allLimitOrders, positionInfo]);
 

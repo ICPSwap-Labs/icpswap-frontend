@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useContext, forwardRef, Ref, useImper
 import { Box } from "components/Mui";
 import { useLimitOrderInfo } from "store/swap/limit-order/hooks";
 import { useLoadDefaultParams, useCleanSwapState, useSwapState, useSwapHandlers } from "store/swap/hooks";
-import { isNullArgs, locationMultipleSearchReplace, nonNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull, locationMultipleSearchReplace, nonUndefinedOrNull } from "@icpswap/utils";
 import { SWAP_FIELD } from "constants/swap";
 import { SWAP_LIMIT_REFRESH_KEY, USER_LIMIT_ORDERS_KEY } from "constants/limit";
 import { TradeState } from "hooks/swap/useTrade";
@@ -108,7 +108,7 @@ export const PlaceOrder = forwardRef(
 
     const isLoadingRoute = swapState === TradeState.LOADING;
     const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
-    const invalid = nonNullArgs(swapInputError) || swapState !== TradeState.VALID;
+    const invalid = nonUndefinedOrNull(swapInputError) || swapState !== TradeState.VALID;
     const isPoolNotChecked = swapState === TradeState.NOT_CHECK;
 
     const inputCurrencyInterfacePrice = useUSDPrice(inputToken);
@@ -187,16 +187,16 @@ export const PlaceOrder = forwardRef(
       if (
         swapLoading ||
         !trade ||
-        isNullArgs(inputToken) ||
-        isNullArgs(outputToken) ||
-        isNullArgs(unusedBalance) ||
-        isNullArgs(position) ||
-        isNullArgs(token0Balance) ||
-        isNullArgs(token1Balance) ||
-        isNullArgs(token0SubAccountBalance) ||
-        isNullArgs(token1SubAccountBalance) ||
-        isNullArgs(orderPriceTick) ||
-        isNullArgs(inputToken)
+        isUndefinedOrNull(inputToken) ||
+        isUndefinedOrNull(outputToken) ||
+        isUndefinedOrNull(unusedBalance) ||
+        isUndefinedOrNull(position) ||
+        isUndefinedOrNull(token0Balance) ||
+        isUndefinedOrNull(token1Balance) ||
+        isUndefinedOrNull(token0SubAccountBalance) ||
+        isUndefinedOrNull(token1SubAccountBalance) ||
+        isUndefinedOrNull(orderPriceTick) ||
+        isUndefinedOrNull(inputToken)
       )
         return;
 

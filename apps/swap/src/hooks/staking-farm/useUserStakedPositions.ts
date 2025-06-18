@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { useUserFarms, getFarmUserTVL, useInfoAllTokens } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FarmUserTvl } from "@icpswap/types";
-import { nonNullArgs, parseTokenAmount } from "@icpswap/utils";
+import { nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useTokens } from "hooks/useCurrency";
 
 export function useUserStakedPositions() {
@@ -58,7 +58,12 @@ export function useUserStakedPositions() {
       const token0USDPrice = infoAllTokens.find((info) => info.address === token0Address)?.priceUSD;
       const token1USDPrice = infoAllTokens.find((info) => info.address === token1Address)?.priceUSD;
 
-      if (nonNullArgs(token0USDPrice) && nonNullArgs(token1USDPrice) && nonNullArgs(token0) && nonNullArgs(token1)) {
+      if (
+        nonUndefinedOrNull(token0USDPrice) &&
+        nonUndefinedOrNull(token1USDPrice) &&
+        nonUndefinedOrNull(token0) &&
+        nonUndefinedOrNull(token1)
+      ) {
         tvl = tvl
           .plus(parseTokenAmount(token0Amount, token0.decimals).multipliedBy(token0USDPrice))
           .plus(parseTokenAmount(token1Amount, token1.decimals).multipliedBy(token1USDPrice));

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { liquidityLocks } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
-import { isNullArgs, nonNullArgs, resultFormat } from "@icpswap/utils";
+import { isUndefinedOrNull, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { Pool, Position } from "@icpswap/swap-sdk";
 import { Null, type UserPositionInfoWithId } from "@icpswap/types";
 
@@ -113,10 +113,10 @@ export function useAllLiquidityLocks(
             const lockId = lockIds[index];
             if (!lockId) return undefined;
             const alias = lockIds[index].alias[0];
-            if (isNullArgs(positionInfos) || isNullArgs(positionInfos)) return undefined;
+            if (isUndefinedOrNull(positionInfos) || isUndefinedOrNull(positionInfos)) return undefined;
             return [positionInfos, ledgerIds[index], alias] as [UserPositionInfoWithId[], string, string];
           })
-          .filter((element) => nonNullArgs(element));
+          .filter((element) => nonUndefinedOrNull(element));
 
         setResult(
           result.reduce(

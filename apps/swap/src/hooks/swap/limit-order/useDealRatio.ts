@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Position } from "@icpswap/swap-sdk";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { LimitOrder, Null } from "@icpswap/types";
 
 import { getLimitTokenAndAmount } from "./useLimitDetails";
@@ -12,7 +12,7 @@ export interface UseLimitDealRatioProps {
 
 export function useLimitDealRatio({ position, limit }: UseLimitDealRatioProps) {
   return useMemo(() => {
-    if (isNullArgs(limit) || isNullArgs(position)) return null;
+    if (isUndefinedOrNull(limit) || isUndefinedOrNull(position)) return null;
 
     const { inputAmount, inputDealAmount } = getLimitTokenAndAmount({ position, limit });
 

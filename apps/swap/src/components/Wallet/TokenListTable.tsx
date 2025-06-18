@@ -7,8 +7,8 @@ import {
   mockALinkAndOpen,
   BigNumber,
   principalToAccount,
-  nonNullArgs,
-  isNullArgs,
+  nonUndefinedOrNull,
+  isUndefinedOrNull,
   formatAmount,
 } from "@icpswap/utils";
 import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal, ImportToNns } from "components/index";
@@ -245,12 +245,12 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   const isHidden = useMemo(() => {
     let hiddenBySmallBalance = false;
 
-    if (isNullArgs(tokenBalance)) return false;
+    if (isUndefinedOrNull(tokenBalance)) return false;
 
-    if (nonNullArgs(token)) {
+    if (nonUndefinedOrNull(token)) {
       if (new BigNumber(tokenBalance).isEqualTo(0)) {
         hiddenBySmallBalance = sortBalance !== SortBalanceEnum.ALL;
-      } else if (nonNullArgs(tokenUSDPrice)) {
+      } else if (nonUndefinedOrNull(tokenUSDPrice)) {
         const tokenUSDValue = parseTokenAmount(tokenBalance, token.decimals).multipliedBy(tokenUSDPrice);
 
         if (sortBalance === SortBalanceEnum.TEN) {
@@ -312,12 +312,12 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
         <Box sx={{ width: "50%" }}>
           <Typography fontSize="12px">Balance</Typography>
           <Typography color="textPrimary" sx={{ margin: "6px 0 0 0" }}>
-            {nonNullArgs(tokenBalance) && token
+            {nonUndefinedOrNull(tokenBalance) && token
               ? formatAmount(parseTokenAmount(tokenBalance, token.decimals).toString())
               : "--"}
           </Typography>
           <Typography className={classes.tokenAssets} sx={{ margin: "4px 0 0 0" }}>
-            {nonNullArgs(tokenUSDPrice) && nonNullArgs(tokenBalance) && token
+            {nonUndefinedOrNull(tokenUSDPrice) && nonUndefinedOrNull(tokenBalance) && token
               ? `≈
               ${formatDollarAmount(
                 parseTokenAmount(tokenBalance, token.decimals).multipliedBy(tokenUSDPrice).toString(),

@@ -12,7 +12,7 @@ import type {
   Null,
 } from "@icpswap/types";
 import { OLD_CANISTER_IDS } from "constants/nft";
-import { resultFormat, principalToAccount, isAvailablePageArgs, isNullArgs } from "@icpswap/utils";
+import { resultFormat, principalToAccount, isAvailablePageArgs, isUndefinedOrNull } from "@icpswap/utils";
 import { swapNFT, NFTCanisterController, NFTCanister } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
@@ -158,7 +158,7 @@ export function useNFTCanisterList(offset: number, limit: number) {
 export function useUserCanisterList(account: string | Null, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
-      if (!isAvailablePageArgs(offset, limit) || isNullArgs(account)) return undefined;
+      if (!isAvailablePageArgs(offset, limit) || isUndefinedOrNull(account)) return undefined;
       return resultFormat<PaginationResult<NFTControllerInfo>>(
         await (await NFTCanisterController()).findUserCanister(account, BigInt(offset), BigInt(limit)),
       ).data;

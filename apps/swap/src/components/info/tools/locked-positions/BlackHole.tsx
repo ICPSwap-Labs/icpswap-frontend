@@ -1,6 +1,6 @@
 import { usePoolByPoolId } from "hooks/swap";
 import { useMemo } from "react";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { PositionTableUI } from "components/liquidity/index";
 import { useLiquidityLockIds, useMultiPositionInfos, useExtraBlackHolePositionInfos } from "@icpswap/hooks";
@@ -16,7 +16,7 @@ export function BlackHolePositions({ poolId }: BlackHolePositionsProps) {
   const [, pool] = usePoolByPoolId(poolId);
 
   const tokenIds = useMemo(() => {
-    if (isNullArgs(pool)) return null;
+    if (isUndefinedOrNull(pool)) return null;
     return [pool.token0.address, pool.token1.address];
   }, [pool]);
 
@@ -32,7 +32,7 @@ export function BlackHolePositions({ poolId }: BlackHolePositionsProps) {
   const extraPositions = useExtraBlackHolePositionInfos(poolId);
 
   const positions = useMemo(() => {
-    if (isNullArgs(__positions)) return null;
+    if (isUndefinedOrNull(__positions)) return null;
 
     const __extraPositions =
       extraPositions?.filter((e) => !!e).map((ele) => ({ ...ele, poolId }) as PositionDetails) ?? [];

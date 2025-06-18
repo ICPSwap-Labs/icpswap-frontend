@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs, isNullArgs, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, isUndefinedOrNull, availableArgsNull } from "@icpswap/utils";
 import { stakeIndex } from "@icpswap/actor";
 import type { PaginationResult, StakeIndexPoolInfo, StakeAprInfo, StakeUserStakeInfo } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
@@ -48,7 +48,8 @@ export function useStakeAprChartData(
 ) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(start_time) || isNullArgs(principal) || isNullArgs(end_time)) return undefined;
+      if (isUndefinedOrNull(start_time) || isUndefinedOrNull(principal) || isUndefinedOrNull(end_time))
+        return undefined;
       return await getStakeAprChartData(principal, start_time, end_time);
     }, [start_time, end_time, principal]),
   );
@@ -63,7 +64,7 @@ export async function getUserStakedTokens(principal: string) {
 export function useUserStakedTokens(principal: string | undefined) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(principal)) return undefined;
+      if (isUndefinedOrNull(principal)) return undefined;
 
       return await getUserStakedTokens(principal);
     }, [principal]),

@@ -21,7 +21,7 @@ import { isUseTransfer } from "utils/token/index";
 import { getSwapSteps } from "components/swap/SwapSteps";
 import { useStepContentManager } from "store/steps/hooks";
 import { OpenExternalTip } from "types/index";
-import { isNullArgs, BigNumber, formatTokenAmount } from "@icpswap/utils";
+import { isUndefinedOrNull, BigNumber, formatTokenAmount } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 import { useAllowance } from "hooks/token";
 
@@ -150,7 +150,7 @@ export function useSwapCalls() {
             });
 
             const transferOrApprove = async () => {
-              if (isNullArgs(tokenInsufficient)) return false;
+              if (isUndefinedOrNull(tokenInsufficient)) return false;
               if (noApproveOrTransferByTokenInsufficient(tokenInsufficient)) return true;
 
               if (isUseTransfer(inputToken)) {

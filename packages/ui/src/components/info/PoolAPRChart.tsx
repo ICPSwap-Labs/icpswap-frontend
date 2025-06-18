@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { BigNumber, isNullArgs, numToPercent } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, numToPercent } from "@icpswap/utils";
 import { usePoolAPRChartData, usePoolAPRs } from "@icpswap/hooks";
 import { type Null, ChartTimeEnum } from "@icpswap/types";
 import { ReferenceLine } from "recharts";
@@ -47,7 +47,7 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
   const latestData = formattedChartData.length > 0 ? formattedChartData[formattedChartData.length - 1] : null;
 
   const apr = useMemo(() => {
-    if (isNullArgs(aprResult)) return null;
+    if (isUndefinedOrNull(aprResult)) return null;
 
     if (time === ChartTimeEnum["24H"]) return aprResult.aprAvg1D;
     if (time === ChartTimeEnum["7D"]) return aprResult.aprAvg7D;
@@ -57,8 +57,8 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
 
   const aprY = useMemo(() => {
     if (
-      isNullArgs(apr) ||
-      isNullArgs(formattedChartData) ||
+      isUndefinedOrNull(apr) ||
+      isUndefinedOrNull(formattedChartData) ||
       formattedChartData.length < 2 ||
       new BigNumber(apr).isEqualTo(0)
     )

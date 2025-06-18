@@ -1,7 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 import { Typography, Button, Box } from "components/Mui";
 import { MaxButton, NumberTextField } from "components/index";
-import { BigNumber, isNullArgs, nonNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  BigNumber,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { Token, Pool } from "@icpswap/swap-sdk";
 import { Flex, Modal } from "@icpswap/ui";
 import PercentageSlider from "components/PercentageSlider/ui";
@@ -111,9 +117,9 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
 
   const error = useMemo(() => {
     if (amount === "") return t("common.enter.input.amount");
-    if (nonNullArgs(balance) && new BigNumber(balance).isLessThan(amount))
+    if (nonUndefinedOrNull(balance) && new BigNumber(balance).isLessThan(amount))
       return t("common.error.insufficient.balance");
-    if (isNullArgs(balance) || !token || isNullArgs(maxDepositAmount)) return t`Confirm`;
+    if (isUndefinedOrNull(balance) || !token || isUndefinedOrNull(maxDepositAmount)) return t`Confirm`;
     if (new BigNumber(maxDepositAmount).isLessThan(amount)) return t("common.error.insufficient.balance");
 
     return undefined;

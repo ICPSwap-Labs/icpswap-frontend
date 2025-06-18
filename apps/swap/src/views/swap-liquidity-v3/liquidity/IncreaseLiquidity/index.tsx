@@ -9,7 +9,7 @@ import { useMintState, useMintHandlers, useMintInfo, useResetMintState } from "s
 import { usePosition } from "hooks/swap/usePosition";
 import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
-import { isNullArgs, parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
+import { isUndefinedOrNull, parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -174,13 +174,13 @@ export default function IncreaseLiquidity() {
 
   const handleIncreaseLiquidity = useCallback(async () => {
     if (
-      isNullArgs(position) ||
-      isNullArgs(principal) ||
-      isNullArgs(unusedBalance) ||
-      isNullArgs(token0SubAccountBalance) ||
-      isNullArgs(token1SubAccountBalance) ||
-      isNullArgs(token0Balance) ||
-      isNullArgs(token1Balance)
+      isUndefinedOrNull(position) ||
+      isUndefinedOrNull(principal) ||
+      isUndefinedOrNull(unusedBalance) ||
+      isUndefinedOrNull(token0SubAccountBalance) ||
+      isUndefinedOrNull(token1SubAccountBalance) ||
+      isUndefinedOrNull(token0Balance) ||
+      isUndefinedOrNull(token1Balance)
     )
       return;
 

@@ -6,7 +6,7 @@ import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 import { useUserUnusedBalance } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useRefreshTriggerManager, useToken, useTips, MessageTypes } from "hooks/index";
-import { BigNumber, formatAmount, isNullArgs, parseTokenAmount, sleep } from "@icpswap/utils";
+import { BigNumber, formatAmount, isUndefinedOrNull, parseTokenAmount, sleep } from "@icpswap/utils";
 import { useSwapWithdraw } from "hooks/swap/index";
 import { Trans, useTranslation } from "react-i18next";
 
@@ -44,7 +44,12 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
 
   const handleWithdraw = useCallback(
     async (val: "input" | "output") => {
-      if (isNullArgs(inputBalance) || isNullArgs(outputBalance) || isNullArgs(inputToken) || isNullArgs(outputToken))
+      if (
+        isUndefinedOrNull(inputBalance) ||
+        isUndefinedOrNull(outputBalance) ||
+        isUndefinedOrNull(inputToken) ||
+        isUndefinedOrNull(outputToken)
+      )
         return;
 
       if (val === "input") {
@@ -104,8 +109,8 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
             <TextButton
               onClick={() => handleWithdraw("input")}
               disabled={
-                isNullArgs(inputBalance) ||
-                isNullArgs(isSorted) ||
+                isUndefinedOrNull(inputBalance) ||
+                isUndefinedOrNull(isSorted) ||
                 inputBalance === BigInt(0) ||
                 loading.input ||
                 (inputToken && !new BigNumber(inputBalance.toString()).isGreaterThan(inputToken.transFee))
@@ -132,8 +137,8 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
             <TextButton
               onClick={() => handleWithdraw("output")}
               disabled={
-                isNullArgs(outputBalance) ||
-                isNullArgs(isSorted) ||
+                isUndefinedOrNull(outputBalance) ||
+                isUndefinedOrNull(isSorted) ||
                 outputBalance === BigInt(0) ||
                 loading.output ||
                 (outputToken && !new BigNumber(outputBalance.toString()).isGreaterThan(outputToken.transFee))

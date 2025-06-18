@@ -9,7 +9,7 @@ import { getTokenInsufficient, TokenInsufficient } from "hooks/swap/index";
 import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
 import store from "store/index";
 import { useUserUnusedBalance, useDebounce } from "@icpswap/hooks";
-import { formatTokenAmount, isNullArgs, BigNumber, nonNullArgs } from "@icpswap/utils";
+import { formatTokenAmount, isUndefinedOrNull, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
@@ -96,10 +96,10 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   const dependentFieldAmount = useMemo(() => {
     if (
-      nonNullArgs(independentFieldAmount) &&
-      nonNullArgs(orderPrice) &&
-      nonNullArgs(outputToken) &&
-      nonNullArgs(inputToken)
+      nonUndefinedOrNull(independentFieldAmount) &&
+      nonUndefinedOrNull(orderPrice) &&
+      nonUndefinedOrNull(outputToken) &&
+      nonUndefinedOrNull(inputToken)
     ) {
       if (isExactIn) {
         return CurrencyAmount.fromRawAmount(
@@ -133,12 +133,12 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   );
 
   const isInputTokenSorted = useMemo(() => {
-    if (isNullArgs(pool) || isNullArgs(inputToken)) return null;
+    if (isUndefinedOrNull(pool) || isUndefinedOrNull(inputToken)) return null;
     return pool.token0.equals(inputToken);
   }, [pool, inputToken]);
 
   const atLimitedTick = useMemo(() => {
-    if (isNullArgs(pool)) return false;
+    if (isUndefinedOrNull(pool)) return false;
 
     const tickCurrent = pool.tickCurrent;
 
@@ -147,7 +147,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   // The position tickUpper or tickLower, boundary tick
   const { minUseableTick, error: tickError } = useMemo(() => {
-    if (isNullArgs(pool) || isNullArgs(isInputTokenSorted)) return { minUseableTick: null, error: false };
+    if (isUndefinedOrNull(pool) || isUndefinedOrNull(isInputTokenSorted)) return { minUseableTick: null, error: false };
 
     const tickCurrent = pool.tickCurrent;
 
@@ -207,7 +207,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   // The order price tick should be greater than or equal to this tick
   const minSettableTick = useMemo(() => {
-    if (nonNullArgs(minUseableTick) && pool) {
+    if (nonUndefinedOrNull(minUseableTick) && pool) {
       return isInputTokenSorted
         ? minUseableTick - parseInt(String(TICK_SPACINGS[pool.fee] / 2)) + 1
         : minUseableTick + parseInt(String(TICK_SPACINGS[pool.fee] / 2)) - 1;
@@ -281,7 +281,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   });
 
   const currentPrice = useMemo(() => {
-    if (isNullArgs(pool) || isNullArgs(inputToken) || isNullArgs(outputToken)) return undefined;
+    if (isUndefinedOrNull(pool) || isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return undefined;
     if (pool.token0.address === inputToken.address) return pool.token0Price.toFixed(outputToken.decimals);
     return pool.token1Price.toFixed(inputToken.decimals);
   }, [pool, inputToken, outputToken]);
@@ -294,7 +294,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
       : undefined;
 
   const inputError = useMemo(() => {
-    if (isNullArgs(inputToken) || isNullArgs(outputToken)) return t("common.select.a.token");
+    if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return t("common.select.a.token");
     if (!parsedAmounts[SWAP_FIELD.INPUT]) return t("common.enter.input.amount");
     if (!inputSwapAmount || formatTokenAmount(inputSwapAmount, inputToken.decimals).isLessThan(inputToken.transFee))
       return t("common.error.amount.large.than.fee");
@@ -311,18 +311,18 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (inputNumberCheck(inputSwapAmount) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
     if (tokenInsufficient === TokenInsufficient.INSUFFICIENT) return `Insufficient ${inputToken?.symbol} balance`;
-    if (isNullArgs(orderPrice) || orderPrice === "") return t`Enter the price`;
+    if (isUndefinedOrNull(orderPrice) || orderPrice === "") return t`Enter the price`;
     if (new BigNumber(orderPrice).isEqualTo(0)) return t`Invalid price`;
     if (
       !inputTokenSubBalance ||
-      isNullArgs(inputTokenUnusedBalance) ||
-      isNullArgs(currentPrice) ||
-      isNullArgs(pool) ||
-      isNullArgs(orderPriceTick) ||
-      isNullArgs(isInputTokenSorted) ||
-      isNullArgs(minSettableTick) ||
+      isUndefinedOrNull(inputTokenUnusedBalance) ||
+      isUndefinedOrNull(currentPrice) ||
+      isUndefinedOrNull(pool) ||
+      isUndefinedOrNull(orderPriceTick) ||
+      isUndefinedOrNull(isInputTokenSorted) ||
+      isUndefinedOrNull(minSettableTick) ||
       Trade?.noLiquidity === true ||
-      isNullArgs(minUseableTick)
+      isUndefinedOrNull(minUseableTick)
     )
       return t("limit.submit");
 

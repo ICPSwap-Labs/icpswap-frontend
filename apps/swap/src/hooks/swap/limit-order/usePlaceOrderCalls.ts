@@ -17,7 +17,7 @@ import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
 import { isUseTransfer } from "utils/token/index";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import { isNullArgs, BigNumber } from "@icpswap/utils";
+import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 import { mint as __mint } from "hooks/swap/v3Calls";
 import { useUpdateUserPositionPools } from "store/hooks";
 import { useUpdatePlaceOrderPositionId, getPlaceOrderPositionId } from "store/swap/limit-order/hooks";
@@ -217,7 +217,7 @@ export function usePlaceOrderCalls() {
 
       const placeOrder = async () => {
         const positionId = getPlaceOrderPositionId();
-        if (isNullArgs(positionId)) return false;
+        if (isUndefinedOrNull(positionId)) return false;
         const { status, message } = await __placeOrder(poolId, positionId, limitLick);
         if (status === ResultStatus.OK) {
           openSuccessTip(t`Add limit order successfully`);

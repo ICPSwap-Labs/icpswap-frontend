@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Typography, Box } from "components/Mui";
-import { formatDollarAmount, nonNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
 import { usePositionFeesChartData } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
 import { LineChartAlt, ImageLoading, Flex } from "@icpswap/ui";
@@ -49,7 +49,7 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
             {latestPositionValue ? (
               <>
                 <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-                  {nonNullArgs(latestValue)
+                  {nonUndefinedOrNull(latestValue)
                     ? formatDollarAmount(latestValue)
                     : formatDollarAmount(formattedChartData[formattedChartData.length - 1]?.value)}
                 </Typography>

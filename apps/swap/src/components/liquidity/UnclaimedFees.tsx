@@ -1,7 +1,7 @@
 import { useCallback, useState, useMemo } from "react";
 import { Typography, Box, Button, CircularProgress } from "components/Mui";
 import { Flex, Tooltip } from "@icpswap/ui";
-import { formatDollarAmount, nonNullArgs, BigNumber } from "@icpswap/utils";
+import { formatDollarAmount, nonUndefinedOrNull, BigNumber } from "@icpswap/utils";
 import { usePositionContext } from "components/swap/index";
 import { collect } from "@icpswap/hooks";
 import { decodePositionKey } from "utils/swap";
@@ -43,7 +43,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
       availableFees.map(async (key: string) => {
         const { poolId, positionIndex, token0, token0Fee, token1, token1Fee } = decodePositionKey(key);
 
-        if (nonNullArgs(poolId) && nonNullArgs(positionIndex)) {
+        if (nonUndefinedOrNull(poolId) && nonUndefinedOrNull(positionIndex)) {
           const result = await collect(poolId, {
             positionId: BigInt(positionIndex),
           });

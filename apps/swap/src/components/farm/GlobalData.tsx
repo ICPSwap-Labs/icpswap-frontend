@@ -2,7 +2,7 @@ import { Typography, Box } from "components/Mui";
 import { useFarmGlobalData } from "hooks/staking-farm";
 import { Tooltip, Flex } from "components/index";
 import React from "react";
-import { formatDollarAmount, nonNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 
 interface ItemProps {
@@ -78,7 +78,7 @@ export function GlobalData() {
       <Item
         label0={t("farm.available.positions")}
         value0={
-          nonNullArgs(globalData.userPositionAmount) && nonNullArgs(globalData.userPositionValue) ? (
+          nonUndefinedOrNull(globalData.userPositionAmount) && nonUndefinedOrNull(globalData.userPositionValue) ? (
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
               <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }} component="span">
                 {formatDollarAmount(globalData.userPositionValue)}
@@ -96,7 +96,7 @@ export function GlobalData() {
         tooltip0={t`The number of positions currently available in your account for staking.`}
         label1={t("farm.staked.positions")}
         value1={
-          nonNullArgs(globalData.userStakedFarms) && nonNullArgs(globalData.userStakedTvl) ? (
+          nonUndefinedOrNull(globalData.userStakedFarms) && nonUndefinedOrNull(globalData.userStakedTvl) ? (
             <Typography sx={{ fontSize: "24px", fontWeight: 500 }} component="div">
               <Typography sx={{ fontSize: "24px", color: "text.primary", fontWeight: 500 }} component="span">
                 {formatDollarAmount(globalData.userStakedTvl)}

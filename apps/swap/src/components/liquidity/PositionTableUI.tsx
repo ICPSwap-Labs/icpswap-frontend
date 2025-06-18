@@ -1,5 +1,5 @@
 import { Box, Theme, makeStyles } from "components/Mui";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useMemo } from "react";
 import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationType, PaginationProps } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
@@ -53,7 +53,7 @@ export function PositionTableUI({
   const [, pool] = usePoolByPoolId(poolId);
 
   const tokenIds = useMemo(() => {
-    if (isNullArgs(pool)) return null;
+    if (isUndefinedOrNull(pool)) return null;
 
     return [pool.token0.address, pool.token1.address];
   }, [pool]);

@@ -2,7 +2,7 @@ import { getSwapUserPositions } from "@icpswap/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { useStoreUserPositionPools } from "store/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { UserPositionByList } from "types/swap";
 
@@ -14,7 +14,7 @@ export function useUserAllPositionsByPoolIds(poolIds: string[] | undefined, refr
 
   useEffect(() => {
     async function call() {
-      if (isNullArgs(poolIds) || poolIds.length === 0 || isNullArgs(principal)) {
+      if (isUndefinedOrNull(poolIds) || poolIds.length === 0 || isUndefinedOrNull(principal)) {
         setPositions([]);
         return;
       }

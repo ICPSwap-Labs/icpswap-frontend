@@ -1,4 +1,4 @@
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { useTokenImportToNns } from "hooks/token";
 import { ReactNode } from "react";
@@ -13,5 +13,7 @@ interface ImportToNnsProps {
 export function ImportToNns({ tokenId, children }: ImportToNnsProps) {
   const canImportToNns = useTokenImportToNns(tokenId);
 
-  return canImportToNns && nonNullArgs(tokenId) ? <Link link={importTokenToNnsUrl(tokenId)}>{children}</Link> : null;
+  return canImportToNns && nonUndefinedOrNull(tokenId) ? (
+    <Link link={importTokenToNnsUrl(tokenId)}>{children}</Link>
+  ) : null;
 }

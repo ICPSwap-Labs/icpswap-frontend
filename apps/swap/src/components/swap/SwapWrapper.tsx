@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect, forwardRef, Ref, useImperativeHandle } from "react";
 import { Box, Typography, CircularProgress } from "components/Mui";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
-import { isNullArgs, BigNumber, getNumberDecimals } from "@icpswap/utils";
+import { isUndefinedOrNull, BigNumber, getNumberDecimals } from "@icpswap/utils";
 import { SWAP_FIELD, SWAP_REFRESH_KEY } from "constants/swap";
 import { SAFE_DECIMALS_LENGTH } from "constants/index";
 import { useExpertModeManager } from "store/swap/cache/hooks";
@@ -189,9 +189,9 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
       (exceedImpact && !impactChecked) ||
       swapLoading ||
       !trade ||
-      isNullArgs(inputTokenSubBalance) ||
-      isNullArgs(inputTokenUnusedBalance) ||
-      isNullArgs(inputTokenBalance)
+      isUndefinedOrNull(inputTokenSubBalance) ||
+      isUndefinedOrNull(inputTokenUnusedBalance) ||
+      isUndefinedOrNull(inputTokenBalance)
     )
       return;
 

@@ -1,6 +1,6 @@
 import { Box, Typography, useTheme } from "components/Mui";
 import { Flex, Tooltip } from "@icpswap/ui";
-import { formatTokenPrice, nonNullArgs } from "@icpswap/utils";
+import { formatTokenPrice, nonUndefinedOrNull } from "@icpswap/utils";
 import { Null, ChartTimeEnum } from "@icpswap/types";
 import { SWAP_CHART_RANGE_PRICE_COLOR } from "constants/swap";
 import { useTranslation } from "react-i18next";
@@ -40,7 +40,7 @@ export function PriceRangeLabel({ poolPriceLower, poolPriceUpper, chartTime }: P
       </Flex>
 
       <Typography sx={{ color: "text.primary", fontSize: "12px" }}>
-        {nonNullArgs(poolPriceLower) && nonNullArgs(poolPriceUpper)
+        {nonUndefinedOrNull(poolPriceLower) && nonUndefinedOrNull(poolPriceUpper)
           ? `${formatTokenPrice(poolPriceLower)} - ${formatTokenPrice(poolPriceUpper)}`
           : "--"}
       </Typography>

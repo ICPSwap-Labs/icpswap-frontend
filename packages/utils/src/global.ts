@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { Principal } from "@dfinity/principal";
 
 import { parseTokenAmount } from "./tokenAmount";
-import { isNullArgs } from "./isNullArgs";
+import { isUndefinedOrNull } from "./isUndefinedOrNull";
 
 export function transactionsTypeFormat(type: any): string {
   if (typeof type === "string") return type;
@@ -24,7 +24,7 @@ export function openBase64ImageInNewWindow(base64String: string) {
 }
 
 export function cycleValueFormat(value: NumberType | Null, noUnit?: boolean): string {
-  if (value === 0 || isNullArgs(value)) return noUnit ? `0` : `0 T`;
+  if (value === 0 || isUndefinedOrNull(value)) return noUnit ? `0` : `0 T`;
 
   return `${new BigNumber(parseTokenAmount(value, 12).toFixed(4)).toFormat()}${noUnit ? "" : " T"}`;
 }

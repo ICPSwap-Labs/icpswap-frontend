@@ -1,7 +1,7 @@
 import { Flex, APRPanel, BodyCell } from "@icpswap/ui";
 import { useMemo } from "react";
 import { useToken } from "hooks/useCurrency";
-import { formatDollarAmount, parseTokenAmount, BigNumber, nonNullArgs, formatAmount } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, BigNumber, nonUndefinedOrNull, formatAmount } from "@icpswap/utils";
 import { useFarmAvgApr } from "@icpswap/hooks";
 import type { FarmInfo } from "@icpswap/types";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -24,7 +24,7 @@ export function AvgAprCell({ farmId, farmInfo }: AvgAprCellProps) {
   }, [avgAPR]);
 
   const { totalRewardAmount, totalRewardUSD } = useMemo(() => {
-    if (nonNullArgs(farmInfo) && nonNullArgs(rewardToken)) {
+    if (nonUndefinedOrNull(farmInfo) && nonUndefinedOrNull(rewardToken)) {
       const amount = parseTokenAmount(farmInfo.totalReward, rewardToken.decimals).toString();
 
       return {
@@ -42,10 +42,10 @@ export function AvgAprCell({ farmId, farmInfo }: AvgAprCellProps) {
         <APRPanel
           value={apr}
           tooltip={
-            nonNullArgs(rewardToken) && nonNullArgs(totalRewardAmount)
+            nonUndefinedOrNull(rewardToken) && nonUndefinedOrNull(totalRewardAmount)
               ? t("farm.apr.descriptions", {
                   reward: `${formatAmount(totalRewardAmount)} ${rewardToken.symbol}`,
-                  rewardUsd: nonNullArgs(totalRewardUSD) ? formatDollarAmount(totalRewardUSD) : "--",
+                  rewardUsd: nonUndefinedOrNull(totalRewardUSD) ? formatDollarAmount(totalRewardUSD) : "--",
                 })
               : null
           }

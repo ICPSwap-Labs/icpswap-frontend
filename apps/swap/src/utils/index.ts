@@ -3,7 +3,7 @@
 import JSBI from "jsbi";
 import BigNumber from "bignumber.js";
 import { Null } from "@icpswap/types";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 // @ts-ignore  hijack bigint
 BigInt.prototype.toJSON = function toJSON() {
@@ -102,7 +102,7 @@ export function isSafari() {
 }
 
 export function stringifyBackPath(path: string | Null) {
-  return isNullArgs(path) ? "" : window.btoa(path);
+  return isUndefinedOrNull(path) ? "" : window.btoa(path);
 }
 
 export function parseBackPath(path: string) {

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Position, Pool } from "@icpswap/swap-sdk";
 import { usePoolByPoolId, PoolState } from "hooks/swap/usePools";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 export interface UsePositionProps {
   poolId: string | undefined;
@@ -48,7 +48,7 @@ export interface usePositionWithPoolProps {
 export function usePositionWithPool({ tickLower, tickUpper, liquidity, pool }: usePositionWithPoolProps) {
   let position: Position | undefined;
 
-  if (pool && nonNullArgs(liquidity) && nonNullArgs(tickLower) && nonNullArgs(tickUpper)) {
+  if (pool && nonUndefinedOrNull(liquidity) && nonUndefinedOrNull(tickLower) && nonUndefinedOrNull(tickUpper)) {
     position = new Position({
       pool,
       liquidity: liquidity.toString(),

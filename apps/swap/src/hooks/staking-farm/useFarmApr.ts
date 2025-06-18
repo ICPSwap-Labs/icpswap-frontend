@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { parseTokenAmount, BigNumber, nowInSeconds, isNullArgs } from "@icpswap/utils";
+import { parseTokenAmount, BigNumber, nowInSeconds, isUndefinedOrNull } from "@icpswap/utils";
 import type { InitFarmArgs, FarmRewardMetadata, FarmState, FarmDepositArgs, Null } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
 import { useUSDPriceById } from "hooks/useUSDPrice";
@@ -20,7 +20,7 @@ export function useFarmApr({ farmTvlValue, state, rewardToken, farmInitArgs, rew
     if (!farmTvlValue || !farmInitArgs || !rewardMetadata || !rewardToken || new BigNumber(farmTvlValue).isEqualTo(0))
       return undefined;
 
-    if (state !== "LIVE" || isNullArgs(rewardTokenPrice)) return undefined;
+    if (state !== "LIVE" || isUndefinedOrNull(rewardTokenPrice)) return undefined;
 
     const val = parseTokenAmount(rewardMetadata.rewardPerCycle, rewardToken.decimals)
       .multipliedBy(rewardTokenPrice)
@@ -58,13 +58,13 @@ export function useUserApr({
       !farmTvlValue ||
       !farmInitArgs ||
       !rewardToken ||
-      isNullArgs(positionsValue) ||
+      isUndefinedOrNull(positionsValue) ||
       !deposits ||
       new BigNumber(farmTvlValue).isEqualTo(0)
     )
       return undefined;
 
-    if (state !== "LIVE" || isNullArgs(rewardTokenPrice)) return undefined;
+    if (state !== "LIVE" || isUndefinedOrNull(rewardTokenPrice)) return undefined;
 
     const apr = deposits.reduce(
       (prev, curr, index) => {
@@ -74,7 +74,7 @@ export function useUserApr({
 
         const positionValue = positionsValue[index];
 
-        if (isNullArgs(positionValue)) return prev;
+        if (isUndefinedOrNull(positionValue)) return prev;
 
         const val = parseTokenAmount(curr.rewardAmount, rewardToken.decimals)
           .multipliedBy(rewardTokenPrice)
@@ -89,7 +89,7 @@ export function useUserApr({
       null as null | BigNumber,
     );
 
-    if (isNullArgs(apr)) return undefined;
+    if (isUndefinedOrNull(apr)) return undefined;
 
     return `${apr.dividedBy(deposits.length)}%`;
   }, [farmTvlValue, state, farmInitArgs, rewardToken, positionsValue, deposits]);
@@ -128,7 +128,7 @@ export function useUserSingleLiquidityApr({
     )
       return undefined;
 
-    if (state !== "LIVE" || isNullArgs(rewardTokenPrice)) return undefined;
+    if (state !== "LIVE" || isUndefinedOrNull(rewardTokenPrice)) return undefined;
 
     const depositTime = deposit.initTime;
 

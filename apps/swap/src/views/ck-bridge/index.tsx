@@ -1,7 +1,7 @@
 import { useChainKeyMinterInfo, useParsedQueryString } from "@icpswap/hooks";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 import { ckBTC, ckUSDC, ckETH } from "@icpswap/tokens";
 import { Erc20BridgeWrapper, BtcBridgeWrapper, EthBridgeWrapper } from "components/ck-bridge";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -35,7 +35,7 @@ export default function CkBridge() {
       (e) => e.ledger_canister_id.toString() === token.address,
     );
 
-    return nonNullArgs(erc20TokenMinterInfo) ? "erc20" : token.address === ckETH.address ? "eth" : "btc";
+    return nonUndefinedOrNull(erc20TokenMinterInfo) ? "erc20" : token.address === ckETH.address ? "eth" : "btc";
   }, [token, minterInfo]);
 
   const bridgeType = useMemo(() => {

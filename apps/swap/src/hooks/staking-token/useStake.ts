@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { stakingPoolDeposit, stakingPoolDepositFrom, stakingTokenStake } from "@icpswap/hooks";
 import { Null, ResultStatus } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
-import { BigNumber, isNullArgs, sleep } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, sleep } from "@icpswap/utils";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -131,7 +131,7 @@ function useStakeCalls({ token, poolId }: UseStakeCallsProps) {
   const withdraw = useRewardTokenWithdrawCall();
 
   const allowanceTokenId = useMemo(() => {
-    if (isNullArgs(token)) return undefined;
+    if (isUndefinedOrNull(token)) return undefined;
     return isUseTransfer(token) ? undefined : token.address;
   }, [token]);
 

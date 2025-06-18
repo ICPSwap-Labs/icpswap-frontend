@@ -10,7 +10,7 @@ import {
   timestampFormat,
   explorerLink,
   formatDollarAmount,
-  nonNullArgs,
+  nonUndefinedOrNull,
 } from "@icpswap/utils";
 import { useStakingPoolState, useStakingPoolCycles, useStakingPoolUserInfo } from "@icpswap/hooks";
 import Countdown from "react-countdown";
@@ -179,7 +179,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             <Flex sx={{ width: "100%" }} justify="space-between">
               <Typography>{t("stake.total.staker")}</Typography>
               <Typography color="text.primary" component="div">
-                {nonNullArgs(totalStaker) ? `${totalStaker.toString()}` : "--"}
+                {nonUndefinedOrNull(totalStaker) ? `${totalStaker.toString()}` : "--"}
               </Typography>
             </Flex>
 

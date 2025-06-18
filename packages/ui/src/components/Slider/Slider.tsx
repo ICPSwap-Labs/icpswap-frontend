@@ -1,4 +1,4 @@
-import { BigNumber, nonNullArgs, isNullArgs, percentToNum, numToPercent } from "@icpswap/utils";
+import { BigNumber, nonUndefinedOrNull, isUndefinedOrNull, percentToNum, numToPercent } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -28,7 +28,7 @@ export function Slider({ percent, onChange, labelLeft, labelRight }: SliderProps
   const [arrowPositionByMouse, setArrowPosition] = useState<string | null>(null);
 
   const sliderWidth = useMemo(() => {
-    if (isNullArgs(percent) || isNullArgs(wrapperWidth)) return 0;
+    if (isUndefinedOrNull(percent) || isUndefinedOrNull(wrapperWidth)) return 0;
     return new BigNumber(wrapperWidth).multipliedBy(percentToNum(percent)).toString();
   }, [wrapperWidth, percent]);
 
@@ -40,7 +40,7 @@ export function Slider({ percent, onChange, labelLeft, labelRight }: SliderProps
 
   const handleSliderClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
-      if (isNullArgs(wrapperWidth)) return;
+      if (isUndefinedOrNull(wrapperWidth)) return;
 
       const nativeEvent = event.nativeEvent;
       const offsetX = nativeEvent.offsetX;
@@ -62,7 +62,7 @@ export function Slider({ percent, onChange, labelLeft, labelRight }: SliderProps
 
   useEffect(() => {
     const move = (event: MouseEvent) => {
-      if (mouseDown && MouseDownX && nonNullArgs(wrapperWidth)) {
+      if (mouseDown && MouseDownX && nonUndefinedOrNull(wrapperWidth)) {
         const screenX = event.screenX;
         const moveX = screenX - MouseDownX;
 

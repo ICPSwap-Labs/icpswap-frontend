@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSwapPools, useUserLimitOrders, getUserLimitOrders } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { Null, LimitOrder } from "@icpswap/types";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 export interface UseLimitOrdersProps {
   val: string | Null;
@@ -57,7 +57,8 @@ export function useLimitOrders({ val, refreshTrigger }: UseLimitOrdersProps): {
   return useMemo(
     () => ({
       loading: loading || allPairLoading,
-      result: val === "ALL PAIR" ? allLimitOrders : isNullArgs(val) ? null : userLimitOrders?.map((ele) => [ele, val]),
+      result:
+        val === "ALL PAIR" ? allLimitOrders : isUndefinedOrNull(val) ? null : userLimitOrders?.map((ele) => [ele, val]),
     }),
     [allPairLoading, loading, val, allLimitOrders, userLimitOrders],
   );

@@ -9,7 +9,7 @@ import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance
 import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
 import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
-import { isValidPrincipal, formatTokenAmount, isNullArgs } from "@icpswap/utils";
+import { isValidPrincipal, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { useParsedQueryString, useDebouncedChangeHandler, useDebounce } from "@icpswap/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useAllowance } from "hooks/token";
@@ -130,7 +130,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
 
   // Force to use token from pool, the token standard is using from pool metadata
   const inputToken = useMemo(() => {
-    if (isNullArgs(pool) || isNullArgs(__inputToken)) return undefined;
+    if (isUndefinedOrNull(pool) || isUndefinedOrNull(__inputToken)) return undefined;
     return pool.alignToken(__inputToken);
   }, [pool, __inputToken]);
 
@@ -181,10 +181,10 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
   });
 
   const inputError = useMemo(() => {
-    if (isNullArgs(__inputToken) || isNullArgs(__outputToken)) return t("common.select.a.token");
+    if (isUndefinedOrNull(__inputToken) || isUndefinedOrNull(__outputToken)) return t("common.select.a.token");
     if (!parsedAmount) return t("common.enter.input.amount");
     if (!typedValue || typedValue === "0") return t("common.error.amount.large.than.fee");
-    if (!inputTokenSubBalance || isNullArgs(inputTokenUnusedBalance)) return t("common.swap");
+    if (!inputTokenSubBalance || isUndefinedOrNull(inputTokenUnusedBalance)) return t("common.swap");
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
     if (tokenInsufficient === "INSUFFICIENT")

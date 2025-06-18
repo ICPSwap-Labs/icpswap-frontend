@@ -1,6 +1,6 @@
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
-import { nonNullArgs, parseTokenAmount, BigNumber } from "@icpswap/utils";
+import { nonUndefinedOrNull, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { useTheme, Box, Typography, CircularProgress, TextField } from "components/Mui";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useCallback, useMemo, useState } from "react";
@@ -154,7 +154,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
         variant="contained"
         fullWidth
         size="large"
-        disabled={nonNullArgs(dissolve_error) || loading || oisyButtonDisabled}
+        disabled={nonUndefinedOrNull(dissolve_error) || loading || oisyButtonDisabled}
         onClick={handleDissolve}
         startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
       >

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, useTheme } from "components/Mui";
 import { useAllLiquidityLocks, usePoolTVLValue, usePositionsValue } from "@icpswap/hooks";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { Position, Pool } from "@icpswap/swap-sdk";
 import { useLiquidityLocksImage } from "hooks/swap/index";
 import { Null } from "@icpswap/types";
@@ -102,8 +102,8 @@ export function LiquidityLocks({ pool, poolId }: LiquidityLocksProps) {
   }, [locksValue, allLiquidityLocks, poolTvlValue]);
 
   const sortedLiquidityLocks = useMemo(() => {
-    if (isNullArgs(allLiquidityLocks)) return undefined;
-    if (isNullArgs(locksValue)) return allLiquidityLocks;
+    if (isUndefinedOrNull(allLiquidityLocks)) return undefined;
+    if (isUndefinedOrNull(locksValue)) return allLiquidityLocks;
 
     const __allLiquidityLocks = [...allLiquidityLocks, [undefined, undefined, FREE_LIQUIDITY_NAME]] as Array<
       [Position[] | undefined, string | undefined, string]

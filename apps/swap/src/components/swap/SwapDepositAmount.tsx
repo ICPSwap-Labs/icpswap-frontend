@@ -5,7 +5,7 @@ import LockIcon from "assets/images/swap/Lock";
 import { NumberTextField, TokenImage, MaxButton } from "components/index";
 import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { isDarkTheme } from "utils";
-import { nonNullArgs, parseTokenAmount, BigNumber, formatTokenAmount, isNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull, parseTokenAmount, BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { SwapBalancesSlider } from "components/swap/SwapBalancesSlider";
 import { Null } from "@icpswap/types";
@@ -163,7 +163,7 @@ export function SwapDepositAmount({
   });
 
   const handleWalletBalanceClick = useCallback(() => {
-    if (isNullArgs(maxWalletBalanceSpent) || isNullArgs(currency)) return;
+    if (isUndefinedOrNull(maxWalletBalanceSpent) || isUndefinedOrNull(currency)) return;
     onUserInput(maxAmountFormat(maxWalletBalanceSpent.toExact(), currency.decimals));
   }, [onUserInput, maxWalletBalanceSpent, currency]);
 
@@ -207,8 +207,8 @@ export function SwapDepositAmount({
           <Flex fullWidth justify="space-between">
             <Flex gap="0 8px">
               {noLiquidity === false ? (
-                nonNullArgs(unusedBalance) &&
-                nonNullArgs(subAccountBalance) &&
+                nonUndefinedOrNull(unusedBalance) &&
+                nonUndefinedOrNull(subAccountBalance) &&
                 currency &&
                 parseTokenAmount(
                   new BigNumber(unusedBalance.toString()).plus(subAccountBalance),

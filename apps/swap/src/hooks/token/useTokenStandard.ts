@@ -1,4 +1,4 @@
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 import { icrc1 } from "@icpswap/actor";
 import { EXTAdapter, icrc1Adapter, DIP20Adapter } from "@icpswap/token-adapter";
 import { TOKEN_STANDARD } from "@icpswap/types";
@@ -47,13 +47,13 @@ export interface GetTokenStandardProps {
 
 export async function getTokenStandard({ canisterId }: GetTokenStandardProps) {
   const icrc_standard = await getIcrcStandard(canisterId);
-  if (nonNullArgs(icrc_standard)) return icrc_standard;
+  if (nonUndefinedOrNull(icrc_standard)) return icrc_standard;
 
   const dip20_standard = await getDIP20Standard(canisterId);
-  if (nonNullArgs(dip20_standard)) return dip20_standard;
+  if (nonUndefinedOrNull(dip20_standard)) return dip20_standard;
 
   const ext_standard = await getExtStandard(canisterId);
-  if (nonNullArgs(ext_standard)) return ext_standard;
+  if (nonUndefinedOrNull(ext_standard)) return ext_standard;
 
   return undefined;
 }

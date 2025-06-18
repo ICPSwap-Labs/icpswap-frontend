@@ -1,5 +1,5 @@
 import { Null } from "@icpswap/types";
-import { isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 
 interface TokenSymbolEllipsisProps {
   symbol: string | Null;
@@ -10,11 +10,11 @@ interface TokenSymbolEllipsisProps {
 export function tokenSymbolEllipsis({ symbol, symbolLength = 10, windowScreenWith }: TokenSymbolEllipsisProps) {
   const mq = window.matchMedia(`(max-width: ${windowScreenWith}px)`);
 
-  if (isNullArgs(symbol)) return "";
+  if (isUndefinedOrNull(symbol)) return "";
 
   const ellipsisSymbol = symbol.length > 10 ? `${symbol.slice(0, symbolLength)}...` : symbol;
 
-  if (nonNullArgs(windowScreenWith) && mq) {
+  if (nonUndefinedOrNull(windowScreenWith) && mq) {
     return ellipsisSymbol;
   }
 

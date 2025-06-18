@@ -1,6 +1,6 @@
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { SAFE_INTEGER_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { toBase64 } from "@slide-computer/signer";
 import { Null } from "@icpswap/types";
 
@@ -44,7 +44,7 @@ export function inputNumberCheck(num: string | number): boolean {
 }
 
 export function getTokenBalanceKey(canisterId: string | Null, address: string | Null, sub?: Uint8Array) {
-  if (isNullArgs(canisterId) || isNullArgs(address)) return undefined;
+  if (isUndefinedOrNull(canisterId) || isUndefinedOrNull(address)) return undefined;
   return `${canisterId}_${address}${sub ? `_${toBase64(sub)}` : ""}`;
 }
 

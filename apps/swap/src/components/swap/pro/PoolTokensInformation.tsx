@@ -3,7 +3,7 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { LoadingRow } from "@icpswap/ui";
 import { SwapContext } from "components/swap/index";
 import { ICP } from "@icpswap/tokens";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { SwapProCardWrapper } from "./SwapProWrapper";
 import { TokenInformation } from "./TokenInformation";
 
@@ -20,7 +20,7 @@ export function PoolTokensInformation() {
   }, [inputToken, outputToken]);
 
   const token = useMemo(() => {
-    if (isNullArgs(inputToken) || isNullArgs(outputToken)) return undefined;
+    if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return undefined;
     if (tokensShowInformation.length === 1) return tokensShowInformation[0];
     return inverted ? inputToken : outputToken;
   }, [inputToken, outputToken, inverted, tokensShowInformation]);
