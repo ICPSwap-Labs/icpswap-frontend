@@ -24,6 +24,7 @@ import { useGlobalContext, useRefreshTrigger, useSwapNoLiquidityManager } from "
 import { useTranslation } from "react-i18next";
 import { useSwapCallback } from "hooks/swap/useSwapCallback";
 import { SwapSuccessModal } from "components/swap/SwapSuccessModal";
+import { TokenOutOfCycles } from "components/swap/TokenOutOfCycles";
 
 export interface SwapWrapperRef {
   setInputAmount: (amount: string) => void;
@@ -49,6 +50,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [swapLoading, setSwapLoading] = useState(false);
   const [swapSuccessModalShow, setSwapSuccessModalShow] = useState(false);
+  const [outOfCyclesChecked, setOutOfCyclesChecked] = useState<boolean | undefined>(undefined);
 
   useLoadDefaultParams();
 
@@ -187,6 +189,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const handleSwapConfirm = useCallback(async () => {
     if (
       (exceedImpact && !impactChecked) ||
+      outOfCyclesChecked === false ||
       swapLoading ||
       !trade ||
       isUndefinedOrNull(inputTokenSubBalance) ||
@@ -239,6 +242,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   }, [
     exceedImpact,
     impactChecked,
+    outOfCyclesChecked,
     swapLoading,
     setSwapLoading,
     trade,
@@ -335,12 +339,30 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
 
       <Impact showImpact={exceedImpact} onCheckChange={(checked) => setImpactChecked(checked)} />
 
+      <TokenOutOfCycles
+        inputToken={inputToken}
+        outputToken={outputToken}
+        onCheckChange={(checked) => setOutOfCyclesChecked(checked)}
+        updateTokensOutOfCycles={(tokenIds: string[]) => {
+          if (tokenIds.length > 0) {
+            setOutOfCyclesChecked(false);
+          }
+        }}
+      />
+
       <AuthButton
         fullWidth
         variant="contained"
         size="large"
         onClick={handleSwap}
-        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (exceedImpact && !impactChecked) || !trade}
+        disabled={
+          !isValid ||
+          priceImpactTooHigh ||
+          isPoolNotChecked ||
+          (exceedImpact && !impactChecked) ||
+          !trade ||
+          outOfCyclesChecked === false
+        }
         sx={{
           borderRadius: "16px",
         }}

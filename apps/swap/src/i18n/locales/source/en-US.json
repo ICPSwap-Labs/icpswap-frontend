@@ -757,6 +757,7 @@
   "common.price.range": "Price range",
   "limit.confirm.description2": "There might be a situation where swap price reaches your limit order price but doesn’t get executed. For example, a swap order (buying or selling) could hit your limit order price, but the swap volume might not be enough to fill your limit order.",
   "swap.price.impact.high.descriptions": "Price impact is too high. You would lose a significant portion of your funds in this trade. Please confirm if you wish to proceed with the swap.",
+  "swap.token.out.of.cycles": "{{symbol}} token is out of cycles! DO NOT Trade — your tokens will get stuck! Please confirm if you wish to proceed with the swap.",
   "YP76+u": "Principal ID (PID): Your unique wallet identifier, similar to an Ethereum wallet address. It supports ICRC and DIP20 standards token transfers and transactions.",
   "common.price.change": "Price change",
   "YaEq2L": "Royalties fee settle error",
