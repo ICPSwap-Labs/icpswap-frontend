@@ -18,7 +18,11 @@ const useStyles = makeStyles((theme: Theme) => {
       lineHeight: "20px",
       fontSize: "12px",
       wordBreak: "break-all",
-      ...theme.mixins.overflowEllipsis2,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      display: "-webkit-box",
+      "-webkit-box-orient": "vertical",
+      "-webkit-line-clamp": 2,
     },
     positionSVG: {
       "& svg": {

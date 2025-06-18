@@ -20,8 +20,8 @@ export const idlFactory = ({ IDL }: any) => {
     limit: IDL.Nat,
     totalElements: IDL.Nat,
   });
-  const Result_30 = IDL.Variant({ ok: Page_5, err: Error });
-  const Result_29 = IDL.Variant({
+  const Result_31 = IDL.Variant({ ok: Page_5, err: Error });
+  const Result_30 = IDL.Variant({
     ok: IDL.Record({
       tokenIncome: IDL.Vec(IDL.Tuple(IDL.Nat, IDL.Record({ tokensOwed0: IDL.Nat, tokensOwed1: IDL.Nat }))),
       totalTokensOwed0: IDL.Nat,
@@ -30,7 +30,7 @@ export const idlFactory = ({ IDL }: any) => {
     err: Error,
   });
   const ClaimArgs = IDL.Record({ positionId: IDL.Nat });
-  const Result_28 = IDL.Variant({
+  const Result_29 = IDL.Variant({
     ok: IDL.Record({ amount0: IDL.Nat, amount1: IDL.Nat }),
     err: Error,
   });
@@ -55,9 +55,16 @@ export const idlFactory = ({ IDL }: any) => {
     amount1Desired: IDL.Text,
     tickLower: IDL.Int,
   });
+  const DepositAndSwapArgs = IDL.Record({
+    tokenInFee: IDL.Nat,
+    amountIn: IDL.Text,
+    zeroForOne: IDL.Bool,
+    amountOutMinimum: IDL.Text,
+    tokenOutFee: IDL.Nat,
+  });
   const CycleInfo = IDL.Record({ balance: IDL.Nat, available: IDL.Nat });
-  const Result_27 = IDL.Variant({ ok: CycleInfo, err: Error });
-  const Result_26 = IDL.Variant({
+  const Result_28 = IDL.Variant({ ok: CycleInfo, err: Error });
+  const Result_27 = IDL.Variant({
     ok: IDL.Record({
       feeGrowthGlobal1X128: IDL.Nat,
       feeGrowthGlobal0X128: IDL.Nat,
@@ -65,7 +72,7 @@ export const idlFactory = ({ IDL }: any) => {
     err: Error,
   });
   const Token = IDL.Record({ address: IDL.Text, standard: IDL.Text });
-  const Result_25 = IDL.Variant({
+  const Result_26 = IDL.Variant({
     ok: IDL.Record({
       infoCid: IDL.Principal,
       trustedCanisterManagerCid: IDL.Principal,
@@ -74,6 +81,18 @@ export const idlFactory = ({ IDL }: any) => {
       feeReceiverCid: IDL.Principal,
     }),
     err: Error,
+  });
+  const Time = IDL.Int;
+  const JobInfo = IDL.Record({
+    interval: IDL.Nat,
+    name: IDL.Text,
+    lastRun: Time,
+    timerId: IDL.Opt(IDL.Nat),
+  });
+  const Level = IDL.Variant({ Inactive: IDL.Null, Active: IDL.Null });
+  const LimitOrderType = IDL.Variant({
+    Lower: IDL.Null,
+    Upper: IDL.Null,
   });
   const LimitOrderKey = IDL.Record({
     timestamp: IDL.Nat,
@@ -85,11 +104,11 @@ export const idlFactory = ({ IDL }: any) => {
     owner: IDL.Principal,
     token1InAmount: IDL.Nat,
   });
-  const Result_24 = IDL.Variant({
-    ok: IDL.Vec(IDL.Tuple(LimitOrderKey, LimitOrderValue)),
+  const Result_25 = IDL.Variant({
+    ok: IDL.Vec(IDL.Tuple(LimitOrderType, LimitOrderKey, LimitOrderValue)),
     err: Error,
   });
-  const Result_23 = IDL.Variant({
+  const Result_24 = IDL.Variant({
     ok: IDL.Record({
       lowerLimitOrders: IDL.Vec(IDL.Tuple(LimitOrderKey, LimitOrderValue)),
       upperLimitOrders: IDL.Vec(IDL.Tuple(LimitOrderKey, LimitOrderValue)),
@@ -107,7 +126,7 @@ export const idlFactory = ({ IDL }: any) => {
     liquidity: IDL.Nat,
     feeGrowthInside0LastX128: IDL.Nat,
   });
-  const Result_22 = IDL.Variant({ ok: PositionInfo, err: Error });
+  const Result_23 = IDL.Variant({ ok: PositionInfo, err: Error });
   const PositionInfoWithId = IDL.Record({
     id: IDL.Text,
     tokensOwed0: IDL.Nat,
@@ -122,8 +141,8 @@ export const idlFactory = ({ IDL }: any) => {
     limit: IDL.Nat,
     totalElements: IDL.Nat,
   });
-  const Result_21 = IDL.Variant({ ok: Page_4, err: Error });
-  const Result_20 = IDL.Variant({
+  const Result_22 = IDL.Variant({ ok: Page_4, err: Error });
+  const Result_21 = IDL.Variant({
     ok: IDL.Vec(
       IDL.Record({
         userPositionId: IDL.Nat,
@@ -135,48 +154,203 @@ export const idlFactory = ({ IDL }: any) => {
     ),
     err: Error,
   });
-  const TransactionType = IDL.Variant({
-    decreaseLiquidity: IDL.Null,
-    limitOrder: IDL.Record({
-      token0InAmount: IDL.Nat,
-      positionId: IDL.Nat,
-      token1InAmount: IDL.Nat,
-    }),
-    claim: IDL.Null,
-    swap: IDL.Null,
-    addLiquidity: IDL.Null,
-    transferPosition: IDL.Nat,
-    increaseLiquidity: IDL.Null,
+  const Error__1 = IDL.Text;
+  const WithdrawStatus = IDL.Variant({
+    Failed: IDL.Null,
+    CreditCompleted: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const Account = IDL.Record({
+    owner: IDL.Principal,
+    subaccount: IDL.Opt(IDL.Vec(IDL.Nat8)),
+  });
+  const Transfer = IDL.Record({
+    to: Account,
+    fee: IDL.Nat,
+    token: IDL.Principal,
+    from: Account,
+    memo: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    index: IDL.Nat,
+    amount: IDL.Nat,
+  });
+  const WithdrawInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: WithdrawStatus,
+    transfer: Transfer,
+  });
+  const RemoveLimitOrderStatus = IDL.Variant({
+    Failed: IDL.Null,
+    RemoveLimitOrderCompleted: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const RemoveLimitOrderInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: RemoveLimitOrderStatus,
+    positionId: IDL.Nat,
+  });
+  const AddLiquidityStatus = IDL.Variant({
+    Failed: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const AddLiquidityInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: AddLiquidityStatus,
+    liquidity: IDL.Nat,
+    positionId: IDL.Nat,
+    amount0: IDL.Nat,
+    amount1: IDL.Nat,
+    token0: IDL.Principal,
+    token1: IDL.Principal,
+  });
+  const OneStepSwapStatus = IDL.Variant({
+    SwapCompleted: IDL.Null,
+    Failed: IDL.Null,
+    PreSwapCompleted: IDL.Null,
+    DepositCreditCompleted: IDL.Null,
+    DepositTransferCompleted: IDL.Null,
+    Created: IDL.Null,
+    WithdrawCreditCompleted: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const SwapStatus = IDL.Variant({
+    Failed: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const Amount = IDL.Nat;
+  const SwapInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: SwapStatus,
+    tokenIn: IDL.Principal,
+    tokenOut: IDL.Principal,
+    amountIn: Amount,
+    amountOut: IDL.Nat,
+  });
+  const DepositStatus = IDL.Variant({
+    Failed: IDL.Null,
+    TransferCompleted: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const DepositInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: DepositStatus,
+    transfer: Transfer,
+  });
+  const OneStepSwapInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: OneStepSwapStatus,
+    withdraw: WithdrawInfo,
+    swap: SwapInfo,
+    deposit: DepositInfo,
+  });
+  const RefundStatus = IDL.Variant({
+    Failed: IDL.Null,
+    CreditCompleted: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const RefundInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: RefundStatus,
+    failedIndex: IDL.Nat,
+    transfer: Transfer,
+  });
+  const ExecuteLimitOrderStatus = IDL.Variant({
+    Failed: IDL.Null,
+    ExecuteLimitOrderCompleted: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const ExecuteLimitOrderInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: ExecuteLimitOrderStatus,
+    positionId: IDL.Nat,
+  });
+  const TransferPositionStatus = IDL.Variant({
+    Failed: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const TransferPositionInfo = IDL.Record({
+    to: Account,
+    err: IDL.Opt(Error__1),
+    status: TransferPositionStatus,
+    from: Account,
+    positionId: IDL.Nat,
+  });
+  const DecreaseLiquidityStatus = IDL.Variant({
+    Failed: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const DecreaseLiquidityInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: DecreaseLiquidityStatus,
+    liquidity: IDL.Nat,
+    positionId: IDL.Nat,
+    amount0: IDL.Nat,
+    amount1: IDL.Nat,
+    token0: IDL.Principal,
+    token1: IDL.Principal,
+  });
+  const ClaimStatus = IDL.Variant({
+    Failed: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const ClaimInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: ClaimStatus,
+    positionId: IDL.Nat,
+    amount0: IDL.Nat,
+    amount1: IDL.Nat,
+    token0: IDL.Principal,
+    token1: IDL.Principal,
+  });
+  const AddLimitOrderStatus = IDL.Variant({
+    Failed: IDL.Null,
+    Created: IDL.Null,
+    Completed: IDL.Null,
+  });
+  const AddLimitOrderInfo = IDL.Record({
+    err: IDL.Opt(Error__1),
+    status: AddLimitOrderStatus,
+    positionId: IDL.Nat,
+  });
+  const Action = IDL.Variant({
+    Withdraw: WithdrawInfo,
+    RemoveLimitOrder: RemoveLimitOrderInfo,
+    AddLiquidity: AddLiquidityInfo,
+    OneStepSwap: OneStepSwapInfo,
+    Deposit: DepositInfo,
+    Refund: RefundInfo,
+    Swap: SwapInfo,
+    ExecuteLimitOrder: ExecuteLimitOrderInfo,
+    TransferPosition: TransferPositionInfo,
+    DecreaseLiquidity: DecreaseLiquidityInfo,
+    Claim: ClaimInfo,
+    AddLimitOrder: AddLimitOrderInfo,
+  });
+  const Transaction__1 = IDL.Record({
+    id: IDL.Nat,
+    action: Action,
+    owner: IDL.Principal,
+    timestamp: Time,
+    canisterId: IDL.Principal,
   });
   const SwapRecordInfo = IDL.Record({
-    to: IDL.Text,
-    feeAmount: IDL.Int,
-    action: TransactionType,
-    feeAmountTotal: IDL.Int,
-    token0Id: IDL.Text,
-    token1Id: IDL.Text,
-    token0AmountTotal: IDL.Nat,
-    liquidityTotal: IDL.Nat,
-    from: IDL.Text,
-    tick: IDL.Int,
-    feeTire: IDL.Nat,
-    recipient: IDL.Text,
-    token0ChangeAmount: IDL.Nat,
-    token1AmountTotal: IDL.Nat,
-    liquidityChange: IDL.Nat,
-    token1Standard: IDL.Text,
-    TVLToken0: IDL.Int,
-    TVLToken1: IDL.Int,
-    token0Fee: IDL.Nat,
-    token1Fee: IDL.Nat,
-    timestamp: IDL.Int,
-    token1ChangeAmount: IDL.Nat,
-    token0Standard: IDL.Text,
-    price: IDL.Nat,
+    currentLiquidity: IDL.Nat,
+    currentSqrtPriceX96: IDL.Nat,
+    currentTick: IDL.Int,
+    txInfo: Transaction__1,
     poolId: IDL.Text,
   });
   const PushError = IDL.Record({ time: IDL.Int, message: IDL.Text });
-  const Result_19 = IDL.Variant({
+  const Result_20 = IDL.Variant({
     ok: IDL.Record({
       infoCid: IDL.Text,
       records: IDL.Vec(SwapRecordInfo),
@@ -185,7 +359,7 @@ export const idlFactory = ({ IDL }: any) => {
     }),
     err: Error,
   });
-  const Result_18 = IDL.Variant({
+  const Result_19 = IDL.Variant({
     ok: IDL.Vec(IDL.Tuple(IDL.Int, IDL.Nat)),
     err: Error,
   });
@@ -204,7 +378,7 @@ export const idlFactory = ({ IDL }: any) => {
     limit: IDL.Nat,
     totalElements: IDL.Nat,
   });
-  const Result_17 = IDL.Variant({ ok: Page_3, err: Error });
+  const Result_18 = IDL.Variant({ ok: Page_3, err: Error });
   const TickInfoWithId = IDL.Record({
     id: IDL.Text,
     initialized: IDL.Bool,
@@ -222,8 +396,8 @@ export const idlFactory = ({ IDL }: any) => {
     limit: IDL.Nat,
     totalElements: IDL.Nat,
   });
-  const Result_16 = IDL.Variant({ ok: Page_2, err: Error });
-  const Result_15 = IDL.Variant({
+  const Result_17 = IDL.Variant({ ok: Page_2, err: Error });
+  const Result_16 = IDL.Variant({
     ok: IDL.Record({
       swapFee0Repurchase: IDL.Nat,
       token0Amount: IDL.Nat,
@@ -239,25 +413,19 @@ export const idlFactory = ({ IDL }: any) => {
     Blob: IDL.Vec(IDL.Nat8),
     Text: IDL.Text,
   });
-  const TransferLog = IDL.Record({
-    to: IDL.Principal,
-    fee: IDL.Nat,
-    result: IDL.Text,
-    token: Token,
-    action: IDL.Text,
-    daysFrom19700101: IDL.Nat,
+  const Transaction = IDL.Record({
+    id: IDL.Nat,
+    action: Action,
     owner: IDL.Principal,
-    from: IDL.Principal,
-    fromSubaccount: IDL.Opt(IDL.Vec(IDL.Nat8)),
-    timestamp: IDL.Nat,
-    index: IDL.Nat,
-    amount: IDL.Nat,
-    errorMsg: IDL.Text,
-    toSubaccount: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    timestamp: Time,
+    canisterId: IDL.Principal,
   });
-  const Result_14 = IDL.Variant({ ok: IDL.Vec(TransferLog), err: Error });
+  const Result_15 = IDL.Variant({
+    ok: IDL.Vec(IDL.Tuple(IDL.Nat, Transaction)),
+    err: Error,
+  });
   const Result_1 = IDL.Variant({ ok: IDL.Text, err: Error });
-  const Result_13 = IDL.Variant({
+  const Result_14 = IDL.Variant({
     ok: IDL.Record({
       upperLimitOrdersIds: IDL.Vec(IDL.Record({ userPositionId: IDL.Nat, timestamp: IDL.Nat })),
       lowerLimitOrderIds: IDL.Vec(IDL.Record({ userPositionId: IDL.Nat, timestamp: IDL.Nat })),
@@ -273,12 +441,12 @@ export const idlFactory = ({ IDL }: any) => {
     feeGrowthInside0LastX128: IDL.Nat,
     tickLower: IDL.Int,
   });
-  const Result_12 = IDL.Variant({ ok: UserPositionInfo, err: Error });
-  const Result_11 = IDL.Variant({
+  const Result_13 = IDL.Variant({ ok: UserPositionInfo, err: Error });
+  const Result_12 = IDL.Variant({
     ok: IDL.Vec(IDL.Tuple(IDL.Text, IDL.Vec(IDL.Nat))),
     err: Error,
   });
-  const Result_10 = IDL.Variant({ ok: IDL.Vec(IDL.Nat), err: Error });
+  const Result_11 = IDL.Variant({ ok: IDL.Vec(IDL.Nat), err: Error });
   const UserPositionInfoWithTokenAmount = IDL.Record({
     id: IDL.Nat,
     tickUpper: IDL.Int,
@@ -297,7 +465,7 @@ export const idlFactory = ({ IDL }: any) => {
     limit: IDL.Nat,
     totalElements: IDL.Nat,
   });
-  const Result_9 = IDL.Variant({ ok: Page_1, err: Error });
+  const Result_10 = IDL.Variant({ ok: Page_1, err: Error });
   const UserPositionInfoWithId = IDL.Record({
     id: IDL.Nat,
     tickUpper: IDL.Int,
@@ -314,12 +482,12 @@ export const idlFactory = ({ IDL }: any) => {
     limit: IDL.Nat,
     totalElements: IDL.Nat,
   });
-  const Result_8 = IDL.Variant({ ok: Page, err: Error });
-  const Result_7 = IDL.Variant({
+  const Result_9 = IDL.Variant({ ok: Page, err: Error });
+  const Result_8 = IDL.Variant({
     ok: IDL.Vec(UserPositionInfoWithId),
     err: Error,
   });
-  const Result_6 = IDL.Variant({
+  const Result_7 = IDL.Variant({
     ok: IDL.Record({ balance0: IDL.Nat, balance1: IDL.Nat }),
     err: Error,
   });
@@ -387,7 +555,7 @@ export const idlFactory = ({ IDL }: any) => {
     maxLiquidityPerTick: IDL.Nat,
     nextPositionId: IDL.Nat,
   });
-  const Result_5 = IDL.Variant({ ok: PoolMetadata, err: Error });
+  const Result_6 = IDL.Variant({ ok: PoolMetadata, err: Error });
   const MintArgs = IDL.Record({
     fee: IDL.Nat,
     tickUpper: IDL.Int,
@@ -402,10 +570,11 @@ export const idlFactory = ({ IDL }: any) => {
     zeroForOne: IDL.Bool,
     amountOutMinimum: IDL.Text,
   });
-  const Result_4 = IDL.Variant({
+  const Result_5 = IDL.Variant({
     ok: IDL.Record({ tokensOwed0: IDL.Nat, tokensOwed1: IDL.Nat }),
     err: Error,
   });
+  const Result_4 = IDL.Variant({ ok: IDL.Bool, err: IDL.Null });
   const Result_3 = IDL.Variant({ ok: IDL.Int, err: Error });
   const WithdrawArgs = IDL.Record({
     fee: IDL.Nat,
@@ -419,16 +588,20 @@ export const idlFactory = ({ IDL }: any) => {
     amount: IDL.Nat,
   });
   return IDL.Service({
+    activeJobs: IDL.Func([], [], []),
     addLimitOrder: IDL.Func([LimitOrderArgs], [Result_2], []),
-    allTokenBalance: IDL.Func([IDL.Nat, IDL.Nat], [Result_30], ["query"]),
+    allTokenBalance: IDL.Func([IDL.Nat, IDL.Nat], [Result_31], ["query"]),
     approvePosition: IDL.Func([IDL.Principal, IDL.Nat], [Result_2], []),
-    batchRefreshIncome: IDL.Func([IDL.Vec(IDL.Nat)], [Result_29], ["query"]),
+    batchRefreshIncome: IDL.Func([IDL.Vec(IDL.Nat)], [Result_30], ["query"]),
     checkOwnerOfUserPosition: IDL.Func([IDL.Principal, IDL.Nat], [Result_2], ["query"]),
-    claim: IDL.Func([ClaimArgs], [Result_28], []),
-    decreaseLiquidity: IDL.Func([DecreaseLiquidityArgs], [Result_28], []),
+    claim: IDL.Func([ClaimArgs], [Result_29], []),
+    decreaseLiquidity: IDL.Func([DecreaseLiquidityArgs], [Result_29], []),
+    deleteFailedTransaction: IDL.Func([IDL.Nat, IDL.Bool], [Result_2], []),
     deposit: IDL.Func([DepositArgs], [Result], []),
     depositAllAndMint: IDL.Func([DepositAndMintArgs], [Result], []),
+    depositAndSwap: IDL.Func([DepositAndSwapArgs], [Result], []),
     depositFrom: IDL.Func([DepositArgs], [Result], []),
+    depositFromAndSwap: IDL.Func([DepositAndSwapArgs], [Result], []),
     getAdmins: IDL.Func([], [IDL.Vec(IDL.Principal)], ["query"]),
     getAvailabilityState: IDL.Func(
       [],
@@ -441,21 +614,22 @@ export const idlFactory = ({ IDL }: any) => {
       ["query"],
     ),
     getClaimLog: IDL.Func([], [IDL.Vec(IDL.Text)], ["query"]),
-    getCycleInfo: IDL.Func([], [Result_27], []),
-    getFeeGrowthGlobal: IDL.Func([], [Result_26], ["query"]),
-    getInitArgs: IDL.Func([], [Result_25], ["query"]),
+    getCycleInfo: IDL.Func([], [Result_28], []),
+    getFeeGrowthGlobal: IDL.Func([], [Result_27], ["query"]),
+    getInitArgs: IDL.Func([], [Result_26], ["query"]),
+    getJobs: IDL.Func([], [IDL.Record({ jobs: IDL.Vec(JobInfo), level: Level })], ["query"]),
     getLimitOrderAvailabilityState: IDL.Func([], [Result_2], ["query"]),
-    getLimitOrderStack: IDL.Func([], [Result_24], ["query"]),
-    getLimitOrders: IDL.Func([], [Result_23], ["query"]),
+    getLimitOrderStack: IDL.Func([], [Result_25], ["query"]),
+    getLimitOrders: IDL.Func([], [Result_24], ["query"]),
     getMistransferBalance: IDL.Func([Token], [Result], []),
-    getPosition: IDL.Func([GetPositionArgs], [Result_22], ["query"]),
-    getPositions: IDL.Func([IDL.Nat, IDL.Nat], [Result_21], ["query"]),
-    getSortedUserLimitOrders: IDL.Func([IDL.Principal], [Result_20], ["query"]),
-    getSwapRecordState: IDL.Func([], [Result_19], ["query"]),
-    getTickBitmaps: IDL.Func([], [Result_18], ["query"]),
-    getTickInfos: IDL.Func([IDL.Nat, IDL.Nat], [Result_17], ["query"]),
-    getTicks: IDL.Func([IDL.Nat, IDL.Nat], [Result_16], ["query"]),
-    getTokenAmountState: IDL.Func([], [Result_15], ["query"]),
+    getPosition: IDL.Func([GetPositionArgs], [Result_23], ["query"]),
+    getPositions: IDL.Func([IDL.Nat, IDL.Nat], [Result_22], ["query"]),
+    getSortedUserLimitOrders: IDL.Func([IDL.Principal], [Result_21], ["query"]),
+    getSwapRecordState: IDL.Func([], [Result_20], ["query"]),
+    getTickBitmaps: IDL.Func([], [Result_19], ["query"]),
+    getTickInfos: IDL.Func([IDL.Nat, IDL.Nat], [Result_18], ["query"]),
+    getTicks: IDL.Func([IDL.Nat, IDL.Nat], [Result_17], ["query"]),
+    getTokenAmountState: IDL.Func([], [Result_16], ["query"]),
     getTokenBalance: IDL.Func([], [IDL.Record({ token0: IDL.Nat, token1: IDL.Nat })], []),
     getTokenMeta: IDL.Func(
       [],
@@ -463,39 +637,41 @@ export const idlFactory = ({ IDL }: any) => {
         IDL.Record({
           token0: IDL.Vec(IDL.Tuple(IDL.Text, Value)),
           token1: IDL.Vec(IDL.Tuple(IDL.Text, Value)),
-          token0Fee: IDL.Opt(IDL.Nat),
-          token1Fee: IDL.Opt(IDL.Nat),
+          token0Fee: IDL.Nat,
+          token1Fee: IDL.Nat,
         }),
       ],
       [],
     ),
-    getTransferLogs: IDL.Func([], [Result_14], ["query"]),
+    getTransactions: IDL.Func([], [Result_15], ["query"]),
     getUserByPositionId: IDL.Func([IDL.Nat], [Result_1], ["query"]),
-    getUserLimitOrders: IDL.Func([IDL.Principal], [Result_13], ["query"]),
-    getUserPosition: IDL.Func([IDL.Nat], [Result_12], ["query"]),
-    getUserPositionIds: IDL.Func([], [Result_11], ["query"]),
-    getUserPositionIdsByPrincipal: IDL.Func([IDL.Principal], [Result_10], ["query"]),
-    getUserPositionWithTokenAmount: IDL.Func([IDL.Nat, IDL.Nat], [Result_9], ["query"]),
-    getUserPositions: IDL.Func([IDL.Nat, IDL.Nat], [Result_8], ["query"]),
-    getUserPositionsByPrincipal: IDL.Func([IDL.Principal], [Result_7], ["query"]),
-    getUserUnusedBalance: IDL.Func([IDL.Principal], [Result_6], ["query"]),
+    getUserLimitOrders: IDL.Func([IDL.Principal], [Result_14], ["query"]),
+    getUserPosition: IDL.Func([IDL.Nat], [Result_13], ["query"]),
+    getUserPositionIds: IDL.Func([], [Result_12], ["query"]),
+    getUserPositionIdsByPrincipal: IDL.Func([IDL.Principal], [Result_11], ["query"]),
+    getUserPositionWithTokenAmount: IDL.Func([IDL.Nat, IDL.Nat], [Result_10], ["query"]),
+    getUserPositions: IDL.Func([IDL.Nat, IDL.Nat], [Result_9], ["query"]),
+    getUserPositionsByPrincipal: IDL.Func([IDL.Principal], [Result_8], ["query"]),
+    getUserUnusedBalance: IDL.Func([IDL.Principal], [Result_7], ["query"]),
     getVersion: IDL.Func([], [IDL.Text], ["query"]),
     icrc10_supported_standards: IDL.Func([], [IDL.Vec(IDL.Record({ url: IDL.Text, name: IDL.Text }))], ["query"]),
     icrc21_canister_call_consent_message: IDL.Func([Icrc21ConsentMessageRequest], [Icrc21ConsentMessageResponse], []),
     icrc28_trusted_origins: IDL.Func([], [Icrc28TrustedOriginsResponse], []),
     increaseLiquidity: IDL.Func([IncreaseLiquidityArgs], [Result], []),
     init: IDL.Func([IDL.Nat, IDL.Int, IDL.Nat], [], []),
-    metadata: IDL.Func([], [Result_5], ["query"]),
+    metadata: IDL.Func([], [Result_6], ["query"]),
     mint: IDL.Func([MintArgs], [Result], []),
     quote: IDL.Func([SwapArgs], [Result], ["query"]),
     quoteForAll: IDL.Func([SwapArgs], [Result], ["query"]),
-    refreshIncome: IDL.Func([IDL.Nat], [Result_4], ["query"]),
-    removeErrorTransferLog: IDL.Func([IDL.Nat, IDL.Bool], [], []),
+    refreshIncome: IDL.Func([IDL.Nat], [Result_5], ["query"]),
     removeLimitOrder: IDL.Func([IDL.Nat], [Result_2], []),
+    restartJobs: IDL.Func([IDL.Vec(IDL.Text)], [], []),
     setAdmins: IDL.Func([IDL.Vec(IDL.Principal)], [], []),
     setAvailable: IDL.Func([IDL.Bool], [], []),
+    setIcrc28TrustedOrigins: IDL.Func([IDL.Vec(IDL.Text)], [Result_4], []),
     setLimitOrderAvailable: IDL.Func([IDL.Bool], [], []),
     setWhiteList: IDL.Func([IDL.Vec(IDL.Principal)], [], []),
+    stopJobs: IDL.Func([IDL.Vec(IDL.Text)], [], []),
     sumTick: IDL.Func([], [Result_3], ["query"]),
     swap: IDL.Func([SwapArgs], [Result], []),
     transferPosition: IDL.Func([IDL.Principal, IDL.Principal, IDL.Nat], [Result_2], []),

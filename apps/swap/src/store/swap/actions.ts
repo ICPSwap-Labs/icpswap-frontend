@@ -1,6 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
 import { SWAP_FIELD } from "constants/swap";
 import { type SwapPoolData } from "@icpswap/types";
+import { SwapFinalMetadata } from "types/swap";
 
 export const selectCurrency = createAction<{ field: SWAP_FIELD; currencyId: string | undefined }>(
   "swap/selectCurrency",
@@ -18,10 +19,6 @@ export const updatePoolCanisterIds = createAction<PoolCanisterRecord>("swapCache
 
 export const updateSwapOutAmount = createAction<{ key: string; value: bigint | undefined }>("swap/updateSwapOutAmount");
 
-export const updateDecreaseLiquidityAmount = createAction<{
-  key: string;
-  amount0: bigint | undefined;
-  amount1: bigint | undefined;
-}>("swap/updateDecreaseLiquidityAmount");
-
 export const updateAllSwapPools = createAction<SwapPoolData[]>("swap/updateAllSwapPools");
+
+export const updateSwapFinalMetadata = createAction<SwapFinalMetadata>("swap/updateSwapFinalMetadata");

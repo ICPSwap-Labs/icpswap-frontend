@@ -33,6 +33,7 @@ export type {
   PoolAPRs,
   TokenAnalysisData,
   PoolInstaller,
+  DepositAndSwapArgs,
 } from "@icpswap/candid";
 
 export type LimitOrder = {

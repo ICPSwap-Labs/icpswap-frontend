@@ -37,45 +37,44 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
         getAllTokenPools().catch(() => undefined),
         getAllClaimEvents().catch(() => undefined),
       ]).then(([allSwapPools, allTokenPools, allClaimEvents]) => {
-        const allTokenStandards: { canisterId: string; standard: TOKEN_STANDARD }[] = [];
+        const allTokenStandards: { [canisterId: string]: TOKEN_STANDARD } = {};
+
+        const pushStandard = (canisterId: string, standard: TOKEN_STANDARD) => {
+          if (allTokenStandards[canisterId]) {
+            if (allTokenStandards[canisterId] === TOKEN_STANDARD.ICRC1 && standard === TOKEN_STANDARD.ICRC2) {
+              allTokenStandards[canisterId] = TOKEN_STANDARD.ICRC2;
+            }
+          } else {
+            allTokenStandards[canisterId] = standard;
+          }
+        };
 
         allTokenPools?.forEach((pool) => {
-          allTokenStandards.push({
-            canisterId: pool.stakingToken.address,
-            standard: pool.stakingToken.standard as TOKEN_STANDARD,
-          });
-
-          allTokenStandards.push({
-            canisterId: pool.rewardToken.address,
-            standard: pool.rewardToken.standard as TOKEN_STANDARD,
-          });
+          pushStandard(pool.stakingToken.address, pool.stakingToken.standard as TOKEN_STANDARD);
+          pushStandard(pool.rewardToken.address, pool.rewardToken.standard as TOKEN_STANDARD);
         });
 
         allClaimEvents?.forEach((event) => {
-          allTokenStandards.push({
-            canisterId: event.tokenCid,
-            standard: event.tokenStandard as TOKEN_STANDARD,
-          });
+          pushStandard(event.tokenCid, event.tokenStandard as TOKEN_STANDARD);
         });
 
         allSwapPools?.forEach((pool) => {
-          allTokenStandards.push({
-            canisterId: pool.token0.address,
-            standard: pool.token0.standard as TOKEN_STANDARD,
-          });
+          pushStandard(pool.token0.address, pool.token0.standard as TOKEN_STANDARD);
 
-          allTokenStandards.push({
-            canisterId: pool.token1.address,
-            standard: pool.token1.standard as TOKEN_STANDARD,
-          });
+          pushStandard(pool.token1.address, pool.token1.standard as TOKEN_STANDARD);
 
           setAllPools(allSwapPools);
 
           updatePoolCanisterId({ key: pool.key, id: pool.canisterId.toString() });
         });
 
-        registerTokens(allTokenStandards);
-        updateTokenStandard(allTokenStandards);
+        const __allTokenStandards = Object.keys(allTokenStandards).map((canisterId) => ({
+          canisterId,
+          standard: allTokenStandards[canisterId],
+        }));
+
+        registerTokens(__allTokenStandards);
+        updateTokenStandard(__allTokenStandards);
         updateAllSwapPools(allSwapPools);
 
         const allCanisterIds = [
@@ -90,7 +89,7 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
         }, [] as string[]);
 
         updateCanisters(allCanisterIds);
-        updateTokens(allTokenStandards.map((e) => e.canisterId));
+        updateTokens(Object.keys(allTokenStandards));
 
         setUpdated(true);
       });

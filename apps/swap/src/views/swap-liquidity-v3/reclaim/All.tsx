@@ -150,7 +150,7 @@ export function ReclaimAll() {
       ) : null}
 
       <Box sx={{ margin: "20px 0 0 0" }}>
-        {no_data && loading === false ? <NoData /> : null}
+        {no_data && loading === false ? <NoData tip={t("swap.reclaim.empty")} /> : null}
 
         {filteredBalances.length > 0 ? (
           <Box

@@ -1,5 +1,6 @@
-import React, { useState, useMemo, useEffect, useContext } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Typography, Button, useMediaQuery, Box, useTheme } from "components/Mui";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/swap";
 import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import {
@@ -13,10 +14,12 @@ import {
 import { CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
 import { PositionState } from "utils/index";
 import { TokenImage } from "components/index";
-import { PositionContext, TransferPosition } from "components/swap/index";
+import { usePositionContext, TransferPosition } from "components/swap/index";
 import { isElement } from "react-is";
 import { Flex, Link } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
+import { RemoveAllLiquidity } from "components/liquidity/RemoveAllLiquidity";
+import { useRefreshTriggerManager } from "hooks";
 import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
 
 interface PositionDetailItemProps {
@@ -114,7 +117,9 @@ export function PositionDetails({
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [transferShow, setTransferShow] = useState(false);
 
-  const { setRefreshTrigger, setPositionFees } = useContext(PositionContext);
+  const { setPositionFees } = usePositionContext();
+
+  const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { token0, token1 } = position?.pool || {};
 
@@ -123,10 +128,6 @@ export function PositionDetails({
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked, isLimit]);
-
-  const handleTransferSuccess = () => {
-    setRefreshTrigger();
-  };
 
   const { amount0, amount1, value0, value1 } = useMemo(() => {
     if (!position || isNullArgs(token0USDPrice) || isNullArgs(token1USDPrice)) return {};
@@ -309,6 +310,12 @@ export function PositionDetails({
           </Flex>
 
           <Flex gap="17px" wrap="wrap" justify="flex-end">
+            <RemoveAllLiquidity
+              position={position}
+              positionId={positionId}
+              onDecreaseSuccess={() => setRefreshTrigger()}
+            />
+
             {farmId ? (
               <Link to={`/farm/details/${farmId}`}>
                 <Button variant="contained" className="secondary" size={matchDownSM ? "medium" : "large"}>
@@ -353,7 +360,7 @@ export function PositionDetails({
           position={position}
           positionId={positionId}
           onClose={() => setTransferShow(false)}
-          onTransferSuccess={handleTransferSuccess}
+          onTransferSuccess={() => setRefreshTrigger()}
         />
       ) : null}
 

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useContext, forwardRef, Ref, useImperativeHandle } from "react";
+import { useState, useCallback, useMemo, useEffect, forwardRef, Ref, useImperativeHandle } from "react";
 import { Box, Typography, CircularProgress } from "components/Mui";
 import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
 import { isNullArgs, BigNumber, getNumberDecimals } from "@icpswap/utils";
@@ -7,7 +7,6 @@ import { SAFE_DECIMALS_LENGTH } from "constants/index";
 import { useExpertModeManager } from "store/swap/cache/hooks";
 import { TradeState } from "hooks/swap/useTrade";
 import { maxAmountFormat } from "utils/swap/index";
-import { useSwapCallback } from "hooks/swap/useSwapCallback";
 import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
@@ -17,12 +16,14 @@ import { AuthButton } from "components/index";
 import { Flex, MainCard } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
-import { SwapInputWrapper, SwapConfirmModal, SwapContext, Impact } from "components/swap/index";
+import { SwapInputWrapper, SwapConfirmModal, Impact, useSwapContext } from "components/swap/index";
 import { useHistory } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
-import { useGlobalContext, useRefreshTrigger } from "hooks/index";
+import { useGlobalContext, useRefreshTrigger, useSwapNoLiquidityManager } from "hooks/index";
 import { useTranslation } from "react-i18next";
+import { useSwapCallback } from "hooks/swap/useSwapCallback";
+import { SwapSuccessModal } from "components/swap/SwapSuccessModal";
 
 export interface SwapWrapperRef {
   setInputAmount: (amount: string) => void;
@@ -38,8 +39,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [isExpertMode] = useExpertModeManager();
-  const { setPoolId, setSelectedPool, setCachedPool, setNoLiquidity, usdValueChange, setInputToken, setOutputToken } =
-    useContext(SwapContext);
+  const { setPoolId, setSelectedPool, setCachedPool, usdValueChange, setInputToken, setOutputToken } = useSwapContext();
   const { setRefreshTriggers } = useGlobalContext();
   const { onUserInput } = useSwapHandlers();
   const clearSwapState = useCleanSwapState();
@@ -48,6 +48,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const [impactChecked, setImpactChecked] = useState(false);
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [swapLoading, setSwapLoading] = useState(false);
+  const [swapSuccessModalShow, setSwapSuccessModalShow] = useState(false);
 
   useLoadDefaultParams();
 
@@ -94,20 +95,23 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const inputTokenPrice = useUSDPrice(inputToken);
   const outputTokenPrice = useUSDPrice(outputToken);
 
+  const { updateNoLiquidity } = useSwapNoLiquidityManager();
+
   // Set pool for Swap context
   useEffect(() => {
     const pool = routes[0]?.pools[0];
     setSelectedPool(pool);
 
     if (pool) {
-      setNoLiquidity(noLiquidity);
       setCachedPool(pool);
     }
+
+    updateNoLiquidity(noLiquidity);
 
     if (pool?.id) {
       setPoolId(pool.id);
     }
-  }, [routes, setSelectedPool, noLiquidity]);
+  }, [routes, setSelectedPool, noLiquidity, updateNoLiquidity]);
 
   // Set token for Swap context
   useEffect(() => {
@@ -178,7 +182,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     return getImpactConfirm(usdValueChange);
   }, [usdValueChange]);
 
-  const swapCallback = useSwapCallback();
+  const swapCallback = useSwapCallback({ inputToken, poolId, refresh: refreshTrigger });
 
   const handleSwapConfirm = useCallback(async () => {
     if (
@@ -225,13 +229,16 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     handleInput("", "input");
     handleInput("", "output");
 
-    await call();
+    const success = await call();
+
+    if (success) {
+      setSwapSuccessModalShow(true);
+    }
 
     closeLoadingTip(loadingKey);
   }, [
     exceedImpact,
     impactChecked,
-    swapCallback,
     swapLoading,
     setSwapLoading,
     trade,
@@ -239,6 +246,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     inputTokenUnusedBalance,
     setRefreshTriggers,
     inputTokenBalance,
+    swapCallback,
   ]);
 
   const handleMaxInput = useCallback(() => {
@@ -267,6 +275,10 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     }),
     [handleInput],
   );
+
+  const handleSwap = useCallback(() => {
+    setConfirmModalShow(true);
+  }, []);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "6px 0" : "6px 0" }}>
@@ -327,8 +339,8 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         fullWidth
         variant="contained"
         size="large"
-        onClick={() => setConfirmModalShow(true)}
-        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (exceedImpact && !impactChecked)}
+        onClick={handleSwap}
+        disabled={!isValid || priceImpactTooHigh || isPoolNotChecked || (exceedImpact && !impactChecked) || !trade}
         sx={{
           borderRadius: "16px",
         }}
@@ -360,6 +372,8 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
           inputTokenBalance={inputTokenBalance}
         />
       )}
+
+      <SwapSuccessModal open={swapSuccessModalShow} onClose={() => setSwapSuccessModalShow(false)} />
     </Box>
   );
 });

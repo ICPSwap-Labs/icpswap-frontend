@@ -1,8 +1,6 @@
 import { BigNumber } from "bignumber.js";
-import { Override, ActorIdentity, StatusResult, PaginationResult } from "@icpswap/types";
+import { ActorIdentity, StatusResult, PaginationResult } from "@icpswap/types";
 import { ActorSubclass } from "@dfinity/agent";
-import { Principal } from "@dfinity/principal";
-import type { TokenTransaction } from "@icpswap/types";
 import {
   TokenHolder,
   BalanceRequest as _BalanceRequest,
@@ -60,37 +58,7 @@ export type SetFeeResult = BaseTokenResult<boolean>;
 export type SetFeeToRequest = BaseTokenIdentityRequest<_SetFeeToRequest>;
 export type SetFeeToResult = BaseTokenResult<boolean>;
 
-export type TransactionRequest = BaseTokenRequest<
-  Override<
-    _TransactionRequest,
-    {
-      capId?: string;
-      getCapRootId?: (canisterId: string) => Promise<Principal>;
-      getCapUserTransactions?: (
-        canisterId: string,
-        principal: Principal,
-        witness: boolean,
-        offset: number,
-      ) => Promise<{
-        totalElements: number;
-        offset: number;
-        limit: number;
-        content: TokenTransaction[];
-      }>;
-      getCapTransactions?: (
-        canisterId: string,
-        witness: boolean,
-        offset: number,
-      ) => Promise<{
-        totalElements: number;
-        offset: number;
-        limit: number;
-        content: TokenTransaction[];
-      }>;
-      witness?: boolean;
-    }
-  >
->;
+export type TransactionRequest = BaseTokenRequest<_TransactionRequest>;
 export type TransactionResult = BaseTokenResult<PaginationResult<Transaction>>;
 
 export type ApproveRequest = BaseTokenIdentityRequest<TokenApproveRequest>;

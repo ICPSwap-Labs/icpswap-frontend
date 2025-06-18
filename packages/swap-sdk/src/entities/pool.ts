@@ -111,6 +111,16 @@ export class Pool {
   }
 
   /**
+   * Returns the token in pool,
+   * Ensure token standard compatibility with the pool by utilizing tokens within the pool.
+   * @param token The token to check
+   * @returns True if token is either token0 or token
+   */
+  public alignToken(token: Token): Token {
+    return token.equals(this.token0) ? this.token0 : this.token1;
+  }
+
+  /**
    * Returns the current mid price of the pool in terms of token0, i.e. the ratio of token1 over token0
    */
   public get token0Price(): Price<Token, Token> {

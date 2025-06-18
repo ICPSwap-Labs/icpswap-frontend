@@ -1,16 +1,12 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, formatAmount, formatTokenPrice, isNullArgs } from "@icpswap/utils";
-import { Flex, TextButton } from "@icpswap/ui";
+import { Flex } from "@icpswap/ui";
+import { BigNumber, formatAmount, formatTokenPrice } from "@icpswap/utils";
 import { LimitTransaction } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import dayjs from "dayjs";
-import { useToken } from "hooks/index";
-import { useUserUnusedBalance } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import { WithdrawTokens } from "components/swap/limit-order/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { useLimitHistory } from "hooks/swap/limit-order/useLimitHistory";
 
 export interface HistoryRowProps {
   transaction: LimitTransaction;
@@ -18,59 +14,16 @@ export interface HistoryRowProps {
 }
 
 export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
-  const { t } = useTranslation();
   const theme = useTheme();
-  const principal = useAccountPrincipal();
 
-  const [showWithdrawTokens, setShowWithdrawTokens] = useState(false);
   const [invertPrice, setInvertPrice] = useState(false);
-
-  const { result: unusedBalance } = useUserUnusedBalance(transaction.poolId, principal);
-
-  const { inputTokenId, outputTokenId, inputAmount, outputChangeAmount, inputChangeAmount } = useMemo(() => {
-    const inputTokenId = new BigNumber(transaction.token0InAmount).isEqualTo(0)
-      ? transaction.token1Id
-      : transaction.token0Id;
-
-    const outputTokenId = inputTokenId === transaction.token1Id ? transaction.token0Id : transaction.token1Id;
-    const inputAmount = inputTokenId === transaction.token1Id ? transaction.token1InAmount : transaction.token0InAmount;
-    const outputChangeAmount =
-      inputTokenId === transaction.token1Id ? transaction.token0ChangeAmount : transaction.token1ChangeAmount;
-    const inputChangeAmount =
-      inputTokenId === transaction.token1Id ? transaction.token1ChangeAmount : transaction.token0ChangeAmount;
-
-    return {
-      inputTokenId,
-      outputTokenId,
-      inputAmount,
-      outputChangeAmount,
-      inputChangeAmount,
-    };
-  }, [transaction]);
-
-  const [, inputToken] = useToken(inputTokenId);
-  const [, outputToken] = useToken(outputTokenId);
-
-  const limitPrice = useMemo(() => {
-    if (!outputToken) return undefined;
-    return new BigNumber(outputChangeAmount).dividedBy(inputAmount).toFixed(outputToken.decimals);
-  }, [outputChangeAmount, outputToken, inputAmount]);
+  const { inputAmount, inputToken, inputChangeAmount, outputChangeAmount, outputToken, limitPrice } = useLimitHistory({
+    transaction,
+  });
 
   const handleInvert = useCallback(() => {
     setInvertPrice(!invertPrice);
   }, [invertPrice, setInvertPrice]);
-
-  const disableWithdraw = useMemo(() => {
-    if (isNullArgs(unusedBalance) || isNullArgs(inputToken) || isNullArgs(outputToken)) return true;
-
-    const token0 = inputToken.sortsBefore(outputToken) ? inputToken : outputToken;
-    const token1 = inputToken.sortsBefore(outputToken) ? outputToken : inputToken;
-
-    return (
-      !new BigNumber(unusedBalance.balance0.toString()).isGreaterThan(token0.transFee) &&
-      !new BigNumber(unusedBalance.balance1.toString()).isGreaterThan(token1.transFee)
-    );
-  }, [unusedBalance, inputToken, outputToken]);
 
   return (
     <>
@@ -141,21 +94,7 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
             )}
           </Typography>
         </Flex>
-
-        <Flex justify="flex-end">
-          <TextButton onClick={() => setShowWithdrawTokens(true)} disabled={disableWithdraw}>
-            {t("common.withdraw")}
-          </TextButton>
-        </Flex>
       </Box>
-
-      {showWithdrawTokens ? (
-        <WithdrawTokens
-          open={showWithdrawTokens}
-          onClose={() => setShowWithdrawTokens(false)}
-          transaction={transaction}
-        />
-      ) : null}
     </>
   );
 }

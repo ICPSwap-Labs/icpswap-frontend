@@ -11,6 +11,7 @@ export interface StepContent {
   skipError?: string;
   skipOk?: string;
   errorMessage?: string;
+  description?: ReactNode;
 }
 
 export type StepContents = Override<StepContent, { step: number }>;
@@ -22,12 +23,15 @@ export interface StepDetailsProps {
   content: StepContents[];
   activeStep: number;
   errorStep: number | undefined;
-  description?: string;
+  description?: ReactNode;
 }
+
+export type StepType = "swap";
 
 export interface StepDetails {
   title: ReactNode;
   onClose?: () => void;
   content: StepContents[];
   description?: string;
+  type?: StepType;
 }

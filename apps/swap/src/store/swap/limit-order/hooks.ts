@@ -5,8 +5,8 @@ import { useToken } from "hooks/useCurrency";
 import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
 import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { getTokenInsufficient, TokenInsufficient } from "hooks/swap/index";
 import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
-import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import { useUserUnusedBalance, useDebounce } from "@icpswap/hooks";
 import { formatTokenAmount, isNullArgs, BigNumber, nonNullArgs } from "@icpswap/utils";
@@ -45,20 +45,46 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     [SWAP_FIELD.OUTPUT]: outputCurrencyId,
   } = useSwapState();
 
-  const [inputCurrencyState, inputToken] = useToken(inputCurrencyId);
-  const [outputCurrencyState, outputToken] = useToken(outputCurrencyId);
+  const [inputCurrencyState, __inputToken] = useToken(inputCurrencyId);
+  const [outputCurrencyState, __outputToken] = useToken(outputCurrencyId);
   const inputCurrencyPrice = useUSDPriceById(inputCurrencyId);
 
   const isExactIn = independentField === SWAP_FIELD.INPUT;
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 
+  const otherCurrency = (isExactIn ? __outputToken : __inputToken) ?? undefined;
+
+  const [debouncedTypedValue] = useDebounce(
+    useMemo(() => [typedValue, otherCurrency], [typedValue, otherCurrency]),
+    600,
+  );
+
+  const Trade = useBestTrade(
+    __inputToken,
+    __outputToken,
+    !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
+  );
+
+  // Force to use token from pool, the token standard is using from pool metadata
+  const { poolId, pool, inputToken, outputToken } = useMemo(() => {
+    if (!Trade) return {};
+
+    const pool = Trade.pool;
+    const { token0, token1 } = pool ?? {};
+
+    const inputToken = __inputToken && __outputToken ? (token0?.equals(__inputToken) ? token0 : token1) : undefined;
+    const outputToken = __inputToken && __outputToken ? (token0?.equals(__inputToken) ? token1 : token0) : undefined;
+
+    return { poolId: pool?.id, pool, inputToken, outputToken };
+  }, [Trade, __inputToken, __outputToken]);
+
   const { result: inputCurrencyBalance } = useCurrencyBalance(principal, inputToken, refresh);
   const { result: outputCurrencyBalance } = useCurrencyBalance(principal, outputToken, refresh);
 
   const orderPrice = useMemo(() => {
-    if (!__orderPrice || !outputToken) return undefined;
-    return new BigNumber(__orderPrice).toFixed(outputToken.decimals).toString();
-  }, [__orderPrice, outputToken]);
+    if (!__orderPrice || !__outputToken) return undefined;
+    return new BigNumber(__orderPrice).toFixed(__outputToken.decimals).toString();
+  }, [__orderPrice, __outputToken]);
 
   const currencyBalances = {
     [SWAP_FIELD.INPUT]: inputCurrencyBalance,
@@ -95,7 +121,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     }
 
     return undefined;
-  }, [isExactIn, independentFieldAmount, orderPrice, outputToken]);
+  }, [isExactIn, independentFieldAmount, orderPrice, __inputToken, __outputToken]);
 
   const parsedAmounts = useMemo(
     () =>
@@ -104,27 +130,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
         [dependentField]: dependentFieldAmount,
       }) as { INPUT: CurrencyAmount<Token> | undefined; OUTPUT: CurrencyAmount<Token> | undefined },
     [independentField, independentFieldAmount],
-  );
-
-  const otherCurrency = (isExactIn ? outputToken : inputToken) ?? undefined;
-
-  const [debouncedTypedValue] = useDebounce(
-    useMemo(() => [typedValue, otherCurrency], [typedValue, otherCurrency]),
-    600,
-  );
-
-  const Trade = useBestTrade(
-    inputToken,
-    outputToken,
-    !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
-  );
-
-  const { pool, poolId } = useMemo(
-    () => ({
-      pool: Trade?.pool,
-      poolId: Trade?.pool?.id,
-    }),
-    [Trade],
   );
 
   const isInputTokenSorted = useMemo(() => {
@@ -305,7 +310,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
       return t("limit.error.amount.minimum");
     if (inputNumberCheck(inputSwapAmount) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
-    if (tokenInsufficient === "INSUFFICIENT") return `Insufficient ${inputToken?.symbol} balance`;
+    if (tokenInsufficient === TokenInsufficient.INSUFFICIENT) return `Insufficient ${inputToken?.symbol} balance`;
     if (isNullArgs(orderPrice) || orderPrice === "") return t`Enter the price`;
     if (new BigNumber(orderPrice).isEqualTo(0)) return t`Invalid price`;
     if (
@@ -363,8 +368,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     routes: Trade?.routes,
     noLiquidity: Trade?.noLiquidity,
     currencyBalances,
-    inputToken,
-    outputToken,
+    inputToken: __inputToken,
+    outputToken: __outputToken,
     inputCurrencyState,
     outputCurrencyState,
     inputTokenUnusedBalance,

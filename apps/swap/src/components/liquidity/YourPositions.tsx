@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Box } from "components/Mui";
 import { PositionCard } from "components/liquidity/index";
 import { usePosition } from "hooks/swap/usePosition";
@@ -7,12 +7,13 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
 import { PositionFilterState, PositionSort, UserPositionByList } from "types/swap";
 import { useInitialUserPositionPools } from "store/hooks";
-import { PositionContext } from "components/swap/index";
+import { usePositionContext } from "components/swap/index";
 import { useMultiplePositionsFee, useSortedPositions } from "hooks/swap/index";
 import { useAvailableFarmsForPool } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
 import { getPositionFeeKey } from "utils/swap";
 import { useRefreshTrigger } from "hooks/index";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { POSITIONS_FEES_REFRESH_KEY } from "constants/liquidity";
 import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
 
@@ -59,7 +60,8 @@ interface YourPositionsProps {
 export function YourPositions({ filterState, sort, hiddenNumbers }: YourPositionsProps) {
   const principal = useAccountPrincipalString();
 
-  const { refreshTrigger, setAllPositions, allPositionsUSDValue, positionFees } = useContext(PositionContext);
+  const refreshTrigger = useRefreshTrigger(LIQUIDITY_OWNER_REFRESH_KEY);
+  const { setAllPositions, allPositionsUSDValue, positionFees } = usePositionContext();
   const positionFeesRefreshTrigger = useRefreshTrigger(POSITIONS_FEES_REFRESH_KEY);
 
   const { loading: initialUserPositionPoolsLoading } = useInitialUserPositionPools();

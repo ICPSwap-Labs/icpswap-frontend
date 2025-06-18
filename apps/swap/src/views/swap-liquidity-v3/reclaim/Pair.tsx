@@ -1,11 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow, Tooltip } from "components/index";
+import { NoData, LoadingRow } from "components/index";
 import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { SelectPair } from "components/Select/SelectPair";
-import { isMobile } from "react-device-detect";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -24,7 +23,10 @@ export function ReclaimWithPair() {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const history = useHistory();
-  const { poolId } = useParsedQueryString() as { poolId: string };
+  const { poolId: poolIdFromUrl } = useParsedQueryString() as { poolId: string | undefined };
+
+  const [poolId, setPoolId] = useState<string | undefined>();
+
   const { pools, loading, balances } = useUserSwapUnusedBalanceByPoolId(principal, poolId);
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
@@ -98,6 +100,12 @@ export function ReclaimWithPair() {
     }
   };
 
+  useEffect(() => {
+    if (poolIdFromUrl) {
+      setPoolId(poolIdFromUrl);
+    }
+  }, [poolIdFromUrl]);
+
   return (
     <>
       <Box
@@ -125,12 +133,6 @@ export function ReclaimWithPair() {
             },
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: "0 8px" }}>
-            <Typography color="text.primary">{t("common.select.a.pair")}</Typography>
-
-            {isMobile ? <Tooltip tips={t("swap.reclaim.select.pair")} /> : null}
-          </Box>
-
           <Box sx={{ minWidth: "200px" }}>
             <SelectPair search value={poolId} border onPairChange={handlePairChange} />
           </Box>
@@ -162,12 +164,6 @@ export function ReclaimWithPair() {
         </Box>
       </Box>
 
-      {!isMobile ? (
-        <Box sx={{ margin: "10px 0 0 0", display: "flex", gap: "0 5px", alignItems: "center" }}>
-          <Typography>{t("swap.reclaim.select.pair")}</Typography>
-        </Box>
-      ) : null}
-
       <Box sx={{ margin: "20px 0 0 0" }}>
         {loading ? (
           <LoadingRow>
@@ -181,7 +177,7 @@ export function ReclaimWithPair() {
             <div />
           </LoadingRow>
         ) : no_data ? (
-          <NoData />
+          <NoData tip={t("swap.reclaim.empty")} />
         ) : (
           <Box
             sx={{

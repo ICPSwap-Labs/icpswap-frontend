@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow, SelectToken, Tooltip } from "components/index";
+import { NoData, LoadingRow, SelectToken } from "components/index";
 import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -24,7 +24,10 @@ export function ReclaimWithToken() {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const history = useHistory();
-  const { tokenId } = useParsedQueryString() as { tokenId: string };
+  const { tokenId: tokenIdFromUrl } = useParsedQueryString() as { tokenId: string };
+
+  const [tokenId, setTokenId] = useState<string | undefined>(undefined);
+
   const { loading, balances } = useUserSwapPoolBalances({ principal, tokenId });
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
@@ -99,10 +102,8 @@ export function ReclaimWithToken() {
   };
 
   useEffect(() => {
-    if (!tokenId) {
-      history.push(`/swap/withdraw?type=token&tokenId=${ICP.address}`);
-    }
-  }, [tokenId]);
+    setTokenId(tokenIdFromUrl ?? ICP.address);
+  }, [tokenIdFromUrl]);
 
   return (
     <>
@@ -131,14 +132,8 @@ export function ReclaimWithToken() {
             },
           }}
         >
-          <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
-            <Typography color="text.primary">{t("common.select.token")}</Typography>
-
-            {isMobile && tokenId === ICP.address ? <Tooltip tips={t("reclaim.select.token.description")} /> : null}
-          </Box>
-
           <Box sx={{ minWidth: "200px" }}>
-            <SelectToken search value={tokenId} border onTokenChange={handleTokenChange} />
+            <SelectToken search value={tokenId} border onTokenChange={handleTokenChange} showClean={false} />
           </Box>
         </Box>
 
@@ -187,7 +182,7 @@ export function ReclaimWithToken() {
             <div />
           </LoadingRow>
         ) : no_data ? (
-          <NoData />
+          <NoData tip={t("swap.reclaim.empty")} />
         ) : (
           <Box
             sx={{

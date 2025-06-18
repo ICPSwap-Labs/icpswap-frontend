@@ -1,7 +1,6 @@
 export * from "./token-list";
 export * from "./sns";
 export * from "./info";
-export * from "./cap";
 export * from "./token";
 export * from "./icp";
 export * from "./nft";

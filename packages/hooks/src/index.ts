@@ -4,7 +4,6 @@ export * from "./info";
 export * from "./useCallData";
 export * from "./useLimitedInfinityCall";
 export * from "./swap";
-export * from "./cap";
 export * from "./exchange_rate";
 export * from "./icp";
 export * from "./nft";

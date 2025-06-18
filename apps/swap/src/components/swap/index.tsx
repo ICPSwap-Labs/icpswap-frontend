@@ -1,5 +1,4 @@
 export * from "./SwapWrapper";
-export * from "./ReclaimLink";
 export * from "./context";
 export * from "./SwapFeeSelector";
 export * from "../CurrencySelector";

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { CssBaseline, Grid, Box, makeStyles, useTheme, Theme } from "components/Mui";
+import { CssBaseline, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import Background from "components/Background";
-import { GlobalTips } from "@icpswap/ui";
+import { Flex, GlobalTips } from "@icpswap/ui";
 
 import Header from "./Header";
 
@@ -56,10 +56,9 @@ export function SwapProLayout({ children }: SwapProLayoutProps) {
     <>
       <CssBaseline />
 
-      <Box color="inherit" elevation={0} className={classes.appBar}>
-        <Grid
-          container
-          alignItems="center"
+      <Box className={classes.appBar}>
+        <Flex
+          fullWidth
           sx={{
             padding: "0 20px",
             height: "64px",
@@ -70,7 +69,7 @@ export function SwapProLayout({ children }: SwapProLayoutProps) {
           }}
         >
           <Header />
-        </Grid>
+        </Flex>
       </Box>
 
       <Box className={classes.mainContent}>

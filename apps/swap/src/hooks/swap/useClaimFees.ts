@@ -5,11 +5,9 @@ import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getCollectFeeSteps } from "components/swap/CollectFeeSteps";
 import { useStepContentManager } from "store/steps/hooks";
-import { useSwapWithdraw, useReclaimCallback } from "hooks/swap/index";
 import { useErrorTip } from "hooks/useTips";
 import { collect } from "hooks/swap/v3Calls";
-import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import { sleep, BigNumber } from "@icpswap/utils";
+import { OpenExternalTip } from "types/index";
 import { useTranslation } from "react-i18next";
 
 export async function collectPositionFee(pool: string, positionId: bigint) {
@@ -31,79 +29,17 @@ interface CollectFeeCallsArgs {
 function useCollectFeeCalls() {
   const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
-  const withdraw = useSwapWithdraw();
   const { t } = useTranslation();
 
   return useCallback(
-    ({
-      pool,
-      positionId,
-      currencyFeeAmount0,
-      currencyFeeAmount1,
-      openExternalTip,
-      stepKey,
-      refresh,
-    }: CollectFeeCallsArgs) => {
-      const __withdraw = async () => {
-        const withdrawCurrencyA = async () => {
-          if (!currencyFeeAmount0 || !pool) return false;
-
-          if (
-            !new BigNumber(currencyFeeAmount0.quotient.toString())
-              .minus(currencyFeeAmount0.currency.transFee)
-              .isGreaterThan(0)
-          )
-            return true;
-
-          return await withdraw(
-            currencyFeeAmount0.currency,
-            pool.id,
-            currencyFeeAmount0.quotient.toString(),
-            ({ message }: ExternalTipArgs) => {
-              openExternalTip({ message, tipKey: stepKey, poolId: pool.id });
-            },
-          );
-        };
-
-        const withdrawCurrencyB = async () => {
-          if (!currencyFeeAmount1 || !pool) return false;
-
-          if (
-            !new BigNumber(currencyFeeAmount1.quotient.toString())
-              .minus(currencyFeeAmount1.currency.transFee)
-              .isGreaterThan(0)
-          )
-            return true;
-
-          const result = await withdraw(
-            currencyFeeAmount1.currency,
-            pool.id,
-            currencyFeeAmount1.quotient.toString(),
-            ({ message }: ExternalTipArgs) => {
-              openExternalTip({ message, tipKey: stepKey, tokenId: currencyFeeAmount1.currency.address });
-            },
-          );
-
-          return result;
-        };
-
-        const result = await Promise.all([withdrawCurrencyA(), withdrawCurrencyB()]).catch((err) => {
-          console.warn("Claim fees error: ", err);
-          return [false, false];
-        });
-
-        if (refresh) refresh();
-
-        return !result.includes(false);
-      };
-
+    ({ pool, positionId, refresh }: CollectFeeCallsArgs) => {
       const _collect = async () => {
         if (!positionId || !principal || !pool) return false;
 
         const { status, message } = await collectPositionFee(pool.id, positionId);
 
         if (status === "ok") {
-          __withdraw();
+          if (refresh) refresh();
           return true;
         }
 
@@ -111,12 +47,7 @@ function useCollectFeeCalls() {
         return false;
       };
 
-      const step1 = async () => {
-        await sleep(1000);
-        return true;
-      };
-
-      return [_collect, step1];
+      return [_collect];
     },
     [principal],
   );
@@ -134,8 +65,6 @@ function useCollectFeeSteps() {
   const principal = useAccountPrincipal();
   const stepContentManage = useStepContentManager();
 
-  const handleReclaim = useReclaimCallback();
-
   return useCallback(
     (key: string, { positionId, retry, currencyFeeAmount0, currencyFeeAmount1 }: AddLiquidityStepsArgs) => {
       const content = getCollectFeeSteps({
@@ -144,7 +73,6 @@ function useCollectFeeSteps() {
         currencyFeeAmount1,
         currencyFeeAmount0,
         principal,
-        handleReclaim,
       });
 
       stepContentManage(String(key), {

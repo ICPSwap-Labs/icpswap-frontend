@@ -116,7 +116,6 @@ export function TextButton({
 
     if (to) {
       history.push(to);
-      
     }
   }, [link, to, onClick, disabled]);
 

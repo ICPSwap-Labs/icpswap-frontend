@@ -1,12 +1,11 @@
 /* eslint-disable prefer-const */
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { Box, Typography, makeStyles, Theme, useTheme } from "components/Mui";
+import { Box, Typography, makeStyles, Theme } from "components/Mui";
 import {
   FeeSelector,
   CurrencySelector,
   SwapDepositAmount,
-  Reclaim,
   AddLiquidityButton,
   BuyTokenButton,
 } from "components/swap/index";
@@ -19,7 +18,7 @@ import {
 } from "store/swap/liquidity/hooks";
 import { UseCurrencyState, useToken } from "hooks/useCurrency";
 import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID, FIELD } from "constants/swap";
-import ConfirmAddLiquidity from "components/swap/AddLiquidityConfirmModal";
+import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
 import { isDarkTheme, parseBackPath } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
@@ -38,6 +37,8 @@ import { Wrapper } from "components/index";
 import { ArrowLeft } from "react-feather";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
+import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 import { useMediaQuery640 } from "hooks/theme";
 
 const DISABLED_STYLE = {
@@ -81,10 +82,11 @@ export default function AddLiquidity() {
   const classes = useStyle();
   const history = useHistory();
   const principal = useAccountPrincipal();
-  const theme = useTheme();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
   const down640 = useMediaQuery640();
+
+  const [confirmAddLoading, setConfirmAddLoading] = useState(false);
 
   let { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams<URLParams>();
   const { path: backPath } = useParsedQueryString() as { path: string };
@@ -244,6 +246,8 @@ export default function AddLiquidity() {
   const getAddLiquidityCall = useAddLiquidityCall();
 
   const handleOnConfirm = useCallback(async () => {
+    await window.icConnector.signerAgent?.signer.openChannel();
+
     // token0SubAccountBalance, token1SubAccountBalance, unusedBalance is undefined when pool is not created
     // So set the value is 0 by default
     // TODO: Fix this?
@@ -272,6 +276,8 @@ export default function AddLiquidity() {
       })
       .map((e) => e.subnet);
 
+    setConfirmAddLoading(true);
+
     const { call, key } = await getAddLiquidityCall({
       token0Balance,
       token1Balance,
@@ -298,6 +304,7 @@ export default function AddLiquidity() {
     );
 
     setConfirmModalShow(false);
+    setConfirmAddLoading(false);
 
     const result = await call();
 
@@ -492,6 +499,7 @@ export default function AddLiquidity() {
                     : undefined
                 }
                 maxSpentAmount={maxAmounts[FIELD.CURRENCY_A]?.toExact()}
+                poolId={pool?.id}
               />
 
               <SwapDepositAmount
@@ -521,25 +529,19 @@ export default function AddLiquidity() {
                     : undefined
                 }
                 maxSpentAmount={maxAmounts[FIELD.CURRENCY_B]?.toExact()}
+                poolId={pool?.id}
               />
 
-              {!noLiquidity ? (
-                <Box
-                  sx={{
-                    padding: "16px",
-                    background: theme.palette.background.level3,
-                    borderRadius: "12px",
-                    width: "100%",
-                  }}
-                >
-                  <Reclaim
-                    fontSize="12px"
+              {!noLiquidity && pool ? (
+                <Flex vertical align="flex-start" gap="8px 0" fullWidth>
+                  <ReclaimTokensInPool
                     pool={pool}
-                    bg1={theme.palette.background.level2}
-                    keepInPool={false}
                     refreshKey={ADD_LIQUIDITY_REFRESH_KEY}
+                    background="level3"
+                    borderRadius="12px"
                   />
-                </Box>
+                  <ToReclaim background={3} poolId={pool.id} borderRadius="12px" />
+                </Flex>
               ) : null}
 
               {nonNullArgs(baseCurrency) && nonNullArgs(quoteCurrency) && !noLiquidity ? (
@@ -623,11 +625,12 @@ export default function AddLiquidity() {
       </Flex>
 
       {confirmModalShow && !!position && (
-        <ConfirmAddLiquidity
+        <AddLiquidityConfirmModal
           onConfirm={handleOnConfirm}
           onCancel={handleOnCancel}
           open={confirmModalShow}
           position={position}
+          loading={confirmAddLoading}
         />
       )}
     </Wrapper>

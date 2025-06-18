@@ -59,8 +59,6 @@ export function isMeConnector(connector: Connector) {
 export class Actor {
   private connector: Connector = Connector.ICPSwap;
 
-  private agent: null | HttpAgent = null;
-
   private host: string = ic_host;
 
   private errorCallbacks: ActorErrorCallback[] = [];
@@ -78,7 +76,6 @@ export class Actor {
     host,
     idlFactory,
     identity,
-    agent,
     actorName,
   }: ActorConstructor): Promise<ActorSubclass<T>> {
     let id = canisterId;
@@ -109,7 +106,7 @@ export class Actor {
       actor = await createBaseActor<T>({
         canisterId: id,
         interfaceFactory: idlFactory,
-        agent: await this.AnonymousAgent(__host),
+        agent: this.AnonymousAgent(__host),
         fetchRootKey: __host !== ic_host,
       });
     }
@@ -190,14 +187,14 @@ export class Actor {
     return _actor as ActorSubclass<T>;
   }
 
-  public async AnonymousAgent(host?: string) {
-    return await HttpAgent.create({
+  public AnonymousAgent(host?: string) {
+    return HttpAgent.createSync({
       host: host ?? this.host,
+      // "Timestamp failed to pass the watermark after retrying the configured multiple times.
+      // We cannot guarantee the integrity of the response since it could be a replay attack."
+      // https://forum.dfinity.org/t/error-occurs-during-intensive-download-requests-involving-multiple-canisters/47942
+      retryTimes: 1000,
     });
-  }
-
-  public setAgent(agent: HttpAgent | null) {
-    this.agent = agent;
   }
 
   public setHost(host: string) {

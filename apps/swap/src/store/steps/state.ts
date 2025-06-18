@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { type StepContents } from "types/step";
+import { type StepContents, StepType } from "types/step";
 
 export interface StepDetailsProps {
   title: ReactNode;
@@ -8,6 +8,7 @@ export interface StepDetailsProps {
   activeStep: number;
   errorStep: number | undefined;
   description?: string;
+  type?: StepType;
 }
 
 export interface StepsState {

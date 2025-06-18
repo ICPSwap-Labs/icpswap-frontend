@@ -10,7 +10,7 @@ import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swap/burn/hooks";
 import { BURN_FIELD } from "constants/swap";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
-import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
+import { useSuccessTip, useLoadingTip } from "hooks/useTips";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import LiquidityInfo from "components/swap/LiquidityInfo";
@@ -18,14 +18,11 @@ import { PoolState } from "hooks/swap/usePools";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import StepViewButton from "components/Steps/View";
 import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
-import { ExternalTipArgs } from "types/index";
-import { ReclaimTips, LoadingRow, MainCard, Wrapper, AuthButton } from "components/index";
-import { KeepTokenInPool } from "components/swap/KeepTokenInPool";
+import { LoadingRow, MainCard, Wrapper, AuthButton } from "components/index";
 import { useTranslation } from "react-i18next";
-
-import Unclaimed from "./Unclaimed";
-import DecreaseLiquidityInput from "./Input";
-import { DecreaseLiquidityConfirm } from "./Confirm";
+import { DecreaseLiquidityConfirm } from "components/liquidity/Decrease/Confirm";
+import { Unclaimed } from "components/liquidity/Decrease/Unclaimed";
+import { DecreaseLiquidityInput } from "components/liquidity/Decrease/Input";
 
 export default function DecreaseLiquidity() {
   const { t } = useTranslation();
@@ -123,7 +120,6 @@ export default function DecreaseLiquidity() {
   const [loading, setLoading] = useState(false);
 
   const [openSuccessTip] = useSuccessTip();
-  const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
 
   const handleBack = useCallback(() => {
@@ -151,8 +147,6 @@ export default function DecreaseLiquidity() {
     currencyA,
     currencyB,
     formattedAmounts,
-    feeAmount0,
-    feeAmount1,
   });
 
   const handleConfirm = useCallback(async () => {
@@ -162,11 +156,7 @@ export default function DecreaseLiquidity() {
 
     setLoading(true);
 
-    const { key, call } = getDecreaseLiquidityCall({
-      openExternalTip: ({ message, tipKey, tokenId, poolId }: ExternalTipArgs) => {
-        openErrorTip(<ReclaimTips message={message} tipKey={tipKey} poolId={poolId} tokenId={tokenId} />);
-      },
-    });
+    const { key, call } = getDecreaseLiquidityCall();
 
     const loadingTipKey = openLoadingTip(`Remove ${currencyA?.symbol}/${currencyB?.symbol} liquidity`, {
       extraContent: <StepViewButton step={key} />,
@@ -179,7 +169,7 @@ export default function DecreaseLiquidity() {
     closeLoadingTip(loadingTipKey);
 
     if (result === true) {
-      openSuccessTip(t`Withdrawal submitted`);
+      openSuccessTip(t("swap.decrease.liquidity.success"));
       handleDecreaseSuccess();
     }
 
@@ -249,10 +239,6 @@ export default function DecreaseLiquidity() {
               </Box>
 
               <Box mt="24px">
-                <KeepTokenInPool label={t("swap.keep.pools.description")} showRefresh={false} />
-              </Box>
-
-              <Box mt="24px">
                 <AuthButton
                   variant="contained"
                   fullWidth
@@ -260,7 +246,7 @@ export default function DecreaseLiquidity() {
                   size="large"
                   onClick={handleDecreaseLiquidity}
                 >
-                  {isValid ? t`Remove` : error}
+                  {isValid ? t("common.remove") : error}
                 </AuthButton>
               </Box>
             </>

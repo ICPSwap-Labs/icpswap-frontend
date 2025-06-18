@@ -14,8 +14,6 @@ export const DEFAULT_SWAP_OUTPUT_ID = isIC ? ICS.address : ICS.address;
 
 export const SWAP_REFRESH_KEY = "swap";
 
-export const LIQUIDITY_OWNER_REFRESH_KEY = "LIQUIDITY_OWNER_REFRESH_KEY";
-
 export const SWAP_CHART_CURRENT_PRICE_COLOR = "#ffffff";
 export const SWAP_CHART_RANGE_PRICE_COLOR = "#8672FF";
 
@@ -33,3 +31,4 @@ export enum Tab {
 }
 
 export * from "./mint";
+export * from "./liquidity";

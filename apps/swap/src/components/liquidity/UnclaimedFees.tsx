@@ -1,8 +1,8 @@
-import { useContext, useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo } from "react";
 import { Typography, Box, Button, CircularProgress } from "components/Mui";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount, nonNullArgs, BigNumber } from "@icpswap/utils";
-import { PositionContext } from "components/swap/index";
+import { usePositionContext } from "components/swap/index";
 import { collect } from "@icpswap/hooks";
 import { decodePositionKey } from "utils/swap";
 import { useTips, MessageTypes } from "hooks/useTips";
@@ -20,7 +20,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [openTip, closeTip] = useTips();
-  const { positionFeesValue, positionFees } = useContext(PositionContext);
+  const { positionFeesValue, positionFees } = usePositionContext();
   const { setRefreshTriggers } = useGlobalContext();
   const withdraw = useSwapWithdrawByTokenId();
 

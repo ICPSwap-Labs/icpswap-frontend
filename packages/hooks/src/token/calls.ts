@@ -11,18 +11,9 @@ export interface getTokenTransactionProps {
   account: string | undefined | null | Principal;
   offset: number;
   limit: number;
-  capId?: string;
-  witness?: boolean;
 }
 
-export async function getTokenTransaction({
-  canisterId,
-  account,
-  offset,
-  limit,
-  capId,
-  witness,
-}: getTokenTransactionProps) {
+export async function getTokenTransaction({ canisterId, account, offset, limit }: getTokenTransactionProps) {
   return (
     await tokenAdapter.transactions({
       canisterId,
@@ -32,8 +23,6 @@ export async function getTokenTransaction({
         limit,
         index: undefined,
         hash: undefined,
-        capId,
-        witness,
       },
     })
   ).data;
@@ -44,19 +33,9 @@ export interface useTokenTransactionsProps {
   account: string | undefined | null | Principal;
   offset: number;
   limit: number;
-  cap?: boolean;
-  capId?: string;
-  witness?: boolean;
 }
 
-export function useTokenTransactions({
-  canisterId,
-  account,
-  offset,
-  limit,
-  capId,
-  witness,
-}: useTokenTransactionsProps) {
+export function useTokenTransactions({ canisterId, account, offset, limit }: useTokenTransactionsProps) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
@@ -66,10 +45,8 @@ export function useTokenTransactions({
         account,
         offset,
         limit,
-        capId,
-        witness,
       });
-    }, [offset, limit, canisterId, account, capId, witness]),
+    }, [offset, limit, canisterId, account]),
   );
 }
 

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useContext } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
@@ -15,7 +15,7 @@ import { useFarmState, useFarmInitArgs, useFarmUserPositions, useSwapPoolMetadat
 import { type FarmInfoWithId } from "@icpswap/types";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { PositionContext, PositionRangeState } from "components/swap/index";
+import { usePositionContext, PositionRangeState } from "components/swap/index";
 import { FarmStateChip } from "components/farm/index";
 import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
@@ -138,7 +138,7 @@ export function PositionCardForFarm({
   const [detailShow, setDetailShow] = useState<boolean | undefined>(undefined);
   const [manuallyInverted, setManuallyInverted] = useState(false);
 
-  const { setAllPositionsUSDValue, setHiddenNumbers } = useContext(PositionContext);
+  const { setAllPositionsUSDValue, setHiddenNumbers } = usePositionContext();
 
   const positionKey = useMemo(() => {
     if (!position) return undefined;

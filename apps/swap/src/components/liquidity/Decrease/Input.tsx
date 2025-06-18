@@ -1,6 +1,6 @@
 import React from "react";
-import { Grid, Box, Typography, makeStyles, Theme } from "components/Mui";
-import { NumberTextField, TokenImage } from "components/index";
+import { Box, Typography, makeStyles, Theme } from "components/Mui";
+import { NumberTextField, TokenImage, Flex } from "components/index";
 import { MAX_SWAP_INPUT_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
@@ -40,12 +40,7 @@ export interface DecreaseLiquidityInputProps {
   totalAmount: React.ReactChild;
 }
 
-export default function DecreaseLiquidityInput({
-  currency,
-  value,
-  onUserInput,
-  totalAmount,
-}: DecreaseLiquidityInputProps) {
+export function DecreaseLiquidityInput({ currency, value, onUserInput, totalAmount }: DecreaseLiquidityInputProps) {
   const { t } = useTranslation();
   const classes = useStyle();
 
@@ -53,14 +48,15 @@ export default function DecreaseLiquidityInput({
 
   return (
     <Box className={classes.inputBox}>
-      <Grid container>
+      <Flex fullWidth>
         <Box className={classes.tokenButton}>
-          <Grid item xs container alignItems="center" gap="0 8px">
+          <Flex fullWidth gap="0 8px">
             <TokenImage logo={currency?.logo} tokenId={currency?.wrapped.address} size="24px" />
             <Typography component="span">{currency?.symbol}</Typography>
-          </Grid>
+          </Flex>
         </Box>
-        <Grid item xs>
+
+        <Box sx={{ flex: 1 }}>
           <NumberTextField
             fullWidth
             value={value}
@@ -82,8 +78,8 @@ export default function DecreaseLiquidityInput({
               onUserInput(e.target.value);
             }}
           />
-        </Grid>
-      </Grid>
+        </Box>
+      </Flex>
       <Box mt={1}>
         <Typography fontSize="12px">
           {t("common.total.amount", { amount: `${totalAmount} ${currency?.symbol}` })}

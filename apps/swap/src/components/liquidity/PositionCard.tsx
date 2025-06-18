@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useContext } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
@@ -7,7 +7,7 @@ import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverte
 import { isDarkTheme } from "utils/index";
 import { Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { PoolCurrentPrice, PositionContext, PositionRangeState } from "components/swap/index";
+import { usePositionContext, PositionRangeState, PoolCurrentPrice } from "components/swap/index";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { encodePositionKey, PositionState } from "utils/swap/index";
 import { PositionFilterState, PositionSort } from "types/swap";
@@ -107,7 +107,7 @@ export interface PositionCardProps {
   staked?: boolean; // The position is staked or not
   filterState: PositionFilterState;
   sort: PositionSort;
-  isLimit: boolean;
+  isLimit: boolean | undefined;
   fee: { fee0: bigint; fee1: bigint } | undefined;
 }
 
@@ -129,7 +129,7 @@ export function PositionCard({
   const [detailShow, setDetailShow] = useState<boolean | undefined>(undefined);
   const [manuallyInverted, setManuallyInverted] = useState(false);
 
-  const { setAllPositionsUSDValue, setHiddenNumbers } = useContext(PositionContext);
+  const { setAllPositionsUSDValue, setHiddenNumbers } = usePositionContext();
 
   const handleToggleShow = useCallback(() => {
     if (!position) return;
@@ -214,7 +214,7 @@ export function PositionCard({
   }, [totalUSDValue, positionKey, staked, isLimit]);
 
   const displayByFilter = useMemo(() => {
-    if (isNullArgs(positionState)) return true;
+    if (isNullArgs(positionState) || isNullArgs(isLimit)) return true;
     if (isLimit) return false;
 
     switch (filterState) {

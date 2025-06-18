@@ -149,10 +149,10 @@ export function SplitNeuron({
   return (
     <>
       <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={!canSplit || disabled}>
-        {t("nns.neuron.split")}
+        {`${t("nns.neuron.split")}`}
       </Button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title={t("nns.neuron.split")}>
+      <Modal open={open} onClose={() => setOpen(false)} title={`${t("nns.neuron.split")}`}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0" }}>
           <NumberFilledTextField
             placeholder={t("common.enter.input.amount")}

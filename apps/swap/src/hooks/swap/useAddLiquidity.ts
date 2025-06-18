@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { updateUserPositionPoolId, getPassCode, requestPassCode } from "@icpswap/hooks";
+import { getPassCode, requestPassCode } from "@icpswap/hooks";
 import { Position, Token } from "@icpswap/swap-sdk";
 import { getLocaleMessage } from "i18n/service";
 import { useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
@@ -10,8 +10,11 @@ import {
   useSwapDeposit,
   useSwapTransfer,
   getTokenInsufficient,
+  noApproveByTokenInsufficient,
   getTokenActualTransferRawAmount,
   getTokenActualDepositRawAmount,
+  noTransferByTokenInsufficient,
+  noDepositByTokenInsufficient,
 } from "hooks/swap/index";
 import { isUseTransfer } from "utils/token/index";
 import { createPool, mint as __mint } from "hooks/swap/v3Calls";
@@ -24,6 +27,7 @@ import { PassCodeManagerId } from "constants/canister";
 import { Principal } from "@dfinity/principal";
 import { BigNumber } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
+import { useStepsToReclaimCallback } from "./useStepsToReclaimCallback";
 
 let SwapPoolId: undefined | string;
 
@@ -160,7 +164,7 @@ function useAddLiquidityCalls() {
         const poolId = getPoolId();
         const token0 = position.pool.token0;
 
-        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+        if (noApproveByTokenInsufficient(token0Insufficient)) return true;
 
         if (amount0Desired !== "0") {
           return await approve({
@@ -177,7 +181,7 @@ function useAddLiquidityCalls() {
       const approveToken1 = async () => {
         const poolId = getPoolId();
 
-        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+        if (noApproveByTokenInsufficient(token1Insufficient)) return true;
 
         if (amount1Desired !== "0") {
           return await approve({
@@ -194,7 +198,7 @@ function useAddLiquidityCalls() {
       const transferToken0 = async () => {
         const poolId = getPoolId();
 
-        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+        if (noTransferByTokenInsufficient(token0Insufficient)) return true;
 
         if (amount0Desired !== "0") {
           return await transfer(
@@ -216,7 +220,7 @@ function useAddLiquidityCalls() {
       const transferToken1 = async () => {
         const poolId = getPoolId();
 
-        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+        if (noTransferByTokenInsufficient(token1Insufficient)) return true;
 
         if (amount1Desired !== "0") {
           return await transfer(
@@ -238,7 +242,7 @@ function useAddLiquidityCalls() {
       const depositToken0 = async () => {
         const poolId = getPoolId();
 
-        if (token0Insufficient === "NO_TRANSFER_APPROVE") return true;
+        if (noDepositByTokenInsufficient(token0Insufficient)) return true;
         if (amount0Desired === "0") return true;
 
         // Mins 1 token fee by backend, so the deposit amount should add 1 token fee if use deposit
@@ -259,7 +263,7 @@ function useAddLiquidityCalls() {
       const depositToken1 = async () => {
         const poolId = getPoolId();
 
-        if (token1Insufficient === "NO_TRANSFER_APPROVE") return true;
+        if (noDepositByTokenInsufficient(token1Insufficient)) return true;
         if (amount1Desired === "0") return true;
 
         return await deposit({
@@ -291,8 +295,6 @@ function useAddLiquidityCalls() {
 
         if (status === "ok") {
           openSuccessTip(t("liquidity.add.success"));
-
-          updateUserPositionPoolId(poolId, true);
           updateStoreUserPositionPool([poolId]);
 
           return true;
@@ -336,11 +338,7 @@ function useInitialAddLiquiditySteps() {
   const history = useHistory();
   const closeAllSteps = useCloseAllSteps();
   const { t } = useTranslation();
-
-  const handleReclaim = () => {
-    history.push("/swap/withdraw");
-    closeAllSteps();
-  };
+  const stepsToReclaimCallback = useStepsToReclaimCallback();
 
   const handleReclaimPCMBalance = () => {
     history.push("/swap/pcm/reclaim");
@@ -356,7 +354,7 @@ function useInitialAddLiquiditySteps() {
         position,
         noLiquidity,
         retry,
-        handleReclaim,
+        handleReclaim: stepsToReclaimCallback,
         handleReclaimPCMBalance,
         pcmMetadata,
         pcmToken,

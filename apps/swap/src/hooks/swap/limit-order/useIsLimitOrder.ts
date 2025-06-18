@@ -15,7 +15,7 @@ export function useIsLimitOrder({ poolId, positionId }: UseIsLimitOrderProps) {
   const { result: userLimitOrders } = useUserLimitOrders(poolId, principal?.toString());
 
   return useMemo(() => {
-    if (isNullArgs(positionId)) return false;
-    return userLimitOrders ? !!userLimitOrders.find((e) => e.userPositionId === BigInt(positionId)) : false;
+    if (isNullArgs(positionId) || isNullArgs(userLimitOrders)) return undefined;
+    return !!userLimitOrders.find((e) => e.userPositionId === BigInt(positionId));
   }, [userLimitOrders, positionId]);
 }

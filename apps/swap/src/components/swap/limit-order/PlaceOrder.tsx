@@ -132,11 +132,21 @@ export const PlaceOrder = forwardRef(
       (token: Token) => {
         const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
 
+        let search = location.search;
+
         if (token.address === outputTokenId) {
-          history.push(`${prePath}?input=${token.address}&output=${ICP.address}`);
+          search = locationMultipleSearchReplace(location.search, [
+            { key: "input", value: token.address },
+            { key: "output", value: ICP.address },
+          ]);
         } else {
-          history.push(`${prePath}?input=${token.address}&output=${outputTokenId}`);
+          search = locationMultipleSearchReplace(location.search, [
+            { key: "input", value: token.address },
+            { key: "output", value: outputTokenId },
+          ]);
         }
+
+        history.push(`${prePath}${search}`);
       },
       [outputTokenId],
     );
@@ -278,7 +288,14 @@ export const PlaceOrder = forwardRef(
 
     const handleSwitchTokens = useCallback(() => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
-      history.push(`${prePath}?input=${outputTokenId}&output=${inputTokenId}`);
+
+      const search = locationMultipleSearchReplace(location.search, [
+        { key: "input", value: outputTokenId },
+        { key: "output", value: inputTokenId },
+      ]);
+
+      history.push(`${prePath}${search}`);
+
       onSwitchTokens();
 
       handleInput("", "input");

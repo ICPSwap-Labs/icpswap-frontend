@@ -13,17 +13,17 @@ const Tabs = [
   {
     key: "pair",
     path: "/swap/withdraw?type=pair",
-    value: "Trading Pair",
+    value: "Swap Pairs",
   },
   {
     key: "token",
     path: "/swap/withdraw?type=token",
-    value: "Token",
+    value: "Tokens",
   },
   {
     key: "all",
     path: "/swap/withdraw?type=all",
-    value: "All",
+    value: "All Pools",
   },
 ];
 
@@ -64,11 +64,7 @@ export default function SwapReclaim() {
           </Box>
 
           {!isMobile ? (
-            <>
-              <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>
-                {t("swap.reclaim.descriptions")}
-              </Typography>
-            </>
+            <Typography sx={{ margin: "10px 0 0 0", lineHeight: "18px" }}>{t("swap.reclaim.descriptions")}</Typography>
           ) : null}
 
           <Box

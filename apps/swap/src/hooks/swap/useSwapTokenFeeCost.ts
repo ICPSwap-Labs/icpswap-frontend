@@ -38,7 +38,7 @@ export function useSwapTokenFeeCost({
     });
 
     if (tokenInsufficient === "NO_TRANSFER_APPROVE") return "0";
-    if (tokenInsufficient === "NEED_DEPOSIT") return token.transFee.toString();
+    if (tokenInsufficient === "NEED_DEPOSIT_FROM_SUB") return token.transFee.toString();
     if (tokenInsufficient === "NEED_TRANSFER_APPROVE") return (token.transFee * 2).toString();
 
     return "0";

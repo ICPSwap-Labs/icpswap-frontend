@@ -7,8 +7,8 @@ import {
   switchCurrencies,
   updatePoolCanisterIds,
   updateSwapOutAmount,
-  updateDecreaseLiquidityAmount,
   updateAllSwapPools,
+  updateSwapFinalMetadata,
 } from "./actions";
 import { initialState } from "./state";
 
@@ -61,10 +61,10 @@ export default createReducer(initialState, (builder) => {
     .addCase(updateSwapOutAmount, (state, { payload }) => {
       state.swapOutAmount[payload.key] = payload.value;
     })
-    .addCase(updateDecreaseLiquidityAmount, (state, { payload }) => {
-      state.decreaseLiquidityAmount[payload.key] = { amount0: payload.amount0, amount1: payload.amount1 };
-    })
     .addCase(updateAllSwapPools, (state, { payload }) => {
       state.allSwapPools = payload;
+    })
+    .addCase(updateSwapFinalMetadata, (state, { payload }) => {
+      state.swapFinalMetadata = payload;
     });
 });

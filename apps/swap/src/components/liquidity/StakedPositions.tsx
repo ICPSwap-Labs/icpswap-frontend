@@ -1,14 +1,16 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Box } from "components/Mui";
 import { PositionCardForFarm } from "components/liquidity/index";
 import { usePosition } from "hooks/swap/usePosition";
 import { LoadingRow } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useSwapPositionsMultipleFarm, useSortedPositions, useMultiplePositionsFee } from "hooks/swap/index";
-import { PositionContext } from "components/swap/index";
+import { usePositionContext } from "components/swap/index";
 import { useUserAllFarmsInfo } from "hooks/staking-farm/index";
 import { PositionFilterState, PositionSort, type UserPositionForFarm } from "types/swap";
 import { getPositionFeeKey } from "utils/swap";
+import { useRefreshTrigger } from "hooks";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/liquidity";
 import { YourFarmEmpty } from "components/farm/Empty";
 
 interface PositionItemProps {
@@ -54,7 +56,8 @@ interface StakedPositionsProps {
 export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPositionsProps) {
   const principal = useAccountPrincipalString();
 
-  const { refreshTrigger, setAllStakedPositions, positionFees, allPositionsUSDValue } = useContext(PositionContext);
+  const { setAllStakedPositions, positionFees, allPositionsUSDValue } = usePositionContext();
+  const refreshTrigger = useRefreshTrigger(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { result: allFarms, loading: farmsLoading } = useUserAllFarmsInfo();
   const { result: positions, loading } = useSwapPositionsMultipleFarm(allFarms, refreshTrigger);

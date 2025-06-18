@@ -10,17 +10,20 @@ import {
   useSwapDeposit,
   useSwapTransfer,
   getTokenInsufficient,
+  noApproveByTokenInsufficient,
   getTokenActualTransferRawAmount,
   getTokenActualDepositRawAmount,
+  noTransferByTokenInsufficient,
+  noDepositByTokenInsufficient,
 } from "hooks/swap/index";
 import { isUseTransfer } from "utils/token/index";
 import { useSuccessTip } from "hooks/useTips";
 import { increaseLiquidity } from "hooks/swap/v3Calls";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import { useReclaimCallback } from "hooks/swap";
 import { TOKEN_STANDARD } from "@icpswap/types";
 import { BigNumber } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
+import { useStepsToReclaimCallback } from "hooks/swap/useStepsToReclaimCallback";
 
 export interface IncreaseLiquidityArgs {
   positionId: string;
@@ -82,21 +85,23 @@ export function useIncreaseLiquidityCalls() {
       });
 
       const approveToken0 = async () => {
-        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+        if (noApproveByTokenInsufficient(token0Insufficient)) return true;
+
         if (amount0Desired !== "0")
           return await approve({ token: position.pool.token0, amount: amount0Desired, poolId });
         return true;
       };
 
       const approveToken1 = async () => {
-        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+        if (noApproveByTokenInsufficient(token1Insufficient)) return true;
+
         if (amount1Desired !== "0")
           return await approve({ token: position.pool.token1, amount: amount1Desired, poolId });
         return true;
       };
 
       const transferToken0 = async () => {
-        if (token0Insufficient === "NO_TRANSFER_APPROVE" || token0Insufficient === "NEED_DEPOSIT") return true;
+        if (noTransferByTokenInsufficient(token0Insufficient)) return true;
         if (amount0Desired !== "0")
           return await transfer(
             token0,
@@ -113,7 +118,8 @@ export function useIncreaseLiquidityCalls() {
       };
 
       const transferToken1 = async () => {
-        if (token1Insufficient === "NO_TRANSFER_APPROVE" || token1Insufficient === "NEED_DEPOSIT") return true;
+        if (noTransferByTokenInsufficient(token1Insufficient)) return true;
+
         if (amount1Desired !== "0")
           return await transfer(
             token1,
@@ -130,7 +136,7 @@ export function useIncreaseLiquidityCalls() {
       };
 
       const depositToken0 = async () => {
-        if (token0Insufficient === "NO_TRANSFER_APPROVE") return true;
+        if (noDepositByTokenInsufficient(token0Insufficient)) return true;
 
         if (amount0Desired !== "0") {
           return await deposit({
@@ -150,7 +156,7 @@ export function useIncreaseLiquidityCalls() {
       };
 
       const depositToken1 = async () => {
-        if (token1Insufficient === "NO_TRANSFER_APPROVE") return true;
+        if (noDepositByTokenInsufficient(token1Insufficient)) return true;
 
         if (amount1Desired !== "0") {
           return await deposit({
@@ -208,12 +214,12 @@ function useInitialAddLiquiditySteps() {
   const { t } = useTranslation();
   const stepContentManage = useStepContentManager();
 
-  const handleReclaim = useReclaimCallback();
+  const stepsToReclaimCallback = useStepsToReclaimCallback();
 
   return useCallback((key: string, { position }: InitialAddLiquidityStepsArgs) => {
     const content = getIncreaseLiquiditySteps({
       position,
-      handleReclaim,
+      handleReclaim: stepsToReclaimCallback,
     });
 
     stepContentManage(String(key), {

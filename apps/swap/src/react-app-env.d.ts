@@ -107,6 +107,11 @@ interface Window {
     createActor: <T>({ canisterId, interfaceFactory }: CreateActorArgs) => Promise<ActorSubclass<T>>;
     isConnected: () => Promise<boolean>;
     disconnect: () => Promise<void>;
+    signerAgent?: {
+      signer: {
+        openChannel: () => Promise<void>;
+      };
+    };
   };
 }
 
@@ -114,10 +119,6 @@ declare module "@mui/material/styles" {
   interface Theme {
     direction: string;
     palette: any;
-    mixins: {
-      overflowEllipsis: any;
-      overflowEllipsis2: any;
-    };
     typography: any;
     components: any;
     themeOption: any;
@@ -135,10 +136,6 @@ declare module "@mui/material/styles" {
   interface ThemeOptions {
     direction?: string;
     palette?: any;
-    mixins?: {
-      overflowEllipsis: any;
-      overflowEllipsis2: any;
-    };
     typography?: any;
     components?: any;
     themeOption?: any;

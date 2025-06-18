@@ -277,12 +277,12 @@ export default function NoAuthNFTInfo() {
                     </Grid>
                     <Box mt="14px">
                       <Typography
+                        className="text-overflow-ellipsis"
                         variant="h3"
                         color="text.primary"
                         sx={{
                           fontSize: "26px",
                           fontWeight: 700,
-                          ...theme.mixins.overflowEllipsis,
                           maxWidth: "680px",
                           wordBreak: "break-all",
                         }}

@@ -6,10 +6,9 @@ import { initialState } from "./states";
 export default createReducer(initialState, (builder) => {
   builder
     .addCase(login, (state, { payload }) => {
-      return {
-        ...state,
-        ...payload,
-      };
+      state.name = payload.name ?? "";
+      state.walletType = payload.walletType ?? null;
+      state.principal = payload.principal ?? "";
     })
     .addCase(logout, (state) => {
       return { ...initialState, walletConnectorOpen: state.walletConnectorOpen };
