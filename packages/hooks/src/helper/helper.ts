@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { icpswap_fetch_post, isNullArgs } from "@icpswap/utils";
+import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
 import type { Null } from "@icpswap/types";
 
 import { useCallsData } from "../useCallData";
@@ -28,7 +28,7 @@ export interface UseHelperUserTokensProps {
 export function useUserTokens({ principal, refresh }: UseHelperUserTokensProps) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(principal)) return undefined;
+      if (isUndefinedOrNull(principal)) return undefined;
       return await getUserTokens({ principal });
     }, [principal]),
     refresh,

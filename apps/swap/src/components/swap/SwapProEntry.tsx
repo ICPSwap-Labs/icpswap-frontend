@@ -4,7 +4,7 @@ import { useTheme } from "components/Mui";
 import { useHistory } from "react-router-dom";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 import { Tab } from "constants/index";
 
 export interface SwapProEntryProps {
@@ -18,7 +18,7 @@ export function SwapProEntry({ inputToken, outputToken, limit }: SwapProEntryPro
   const history = useHistory();
 
   const handleToSwapPro = useCallback(() => {
-    if (nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
+    if (nonUndefinedOrNull(inputToken) && nonUndefinedOrNull(outputToken)) {
       history.push(
         `/swap/pro?input=${inputToken.address}&output=${outputToken.address}${limit ? `&tab=${Tab.Limit}` : ""}`,
       );

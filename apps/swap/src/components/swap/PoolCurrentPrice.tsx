@@ -5,7 +5,7 @@ import { Pool, Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useUSDPriceById } from "hooks/index";
-import { formatDollarAmount, formatTokenPrice, isNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PoolCurrentPriceProps {
@@ -45,7 +45,7 @@ export function PoolCurrentPrice({
   const { token0, token1 } = pool || {};
 
   const baseToken = useMemo(() => {
-    if (isNullArgs(token0) || isNullArgs(token1)) return undefined;
+    if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1)) return undefined;
 
     if (__token) {
       const anotherToken = __token.equals(token0) ? token1 : token0;
@@ -56,7 +56,7 @@ export function PoolCurrentPrice({
   }, [__token, token0, token1]);
 
   const quoteToken = useMemo(() => {
-    if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(baseToken)) return undefined;
+    if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(baseToken)) return undefined;
     return baseToken.equals(token0) ? token1 : token0;
   }, [baseToken, token0, token1]);
 
@@ -64,7 +64,7 @@ export function PoolCurrentPrice({
   const quoteTokenUSDPrice = useUSDPriceById(quoteToken?.address);
 
   const price = useMemo(() => {
-    if (isNullArgs(quoteToken) || isNullArgs(baseToken) || isNullArgs(pool)) return undefined;
+    if (isUndefinedOrNull(quoteToken) || isUndefinedOrNull(baseToken) || isUndefinedOrNull(pool)) return undefined;
 
     return manuallyInverted
       ? pool.priceOf(quoteToken).toFixed(quoteToken.decimals)
@@ -72,7 +72,7 @@ export function PoolCurrentPrice({
   }, [pool, quoteToken, manuallyInverted]);
 
   const label = useMemo(() => {
-    if (isNullArgs(baseToken) || isNullArgs(quoteToken)) return undefined;
+    if (isUndefinedOrNull(baseToken) || isUndefinedOrNull(quoteToken)) return undefined;
 
     return manuallyInverted
       ? `${tokenSymbolEllipsis({

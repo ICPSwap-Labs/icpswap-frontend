@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { getUserFarmInfo } from "@icpswap/hooks";
 import { type FarmInfoWithId } from "@icpswap/types";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 import { useYourFarms } from "./useYourFarms";
@@ -15,7 +15,7 @@ export function useUserAllFarmsInfo() {
 
   useEffect(() => {
     async function call() {
-      if (isNullArgs(userAllFarms) || isNullArgs(principal)) {
+      if (isUndefinedOrNull(userAllFarms) || isUndefinedOrNull(principal)) {
         setFarmsInfo(null);
         return;
       }

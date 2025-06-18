@@ -1,7 +1,7 @@
 import React, { useState, useRef, ReactNode } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import CloseIcon from "@mui/icons-material/Close";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 import { makeStyles, Theme, Typography, Box } from "../Mui";
 
@@ -123,7 +123,7 @@ export function SelectPanel({
 
       <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
         <Box>
-          {nonNullArgs(value) || (panel && panel(menu)) ? (
+          {nonUndefinedOrNull(value) || (panel && panel(menu)) ? (
             <Typography color={valueColor ?? "text.primary"} component="div">
               {panel ? panel(menu) : menu?.selectLabel ?? menu?.label}
             </Typography>

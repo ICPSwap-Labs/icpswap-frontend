@@ -5,8 +5,8 @@ import { Flex } from "@icpswap/ui";
 import {
   BigNumber,
   formatDollarAmount,
-  isNullArgs,
-  nonNullArgs,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
   numToPercent,
   formatLiquidityAmount,
 } from "@icpswap/utils";
@@ -33,16 +33,16 @@ export function PositionValue({ position }: PositionValueProps) {
   const token0USDPrice = useUSDPriceById(token0.address);
   const token1USDPrice = useUSDPriceById(token1.address);
   const token0USDValue = useMemo(() => {
-    if (isNullArgs(token0USDPrice)) return undefined;
+    if (isUndefinedOrNull(token0USDPrice)) return undefined;
     return new BigNumber(token0Amount).multipliedBy(token0USDPrice).toString();
   }, [token0USDPrice, token0Amount]);
   const token1USDValue = useMemo(() => {
-    if (isNullArgs(token1USDPrice)) return undefined;
+    if (isUndefinedOrNull(token1USDPrice)) return undefined;
     return new BigNumber(token1Amount).multipliedBy(token1USDPrice).toString();
   }, [token1USDPrice, token1Amount]);
 
   const { token0Percent, token1Percent } = useMemo(() => {
-    if (isNullArgs(token0USDValue) || isNullArgs(token1USDValue)) return {};
+    if (isUndefinedOrNull(token0USDValue) || isUndefinedOrNull(token1USDValue)) return {};
 
     const totalUSDValue = new BigNumber(token0USDValue).plus(token1USDValue);
 
@@ -74,7 +74,7 @@ export function PositionValue({ position }: PositionValueProps) {
           <Flex vertical gap="6px 0" align="flex-end">
             <Typography color="text.primary">{formatLiquidityAmount(token0Amount)}</Typography>
             <Typography fontSize="12px">
-              {nonNullArgs(token0USDValue) ? formatDollarAmount(token0USDValue) : "--"}
+              {nonUndefinedOrNull(token0USDValue) ? formatDollarAmount(token0USDValue) : "--"}
             </Typography>
           </Flex>
         </Flex>
@@ -90,14 +90,14 @@ export function PositionValue({ position }: PositionValueProps) {
           <Flex vertical gap="6px 0" align="flex-end">
             <Typography color="text.primary">{formatLiquidityAmount(token1Amount)}</Typography>
             <Typography fontSize="12px">
-              {nonNullArgs(token1USDValue) ? formatDollarAmount(token1USDValue) : "--"}
+              {nonUndefinedOrNull(token1USDValue) ? formatDollarAmount(token1USDValue) : "--"}
             </Typography>
           </Flex>
         </Flex>
       </Flex>
 
       <Flex vertical gap="26px 0" align="flex-start" sx={{ margin: "26px 0 0 0" }} fullWidth>
-        {nonNullArgs(token0Percent) && nonNullArgs(token1Percent) ? (
+        {nonUndefinedOrNull(token0Percent) && nonUndefinedOrNull(token1Percent) ? (
           <Box sx={{ width: "100%" }}>
             <Flex fullWidth justify="space-between" gap="0 12px">
               <Flex gap="0 8px">

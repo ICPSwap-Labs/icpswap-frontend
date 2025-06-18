@@ -1,5 +1,5 @@
 import { getSwapPosition } from "@icpswap/hooks";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { Null, type FarmInfoWithId } from "@icpswap/types";
 import { useEffect, useMemo, useState } from "react";
 import { UserPosition, UserPositionForFarm } from "types/swap";
@@ -18,8 +18,8 @@ export function useSwapPositions(data: UserPositions[] | undefined, refresh?: nu
 
   useEffect(() => {
     async function call() {
-      if (isNullArgs(data)) return;
-      if (data.length === 0 || isNullArgs(principal)) {
+      if (isUndefinedOrNull(data)) return;
+      if (data.length === 0 || isUndefinedOrNull(principal)) {
         setPositions([]);
         return;
       }
@@ -57,7 +57,7 @@ export function useSwapPositionsMultipleFarm(farms: FarmInfoWithId[] | Null, ref
 
   useEffect(() => {
     async function call() {
-      if (isNullArgs(farms) || isNullArgs(principal) || farms.length === 0) {
+      if (isUndefinedOrNull(farms) || isUndefinedOrNull(principal) || farms.length === 0) {
         setPositions([]);
         return;
       }

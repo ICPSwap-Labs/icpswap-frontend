@@ -6,7 +6,7 @@ import Zoom, { ZoomOverlay } from "components/liquidity/PriceRangeChart/Zoom";
 import { ChartEntry, ZoomLevels, Dimensions, Margins } from "components/liquidity/PriceRangeChart/types";
 import type { Null } from "@icpswap/types";
 import { Bound } from "constants/swap";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 export const xAccessor = (d: ChartEntry) => d.price0;
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
@@ -108,7 +108,7 @@ export function Chart({
             <rect x="0" y="0" width={innerWidth} height={height} />
           </clipPath>
 
-          {nonNullArgs(areaLower) && nonNullArgs(areaUpper) && (
+          {nonUndefinedOrNull(areaLower) && nonUndefinedOrNull(areaUpper) && (
             // mask to highlight selected area
             <mask id={`${id}-chart-area-mask`}>
               <rect
@@ -127,7 +127,7 @@ export function Chart({
           <g clipPath={`url(#${id}-chart-clip)`}>
             <Area series={series} xScale={xScale} yScale={yScale} xValue={xAccessor} yValue={yAccessor} />
 
-            {nonNullArgs(areaLower) && nonNullArgs(areaUpper) && (
+            {nonUndefinedOrNull(areaLower) && nonUndefinedOrNull(areaUpper) && (
               // duplicate area chart with mask for selected area
               <g mask={`url(#${id}-chart-area-mask)`}>
                 <rect

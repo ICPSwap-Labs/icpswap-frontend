@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
-import { BigNumber, isNullArgs, nonNullArgs, numToPercent } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, numToPercent } from "@icpswap/utils";
 import { usePositionAPRChartData, usePoolAPRs } from "@icpswap/hooks";
 import { type Null, ChartTimeEnum } from "@icpswap/types";
 import { LineChartAlt, ImageLoading, ChartAPRLabel, Flex } from "@icpswap/ui";
@@ -39,7 +39,7 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
   const latestPositionValue = formattedChartData.length > 0 ? formattedChartData[formattedChartData.length - 1] : null;
 
   const apr = useMemo(() => {
-    if (isNullArgs(aprResult)) return null;
+    if (isUndefinedOrNull(aprResult)) return null;
 
     if (aprTime === ChartTimeEnum["24H"]) return aprResult.aprAvg1D;
     if (aprTime === ChartTimeEnum["7D"]) return aprResult.aprAvg7D;
@@ -49,8 +49,8 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
 
   const aprY = useMemo(() => {
     if (
-      isNullArgs(apr) ||
-      isNullArgs(formattedChartData) ||
+      isUndefinedOrNull(apr) ||
+      isUndefinedOrNull(formattedChartData) ||
       formattedChartData.length < 2 ||
       new BigNumber(apr).isEqualTo(0)
     )
@@ -93,7 +93,9 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
             {latestPositionValue ? (
               <>
                 <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-                  {nonNullArgs(latestValue) ? numToPercent(latestValue, 2) : numToPercent(latestPositionValue.value, 2)}
+                  {nonUndefinedOrNull(latestValue)
+                    ? numToPercent(latestValue, 2)
+                    : numToPercent(latestPositionValue.value, 2)}
                 </Typography>
 
                 <Typography

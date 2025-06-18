@@ -1,7 +1,12 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
-import { nonNullArgs, parseTokenAmount, formatTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  nonUndefinedOrNull,
+  parseTokenAmount,
+  formatTokenAmount,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
@@ -152,7 +157,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         variant="contained"
         fullWidth
         size="large"
-        disabled={nonNullArgs(dissolve_error) || loading || oisyButtonDisabled}
+        disabled={nonUndefinedOrNull(dissolve_error) || loading || oisyButtonDisabled}
         startIcon={loading ? <CircularProgress color="inherit" size={20} /> : null}
         onClick={handleDissolve}
       >

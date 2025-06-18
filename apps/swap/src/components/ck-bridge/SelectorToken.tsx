@@ -11,7 +11,7 @@ import {
   formatDollarAmount,
   BigNumber,
   isValidPrincipal,
-  nonNullArgs,
+  nonUndefinedOrNull,
   formatAmount,
 } from "@icpswap/utils";
 import { useToken } from "hooks/index";
@@ -132,7 +132,7 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
                   },
                 }}
               >
-                {priceUSD !== undefined && nonNullArgs(balance) && nonNullArgs(token)
+                {priceUSD !== undefined && nonUndefinedOrNull(balance) && nonUndefinedOrNull(token)
                   ? formatDollarAmount(
                       new BigNumber(priceUSD).multipliedBy(parseTokenAmount(balance, token.decimals)).toString(),
                     )

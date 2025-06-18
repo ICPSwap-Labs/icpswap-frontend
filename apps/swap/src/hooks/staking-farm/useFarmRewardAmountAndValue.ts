@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useIntervalUserRewardInfo } from "hooks/staking-farm";
-import { parseTokenAmount, BigNumber, nonNullArgs } from "@icpswap/utils";
+import { parseTokenAmount, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { InitFarmArgs } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
@@ -29,7 +29,7 @@ export function useFarmUserRewardAmountAndValue({ farmId, positionIds, farmInitA
       __userRewardAmount,
       userRewardAmount,
       userRewardValue:
-        nonNullArgs(userRewardAmount) && nonNullArgs(rewardTokenPrice)
+        nonUndefinedOrNull(userRewardAmount) && nonUndefinedOrNull(rewardTokenPrice)
           ? new BigNumber(userRewardAmount).multipliedBy(rewardTokenPrice).toString()
           : undefined,
     }),

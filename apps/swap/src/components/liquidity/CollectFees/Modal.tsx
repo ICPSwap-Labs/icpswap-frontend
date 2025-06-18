@@ -1,6 +1,6 @@
 import { Box, Typography, CircularProgress, useTheme } from "components/Mui";
 import { TokenImage, Modal, Flex, AuthButton } from "components/index";
-import { isNullArgs, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { isUndefinedOrNull, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
 import { useMemo, useState } from "react";
 import { useCollectFeeCallback } from "hooks/swap/useClaimFees";
@@ -39,7 +39,8 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
   const getClaimFeeCall = useCollectFeeCallback();
 
   const handleCollect = async () => {
-    if (loading || !positionId || !pool || !position || isNullArgs(feeAmount0) || isNullArgs(feeAmount1)) return;
+    if (loading || !positionId || !pool || !position || isUndefinedOrNull(feeAmount0) || isUndefinedOrNull(feeAmount1))
+      return;
 
     const { token0, token1 } = pool;
 
@@ -81,7 +82,7 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
   };
 
   const disabled = useMemo(() => {
-    if (isNullArgs(feeAmount0) || isNullArgs(feeAmount1)) return true;
+    if (isUndefinedOrNull(feeAmount0) || isUndefinedOrNull(feeAmount1)) return true;
 
     return feeAmount0 === BigInt(0) && feeAmount1 === BigInt(0);
   }, [feeAmount0, feeAmount1]);

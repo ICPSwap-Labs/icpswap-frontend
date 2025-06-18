@@ -12,14 +12,13 @@ import {
 import { FindPositionsModal, Link } from "components/index";
 import { PositionContext } from "components/swap/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { formatDollarAmount, BigNumber, replaceBrowserHistoryMultiple } from "@icpswap/utils";
 import { PositionSort, PositionFilterState, UserPositionByList, UserPositionForFarm } from "types/swap";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
 import { Unlock } from "react-feather";
 import { useTranslation } from "react-i18next";
 import i18n from "i18n/index";
-import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -67,10 +66,10 @@ export function Positions() {
   const { t } = useTranslation();
   const classes = useStyles();
   const principalString = useAccountPrincipalString();
-  const history = useHistory();
 
-  const { subTab: tab } = useParsedQueryString() as { subTab: TabName | undefined };
+  const { subTab: subTabFromUrl } = useParsedQueryString() as { subTab: TabName | undefined };
   const [loadedTabs, setLoadedTabs] = useState<Array<TabName>>([]);
+  const [subTab, setSubTab] = useState<TabName>(TabName.YourPositions);
 
   const [findPosition, setFindPosition] = useState(false);
   const [positionSort, setPositionSort] = useState<PositionSort>(PositionSort.Default);
@@ -152,22 +151,22 @@ export function Positions() {
     setHiddenNumbers({});
   }, [principalString]);
 
-  const activeTab = useMemo(() => {
-    return tab ?? TabName.YourPositions;
-  }, [tab]);
+  useEffect(() => {
+    if (!loadedTabs.includes(subTab)) {
+      setLoadedTabs([...loadedTabs, subTab]);
+    }
+  }, [subTab, loadedTabs]);
 
   useEffect(() => {
-    if (!loadedTabs.includes(activeTab)) {
-      setLoadedTabs([...loadedTabs, activeTab]);
+    if (subTabFromUrl) {
+      setSubTab(subTabFromUrl);
     }
-  }, [activeTab, loadedTabs]);
+  }, [subTabFromUrl]);
 
-  const handleTab = useCallback(
-    (value: TabName) => {
-      history.push(`/liquidity?tab=Positions&subTab=${value}`);
-    },
-    [history],
-  );
+  const handleTab = useCallback((value: TabName) => {
+    setSubTab(value);
+    replaceBrowserHistoryMultiple({ subTab: value });
+  }, []);
 
   return (
     <PositionContext.Provider
@@ -254,7 +253,7 @@ export function Positions() {
               return (
                 <Flex align="center" gap="0 4px" key={__tab.value}>
                   <Typography
-                    className={`${classes.tab}${activeTab === __tab.value ? " active" : ""}`}
+                    className={`${classes.tab}${subTab === __tab.value ? " active" : ""}`}
                     onClick={() => handleTab(__tab.value)}
                   >
                     {__tab.label}
@@ -323,7 +322,7 @@ export function Positions() {
         </Flex>
 
         <Box mt="26px">
-          <Box sx={{ display: activeTab === TabName.YourPositions ? "block" : "none" }}>
+          <Box sx={{ display: subTab === TabName.YourPositions ? "block" : "none" }}>
             <YourPositions
               filterState={positionFilterState}
               sort={positionSort}
@@ -331,7 +330,7 @@ export function Positions() {
             />
           </Box>
 
-          <Box sx={{ display: activeTab === TabName.StakedPositions ? "block" : "none" }}>
+          <Box sx={{ display: subTab === TabName.StakedPositions ? "block" : "none" }}>
             <StakedPositions
               filterState={positionFilterState}
               sort={positionSort}

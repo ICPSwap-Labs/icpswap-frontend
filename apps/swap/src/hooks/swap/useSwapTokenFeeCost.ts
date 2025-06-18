@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Token } from "@icpswap/swap-sdk";
 import { getTokenInsufficient } from "hooks/swap/index";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 
 export interface useSwapTokenFeeCostProps {
@@ -21,11 +21,11 @@ export function useSwapTokenFeeCost({
 }: useSwapTokenFeeCostProps) {
   return useMemo(() => {
     if (
-      isNullArgs(token) ||
-      isNullArgs(tokenBalance) ||
-      isNullArgs(subAccountBalance) ||
-      isNullArgs(unusedBalance) ||
-      isNullArgs(amount)
+      isUndefinedOrNull(token) ||
+      isUndefinedOrNull(tokenBalance) ||
+      isUndefinedOrNull(subAccountBalance) ||
+      isUndefinedOrNull(unusedBalance) ||
+      isUndefinedOrNull(amount)
     )
       return undefined;
 

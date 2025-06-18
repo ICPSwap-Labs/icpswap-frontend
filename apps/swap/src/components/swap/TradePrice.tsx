@@ -5,7 +5,7 @@ import {
   formatTokenPrice,
   toSignificantWithGroupSeparator,
   BigNumber,
-  isNullArgs,
+  isUndefinedOrNull,
   formatDollarAmount,
 } from "@icpswap/utils";
 import { Typography, useTheme, useMediaQuery } from "components/Mui";
@@ -134,11 +134,11 @@ export function TradePriceV2({ price, token0, token1, showConvert = true, color 
 
   const usdValue = useMemo(() => {
     if (
-      isNullArgs(price) ||
-      isNullArgs(token0) ||
-      isNullArgs(token0USDPrice) ||
-      isNullArgs(token1) ||
-      isNullArgs(token1USDPrice)
+      isUndefinedOrNull(price) ||
+      isUndefinedOrNull(token0) ||
+      isUndefinedOrNull(token0USDPrice) ||
+      isUndefinedOrNull(token1) ||
+      isUndefinedOrNull(token1USDPrice)
     )
       return undefined;
 

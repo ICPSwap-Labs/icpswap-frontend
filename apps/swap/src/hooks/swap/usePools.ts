@@ -2,7 +2,7 @@ import { useMemo, useEffect, useState } from "react";
 import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
-import { isNullArgs, nonNullArgs, numberToString } from "@icpswap/utils";
+import { isUndefinedOrNull, nonUndefinedOrNull, numberToString } from "@icpswap/utils";
 import type { Null, PoolMetadata } from "@icpswap/types";
 import { getPool_update_call } from "hooks/swap/v3Calls";
 import { NETWORK, network } from "constants/index";
@@ -35,7 +35,8 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 
   const sortedPoolKeys: PoolKey[] = useMemo(() => {
     return poolKeys.map(([token0, token1, fee]) => {
-      if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return [token0, token1, fee];
+      if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(fee))
+        return [token0, token1, fee];
 
       const __token0 = token0.sortsBefore(token1) ? token0 : token1;
       const __token1 = __token0.equals(token0) ? token1 : token0;
@@ -55,13 +56,13 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
         sortedPoolKeys.forEach((poolKey, index) => {
           const [token0, token1, fee] = poolKey;
 
-          if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return;
+          if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(fee)) return;
 
           const key = transformedKeyToKey({ token0: token0.address, token1: token1.address, fee });
 
           const metadataResult = poolsMetadata[index];
 
-          if (isNullArgs(metadataResult)) return;
+          if (isUndefinedOrNull(metadataResult)) return;
 
           pools[key] = {
             id: metadataResult.poolId,
@@ -79,7 +80,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
           sortedPoolKeys.map(async (poolKey, index) => {
             const [token0, token1, fee] = poolKey;
 
-            if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return null;
+            if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(fee)) return null;
 
             const pool = await getPool_update_call(token0.address, token1.address, fee);
 
@@ -93,7 +94,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
             } else {
               const metadataResult = poolsMetadata[index];
 
-              if (nonNullArgs(metadataResult)) {
+              if (nonUndefinedOrNull(metadataResult)) {
                 setPools((prevState) => ({
                   ...prevState,
                   [key]: {
@@ -159,7 +160,8 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
     return sortedPoolKeys.map((poolKey, index) => {
       const [token0, token1, fee] = poolKey;
 
-      if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(fee)) return [PoolState.INVALID, null];
+      if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(fee))
+        return [PoolState.INVALID, null];
 
       if (loading) return [PoolState.LOADING, null];
 
@@ -172,11 +174,11 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
       const { metadata, id, checked } = result;
 
       if (
-        isNullArgs(metadata) ||
-        isNullArgs(metadata.token0) ||
-        isNullArgs(metadata.token1) ||
-        isNullArgs(metadata.fee) ||
-        isNullArgs(id)
+        isUndefinedOrNull(metadata) ||
+        isUndefinedOrNull(metadata.token0) ||
+        isUndefinedOrNull(metadata.token1) ||
+        isUndefinedOrNull(metadata.fee) ||
+        isUndefinedOrNull(id)
       )
         return [PoolState.NOT_EXISTS, null];
 
@@ -185,7 +187,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 
         const [token0, token1] = poolKeys[index];
 
-        if (isNullArgs(token0) || isNullArgs(token1)) return [PoolState.NOT_EXISTS, null];
+        if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1)) return [PoolState.NOT_EXISTS, null];
 
         // Renew token standard from the pool metadata
         const __token0 = new Token({

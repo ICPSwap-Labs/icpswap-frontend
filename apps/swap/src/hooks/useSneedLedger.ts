@@ -1,4 +1,4 @@
-import { isNullArgs, isValidPrincipal, principalToAccount } from "@icpswap/utils";
+import { isUndefinedOrNull, isValidPrincipal, principalToAccount } from "@icpswap/utils";
 import { useLiquidityLockIds } from "@icpswap/hooks";
 import { useMemo } from "react";
 import { Null } from "@icpswap/types";
@@ -19,7 +19,7 @@ export interface UseIsSneedOwnerProps {
 
 export function useIsSneedOwner({ owner, sneedLedger }: UseIsSneedOwnerProps) {
   return useMemo(() => {
-    if (isNullArgs(owner) || isNullArgs(sneedLedger)) return false;
+    if (isUndefinedOrNull(owner) || isUndefinedOrNull(sneedLedger)) return false;
 
     if (isValidPrincipal(owner)) {
       return owner === sneedLedger;

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Null } from "@icpswap/types";
-import { icpswap_fetch_post, isNullArgs } from "@icpswap/utils";
+import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
 
 import { useCallsData } from "../useCallData";
 
@@ -13,7 +13,8 @@ interface UseAddressAliasProps {
 export function useAddressAlias({ principal, account, accountTextual }: UseAddressAliasProps) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(principal) && isNullArgs(account) && isNullArgs(accountTextual)) return undefined;
+      if (isUndefinedOrNull(principal) && isUndefinedOrNull(account) && isUndefinedOrNull(accountTextual))
+        return undefined;
 
       return (
         await icpswap_fetch_post<string>(`/info/address/alias`, {
@@ -43,7 +44,7 @@ export async function getAddressesAlias({ principals, accounts }: GetAddressesAl
 export function useAddressesAlias({ principals, accounts }: GetAddressesAliasProps) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(principals) && isNullArgs(accounts)) return undefined;
+      if (isUndefinedOrNull(principals) && isUndefinedOrNull(accounts)) return undefined;
       return await getAddressesAlias({ principals, accounts });
     }, [principals, accounts]),
   );

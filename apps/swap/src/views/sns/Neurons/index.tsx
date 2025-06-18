@@ -10,7 +10,7 @@ import { neuronFormat, NeuronState, getDissolvingTimeInSeconds } from "utils/sns
 import {
   BigNumber,
   formatDollarAmount,
-  isNullArgs,
+  isUndefinedOrNull,
   parseTokenAmount,
   shorten,
   toSignificantWithGroupSeparator,
@@ -72,7 +72,7 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
   const tokenUSDPrice = useUSDPrice(token);
 
   const tokenAmount = useMemo(() => {
-    if (isNullArgs(token)) return undefined;
+    if (isUndefinedOrNull(token)) return undefined;
 
     return parseTokenAmount(formatted_neuron.cached_neuron_stake_e8s, token.decimals).toString();
   }, [token, formatted_neuron]);

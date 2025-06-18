@@ -5,8 +5,8 @@ import {
   formatDollarAmount,
   formatDollarTokenPrice,
   BigNumber,
-  nonNullArgs,
-  isNullArgs,
+  nonUndefinedOrNull,
+  isUndefinedOrNull,
   formatIcpAmount,
 } from "@icpswap/utils";
 import { useToken } from "hooks/index";
@@ -90,7 +90,7 @@ function TokenListItem({ token: tokenMetadata, index }: { token: TokenListMetada
           </BodyCell>
         </Flex>
         <BodyCell align="right">
-          {nonNullArgs(tokenDetails) && nonNullArgs(tokenDetails.holderAmount)
+          {nonUndefinedOrNull(tokenDetails) && nonUndefinedOrNull(tokenDetails.holderAmount)
             ? new BigNumber(tokenDetails.holderAmount).toFormat()
             : "--"}
         </BodyCell>
@@ -172,7 +172,7 @@ export function Tokens() {
                 <TokenListItem key={index} index={index} token={token} />
               ))}
             </>
-          ) : isNullArgs(slicedTokens) ? (
+          ) : isUndefinedOrNull(slicedTokens) ? (
             <Box sx={{ padding: "24px" }}>
               <LoadingRow>
                 <div />

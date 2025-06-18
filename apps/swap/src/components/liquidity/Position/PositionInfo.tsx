@@ -1,6 +1,13 @@
 import { Typography, Button, useMediaQuery, useTheme, Box } from "components/Mui";
 import { IsSneedOwner, MainCard } from "components/index";
-import { isNullArgs, isValidAccount, isValidPrincipal, nonNullArgs, numToPercent, shorten } from "@icpswap/utils";
+import {
+  isUndefinedOrNull,
+  isValidAccount,
+  isValidPrincipal,
+  nonUndefinedOrNull,
+  numToPercent,
+  shorten,
+} from "@icpswap/utils";
 import { Flex, TextButton, APRPanel, Link } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { useAddressAlias, usePositionAPRChartData } from "@icpswap/hooks";
@@ -50,7 +57,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
   }, [setRefreshTrigger]);
 
   const apr = useMemo(() => {
-    if (isNullArgs(positionChartData) || positionChartData.length === 0) return null;
+    if (isUndefinedOrNull(positionChartData) || positionChartData.length === 0) return null;
     return positionChartData[positionChartData.length - 1].apr;
   }, [positionChartData]);
 
@@ -106,7 +113,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
 
           <Flex gap="0 4px">
             <Typography color="text.primary">
-              {owner ? (nonNullArgs(addressAlias) ? addressAlias : shorten(owner)) : "--"}
+              {owner ? (nonUndefinedOrNull(addressAlias) ? addressAlias : shorten(owner)) : "--"}
             </Typography>
 
             <IsSneedOwner isSneed={isSneed} />
@@ -117,7 +124,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
           <Typography>{t("common.apr")}</Typography>
 
           <Typography color="text.primary">
-            {nonNullArgs(apr) ? <APRPanel value={numToPercent(apr, 2)} /> : "--"}
+            {nonUndefinedOrNull(apr) ? <APRPanel value={numToPercent(apr, 2)} /> : "--"}
           </Typography>
         </Flex>
 

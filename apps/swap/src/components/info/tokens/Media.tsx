@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useTheme, Typography } from "components/Mui";
 import { Flex, Image, Link } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 export type MediaProps = { k: string; v: string };
 
@@ -44,7 +44,9 @@ export interface MediasProps {
 export function Medias({ medias }: MediasProps) {
   return (
     <>
-      {nonNullArgs(medias) && medias.length > 0 ? medias.map((media) => <Media key={media.k} media={media} />) : null}
+      {nonUndefinedOrNull(medias) && medias.length > 0
+        ? medias.map((media) => <Media key={media.k} media={media} />)
+        : null}
     </>
   );
 }

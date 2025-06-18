@@ -5,7 +5,7 @@ import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useInfoAllTokens } from "@icpswap/hooks";
-import { isValidPrincipal, formatDollarTokenPrice, nonNullArgs, shortenString } from "@icpswap/utils";
+import { isValidPrincipal, formatDollarTokenPrice, nonUndefinedOrNull, shortenString } from "@icpswap/utils";
 import type { IcpSwapAPITokenInfo, Null, PublicTokenOverview } from "@icpswap/types";
 import { NoData, Proportion } from "@icpswap/ui";
 import { useToken } from "hooks/index";
@@ -175,7 +175,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
     filteredTokens.forEach((e) => {
       const token = globalTokenList.find((_e) => _e.canisterId === e.ledgerId);
 
-      if (nonNullArgs(token)) {
+      if (nonUndefinedOrNull(token)) {
         filteredTokenListTokens = filteredTokenListTokens.concat([e]);
       } else {
         filteredNonTokenListTokens = filteredNonTokenListTokens.concat([e]);

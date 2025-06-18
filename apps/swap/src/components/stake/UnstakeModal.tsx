@@ -5,7 +5,7 @@ import {
   BigNumber,
   parseTokenAmount,
   formatTokenAmount,
-  isNullArgs,
+  isUndefinedOrNull,
   toSignificantWithGroupSeparator,
   formatDollarAmount,
 } from "@icpswap/utils";
@@ -79,7 +79,7 @@ export function UnstakeModal({
   };
 
   const tokenAmount = useMemo(() => {
-    if (isNullArgs(stakeAmount) || isNullArgs(stakeToken)) return undefined;
+    if (isUndefinedOrNull(stakeAmount) || isUndefinedOrNull(stakeToken)) return undefined;
 
     return parseTokenAmount(stakeAmount.toString(), stakeToken.decimals);
   }, [stakeAmount, stakeToken]);

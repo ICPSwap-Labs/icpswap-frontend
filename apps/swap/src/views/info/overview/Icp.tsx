@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { ICP } from "@icpswap/tokens";
-import { parseTokenAmount, formatDollarAmount, BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { parseTokenAmount, formatDollarAmount, BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Flex, MainCard, TokenImage, Proportion } from "@icpswap/ui";
 import { useICPBlocksManager } from "hooks/useICBlocks";
 import { useTokenSupply } from "hooks/token/calls";
@@ -24,7 +24,7 @@ export function Icp() {
   const { blocks, secondBlocks } = useICPBlocksManager();
 
   const fdv = useMemo(() => {
-    if (isNullArgs(icpTotalSupply) || isNullArgs(icpTokenInfo)) return null;
+    if (isUndefinedOrNull(icpTotalSupply) || isUndefinedOrNull(icpTokenInfo)) return null;
 
     return formatDollarAmount(
       parseTokenAmount(icpTotalSupply, ICP.decimals).multipliedBy(icpTokenInfo.priceUSD).toString(),
@@ -32,7 +32,7 @@ export function Icp() {
   }, [icpTotalSupply, icpTokenInfo]);
 
   const marketCap = useMemo(() => {
-    if (isNullArgs(tokenAnalysis) || isNullArgs(icpTokenInfo)) return null;
+    if (isUndefinedOrNull(tokenAnalysis) || isUndefinedOrNull(icpTokenInfo)) return null;
 
     return formatDollarAmount(new BigNumber(tokenAnalysis.marketAmount).multipliedBy(icpTokenInfo.priceUSD).toString());
   }, [tokenAnalysis, icpTokenInfo]);
@@ -98,14 +98,14 @@ export function Icp() {
           <Box>
             <Typography>{t("common.market.cap")}</Typography>
             <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
-              {nonNullArgs(marketCap) ? marketCap : "--"}
+              {nonUndefinedOrNull(marketCap) ? marketCap : "--"}
             </Typography>
           </Box>
 
           <Box>
             <Typography>{t("common.fully.diluted.cap")}</Typography>
             <Typography sx={{ margin: "14px 0 0 0", fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
-              {nonNullArgs(fdv) ? fdv : "--"}
+              {nonUndefinedOrNull(fdv) ? fdv : "--"}
             </Typography>
           </Box>
 

@@ -12,7 +12,7 @@ import {
   BigNumber,
   formatDollarTokenPrice,
   formatAmount,
-  nonNullArgs,
+  nonUndefinedOrNull,
   formatDollarAmount,
   explorerLink,
   formatIcpAmount,
@@ -50,13 +50,13 @@ export function TokenDetail() {
   const { result: tokenTVL } = useTokenLatestTVL(canisterId);
 
   const marketCap = useMemo(() => {
-    if (nonNullArgs(tokenAnalysis) && nonNullArgs(infoToken)) {
+    if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(infoToken)) {
       return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(infoToken.priceUSD).toString();
     }
   }, [tokenAnalysis, infoToken]);
 
   // const circulating = useMemo(() => {
-  //   if (nonNullArgs(tokenAnalysis) && nonNullArgs(tokenSupply) && nonNullArgs(token)) {
+  //   if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(tokenSupply) && nonUndefinedOrNull(token)) {
   //     return `${new BigNumber(
   //       new BigNumber(tokenAnalysis.marketAmount).dividedBy(parseTokenAmount(tokenSupply, token.decimals)).toFixed(4),
   //     ).multipliedBy(100)}%`;
@@ -302,7 +302,7 @@ export function TokenDetail() {
               <Flex vertical align="flex-start" gap="8px 0">
                 <Typography>{t("common.market.cap")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
-                  {nonNullArgs(marketCap) ? formatDollarAmount(marketCap) : "--"}
+                  {nonUndefinedOrNull(marketCap) ? formatDollarAmount(marketCap) : "--"}
                 </Typography>
               </Flex>
 

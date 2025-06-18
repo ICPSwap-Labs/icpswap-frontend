@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { Connector } from "constants/index";
 import { useConnector } from "store/auth/hooks";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useErrorTip } from "hooks/useTips";
 import { OisyDisabledTips, type OisyDisabledPage } from "components/OisyDisabledTips";
 
@@ -15,7 +15,7 @@ export function useOisyDisabledTips({ page, noTips = false }: UseOisyDisabledPro
   const [openErrorTip] = useErrorTip();
 
   useEffect(() => {
-    if (isNullArgs(connector)) return;
+    if (isUndefinedOrNull(connector)) return;
 
     if (connector === Connector.Oisy && noTips === false) {
       openErrorTip(<OisyDisabledTips page={page} />, { autoHideDuration: 10000 });
@@ -23,7 +23,7 @@ export function useOisyDisabledTips({ page, noTips = false }: UseOisyDisabledPro
   }, [connector, noTips]);
 
   return useMemo(() => {
-    if (isNullArgs(connector)) return true;
+    if (isUndefinedOrNull(connector)) return true;
     return connector === Connector.Oisy;
   }, [connector]);
 }

@@ -2,7 +2,13 @@ import { useCallback, useMemo } from "react";
 import { Typography, Button, CircularProgress, Box } from "components/Mui";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { toSignificantWithGroupSeparator, parseTokenAmount, nonNullArgs, isNullArgs, BigNumber } from "@icpswap/utils";
+import {
+  toSignificantWithGroupSeparator,
+  parseTokenAmount,
+  nonUndefinedOrNull,
+  isUndefinedOrNull,
+  BigNumber,
+} from "@icpswap/utils";
 import { useUserPCMBalance, usePCMMetadata } from "@icpswap/hooks";
 import { useWithdrawPCMBalanceCallback, useUserPassCodes, WithdrawPCMBalanceArgs } from "hooks/swap/index";
 import { useRefreshTrigger, useGlobalContext, useToken } from "hooks/index";
@@ -28,7 +34,13 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
   const { callback: withdrawPCMBalance, loading: withdrawPCMBalanceLoading } = useWithdrawPCMBalanceCallback();
 
   const handleWithdrawPCMBalance = useCallback(async () => {
-    if (isNullArgs(unusedPCMBalance) || !pcmToken || isNullArgs(pcmMetadata) || isNullArgs(passCodes)) return;
+    if (
+      isUndefinedOrNull(unusedPCMBalance) ||
+      !pcmToken ||
+      isUndefinedOrNull(pcmMetadata) ||
+      isUndefinedOrNull(passCodes)
+    )
+      return;
 
     const args = [
       {
@@ -54,7 +66,12 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
   }, [unusedPCMBalance, pcmToken, pcmMetadata, passCodes]);
 
   const totalTokenAmount = useMemo(() => {
-    if (isNullArgs(unusedPCMBalance) || isNullArgs(pcmToken) || isNullArgs(passCodes) || isNullArgs(pcmMetadata))
+    if (
+      isUndefinedOrNull(unusedPCMBalance) ||
+      isUndefinedOrNull(pcmToken) ||
+      isUndefinedOrNull(passCodes) ||
+      isUndefinedOrNull(pcmMetadata)
+    )
       return undefined;
 
     return new BigNumber(unusedPCMBalance.toString()).plus(
@@ -71,7 +88,7 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
 
       <Flex gap="0 8px" sx={{ margin: "15px 0 0 0" }}>
         <Typography className={className}>
-          {pcmToken && nonNullArgs(totalTokenAmount)
+          {pcmToken && nonUndefinedOrNull(totalTokenAmount)
             ? `${toSignificantWithGroupSeparator(parseTokenAmount(totalTokenAmount, pcmToken.decimals).toString())} ${
                 pcmToken.symbol
               }`
@@ -82,7 +99,7 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
           size="small"
           onClick={handleWithdrawPCMBalance}
           startIcon={withdrawPCMBalanceLoading ? <CircularProgress color="inherit" size={16} /> : null}
-          disabled={withdrawPCMBalanceLoading || isNullArgs(totalTokenAmount) || totalTokenAmount.isEqualTo(0)}
+          disabled={withdrawPCMBalanceLoading || isUndefinedOrNull(totalTokenAmount) || totalTokenAmount.isEqualTo(0)}
         >
           {t("common.withdraw")}
         </Button>

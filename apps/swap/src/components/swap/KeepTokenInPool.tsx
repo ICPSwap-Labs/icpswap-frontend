@@ -3,7 +3,7 @@ import { Typography, Checkbox } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { RotateCcw } from "react-feather";
 import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
-import { nonNullArgs } from "@icpswap/utils";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 import { KeepTokenInPoolsConfirmModal } from "components/swap/KeepTokenInPoolsConfirm";
 import { useGlobalContext } from "hooks/index";
 import { useTranslation } from "react-i18next";
@@ -38,7 +38,7 @@ export function KeepTokenInPool({ ui, label, showRefresh = true, refreshKey }: K
   }, [setCheckOpen, keepInPools, updateKeepInPools]);
 
   const handleRefresh = useCallback(() => {
-    if (setRefreshTriggers && nonNullArgs(refreshKey)) {
+    if (setRefreshTriggers && nonUndefinedOrNull(refreshKey)) {
       setRefreshTriggers(refreshKey);
     }
   }, [setRefreshTriggers, refreshKey]);

@@ -1,4 +1,4 @@
-import { isNullArgs, resultFormat } from "@icpswap/utils";
+import { isUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { useCallback } from "react";
 import type { Null, TokenAnalysisData } from "@icpswap/types";
 import { tokenAnalysis } from "@icpswap/actor";
@@ -14,7 +14,7 @@ export async function getTokenAnalysis(canisterId: string | Null) {
 export function useTokenAnalysis(canisterId: string | Null) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(canisterId)) return undefined;
+      if (isUndefinedOrNull(canisterId)) return undefined;
       return await getTokenAnalysis(canisterId);
     }, [canisterId]),
   );

@@ -1,5 +1,5 @@
 import { Principal } from "@dfinity/principal";
-import { isNullArgs, isValidPrincipal } from "@icpswap/utils";
+import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
 import { useCallback } from "react";
 import { useCallsData } from "@icpswap/hooks";
 import { tokenAdapter } from "@icpswap/token-adapter";
@@ -39,7 +39,7 @@ export interface useAllowanceArgs {
 export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub, refresh }: useAllowanceArgs) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(spender) || isNullArgs(owner) || isNullArgs(canisterId)) return undefined;
+      if (isUndefinedOrNull(spender) || isUndefinedOrNull(owner) || isUndefinedOrNull(canisterId)) return undefined;
 
       return await allowance({
         spender,

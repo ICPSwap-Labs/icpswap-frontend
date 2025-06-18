@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Null } from "@icpswap/types";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 import { useCallsData } from "../useCallData";
 
@@ -48,7 +48,7 @@ interface UserNodeMachinesOfSubnetProps {
 export function useNodeMachinesOfSubnet({ subnet }: UserNodeMachinesOfSubnetProps) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(subnet)) return undefined;
+      if (isUndefinedOrNull(subnet)) return undefined;
       const fetch_result = await fetch(`https://ic-api.internetcomputer.org/api/v3/nodes?subnet=${subnet}`).catch(
         () => undefined,
       );

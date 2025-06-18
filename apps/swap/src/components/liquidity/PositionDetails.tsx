@@ -6,7 +6,7 @@ import { CurrencyAmountFormatDecimals } from "constants/index";
 import {
   BigNumber,
   formatDollarAmount,
-  isNullArgs,
+  isUndefinedOrNull,
   toSignificantWithGroupSeparator,
   formatLiquidityAmount,
   urlStringFormat,
@@ -124,13 +124,13 @@ export function PositionDetails({
   const { token0, token1 } = position?.pool || {};
 
   useEffect(() => {
-    if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && !isLimit) {
+    if (!isUndefinedOrNull(feeUSDValue) && !isUndefinedOrNull(positionKey) && staked !== true && !isLimit) {
       setPositionFees(positionKey, new BigNumber(feeUSDValue));
     }
   }, [setPositionFees, positionKey, feeUSDValue, staked, isLimit]);
 
   const { amount0, amount1, value0, value1 } = useMemo(() => {
-    if (!position || isNullArgs(token0USDPrice) || isNullArgs(token1USDPrice)) return {};
+    if (!position || isUndefinedOrNull(token0USDPrice) || isUndefinedOrNull(token1USDPrice)) return {};
 
     const amount0 = position.amount0.toFixed(CurrencyAmountFormatDecimals(position.amount0.currency.decimals));
     const amount1 = position.amount1.toFixed(CurrencyAmountFormatDecimals(position.amount1.currency.decimals));

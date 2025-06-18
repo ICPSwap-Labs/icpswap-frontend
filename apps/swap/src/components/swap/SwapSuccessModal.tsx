@@ -5,7 +5,7 @@ import { Flex, Link, Modal } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 import { ArrowRight } from "react-feather";
 import { useSwapFinalMetadataManager } from "store/hooks";
-import { formatAmount, isNullArgs, nonNullArgs, parseTokenAmount } from "@icpswap/utils";
+import { formatAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { APP_URL } from "constants/index";
 
 export interface SwapSuccessModalProps {
@@ -31,7 +31,12 @@ export function SwapSuccessModal({ onClose, open }: SwapSuccessModalProps) {
   }, [swapFinalMetadata]);
 
   const xShareUrl = useMemo(() => {
-    if (isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(inputAmount) || isNullArgs(outputAmount))
+    if (
+      isUndefinedOrNull(inputToken) ||
+      isUndefinedOrNull(outputToken) ||
+      isUndefinedOrNull(inputAmount) ||
+      isUndefinedOrNull(outputAmount)
+    )
       return undefined;
 
     return `https://x.com/intent/tweet?url=${APP_URL}/swap&text=Just swapped ${formatAmount(
@@ -51,7 +56,7 @@ export function SwapSuccessModal({ onClose, open }: SwapSuccessModalProps) {
         <Flex gap="0 4px">
           <TokenImage size="20px" tokenId={inputToken?.address} logo={inputToken?.logo} />
           <Typography fontSize="16px" color="text.primary">
-            {nonNullArgs(inputAmount) && nonNullArgs(inputToken)
+            {nonUndefinedOrNull(inputAmount) && nonUndefinedOrNull(inputToken)
               ? formatAmount(parseTokenAmount(inputAmount.toString(), inputToken.decimals).toString())
               : "--"}{" "}
             {inputToken?.symbol}
@@ -63,7 +68,7 @@ export function SwapSuccessModal({ onClose, open }: SwapSuccessModalProps) {
         <Flex gap="0 4px">
           <TokenImage size="20px" tokenId={outputToken?.address} logo={outputToken?.logo} />
           <Typography fontSize="16px" color="text.primary">
-            {nonNullArgs(outputAmount) && nonNullArgs(outputToken)
+            {nonUndefinedOrNull(outputAmount) && nonUndefinedOrNull(outputToken)
               ? formatAmount(parseTokenAmount(outputAmount.toString(), outputToken.decimals).toString())
               : "--"}{" "}
             {outputToken?.symbol}

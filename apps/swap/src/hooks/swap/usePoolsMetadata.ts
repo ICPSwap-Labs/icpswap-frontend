@@ -1,4 +1,4 @@
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { Token, FeeAmount } from "@icpswap/swap-sdk";
 import { useMemo, useEffect, useState } from "react";
 import { getSwapPool, getSwapPoolMetadata } from "@icpswap/hooks";
@@ -26,7 +26,7 @@ export async function getMultiPoolsMetadata(poolKeys: [Token | Null, Token | Nul
 
   return await Promise.all(
     transformedPoolKeys.map(async (ele) => {
-      if (isNullArgs(ele)) return null;
+      if (isUndefinedOrNull(ele)) return null;
 
       const [token0, token1, fee] = ele;
 

@@ -3,7 +3,7 @@ import { Typography, Button, useTheme } from "components/Mui";
 import { Flex, TokenImage, MainCard } from "components/index";
 import { Position } from "@icpswap/swap-sdk";
 import {
-  isNullArgs,
+  isUndefinedOrNull,
   parseTokenAmount,
   formatDollarAmount,
   toSignificantWithGroupSeparator,
@@ -34,18 +34,20 @@ export function UncollectedFees({ position, positionId, isOwner }: UncollectedFe
   const token1USDPrice = useUSDPriceById(token1?.address);
 
   const fee0USDValue = useMemo(() => {
-    if (isNullArgs(token0) || isNullArgs(feeAmount0) || isNullArgs(token0USDPrice)) return undefined;
+    if (isUndefinedOrNull(token0) || isUndefinedOrNull(feeAmount0) || isUndefinedOrNull(token0USDPrice))
+      return undefined;
 
     return parseTokenAmount(feeAmount0, token0.decimals).multipliedBy(token0USDPrice);
   }, [feeAmount0, token0, token0USDPrice]);
 
   const fee1USDValue = useMemo(() => {
-    if (isNullArgs(token1) || isNullArgs(feeAmount1) || isNullArgs(token1USDPrice)) return undefined;
+    if (isUndefinedOrNull(token1) || isUndefinedOrNull(feeAmount1) || isUndefinedOrNull(token1USDPrice))
+      return undefined;
     return parseTokenAmount(feeAmount1, token1.decimals).multipliedBy(token1USDPrice);
   }, [feeAmount1, token1, token1USDPrice]);
 
   const totalUSDValue = useMemo(() => {
-    if (isNullArgs(fee0USDValue) || isNullArgs(fee1USDValue)) return undefined;
+    if (isUndefinedOrNull(fee0USDValue) || isUndefinedOrNull(fee1USDValue)) return undefined;
     return fee0USDValue.plus(fee1USDValue);
   }, [fee0USDValue, fee1USDValue]);
 
@@ -55,11 +57,11 @@ export function UncollectedFees({ position, positionId, isOwner }: UncollectedFe
 
   const disableCollect = useMemo(() => {
     if (
-      isNullArgs(totalUSDValue) ||
-      isNullArgs(feeAmount0) ||
-      isNullArgs(feeAmount1) ||
-      isNullArgs(token0) ||
-      isNullArgs(token1)
+      isUndefinedOrNull(totalUSDValue) ||
+      isUndefinedOrNull(feeAmount0) ||
+      isUndefinedOrNull(feeAmount1) ||
+      isUndefinedOrNull(token0) ||
+      isUndefinedOrNull(token1)
     )
       return true;
 

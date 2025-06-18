@@ -1,7 +1,7 @@
 import { useInfoPoolsOfToken, useInfoTokenStorageIds } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { Null } from "@icpswap/types";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useMemo } from "react";
 
 export function useTokenDexScreener(tokenId: string | Null) {
@@ -14,7 +14,7 @@ export function useTokenDexScreener(tokenId: string | Null) {
   const { result: tokenPools } = useInfoPoolsOfToken(storageId, tokenId);
 
   return useMemo(() => {
-    if (isNullArgs(tokenId) || isNullArgs(tokenPools)) return undefined;
+    if (isUndefinedOrNull(tokenId) || isUndefinedOrNull(tokenPools)) return undefined;
 
     const poolWithICP = tokenPools.find((e) => {
       if (e.token0Id === tokenId) {

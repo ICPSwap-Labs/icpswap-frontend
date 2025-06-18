@@ -4,10 +4,10 @@ import { CurrencySelector } from "components/swap/index";
 import {
   formatDollarAmount,
   BigNumber,
-  nonNullArgs,
+  nonUndefinedOrNull,
   parseTokenAmount,
   formatTokenAmount,
-  isNullArgs,
+  isUndefinedOrNull,
 } from "@icpswap/utils";
 import { Flex, MaxButton, Tooltip } from "@icpswap/ui";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
@@ -97,12 +97,12 @@ export function SwapInputCurrency({
   const maxPoolBalanceSpent = usePoolBalanceMaxSpend({ token, subBalance, unusedBalance });
 
   const handleWalletBalanceClick = useCallback(() => {
-    if (!isInput || isNullArgs(maxWalletBalanceSpent) || isNullArgs(token)) return;
+    if (!isInput || isUndefinedOrNull(maxWalletBalanceSpent) || isUndefinedOrNull(token)) return;
     onInput(maxAmountFormat(maxWalletBalanceSpent.toExact(), token.decimals));
   }, [onInput, isInput, maxWalletBalanceSpent, token]);
 
   const handleCanisterBalanceClick = useCallback(() => {
-    if (isInput !== true || isNullArgs(maxPoolBalanceSpent) || isNullArgs(token)) return undefined;
+    if (isInput !== true || isUndefinedOrNull(maxPoolBalanceSpent) || isUndefinedOrNull(token)) return undefined;
     onInput(maxAmountFormat(maxPoolBalanceSpent.toExact(), token.decimals));
   }, [onInput, maxPoolBalanceSpent, isInput, token]);
 
@@ -138,8 +138,8 @@ export function SwapInputCurrency({
         <Flex fullWidth justify="space-between" sx={{ margin: "12px 0 0 0" }}>
           <Flex gap="0 8px">
             {noLiquidity === false ? (
-              nonNullArgs(unusedBalance) &&
-              nonNullArgs(subBalance) &&
+              nonUndefinedOrNull(unusedBalance) &&
+              nonUndefinedOrNull(subBalance) &&
               token &&
               parseTokenAmount(new BigNumber(unusedBalance.toString()).plus(subBalance), token.decimals).isGreaterThan(
                 0,

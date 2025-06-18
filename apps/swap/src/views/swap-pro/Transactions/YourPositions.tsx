@@ -8,7 +8,7 @@ import { UserPositionByList } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePool } from "hooks/swap/usePools";
-import { BigNumber, formatDollarAmount, formatAmount, isNullArgs } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SwapProContext } from "components/swap/pro";
 import { Null } from "@icpswap/types";
@@ -177,7 +177,7 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
   const { result: userLimitOrders } = useUserLimitOrders(poolId, principal?.toString());
 
   const filteredPositions = useMemo(() => {
-    if (isNullArgs(userPositions) || isNullArgs(userLimitOrders)) return null;
+    if (isUndefinedOrNull(userPositions) || isUndefinedOrNull(userLimitOrders)) return null;
 
     return (
       userPositions

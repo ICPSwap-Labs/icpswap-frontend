@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from "react";
 import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { BigNumber, formatDollarAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
 import { isDarkTheme } from "utils/index";
 import { Loading } from "components/index";
@@ -181,7 +181,13 @@ export function PositionCard({
   }, [fee]);
 
   const { currencyFeeAmount0, currencyFeeAmount1 } = useMemo(() => {
-    if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(feeAmount0) || isNullArgs(feeAmount1)) return {};
+    if (
+      isUndefinedOrNull(token0) ||
+      isUndefinedOrNull(token1) ||
+      isUndefinedOrNull(feeAmount0) ||
+      isUndefinedOrNull(feeAmount1)
+    )
+      return {};
 
     const currencyFeeAmount0 = CurrencyAmount.fromRawAmount(token0, feeAmount0.toString());
     const currencyFeeAmount1 = CurrencyAmount.fromRawAmount(token1, feeAmount1.toString());
@@ -194,10 +200,10 @@ export function PositionCard({
 
   const feeUSDValue = useMemo(() => {
     if (
-      isNullArgs(currencyFeeAmount0) ||
-      isNullArgs(currencyFeeAmount1) ||
-      isNullArgs(token0USDPrice) ||
-      isNullArgs(token1USDPrice)
+      isUndefinedOrNull(currencyFeeAmount0) ||
+      isUndefinedOrNull(currencyFeeAmount1) ||
+      isUndefinedOrNull(token0USDPrice) ||
+      isUndefinedOrNull(token1USDPrice)
     )
       return undefined;
 
@@ -208,13 +214,13 @@ export function PositionCard({
   }, [currencyFeeAmount0, currencyFeeAmount1, token0USDPrice, token1USDPrice]);
 
   useEffect(() => {
-    if (nonNullArgs(totalUSDValue) && nonNullArgs(positionKey) && isLimit === false) {
+    if (nonUndefinedOrNull(totalUSDValue) && nonUndefinedOrNull(positionKey) && isLimit === false) {
       setAllPositionsUSDValue(positionKey, new BigNumber(totalUSDValue));
     }
   }, [totalUSDValue, positionKey, staked, isLimit]);
 
   const displayByFilter = useMemo(() => {
-    if (isNullArgs(positionState) || isNullArgs(isLimit)) return true;
+    if (isUndefinedOrNull(positionState) || isUndefinedOrNull(isLimit)) return true;
     if (isLimit) return false;
 
     switch (filterState) {

@@ -6,7 +6,7 @@ import {
   formatAmount,
   formatDollarAmount,
   BigNumber,
-  nonNullArgs,
+  nonUndefinedOrNull,
   formatDollarTokenPrice,
 } from "@icpswap/utils";
 import { useInfoToken, useTokenAnalysis, useTokenSupply, useTokenBurned } from "@icpswap/hooks";
@@ -27,13 +27,13 @@ export function Ics() {
   const { result: tokenBurned } = useTokenBurned(ICS.address);
 
   const marketCap = useMemo(() => {
-    if (nonNullArgs(tokenAnalysis) && nonNullArgs(infoToken)) {
+    if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(infoToken)) {
       return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(infoToken.priceUSD).toString();
     }
   }, [tokenAnalysis, infoToken]);
 
   const fdv = useMemo(() => {
-    if (nonNullArgs(tokenSupply) && nonNullArgs(infoToken)) {
+    if (nonUndefinedOrNull(tokenSupply) && nonUndefinedOrNull(infoToken)) {
       return parseTokenAmount(tokenSupply, ICS.decimals).multipliedBy(infoToken.priceUSD).toString();
     }
   }, [tokenSupply, infoToken]);

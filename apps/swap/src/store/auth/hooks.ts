@@ -200,7 +200,7 @@ export function useIdentityKitInitialConnect() {
         // The returned user is undefined is initializing, so disable disconnect for now.
         // Do something when IdentityKit is out session
 
-        // if (isInitializing === false && isNullArgs(user)) {
+        // if (isInitializing === false && isUndefinedOrNull(user)) {
         //   await disconnect();
         //   setLoading(false);
         //   return;

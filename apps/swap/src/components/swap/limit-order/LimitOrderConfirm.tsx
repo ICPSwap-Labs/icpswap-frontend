@@ -5,7 +5,7 @@ import {
   BigNumber,
   formatDollarAmount,
   formatTokenAmount,
-  isNullArgs,
+  isUndefinedOrNull,
   parseTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
@@ -119,7 +119,7 @@ export function LimitOrderConfirm({
   const [viewAll, setViewAll] = useState(false);
 
   const outputAmount = useMemo(() => {
-    if (isNullArgs(orderPrice) || isNullArgs(inputAmount)) return undefined;
+    if (isUndefinedOrNull(orderPrice) || isUndefinedOrNull(inputAmount)) return undefined;
 
     return new BigNumber(inputAmount).multipliedBy(orderPrice).toString();
   }, [inputAmount, orderPrice]);

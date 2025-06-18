@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Null } from "@icpswap/types";
-import { isNullArgs } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 import { useCallsData } from "../useCallData";
 
@@ -15,7 +15,7 @@ interface UseSubtetBlockRateProps {
 export function useSubnetBlockRate({ subnet }: UseSubtetBlockRateProps) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(subnet)) return null;
+      if (isUndefinedOrNull(subnet)) return null;
 
       const fetch_result = await fetch(
         `https://ic-api.internetcomputer.org/api/v3/metrics/block-rate?subnet=${subnet}`,

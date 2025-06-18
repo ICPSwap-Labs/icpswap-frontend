@@ -1,7 +1,7 @@
 import { Flex, GridRowBetween, Proportion } from "@icpswap/ui";
 import { Typography, Box, useTheme } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
-import { formatAmount, BigNumber, formatTokenPrice, formatDollarTokenPrice, isNullArgs } from "@icpswap/utils";
+import { formatAmount, BigNumber, formatTokenPrice, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 import { useUSDPrice } from "hooks";
 import { useMemo } from "react";
@@ -31,7 +31,13 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
   const token1USDPrice = useUSDPrice(token1);
 
   const { lockedToken0Amount, lockedToken1Amount } = useMemo(() => {
-    if (isNullArgs(data) || isNullArgs(index) || isNullArgs(currentPrice) || isNullArgs(price0)) return {};
+    if (
+      isUndefinedOrNull(data) ||
+      isUndefinedOrNull(index) ||
+      isUndefinedOrNull(currentPrice) ||
+      isUndefinedOrNull(price0)
+    )
+      return {};
 
     let lockedToken0Amount = new BigNumber(0);
     let lockedToken1Amount = new BigNumber(0);

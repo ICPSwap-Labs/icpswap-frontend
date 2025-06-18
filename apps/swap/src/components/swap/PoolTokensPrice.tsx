@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { nonNullArgs, formatDollarTokenPrice } from "@icpswap/utils";
+import { nonUndefinedOrNull, formatDollarTokenPrice } from "@icpswap/utils";
 import { Pool } from "@icpswap/swap-sdk";
 import { useUSDPriceById } from "hooks/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
@@ -29,7 +29,7 @@ export function PoolTokensPrice({ pool, width }: PoolTokensPriceProps) {
     >
       <Flex gap="0 4px">
         <Typography color="text.primary" className="text-overflow-ellipsis" sx={{ maxWidth: width }}>
-          {nonNullArgs(token0) && nonNullArgs(token1) && nonNullArgs(pool)
+          {nonUndefinedOrNull(token0) && nonUndefinedOrNull(token1) && nonUndefinedOrNull(pool)
             ? manuallyInverted
               ? `1 ${token1.symbol} = ${pool.priceOf(token1).toSignificant(6)} ${token0.symbol}${
                   token1USDPrice ? ` = ${formatDollarTokenPrice(token1USDPrice)}` : ""

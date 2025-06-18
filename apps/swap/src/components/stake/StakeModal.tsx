@@ -3,7 +3,7 @@ import { Button, Typography, Grid, Box, CircularProgress } from "components/Mui"
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { Token } from "@icpswap/swap-sdk";
-import { parseTokenAmount, numberToString, formatTokenAmount, isNullArgs, BigNumber } from "@icpswap/utils";
+import { parseTokenAmount, numberToString, formatTokenAmount, isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { Flex, MaxButton } from "@icpswap/ui";
 import { useToken } from "hooks/useCurrency";
@@ -37,7 +37,7 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
   const [, rewardToken] = useToken(pool.rewardToken.address);
 
   const balance = useMemo(() => {
-    if (isNullArgs(_balance) || isNullArgs(token)) return undefined;
+    if (isUndefinedOrNull(_balance) || isUndefinedOrNull(token)) return undefined;
     return parseTokenAmount(_balance, token.decimals);
   }, [_balance, token]);
 

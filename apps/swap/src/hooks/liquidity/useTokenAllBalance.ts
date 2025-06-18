@@ -4,7 +4,7 @@ import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { useUserUnusedBalance } from "@icpswap/hooks";
-import { BigNumber, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 
 interface UseTokenAllBalanceProps {
   token0: Token | undefined;
@@ -38,11 +38,15 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
       token0SubAccountBalance: token0SubAccountBalance ?? "0",
       token1SubAccountBalance: token1SubAccountBalance ?? "0",
       token0AllBalance:
-        nonNullArgs(token0Balance) && nonNullArgs(token0SubAccountBalance) && nonNullArgs(unusedBalance)
+        nonUndefinedOrNull(token0Balance) &&
+        nonUndefinedOrNull(token0SubAccountBalance) &&
+        nonUndefinedOrNull(unusedBalance)
           ? new BigNumber(token0Balance).plus(token0SubAccountBalance).plus(unusedBalance.balance0.toString())
           : undefined,
       token1AllBalance:
-        nonNullArgs(token1Balance) && nonNullArgs(token1SubAccountBalance) && nonNullArgs(unusedBalance)
+        nonUndefinedOrNull(token1Balance) &&
+        nonUndefinedOrNull(token1SubAccountBalance) &&
+        nonUndefinedOrNull(unusedBalance)
           ? new BigNumber(token1Balance).plus(token1SubAccountBalance).plus(unusedBalance.balance1.toString())
           : undefined,
     };

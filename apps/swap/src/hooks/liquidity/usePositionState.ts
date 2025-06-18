@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { Position } from "@icpswap/swap-sdk";
 import { PositionState } from "utils/swap/index";
 
@@ -7,7 +7,13 @@ export function usePositionState(position: Position | undefined) {
   const { pool, tickLower, tickUpper } = position || {};
 
   return useMemo(() => {
-    if (isNullArgs(pool) || isNullArgs(tickUpper) || isNullArgs(tickLower) || isNullArgs(position)) return undefined;
+    if (
+      isUndefinedOrNull(pool) ||
+      isUndefinedOrNull(tickUpper) ||
+      isUndefinedOrNull(tickLower) ||
+      isUndefinedOrNull(position)
+    )
+      return undefined;
 
     const outOfRange =
       pool && (tickUpper || tickUpper === 0) && (tickLower || tickLower === 0)

@@ -22,7 +22,7 @@ import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmMod
 import { useErrorTip, useLoadingTip } from "hooks/useTips";
 import { isDarkTheme, parseBackPath } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
-import { BigNumber, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useAddLiquidityCall } from "hooks/swap/useAddLiquidity";
 import StepViewButton from "components/Steps/View";
@@ -252,17 +252,17 @@ export default function AddLiquidity() {
     // So set the value is 0 by default
     // TODO: Fix this?
     if (
-      isNullArgs(position) ||
-      isNullArgs(principal) ||
-      isNullArgs(pcmMetadata) ||
-      isNullArgs(pcmToken) ||
-      isNullArgs(userPCMBalance) ||
-      isNullArgs(token0Balance) ||
-      isNullArgs(token1Balance) ||
-      isNullArgs(token0SubAccountBalance) ||
-      isNullArgs(token1SubAccountBalance) ||
-      isNullArgs(unusedBalance) ||
-      isNullArgs(installers)
+      isUndefinedOrNull(position) ||
+      isUndefinedOrNull(principal) ||
+      isUndefinedOrNull(pcmMetadata) ||
+      isUndefinedOrNull(pcmToken) ||
+      isUndefinedOrNull(userPCMBalance) ||
+      isUndefinedOrNull(token0Balance) ||
+      isUndefinedOrNull(token1Balance) ||
+      isUndefinedOrNull(token0SubAccountBalance) ||
+      isUndefinedOrNull(token1SubAccountBalance) ||
+      isUndefinedOrNull(unusedBalance) ||
+      isUndefinedOrNull(installers)
     )
       return;
 
@@ -544,7 +544,7 @@ export default function AddLiquidity() {
                 </Flex>
               ) : null}
 
-              {nonNullArgs(baseCurrency) && nonNullArgs(quoteCurrency) && !noLiquidity ? (
+              {nonUndefinedOrNull(baseCurrency) && nonUndefinedOrNull(quoteCurrency) && !noLiquidity ? (
                 <Flex
                   fullWidth
                   sx={{

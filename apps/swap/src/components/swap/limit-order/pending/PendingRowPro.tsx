@@ -7,8 +7,8 @@ import { useState, useCallback, useMemo } from "react";
 import { Typography, useTheme } from "components/Mui";
 import {
   nanosecond2Millisecond,
-  nonNullArgs,
-  isNullArgs,
+  nonUndefinedOrNull,
+  isUndefinedOrNull,
   parseTokenAmount,
   BigNumber,
   formatTokenPrice,
@@ -67,14 +67,14 @@ export function PendingRowPro({
   });
 
   const inputAmount = useMemo(() => {
-    if (isNullArgs(inputToken)) return null;
+    if (isUndefinedOrNull(inputToken)) return null;
     return new BigNumber(token0InAmount.toString()).isEqualTo(0)
       ? parseTokenAmount(token1InAmount, inputToken.decimals).toString()
       : parseTokenAmount(token0InAmount, inputToken.decimals).toString();
   }, [token0InAmount, token1InAmount, inputToken]);
 
   const outputAmount = useMemo(() => {
-    if (nonNullArgs(limitPrice) && nonNullArgs(outputToken) && nonNullArgs(inputAmount)) {
+    if (nonUndefinedOrNull(limitPrice) && nonUndefinedOrNull(outputToken) && nonUndefinedOrNull(inputAmount)) {
       return new BigNumber(inputAmount).multipliedBy(limitPrice.toFixed(outputToken.decimals)).toString();
     }
   }, [inputAmount, limitPrice, outputToken]);

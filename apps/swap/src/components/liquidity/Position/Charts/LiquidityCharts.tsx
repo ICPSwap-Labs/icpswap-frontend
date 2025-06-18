@@ -4,7 +4,7 @@ import { Flex } from "@icpswap/ui";
 import { usePoolPricePeriodRange } from "@icpswap/hooks";
 import { Bound } from "constants/swap";
 import { ChartTimeEnum, Null } from "@icpswap/types";
-import { isNullArgs, BigNumber } from "@icpswap/utils";
+import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
 import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
 
@@ -58,7 +58,7 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
   );
 
   const { poolPriceLower, poolPriceUpper } = useMemo(() => {
-    if (isNullArgs(periodPriceRange)) return {};
+    if (isUndefinedOrNull(periodPriceRange)) return {};
 
     let poolPriceLower: number | string | Null = null;
     let poolPriceUpper: number | string | Null = null;

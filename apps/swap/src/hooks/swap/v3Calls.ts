@@ -11,7 +11,7 @@ import {
   createSwapPool,
   _getSwapPoolAllBalance,
 } from "@icpswap/hooks";
-import { resultFormat, isAvailablePageArgs, isNullArgs, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, isUndefinedOrNull, availableArgsNull } from "@icpswap/utils";
 import { FeeAmount } from "@icpswap/swap-sdk";
 import type { Null, PaginationResult, SwapPoolData, UserStorageTransaction } from "@icpswap/types";
 import BigNumber from "bignumber.js";
@@ -100,7 +100,7 @@ export async function getPositionDetailsFromId(poolId: string, positionId: strin
 export function usePositionDetailsFromId(poolId: string | Null, positionId: string | undefined) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(poolId) || isNullArgs(positionId)) return undefined;
+      if (isUndefinedOrNull(poolId) || isUndefinedOrNull(positionId)) return undefined;
       return await getPositionDetailsFromId(poolId, positionId);
     }, [poolId, positionId]),
   );

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { isNullArgs, BigNumber, formatTokenAmount } from "@icpswap/utils";
+import { isUndefinedOrNull, BigNumber, formatTokenAmount } from "@icpswap/utils";
 import { Position, tickToPrice, CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { LimitOrder, Null } from "@icpswap/types";
 
@@ -65,7 +65,7 @@ export function useLimitTokenAndAmount({ limit, position }: UseLimitTokenAndAmou
   outputDealAmount: CurrencyAmount<Token> | undefined;
 } {
   return useMemo(() => {
-    if (isNullArgs(limit) || isNullArgs(position)) {
+    if (isUndefinedOrNull(limit) || isUndefinedOrNull(position)) {
       return {
         inputToken: undefined,
         outputToken: undefined,
@@ -88,7 +88,13 @@ export function useLimitDetails({ limit, position, tickLimit }: UseLimitDetailsP
   const { inputAmount, inputToken, outputToken } = useLimitTokenAndAmount({ limit, position });
 
   return useMemo(() => {
-    if (isNullArgs(inputAmount) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(position)) return {};
+    if (
+      isUndefinedOrNull(inputAmount) ||
+      isUndefinedOrNull(inputToken) ||
+      isUndefinedOrNull(outputToken) ||
+      isUndefinedOrNull(position)
+    )
+      return {};
 
     const baseToken = inputToken;
     const quoteToken = outputToken;

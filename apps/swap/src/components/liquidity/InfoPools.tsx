@@ -24,7 +24,7 @@ import {
   getPoolAPR,
 } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { formatDollarAmount, isNullArgs, percentToNum, urlStringFormat } from "@icpswap/utils";
+import { formatDollarAmount, isUndefinedOrNull, percentToNum, urlStringFormat } from "@icpswap/utils";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { Search } from "react-feather";
@@ -549,7 +549,7 @@ export function InfoPools() {
                     <PoolRow key={pool.pool} index={index + 1} pool={pool} timeBase={timeBase} />
                   ))}
                 </>
-              ) : isNullArgs(slicedPools) ? (
+              ) : isUndefinedOrNull(slicedPools) ? (
                 <Box sx={{ padding: "24px" }}>
                   <LoadingRow>
                     <div />

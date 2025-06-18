@@ -1,7 +1,7 @@
 import { Flex, APRPanel } from "@icpswap/ui";
 import { useMemo } from "react";
 import { Null, type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { formatDollarAmount, parseTokenAmount, formatAmount, nonNullArgs, BigNumber } from "@icpswap/utils";
+import { formatDollarAmount, parseTokenAmount, formatAmount, nonUndefinedOrNull, BigNumber } from "@icpswap/utils";
 import { useStakePoolStatInfo } from "@icpswap/hooks";
 import { StakingPoolInfo } from "@icpswap/types";
 import { useUSDPrice } from "hooks/useUSDPrice";
@@ -32,7 +32,7 @@ export function AprCell({ poolInfo, stakingPoolInfo }: AprCellProps) {
   });
 
   const { rewardAmount, rewardsUSDValue } = useMemo(() => {
-    if (nonNullArgs(rewardToken) && nonNullArgs(stakeStatInfo)) {
+    if (nonUndefinedOrNull(rewardToken) && nonUndefinedOrNull(stakeStatInfo)) {
       const amount = parseTokenAmount(stakeStatInfo.rewardTokenAmount, rewardToken.decimals).toString();
 
       return {

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { BigNumber, isNullArgs, parseTokenAmount } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { Position } from "@icpswap/swap-sdk";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 
@@ -15,11 +15,11 @@ export function usePositionFeesValue({ position, feeAmount0, feeAmount1 }: usePo
 
   return useMemo(() => {
     if (
-      isNullArgs(position) ||
-      isNullArgs(feeAmount0) ||
-      isNullArgs(feeAmount1) ||
-      isNullArgs(token0USDPrice) ||
-      isNullArgs(token1USDPrice)
+      isUndefinedOrNull(position) ||
+      isUndefinedOrNull(feeAmount0) ||
+      isUndefinedOrNull(feeAmount1) ||
+      isUndefinedOrNull(token0USDPrice) ||
+      isUndefinedOrNull(token1USDPrice)
     )
       return undefined;
 

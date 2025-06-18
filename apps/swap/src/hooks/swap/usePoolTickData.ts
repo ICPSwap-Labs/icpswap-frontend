@@ -3,7 +3,7 @@ import { JSBI } from "utils/index";
 import { useMemo } from "react";
 import { useSwapAllTicks } from "@icpswap/hooks";
 import { usePoolCanisterId } from "hooks/swap/index";
-import { isNullArgs, BigNumber } from "@icpswap/utils";
+import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 
 import { PoolState, usePool } from "./usePools";
 
@@ -125,7 +125,7 @@ export function usePoolActiveLiquidity(
     if (
       !token0 ||
       !token1 ||
-      isNullArgs(activeTick) ||
+      isUndefinedOrNull(activeTick) ||
       poolState !== PoolState.EXISTS ||
       !sortedTicks ||
       sortedTicks.length === 0 ||

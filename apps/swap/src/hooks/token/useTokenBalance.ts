@@ -10,8 +10,8 @@ import {
   isOkSubAccount,
   principalToAccount,
   BigNumber,
-  isNullArgs,
-  nonNullArgs,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
 } from "@icpswap/utils";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
@@ -101,10 +101,10 @@ export function useTokenBalance(
     useCallback(async () => {
       if (!account || !canisterId) return undefined;
       const result = await getTokenBalance(canisterId, account, sub);
-      const balance = result && nonNullArgs(result.data) ? result.data.toString() : undefined;
+      const balance = result && nonUndefinedOrNull(result.data) ? result.data.toString() : undefined;
       const tokenKey = getTokenBalanceKey(canisterId, account.toString(), sub);
 
-      if (tokenKey && nonNullArgs(balance)) updateStateBalance(tokenKey, balance);
+      if (tokenKey && nonUndefinedOrNull(balance)) updateStateBalance(tokenKey, balance);
 
       return balance;
     }, [account, canisterId, sub, updateStateBalance]),
@@ -113,8 +113,8 @@ export function useTokenBalance(
 
   return useMemo(() => {
     return {
-      loading: isNullArgs(stateBalance) ? loading : false,
-      result: nonNullArgs(balance) ? balance.toString() : stateBalance,
+      loading: isUndefinedOrNull(stateBalance) ? loading : false,
+      result: nonUndefinedOrNull(balance) ? balance.toString() : stateBalance,
     };
   }, [loading, balance, stateBalance, canisterId]);
 }
@@ -179,7 +179,7 @@ export function useCurrencyBalance(
   const { loading, result } = useTokenBalance(token?.address, account, refresh);
 
   return useMemo(() => {
-    if (isNullArgs(result) || loading || !token)
+    if (isUndefinedOrNull(result) || loading || !token)
       return {
         loading,
         result: undefined,
@@ -202,13 +202,13 @@ export function useCurrencyBalanceV1(
   const { loading, result } = useTokenBalance(token?.address, account, refresh);
 
   useEffect(() => {
-    if (nonNullArgs(result)) {
+    if (nonUndefinedOrNull(result)) {
       setStoreResult(result);
     }
   }, [result]);
 
   return useMemo(() => {
-    if (!token || isNullArgs(storeResult) || loading)
+    if (!token || isUndefinedOrNull(storeResult) || loading)
       return {
         loading,
         result: storeResult && token ? CurrencyAmount.fromRawAmount(token, storeResult) : undefined,

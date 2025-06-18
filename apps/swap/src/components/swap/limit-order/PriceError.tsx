@@ -4,7 +4,7 @@ import { Flex } from "@icpswap/ui";
 import { tickToPrice, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { WaringIcon } from "assets/icons/WaringIcon";
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 
 import { LimitContext } from "./context";
@@ -29,7 +29,12 @@ export function PriceError({
   const { selectedPool, inverted } = useContext(LimitContext);
 
   const pricePercent = useMemo(() => {
-    if (isNullArgs(orderPriceTick) || isNullArgs(minSettableTick) || isNullArgs(inputToken) || isNullArgs(outputToken))
+    if (
+      isUndefinedOrNull(orderPriceTick) ||
+      isUndefinedOrNull(minSettableTick) ||
+      isUndefinedOrNull(inputToken) ||
+      isUndefinedOrNull(outputToken)
+    )
       return null;
 
     const orderPrice = tickToPrice(inputToken, outputToken, orderPriceTick);

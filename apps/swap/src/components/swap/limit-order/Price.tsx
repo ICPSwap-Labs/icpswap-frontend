@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, useContext, forwardRef, useImperativeHandle } from "react";
 import { Box, Typography } from "components/Mui";
 import { Flex, MainCard } from "@icpswap/ui";
-import { BigNumber, formatTokenAmount, isNullArgs, nonNullArgs } from "@icpswap/utils";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Price, tickToPrice, Token, TICK_SPACINGS, priceToClosestTick, CurrencyAmount } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -53,7 +53,7 @@ export const SwapLimitPrice = forwardRef(
     const { inverted, setInverted, selectedPool } = useContext(LimitContext);
 
     const minUseablePrice = useMemo(() => {
-      if (nonNullArgs(inputToken) && nonNullArgs(outputToken) && nonNullArgs(minUseableTick)) {
+      if (nonUndefinedOrNull(inputToken) && nonUndefinedOrNull(outputToken) && nonUndefinedOrNull(minUseableTick)) {
         return tickToPrice(inputToken, outputToken, minUseableTick).toFixed(outputToken.decimals);
       }
     }, [inputToken, outputToken, minUseableTick]);
@@ -79,13 +79,13 @@ export const SwapLimitPrice = forwardRef(
     const handleInvert = useCallback(() => {
       setInverted(!inverted);
 
-      if (nonNullArgs(inputValue) && inputValue !== "" && nonNullArgs(outputToken)) {
+      if (nonUndefinedOrNull(inputValue) && inputValue !== "" && nonUndefinedOrNull(outputToken)) {
         handleInputPrice(new BigNumber(1).dividedBy(inputValue).toFixed(outputToken.decimals), !inverted);
       }
     }, [setInverted, outputToken, inputValue, inverted]);
 
     useEffect(() => {
-      if (isNullArgs(orderPrice) || orderPrice === "") {
+      if (isUndefinedOrNull(orderPrice) || orderPrice === "") {
         setInputValue("");
       }
     }, [orderPrice]);
@@ -105,7 +105,7 @@ export const SwapLimitPrice = forwardRef(
     }, [inverted, inputToken, outputToken]);
 
     const __orderPrice = useMemo(() => {
-      if (nonNullArgs(orderPrice) && nonNullArgs(inputToken) && nonNullArgs(outputToken)) {
+      if (nonUndefinedOrNull(orderPrice) && nonUndefinedOrNull(inputToken) && nonUndefinedOrNull(outputToken)) {
         return new Price(
           inputToken,
           outputToken,
@@ -116,17 +116,17 @@ export const SwapLimitPrice = forwardRef(
     }, [orderPrice, inputToken, outputToken]);
 
     const closestTick = useMemo(() => {
-      if (nonNullArgs(__orderPrice)) {
+      if (nonUndefinedOrNull(__orderPrice)) {
         return priceToClosestTick(__orderPrice);
       }
     }, [__orderPrice]);
 
     const handleIncreasePrice = useCallback(() => {
       if (
-        nonNullArgs(selectedPool) &&
-        nonNullArgs(closestTick) &&
-        nonNullArgs(inputToken) &&
-        nonNullArgs(outputToken)
+        nonUndefinedOrNull(selectedPool) &&
+        nonUndefinedOrNull(closestTick) &&
+        nonUndefinedOrNull(inputToken) &&
+        nonUndefinedOrNull(outputToken)
       ) {
         const newPriceTick =
           closestTick +
@@ -150,10 +150,10 @@ export const SwapLimitPrice = forwardRef(
 
     const handleDecreasePrice = useCallback(() => {
       if (
-        nonNullArgs(closestTick) &&
-        nonNullArgs(selectedPool) &&
-        nonNullArgs(inputToken) &&
-        nonNullArgs(outputToken)
+        nonUndefinedOrNull(closestTick) &&
+        nonUndefinedOrNull(selectedPool) &&
+        nonUndefinedOrNull(inputToken) &&
+        nonUndefinedOrNull(outputToken)
       ) {
         const newPriceTick =
           closestTick +
@@ -178,11 +178,11 @@ export const SwapLimitPrice = forwardRef(
 
     const handleMinMax = useCallback(() => {
       if (
-        isNullArgs(selectedPool) ||
-        isNullArgs(inputToken) ||
-        isNullArgs(outputToken) ||
-        isNullArgs(minUseableTick) ||
-        isNullArgs(isInputTokenSorted) ||
+        isUndefinedOrNull(selectedPool) ||
+        isUndefinedOrNull(inputToken) ||
+        isUndefinedOrNull(outputToken) ||
+        isUndefinedOrNull(minUseableTick) ||
+        isUndefinedOrNull(isInputTokenSorted) ||
         atLimitedTick === true
       )
         return;
@@ -201,7 +201,7 @@ export const SwapLimitPrice = forwardRef(
 
     const handlePriceChange = useCallback(
       (val: number) => {
-        if (isNullArgs(currentPrice) || atLimitedTick === true) return;
+        if (isUndefinedOrNull(currentPrice) || atLimitedTick === true) return;
 
         const invertedPrice = new BigNumber(1).dividedBy(currentPrice);
         const invertedNewPrice = inverted
@@ -214,7 +214,7 @@ export const SwapLimitPrice = forwardRef(
     );
 
     // const handleSetDefaultPrice = useCallback(() => {
-    //   if (isNullArgs(selectedPool) || isNullArgs(inputToken) || isNullArgs(outputToken) || isNullArgs(minUseableTick))
+    //   if (isUndefinedOrNull(selectedPool) || isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken) || isUndefinedOrNull(minUseableTick))
     //     return;
 
     //   // Force tick range exclude tick current
@@ -225,10 +225,10 @@ export const SwapLimitPrice = forwardRef(
 
     const handleBlur: React.FocusEventHandler<HTMLInputElement> = useCallback(() => {
       if (
-        isNullArgs(inputToken) ||
-        isNullArgs(outputToken) ||
-        isNullArgs(selectedPool) ||
-        isNullArgs(isInputTokenSorted)
+        isUndefinedOrNull(inputToken) ||
+        isUndefinedOrNull(outputToken) ||
+        isUndefinedOrNull(selectedPool) ||
+        isUndefinedOrNull(isInputTokenSorted)
       )
         return;
 

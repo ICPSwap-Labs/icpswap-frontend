@@ -5,8 +5,8 @@ import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import {
   BigNumber,
   formatDollarAmount,
-  isNullArgs,
-  nonNullArgs,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
@@ -182,7 +182,13 @@ export function PositionCardForFarm({
   }, [fee]);
 
   const { currencyFeeAmount0, currencyFeeAmount1 } = useMemo(() => {
-    if (isNullArgs(token0) || isNullArgs(token1) || isNullArgs(feeAmount0) || isNullArgs(feeAmount1)) return {};
+    if (
+      isUndefinedOrNull(token0) ||
+      isUndefinedOrNull(token1) ||
+      isUndefinedOrNull(feeAmount0) ||
+      isUndefinedOrNull(feeAmount1)
+    )
+      return {};
 
     const currencyFeeAmount0 = CurrencyAmount.fromRawAmount(token0, feeAmount0.toString());
     const currencyFeeAmount1 = CurrencyAmount.fromRawAmount(token1, feeAmount1.toString());
@@ -196,13 +202,13 @@ export function PositionCardForFarm({
   const feeUSDValue = usePositionFeesValue({ position, feeAmount0, feeAmount1 });
 
   useEffect(() => {
-    if (nonNullArgs(totalUSDValue) && nonNullArgs(positionKey)) {
+    if (nonUndefinedOrNull(totalUSDValue) && nonUndefinedOrNull(positionKey)) {
       setAllPositionsUSDValue(positionKey, new BigNumber(totalUSDValue));
     }
   }, [totalUSDValue, positionKey, staked]);
 
   const displayByFilter = useMemo(() => {
-    if (isNullArgs(positionState)) return true;
+    if (isUndefinedOrNull(positionState)) return true;
 
     switch (filterState) {
       case PositionFilterState.All:
@@ -230,7 +236,7 @@ export function PositionCardForFarm({
   const { result: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
 
   const deposit = useMemo(() => {
-    if (!deposits || isNullArgs(positionId)) return undefined;
+    if (!deposits || isUndefinedOrNull(positionId)) return undefined;
 
     return deposits.filter((e) => e.positionId === positionId)[0];
   }, [deposits, positionId]);

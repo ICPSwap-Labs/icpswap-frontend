@@ -1,5 +1,5 @@
 import { usePositions } from "hooks/liquidity/usePositions";
-import { isNullArgs, pageArgsFormat } from "@icpswap/utils";
+import { isUndefinedOrNull, pageArgsFormat } from "@icpswap/utils";
 import { useEffect, useMemo, useState } from "react";
 import { PaginationType } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
@@ -35,7 +35,7 @@ export function PositionTable({ poolId, principal, wrapperClassName, padding, em
 
   const { result: allLimitOrdersResult } = useLimitOrders(poolId);
   const allLimitOrders = useMemo(() => {
-    if (isNullArgs(allLimitOrdersResult)) return null;
+    if (isUndefinedOrNull(allLimitOrdersResult)) return null;
 
     return allLimitOrdersResult.lowerLimitOrders
       .concat(allLimitOrdersResult.upperLimitOrders)
