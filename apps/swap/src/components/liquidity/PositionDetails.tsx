@@ -11,7 +11,7 @@ import {
   formatLiquidityAmount,
   urlStringFormat,
 } from "@icpswap/utils";
-import { CurrencyAmount, Position, Token, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
+import { CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
 import { PositionState } from "utils/index";
 import { TokenImage } from "components/index";
 import { usePositionContext, TransferPosition } from "components/swap/index";
@@ -99,7 +99,6 @@ export interface PositionDetailsProps {
 export function PositionDetails({
   position,
   positionId,
-  manuallyInverted,
   show,
   token0USDPrice,
   token1USDPrice,
@@ -123,22 +122,6 @@ export function PositionDetails({
   const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { token0, token1 } = position?.pool || {};
-
-  const pricesFromPosition = getPriceOrderingFromPositionForUI(position);
-
-  // handle manual inversion
-  const { base } = useInverter({
-    priceLower: pricesFromPosition?.priceLower,
-    priceUpper: pricesFromPosition?.priceUpper,
-    quote: pricesFromPosition?.quote,
-    base: pricesFromPosition?.base,
-    invert: manuallyInverted,
-  });
-
-  const inverted = token1 ? base?.equals(token1) : undefined;
-
-  const currencyQuote = inverted ? token0 : token1;
-  const currencyBase = inverted ? token1 : token0;
 
   useEffect(() => {
     if (!isNullArgs(feeUSDValue) && !isNullArgs(positionKey) && staked !== true && !isLimit) {
@@ -199,11 +182,7 @@ export function PositionDetails({
             <PositionDetailItem
               label={
                 <Flex gap="0 4px">
-                  <TokenImage
-                    logo={currencyQuote?.logo}
-                    tokenId={currencyQuote?.address}
-                    size={matchDownSM ? "16px" : "20px"}
-                  />
+                  <TokenImage logo={token0?.logo} tokenId={token0?.address} size={matchDownSM ? "16px" : "20px"} />
                   <Typography
                     sx={{
                       width: "136px",
@@ -216,7 +195,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    {t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
+                    {t("common.amount.with.symbol", { symbol: token0?.symbol })}
                   </Typography>
                 </Flex>
               }
@@ -245,11 +224,7 @@ export function PositionDetails({
             <PositionDetailItem
               label={
                 <Flex gap="0 4px">
-                  <TokenImage
-                    logo={currencyBase?.logo}
-                    tokenId={currencyBase?.address}
-                    size={matchDownSM ? "16px" : "20px"}
-                  />
+                  <TokenImage logo={token1?.logo} tokenId={token1?.address} size={matchDownSM ? "16px" : "20px"} />
                   <Typography
                     sx={{
                       width: "136px",
@@ -262,7 +237,7 @@ export function PositionDetails({
                       },
                     }}
                   >
-                    {t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
+                    {t("common.amount.with.symbol", { symbol: token1?.symbol })}
                   </Typography>
                 </Flex>
               }

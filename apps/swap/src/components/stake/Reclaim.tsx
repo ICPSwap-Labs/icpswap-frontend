@@ -169,7 +169,7 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
             </LoadingRow>
           </Box>
         ) : unusedToken && unusedToken.balance === BigInt(0) && !claimableStakingAmount && !claimableRewards ? (
-          <NoData />
+          <NoData tip={t("stake.reclaim.empty")} />
         ) : (
           <Box>
             {unusedToken && unusedToken?.balance && unusedToken?.balance > BigInt(0) && poolId && stakeToken ? (

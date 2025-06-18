@@ -20,25 +20,17 @@ import { StakingPoolInfo, StakingState } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
 import { useTranslation } from "react-i18next";
 
-const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
+function CountdownBox({ startTime, endTime }: { startTime: number; endTime: number }) {
   const { t } = useTranslation();
-
   const nowTime = parseInt(String(Date.now() / 1000));
-  let expand = false;
-  let date = startTime;
-  if (nowTime > endTime) {
-    expand = true;
-  }
-  if (nowTime < startTime) {
-    date = startTime * 1000;
-  } else if (nowTime > startTime && nowTime < endTime) {
-    date = endTime * 1000;
-  } else {
-    date = 0;
-  }
+  const isEnded = nowTime > endTime;
 
-  return expand ? <Typography color="text.primary">{t("common.end")}</Typography> : <Countdown date={date} />;
-};
+  if (isEnded) return <Typography color="text.primary">{t("common.end")}</Typography>;
+
+  const countDownDate = nowTime < startTime ? startTime * 1000 : endTime * 1000;
+
+  return <Countdown date={countDownDate} />;
+}
 
 export interface StakeDetailsProps {
   poolId: string | undefined;
@@ -92,8 +84,12 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
             <Flex gap="0 4px">
               {stakeToken ? (
                 <>
-                  <Link href={`/swap?input=${ICP.address}&output=${stakeToken.address}`} color="text.secondary">
-                    Get {stakeToken.symbol}
+                  <Link
+                    href={`/swap?input=${ICP.address}&output=${stakeToken.address}`}
+                    color="text.secondary"
+                    target="_blank"
+                  >
+                    Buy {stakeToken.symbol}
                   </Link>
 
                   <Image src="/images/external-link.svg" sx={{ width: "22px", height: "22px", cursor: "pointer" }} />
@@ -137,30 +133,6 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
                 </Link>
               </Flex>
             ) : null}
-
-            <Flex sx={{ width: "100%" }} justify="space-between" align="flex-start">
-              <Typography>{t("stake.reward.per.second")}</Typography>
-              <Flex vertical align="flex-end">
-                <Typography color="text.primary">
-                  {!rewardToken || !poolInfo
-                    ? "--"
-                    : `${toSignificantWithGroupSeparator(
-                        parseTokenAmount(poolInfo.rewardPerTime, rewardToken.decimals).toString(),
-                        8,
-                      )} ${rewardToken.symbol}`}
-                </Typography>
-
-                <Typography mt="4px">
-                  {!rewardToken || !rewardTokenPrice || !poolInfo
-                    ? "--"
-                    : `${formatDollarAmount(
-                        parseTokenAmount(poolInfo.rewardPerTime, rewardToken.decimals)
-                          .multipliedBy(rewardTokenPrice)
-                          .toString(),
-                      )}`}
-                </Typography>
-              </Flex>
-            </Flex>
 
             <Flex sx={{ width: "100%" }} justify="space-between" align="flex-start">
               <Typography>{t("stake.reward.per.day")}</Typography>

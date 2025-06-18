@@ -1,16 +1,9 @@
 import { useState } from "react";
 import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
-import {
-  formatDollarAmount,
-  formatAmount,
-  parseTokenAmount,
-  explorerLink,
-  cycleValueFormat,
-  BigNumber,
-} from "@icpswap/utils";
+import { formatDollarAmount, formatAmount, parseTokenAmount, explorerLink, BigNumber } from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
-import { usePoolLatestTVL, usePoolAPR, useSwapCyclesInfo } from "@icpswap/hooks";
+import { usePoolLatestTVL, usePoolAPR } from "@icpswap/hooks";
 import { useInfoPool } from "hooks/info/index";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
 import { PoolTransactions } from "components/info/swap";
@@ -89,8 +82,6 @@ export default function SwapPoolDetails() {
     openTips("Copy Successfully", TIP_SUCCESS);
   };
 
-  const { result: cycles } = useSwapCyclesInfo(canisterId);
-
   const apr = usePoolAPR({ volumeUSD: pool?.volumeUSD, tvlUSD: poolTvlUSD });
 
   return (
@@ -122,14 +113,6 @@ export default function SwapPoolDetails() {
               <TextButton link={explorerLink(canisterId)}>{canisterId}</TextButton>
               <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
             </Flex>
-          </Box>
-
-          <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
-            <Box sx={{ background: theme.palette.background.level4, borderRadius: "8px", padding: "4px 6px" }}>
-              <Typography color="text.primary" sx={{ fontSize: "12px" }}>
-                {cycleValueFormat(cycles?.balance)}
-              </Typography>
-            </Box>
           </Box>
         </Box>
       </Box>

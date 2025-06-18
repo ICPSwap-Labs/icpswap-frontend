@@ -13,6 +13,7 @@ import { LoadingRow, Wrapper, Link } from "components/index";
 import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
 import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
 import { useTranslation } from "react-i18next";
+import { DEFAULT_ROOT_ID } from "constants/nns";
 
 import { getProposalStatus } from "./proposal.utils";
 
@@ -120,7 +121,7 @@ export default function Votes() {
   const [excludeFuncIds, setExcludeFuncIds] = useState<bigint[]>([]);
 
   const root_id = useMemo(() => {
-    return root_id_url ?? "csyra-haaaa-aaaaq-aacva-cai";
+    return root_id_url ?? DEFAULT_ROOT_ID;
   }, [root_id_url]);
 
   const { result: listedSNS } = useListDeployedSNSs();
