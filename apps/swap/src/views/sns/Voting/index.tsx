@@ -20,9 +20,10 @@ import { getProposalStatus } from "./proposal.utils";
 interface ProposalItemProps {
   proposal: ProposalData;
   governance_id: string | undefined;
+  latest_id: bigint | undefined;
 }
 
-function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
+function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps) {
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -78,7 +79,12 @@ function ProposalItem({ proposal, governance_id }: ProposalItemProps) {
         },
       }}
     >
-      <Link to={`/sns/voting/${governance_id}/${proposal_id}`} width="100%" height="100%" display="block">
+      <Link
+        to={`/sns/voting/${governance_id}/${proposal_id}${latest_id ? `?latest_id=${latest_id}` : ""}`}
+        width="100%"
+        height="100%"
+        display="block"
+      >
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography>ID: {proposal.id[0]?.id.toString() ?? "--"}</Typography>
 
@@ -245,6 +251,7 @@ export default function Votes() {
                 key={proposal.id[0]?.id ? proposal.id[0]?.id.toString() : `proposal_${index}`}
                 proposal={proposal}
                 governance_id={governance_id}
+                latest_id={proposals ? proposals[0].id[0]?.id : undefined}
               />
             ))}
           </Box>

@@ -1,7 +1,13 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import { useListDeployedSNSs, useProposal, useListNeurons, useNervousSystemParameters } from "@icpswap/hooks";
-import { useMemo, useState } from "react";
-import { LoadingRow, TokenImage, MainCard, Wrapper } from "components/index";
+import {
+  useListDeployedSNSs,
+  useProposal,
+  useListNeurons,
+  useNervousSystemParameters,
+  useParsedQueryString,
+} from "@icpswap/hooks";
+import { useCallback, useMemo, useState } from "react";
+import { LoadingRow, TokenImage, MainCard, Wrapper, Flex } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { nowInSeconds } from "@icpswap/utils";
 import { useToken } from "hooks/index";
@@ -13,6 +19,34 @@ import { VotingResult } from "./components/VotingResult";
 import { ProposalSummary } from "./components/Summary";
 import { ProposalPayload } from "./components/Payload";
 
+interface ProposalSwitchProps {
+  proposal_id: string;
+  governance_id: string;
+  latest_id: string | undefined;
+  prev?: boolean;
+}
+
+function ProposalSwitch({ proposal_id, latest_id, governance_id, prev }: ProposalSwitchProps) {
+  const history = useHistory();
+
+  const handleProposalSwitch = useCallback(() => {
+    if (prev) {
+      history.push(`/sns/voting/${governance_id}/${Number(proposal_id) - 1}?latest_id=${latest_id}`);
+    } else {
+      history.push(`/sns/voting/${governance_id}/${Number(proposal_id) + 1}?latest_id=${latest_id}`);
+    }
+  }, [history, prev, proposal_id, governance_id]);
+
+  return (
+    <Box
+      sx={{ width: "20px", height: "20px", cursor: "pointer", transform: prev ? "rotate(180deg)" : "rotate(0deg)" }}
+      onClick={handleProposalSwitch}
+    >
+      <img width="20px" height="20px" src="/images/arrow-left.svg" alt="" />
+    </Box>
+  );
+}
+
 export default function Voting() {
   const theme = useTheme();
   const history = useHistory();
@@ -20,6 +54,7 @@ export default function Voting() {
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   const { governance_id, proposal_id } = useParams<{ governance_id: string; proposal_id: string }>();
+  const { latest_id } = useParsedQueryString() as { latest_id: string | undefined };
 
   const { result: listedSNS } = useListDeployedSNSs();
 
@@ -31,6 +66,7 @@ export default function Voting() {
   }, [listedSNS, governance_id]);
 
   const ledger_id = sns?.ledger_canister_id.toString();
+  const root_id = sns?.root_canister_id[0]?.toString();
 
   const [, token] = useToken(ledger_id);
   const { result: proposal_data, loading } = useProposal(
@@ -68,20 +104,31 @@ export default function Voting() {
     };
   }, [proposal_data]);
 
-  const handleBack = () => {
-    history.goBack();
-  };
+  const handleBack = useCallback(() => {
+    if (root_id) {
+      history.push(`/sns/voting?root_id=${root_id}`);
+    }
+  }, [history, root_id]);
 
   return (
     <Wrapper>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Box sx={{ width: "100%", maxWidth: "1400px" }}>
           <MainCard>
-            <Box sx={{ margin: "0 0 12px 0" }}>
+            <Flex justify="space-between">
               <ArrowLeft color="#ffffff" size="20px" cursor="pointer" onClick={handleBack} />
-            </Box>
+              <Flex gap="16px">
+                {latest_id && latest_id !== proposal_id ? (
+                  <ProposalSwitch proposal_id={proposal_id} governance_id={governance_id} latest_id={latest_id} />
+                ) : null}
 
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
+                {proposal_id !== "1" ? (
+                  <ProposalSwitch proposal_id={proposal_id} governance_id={governance_id} latest_id={latest_id} prev />
+                ) : null}
+              </Flex>
+            </Flex>
+
+            <Box sx={{ display: "flex", justifyContent: "center", margin: "12px 0 0 0 " }}>
               {loading ? (
                 <Box sx={{ width: "100%" }}>
                   <LoadingRow>
