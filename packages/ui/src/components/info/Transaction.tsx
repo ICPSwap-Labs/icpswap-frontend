@@ -1,4 +1,4 @@
-import { formatDollarAmount, formatAmount, enumToString, shorten, BigNumber, nonNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, formatAmount, enumToString, shorten, BigNumber } from "@icpswap/utils";
 import type { InfoTransactionResponse } from "@icpswap/types";
 import dayjs from "dayjs";
 import { Copy } from "react-feather";

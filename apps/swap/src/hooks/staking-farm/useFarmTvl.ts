@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useFarmTVL } from "@icpswap/hooks";
 import { useICPPrice } from "store/global/hooks";
-import { isNullArgs, parseTokenAmount } from "@icpswap/utils";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useToken, useUSDPrice } from "hooks/index";
 
 export function useFarmTvl(farmId: string) {
@@ -16,7 +16,7 @@ export function useFarmTvl(farmId: string) {
   const token1Price = useUSDPrice(token1);
 
   const tvl = useMemo(() => {
-    if (!farmTvl || !icpPrice || !token0 || !token1 || isNullArgs(token0Price) || isNullArgs(token1Price))
+    if (!farmTvl || !icpPrice || !token0 || !token1 || isUndefinedOrNull(token0Price) || isUndefinedOrNull(token1Price))
       return undefined;
 
     const { poolToken0, poolToken1 } = farmTvl;

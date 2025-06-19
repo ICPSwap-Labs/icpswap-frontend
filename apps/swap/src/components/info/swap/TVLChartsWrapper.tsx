@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Typography, Box } from "components/Mui";
-import { formatDollarAmount, isNullArgs } from "@icpswap/utils";
+import { formatDollarAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { GridAutoRows, MainCard, LineChartAlt, Tooltip, ImageLoading } from "@icpswap/ui";
 import dayjs from "dayjs";
 import { ApiResult, InfoGlobalDataResponse, InfoGlobalRealTimeDataResponse, Null, PageResponse } from "@icpswap/types";
@@ -18,7 +18,7 @@ export function TVLChartsWrapper({ globalCharts, globalProtocol }: TVLChartsWrap
   const [leftLabel, setLeftLabel] = useState<string | undefined>();
 
   const reversedGlobalCharts = useMemo(() => {
-    if (isNullArgs(globalCharts)) return undefined;
+    if (isUndefinedOrNull(globalCharts)) return undefined;
     return [...globalCharts.content].reverse();
   }, [globalCharts]);
 

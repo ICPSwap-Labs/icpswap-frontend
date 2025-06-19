@@ -1,4 +1,4 @@
-import { BigNumber, isNullArgs } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { useMemo } from "react";
 
 export function getFee24HFromVolume24H(volume24H: string | number) {
@@ -7,7 +7,7 @@ export function getFee24HFromVolume24H(volume24H: string | number) {
 
 export function uesFee24HFromVolume24H(volume24H: string | number | undefined) {
   return useMemo(() => {
-    if (isNullArgs(volume24H)) return undefined;
+    if (isUndefinedOrNull(volume24H)) return undefined;
     return getFee24HFromVolume24H(volume24H);
   }, [volume24H]);
 }

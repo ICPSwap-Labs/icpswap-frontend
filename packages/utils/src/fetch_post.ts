@@ -2,7 +2,7 @@ import { IcpSwapAPIResult } from "@icpswap/types";
 import { ICPSWAP_API } from "@icpswap/constants";
 
 import { resultFormat } from "./resultFormat";
-import { nonNullArgs } from "./isNullArgs";
+import { nonUndefinedOrNull } from "./isUndefinedOrNull";
 
 export async function fetch_post<T>(api: string, data?: any) {
   const fetch_result = await fetch(api, {
@@ -28,7 +28,7 @@ export async function fetch_get<T>(api: string, data?: any) {
 
   if (data) {
     Object.keys(data).forEach((key) => {
-      if (nonNullArgs(data[key])) {
+      if (nonUndefinedOrNull(data[key])) {
         __data[key] = data[key];
       }
     });

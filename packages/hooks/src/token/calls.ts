@@ -28,28 +28,6 @@ export async function getTokenTransaction({ canisterId, account, offset, limit }
   ).data;
 }
 
-export interface useTokenTransactionsProps {
-  canisterId: string;
-  account: string | undefined | null | Principal;
-  offset: number;
-  limit: number;
-}
-
-export function useTokenTransactions({ canisterId, account, offset, limit }: useTokenTransactionsProps) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-
-      return getTokenTransaction({
-        canisterId,
-        account,
-        offset,
-        limit,
-      });
-    }, [offset, limit, canisterId, account]),
-  );
-}
-
 export async function getTokenSupply(canisterId: string) {
   return (await tokenAdapter.supply({ canisterId: canisterId! })).data;
 }

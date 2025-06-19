@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { icpswap_info_fetch_get, isNullArgs } from "@icpswap/utils";
+import { icpswap_info_fetch_get, isUndefinedOrNull } from "@icpswap/utils";
 import type { PageResponse, Null, InfoTokenDataResponse } from "@icpswap/types";
 
 import { useCallsData } from "../useCallData";
@@ -32,7 +32,7 @@ interface UetTokenChartsProps {
 export function useTokenCharts({ tokenId, level, page, limit }: UetTokenChartsProps) {
   return useCallsData(
     useCallback(async () => {
-      if (isNullArgs(tokenId)) return undefined;
+      if (isUndefinedOrNull(tokenId)) return undefined;
 
       return await getTokenCharts({ tokenId, level, page, limit });
     }, [tokenId, level, page, limit]),
