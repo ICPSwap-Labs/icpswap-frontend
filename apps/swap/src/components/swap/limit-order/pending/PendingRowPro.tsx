@@ -136,15 +136,17 @@ export function PendingRowPro({
             sx={{ justifyContent: "flex-end", alignItems: "center", gap: "0 4px" }}
             onClick={() => setInvertPrice(!invertPrice)}
           >
-            {limitPrice
-              ? invertPrice
-                ? `1 ${outputToken.symbol} = ${formatTokenPrice(
-                    new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
-                  )} ${inputToken.symbol}`
-                : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
-                    outputToken.symbol
-                  }`
-              : "--"}
+            <Typography sx={{ fontSize: "inherit", color: "inherit", textAlign: "right", wordBreak: "break-word" }}>
+              {limitPrice
+                ? invertPrice
+                  ? `1 ${outputToken.symbol} = ${formatTokenPrice(
+                      new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
+                    )} ${inputToken.symbol}`
+                  : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
+                      outputToken.symbol
+                    }`
+                : "--"}
+            </Typography>
 
             <SyncAltIcon
               sx={{
