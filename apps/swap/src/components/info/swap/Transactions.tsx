@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, ReactNode } from "react";
 import { enumToString, nonUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, SortDirection, TransactionRow, ImageLoading, NoData } from "@icpswap/ui";
+import { Header, HeaderCell, SortDirection, TransactionRow, ImageLoading, NoData, LoadingRow } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "components/pagination/cus";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
@@ -183,7 +183,20 @@ export function Transactions({
 
           {(sortedTransactions ?? []).length === 0 && !loading ? CustomNoData ?? <NoData /> : null}
 
-          {loading && !sortedTransactions ? <ImageLoading loading={loading} /> : null}
+          {loading && !sortedTransactions ? (
+            <Box sx={{ padding: "12px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
+          ) : null}
         </Box>
       </Box>
 
