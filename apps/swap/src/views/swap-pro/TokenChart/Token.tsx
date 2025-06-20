@@ -6,7 +6,7 @@ import { formatDollarTokenPrice } from "@icpswap/utils";
 import type { PublicTokenOverview, TokenListMetadata } from "@icpswap/types";
 import { Copy } from "components/Copy/icon";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
-import { ICP } from "@icpswap/tokens";
+import { useSwapContext } from "components/swap";
 import { SwapProContext } from "components/swap/pro";
 import { useTranslation } from "react-i18next";
 
@@ -58,6 +58,7 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const { token } = useContext(SwapProContext);
+  const { inputToken, outputToken } = useSwapContext();
 
   const tokenId = useMemo(() => {
     return token?.address;
@@ -165,7 +166,7 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
         <Box sx={{ display: "flex", gap: "0 10px" }}>
           {!matchDownSM ? <TokenChartsViewSelector /> : null}
 
-          <Link link={`/liquidity/add/${ICP.address}/${tokenId}`}>
+          <Link link={`/liquidity/add/${inputToken?.address}/${outputToken?.address}`}>
             <Button className="secondary" variant="contained">
               {t("swap.add.liquidity")}
             </Button>

@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, ReactNode } from "react";
 import { enumToString, nonUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, SortDirection, TransactionRow, ImageLoading, NoData, LoadingRow } from "@icpswap/ui";
+import { Header, HeaderCell, SortDirection, TransactionRow, NoData, LoadingRow } from "@icpswap/ui";
 import { PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "components/pagination/cus";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
