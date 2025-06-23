@@ -134,11 +134,11 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
 
       <BodyCell>
         <BodyCell sx={{ alignItems: "center", gap: "0 4px" }} color="primary.main">
-          <Link link={`https://www.icexplorer.io/address/details/${transaction.toPrincipalId}`} color="primary">
-            {shorten(transaction.toPrincipalId, 6)}
+          <Link link={`https://www.icexplorer.io/address/details/${transaction.fromPrincipalId}`} color="primary">
+            {shorten(transaction.fromPrincipalId, 6)}
           </Link>
 
-          <Copy size={12} color="#ffffff" onClick={() => onCopy(transaction.toPrincipalId)} />
+          <Copy size={12} color="#ffffff" onClick={() => onCopy(transaction.fromPrincipalId)} />
         </BodyCell>
       </BodyCell>
 
