@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSwapPools, useUserLimitOrders, getUserLimitOrders } from "@icpswap/hooks";
+import { useUserLimitOrders, getUserLimitOrders } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { Null, LimitOrder } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { useStoreUserPositionPools } from "store/hooks";
 
 export interface UseLimitOrdersProps {
   val: string | Null;
@@ -24,22 +25,22 @@ export function useLimitOrders({ val, refreshTrigger }: UseLimitOrdersProps): {
     refreshTrigger,
   );
 
-  const { result: swapPools } = useSwapPools();
+  const usePositionPools = useStoreUserPositionPools();
 
   useEffect(() => {
     async function call() {
-      if (swapPools && val === "ALL PAIR" && principal) {
+      if (usePositionPools && val === "ALL PAIR" && principal) {
         setAllPairLoading(true);
 
         let result: Array<[LimitOrder, string]> = [];
 
-        for (let i = 0; i < swapPools.length; i++) {
-          const pool = swapPools[i];
+        for (let i = 0; i < usePositionPools.length; i++) {
+          const poolId = usePositionPools[i];
 
-          const __result = await getUserLimitOrders(pool.canisterId.toString(), principal.toString());
+          const __result = await getUserLimitOrders(poolId, principal.toString());
 
           if (__result) {
-            result = result.concat(__result.map((limit) => [limit, pool.canisterId.toString()]));
+            result = result.concat(__result.map((limit) => [limit, poolId]));
           }
         }
 
@@ -52,7 +53,7 @@ export function useLimitOrders({ val, refreshTrigger }: UseLimitOrdersProps): {
     }
 
     call();
-  }, [swapPools, val]);
+  }, [usePositionPools, val]);
 
   return useMemo(
     () => ({
