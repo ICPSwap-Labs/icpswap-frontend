@@ -1,16 +1,9 @@
-import { ICP, WRAPPED_ICP, ICS, ckUSDC, ckBTC, ckETH } from "@icpswap/tokens";
+import { ICP, ICS, ckUSDC, ckBTC, ckETH } from "@icpswap/tokens";
 import { Connector } from "constants/wallet";
 
-export const DISPLAY_IN_WALLET_FOREVER = [
-  ICP.address,
-  WRAPPED_ICP.address,
-  ICS.address,
-  ckUSDC.address,
-  ckBTC.address,
-  ckETH.address,
-];
+export const DISPLAY_IN_WALLET_FOREVER = [ICP.address, ICS.address, ckUSDC.address, ckBTC.address, ckETH.address];
 
-export const NO_HIDDEN_TOKENS = [ICP.address, WRAPPED_ICP.address];
+export const NO_HIDDEN_TOKENS = [ICP.address];
 
 export const DEFAULT_DISPLAYED_TOKENS = [ICP, ICS, ckUSDC, ckBTC, ckETH];
 
