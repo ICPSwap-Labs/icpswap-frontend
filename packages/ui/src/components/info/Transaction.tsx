@@ -100,6 +100,11 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
     return new BigNumber(token0Amount).multipliedBy(transaction.token0Price).toString();
   }, [token0Amount]);
 
+  const account = useMemo(() => {
+    if (transaction.fromPrincipalId === transaction.poolId) return transaction.toPrincipalId;
+    return transaction.fromPrincipalId;
+  }, [transaction]);
+
   return (
     <TableRow className={className} borderBottom={`1px solid ${theme.palette.border.level1}`}>
       <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
@@ -134,11 +139,11 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
 
       <BodyCell>
         <BodyCell sx={{ alignItems: "center", gap: "0 4px" }} color="primary.main">
-          <Link link={`https://www.icexplorer.io/address/details/${transaction.fromPrincipalId}`} color="primary">
-            {shorten(transaction.fromPrincipalId, 6)}
+          <Link link={`https://www.icexplorer.io/address/details/${account}`} color="primary">
+            {shorten(account, 6)}
           </Link>
 
-          <Copy size={12} color="#ffffff" onClick={() => onCopy(transaction.fromPrincipalId)} />
+          <Copy size={12} color="#ffffff" onClick={() => onCopy(account)} />
         </BodyCell>
       </BodyCell>
 
