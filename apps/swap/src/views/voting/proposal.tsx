@@ -6,12 +6,12 @@ import { Wrapper, MainCard, Breadcrumbs } from "components/index";
 import { VoteStateCount, StateLabel, useVoteState } from "components/vote/VoteState";
 import { VotesResult, CastVotes } from "components/vote/VotesInfo";
 import VoteRecords from "components/vote/Records";
-import BaseMarkdown from "components/markdown/BaseMarkdown";
 import { useDownloadPowers } from "hooks/voting/useDownloadPowers";
 import { useVotingProposal } from "@icpswap/hooks";
 import DeleteProposalModal from "components/vote/DeleteProposal";
 import { useAccount } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
+import { Markdown } from "components/markdown/BaseMarkdown";
 
 export default function VotingProposal() {
   const { t } = useTranslation();
@@ -152,7 +152,7 @@ export default function VotingProposal() {
                 sx={{ ...(truncateMarkdownBody && !showMore ? { height: "400px" } : {}), overflow: "hidden" }}
               >
                 <Box ref={proposalRef}>
-                  <BaseMarkdown content={proposal?.content} />
+                  <Markdown content={proposal.content} />
                 </Box>
               </Box>
               {truncateMarkdownBody ? (

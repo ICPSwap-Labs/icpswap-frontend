@@ -4,6 +4,7 @@ import { MainCard } from "components/index";
 import type { ProposalData } from "@icpswap/types";
 import { nowInSeconds } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
+import { Markdown } from "components/markdown/BaseMarkdown";
 
 export interface ProposalSummaryProps {
   proposal_data: ProposalData | undefined;
@@ -41,9 +42,11 @@ export function ProposalSummary({ proposal_data }: ProposalSummaryProps) {
 
         <Typography sx={{ margin: "20px 0 0 0" }}>{title}</Typography>
 
-        <MainCard sx={{ margin: "20px 0 0 0" }} level={3}>
-          <Typography>{summary}</Typography>
-        </MainCard>
+        {summary ? (
+          <MainCard sx={{ margin: "20px 0 0 0" }} level={3}>
+            <Markdown content={summary} />
+          </MainCard>
+        ) : null}
       </Box>
     </MainCard>
   );

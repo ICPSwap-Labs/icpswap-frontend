@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { MainCard } from "components/index";
 import type { ProposalData } from "@icpswap/types";
 import { nowInSeconds } from "@icpswap/utils";
-import BaseMarkdown from "components/markdown/BaseMarkdown";
+import { Markdown } from "components/markdown/BaseMarkdown";
 import { useTranslation } from "react-i18next";
 
 export interface ProposalPayloadProps {
@@ -41,7 +41,7 @@ export function ProposalPayload({ proposal_data }: ProposalPayloadProps) {
 
         {payload_text_rendering ? (
           <MainCard level={3} sx={{ margin: "20px 0 0 0" }}>
-            <BaseMarkdown content={payload_text_rendering} />
+            <Markdown content={payload_text_rendering} />
           </MainCard>
         ) : null}
       </Box>

@@ -1,5 +1,5 @@
 import { Typography, Box } from "components/Mui";
-import BaseMarkdown from "components/markdown/BaseMarkdown";
+import { Markdown } from "components/markdown/BaseMarkdown";
 
 export default function Preview({ title, content }: { title: string | undefined; content: string | undefined }) {
   return (
@@ -11,7 +11,7 @@ export default function Preview({ title, content }: { title: string | undefined;
       {content ? (
         <>
           <Box mt="20px">
-            <BaseMarkdown content={content} />
+            <Markdown content={content} />
           </Box>
         </>
       ) : null}
