@@ -200,11 +200,11 @@ export function Transactions({
         </Box>
       </Box>
 
-      <Box sx={{ padding: styleProps?.padding ?? "16px" }}>
-        {nonUndefinedOrNull(filteredTransactions) ? (
+      {nonUndefinedOrNull(filteredTransactions) && !loading && filteredTransactions.length > 0 ? (
+        <Box sx={{ padding: styleProps?.padding ?? "16px" }}>
           <Pagination page={page} maxItems={maxItems} length={filteredTransactions.length} onPageChange={setPage} />
-        ) : null}
-      </Box>
+        </Box>
+      ) : null}
     </>
   );
 }
