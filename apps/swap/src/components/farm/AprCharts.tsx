@@ -10,27 +10,25 @@ import { darken } from "polished";
 import { useTranslation } from "react-i18next";
 
 const DAYJS_FORMAT = "MMM D, YYYY HH:mm:ss";
+const color = "#5669dc";
 
 export interface FarmAprChartsProps {
   farmId: string | undefined;
 }
 
 export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
+  const theme = useTheme();
   const { t } = useTranslation();
   const [value, setValue] = useState<null | number>(null);
   const [label, setLabel] = useState<null | string>(null);
 
   const { result: aprCharts } = useFarmAprCharts(farmId);
 
-  const theme = useTheme();
-
   const chartData = useMemo(() => {
     if (!aprCharts) return undefined;
 
-    return aprCharts.map((e) => ({ time: e[0].toString(), value: e[1] }));
+    return aprCharts.filter(([, value]) => value !== Infinity).map((e) => ({ time: e[0].toString(), value: e[1] }));
   }, [aprCharts]);
-
-  const color = "#5669dc";
 
   return aprCharts && aprCharts.length > 0 ? (
     <Box
