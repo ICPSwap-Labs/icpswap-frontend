@@ -100,17 +100,17 @@ export function VolumeChartsWrapper({ globalCharts, globalProtocol }: VolumeChar
                 <Typography fontSize="16px">Volume</Typography>
 
                 <Tooltip
-                  tips={t` Volume is calculated only based on the total value of tokens listed on the Tokenlist.`}
+                  tips={t`Volume is calculated only based on the total value of tokens listed on the Tokenlist.`}
                 />
               </Box>
               <Typography color="text.primary" fontWeight={600} fontSize="32px">
                 {volumeHover === undefined
                   ? globalProtocol
-                    ? formatDollarAmount(globalProtocol.volumeUSD)
+                    ? formatDollarAmount(globalProtocol.volumeUSD24H)
                     : ""
                   : formatDollarAmount(volumeHover)}
               </Typography>
-              {rightLabel || globalProtocol?.volumeUSD ? (
+              {rightLabel || globalProtocol?.volumeUSD24H ? (
                 <Typography fontSize="12px" height="14px">
                   {rightLabel || "The last 24H"}
                 </Typography>

@@ -20,6 +20,7 @@ export interface InfoGlobalDataResponse extends Serializable {
 
 export interface InfoGlobalRealTimeDataResponse extends Serializable {
   volumeUSD: string;
+  volumeUSD24H: string;
   feesUSD: string;
   txCount: string;
   tvlUSD: string;
