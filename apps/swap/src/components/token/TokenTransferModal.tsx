@@ -194,6 +194,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
           numericProps={{
             allowNegative: false,
             decimalScale: token.decimals,
+            thousandSeparator: true,
           }}
           autoComplete="off"
           textFieldProps={{
