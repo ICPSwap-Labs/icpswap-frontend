@@ -9,10 +9,10 @@ import { Token } from "@icpswap/swap-sdk";
 import { useFarmState } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
-
-import PositionRangeState from "./PositionState";
-import { Unstake } from "./Unstake";
-import { Stake } from "./Stake";
+import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
+import PositionRangeState from "components/farm/PositionState";
+import { Unstake } from "components/farm/Unstake";
+import { Stake } from "components/farm/Stake";
 
 export interface PositionInfo {
   id: bigint;
@@ -118,7 +118,9 @@ export function FarmPositionCard({
 
   return (
     <>
-      <MainCard borderRadius="16px" level={2} padding="16px">
+      <MainCard borderRadius="16px" level={2} padding="16px" sx={{ position: "relative" }}>
+        <LiquidityStateFlag position={position} borderRadius="16px" />
+
         <Flex fullWidth justify="space-between">
           <Typography sx={{ fontSize: "16px", fontWeight: 500, color: "text.primary" }}>
             {token0 && token1 ? `${token0.symbol}/${token1.symbol}(#${positionInfo.id.toString()})` : "--"}

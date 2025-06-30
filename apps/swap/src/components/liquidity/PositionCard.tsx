@@ -15,8 +15,8 @@ import { usePositionState } from "hooks/liquidity";
 import { LimitLabel } from "components/swap/limit-order/index";
 import { useTranslation } from "react-i18next";
 import { TokenPairName } from "components/TokenPairName";
-
-import { PositionDetails } from "./PositionDetails";
+import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
+import { PositionDetails } from "components/liquidity/PositionDetails";
 
 const useStyle = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -40,38 +40,6 @@ const useStyle = makeStyles((theme: Theme) => ({
     "@media(max-width: 640px)": {
       margin: "12px 0 0 0",
       padding: "16px 12px",
-    },
-  },
-  state: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "4px",
-    height: "100%",
-    borderTopLeftRadius: "12px",
-    borderBottomLeftRadius: "12px",
-    background: "#8492C4",
-
-    "@media(max-width: 640px)": {
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "4px",
-      borderTopLeftRadius: "12px",
-      borderBottomLeftRadius: "0px",
-      borderTopRightRadius: "12px",
-    },
-
-    "&.level0": {
-      background: "#FFD24C",
-    },
-
-    "&.level1": {
-      background: "#D3625B",
-    },
-
-    "&.outOfRange": {
-      background: "#9D332C",
     },
   },
 
@@ -252,7 +220,7 @@ export function PositionCard({
         display: displayByFilter ? "block" : "none",
       }}
     >
-      <Box className={`${classes.state} ${positionState ?? ""}`} />
+      <LiquidityStateFlag position={position} />
 
       <Flex
         justify="space-between"
