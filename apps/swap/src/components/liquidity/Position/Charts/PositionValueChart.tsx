@@ -21,7 +21,7 @@ export function PositionValueChart({ poolId, positionId }: TokenChartsProps) {
     if (positionValueChartData) {
       return positionValueChartData.map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
+          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
           value: data.value,
         };
       });

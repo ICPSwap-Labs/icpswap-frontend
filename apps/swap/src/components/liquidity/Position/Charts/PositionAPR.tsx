@@ -28,8 +28,8 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
     if (positionChartData) {
       return positionChartData.map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
-          value: data.apr,
+          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          value: Number(data.apr),
         };
       });
     }
@@ -64,7 +64,7 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
 
     const diff = sortedData[0].value - sortedData[sortedData.length - 1].value;
 
-    return ((diff - apr) / diff) * CHART_HEIGHT;
+    return ((diff - Number(apr)) / diff) * CHART_HEIGHT;
   }, [formattedChartData, apr]);
 
   const lineY = useMemo(() => {

@@ -36,8 +36,8 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
     if (poolChartData) {
       return poolChartData.map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
-          value: data.apr,
+          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          value: Number(data.apr),
         };
       });
     }
@@ -72,7 +72,7 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
 
     const diff = sortedData[0].value - sortedData[sortedData.length - 1].value;
 
-    return ((diff - apr) / diff) * parseInt(height);
+    return new BigNumber(diff).minus(apr).dividedBy(diff).multipliedBy(parseInt(height)).toString();
   }, [formattedChartData, apr, time]);
 
   useEffect(() => {

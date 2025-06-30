@@ -22,4 +22,3 @@ export const limitTransaction = async () =>
   });
 
 export * from "./global";
-export * from "./tokenAnalysis";

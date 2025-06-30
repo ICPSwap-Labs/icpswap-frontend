@@ -23,7 +23,7 @@ export function PoolTvlChart({ chartsData, loading, noData, height = "340px" }: 
     return chartsData.reverse().map((data) => {
       return {
         time: dayjs(Number(data.beginTime)).format("YYYY-MM-DD HH:mm:ss"),
-        value: data.tvlUSD,
+        value: Number(data.tvlUSD),
       };
     });
   }, [chartsData]);

@@ -10,8 +10,6 @@ import {
   TicketInterfaceFactory,
   PositionIndex,
   PositionIndexInterfaceFactory,
-  PositionChartsService,
-  PositionChartsFactory,
 } from "@icpswap/candid";
 import { actor } from "../actor";
 import { ActorName } from "../ActorName";
@@ -48,10 +46,4 @@ export const swapPosition = (identity?: ActorIdentity) =>
     actorName: ActorName.Position,
     idlFactory: PositionIndexInterfaceFactory,
     identity,
-  });
-
-export const positionCharts = () =>
-  actor.create<PositionChartsService>({
-    actorName: ActorName.PositionCharts,
-    idlFactory: PositionChartsFactory,
   });

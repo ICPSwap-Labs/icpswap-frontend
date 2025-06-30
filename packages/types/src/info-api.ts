@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2025-06-13 19:04:22.
+// Generated using typescript-generator version 3.2.1263 on 2025-06-30 15:53:51.
 
 export interface InfoResult<T> extends Serializable {
   code: number;
@@ -188,81 +188,81 @@ export interface PageResponse<T> extends Serializable {
 
 export interface PoolApr extends Serializable {
   snapshotTime: number;
-  pool: Principal;
+  pool: string;
   dayId: number;
-  apr: number;
+  apr: string;
 }
 
 export interface PoolAprIndex extends Serializable {
-  pool: Principal;
-  aprAvg1D: number;
-  aprAvg7D: number;
-  aprAvg30D: number;
+  pool: string;
+  aprAvg1D: string;
+  aprAvg7D: string;
+  aprAvg30D: string;
 }
 
 export interface PoolPrice extends Serializable {
   snapshotTime: number;
-  pool: Principal;
+  pool: string;
   dayId: number;
   hourId: number;
-  price: number;
+  price: string;
 }
 
 export interface PoolTVL {
-  poolId: Principal;
-  tvl: number;
+  poolId: string;
+  tvl: string;
 }
 
 export interface PositionAPR extends Serializable {
   snapshotTime: number;
-  poolId: Principal;
-  positionId: number;
+  poolId: string;
+  positionId: string;
   dayId: number;
-  apr: number;
+  apr: string;
 }
 
 export interface PositionFees extends Serializable {
   snapshotTime: number;
-  poolId: Principal;
-  positionId: number;
+  poolId: string;
+  positionId: string;
   dayId: number;
-  fees: number;
+  fees: string;
 }
 
 export interface PositionIndexResponse extends Serializable {
-  pool: Principal;
-  positionId: number;
+  pool: string;
+  positionId: string;
   snapshotTime: number;
   dayId: number;
-  token0Amount: number;
-  token1Amount: number;
-  token0FeeAmount: number;
-  token1FeeAmount: number;
-  token0FeeDayAmount: number;
-  token1FeeDayAmount: number;
-  token0USDPrice: number;
-  token1USDPrice: number;
-  value: number;
-  fees: number;
-  apr: number;
+  token0Amount: string;
+  token1Amount: string;
+  token0FeeAmount: string;
+  token1FeeAmount: string;
+  token0FeeDayAmount: string;
+  token1FeeDayAmount: string;
+  token0USDPrice: string;
+  token1USDPrice: string;
+  value: string;
+  fees: string;
+  apr: string;
 }
 
 export interface PositionValue extends Serializable {
   snapshotTime: number;
-  poolId: Principal;
-  positionId: number;
+  poolId: string;
+  positionId: string;
   dayId: number;
-  value: number;
+  value: string;
 }
 
 export interface PriceIndex extends Serializable {
-  pool: Principal;
-  priceLow24H: number;
-  priceHigh24H: number;
-  priceLow7D: number;
-  priceHigh7D: number;
-  priceLow30D: number;
-  priceHigh30D: number;
+  pool: string;
+  priceLow24H: string;
+  priceHigh24H: string;
+  priceLow7D: string;
+  priceHigh7D: string;
+  priceLow30D: string;
+  priceHigh30D: string;
 }
 
 export interface TokenResponse extends Serializable {
@@ -275,6 +275,18 @@ export interface TokenResponse extends Serializable {
   decimals: number;
   mintingAccount: string;
   totalSupply: string;
+  price: string;
+  priceICP: string;
+  marketCap: string;
+  fullyDilutedMarketCap: string;
+  tokenDetail: { [index: string]: string };
+  standardArray: string[];
+  controllerArray: string[];
+  holders: number;
+  totalAmount: string;
+  lockedAmount: string;
+  marketAmount: string;
+  transactionAmount: string;
 }
 
 export interface UserWalletResponse extends Serializable {
@@ -285,13 +297,7 @@ export interface UserWalletResponse extends Serializable {
 
 export interface Serializable {}
 
-export interface Principal extends Cloneable {
-  value?: any;
-}
-
 export interface TokenBalance {
   token: string;
   balance: number;
 }
-
-export interface Cloneable {}
