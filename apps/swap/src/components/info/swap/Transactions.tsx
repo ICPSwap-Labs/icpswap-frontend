@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, ReactNode } from "react";
-import { enumToString, nonUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, SortDirection, TransactionRow, ImageLoading, NoData } from "@icpswap/ui";
+import { enumToString, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { Header, HeaderCell, SortDirection, TransactionRow, NoData, LoadingRow } from "@icpswap/ui";
 import { InfoTransactionResponse, Null, PoolStorageTransaction } from "@icpswap/types";
 import Pagination from "components/pagination/cus";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
@@ -172,18 +172,31 @@ export function Transactions({
             </HeaderCell>
           </Header>
 
-          {(sortedTransactions ?? []).map((transaction, index) => (
-            <TransactionRow
-              key={`${String(transaction.txTime)}_${index}`}
-              className={classes.wrapper}
-              transaction={transaction}
-              onCopy={handleCopy}
-            />
-          ))}
-
-          {(sortedTransactions ?? []).length === 0 && !loading ? CustomNoData ?? <NoData /> : null}
-
-          {loading && !sortedTransactions ? <ImageLoading loading={loading} /> : null}
+          {isUndefinedOrNull(sortedTransactions) || loading ? (
+            <Box sx={{ padding: "12px" }}>
+              <LoadingRow>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </LoadingRow>
+            </Box>
+          ) : sortedTransactions.length === 0 ? (
+            CustomNoData ?? <NoData />
+          ) : (
+            (sortedTransactions ?? []).map((transaction, index) => (
+              <TransactionRow
+                key={`${String(transaction.txTime)}_${index}`}
+                className={classes.wrapper}
+                transaction={transaction}
+                onCopy={handleCopy}
+              />
+            ))
+          )}
         </Box>
       </Box>
 
