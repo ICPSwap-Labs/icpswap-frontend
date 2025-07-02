@@ -22,7 +22,7 @@ export function PositionValueChart({ poolId, positionId }: TokenChartsProps) {
       return positionValueChartData.map((data) => {
         return {
           time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
-          value: data.value,
+          value: Number(data.value),
         };
       });
     }
