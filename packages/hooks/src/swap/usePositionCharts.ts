@@ -85,16 +85,16 @@ export function usePoolAPRChartData(poolId: string | Null) {
   );
 }
 
-export async function getPoolAPRs(poolId: string) {
+export async function getPoolAverageAPRs(poolId: string) {
   const result = await icpswap_fetch_post<PoolAprIndex>("/swap/pool/apr/index", { pid: poolId });
-  return result.data;
+  return result?.data;
 }
 
-export function usePoolAPRs(poolId: string | Null) {
+export function usePoolAverageAPRs(poolId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (isUndefinedOrNull(poolId)) return undefined;
-      return await getPoolAPRs(poolId);
+      return await getPoolAverageAPRs(poolId);
     }, [poolId]),
   );
 }

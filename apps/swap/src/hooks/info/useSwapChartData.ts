@@ -6,7 +6,8 @@ import { icpswap_info_fetch_get } from "@icpswap/utils";
 export function useGlobalProtocol() {
   return useCallsData(
     useCallback(async () => {
-      return (await icpswap_info_fetch_get<InfoGlobalRealTimeDataResponse>("/global/protocol")).data;
+      const result = await icpswap_info_fetch_get<InfoGlobalRealTimeDataResponse>("/global/protocol");
+      return result?.data;
     }, []),
   );
 }

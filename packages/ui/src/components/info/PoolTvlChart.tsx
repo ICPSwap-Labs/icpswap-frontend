@@ -20,7 +20,7 @@ export function PoolTvlChart({ chartsData, loading, noData, height = "340px" }: 
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
   const formattedData = useMemo(() => {
-    return chartsData.reverse().map((data) => {
+    return chartsData.map((data) => {
       return {
         time: dayjs(Number(data.beginTime)).format("YYYY-MM-DD HH:mm:ss"),
         value: Number(data.tvlUSD),

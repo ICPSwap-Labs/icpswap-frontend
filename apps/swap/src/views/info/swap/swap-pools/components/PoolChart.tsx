@@ -33,7 +33,7 @@ export interface PoolChartProps {
 export function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps) {
   const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
   const [aprTime, setAPRTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
-  const [chartView, setChartView] = useState<ChartView>(ChartView.APR);
+  const [chartView, setChartView] = useState<ChartView>(ChartView.TVL);
 
   const { result: poolChartsResult, loading } = usePoolCharts({
     poolId: canisterId,
@@ -43,8 +43,8 @@ export function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps
   });
 
   const poolChartsData = useMemo(() => {
-    return poolChartsResult?.content ?? [];
-  }, [poolChartsResult]);
+    return poolChartsResult?.content ? [...poolChartsResult?.content].reverse() : [];
+  }, [poolChartsResult?.content]);
 
   return (
     <MainCard

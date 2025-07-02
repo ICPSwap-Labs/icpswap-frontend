@@ -2,65 +2,11 @@ import { useState, useMemo } from "react";
 import dayjs from "dayjs";
 import { VolumeWindow, Null, InfoPoolDataResponse } from "@icpswap/types";
 import { useTransformedVolumeData } from "@icpswap/hooks";
+import { formatDollarAmount } from "@icpswap/utils";
 
-import { BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { BarChartAlt } from "../BarChart/alt";
 import { ImageLoading } from "../Loading";
 import { Box, Typography } from "../Mui";
-
-type VolumeData = {
-  timestamp: number;
-  volumeUSD: number;
-};
-
-function volumeDataFormatter(data: InfoPoolDataResponse[]) {
-  const oldData = [...data];
-
-  const newData: VolumeData[] = [];
-
-  if (data.length === 0) return [];
-
-  // Fill the empty data between origin data
-  for (let i = 0; i < oldData.length; i++) {
-    const curr = oldData[i];
-    const next = oldData[i + 1];
-
-    if (next) {
-      const diff = next.beginTime - curr.beginTime;
-      const days = parseInt((Number(diff) / (3600 * 24)).toString());
-
-      if (days === 1) {
-        newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
-      } else {
-        // push curr data
-        newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
-
-        for (let i = 1; i < days; i++) {
-          newData.push({
-            volumeUSD: 0,
-            timestamp: Number(curr.beginTime) + 24 * 3600 * i * 1000,
-          });
-        }
-      }
-    } else {
-      newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
-    }
-  }
-
-  const now = new Date().getTime();
-  const endTime = oldData[oldData.length - 1].beginTime;
-  const days = parseInt(((now - Number(endTime) * 1000) / (1000 * 3600 * 24)).toString());
-
-  // Fill the latest data to today
-  for (let i = 1; i <= days; i++) {
-    newData.push({
-      volumeUSD: 0,
-      timestamp: Number(endTime) + 24 * 3600 * i,
-    });
-  }
-
-  return newData;
-}
 
 export interface PoolChartProps {
   chartsData: Array<InfoPoolDataResponse>;
@@ -83,10 +29,10 @@ export function PoolVolumeChart({
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
   const volumeData = useMemo(() => {
-    return volumeDataFormatter(chartsData).map((data) => {
+    return chartsData.map((data) => {
       return {
-        timestamp: data.timestamp,
-        volumeUSD: data.volumeUSD,
+        timestamp: data.beginTime,
+        volumeUSD: Number(data.volumeUSD),
       };
     });
   }, [chartsData]);
