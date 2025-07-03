@@ -60,15 +60,17 @@ export function Transactions({
   const [filter, setFilter] = useState<Filter>("all");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
 
+  console.log("transactions: ", transactions);
+
   const filteredTransactions = useMemo(() => {
     return transactions
       ? transactions
           .slice()
           .filter((ele) => {
             const type = enumToString(ele.actionType);
-            if (filter === "swaps") return type === "swap";
-            if (filter === "adds") return type === "increaseLiquidity" || type === "addLiquidity" || type === "mint";
-            if (filter === "removes") return type === "decreaseLiquidity";
+            if (filter === "swaps") return type === "Swap";
+            if (filter === "adds") return type === "IncreaseLiquidity" || type === "AddLiquidity" || type === "Mint";
+            if (filter === "removes") return type === "DecreaseLiquidity";
             return true;
           })
           .filter((ele) => {
