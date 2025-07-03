@@ -60,8 +60,6 @@ export function Transactions({
   const [filter, setFilter] = useState<Filter>("all");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
 
-  console.log("transactions: ", transactions);
-
   const filteredTransactions = useMemo(() => {
     return transactions
       ? transactions
