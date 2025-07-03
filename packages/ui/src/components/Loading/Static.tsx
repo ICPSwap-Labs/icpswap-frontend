@@ -27,11 +27,11 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 export interface ImageLoadingProps {
-  loading: boolean;
+  loading?: boolean;
   mask?: boolean;
 }
 
-export function ImageLoading({ loading, mask = false }: ImageLoadingProps) {
+export function ImageLoading({ loading = true, mask = false }: ImageLoadingProps) {
   const classes = useStyles();
 
   return loading ? (

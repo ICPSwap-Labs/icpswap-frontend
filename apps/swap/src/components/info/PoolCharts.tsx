@@ -41,7 +41,7 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
   });
 
   const poolChartsData = useMemo(() => {
-    return poolChartsResult?.content ?? [];
+    return poolChartsResult?.content ? [...poolChartsResult?.content].reverse() : [];
   }, [poolChartsResult]);
 
   return (

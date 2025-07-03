@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
 import { InfoTokenRealTimeDataResponse } from "@icpswap/types";
-import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import Pagination from "components/pagination/cus";
 import { useToken } from "hooks/index";
@@ -120,7 +120,7 @@ const headers: HeaderType[] = [
   { label: "#", key: "#", sort: false },
   { label: i18n.t("common.name"), key: "name", sort: true },
   { label: i18n.t("common.price"), key: "price", sort: true },
-  { label: i18n.t("common.price.range"), key: "priceUSDChange", sort: true },
+  { label: i18n.t("common.price.range"), key: "priceChange24H", sort: true },
   { label: i18n.t("common.volume24h"), key: "volumeUSD24H", sort: true },
   { label: i18n.t("common.tvl"), key: "tvlUSD", sort: true },
 ];
@@ -188,18 +188,15 @@ export function TokenTable({ tokens: _tokens, maxItems = 10, loading }: TokenTab
         ))}
       </Header>
 
-      {(sortedTokens ?? []).map((token, index) => (
-        <TokenItem
-          key={String(token.tokenLedgerId)}
-          index={(page - 1) * maxItems + index + 1}
-          token={token}
-          align={align}
-        />
-      ))}
-
-      {tokens?.length === 0 && !loading ? <NoData tip={t("info.swap.pool.empty")} /> : null}
-
-      {loading ? <ImageLoading loading={loading} /> : null}
+      {loading || isUndefinedOrNull(sortedTokens) ? (
+        <ImageLoading />
+      ) : sortedTokens.length > 0 ? (
+        sortedTokens.map((token, index) => (
+          <TokenItem key={token.tokenLedgerId} index={(page - 1) * maxItems + index + 1} token={token} align={align} />
+        ))
+      ) : (
+        <NoData tip={t("info.swap.pool.empty")} />
+      )}
 
       <Box mt="20px">
         {!loading && (tokens?.length ?? 0) > 0 ? (

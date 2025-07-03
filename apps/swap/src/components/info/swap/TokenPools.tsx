@@ -113,10 +113,11 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
       })
       .sort((a, b) => {
         if (a && b && !!sortField) {
-          const bool =
-            a[sortField as keyof PoolInfoWithApr] > b[sortField as keyof PoolInfoWithApr]
-              ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
-              : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
+          const bool = new BigNumber(a[sortField as keyof PoolInfoWithApr] ?? 0).isGreaterThan(
+            b[sortField as keyof PoolInfoWithApr] ?? 0,
+          )
+            ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
+            : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
           return bool;
         }

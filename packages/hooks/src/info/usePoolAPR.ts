@@ -37,9 +37,7 @@ interface GetPoolAPRProps {
 export function getPoolAPR({ volumeUSD, tvlUSD, timeBase }: GetPoolAPRProps): string | null {
   const allFees = new BigNumber(volumeUSD.toString()).multipliedBy(3).dividedBy(1000);
 
-  if (new BigNumber(tvlUSD.toString()).isEqualTo(0) || new BigNumber(allFees.toString()).isEqualTo(0)) {
-    return null;
-  }
+  if (new BigNumber(tvlUSD.toString()).isEqualTo(0) || new BigNumber(allFees.toString()).isEqualTo(0)) return null;
 
   return `${new BigNumber(allFees)
     .multipliedBy(0.8)

@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { PoolRow } from "components/info/swap/pool";
 import { getPoolAPR } from "@icpswap/hooks";
 import { PoolInfoWithApr } from "types/info";
-import { BigNumber, percentToNum } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, percentToNum } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
   return {
@@ -78,14 +78,14 @@ const DEFAULT_SORT_FILED = "volumeUSD24H";
 export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const classes = useStyles();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState<string>(DEFAULT_SORT_FILED);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
-  const classes = useStyles();
 
   const pools = useMemo(() => {
-    if (!_pools) return [];
+    if (!_pools) return undefined;
 
     setPage(1);
 
@@ -99,10 +99,7 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
         );
       })
       .map((pool) => {
-        const apr24h =
-          !pool.volumeUSD24H || !pool.tvlUSD
-            ? undefined
-            : getPoolAPR({ volumeUSD: pool.volumeUSD24H, tvlUSD: pool.tvlUSD });
+        const apr24h = getPoolAPR({ volumeUSD: pool.volumeUSD24H, tvlUSD: pool.tvlUSD });
         return { ...pool, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
       });
   }, [_pools]);
@@ -124,7 +121,7 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
             return 0;
           })
           .slice(maxItems * (page - 1), page * maxItems)
-      : [];
+      : undefined;
   }, [pools, maxItems, page, sortField, sortDirection]);
 
   const handleSortChange = (sortField: string, sortDirection: SortDirection) => {
@@ -141,21 +138,23 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
     <>
       <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled={DEFAULT_SORT_FILED} align={align} />
 
-      {(sortedPools ?? []).map((pool, index) => {
-        return (
-          <PoolRow
-            key={pool.poolId}
-            wrapperClass={classes.wrapper}
-            index={(page - 1) * maxItems + index + 1}
-            poolInfo={pool}
-            align={align}
-          />
-        );
-      })}
-
-      {sortedPools?.length === 0 && !loading ? <NoData tip={t("info.swap.pool.empty")} /> : null}
-
-      {loading ? <ImageLoading loading={loading} /> : null}
+      {loading || isUndefinedOrNull(sortedPools) ? (
+        <ImageLoading />
+      ) : sortedPools.length > 0 ? (
+        sortedPools.map((pool, index) => {
+          return (
+            <PoolRow
+              key={pool.poolId}
+              wrapperClass={classes.wrapper}
+              index={(page - 1) * maxItems + index + 1}
+              poolInfo={pool}
+              align={align}
+            />
+          );
+        })
+      ) : (
+        <NoData tip={t("info.swap.pool.empty")} />
+      )}
 
       <Box mt="20px">
         {!loading && (pools?.length ?? 0) > 0 ? (
