@@ -74,12 +74,6 @@
   "LiquidityLocks": {
     "ic": "ihzcl-aiaaa-aaaah-aebvq-cai"
   },
-  "PositionCharts": {
-    "ic": "ppuf3-gyaaa-aaaag-qkpuq-cai"
-  },
-  "TokenAnalysis": {
-    "ic": "no3fa-eqaaa-aaaag-qkq4q-cai"
-  },
   "LimitTransaction": {
     "ic": "kxmnw-xyaaa-aaaag-qndsq-cai"
   }

@@ -1,7 +1,7 @@
 import { Typography, Box, useTheme } from "components/Mui";
 import { toSignificant, BigNumber } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import { useInfoPool } from "hooks/info/swap";
+import { useInfoPool } from "@icpswap/hooks";
 import { useMemo } from "react";
 import { TokenImage } from "components/index";
 import { Token } from "@icpswap/swap-sdk";
@@ -46,13 +46,13 @@ export function InfoTokenPrices({ tokenInfo }: { tokenInfo: Token | undefined })
   const icpPrice = useMemo(() => {
     if (!pool || !tokenInfo?.address) return undefined;
 
-    return pool.token0Id === tokenInfo.address ? pool.token1Price : pool.token0Price;
+    return pool.token0LedgerId === tokenInfo.address ? pool.token1Price : pool.token0Price;
   }, [pool, tokenInfo?.address]);
 
   const tokenPrice = useMemo(() => {
     if (!pool || !tokenInfo?.address) return undefined;
 
-    return pool.token0Id === tokenInfo.address ? pool.token0Price : pool.token1Price;
+    return pool.token0LedgerId === tokenInfo.address ? pool.token0Price : pool.token1Price;
   }, [pool, tokenInfo?.address]);
 
   const icpRatio = tokenPrice && icpPrice ? new BigNumber(icpPrice).dividedBy(tokenPrice).toNumber() : undefined;

@@ -100,7 +100,7 @@ export function BarChartAlt({
             axisLine={false}
             tickLine={false}
             tickFormatter={(time) => dayjs(time).format(activeWindow === "monthly" ? "MMM" : tickFormat)}
-            minTickGap={10}
+            minTickGap={15}
             tick={{ fill: theme.palette.text.secondary }}
           />
           <Tooltip

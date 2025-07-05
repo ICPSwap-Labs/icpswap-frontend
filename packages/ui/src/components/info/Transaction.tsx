@@ -1,8 +1,9 @@
-import { formatDollarAmount, formatAmount, enumToString, shorten } from "@icpswap/utils";
-import type { PoolStorageTransaction } from "@icpswap/types";
+import { formatDollarAmount, formatAmount, enumToString, shorten, BigNumber } from "@icpswap/utils";
+import type { InfoTransactionResponse } from "@icpswap/types";
 import dayjs from "dayjs";
 import { Copy } from "react-feather";
 
+import { useMemo } from "react";
 import { BoxProps, useTheme } from "../Mui";
 import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { TableRow, BodyCell } from "../Table";
@@ -24,11 +25,11 @@ function OverflowTokenSymbolBodyCell({ symbol }: { symbol: string }) {
   );
 }
 
-export function ActionTypeFormat(transaction: PoolStorageTransaction) {
-  const type = enumToString(transaction.action);
+export function ActionTypeFormat(transaction: InfoTransactionResponse) {
+  const type = enumToString(transaction.actionType);
 
   switch (type) {
-    case "swap":
+    case "Swap":
       return (
         <BodyCell>
           Swap&nbsp;
@@ -38,9 +39,9 @@ export function ActionTypeFormat(transaction: PoolStorageTransaction) {
         </BodyCell>
       );
 
-    case "increaseLiquidity":
-    case "addLiquidity":
-    case "mint":
+    case "IncreaseLiquidity":
+    case "AddLiquidity":
+    case "Mint":
       return (
         <BodyCell>
           Add&nbsp;
@@ -49,7 +50,7 @@ export function ActionTypeFormat(transaction: PoolStorageTransaction) {
           <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
         </BodyCell>
       );
-    case "decreaseLiquidity":
+    case "DecreaseLiquidity":
       return (
         <BodyCell>
           Remove&nbsp;
@@ -58,7 +59,7 @@ export function ActionTypeFormat(transaction: PoolStorageTransaction) {
           <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
         </BodyCell>
       );
-    case "claim":
+    case "Claim":
       return (
         <BodyCell>
           Collect&nbsp;
@@ -74,7 +75,7 @@ export function ActionTypeFormat(transaction: PoolStorageTransaction) {
 }
 
 interface TransactionRowProps {
-  transaction: PoolStorageTransaction;
+  transaction: InfoTransactionResponse;
   wrapperSx?: BoxProps["sx"];
   className?: BoxProps["className"];
   onCopy?: (address: string) => void;
@@ -83,14 +84,31 @@ interface TransactionRowProps {
 export function TransactionRow({ transaction, className, onCopy }: TransactionRowProps) {
   const theme = useTheme();
 
+  const token0Amount = useMemo(() => {
+    return new BigNumber(transaction.token0AmountIn).isEqualTo(0)
+      ? transaction.token0AmountOut
+      : transaction.token0AmountIn;
+  }, [transaction]);
+
+  const token1Amount = useMemo(() => {
+    return new BigNumber(transaction.token1AmountIn).isEqualTo(0)
+      ? transaction.token1AmountOut
+      : transaction.token1AmountIn;
+  }, [transaction]);
+
+  const account = useMemo(() => {
+    if (transaction.fromPrincipalId === transaction.poolId) return transaction.toPrincipalId;
+    return transaction.fromPrincipalId;
+  }, [transaction]);
+
   return (
     <TableRow className={className} borderBottom={`1px solid ${theme.palette.border.level1}`}>
       <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
 
-      <BodyCell>{formatDollarAmount(transaction.amountUSD)}</BodyCell>
+      <BodyCell>{formatDollarAmount(transaction.token0TxValue)}</BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>
-        {formatAmount(transaction.token0ChangeAmount)}
+        {formatAmount(token0Amount)}
         <SwapTransactionPriceTip
           symbol={transaction.token0Symbol}
           price={transaction.token0Price}
@@ -103,7 +121,7 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
       </BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>
-        {formatAmount(transaction.token1ChangeAmount)}
+        {formatAmount(token1Amount)}
         <SwapTransactionPriceTip
           symbol={transaction.token1Symbol}
           price={transaction.token1Price}
@@ -117,15 +135,15 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
 
       <BodyCell>
         <BodyCell sx={{ alignItems: "center", gap: "0 4px" }} color="primary.main">
-          <Link link={`https://www.icexplorer.io/address/details/${transaction.recipient}`} color="primary">
-            {shorten(transaction.recipient, 6)}
+          <Link link={`https://www.icexplorer.io/address/details/${account}`} color="primary">
+            {shorten(account, 6)}
           </Link>
 
-          <Copy size={12} color="#ffffff" onClick={() => onCopy(transaction.recipient)} />
+          <Copy size={12} color="#ffffff" onClick={() => onCopy(account)} />
         </BodyCell>
       </BodyCell>
 
-      <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
+      <BodyCell>{dayjs(Number(transaction.txTime)).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
     </TableRow>
   );
 }

@@ -1,14 +1,12 @@
-import { isUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
 import { useCallback } from "react";
-import type { Null, TokenAnalysisData } from "@icpswap/types";
-import { tokenAnalysis } from "@icpswap/actor";
+import type { Null, TokenResponse } from "@icpswap/types";
 
-import { Principal } from "@dfinity/principal";
 import { useCallsData } from "../useCallData";
 
-export async function getTokenAnalysis(canisterId: string | Null) {
-  const result = await (await tokenAnalysis()).getTokenData(Principal.fromText(canisterId));
-  return resultFormat<TokenAnalysisData>(result).data;
+export async function getTokenAnalysis(canisterId: string) {
+  const result = await icpswap_fetch_post<TokenResponse>("/token/data", { pid: canisterId });
+  return result?.data;
 }
 
 export function useTokenAnalysis(canisterId: string | Null) {

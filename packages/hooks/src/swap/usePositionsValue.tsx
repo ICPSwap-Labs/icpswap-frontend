@@ -20,8 +20,8 @@ export function usePositionsValue(positions: Position[] | Null) {
         const token0Amount = position.amount0.toExact();
         const token1Amount = position.amount1.toExact();
 
-        const token0Price = allTokenInfos.find((info) => info.address === position.pool.token0.address)?.priceUSD;
-        const token1Price = allTokenInfos.find((info) => info.address === position.pool.token1.address)?.priceUSD;
+        const token0Price = allTokenInfos.find((info) => info.tokenLedgerId === position.pool.token0.address)?.price;
+        const token1Price = allTokenInfos.find((info) => info.tokenLedgerId === position.pool.token1.address)?.price;
 
         if (token0Price !== undefined && token1Price !== undefined) {
           totalValue = (totalValue ?? new BigNumber(0))

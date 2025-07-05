@@ -2,12 +2,13 @@ import { useMemo } from "react";
 import { Box, Typography, useTheme, keyframes } from "components/Mui";
 import HotIcon from "assets/icons/swap-pro/hot.svg";
 import { useToken } from "hooks/index";
-import type { PublicTokenOverview } from "@icpswap/types";
+import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { TokenImage } from "components/index";
 import { useHistory } from "react-router-dom";
 import { ICP, ICS } from "@icpswap/tokens";
 import { useInfoAllTokens } from "@icpswap/hooks";
 import { Proportion } from "@icpswap/ui";
+import { BigNumber } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 
 const animationKeyframes = keyframes`
@@ -39,7 +40,7 @@ function StarIcon() {
 }
 
 interface TokenItemProps {
-  tokenInfo: PublicTokenOverview;
+  tokenInfo: InfoTokenRealTimeDataResponse;
   index: number;
 }
 
@@ -47,17 +48,17 @@ function TokenItem({ tokenInfo, index }: TokenItemProps) {
   const history = useHistory();
 
   const handleTokenClick = () => {
-    history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.address}`);
+    history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.tokenLedgerId}`);
   };
 
-  const [, token] = useToken(tokenInfo.address);
+  const [, token] = useToken(tokenInfo.tokenLedgerId);
 
   return (
     <Box sx={{ display: "flex", gap: "0 4px", cursor: "pointer", alignItems: "center" }} onClick={handleTokenClick}>
       <Typography sx={{ color: index === 0 ? "#FFD24C" : "text.primary", whiteSpace: "nowrap" }}>
         #{index + 1}
       </Typography>
-      <TokenImage logo={token?.logo} tokenId={tokenInfo.address} size="16px" />
+      <TokenImage logo={token?.logo} tokenId={tokenInfo.tokenLedgerId} size="16px" />
       <Typography
         sx={{
           width: "fit-content",
@@ -66,16 +67,16 @@ function TokenItem({ tokenInfo, index }: TokenItemProps) {
           color: index === 0 ? "#FFD24C" : "text.primary",
         }}
       >
-        {tokenInfo.name}
+        {tokenInfo.tokenName}
       </Typography>
       {index === 0 ? <StarIcon /> : null}
-      <Proportion value={tokenInfo.priceUSDChange} fontSize="12px" />
+      <Proportion value={tokenInfo.priceChange24H} fontSize="12px" />
     </Box>
   );
 }
 
 interface TokensWrapperProps {
-  tokensInfo: PublicTokenOverview[];
+  tokensInfo: InfoTokenRealTimeDataResponse[];
 }
 
 function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
@@ -102,7 +103,7 @@ function TokensWrapper({ tokensInfo }: TokensWrapperProps) {
         }}
       >
         {tokensInfo.map((tokenInfo, index) => (
-          <TokenItem key={tokenInfo.address} tokenInfo={tokenInfo} index={index} />
+          <TokenItem key={tokenInfo.tokenLedgerId} tokenInfo={tokenInfo} index={index} />
         ))}
       </Box>
     </Box>
@@ -115,13 +116,13 @@ export default function HotTokens() {
   const infoAllTokens = useInfoAllTokens();
 
   const tokenList = useMemo(() => {
-    const icsInfo = infoAllTokens?.filter((e) => e.address === ICS.address)?.[0];
+    const icsInfo = infoAllTokens?.filter((e) => e.tokenLedgerId === ICS.address)?.[0];
 
     const allTokens = infoAllTokens
-      ?.filter((e) => e.symbol !== "ICP" && e.address !== ICS.address)
+      ?.filter((e) => e.tokenSymbol !== "ICP" && e.tokenLedgerId !== ICS.address)
       ?.sort((a, b) => {
-        if (a.volumeUSD > b.volumeUSD) return -1;
-        if (a.volumeUSD < b.volumeUSD) return 1;
+        if (new BigNumber(a.volumeUSD24H).isGreaterThan(b.volumeUSD24H)) return -1;
+        if (new BigNumber(a.volumeUSD24H).isLessThan(b.volumeUSD24H)) return 1;
         return 0;
       })
       .slice(0, 20);

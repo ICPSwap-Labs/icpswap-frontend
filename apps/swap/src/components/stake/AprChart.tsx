@@ -158,6 +158,8 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
                     if (props && props.payload && props.payload.value) {
                       setValue(props.payload.value);
                     }
+
+                    return value;
                   }}
                 />
                 <Area dataKey="value" type="monotone" stroke={color} fill="url(#gradient)" strokeWidth={2} />

@@ -3,13 +3,13 @@ import { makeStyles, Typography, Box } from "components/Mui";
 import { NoData, ImageLoading } from "components/index";
 import { Header, HeaderCell, SortDirection, OnlyTokenList } from "@icpswap/ui";
 import Pagination from "components/pagination/cus";
-import { useAllPoolsTVL, useTokensFromList, useNodeInfoAllPools, getPoolAPR } from "@icpswap/hooks";
+import { useTokensFromList, getPoolAPR, useInfoTokenPools } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
 import { PoolRow } from "components/info/swap/pool";
 import { PoolInfoWithApr } from "types/info";
-import { percentToNum } from "@icpswap/utils";
+import { BigNumber, percentToNum } from "@icpswap/utils";
 
 const useStyles = makeStyles(() => {
   return {
@@ -32,6 +32,8 @@ type HeaderType = {
   end?: boolean;
 };
 
+const DEFAULT_SORT_FILED = "volumeUSD24H";
+
 interface PoolTableHeaderProps {
   onSortChange: (sortField: string, sortDirection: SortDirection) => void;
   defaultSortFiled?: string;
@@ -46,8 +48,8 @@ function PoolTableHeader({ onSortChange, defaultSortFiled = "" }: PoolTableHeade
     { label: t`Pool`, key: "pool", sort: false },
     { label: t`TVL`, key: "tvlUSD", sort: true },
     { label: t`APR(24H)`, key: "apr", sort: true },
-    { label: t("common.volume24h"), key: "volumeUSD", sort: true },
-    { label: t("common.volume7d"), key: "volumeUSD7d", sort: true },
+    { label: t("common.volume24h"), key: "volumeUSD24H", sort: true },
+    { label: t("common.volume7d"), key: "volumeUSD7D", sort: true },
     { label: t("common.total.volume"), key: "totalVolumeUSD", sort: true },
   ];
 
@@ -71,60 +73,58 @@ export interface TokenPoolsProps {
 export function TokenPools({ canisterId }: TokenPoolsProps) {
   const { t } = useTranslation();
   const [checked, setChecked] = useState(true);
-  const [sortField, setSortField] = useState<string>("volumeUSD");
+  const [sortField, setSortField] = useState<string>(DEFAULT_SORT_FILED);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
   const classes = useStyles();
 
   const [page, setPage] = useState(1);
 
-  const { result: allPoolsTVL } = useAllPoolsTVL();
   const { result: tokenList } = useTokensFromList();
-  const { result: allSwapPools, loading } = useNodeInfoAllPools();
+  const { result: tokenPools, loading } = useInfoTokenPools(canisterId);
 
   const allPoolsOfToken = useMemo(() => {
-    if (!allSwapPools || !tokenList) return undefined;
+    if (!tokenPools || !tokenList) return undefined;
 
     const tokenListIds = tokenList.map((token) => token.canisterId).concat(ICP.address);
 
-    return allSwapPools
+    return tokenPools
       .filter((pool) => {
         return (
-          (pool.token0Id === canisterId || pool.token1Id === canisterId) &&
-          pool.token0Price !== 0 &&
-          pool.token1Price !== 0 &&
-          pool.feeTier === BigInt(3000) &&
-          !HIDDEN_POOLS.includes(pool.pool)
+          (pool.token0LedgerId === canisterId || pool.token1LedgerId === canisterId) &&
+          !new BigNumber(pool.token0Price).isEqualTo(0) &&
+          !new BigNumber(pool.token1Price).isEqualTo(0) &&
+          pool.poolFee === 3000 &&
+          !HIDDEN_POOLS.includes(pool.poolId)
         );
       })
       .filter((pool) => {
-        if (checked) return tokenListIds.includes(pool.token0Id) && tokenListIds.includes(pool.token1Id);
+        if (checked) return tokenListIds.includes(pool.token0LedgerId) && tokenListIds.includes(pool.token1LedgerId);
         return !!pool;
       });
-  }, [allSwapPools, canisterId, tokenList, checked]);
+  }, [tokenPools, canisterId, tokenList, checked]);
 
   const slicedPoolsOfToken = useMemo(() => {
-    if (!allPoolsOfToken || !allPoolsTVL) return undefined;
+    if (!allPoolsOfToken) return undefined;
 
     return allPoolsOfToken
       .map((pool) => {
-        const tvlUSD = allPoolsTVL?.find(([poolId]) => poolId === pool.pool)?.[1] ?? 0;
-        const apr24h = getPoolAPR({ volumeUSD: pool.volumeUSD, tvlUSD });
-
-        return { ...pool, tvlUSD, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
+        const apr24h = getPoolAPR({ volumeUSD: pool.volumeUSD24H ?? 0, tvlUSD: pool.tvlUSD ?? 0 });
+        return { ...pool, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
       })
       .sort((a, b) => {
         if (a && b && !!sortField) {
-          const bool =
-            a[sortField as keyof PoolInfoWithApr] > b[sortField as keyof PoolInfoWithApr]
-              ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
-              : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
+          const bool = new BigNumber(a[sortField as keyof PoolInfoWithApr] ?? 0).isGreaterThan(
+            b[sortField as keyof PoolInfoWithApr] ?? 0,
+          )
+            ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
+            : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
           return bool;
         }
         return 0;
       })
       .slice(PAGE_SIZE * (page - 1), PAGE_SIZE * page);
-  }, [allPoolsOfToken, allPoolsTVL, page, sortField, sortDirection]);
+  }, [allPoolsOfToken, page, sortField, sortDirection]);
 
   const handleCheckChange = (checked: boolean) => {
     setChecked(checked);
@@ -155,11 +155,11 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
       <Box mt="20px">
         {slicedPoolsOfToken && slicedPoolsOfToken.length > 0 ? (
           <>
-            <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" />
+            <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled={DEFAULT_SORT_FILED} />
             {(slicedPoolsOfToken ?? []).map((pool, index) => {
               return (
                 <PoolRow
-                  key={pool.pool}
+                  key={pool.poolId}
                   index={(page - 1) * PAGE_SIZE + index + 1}
                   poolInfo={pool}
                   wrapperClass={classes.wrapper}

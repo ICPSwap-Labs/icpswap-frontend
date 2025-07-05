@@ -1,13 +1,10 @@
 import React, { Dispatch, SetStateAction, ReactNode } from "react";
 import { ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { darken } from "polished";
 
 import { Box, useTheme } from "../Mui";
 import { GridRowBetween } from "../Grid/Row";
-
-dayjs.extend(utc);
 
 export type LineChartAltProps = {
   data: any[];
@@ -50,6 +47,7 @@ export function LineChartAlt({
   yTickFormatter,
   tipFormat = "MMM D, YYYY",
   extraNode,
+  height,
   ...rest
 }: LineChartAltProps) {
   const theme = useTheme();
@@ -74,10 +72,8 @@ export function LineChartAlt({
         {topRight ?? null}
       </GridRowBetween>
 
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer>
         <AreaChart
-          width={500}
-          height={minHeight}
           data={data}
           margin={{
             top: 5,
@@ -105,7 +101,7 @@ export function LineChartAlt({
               tickFormatter={(val) => {
                 return xTickFormatter ? xTickFormatter(val) : dayjs(val).format(tickFormat);
               }}
-              minTickGap={10}
+              minTickGap={15}
               tick={{ fill: theme.palette.text.secondary }}
             />
           ) : null}
@@ -124,13 +120,14 @@ export function LineChartAlt({
           <Tooltip
             cursor={{ stroke: "#8572FF" }}
             contentStyle={{ display: "none" }}
-            // @ts-ignore
             formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
               if (setValue && parsedValue !== props.payload.value) {
                 setValue(props.payload.value);
               }
               const formattedTime = dayjs(props.payload.time).format(tipFormat);
               if (setLabel && label !== formattedTime) setLabel(formattedTime);
+
+              return value;
             }}
           />
 

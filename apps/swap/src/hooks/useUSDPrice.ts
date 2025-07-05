@@ -9,7 +9,8 @@ export function useICPPrice(): number | undefined {
   const icpTokenInfo = useInfoToken(ICP.address);
 
   return useMemo(() => {
-    return icpTokenInfo?.priceUSD;
+    if (!icpTokenInfo) return undefined;
+    return icpTokenInfo.price ? Number(icpTokenInfo.price) : undefined;
   }, [icpTokenInfo]);
 }
 
@@ -27,7 +28,7 @@ export function useUSDPrice(token: Token | undefined): string | number | undefin
   return useMemo(() => {
     if (!tokenId) return undefined;
 
-    return graphToken?.priceUSD;
+    return graphToken?.price;
   }, [tokenId, graphToken]);
 }
 
@@ -38,7 +39,7 @@ export function useUSDPriceById(tokenId: string | undefined): number | undefined
     if (!tokenId) return undefined;
 
     if (graphToken) {
-      return graphToken.priceUSD;
+      return Number(graphToken.price);
     }
 
     return undefined;

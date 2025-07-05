@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, ReactNode } from "react";
-import { enumToString, nonUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, enumToString, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Header, HeaderCell, SortDirection, TransactionRow, NoData, LoadingRow } from "@icpswap/ui";
-import { PoolStorageTransaction } from "@icpswap/types";
+import { InfoTransactionResponse, Null } from "@icpswap/types";
 import Pagination from "components/pagination/cus";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { useTips, TIP_SUCCESS } from "hooks/index";
@@ -30,7 +30,7 @@ const useStyles = (styleProps?: StyleProps) =>
   });
 
 export interface TransactionsProps {
-  transactions: PoolStorageTransaction[] | undefined | null;
+  transactions: InfoTransactionResponse[] | Null;
   loading?: boolean;
   maxItems?: number;
   hasFilter?: boolean;
@@ -64,16 +64,18 @@ export function Transactions({
     return transactions
       ? transactions
           .slice()
-          .filter((ele) => {
-            const type = enumToString(ele.action);
-            if (filter === "swaps") return type === "swap";
-            if (filter === "adds") return type === "increaseLiquidity" || type === "addLiquidity" || type === "mint";
-            if (filter === "removes") return type === "decreaseLiquidity";
+          .filter((transaction) => {
+            const type = enumToString(transaction.actionType);
+            if (filter === "swaps") return type === "Swap";
+            if (filter === "adds") return type === "IncreaseLiquidity" || type === "AddLiquidity" || type === "Mint";
+            if (filter === "removes") return type === "DecreaseLiquidity";
             return true;
           })
-          .filter((ele) => {
+          .filter((transaction) => {
             if (!showedTokens) return true;
-            return showedTokens?.includes(ele.token0Id) && showedTokens?.includes(ele.token1Id);
+            return (
+              showedTokens?.includes(transaction.token0LedgerId) && showedTokens?.includes(transaction.token1LedgerId)
+            );
           })
       : null;
   }, [transactions, filter, showedTokens]);
@@ -84,10 +86,11 @@ export function Transactions({
           .slice()
           .sort((a, b) => {
             if (a && b && !!sortField) {
-              const bool =
-                a[sortField as keyof PoolStorageTransaction] > b[sortField as keyof PoolStorageTransaction]
-                  ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
-                  : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
+              const bool = new BigNumber(a[sortField as keyof InfoTransactionResponse]).isGreaterThan(
+                b[sortField as keyof InfoTransactionResponse],
+              )
+                ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
+                : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
               return bool;
             }
@@ -151,39 +154,22 @@ export function Transactions({
               )}
             </Box>
 
-            <HeaderCell field="amountUSD" isSort>
+            <HeaderCell field="token0TxValue" isSort>
               {t("common.total.value")}
             </HeaderCell>
 
-            <HeaderCell field="amountToken0" isSort>
-              {t("common.token.amount")}
-            </HeaderCell>
+            <HeaderCell field="amountToken0">{t("common.token.amount")}</HeaderCell>
 
-            <HeaderCell field="amountToken1" isSort>
-              {t("common.token.amount")}
-            </HeaderCell>
+            <HeaderCell field="amountToken1">{t("common.token.amount")}</HeaderCell>
 
-            <HeaderCell field="sender" isSort>
-              {t("common.account")}
-            </HeaderCell>
+            <HeaderCell field="sender">{t("common.account")}</HeaderCell>
 
             <HeaderCell field="timestamp" isSort>
               {t("common.time")}
             </HeaderCell>
           </Header>
 
-          {(sortedTransactions ?? []).map((transaction, index) => (
-            <TransactionRow
-              key={`${String(transaction.timestamp)}_${index}`}
-              className={classes.wrapper}
-              transaction={transaction}
-              onCopy={handleCopy}
-            />
-          ))}
-
-          {(sortedTransactions ?? []).length === 0 && !loading ? CustomNoData ?? <NoData /> : null}
-
-          {loading && !sortedTransactions ? (
+          {isUndefinedOrNull(sortedTransactions) || loading ? (
             <Box sx={{ padding: "12px" }}>
               <LoadingRow>
                 <div />
@@ -196,7 +182,18 @@ export function Transactions({
                 <div />
               </LoadingRow>
             </Box>
-          ) : null}
+          ) : sortedTransactions.length === 0 ? (
+            CustomNoData ?? <NoData />
+          ) : (
+            sortedTransactions.map((transaction, index) => (
+              <TransactionRow
+                key={`${String(transaction.txTime)}_${index}`}
+                className={classes.wrapper}
+                transaction={transaction}
+                onCopy={handleCopy}
+              />
+            ))
+          )}
         </Box>
       </Box>
 

@@ -1,3 +1,3 @@
-import { Override, PublicPoolOverView } from "@icpswap/types";
+import { InfoPoolRealTimeDataResponse, Override } from "@icpswap/types";
 
-export type PoolInfoWithApr = Override<PublicPoolOverView, { tvlUSD: number; apr24h: string; apr: number }>;
+export type PoolInfoWithApr = Override<InfoPoolRealTimeDataResponse, { apr24h: string; apr: number }>;

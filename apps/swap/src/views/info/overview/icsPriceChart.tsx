@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { makeStyles, useTheme, Box, Theme, useMediaQuery } from "components/Mui";
 import ApexCharts from "apexcharts";
 import Chart from "react-apexcharts";
-import { useTokenPriceChart } from "@icpswap/hooks";
+import { useTokenCharts } from "@icpswap/hooks";
 import { ICS } from "@icpswap/tokens";
+import { toUnixTimestamp } from "@icpswap/utils";
 
 import defaultChartConfig from "./chart.config";
 
@@ -55,33 +56,37 @@ export function ICSPriceChart() {
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const [loading, setLoading] = useState(true);
 
-  const { priceChartData } = useTokenPriceChart(ICS.address);
+  const { result } = useTokenCharts({ tokenId: ICS.address, level: "d1", page: 1, limit: 30 });
+
+  const chartData = useMemo(() => {
+    return result?.content.reverse();
+  }, [result]);
 
   const chartConfig = useMemo(() => {
     return {
       ...defaultChartConfig,
       height: matchDownMD ? 350 : defaultChartConfig.height,
-      series: priceChartData
+      series: chartData
         ? [
             {
-              data: [...priceChartData]
-                .slice(priceChartData.length > 30 ? priceChartData.length - 30 : 0, priceChartData.length)
+              data: [...chartData]
+                .slice(chartData.length > 30 ? chartData.length - 30 : 0, chartData.length)
                 .map((item) => ({
                   y: item.close,
-                  x: item.time,
+                  x: toUnixTimestamp(item.beginTime),
                 })),
             },
           ]
         : [],
     };
-  }, [defaultChartConfig, matchDownMD, priceChartData]);
+  }, [defaultChartConfig, matchDownMD, chartData]);
 
   useEffect(() => {
     if (chartConfig && chartConfig.series.length > 0) {
       ApexCharts.exec(`support-chart`, "updateOptions", chartConfig.options);
       setLoading(false);
     }
-  }, [chartConfig, priceChartData]);
+  }, [chartConfig, chartData]);
 
   return (
     <Box className={classes.card}>

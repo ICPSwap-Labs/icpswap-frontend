@@ -11,7 +11,6 @@ export type {
   PoolOverview,
   PublicPoolChartDayData,
   PoolStorageTransaction,
-  InfoToken,
   PublicTokenChartDayData,
   InfoTokenTransaction,
   PublicTokenPricesData,

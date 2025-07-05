@@ -1,10 +1,10 @@
-import { IcpSwapAPIResult } from "@icpswap/types";
+import { IcpSwapAPIResult, StatusResult } from "@icpswap/types";
 import { ICPSWAP_API } from "@icpswap/constants";
 
 import { resultFormat } from "./resultFormat";
 import { nonUndefinedOrNull } from "./isUndefinedOrNull";
 
-export async function fetch_post<T>(api: string, data?: any) {
+export async function fetch_post<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {
   const fetch_result = await fetch(api, {
     method: "POST",
     headers: {
@@ -51,14 +51,14 @@ export async function fetch_get<T>(api: string, data?: any) {
   return undefined;
 }
 
-export async function icpswap_fetch_post<T>(api: string, data?: any) {
-  return fetch_post<T>(`${ICPSWAP_API}${api}`, data);
+export async function icpswap_fetch_post<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {
+  return await fetch_post<T>(`${ICPSWAP_API}${api}`, data);
 }
 
-export async function icpswap_info_fetch_post<T>(api: string, data?: any) {
-  return fetch_post<T>(`${ICPSWAP_API}/info${api}`, data);
+export async function icpswap_info_fetch_post<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {
+  return await fetch_post<T>(`${ICPSWAP_API}/info${api}`, data);
 }
 
-export async function icpswap_info_fetch_get<T>(api: string, data?: any) {
-  return fetch_get<T>(`${ICPSWAP_API}/info${api}`, data);
+export async function icpswap_info_fetch_get<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {
+  return await fetch_get<T>(`${ICPSWAP_API}/info${api}`, data);
 }

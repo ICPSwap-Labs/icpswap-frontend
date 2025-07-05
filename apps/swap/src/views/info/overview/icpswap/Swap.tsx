@@ -2,9 +2,8 @@ import { useContext, useEffect } from "react";
 import { Typography } from "components/Mui";
 import { Flex, Image, Link } from "@icpswap/ui";
 import { formatDollarAmount, formatAmount } from "@icpswap/utils";
-import { useSwapProtocolData, useSwapPools } from "@icpswap/hooks";
-import { useSwapGlobalData } from "hooks/info/index";
 import { useTranslation } from "react-i18next";
+import { useGlobalProtocol } from "hooks/info/useSwapChartData";
 
 import { IcpswapContext } from "./context";
 import { Card, Item } from "../component";
@@ -13,15 +12,13 @@ export function Swap() {
   const { t } = useTranslation();
   const { setSwapTVL } = useContext(IcpswapContext);
 
-  const { result: swapProtocol } = useSwapProtocolData();
-  const { result: allSwapPools } = useSwapPools();
-  const { result: swapGlobalData } = useSwapGlobalData();
+  const { result: globalProtocol } = useGlobalProtocol();
 
   useEffect(() => {
-    if (swapProtocol) {
-      setSwapTVL(swapProtocol.tvlUSD);
+    if (globalProtocol) {
+      setSwapTVL(globalProtocol.tvlUSD);
     }
-  }, [setSwapTVL, swapProtocol]);
+  }, [setSwapTVL, globalProtocol]);
 
   return (
     <Link to="/info-swap">
@@ -37,26 +34,19 @@ export function Swap() {
         }
       >
         <Flex vertical gap="32px 0" align="flex-start" sx={{ margin: "32px 0 0 0" }}>
-          <Item
-            label={t("common.tvl")}
-            value={swapProtocol ? formatDollarAmount(swapProtocol.tvlUSD) : "--"}
-            // tooltip={t`The cumulative value of positions staked across all live farming pools.`}
-          />
+          <Item label={t("common.tvl")} value={globalProtocol ? formatDollarAmount(globalProtocol.tvlUSD) : "--"} />
           <Item
             label={t("common.total.volume")}
-            value={swapGlobalData ? formatDollarAmount(swapGlobalData?.totalVolume) : "--"}
-            // tooltip={t`The total value of rewards distributed by live farming pools.`}
+            value={globalProtocol ? formatDollarAmount(globalProtocol?.volumeUSD) : "--"}
           />
 
           <Item
             label={t("swap.total.trading.pairs")}
-            value={allSwapPools ? allSwapPools.length : "--"}
-            // tooltip={t`The total value of rewards distributed by finished farming pools.`}
+            value={globalProtocol ? globalProtocol.totalTradingPairs : "--"}
           />
           <Item
             label={t("swap.total.users")}
-            value={swapGlobalData?.totalUser === undefined ? "--" : formatAmount(Number(swapGlobalData.totalUser))}
-            // tooltip={t`The total number of farming pools, including those that are unstart, live, and finished.`}
+            value={globalProtocol?.totalUsers === undefined ? "--" : formatAmount(Number(globalProtocol.totalUsers))}
           />
         </Flex>
       </Card>

@@ -23,7 +23,6 @@ import {
   useInfoToken,
   useTokenAnalysis,
   useTokenSupply,
-  useTokenLatestTVL,
 } from "@icpswap/hooks";
 import { useCanisterInfo } from "hooks/useInternetComputerCalls";
 import { Flex, Proportion, TextButton, BreadcrumbsV1, dexScreenerUrl } from "@icpswap/ui";
@@ -47,11 +46,10 @@ export function TokenDetail() {
   const { result: tokenAnalysis } = useTokenAnalysis(canisterId);
   const { result: canisterInfo } = useCanisterInfo(canisterId);
   const { result: tokenListInfo } = useTokenListTokenInfo(canisterId);
-  const { result: tokenTVL } = useTokenLatestTVL(canisterId);
 
   const marketCap = useMemo(() => {
     if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(infoToken)) {
-      return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(infoToken.priceUSD).toString();
+      return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(infoToken.price).toString();
     }
   }, [tokenAnalysis, infoToken]);
 
@@ -192,15 +190,15 @@ export function TokenDetail() {
 
           <Flex gap="0 8px" sx={{ margin: "24px 0 0 0" }} align="flex-end">
             <Typography color="text.primary" fontWeight={500} fontSize="36px">
-              {infoToken ? formatDollarTokenPrice(infoToken.priceUSD) : "--"}
+              {infoToken ? formatDollarTokenPrice(infoToken.price) : "--"}
             </Typography>
-            <Proportion value={infoToken?.priceUSDChange} fontSize="16px" />
+            <Proportion value={infoToken?.priceChange24H} fontSize="16px" />
           </Flex>
 
           <Flex gap="0 8px" sx={{ margin: "12px 0 0 0" }}>
             <Typography fontSize="18px">
               {infoToken && icpPrice
-                ? `${formatIcpAmount(new BigNumber(infoToken.priceUSD).dividedBy(icpPrice).toString())} ICP`
+                ? `${formatIcpAmount(new BigNumber(infoToken.price).dividedBy(icpPrice).toString())} ICP`
                 : "--"}
             </Typography>
           </Flex>
@@ -292,7 +290,7 @@ export function TokenDetail() {
                   {tokenSupply && token && infoToken
                     ? formatDollarAmount(
                         parseTokenAmount(tokenSupply.toString(), token.decimals)
-                          .multipliedBy(infoToken.priceUSD)
+                          .multipliedBy(infoToken.price)
                           .toString(),
                       )
                     : "--"}
@@ -309,7 +307,7 @@ export function TokenDetail() {
               <Flex vertical align="flex-start" gap="8px 0">
                 <Typography>{t("info.tokens.tvl")}</Typography>
                 <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
-                  {tokenTVL ? formatDollarAmount(tokenTVL.tvlUSD) : "--"}
+                  {infoToken ? formatDollarAmount(infoToken.tvlUSD) : "--"}
                 </Typography>
               </Flex>
 

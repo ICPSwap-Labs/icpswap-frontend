@@ -53,7 +53,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
   const tokenId = useMemo(() => token?.address, [token]);
 
   const tokenPrice = useMemo(() => {
-    return infoToken?.priceUSD;
+    return infoToken?.price;
   }, [infoToken]);
 
   const { result: tokenSupply } = useTokenSupply(tokenId);
@@ -162,7 +162,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
             </Card>
             <Card title={t("common.volume24h")} fontSize="12px">
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {infoToken ? formatDollarAmount(infoToken.volumeUSD) : "--"}
+                {infoToken ? formatDollarAmount(infoToken.volumeUSD24H) : "--"}
               </Typography>
             </Card>
             {/* <Card title={t("common.volume7d")} fontSize="12px">

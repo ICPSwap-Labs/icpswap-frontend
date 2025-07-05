@@ -39,11 +39,11 @@ export function useUserAvailableTokensValue() {
 
         const usdValue = result.reduce((prev, curr, index) => {
           const tokenId = allAvailableStakeTokens[index];
-          const infoToken = infoAllTokens.find((e) => e.address === tokenId);
+          const infoToken = infoAllTokens.find((e) => e.tokenLedgerId === tokenId);
           const token = allTokensInfo.find((e) => e[1]?.canisterId === tokenId)?.[1];
 
           if (tokenId && infoToken && token && curr) {
-            return prev.plus(parseTokenAmount(curr, token.decimals).multipliedBy(infoToken.priceUSD));
+            return prev.plus(parseTokenAmount(curr, token.decimals).multipliedBy(infoToken.price));
           }
 
           return prev;

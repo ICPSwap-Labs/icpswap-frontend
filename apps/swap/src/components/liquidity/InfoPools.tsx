@@ -16,15 +16,9 @@ import {
   APRPanel,
   Link,
 } from "@icpswap/ui";
-import {
-  useAllPoolsTVL,
-  useTokensFromList,
-  useNodeInfoAllPools,
-  useDebouncedChangeHandler,
-  getPoolAPR,
-} from "@icpswap/hooks";
+import { useTokensFromList, useNodeInfoAllPools, useDebouncedChangeHandler, getPoolAPR } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { formatDollarAmount, isUndefinedOrNull, percentToNum, urlStringFormat } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, isUndefinedOrNull, percentToNum, urlStringFormat } from "@icpswap/utils";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { Search } from "react-feather";
@@ -157,13 +151,13 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
 
   const fees = useMemo(() => {
     if (timeBase === "24H") {
-      return (pool.volumeUSD * 3) / 1000;
+      return (Number(pool.volumeUSD24H) * 3) / 1000;
     }
 
-    return (pool.volumeUSD7d * 3) / 1000;
+    return (Number(pool.volumeUSD7D) * 3) / 1000;
   }, [timeBase, pool]);
 
-  const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: pool.token0Id, token1: pool.token1Id });
+  const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: pool.token0LedgerId, token1: pool.token1LedgerId });
 
   const handleAdd: BoxProps["onClick"] = useCallback(
     (event) => {
@@ -180,7 +174,7 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
       event.preventDefault();
       event.stopPropagation();
       event.nativeEvent.stopImmediatePropagation();
-      history.push(`/swap?&input=${pool.token0Id}&output=${pool.token1Id}`);
+      history.push(`/swap?&input=${pool.token0LedgerId}&output=${pool.token1LedgerId}`);
     },
     [history, pool],
   );
@@ -198,7 +192,7 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
   return (
     <>
       <Link
-        to={`/info-swap/pool/details/${pool.pool}?path=${urlStringFormat(
+        to={`/info-swap/pool/details/${pool.poolId}?path=${urlStringFormat(
           "/liquidity?tab=TopPools",
         )}&label=${urlStringFormat(t("common.liquidity"))}`}
       >
@@ -221,8 +215,8 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
               }}
             >
               <Flex align="center">
-                <TokenImage logo={generateLogoUrl(pool.token0Id)} tokenId={pool.token0Id} size="24px" />
-                <TokenImage logo={generateLogoUrl(pool.token1Id)} tokenId={pool.token1Id} size="24px" />
+                <TokenImage logo={generateLogoUrl(pool.token0LedgerId)} tokenId={pool.token0LedgerId} size="24px" />
+                <TokenImage logo={generateLogoUrl(pool.token1LedgerId)} tokenId={pool.token1LedgerId} size="24px" />
               </Flex>
 
               <Flex
@@ -251,12 +245,12 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
                   {pool.token0Symbol} / {pool.token1Symbol}
                 </Typography>
 
-                <FeeTierPercentLabel feeTier={pool.feeTier} />
+                <FeeTierPercentLabel feeTier={pool.poolFee} />
               </Flex>
             </Flex>
           </BodyCell>
           <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-            <PoolTvlTooltip token0Id={pool.token0Id} token1Id={pool.token1Id} poolId={pool.pool}>
+            <PoolTvlTooltip token0Id={pool.token0LedgerId} token1Id={pool.token1LedgerId} poolId={pool.poolId}>
               <Typography
                 align="right"
                 sx={{
@@ -282,7 +276,7 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
             {formatDollarAmount(fees)}
           </BodyCell>
           <BodyCell align="right" sx={{ "@media(max-width: 640px)": { display: "none" } }}>
-            {formatDollarAmount(timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d)}
+            {formatDollarAmount(timeBase === "24H" ? pool.volumeUSD24H : pool.volumeUSD7D)}
           </BodyCell>
           <BodyCell>
             <Flex fullWidth gap="0 5px" justify="flex-end">
@@ -312,12 +306,14 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
 const PAGE_SIZE = 10;
 const START_PAGE = 2;
 
+const DEFAULT_SORT_FILED = "volumeUSD24H";
+
 export function InfoPools() {
   const { t } = useTranslation();
   const classes = useStyles();
   const [searchToken, setSearchToken] = useState<string | undefined>("");
   const [onlyTokenList, setOnlyTokenList] = useState(true);
-  const [sortField, setSortField] = useState<string>("volumeUSD");
+  const [sortField, setSortField] = useState<string>(DEFAULT_SORT_FILED);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
   const theme = useTheme();
 
@@ -326,7 +322,6 @@ export function InfoPools() {
   const [debounceSearchToken, debounceSetSearchToken] = useDebouncedChangeHandler(searchToken, setSearchToken, 300);
   const [headerInViewport, setHeaderInViewport] = useState(true);
 
-  const { result: allPoolsTVL } = useAllPoolsTVL();
   const { result: tokenList } = useTokensFromList();
   const { result: allSwapPools } = useNodeInfoAllPools();
 
@@ -338,10 +333,15 @@ export function InfoPools() {
     return allSwapPools.filter((pool) => {
       let __boolean = true;
 
-      if (pool.token0Price === 0 || pool.token1Price === 0 || pool.feeTier !== BigInt(3000)) __boolean = false;
+      if (
+        new BigNumber(pool.token0Price).isEqualTo(0) ||
+        new BigNumber(pool.token1Price).isEqualTo(0) ||
+        pool.poolFee !== 3000
+      )
+        __boolean = false;
 
       if (onlyTokenList) {
-        if (!tokenListIds.includes(pool.token0Id) || !tokenListIds.includes(pool.token1Id)) {
+        if (!tokenListIds.includes(pool.token0LedgerId) || !tokenListIds.includes(pool.token1LedgerId)) {
           __boolean = false;
         }
       }
@@ -350,8 +350,8 @@ export function InfoPools() {
         if (
           !pool.token0Symbol.toLocaleLowerCase().includes(debounceSearchToken.toLocaleLowerCase()) &&
           !pool.token1Symbol.toLocaleLowerCase().includes(debounceSearchToken.toLocaleLowerCase()) &&
-          !pool.token0Id.toLocaleLowerCase().includes(debounceSearchToken.toLocaleLowerCase()) &&
-          !pool.token1Id.toLocaleLowerCase().includes(debounceSearchToken.toLocaleLowerCase())
+          !pool.token0LedgerId.toLocaleLowerCase().includes(debounceSearchToken.toLocaleLowerCase()) &&
+          !pool.token1LedgerId.toLocaleLowerCase().includes(debounceSearchToken.toLocaleLowerCase())
         ) {
           __boolean = false;
         }
@@ -362,34 +362,34 @@ export function InfoPools() {
   }, [allSwapPools, tokenList, onlyTokenList, debounceSearchToken]);
 
   const slicedPools = useMemo(() => {
-    if (!allPools || !allPoolsTVL) return undefined;
+    if (!allPools) return undefined;
 
     return allPools
       .map((pool) => {
-        const tvlUSD = allPoolsTVL?.find(([poolId]) => poolId === pool.pool)?.[1] ?? 0;
         const apr24h = getPoolAPR({
-          volumeUSD: timeBase === "24H" ? pool.volumeUSD : pool.volumeUSD7d,
-          tvlUSD,
+          volumeUSD: timeBase === "24H" ? pool.volumeUSD24H : pool.volumeUSD7D,
+          tvlUSD: pool.tvlUSD,
           timeBase,
         });
 
-        return { ...pool, tvlUSD, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
+        return { ...pool, apr24h, apr: apr24h ? percentToNum(apr24h) : 0 } as PoolInfoWithApr;
       })
       .sort((a, b) => {
         if (a && b && !!sortField) {
-          const __sortField = sortField === "volumeUSD" && timeBase === "7D" ? "volumeUSD7d" : sortField;
+          const __sortField = sortField === "volumeUSD24H" && timeBase === "7D" ? "volumeUSD7D" : sortField;
 
-          const bool =
-            a[__sortField as keyof PoolInfoWithApr] > b[__sortField as keyof PoolInfoWithApr]
-              ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
-              : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
+          const bool = new BigNumber(a[__sortField as keyof PoolInfoWithApr]).isGreaterThan(
+            b[__sortField as keyof PoolInfoWithApr],
+          )
+            ? (sortDirection === SortDirection.ASC ? 1 : -1) * 1
+            : (sortDirection === SortDirection.ASC ? 1 : -1) * -1;
 
           return bool;
         }
         return 0;
       })
       .slice(0, PAGE_SIZE * page);
-  }, [allPools, allPoolsTVL, page, timeBase, sortField, sortDirection]);
+  }, [allPools, page, timeBase, sortField, sortDirection]);
 
   const handleOnlyTokenList = useCallback(
     (checked: boolean) => {
@@ -546,7 +546,7 @@ export function InfoPools() {
                   </ObserverWrapper>
 
                   {(slicedPools ?? []).map((pool, index) => (
-                    <PoolRow key={pool.pool} index={index + 1} pool={pool} timeBase={timeBase} />
+                    <PoolRow key={pool.poolId} index={index + 1} pool={pool} timeBase={timeBase} />
                   ))}
                 </>
               ) : isUndefinedOrNull(slicedPools) ? (

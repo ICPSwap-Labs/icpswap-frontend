@@ -18,3 +18,7 @@ export function timestampFormat(timestamp: bigint | string | number, format = "Y
 
 export const secondsToDays = (seconds: number): number => seconds / SECONDS_IN_DAY;
 export const daysToSeconds = (days: number): number => Math.round(days * SECONDS_IN_DAY);
+
+export const toUnixTimestamp = (timestamp: string | number) => {
+  return parseInt(String(Number(timestamp) / 1000));
+};

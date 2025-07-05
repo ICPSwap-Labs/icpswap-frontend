@@ -1,6 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { BaseTransaction, Null } from "@icpswap/types";
-import { getTransactionsByPool, useBaseStorages } from "./info";
+import { InfoTransactionResponse, PageResponse, Null } from "@icpswap/types";
+import { icpswap_info_fetch_get } from "@icpswap/utils";
+
+export async function getPoolTransactions(poolId: string, page: number, limit: number) {
+  const result = await icpswap_info_fetch_get<PageResponse<InfoTransactionResponse>>(`/pool/${poolId}/transaction`, {
+    page,
+    limit,
+  });
+
+  return result?.data;
+}
 
 interface UsePoolTransactionsProps {
   poolId: string | Null;
@@ -11,43 +20,26 @@ interface UsePoolTransactionsProps {
 }
 
 export function usePoolTransactions({ poolId, offset, limit, cache, refresh }: UsePoolTransactionsProps) {
-  const { result: storageIds } = useBaseStorages();
-
   const [loading, setLoading] = useState(false);
-  const [transactions, setTransactions] = useState<undefined | BaseTransaction[]>(undefined);
+  const [transactions, setTransactions] = useState<undefined | InfoTransactionResponse[]>(undefined);
 
   useEffect(() => {
     async function call() {
-      if (storageIds && poolId) {
+      if (poolId) {
         if (!cache) {
           setTransactions(undefined);
         }
 
         setLoading(true);
 
-        let transactions: BaseTransaction[] = [];
+        const result = await getPoolTransactions(poolId, offset, limit);
 
-        for (let i = 0; i < storageIds.length; i++) {
-          const result = await getTransactionsByPool(storageIds[i], offset, limit, poolId);
-
-          if (result) {
-            transactions = transactions.concat(result.content);
-
-            if (result.content.length === limit) {
-              break;
-            }
-          } else {
-            await call();
-          }
-        }
-
-        setTransactions(transactions);
+        setTransactions(result.content);
         setLoading(false);
       }
     }
-
     call();
-  }, [storageIds, cache, poolId, offset, limit, refresh]);
+  }, [cache, poolId, offset, limit, refresh]);
 
   return useMemo(() => ({ loading, result: transactions }), [loading, transactions]);
 }

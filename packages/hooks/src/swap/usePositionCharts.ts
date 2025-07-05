@@ -1,22 +1,12 @@
-import { isUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
 import { useCallback } from "react";
-import type {
-  Null,
-  PositionPricePeriodRange,
-  PositionValueChartData,
-  PositionFeeChartData,
-  PositionAPRChartData,
-  PoolAPRChartData,
-  PoolAPRs,
-} from "@icpswap/types";
-import { positionCharts } from "@icpswap/actor";
+import type { Null, PriceIndex, PositionValue, PositionFees, PositionAPR, PoolApr, PoolAprIndex } from "@icpswap/types";
 
-import { Principal } from "@dfinity/principal";
 import { useCallsData } from "../useCallData";
 
 export async function getPoolPricePeriodRange(poolId: string) {
-  const result = await (await positionCharts()).getPriceIndex(Principal.fromText(poolId));
-  return resultFormat<PositionPricePeriodRange>(result).data;
+  const result = await icpswap_fetch_post<PriceIndex>("/swap/pool/price/index", { pid: poolId });
+  return result?.data;
 }
 
 export function usePoolPricePeriodRange(poolId: string | Null) {
@@ -29,8 +19,12 @@ export function usePoolPricePeriodRange(poolId: string | Null) {
 }
 
 export async function getPositionValueChartData(poolId: string, positionId: bigint) {
-  const result = await (await positionCharts()).queryPositionValueLine(Principal.fromText(poolId), positionId);
-  return resultFormat<Array<PositionValueChartData>>(result).data;
+  const result = await icpswap_fetch_post<Array<PositionValue>>("/swap/position/value/line", {
+    poolId,
+    positionId: positionId.toString(),
+  });
+
+  return result?.data;
 }
 
 export function usePositionValueChartData(poolId: string | Null, positionId: bigint | Null) {
@@ -43,8 +37,12 @@ export function usePositionValueChartData(poolId: string | Null, positionId: big
 }
 
 export async function getPositionFeesChartData(poolId: string, positionId: bigint) {
-  const result = await (await positionCharts()).queryPositionFeesLine(Principal.fromText(poolId), positionId);
-  return resultFormat<Array<PositionFeeChartData>>(result).data;
+  const result = await icpswap_fetch_post<Array<PositionFees>>("/swap/position/fee/line", {
+    poolId,
+    positionId: positionId.toString(),
+  });
+
+  return result?.data;
 }
 
 export function usePositionFeesChartData(poolId: string | Null, positionId: bigint | Null) {
@@ -57,8 +55,11 @@ export function usePositionFeesChartData(poolId: string | Null, positionId: bigi
 }
 
 export async function getPositionAPRChartData(poolId: string, positionId: bigint) {
-  const result = await (await positionCharts()).queryPositionAprLine(Principal.fromText(poolId), positionId);
-  return resultFormat<Array<PositionAPRChartData>>(result).data;
+  const result = await icpswap_fetch_post<Array<PositionAPR>>("/swap/position/apr/line", {
+    poolId,
+    positionId: positionId.toString(),
+  });
+  return result.data;
 }
 
 export function usePositionAPRChartData(poolId: string | Null, positionId: bigint | Null) {
@@ -71,8 +72,8 @@ export function usePositionAPRChartData(poolId: string | Null, positionId: bigin
 }
 
 export async function getPoolAPRChartData(poolId: string | Null) {
-  const result = await (await positionCharts()).queryPoolAprLine(Principal.fromText(poolId));
-  return resultFormat<Array<PoolAPRChartData>>(result).data;
+  const result = await icpswap_fetch_post<Array<PoolApr>>("/swap/pool/apr/line", { pid: poolId });
+  return result.data;
 }
 
 export function usePoolAPRChartData(poolId: string | Null) {
@@ -84,16 +85,16 @@ export function usePoolAPRChartData(poolId: string | Null) {
   );
 }
 
-export async function getPoolAPRs(poolId: string | Null) {
-  const result = await (await positionCharts()).getPoolAprIndex(Principal.fromText(poolId));
-  return resultFormat<PoolAPRs>(result).data;
+export async function getPoolAverageAPRs(poolId: string) {
+  const result = await icpswap_fetch_post<PoolAprIndex>("/swap/pool/apr/index", { pid: poolId });
+  return result?.data;
 }
 
-export function usePoolAPRs(poolId: string | Null) {
+export function usePoolAverageAPRs(poolId: string | Null) {
   return useCallsData(
     useCallback(async () => {
       if (isUndefinedOrNull(poolId)) return undefined;
-      return await getPoolAPRs(poolId);
+      return await getPoolAverageAPRs(poolId);
     }, [poolId]),
   );
 }

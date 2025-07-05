@@ -29,7 +29,7 @@
     "polished": "^3.3.2",
     "react-feather": "^2.0.8",
     "react-is": "18.2.0",
-    "recharts": "2.1.12",
+    "recharts": "2.1.15",
     "i18next": "23.10.0",
     "react-i18next": "14.1.0",
     "@emotion/react": "^11.13.5"

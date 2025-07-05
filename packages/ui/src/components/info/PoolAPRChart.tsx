@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
-import { BigNumber, isUndefinedOrNull, numToPercent } from "@icpswap/utils";
-import { usePoolAPRChartData, usePoolAPRs } from "@icpswap/hooks";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { usePoolAPRChartData, usePoolAverageAPRs } from "@icpswap/hooks";
 import { type Null, ChartTimeEnum } from "@icpswap/types";
 import { ReferenceLine } from "recharts";
 
@@ -30,14 +30,14 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
   const [time, setTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
 
   const { result: poolChartData, loading } = usePoolAPRChartData(poolId);
-  const { result: aprResult } = usePoolAPRs(poolId);
+  const { result: averageAprResult } = usePoolAverageAPRs(poolId);
 
   const formattedChartData = useMemo(() => {
     if (poolChartData) {
-      return poolChartData.map((data) => {
+      return [...poolChartData].reverse().map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
-          value: data.apr,
+          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          value: Number(data.apr),
         };
       });
     }
@@ -46,21 +46,21 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
 
   const latestData = formattedChartData.length > 0 ? formattedChartData[formattedChartData.length - 1] : null;
 
-  const apr = useMemo(() => {
-    if (isUndefinedOrNull(aprResult)) return null;
+  const averageApr = useMemo(() => {
+    if (isUndefinedOrNull(averageAprResult)) return null;
 
-    if (time === ChartTimeEnum["24H"]) return aprResult.aprAvg1D;
-    if (time === ChartTimeEnum["7D"]) return aprResult.aprAvg7D;
+    if (time === ChartTimeEnum["24H"]) return averageAprResult.aprAvg1D;
+    if (time === ChartTimeEnum["7D"]) return averageAprResult.aprAvg7D;
 
-    return aprResult.aprAvg30D;
-  }, [aprResult, time]);
+    return averageAprResult.aprAvg30D;
+  }, [averageAprResult, time]);
 
-  const aprY = useMemo(() => {
+  const averageAprSvgHeight = useMemo(() => {
     if (
-      isUndefinedOrNull(apr) ||
+      isUndefinedOrNull(averageApr) ||
       isUndefinedOrNull(formattedChartData) ||
       formattedChartData.length < 2 ||
-      new BigNumber(apr).isEqualTo(0)
+      new BigNumber(averageApr).isEqualTo(0)
     )
       return null;
 
@@ -70,18 +70,20 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
       return 0;
     });
 
-    const diff = sortedData[0].value - sortedData[sortedData.length - 1].value;
+    const diff = new BigNumber(sortedData[0].value).minus(sortedData[sortedData.length - 1].value);
 
-    return ((diff - apr) / diff) * parseInt(height);
-  }, [formattedChartData, apr, time]);
+    return diff.minus(averageApr).dividedBy(diff).multipliedBy(parseInt(height)).toString();
+  }, [formattedChartData, averageApr, time]);
 
   useEffect(() => {
     setTime(__time);
   }, [__time]);
 
-  const lineY = useMemo(() => {
-    return new BigNumber(apr).isLessThan(1) ? new BigNumber(apr).toFixed(4) : new BigNumber(apr).toFixed(4);
-  }, [apr]);
+  const averageAprSvgY = useMemo(() => {
+    return new BigNumber(averageApr).isLessThan(1)
+      ? new BigNumber(averageApr).toFixed(4)
+      : new BigNumber(averageApr).toFixed(2);
+  }, [averageApr]);
 
   return (
     <>
@@ -95,7 +97,7 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
             {latestData ? (
               <>
                 <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-                  {latestValue ? numToPercent(latestValue, 2) : numToPercent(latestData.value, 2)}
+                  {new BigNumber(latestValue || latestData.value).toFixed(2)}%
                 </Typography>
 
                 <Typography
@@ -126,18 +128,16 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
                 label={valueLabel}
                 showXAxis={false}
                 showYAxis
-                yTickFormatter={(val: string) => numToPercent(val, 2)}
+                yTickFormatter={(val: string) => `${new BigNumber(val).toFixed(2)}%`}
                 tipFormat="MMM D, YYYY HH:mm:ss"
                 extraNode={
-                  aprY && apr ? (
+                  averageAprSvgHeight && averageApr ? (
                     <ReferenceLine
                       stroke={theme.colors.apr}
-                      y={lineY}
+                      y={averageAprSvgY}
                       label={
                         // @ts-ignore
-                        <ChartAPRLabel
-                          apr={new BigNumber(apr).isLessThan(0.01) ? numToPercent(apr, 2) : numToPercent(apr, 2)}
-                        />
+                        <ChartAPRLabel apr={`${new BigNumber(averageApr).toFixed(2)}%`} />
                       }
                       strokeDasharray="5 4"
                     />

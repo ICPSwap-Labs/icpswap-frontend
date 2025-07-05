@@ -46,10 +46,11 @@ export function useFarmGlobalData() {
           const { address: token1Principal, amount: token1Amount } = poolToken1TVL;
           const { address: rewardTokenPrincipal, amount: rewardAmount } = totalReward;
 
-          const token0Price = infoAllTokens.find((token) => token.address === token0Principal.toString())?.priceUSD;
-          const token1Price = infoAllTokens.find((token) => token.address === token1Principal.toString())?.priceUSD;
-          const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardTokenPrincipal.toString())
-            ?.priceUSD;
+          const token0Price = infoAllTokens.find((token) => token.tokenLedgerId === token0Principal.toString())?.price;
+          const token1Price = infoAllTokens.find((token) => token.tokenLedgerId === token1Principal.toString())?.price;
+          const rewardTokenPrice = infoAllTokens.find(
+            (token) => token.tokenLedgerId === rewardTokenPrincipal.toString(),
+          )?.price;
 
           const token0Info = await __getTokenInfo(token0Principal.toString());
           const token1Info = await __getTokenInfo(token1Principal.toString());
@@ -97,10 +98,11 @@ export function useFarmGlobalData() {
           const { address: token1Principal, amount: token1Amount } = poolToken1TVL;
           const { address: rewardTokenPrincipal, amount: rewardAmount } = totalReward;
 
-          const token0Price = infoAllTokens.find((token) => token.address === token0Principal.toString())?.priceUSD;
-          const token1Price = infoAllTokens.find((token) => token.address === token1Principal.toString())?.priceUSD;
-          const rewardTokenPrice = infoAllTokens.find((token) => token.address === rewardTokenPrincipal.toString())
-            ?.priceUSD;
+          const token0Price = infoAllTokens.find((token) => token.tokenLedgerId === token0Principal.toString())?.price;
+          const token1Price = infoAllTokens.find((token) => token.tokenLedgerId === token1Principal.toString())?.price;
+          const rewardTokenPrice = infoAllTokens.find(
+            (token) => token.tokenLedgerId === rewardTokenPrincipal.toString(),
+          )?.price;
 
           const token0Info = await __getTokenInfo(token0Principal.toString());
           const token1Info = await __getTokenInfo(token1Principal.toString());

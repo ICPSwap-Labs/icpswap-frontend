@@ -1,11 +1,11 @@
 import { useCallback } from "react";
-import { resultFormat } from "@icpswap/utils";
+import { icpswap_info_fetch_get, resultFormat } from "@icpswap/utils";
 import { node_index } from "@icpswap/actor";
-import { Null, PublicPoolOverView, PublicTokenOverview } from "@icpswap/types";
+import { InfoPoolRealTimeDataResponse, InfoTokenRealTimeDataResponse, Null } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
 
 export async function getNodeInfoAllPools() {
-  return resultFormat<PublicPoolOverView[]>(await (await node_index()).getAllPools()).data;
+  return (await icpswap_info_fetch_get<InfoPoolRealTimeDataResponse[]>("/pool/all")).data;
 }
 
 export function useNodeInfoAllPools() {
@@ -17,7 +17,7 @@ export function useNodeInfoAllPools() {
 }
 
 export async function getNodeInfoAllTokens() {
-  return resultFormat<PublicTokenOverview[]>(await (await node_index()).getAllTokens()).data;
+  return (await icpswap_info_fetch_get<InfoTokenRealTimeDataResponse[]>("/token/all")).data;
 }
 
 export function useNodeInfoAllTokens() {
@@ -28,30 +28,21 @@ export function useNodeInfoAllTokens() {
   );
 }
 
-export async function getInfoPoolStorageIds(pool: string) {
-  return resultFormat<string[]>(await (await node_index()).poolStorage(pool)).data;
+export async function getInfoTokenPools(tokenId: string) {
+  return (await icpswap_info_fetch_get<InfoPoolRealTimeDataResponse[]>(`/token/${tokenId}/pool`)).data;
 }
 
-export function useInfoPoolStorageIds(pool: string | undefined) {
+export function useInfoTokenPools(tokenId: string | Null) {
   return useCallsData(
     useCallback(async () => {
-      if (!pool) return undefined;
-      return await getInfoPoolStorageIds(pool!);
-    }, [pool]),
+      if (!tokenId) return undefined;
+      return await getInfoTokenPools(tokenId);
+    }, [tokenId]),
   );
 }
 
 export async function getInfoTokenStorageIds(token: string) {
   return resultFormat<string[]>(await (await node_index()).tokenStorage(token)).data;
-}
-
-export function useInfoTokenStorageIds(token: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!token) return undefined;
-      return await getInfoTokenStorageIds(token!);
-    }, [token]),
-  );
 }
 
 export async function getInfoUserStorageIds(principal: string) {

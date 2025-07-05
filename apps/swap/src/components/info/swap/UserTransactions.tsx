@@ -1,4 +1,4 @@
-import { useUserPoolTransactions } from "@icpswap/hooks";
+import { useSwapTransactions } from "@icpswap/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { Null } from "@icpswap/types";
 import { ReactNode } from "react";
@@ -14,11 +14,12 @@ export interface UserTransactionsProps {
 
 export function UserTransactions({ poolId, styleProps, CustomNoData }: UserTransactionsProps) {
   const principal = useAccountPrincipalString();
-  const { result: transactions, loading } = useUserPoolTransactions(principal, poolId, 0, 300);
+
+  const { result: transactionsResult, loading } = useSwapTransactions({ principal, poolId, page: 1, limit: 300 });
 
   return (
     <Transactions
-      transactions={transactions}
+      transactions={transactionsResult?.content}
       loading={loading}
       hasFilter
       styleProps={styleProps}

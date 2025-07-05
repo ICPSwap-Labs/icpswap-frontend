@@ -18,8 +18,8 @@ export function useFarmTvlValue({ farmId, token0, token1 }: UseFarmTvlValueArgs)
 
     const { poolToken0, poolToken1 } = farmTvl;
 
-    const token0Price = infoAllTokens.find((e) => e.address === token0.address)?.priceUSD;
-    const token1Price = infoAllTokens.find((e) => e.address === token1.address)?.priceUSD;
+    const token0Price = infoAllTokens.find((e) => e.tokenLedgerId === token0.address)?.price;
+    const token1Price = infoAllTokens.find((e) => e.tokenLedgerId === token1.address)?.price;
 
     if (token0Price === undefined || token1Price === undefined) return undefined;
 

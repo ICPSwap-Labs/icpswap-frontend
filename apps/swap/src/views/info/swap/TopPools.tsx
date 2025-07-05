@@ -29,16 +29,16 @@ export default function TopPools() {
     return pools
       .filter((pool) => {
         if (onlyTokenList) {
-          return tokenListIds.includes(pool.token0Id) && tokenListIds.includes(pool.token1Id);
+          return tokenListIds.includes(pool.token0LedgerId) && tokenListIds.includes(pool.token1LedgerId);
         }
 
         return pool;
       })
-      .filter((pool) => pool.feeTier === BigInt(3000) && !HIDDEN_POOLS.includes(pool.pool))
+      .filter((pool) => pool.poolFee === 3000 && !HIDDEN_POOLS.includes(pool.poolId))
       .filter((pool) => {
         if (!selectedPair) return true;
 
-        return pool.pool === selectedPair;
+        return pool.poolId === selectedPair;
       });
   }, [pools, onlyTokenList, tokenList, selectedPair]);
 

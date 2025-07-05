@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { BigNumber, isValidPrincipal, isAvailablePageArgs, parseTokenAmount } from "@icpswap/utils";
+import { BigNumber, isValidPrincipal, parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { Principal } from "@dfinity/principal";
 import { TokenInfo } from "types/token";
@@ -94,15 +94,6 @@ export async function getTokenTransaction(
       },
     })
   ).data;
-}
-
-export function useTokenTransactions(canisterId: string, account: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return getTokenTransaction(canisterId, account, offset, limit);
-    }, [offset, limit, canisterId]),
-  );
 }
 
 export async function getTokenSupply(canisterId: string | undefined) {

@@ -1,45 +1,32 @@
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-import { VolumeWindow } from "@icpswap/types";
-import { usePoolTvlChartData } from "@icpswap/hooks";
-
+import { InfoPoolDataResponse, VolumeWindow } from "@icpswap/types";
 import { formatDollarAmount } from "@icpswap/utils";
+
 import { ImageLoading } from "../Loading";
 import { LineChartAlt } from "../LineChart/alt";
 import { Box, Typography } from "../Mui";
 
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
-
 export interface PoolTvlChartProps {
-  canisterId: string;
   noData?: React.ReactNode;
   volumeWindow?: VolumeWindow;
   height?: string;
+  chartsData: Array<InfoPoolDataResponse>;
+  loading: boolean;
 }
 
-export function PoolTvlChart({ noData, canisterId, height = "340px" }: PoolTvlChartProps) {
+export function PoolTvlChart({ chartsData, loading, noData, height = "340px" }: PoolTvlChartProps) {
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
-  const { result: poolChartTVl, loading } = usePoolTvlChartData(canisterId);
-
   const formattedData = useMemo(() => {
-    if (poolChartTVl) {
-      return poolChartTVl
-        .filter((data) => Number(data.timestamp) !== 0)
-        .map((data) => {
-          return {
-            time: dayjs(Number(data.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss"),
-            value: data.tvlUSD,
-          };
-        });
-    }
-    return [];
-  }, [poolChartTVl]);
+    return chartsData.map((data) => {
+      return {
+        time: dayjs(Number(data.beginTime)).format("YYYY-MM-DD HH:mm:ss"),
+        value: Number(data.tvlUSD),
+      };
+    });
+  }, [chartsData]);
 
   const latestData = formattedData.length > 0 ? formattedData[formattedData.length - 1] : null;
 

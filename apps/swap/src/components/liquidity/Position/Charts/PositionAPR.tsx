@@ -1,11 +1,10 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, numToPercent } from "@icpswap/utils";
-import { usePositionAPRChartData, usePoolAPRs } from "@icpswap/hooks";
+import { usePositionAPRChartData, usePoolAverageAPRs } from "@icpswap/hooks";
 import { type Null, ChartTimeEnum } from "@icpswap/types";
 import { LineChartAlt, ImageLoading, ChartAPRLabel, Flex } from "@icpswap/ui";
 import { ReferenceLine } from "recharts";
-
 import dayjs from "dayjs";
 
 const CHART_HEIGHT = 240;
@@ -22,80 +21,56 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
   const { result: positionChartData, loading } = usePositionAPRChartData(poolId, positionId);
-  const { result: aprResult } = usePoolAPRs(poolId);
+  const { result: averageAprResult } = usePoolAverageAPRs(poolId);
 
   const formattedChartData = useMemo(() => {
-    if (positionChartData) {
+    if (nonUndefinedOrNull(positionChartData) && nonUndefinedOrNull(averageAprResult)) {
       return positionChartData.map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime * BigInt(1000))).format("YYYY-MM-DD HH:mm:ss"),
-          value: data.apr,
+          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          value: new BigNumber(data.apr).dividedBy(100).toNumber(),
         };
       });
     }
-    return [];
-  }, [positionChartData]);
 
-  const latestPositionValue = formattedChartData.length > 0 ? formattedChartData[formattedChartData.length - 1] : null;
+    return null;
+  }, [positionChartData, averageAprResult]);
 
-  const apr = useMemo(() => {
-    if (isUndefinedOrNull(aprResult)) return null;
+  const latestPositionValue =
+    nonUndefinedOrNull(formattedChartData) && formattedChartData.length > 0
+      ? formattedChartData[formattedChartData.length - 1]
+      : null;
 
-    if (aprTime === ChartTimeEnum["24H"]) return aprResult.aprAvg1D;
-    if (aprTime === ChartTimeEnum["7D"]) return aprResult.aprAvg7D;
+  const averageApr = useMemo(() => {
+    if (isUndefinedOrNull(averageAprResult)) return null;
 
-    return aprResult.aprAvg30D;
-  }, [aprResult, aprTime]);
+    if (aprTime === ChartTimeEnum["24H"]) return averageAprResult.aprAvg1D;
+    if (aprTime === ChartTimeEnum["7D"]) return averageAprResult.aprAvg7D;
 
-  const aprY = useMemo(() => {
-    if (
-      isUndefinedOrNull(apr) ||
-      isUndefinedOrNull(formattedChartData) ||
-      formattedChartData.length < 2 ||
-      new BigNumber(apr).isEqualTo(0)
-    )
-      return null;
-
-    const sortedData = [...formattedChartData].sort((a, b) => {
-      if (a.value < b.value) return 1;
-      if (a.value > b.value) return -1;
-      return 0;
-    });
-
-    const diff = sortedData[0].value - sortedData[sortedData.length - 1].value;
-
-    return ((diff - apr) / diff) * CHART_HEIGHT;
-  }, [formattedChartData, apr]);
+    return averageAprResult.aprAvg30D;
+  }, [averageAprResult, aprTime]);
 
   const lineY = useMemo(() => {
-    return apr
-      ? new BigNumber(apr).isLessThan(1)
-        ? new BigNumber(apr).toFixed(4)
-        : new BigNumber(apr).toFixed(4)
+    return averageApr
+      ? new BigNumber(averageApr).isLessThan(1)
+        ? new BigNumber(averageApr).dividedBy(100).toFixed(4)
+        : new BigNumber(averageApr).dividedBy(100).toFixed(2)
       : null;
-  }, [apr]);
+  }, [averageApr]);
 
   return (
     <>
-      {loading ? (
+      {loading || isUndefinedOrNull(formattedChartData) ? (
         <Box sx={{ width: "100%", minHeight: "300px" }}>
           <ImageLoading loading={loading} />
         </Box>
-      ) : (
+      ) : formattedChartData.length > 0 ? (
         <>
-          {formattedChartData.length === 0 ? (
-            <Flex sx={{ width: "100%", minHeight: "300px" }} justify="center">
-              <Typography sx={{ fontSize: "12px" }}>New position added, data updates tomorrow</Typography>
-            </Flex>
-          ) : null}
-
           <Box sx={{ height: "50px" }}>
             {latestPositionValue ? (
               <>
                 <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-                  {nonUndefinedOrNull(latestValue)
-                    ? numToPercent(latestValue, 2)
-                    : numToPercent(latestPositionValue.value, 2)}
+                  {new BigNumber(nonUndefinedOrNull(latestValue) ? latestValue : latestPositionValue.value).toFixed(2)}%
                 </Typography>
 
                 <Typography
@@ -125,17 +100,21 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
                 label={valueLabel}
                 showXAxis={false}
                 showYAxis
-                yTickFormatter={(val: string) => numToPercent(val, 2)}
+                yTickFormatter={(val: string) => numToPercent(val)}
                 tipFormat="MMM D, YYYY HH:mm:ss"
                 extraNode={
-                  aprY && apr && lineY ? (
+                  nonUndefinedOrNull(averageApr) && nonUndefinedOrNull(lineY) ? (
                     <ReferenceLine
                       stroke={theme.colors.apr}
                       y={lineY}
                       label={
                         // @ts-ignore
                         <ChartAPRLabel
-                          apr={new BigNumber(apr).isLessThan(0.01) ? numToPercent(apr, 2) : numToPercent(apr, 2)}
+                          apr={
+                            new BigNumber(averageApr).isLessThan(1)
+                              ? numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 4)
+                              : numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 2)
+                          }
                         />
                       }
                       strokeDasharray="5 4"
@@ -148,6 +127,10 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
             )}
           </Box>
         </>
+      ) : (
+        <Flex sx={{ width: "100%", minHeight: "300px" }} justify="center">
+          <Typography sx={{ fontSize: "12px" }}>New position added, data updates tomorrow</Typography>
+        </Flex>
       )}
     </>
   );

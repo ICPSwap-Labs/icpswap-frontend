@@ -10,7 +10,7 @@ export default function SwapPools() {
   const { result: pools, loading } = useNodeInfoAllPools();
 
   const _pools = useMemo(() => {
-    return pools?.filter((pool) => pool.feeTier === BigInt(3000));
+    return pools?.filter((pool) => pool.poolFee === 3000);
   }, [pools]);
 
   return (

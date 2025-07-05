@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { useMemo } from "react";
 import { ChartDayVolumeData, GenericChartEntry } from "@icpswap/types";
-import { unixToDate } from "@icpswap/utils";
+import { BigNumber, unixToDate } from "@icpswap/utils";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
 import dayjs from "dayjs";
@@ -32,8 +32,10 @@ export function useTransformedVolumeData(chartData: ChartDayVolumeData[] | undef
     if (chartData) {
       const data: Record<string, GenericChartEntry> = {};
 
-      chartData.forEach(({ date, volumeUSD }: { date: number; volumeUSD: number }) => {
-        const group = unixToType(date, type);
+      chartData.forEach(({ timestamp, volumeUSD }: { timestamp: number; volumeUSD: number }) => {
+        const unixTimestamp = Number(new BigNumber(timestamp).dividedBy(1000).toFixed(0));
+
+        const group = unixToType(unixTimestamp, type);
 
         if (group === undefined) return;
 
@@ -41,7 +43,7 @@ export function useTransformedVolumeData(chartData: ChartDayVolumeData[] | undef
           data[group].value += volumeUSD;
         } else {
           data[group] = {
-            time: unixToDate(date),
+            time: unixToDate(unixTimestamp),
             value: volumeUSD,
           };
         }

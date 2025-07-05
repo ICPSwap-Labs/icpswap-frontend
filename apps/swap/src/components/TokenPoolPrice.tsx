@@ -7,8 +7,8 @@ import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 export interface TokenPoolPriceProps {
   tokenA: Token | undefined;
   tokenB: Token | undefined;
-  priceA: number | undefined;
-  priceB: number | undefined;
+  priceA: number | string | undefined;
+  priceB: number | string | undefined;
   background?: "none" | "level4";
   disable?: boolean;
   wrapperSx?: BoxProps["sx"];

@@ -25,7 +25,7 @@ function TokenTvl({ token, poolId, onUpdateTvl }: TokenTvlProps) {
   const { result: tokenBalance } = useTokenBalance(token?.address, poolId);
   const infoToken = useInfoToken(token?.address);
 
-  const tokenPrice = useMemo(() => infoToken?.priceUSD, [infoToken]);
+  const tokenPrice = useMemo(() => infoToken?.price, [infoToken]);
 
   const tokenUsdTvl = useMemo(() => {
     if (!tokenBalance || !tokenPrice || !token) return undefined;
@@ -128,15 +128,15 @@ export default function TokenUI() {
                 <TokenPoolPrice
                   tokenA={token0}
                   tokenB={token1}
-                  priceA={infoToken0?.priceUSD}
-                  priceB={infoToken1?.priceUSD}
+                  priceA={infoToken0?.price}
+                  priceB={infoToken1?.price}
                   background="none"
                 />
                 <TokenPoolPrice
                   tokenA={token1}
                   tokenB={token0}
-                  priceA={infoToken1?.priceUSD}
-                  priceB={infoToken0?.priceUSD}
+                  priceA={infoToken1?.price}
+                  priceB={infoToken0?.price}
                   background="none"
                 />
               </Box>

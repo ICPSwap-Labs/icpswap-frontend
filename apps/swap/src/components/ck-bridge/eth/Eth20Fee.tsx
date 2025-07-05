@@ -48,7 +48,7 @@ export function EthFee() {
                 {t("common.brackets", {
                   content: `${formatDollarAmount(
                     parseTokenAmount(transactionPrice.max_transaction_fee, ckETH.decimals)
-                      .multipliedBy(ckETHInfoToken.priceUSD)
+                      .multipliedBy(ckETHInfoToken.price)
                       .toString(),
                   )}`,
                 })}

@@ -51,7 +51,7 @@ export function PoolListHeader({ id, showState, finished, gridTemplateColumns, y
 
       {your ? (
         <Flex justify="flex-end" className="row-item">
-          <HeaderCell>{t("stake.your.rewards")}</HeaderCell>
+          <HeaderCell>{t("common.your.rewards")}</HeaderCell>
         </Flex>
       ) : finished ? null : (
         <Flex justify="flex-end" className="row-item">

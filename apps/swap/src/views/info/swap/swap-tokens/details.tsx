@@ -1,8 +1,8 @@
-import { Typography, Box, Button, useMediaQuery, useTheme } from "components/Mui";
+import { Typography, Box, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
 import { InfoWrapper, Breadcrumbs, TextButton, TokenImage, MainCard, ImportToNns } from "components/index";
-import { formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
-import { useParsedQueryString, useTokenLatestTVL, useInfoToken } from "@icpswap/hooks";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
+import { useParsedQueryString, useInfoToken } from "@icpswap/hooks";
 import {
   GridAutoRows,
   Proportion,
@@ -72,14 +72,12 @@ export default function TokenDetails() {
   const [openTips] = useTips();
   const theme = useTheme();
   const tokenChartsRef = useRef<TokenChartsRef>(null);
+  const down640 = useMediaQuery640();
 
   const { path, page } = useParsedQueryString() as { path: string | undefined; page: string | undefined };
 
   const infoToken = useInfoToken(canisterId);
-  const [, token] = useToken(infoToken?.address);
-
-  const { result: tokenTVL } = useTokenLatestTVL(canisterId);
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const [, token] = useToken(canisterId);
 
   const [activeTab, setActiveTab] = useState<TabValue>(TabValue.Transactions);
 
@@ -109,8 +107,6 @@ export default function TokenDetails() {
 
   const tokenPairWithIcp = uesTokenPairWithIcp({ tokenId: canisterId });
 
-  const down640 = useMediaQuery640();
-
   return (
     <InfoWrapper>
       <Breadcrumbs
@@ -134,7 +130,7 @@ export default function TokenDetails() {
             </Flex>
 
             <Typography fontSize="20px" fontWeight="500">
-              ({infoToken?.symbol && down640 ? tokenSymbolEllipsis({ symbol: token?.symbol }) : token?.symbol})
+              ({infoToken?.tokenSymbol && down640 ? tokenSymbolEllipsis({ symbol: token?.symbol }) : token?.symbol})
             </Typography>
           </Flex>
 
@@ -171,11 +167,11 @@ export default function TokenDetails() {
                 lineHeight: "0.8",
               }}
             >
-              {formatDollarTokenPrice(infoToken?.priceUSD)}
+              {formatDollarTokenPrice(infoToken?.price)}
             </Typography>
 
             <Typography component="div" sx={{ display: "flex" }}>
-              (<Proportion value={infoToken?.priceUSDChange} />)
+              (<Proportion value={infoToken?.priceChange24H} />)
             </Typography>
           </Flex>
         </Box>
@@ -190,7 +186,7 @@ export default function TokenDetails() {
             },
           }}
         >
-          {!matchDownSM ? (
+          {!down640 ? (
             <TokenChartsViewSelector token={token} chartView={chartView} setChartView={setChartView} />
           ) : null}
 
@@ -242,10 +238,10 @@ export default function TokenDetails() {
                   fontSize: "24px",
                 }}
               >
-                {formatDollarAmount(tokenTVL?.tvlUSD)}
+                {formatDollarAmount(infoToken?.tvlUSD)}
               </Typography>
 
-              <Proportion value={tokenTVL?.tvlUSDChange} />
+              <Proportion value={infoToken?.tvlUSDChange24H} />
             </GridAutoRows>
 
             <GridAutoRows gap="4px">
@@ -257,7 +253,7 @@ export default function TokenDetails() {
                   fontSize: "24px",
                 }}
               >
-                {formatDollarAmount(infoToken?.volumeUSD)}
+                {formatDollarAmount(infoToken?.volumeUSD24H)}
               </Typography>
             </GridAutoRows>
 
@@ -285,7 +281,9 @@ export default function TokenDetails() {
                   fontSize: "24px",
                 }}
               >
-                {infoToken?.volumeUSD ? formatDollarAmount((infoToken.volumeUSD * 3) / 1000) : "--"}
+                {infoToken?.volumeUSD24H
+                  ? formatDollarAmount(new BigNumber(infoToken.volumeUSD24H).multipliedBy(3).div(1000).toString())
+                  : "--"}
               </Typography>
             </GridAutoRows>
           </GridAutoRows>
@@ -295,7 +293,7 @@ export default function TokenDetails() {
           </Box>
         </MainCard>
 
-        {matchDownSM ? (
+        {down640 ? (
           <Box sx={{ width: "fit-content" }}>
             <TokenChartsViewSelector token={token} chartView={chartView} setChartView={setChartView} />
           </Box>
@@ -313,7 +311,7 @@ export default function TokenDetails() {
           <TokenCharts
             ref={tokenChartsRef}
             canisterId={canisterId}
-            volume={infoToken?.volumeUSD}
+            volume={infoToken?.volumeUSD24H}
             showTopIfDexScreen={false}
             dexScreenHeight="486px"
             priceChart={<TokenPriceChart token={token} />}

@@ -131,7 +131,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   const [, token] = useToken(canisterId);
   const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance(canisterId, principal, refreshNumber);
   const tokenUSDPrice = useMemo(() => {
-    return infoToken?.priceUSD;
+    return infoToken?.price;
   }, [infoToken]);
 
   const handleIncreaseCounter = useCallback(() => {
@@ -155,10 +155,10 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
 
   useEffect(() => {
     if (token && token.decimals !== undefined && token.transFee !== undefined && tokenBalance && infoToken) {
-      setTotalValue(token.address, parseTokenAmount(tokenBalance, token.decimals).multipliedBy(infoToken.priceUSD));
+      setTotalValue(token.address, parseTokenAmount(tokenBalance, token.decimals).multipliedBy(infoToken.price));
 
-      const usdBeforeChange = new BigNumber(infoToken.priceUSD).div(
-        new BigNumber(infoToken.priceUSDChange).dividedBy(100).plus(1),
+      const usdBeforeChange = new BigNumber(infoToken.price).div(
+        new BigNumber(infoToken.priceChange24H).dividedBy(100).plus(1),
       );
 
       setTotalUSDBeforeChange(
