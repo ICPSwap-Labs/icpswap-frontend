@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
-import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, numToPercent } from "@icpswap/utils";
 import { usePositionAPRChartData, usePoolAverageAPRs } from "@icpswap/hooks";
 import { type Null, ChartTimeEnum } from "@icpswap/types";
 import { LineChartAlt, ImageLoading, ChartAPRLabel, Flex } from "@icpswap/ui";
@@ -28,7 +28,7 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
       return positionChartData.map((data) => {
         return {
           time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
-          value: Number(data.apr),
+          value: new BigNumber(data.apr).dividedBy(100).toNumber(),
         };
       });
     }
@@ -53,8 +53,8 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
   const lineY = useMemo(() => {
     return averageApr
       ? new BigNumber(averageApr).isLessThan(1)
-        ? new BigNumber(averageApr).toFixed(4)
-        : new BigNumber(averageApr).toFixed(2)
+        ? new BigNumber(averageApr).dividedBy(100).toFixed(4)
+        : new BigNumber(averageApr).dividedBy(100).toFixed(2)
       : null;
   }, [averageApr]);
 
@@ -100,7 +100,7 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
                 label={valueLabel}
                 showXAxis={false}
                 showYAxis
-                yTickFormatter={(val: string) => `${new BigNumber(val).toFixed(2)}%`}
+                yTickFormatter={(val: string) => numToPercent(val)}
                 tipFormat="MMM D, YYYY HH:mm:ss"
                 extraNode={
                   nonUndefinedOrNull(averageApr) && nonUndefinedOrNull(lineY) ? (
@@ -112,8 +112,8 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
                         <ChartAPRLabel
                           apr={
                             new BigNumber(averageApr).isLessThan(1)
-                              ? `${new BigNumber(averageApr).toFixed(4)}%`
-                              : `${new BigNumber(averageApr).toFixed(2)}%`
+                              ? numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 4)
+                              : numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 2)
                           }
                         />
                       }
