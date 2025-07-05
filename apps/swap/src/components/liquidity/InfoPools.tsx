@@ -108,7 +108,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
         },
         {
           label: timeBase === "24H" ? t("common.volume24h") : t("common.volume7d"),
-          key: "volumeUSD",
+          key: "volumeUSD24H",
           sort: true,
           align: "right",
         },
