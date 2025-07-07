@@ -8,3 +8,5 @@ export * from "./types";
 export * from "./Transaction";
 export * from "./APRChartTimeButtons";
 export * from "./ChartAPRLabel";
+export * from "./ValueLabel";
+export * from "./icons";

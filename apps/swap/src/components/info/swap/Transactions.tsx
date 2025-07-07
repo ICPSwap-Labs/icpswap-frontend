@@ -1,12 +1,13 @@
 import { useState, useMemo, useCallback, ReactNode } from "react";
 import { BigNumber, enumToString, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, SortDirection, TransactionRow, NoData, LoadingRow } from "@icpswap/ui";
+import { Header, HeaderCell, SortDirection, TransactionRow, NoData, LoadingRow, Flex } from "@icpswap/ui";
 import { InfoTransactionResponse, Null } from "@icpswap/types";
 import Pagination from "components/pagination/cus";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
 import { useTranslation } from "react-i18next";
+import { ValueLabelTooltip } from "components/info/ValueLabelTooltip";
 
 export interface StyleProps {
   padding?: string;
@@ -155,7 +156,10 @@ export function Transactions({
             </Box>
 
             <HeaderCell field="token0TxValue" isSort>
-              {t("common.total.value")}
+              <Flex gap="0 4px">
+                <HeaderCell>{t("common.total.value")}</HeaderCell>
+                <ValueLabelTooltip />
+              </Flex>
             </HeaderCell>
 
             <HeaderCell field="amountToken0">{t("common.token.amount")}</HeaderCell>

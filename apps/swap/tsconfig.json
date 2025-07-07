@@ -20,5 +20,5 @@
     "noImplicitAny":false,
   },
   "exclude": ["node_modules", "src/abis/types/**/*"],
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../../packages/ui/src/components/info/ValueLabel.tsx"]
 }
