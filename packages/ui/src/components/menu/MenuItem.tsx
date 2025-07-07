@@ -4,7 +4,7 @@ import { useTheme, Typography, BoxProps } from "../Mui";
 import { Flex } from "../Grid/Flex";
 
 export interface MenuItemProps {
-  onMenuClick: (value: any) => void;
+  onMenuClick?: (value: any) => void;
   active?: boolean;
   label?: ReactNode;
   icon?: ReactNode;
@@ -13,6 +13,9 @@ export interface MenuItemProps {
   onMouseEnter?: BoxProps["onMouseEnter"];
   onMouseLeave?: BoxProps["onMouseLeave"];
   disabled?: boolean;
+  background?: string;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
 export function MenuItem({
@@ -25,6 +28,9 @@ export function MenuItem({
   disabled,
   onMouseEnter,
   onMouseLeave,
+  background,
+  isFirst,
+  isLast,
 }: MenuItemProps) {
   const theme = useTheme();
 
@@ -32,7 +38,7 @@ export function MenuItem({
     <Flex
       fullWidth
       sx={{
-        background: theme.palette.background.level1,
+        background: background ?? theme.palette.background.level1,
         padding: "0 24px",
         height: "44px",
         "&.active": {
@@ -47,8 +53,15 @@ export function MenuItem({
             color: disabled ? "text.secondary" : "text.primary",
           },
         },
+
+        borderTopLeftRadius: isFirst ? "12px" : "0",
+        borderTopRightRadius: isFirst ? "12px" : "0",
+        borderBottomLeftRadius: isLast ? "12px" : "0",
+        borderBottomRightRadius: isLast ? "12px" : "0",
       }}
-      onClick={() => onMenuClick(value)}
+      onClick={() => {
+        if (onMenuClick) onMenuClick(value);
+      }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
@@ -58,6 +71,7 @@ export function MenuItem({
           <Typography
             className="nav-bar-label"
             sx={{ fontSize: "14px", color: active ? "text.primary" : "text.secondary" }}
+            component="div"
           >
             {label}
           </Typography>

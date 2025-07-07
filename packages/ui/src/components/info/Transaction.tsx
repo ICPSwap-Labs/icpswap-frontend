@@ -8,6 +8,7 @@ import { BoxProps, useTheme } from "../Mui";
 import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { TableRow, BodyCell } from "../Table";
 import { Link } from "../Link";
+import { ValueLabel } from "./ValueLabel";
 
 function OverflowTokenSymbolBodyCell({ symbol }: { symbol: string }) {
   return (
@@ -105,7 +106,10 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
     <TableRow className={className} borderBottom={`1px solid ${theme.palette.border.level1}`}>
       <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
 
-      <BodyCell>{formatDollarAmount(transaction.token0TxValue)}</BodyCell>
+      <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
+        {formatDollarAmount(transaction.token0TxValue)}
+        <ValueLabel value={transaction.token0TxValue} />
+      </BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>
         {formatAmount(token0Amount)}

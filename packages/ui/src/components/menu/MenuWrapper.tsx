@@ -26,6 +26,7 @@ export interface MenuWrapperProps {
     | "left-end";
   children: ReactNode;
   border?: string;
+  background?: string;
   padding?: string;
   menuWidth?: string;
 }
@@ -39,6 +40,7 @@ export function MenuWrapper({
   anchor,
   placement,
   children,
+  background,
 }: MenuWrapperProps) {
   const classes = useStyles();
   const theme = useTheme();
@@ -63,7 +65,7 @@ export function MenuWrapper({
       <ClickAwayListener onClickAway={onClickAway}>
         <Box
           sx={{
-            background: theme.palette.background.level1,
+            background: background ?? theme.palette.background.level1,
             border: border ?? `1px solid ${theme.palette.background.level3}`,
             padding: padding ?? "4px 0",
             borderRadius: "12px",
