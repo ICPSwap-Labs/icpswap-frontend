@@ -24,31 +24,3 @@ export function useSwapWithdraw() {
     return true;
   }, []);
 }
-
-export interface UseSwapWithdrawByTokenIdProps {
-  tokenId: string;
-  tokenFee: number | string | bigint;
-  poolId: string;
-  amount: string | bigint | number;
-  openExternalTip?: OpenExternalTip;
-}
-
-export function useSwapWithdrawByTokenId() {
-  const [openErrorTip] = useErrorTip();
-
-  return useCallback(async ({ tokenFee, tokenId, poolId, amount, openExternalTip }: UseSwapWithdrawByTokenIdProps) => {
-    const { status, message } = await withdraw(poolId, tokenId, BigInt(tokenFee), BigInt(amount));
-
-    if (status === "err") {
-      if (openExternalTip) {
-        openExternalTip({ message });
-      } else {
-        openErrorTip(i18n.t("common.failed.withdraw.error.with.reclaimMsg", { symbol: "", message }));
-      }
-
-      return false;
-    }
-
-    return true;
-  }, []);
-}
