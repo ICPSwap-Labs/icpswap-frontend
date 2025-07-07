@@ -1,4 +1,4 @@
 import { createAction } from "@reduxjs/toolkit";
-import type { SnsTokensInfo } from "@icpswap/types";
+import type { NnsTokenInfo } from "@icpswap/types";
 
-export const updateSnsAllTokensInfo = createAction<SnsTokensInfo[]>("global/updateSnsAllTokensInfo");
+export const updateSnsAllTokensInfo = createAction<NnsTokenInfo[]>("global/updateSnsAllTokensInfo");

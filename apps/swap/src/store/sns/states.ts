@@ -1,7 +1,7 @@
-import type { SnsTokensInfo } from "@icpswap/types";
+import type { NnsTokenInfo } from "@icpswap/types";
 
 export interface SnsState {
-  snsAllTokensInfo: SnsTokensInfo[];
+  snsAllTokensInfo: NnsTokenInfo[];
 }
 
 export const initialState: SnsState = {

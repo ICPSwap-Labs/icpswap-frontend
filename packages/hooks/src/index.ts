@@ -5,7 +5,6 @@ export * from "./useCallData";
 export * from "./useLimitedInfinityCall";
 export * from "./swap";
 export * from "./exchange_rate";
-export * from "./icp";
 export * from "./nft";
 export * from "./staking-farm";
 export * from "./staking-token";

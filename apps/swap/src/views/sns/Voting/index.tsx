@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import { useListDeployedSNSs, getListProposals, useParsedQueryString } from "@icpswap/hooks";
+import { getListProposals, useParsedQueryString } from "@icpswap/hooks";
 import type { ProposalData } from "@icpswap/types";
 import { shortenString, nowInSeconds } from "@icpswap/utils";
 import { useMemo, useState, useEffect } from "react";
@@ -14,8 +14,9 @@ import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
 import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_ROOT_ID } from "constants/nns";
-
-import { getProposalStatus } from "./proposal.utils";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
+import { getNnsGovernanceId, getNnsLedgerId, nnsEqualToRootId } from "utils/sns/utils";
+import { getProposalStatus } from "utils/sns/proposal.utils";
 
 interface ProposalItemProps {
   proposal: ProposalData;
@@ -130,18 +131,18 @@ export default function Votes() {
     return root_id_url ?? DEFAULT_ROOT_ID;
   }, [root_id_url]);
 
-  const { result: listedSNS } = useListDeployedSNSs();
+  const allNns = useStateSnsAllTokensInfo();
 
   const sns = useMemo(() => {
-    if (!root_id || !listedSNS) return undefined;
-    return listedSNS.instances.find((e) => e.root_canister_id.toString() === root_id);
-  }, [listedSNS, root_id]);
+    if (!root_id || !allNns) return undefined;
+    return allNns.find((nns) => nnsEqualToRootId(nns, root_id));
+  }, [allNns, root_id]);
 
   const { governance_id } = useMemo(() => {
     if (!sns) return { governance_id: undefined, ledger_id: undefined };
 
-    const governance_canister_id = sns.governance_canister_id[0];
-    const ledger_canister_id = sns.ledger_canister_id[0];
+    const governance_canister_id = getNnsGovernanceId(sns);
+    const ledger_canister_id = getNnsLedgerId(sns);
 
     return { governance_id: governance_canister_id?.toString(), ledger_id: ledger_canister_id?.toString() };
   }, [sns]);

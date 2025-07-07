@@ -14,9 +14,9 @@ import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
 import { Modal } from "@icpswap/ui";
-
-import { TokenItem } from "./TokenItem";
-import { BaseTokens } from "./BaseToken";
+import { TokenItem } from "components/CurrencySelector/TokenItem";
+import { BaseTokens } from "components/CurrencySelector/BaseToken";
+import { getNnsRootId } from "utils/sns/utils";
 
 const useStyles = makeStyles(() => {
   return {
@@ -74,9 +74,9 @@ export default function Selector({
         return !yourTokens.includes(token.canisterId);
       })
       .forEach((token) => {
-        const snsTokenInfo = snsAllTokensInfo.find((e) => e.canister_ids.ledger_canister_id === token.canisterId);
+        const snsTokenInfo = snsAllTokensInfo.find((e) => e.list_sns_canisters.ledger === token.canisterId);
 
-        if (snsTokenInfo?.canister_ids.root_canister_id) {
+        if (getNnsRootId(snsTokenInfo)) {
           snsTokens.push(token);
         } else {
           noneSnsTokens.push(token);

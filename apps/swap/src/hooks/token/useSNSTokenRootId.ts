@@ -7,7 +7,7 @@ export function useSNSTokenRootId(tokenId: string | Null) {
 
   return useMemo(() => {
     if (!tokenId || !snsAllTokensInfo) return undefined;
-    const snsTokenInfo = snsAllTokensInfo.find((e) => e.canister_ids.ledger_canister_id === tokenId);
-    return snsTokenInfo?.canister_ids.root_canister_id;
+    const snsTokenInfo = snsAllTokensInfo.find((e) => e.list_sns_canisters.ledger === tokenId);
+    return snsTokenInfo?.list_sns_canisters.root;
   }, [snsAllTokensInfo, tokenId]);
 }

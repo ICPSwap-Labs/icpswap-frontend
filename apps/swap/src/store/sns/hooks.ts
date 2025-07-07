@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { getSnsAllTokensInfo } from "@icpswap/hooks";
+import { useNnsTokensInfo } from "@icpswap/hooks";
+
 import { updateSnsAllTokensInfo } from "./actions";
 
 export function useStateSnsAllTokensInfo() {
@@ -11,20 +12,23 @@ export function useStateSnsAllTokensInfo() {
 export function useFetchSnsAllTokensInfo() {
   const dispatch = useAppDispatch();
   const allTokensInfo = useStateSnsAllTokensInfo();
-  const [loading, setLoading] = useState(false);
+  const { result: nnsTokens, loading } = useNnsTokensInfo();
 
   useEffect(() => {
     async function call() {
-      if (allTokensInfo.length > 0 || loading) return;
+      if (nnsTokens) {
+        const __nnsTokens = nnsTokens.sort((a, b) => {
+          if (a.index < b.index) return -1;
+          if (a.index > b.index) return 1;
+          return 0;
+        });
 
-      setLoading(true);
-      const data = await getSnsAllTokensInfo();
-      dispatch(updateSnsAllTokensInfo(data));
-      setLoading(false);
+        dispatch(updateSnsAllTokensInfo(__nnsTokens));
+      }
     }
 
     call();
-  }, [dispatch]);
+  }, [nnsTokens]);
 
   return useMemo(() => ({ loading, result: allTokensInfo }), [loading, allTokensInfo]);
 }

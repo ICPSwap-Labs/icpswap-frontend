@@ -13,6 +13,7 @@ import { TokenItem } from "components/CurrencySelector/TokenItem";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import i18n from "i18n/index";
 import { useTranslation } from "react-i18next";
+import { getNnsRootId, tokenEqualToNnsLedger } from "utils/sns/utils";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -108,9 +109,9 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
         return !DISPLAY_IN_WALLET_FOREVER.includes(token.canisterId);
       })
       .forEach((token) => {
-        const snsTokenInfo = snsAllTokensInfo.find((e) => e.canister_ids.ledger_canister_id === token.canisterId);
+        const snsTokenInfo = snsAllTokensInfo.find((nns) => tokenEqualToNnsLedger(nns, token.canisterId));
 
-        if (snsTokenInfo?.canister_ids.root_canister_id) {
+        if (getNnsRootId(snsTokenInfo)) {
           snsTokens.push(token);
         } else {
           noneSnsTokens.push(token);
