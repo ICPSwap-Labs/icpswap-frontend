@@ -6,8 +6,7 @@ import { useParams } from "react-router-dom";
 import { Copy } from "components/Copy/icon";
 import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
-
-import { convertProposalNumberToText, snsRewardStatus, SnsRewordsText } from "../proposal.utils";
+import { convertProposalNumberToText, snsRewardStatus, SnsRewordsText } from "utils/sns/proposal.utils";
 
 interface ProposalDetailItemProps {
   label: React.ReactNode;

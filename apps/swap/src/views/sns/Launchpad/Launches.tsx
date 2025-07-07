@@ -1,20 +1,18 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import { useListDeployedSNSs, useSwapSaleParameters } from "@icpswap/hooks";
-import { useEffect, useMemo } from "react";
+import { useSwapSaleParameters } from "@icpswap/hooks";
+import { useMemo } from "react";
 import { Flex, LoadingRow, Wrapper } from "components/index";
-import type { SnsTokensInfo } from "@icpswap/types";
+import type { NnsTokenInfo } from "@icpswap/types";
 import AvatarImage from "components/Image/Avatar";
 import dayjs from "dayjs";
 import { useHistory } from "react-router-dom";
-import { useUpdateTokenStandard } from "store/token/cache/hooks";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { Tabs } from "components/sns/Tab";
-import { SnsSwapLifecycle } from "@icpswap/constants";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { useTranslation } from "react-i18next";
+import { isNnsAdopted, isNnsCommitted, isNnsOpen, isNnsPending, nnsTokenLogo } from "utils/sns/utils";
 
 interface LaunchpadProps {
-  sns: SnsTokensInfo;
+  sns: NnsTokenInfo;
 }
 
 function Launchpad({ sns }: LaunchpadProps) {
@@ -24,8 +22,8 @@ function Launchpad({ sns }: LaunchpadProps) {
 
   const { swap_id, root_id } = useMemo(() => {
     return {
-      swap_id: sns.canister_ids.swap_canister_id,
-      root_id: sns.canister_ids.root_canister_id,
+      swap_id: sns.list_sns_canisters.swap,
+      root_id: sns.list_sns_canisters.root,
     };
   }, [sns]);
 
@@ -50,7 +48,7 @@ function Launchpad({ sns }: LaunchpadProps) {
       onClick={() => history.push(`/sns/launch/${root_id}`)}
     >
       <Flex gap="0 10px">
-        <AvatarImage src={sns.meta.logo} />
+        <AvatarImage src={nnsTokenLogo(sns)} />
         <Typography color="text.primary" fontSize="18px" fontWeight={500}>
           {sns.meta.name}
         </Typography>
@@ -71,11 +69,9 @@ function Launchpad({ sns }: LaunchpadProps) {
       </Typography>
 
       <Box sx={{ display: "flex", justifyContent: "space-between", margin: "20px 0 0 0" }}>
-        <Typography>
-          {sns.lifecycle.lifecycle === SnsSwapLifecycle.Committed ? t`Status` : t("common.dead.line")}
-        </Typography>
+        <Typography>{isNnsCommitted(sns) ? t`Status` : t("common.dead.line")}</Typography>
         <Typography color="text.primary">
-          {sns.lifecycle.lifecycle === SnsSwapLifecycle.Committed
+          {isNnsCommitted(sns)
             ? t("common.complete")
             : deadline !== undefined
             ? dayjs(Number(deadline)).format("YYYY-MM-DD HH:mm:ss")
@@ -88,44 +84,28 @@ function Launchpad({ sns }: LaunchpadProps) {
 
 export default function LaunchpadList() {
   const { t } = useTranslation();
-  const { result: listedSNS } = useListDeployedSNSs();
-  const { result: _allSnsTokensInfo, loading } = useFetchSnsAllTokensInfo();
+  const { result: __allSnsTokensInfo, loading } = useFetchSnsAllTokensInfo();
 
   // Only show the launches after ICPSwap Token
   const allSnsTokensInfo = useMemo(() => {
-    if (!_allSnsTokensInfo) return undefined;
-    return _allSnsTokensInfo.filter((e) => e.index >= 27);
-  }, [_allSnsTokensInfo]);
+    if (!__allSnsTokensInfo) return undefined;
+    return __allSnsTokensInfo.filter((e) => e.index >= 27);
+  }, [__allSnsTokensInfo]);
 
   const openedLaunches = useMemo(() => {
     if (!allSnsTokensInfo) return undefined;
-    return allSnsTokensInfo.filter((e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Open);
+    return allSnsTokensInfo.filter((e) => isNnsOpen(e));
   }, [allSnsTokensInfo]);
 
   const completedLaunches = useMemo(() => {
     if (!allSnsTokensInfo) return undefined;
-    return allSnsTokensInfo.filter((e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Committed);
+    return allSnsTokensInfo.filter((e) => isNnsCommitted(e));
   }, [allSnsTokensInfo]);
 
   const upcomingLaunches = useMemo(() => {
     if (!allSnsTokensInfo) return undefined;
-    return allSnsTokensInfo.filter(
-      (e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Pending || e.lifecycle.lifecycle === SnsSwapLifecycle.Adopted,
-    );
+    return allSnsTokensInfo.filter((nns) => isNnsPending(nns) || isNnsAdopted(nns));
   }, [allSnsTokensInfo]);
-
-  const updateTokenStandard = useUpdateTokenStandard();
-
-  useEffect(() => {
-    if (listedSNS) {
-      listedSNS.instances.forEach((e) => {
-        const leger_id = e.ledger_canister_id[0]?.toString();
-        if (leger_id) {
-          updateTokenStandard([{ canisterId: leger_id, standard: TOKEN_STANDARD.ICRC1 }]);
-        }
-      });
-    }
-  }, [listedSNS]);
 
   return (
     <Wrapper>
@@ -150,7 +130,7 @@ export default function LaunchpadList() {
               },
             }}
           >
-            {openedLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
+            {openedLaunches?.map((sns) => <Launchpad key={sns.list_sns_canisters.root} sns={sns} />)}
           </Box>
         ) : (
           <Typography>No Launches</Typography>
@@ -188,7 +168,7 @@ export default function LaunchpadList() {
                 },
               }}
             >
-              {upcomingLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
+              {upcomingLaunches?.map((sns) => <Launchpad key={sns.list_sns_canisters.root} sns={sns} />)}
             </Box>
           ) : (
             <Typography>No Upcoming Launches</Typography>
@@ -226,7 +206,7 @@ export default function LaunchpadList() {
               },
             }}
           >
-            {completedLaunches?.map((sns) => <Launchpad key={sns.canister_ids.root_canister_id} sns={sns} />)}
+            {completedLaunches?.map((sns) => <Launchpad key={sns.list_sns_canisters.root} sns={sns} />)}
           </Box>
         ) : (
           <LoadingRow>

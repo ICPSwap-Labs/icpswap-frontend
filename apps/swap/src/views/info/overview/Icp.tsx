@@ -5,7 +5,7 @@ import { parseTokenAmount, formatDollarAmount, BigNumber, isUndefinedOrNull, non
 import { Flex, MainCard, TokenImage, Proportion } from "@icpswap/ui";
 import { useICPBlocksManager } from "hooks/useICBlocks";
 import { useTokenSupply } from "hooks/token/calls";
-import { useICPPriceList } from "store/global/hooks";
+import { useICP2CyclesManager } from "store/global/hooks";
 import { useTokenAnalysis, useInfoToken } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
 
@@ -17,9 +17,7 @@ export function Icp() {
   const { result: icpTotalSupply } = useTokenSupply(ICP.address);
   const { result: tokenAnalysis } = useTokenAnalysis(ICP.address);
 
-  const ICPPriceList = useICPPriceList();
-
-  const icpToCycles = ICPPriceList && ICPPriceList.length && ICPPriceList[ICPPriceList.length - 1].xdr;
+  const icpToCycles = useICP2CyclesManager();
 
   const { blocks, secondBlocks } = useICPBlocksManager();
 

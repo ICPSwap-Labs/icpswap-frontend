@@ -1,11 +1,5 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import {
-  useListDeployedSNSs,
-  useProposal,
-  useListNeurons,
-  useNervousSystemParameters,
-  useParsedQueryString,
-} from "@icpswap/hooks";
+import { useProposal, useListNeurons, useNervousSystemParameters, useParsedQueryString } from "@icpswap/hooks";
 import { useCallback, useMemo, useState } from "react";
 import { LoadingRow, TokenImage, MainCard, Wrapper, Flex } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -13,6 +7,8 @@ import { nowInSeconds } from "@icpswap/utils";
 import { useToken } from "hooks/index";
 import { useHistory, useParams } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
+import { getNnsLedgerId, getNnsRootId, nnsEqualToGovernance } from "utils/sns/utils";
 
 import { ProposalDetails } from "./components/ProposalDetails";
 import { VotingResult } from "./components/VotingResult";
@@ -56,17 +52,17 @@ export default function Voting() {
   const { governance_id, proposal_id } = useParams<{ governance_id: string; proposal_id: string }>();
   const { latest_id } = useParsedQueryString() as { latest_id: string | undefined };
 
-  const { result: listedSNS } = useListDeployedSNSs();
+  const allNns = useStateSnsAllTokensInfo();
 
   const sns = useMemo(() => {
-    if (!governance_id || !listedSNS) return undefined;
-    const instance = listedSNS.instances.find((e) => e.governance_canister_id.toString() === governance_id);
+    if (!governance_id || !allNns) return undefined;
+    const instance = allNns.find((nns) => nnsEqualToGovernance(nns, governance_id));
     if (!instance) return undefined;
     return instance;
-  }, [listedSNS, governance_id]);
+  }, [allNns, governance_id]);
 
-  const ledger_id = sns?.ledger_canister_id.toString();
-  const root_id = sns?.root_canister_id[0]?.toString();
+  const ledger_id = getNnsLedgerId(sns);
+  const root_id = getNnsRootId(sns);
 
   const [, token] = useToken(ledger_id);
   const { result: proposal_data, loading } = useProposal(

@@ -50,31 +50,26 @@ export interface TokenRoots {
   };
 }
 
-// To be continued
-export type SnsTokensInfo = {
+export type NnsTokenInfo = {
   index: number;
-  canister_ids: {
-    governance_canister_id: string;
-    index_canister_id: string;
-    ledger_canister_id: string;
-    root_canister_id: string;
-    swap_canister_id: string;
-  };
-  lifecycle: {
-    decentralization_sale_open_timestamp_seconds: number | null;
-    lifecycle: number;
-  };
   list_sns_canisters: {
-    governance: string;
-    index: string;
-    ledger: string;
     root: string;
     swap: string;
+    ledger: string;
+    index: string;
+    governance: string;
+    dapps: string[];
+    archives: string[];
   };
   meta: {
+    url: string;
+    name: string;
     description: string;
     logo: string;
-    name: string;
-    url: string;
+  };
+  lifecycle: {
+    decentralization_sale_open_timestamp_seconds: string;
+    lifecycle: string;
+    decentralization_swap_termination_timestamp_seconds: string;
   };
 };

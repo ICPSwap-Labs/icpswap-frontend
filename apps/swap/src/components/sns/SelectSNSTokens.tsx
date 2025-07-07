@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Select, AvatarImage } from "components/index";
 import { Box, Typography } from "components/Mui";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
-import { SnsSwapLifecycle } from "@icpswap/constants";
+import { getNnsRootId, isNnsCommitted, nnsTokenLogo } from "utils/sns/utils";
 
 export interface SelectSnsProps {
   onChange: (value: string) => void;
@@ -14,17 +14,17 @@ export function SelectSns({ onChange, value }: SelectSnsProps) {
 
   const completedSns = useMemo(() => {
     if (!snsAllTokensInfo) return undefined;
-    return snsAllTokensInfo.filter((e) => e.lifecycle.lifecycle === SnsSwapLifecycle.Committed);
+    return snsAllTokensInfo.filter((nns) => isNnsCommitted(nns));
   }, [snsAllTokensInfo]);
 
   const menus = useMemo(() => {
     if (!completedSns) return [];
-    return completedSns?.map((e) => ({
-      value: e.canister_ids.root_canister_id,
+    return completedSns?.map((nns) => ({
+      value: getNnsRootId(nns),
       label: (
         <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>
-          <AvatarImage src={e.meta.logo} sx={{ width: "24px", height: "24px" }} />
-          <Typography fontWeight={500}>{e.meta.name}</Typography>
+          <AvatarImage src={nnsTokenLogo(nns)} sx={{ width: "24px", height: "24px" }} />
+          <Typography fontWeight={500}>{nns.meta.name}</Typography>
         </Box>
       ),
     }));

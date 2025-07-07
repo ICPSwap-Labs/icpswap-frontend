@@ -6,37 +6,24 @@ import type { SwapPoolData } from "@icpswap/types";
 import { registerTokens } from "@icpswap/token-adapter";
 import { network, NETWORK } from "constants/server";
 import { useUpdateTokenStandard, useTokenStandards } from "store/token/cache/hooks";
-import { useGlobalTokenList } from "store/global/hooks";
 import { usePoolCanisterIdManager, useUpdateAllSwapPools } from "store/swap/hooks";
-import { getAllTokenPools } from "hooks/staking-token/index";
-import { getAllClaimEvents } from "hooks/token-claim";
 import { updateCanisters } from "store/allCanisters";
 import { updateTokens } from "store/allTokens";
 
 export const Tokens = [XTC, CAT, MOD, BoomDAO, ckSepoliaUSDC, ckSepoliaETH];
 
-export interface UseInitialTokenStandardArgs {
-  fetchGlobalTokensLoading: boolean;
-}
-
-export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitialTokenStandardArgs) {
-  const [tokensLoading, setTokensLoading] = useState(true);
+export function useInitialTokenStandard() {
   const [updated, setUpdated] = useState(false);
 
   const [AllPools, setAllPools] = useState<SwapPoolData[] | undefined>(undefined);
 
   const updateTokenStandard = useUpdateTokenStandard();
   const updateAllSwapPools = useUpdateAllSwapPools();
-  const globalTokenList = useGlobalTokenList();
   const [, updatePoolCanisterId] = usePoolCanisterIdManager();
 
   useEffect(() => {
     if (network === NETWORK.IC) {
-      Promise.all([
-        getSwapPools(),
-        getAllTokenPools().catch(() => undefined),
-        getAllClaimEvents().catch(() => undefined),
-      ]).then(([allSwapPools, allTokenPools, allClaimEvents]) => {
+      Promise.all([getSwapPools()]).then(([allSwapPools]) => {
         const allTokenStandards: { [canisterId: string]: TOKEN_STANDARD } = {};
 
         const pushStandard = (canisterId: string, standard: TOKEN_STANDARD) => {
@@ -48,15 +35,6 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
             allTokenStandards[canisterId] = standard;
           }
         };
-
-        allTokenPools?.forEach((pool) => {
-          pushStandard(pool.stakingToken.address, pool.stakingToken.standard as TOKEN_STANDARD);
-          pushStandard(pool.rewardToken.address, pool.rewardToken.standard as TOKEN_STANDARD);
-        });
-
-        allClaimEvents?.forEach((event) => {
-          pushStandard(event.tokenCid, event.tokenStandard as TOKEN_STANDARD);
-        });
 
         allSwapPools?.forEach((pool) => {
           pushStandard(pool.token0.address, pool.token0.standard as TOKEN_STANDARD);
@@ -79,11 +57,6 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
 
         const allCanisterIds = [
           ...(allSwapPools?.map((ele) => [ele.canisterId.toString(), ele.token0.address, ele.token1.address]) ?? []),
-          ...(allTokenPools?.map((ele) => [
-            ele.canisterId.toString(),
-            ele.rewardToken.address,
-            ele.stakingToken.address,
-          ]) ?? []),
         ].reduce((prev, curr) => {
           return prev.concat(curr);
         }, [] as string[]);
@@ -97,28 +70,6 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
       setUpdated(true);
     }
   }, []);
-
-  useEffect(() => {
-    if (globalTokenList && globalTokenList.length > 0) {
-      const allTokenStandards = globalTokenList.map((token) => {
-        return {
-          canisterId: token.canisterId,
-          standard: token.standard as TOKEN_STANDARD,
-        };
-      });
-
-      updateTokenStandard(allTokenStandards);
-
-      setTokensLoading(false);
-
-      const tokenIds = globalTokenList.map((ele) => ele.canisterId);
-
-      updateCanisters(tokenIds);
-      updateTokens(tokenIds);
-    } else if (!fetchGlobalTokensLoading) {
-      setTokensLoading(false);
-    }
-  }, [globalTokenList, fetchGlobalTokensLoading]);
 
   useEffect(() => {
     if (network === NETWORK.IC) {
@@ -157,8 +108,8 @@ export function useInitialTokenStandard({ fetchGlobalTokensLoading }: UseInitial
 
   return useMemo(() => {
     return {
-      loading: fetchGlobalTokensLoading || tokensLoading || !updated,
+      loading: !updated,
       AllPools,
     };
-  }, [tokensLoading, fetchGlobalTokensLoading, updated, AllPools]);
+  }, [updated, AllPools]);
 }

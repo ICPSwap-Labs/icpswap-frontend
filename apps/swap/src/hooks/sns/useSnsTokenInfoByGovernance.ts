@@ -1,10 +1,12 @@
 import { useMemo } from "react";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
+import { nnsEqualToGovernance } from "utils/sns/utils";
 
 export function useSnsTokenInfoByGovernance(governanceId: string | undefined) {
   const allSnsTokensInfo = useStateSnsAllTokensInfo();
 
   return useMemo(() => {
-    return allSnsTokensInfo.find((e) => e.canister_ids.governance_canister_id === governanceId);
+    if (!governanceId) return undefined;
+    return allSnsTokensInfo.find((nns) => nnsEqualToGovernance(nns, governanceId));
   }, [governanceId, allSnsTokensInfo]);
 }

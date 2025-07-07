@@ -14,7 +14,7 @@ export function useLiquidityLocksImage(name: string | undefined, principalId: st
   const tokenId = useMemo(() => {
     if (!name || !principalId) return undefined;
     if (name.includes("Governance")) {
-      return snsTokenInfo?.canister_ids.ledger_canister_id;
+      return snsTokenInfo?.list_sns_canisters.ledger;
     }
 
     return undefined;

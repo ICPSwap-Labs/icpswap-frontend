@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useAppSelector } from "store/hooks";
 import { CssBaseline, StyledEngineProvider, ThemeProvider } from "components/Mui";
-import { useFetchXDR2USD, useFetchGlobalTokenList } from "store/global/hooks";
+import { useFetchGlobalTokenList } from "store/global/hooks";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { useConnectManager } from "store/auth/hooks";
 import { usePlugExternalDisconnect } from "hooks/auth/usePlug";
@@ -19,11 +19,10 @@ import { wagmiConfig } from "constants/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DisableIframe } from "components/DisableIframe";
 import { PublicTokenOverview, Null } from "@icpswap/types";
-import { LinearLoader } from "@icpswap/ui";
 
 import { GlobalFetch } from "./GlobalFetch";
 import Web3Provider from "./components/Web3Injector";
-import { useFetchICPPrices, useFetchAllSwapTokens } from "./store/global/hooks";
+import { useFetchAllSwapTokens } from "./store/global/hooks";
 import { FullscreenLoading } from "./components/index";
 import NavigationScroll from "./components/NavigationScroll";
 import { theme } from "./theme";
@@ -37,16 +36,14 @@ export default function App() {
   const [refreshTriggers, setRefreshTriggers] = useState<{ [key: string]: number }>({});
   const [infoAllTokens, setInfoAllTokens] = useState<PublicTokenOverview[] | Null>(null);
 
-  useFetchXDR2USD();
-  useFetchICPPrices();
   useFetchAllSwapTokens();
   usePlugExternalDisconnect();
   useFetchSnsAllTokensInfo();
+  useFetchGlobalTokenList();
 
   const { open: connectorModalOpen, isConnected } = useConnectManager();
 
-  const { loading: fetchGlobalTokensLoading } = useFetchGlobalTokenList();
-  const { loading: isInitialStandardLoading, AllPools } = useInitialTokenStandard({ fetchGlobalTokensLoading });
+  const { AllPools } = useInitialTokenStandard();
 
   const queryClient = new QueryClient();
 
@@ -78,13 +75,9 @@ export default function App() {
                     <ActorInitial>
                       <CssBaseline />
                       <NavigationScroll>
-                        {isInitialStandardLoading ? (
-                          <LinearLoader />
-                        ) : (
-                          <ErrorBoundary>
-                            <Routes />
-                          </ErrorBoundary>
-                        )}
+                        <ErrorBoundary>
+                          <Routes />
+                        </ErrorBoundary>
                         <FullscreenLoading />
                         <GlobalSteps />
                         <GlobalFetch />

@@ -13,7 +13,7 @@ import {
 } from "utils/sns/index";
 import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { snsRewardStatus, SnsProposalRewardStatus } from "../proposal.utils";
+import { snsRewardStatus, SnsProposalRewardStatus } from "utils/sns/proposal.utils";
 
 import { VotableNeurons } from "./VotableNeurons";
 import { VoteConfirm } from "./VoteConfirm";

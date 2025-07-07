@@ -6,7 +6,8 @@ import AvatarImage from "components/Image/Avatar";
 import { useParams, useHistory } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
 import { useToken } from "hooks/index";
-import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
+import { nnsTokenLogo } from "utils/sns/utils";
 
 import { LaunchDetail } from "./components/LaunchDetails";
 import { LaunchStatus } from "./components/LaunchStatus";
@@ -15,21 +16,20 @@ import { LaunchContext } from "./components/context";
 export default function Launch() {
   const history = useHistory();
   const { root_id } = useParams<{ root_id: string }>();
-
   const [reloadCounter, setReloadCounter] = useState(0);
 
-  const { result: snsTokens } = useFetchSnsAllTokensInfo();
+  const snsTokens = useStateSnsAllTokensInfo();
 
   const sns = useMemo(() => {
     if (!snsTokens) return undefined;
-    return snsTokens.filter((e) => e.canister_ids.root_canister_id === root_id)[0];
+    return snsTokens.filter((e) => e.list_sns_canisters.root === root_id)[0];
   }, [snsTokens, root_id]);
 
   const { ledger_id, swap_id } = useMemo(() => {
     if (!sns) return { swap_id: undefined, ledger_id: undefined };
 
-    const ledger_id = sns.canister_ids.ledger_canister_id;
-    const swap_id = sns.canister_ids.swap_canister_id;
+    const ledger_id = sns.list_sns_canisters.ledger;
+    const swap_id = sns.list_sns_canisters.swap;
 
     return { ledger_id, swap_id };
   }, [sns]);
@@ -51,7 +51,7 @@ export default function Launch() {
               <Box>
                 <Box>
                   <Box sx={{ display: "flex", alignItems: "center", gap: "0 10px" }}>
-                    <AvatarImage style={{ width: "52px", height: "52px" }} src={sns.meta.logo} />
+                    <AvatarImage style={{ width: "52px", height: "52px" }} src={nnsTokenLogo(sns)} />
                     <Typography color="text.primary" fontSize={24} fontWeight={500}>
                       {sns.meta.name}
                     </Typography>

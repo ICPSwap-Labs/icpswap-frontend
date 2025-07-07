@@ -53,12 +53,6 @@ export interface TokenCanisterInfo {
   canisterId?: string;
 }
 
-export type ICPPriceInfo = {
-  value: number;
-  timestamp: string;
-  xdr: string;
-};
-
 export type TokenAllowance = {
   spender: string;
   token: string;

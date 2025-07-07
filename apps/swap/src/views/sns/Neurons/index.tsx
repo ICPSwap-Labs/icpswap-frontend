@@ -1,5 +1,5 @@
 import { Box, Typography, useTheme } from "components/Mui";
-import { useListDeployedSNSs, useListNeurons, useNervousSystemParameters, useParsedQueryString } from "@icpswap/hooks";
+import { useListNeurons, useNervousSystemParameters, useParsedQueryString } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { LoadingRow, Copy, Wrapper, Flex } from "components/index";
 import type { Neuron, NervousSystemParameters } from "@icpswap/types";
@@ -23,6 +23,7 @@ import { Tabs } from "components/sns/Tab";
 import { Token } from "@icpswap/swap-sdk";
 import { DEFAULT_ROOT_ID } from "constants/nns";
 import { useHistory } from "react-router-dom";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 
 import { SplitNeuron } from "./components/SplitNeuron";
 import { StopDissolving } from "./components/StopDissolving";
@@ -223,21 +224,24 @@ export default function Neurons() {
     return __root_id ?? DEFAULT_ROOT_ID;
   }, [__root_id]);
 
-  const { result: listedSNS } = useListDeployedSNSs();
+  const allNns = useStateSnsAllTokensInfo();
 
   const sns = useMemo(() => {
-    if (!root_id || !listedSNS) return undefined;
+    if (!root_id || !allNns) return undefined;
 
-    const instance = listedSNS.instances.find((e) => e.root_canister_id.toString() === root_id);
+    const instance = allNns.find((nns) => nns.list_sns_canisters.root === root_id);
 
     if (!instance) return undefined;
 
     return instance;
-  }, [listedSNS, root_id]);
+  }, [allNns, root_id]);
 
   const { governance_id, ledger_id } = useMemo(() => {
     if (!sns) return { governance_id: undefined, ledger_id: undefined };
-    return { governance_id: sns.governance_canister_id.toString(), ledger_id: sns.ledger_canister_id.toString() };
+    return {
+      governance_id: sns.list_sns_canisters.governance.toString(),
+      ledger_id: sns.list_sns_canisters.ledger.toString(),
+    };
   }, [sns]);
 
   const { result: neuronSystemParameters } = useNervousSystemParameters(governance_id);
