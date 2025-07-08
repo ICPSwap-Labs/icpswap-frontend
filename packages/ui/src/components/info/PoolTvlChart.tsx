@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { InfoPoolDataResponse, VolumeWindow } from "@icpswap/types";
-import { formatDollarAmount } from "@icpswap/utils";
+import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
 
 import { ImageLoading } from "../Loading";
 import { LineChartAlt } from "../LineChart/alt";
@@ -45,7 +45,7 @@ export function PoolTvlChart({ chartsData, loading, noData, height = "340px" }: 
         {latestData ? (
           <>
             <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-              {latestValue ? formatDollarAmount(latestValue) : formatDollarAmount(latestData.value)}
+              {nonUndefinedOrNull(latestValue) ? formatDollarAmount(latestValue) : formatDollarAmount(latestData.value)}
             </Typography>
 
             <Typography
