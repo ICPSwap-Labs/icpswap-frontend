@@ -25,9 +25,9 @@ export async function getBaseTransactions(canisterId: string, offset: number, li
 interface GetSwapTransactionsProps {
   page: number;
   limit: number;
-  principal?: string;
-  poolId?: string;
-  tokenId?: string;
+  principal?: string | Null;
+  poolId?: string | Null;
+  tokenId?: string | Null;
 }
 
 export async function getSwapTransactions({ principal, poolId, tokenId, page, limit }: GetSwapTransactionsProps) {

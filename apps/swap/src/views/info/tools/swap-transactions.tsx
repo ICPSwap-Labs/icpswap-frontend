@@ -16,7 +16,7 @@ import {
   BreadcrumbsV1,
   Image,
 } from "@icpswap/ui";
-import { useSwapScanTransactionDownload } from "hooks/info/swap/useSwapScanDownloadTransaction";
+import { useDownloadSwapTransactions } from "hooks/info/swap/index";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
@@ -52,7 +52,7 @@ export default function SwapTransactions() {
 
   const { pair, principal } = useParsedQueryString() as { pair: string; principal: string | undefined };
 
-  const { download, loading: downloadLoading } = useSwapScanTransactionDownload({ pair, principal });
+  const { download, loading: downloadLoading } = useDownloadSwapTransactions();
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PageSize });
 
@@ -146,7 +146,7 @@ export default function SwapTransactions() {
               {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
             </Flex>
 
-            <Button variant="contained" onClick={download} disabled={downloadLoading}>
+            <Button variant="contained" onClick={() => download({ pair, principal })} disabled={downloadLoading}>
               <Flex gap="0 4px">
                 {downloadLoading ? (
                   <CircularProgress color="inherit" size={16} />
