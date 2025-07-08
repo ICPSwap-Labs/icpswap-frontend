@@ -3,9 +3,9 @@ import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 
 import { Dolphin, Fish, Whale } from "./icons";
 
-const WhaleValue = 50000;
-const DolphinValue = 10000;
-const FishValue = 2000;
+export const WhaleValue = 10000;
+export const DolphinValue = 5000;
+export const FishValue = 1000;
 
 export enum TransactionValueLabel {
   whale = "whale",

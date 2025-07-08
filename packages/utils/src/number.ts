@@ -35,11 +35,12 @@ export interface FormatDollarAmountOptions {
   digits?: number;
   min?: number;
   max?: number;
+  dollarDigits?: number;
 }
 
 // using a currency library here in case we want to add more in future
 export const formatDollarAmount = (num: number | string | undefined, options?: FormatDollarAmountOptions) => {
-  const { digits = 2, min = 0.01, max = 1000 } = options ?? {};
+  const { digits = 2, min = 0.01, max = 1000, dollarDigits = 2 } = options ?? {};
 
   if (isUndefinedOrNull(num)) return "-";
   if (new BigNumber(num).isEqualTo(0)) return "$0.00";
@@ -55,8 +56,8 @@ export const formatDollarAmount = (num: number | string | undefined, options?: F
   return `$${Intl.NumberFormat("en-US", {
     notation: "compact",
     compactDisplay: "short",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: dollarDigits,
+    maximumFractionDigits: dollarDigits,
   }).format(Number(num))}`;
 };
 
