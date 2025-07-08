@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Select, AvatarImage } from "components/index";
 import { Box, Typography } from "components/Mui";
-import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { getNnsRootId, isNnsCommitted, nnsTokenLogo } from "utils/sns/utils";
 
 export interface SelectSnsProps {
@@ -10,7 +10,7 @@ export interface SelectSnsProps {
 }
 
 export function SelectSns({ onChange, value }: SelectSnsProps) {
-  const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
+  const snsAllTokensInfo = useStateSnsAllTokensInfo();
 
   const completedSns = useMemo(() => {
     if (!snsAllTokensInfo) return undefined;

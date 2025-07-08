@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { Null } from "@icpswap/types";
 
 export function useSNSTokenRootId(tokenId: string | Null) {
-  const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
+  const snsAllTokensInfo = useStateSnsAllTokensInfo();
 
   return useMemo(() => {
     if (!tokenId || !snsAllTokensInfo) return undefined;
