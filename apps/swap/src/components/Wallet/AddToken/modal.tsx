@@ -5,7 +5,7 @@ import { ImportToken } from "components/ImportToken/index";
 import { Modal, FilledTextField, NoData, Flex } from "components/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
-import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { isValidPrincipal, classNames } from "@icpswap/utils";
 import { Search as SearchIcon } from "react-feather";
 import { TokenListMetadata } from "types/token-list";
@@ -83,8 +83,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
   const [canisterStates, setCanisterStates] = useState<{ [tokenId: string]: boolean }>({});
 
   const globalTokenList = useGlobalTokenList();
-
-  const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
+  const snsAllTokensInfo = useStateSnsAllTokensInfo();
 
   const { taggedTokens } = useTaggedTokenManager();
 

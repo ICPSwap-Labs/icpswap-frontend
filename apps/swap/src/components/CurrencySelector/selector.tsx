@@ -6,7 +6,7 @@ import { FilledTextField, NoData } from "components/index";
 import { isValidPrincipal } from "@icpswap/utils";
 import { Search as SearchIcon } from "react-feather";
 import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
-import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { TokenListMetadata } from "types/token-list";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { ImportToken } from "components/ImportToken/index";
@@ -54,7 +54,7 @@ export default function Selector({
   const [importTokenCanceled, setImportTokenCanceled] = useState(false);
   const [hiddenCanisterIds, setHiddenCanisterIds] = useState<string[]>([]);
 
-  const { result: snsAllTokensInfo } = useFetchSnsAllTokensInfo();
+  const snsAllTokensInfo = useStateSnsAllTokensInfo();
   const globalTokenList = useGlobalTokenList();
 
   const { taggedTokens } = useTaggedTokenManager();
