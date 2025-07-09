@@ -194,6 +194,8 @@ export const PriceRange = memo(
         poolPriceUpper = periodPriceRange.priceHigh30D;
       }
 
+      if (new BigNumber(poolPriceLower).isEqualTo(0) || new BigNumber(poolPriceUpper).isEqualTo(0)) return {};
+
       return {
         poolPriceLower: isSorted
           ? poolPriceLower
