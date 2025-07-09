@@ -1,8 +1,7 @@
-/* eslint-disable no-loop-func */
-import { getSwapTransactions, getLimitedInfinityCallV1 } from "@icpswap/hooks";
+import { getSwapTransactions, getLimitedInfinityCallV1, abortInfinityCallV1 } from "@icpswap/hooks";
 import type { Null, InfoTransactionResponse } from "@icpswap/types";
-import { useMemo, useState, useCallback } from "react";
-import { BigNumber, enumToString, timestampFormat, writeFileOneSheet } from "@icpswap/utils";
+import { useCallback, useMemo } from "react";
+import { BigNumber, enumToString, splitArr, timestampFormat, writeFileOneSheet } from "@icpswap/utils";
 
 export function getSwapDetails(transaction: InfoTransactionResponse) {
   const type = enumToString(transaction.actionType);
@@ -37,11 +36,7 @@ export interface useUserAllSwapTransactionsProps {
 }
 
 export function useDownloadSwapTransactions() {
-  const [loading, setLoading] = useState(false);
-
   const download = useCallback(async ({ principal, pair }: useUserAllSwapTransactionsProps) => {
-    setLoading(true);
-
     const fetch = async (page: number, limit: number) => {
       const result = await getSwapTransactions({
         principal,
@@ -55,7 +50,7 @@ export function useDownloadSwapTransactions() {
 
     const allTransactions = await getLimitedInfinityCallV1<InfoTransactionResponse>(fetch, 5000);
 
-    const downloadData = allTransactions.map((transaction) => {
+    const allFormattedTransactions = allTransactions.map((transaction) => {
       const token0Amount = new BigNumber(transaction.token0AmountIn).isEqualTo(0)
         ? transaction.token0AmountOut
         : transaction.token0AmountIn;
@@ -85,16 +80,16 @@ export function useDownloadSwapTransactions() {
       };
     });
 
-    writeFileOneSheet(downloadData, "swap-scan-transaction-list");
+    if (allFormattedTransactions.length > 50000) {
+      const transactionsChunks = splitArr(allFormattedTransactions, 50000);
 
-    setLoading(false);
+      transactionsChunks.forEach((chunk, index) => {
+        writeFileOneSheet(chunk, `SwapTransactions${index}`);
+      });
+    } else if (allFormattedTransactions.length > 0) {
+      writeFileOneSheet(allFormattedTransactions, "SwapTransactions");
+    }
   }, []);
 
-  return useMemo(
-    () => ({
-      loading,
-      download,
-    }),
-    [loading, download],
-  );
+  return useMemo(() => ({ download, abort: abortInfinityCallV1 }), [download]);
 }

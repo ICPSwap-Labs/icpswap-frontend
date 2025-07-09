@@ -2,7 +2,7 @@ import { useParsedQueryString, useSwapTransactions } from "@icpswap/hooks";
 import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useCallback } from "react";
-import { Box, Typography, Button, CircularProgress, makeStyles, useTheme, Theme } from "components/Mui";
+import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
 import { locationSearchReplace } from "@icpswap/utils";
 import {
   Header,
@@ -14,14 +14,13 @@ import {
   PaginationType,
   NoData,
   BreadcrumbsV1,
-  Image,
 } from "@icpswap/ui";
-import { useDownloadSwapTransactions } from "hooks/info/swap/index";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
 import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
+import { SwapTransactionsDownload } from "components/info/tools/SwapTransactionsDownload";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -51,8 +50,6 @@ export default function SwapTransactions() {
   const [openTip] = useTips();
 
   const { pair, principal } = useParsedQueryString() as { pair: string; principal: string | undefined };
-
-  const { download, loading: downloadLoading } = useDownloadSwapTransactions();
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PageSize });
 
@@ -137,7 +134,6 @@ export default function SwapTransactions() {
                   value={pair}
                   onPairChange={handlePairChange}
                   search
-                  showClean={false}
                   showBackground={false}
                   panelPadding="0px"
                   defaultPanel={<Typography color="text.primary">{t("common.select.all.pair")}</Typography>}
@@ -146,16 +142,7 @@ export default function SwapTransactions() {
               {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
             </Flex>
 
-            <Button variant="contained" onClick={() => download({ pair, principal })} disabled={downloadLoading}>
-              <Flex gap="0 4px">
-                {downloadLoading ? (
-                  <CircularProgress color="inherit" size={16} />
-                ) : (
-                  <Image src="/images/download.svg" sx={{ width: "16px", height: "16px", borderRadius: "0px" }} />
-                )}
-                {t("common.export")}
-              </Flex>
-            </Button>
+            <SwapTransactionsDownload pair={pair} principal={principal} />
           </Box>
         }
       >
