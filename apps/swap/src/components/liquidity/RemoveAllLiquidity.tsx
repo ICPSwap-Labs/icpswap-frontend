@@ -97,7 +97,7 @@ export function RemoveAllLiquidity({ position, positionId, onDecreaseSuccess }: 
     closeLoadingTip(loadingTipKey);
 
     if (result === true) {
-      openSuccessTip(t("swap.decrease.liquidity.success"));
+      openSuccessTip(t("swap.remove.liquidity.success"));
       if (onDecreaseSuccess) onDecreaseSuccess();
     }
 
