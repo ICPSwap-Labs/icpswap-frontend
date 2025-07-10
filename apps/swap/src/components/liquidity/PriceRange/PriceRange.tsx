@@ -19,6 +19,7 @@ import { RangeButton } from "components/liquidity/RangeButton";
 import { PriceRangeChartTimeButtons } from "components/liquidity/PriceRangeChartTimeButtons";
 import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
 import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
+import { AutoPriceRangeButton } from "components/liquidity/PriceRange/Auto";
 
 const useSetPriceStyle = makeStyles((theme: Theme) => {
   return {
@@ -318,6 +319,7 @@ export const PriceRange = memo(
                     price={price}
                     poolPriceLower={poolPriceLower}
                     poolPriceUpper={poolPriceUpper}
+                    poolId={pool?.id}
                   />
                 </Box>
               </Box>
@@ -369,6 +371,18 @@ export const PriceRange = memo(
                       {RANGE_BUTTONS.map(({ value, text }) => (
                         <RangeButton key={value} text={text} value={value} onClick={handleRange} active={rangeValue} />
                       ))}
+
+                      {!noLiquidity ? (
+                        <AutoPriceRangeButton
+                          onLeftRangeInput={onLeftRangeInput}
+                          onRightRangeInput={onRightRangeInput}
+                          pool={pool}
+                          baseCurrency={baseCurrency}
+                          quoteCurrency={quoteCurrency}
+                          rangeValue={rangeValue}
+                          setRangeValue={setRangeValue}
+                        />
+                      ) : null}
 
                       {!noLiquidity ? (
                         <RangeButton

@@ -17,9 +17,8 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
 import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
-
-import { ZoomLevels } from "./types";
-import { Chart } from "./Chart";
+import { ZoomLevels } from "components/liquidity/PriceRangeChart/types";
+import { Chart } from "components/liquidity/PriceRangeChart/Chart";
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
   [FeeAmount.LOW]: {
@@ -67,6 +66,7 @@ export interface LiquidityChartRangeInputProps {
   onRightRangeInput?: (typedValue: string) => void;
   poolPriceLower: string | number | Null;
   poolPriceUpper: string | number | Null;
+  poolId: string | Null;
 }
 
 // Todo: Duplicate LiquidityChartRangeInput

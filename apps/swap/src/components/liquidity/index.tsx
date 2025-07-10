@@ -8,7 +8,7 @@ export * from "./StakedPositions";
 export * from "./UnusedPCMBalance";
 export * from "./UnclaimedFees";
 export * from "./InfoPool";
-export * from "./PriceRange";
+export * from "./PriceRange/PriceRange";
 export * from "./SelectState";
 export * from "./SelectPositionSort";
 export * from "./PositionRangeDot";
