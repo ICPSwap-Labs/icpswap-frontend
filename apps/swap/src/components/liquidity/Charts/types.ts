@@ -54,6 +54,12 @@ export interface LiquidityChartRangeInputProps {
   brushDomain: [number, number] | undefined;
   onBrushDomainChange: (domain: [number, number], mode: string | undefined) => void;
   zoomLevels: ZoomLevels;
-  poolPriceLower: string | number | Null;
   poolPriceUpper: string | number | Null;
+  poolPriceLower: string | number | Null;
+  defaultPriceRange?:
+    | {
+        min: string;
+        max: string;
+      }
+    | undefined;
 }

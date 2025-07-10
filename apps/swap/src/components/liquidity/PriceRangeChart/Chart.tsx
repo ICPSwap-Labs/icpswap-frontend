@@ -1,6 +1,7 @@
 import { max, scaleLinear, ZoomTransform } from "d3";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTheme } from "components/Mui";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 import {
   PriceLine,
   Area,
@@ -8,9 +9,8 @@ import {
   ChartEntry,
   LiquidityChartRangeInputProps,
 } from "components/liquidity/Charts/index";
-
-import { Brush } from "./Brush";
-import Zoom, { ZoomOverlay } from "./Zoom";
+import { Brush } from "components/liquidity/PriceRangeChart/Brush";
+import Zoom, { ZoomOverlay } from "components/liquidity/PriceRangeChart/Zoom";
 
 export const xAccessor = (d: ChartEntry) => d.price0;
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
@@ -28,6 +28,7 @@ export function Chart({
   zoomLevels,
   poolPriceLower,
   poolPriceUpper,
+  defaultPriceRange,
 }: LiquidityChartRangeInputProps) {
   const theme = useTheme();
   const zoomRef = useRef<SVGRectElement | null>(null);
@@ -39,11 +40,15 @@ export function Chart({
     [width, height, margins],
   );
 
+  const defaultDomain: [number, number] = useMemo(() => {
+    return nonUndefinedOrNull(defaultPriceRange)
+      ? [Number(defaultPriceRange.min), Number(defaultPriceRange.max)]
+      : [current * zoomLevels.initialMin, current * zoomLevels.initialMax];
+  }, [current, zoomLevels.initialMin, zoomLevels.initialMax, defaultPriceRange]);
+
   const { xScale, yScale } = useMemo(() => {
     const scales = {
-      xScale: scaleLinear()
-        .domain([current * zoomLevels.initialMin, current * zoomLevels.initialMax] as number[])
-        .range([0, innerWidth]),
+      xScale: scaleLinear().domain(defaultDomain).range([0, innerWidth]),
       yScale: scaleLinear()
         .domain([0, max(series, yAccessor)] as number[])
         .range([innerHeight, 0]),
@@ -55,7 +60,7 @@ export function Chart({
     }
 
     return scales;
-  }, [current, zoomLevels.initialMin, zoomLevels.initialMax, innerWidth, series, innerHeight, zoom]);
+  }, [defaultDomain, innerWidth, series, innerHeight, zoom]);
 
   useEffect(() => {
     // reset zoom as necessary
@@ -80,10 +85,7 @@ export function Chart({
           height
         }
         resetBrush={() => {
-          onBrushDomainChange(
-            [current * zoomLevels.initialMin, current * zoomLevels.initialMax] as [number, number],
-            "reset",
-          );
+          onBrushDomainChange(defaultDomain, "reset");
         }}
         zoomLevels={zoomLevels}
       />
