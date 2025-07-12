@@ -45,7 +45,6 @@ export function Transactions({
   transactions,
   styleProps,
   maxItems = 10,
-  loading,
   hasFilter,
   showedTokens,
   CustomNoData,
@@ -169,7 +168,7 @@ export function Transactions({
             </HeaderCell>
           </Header>
 
-          {isUndefinedOrNull(sortedTransactions) || loading ? (
+          {isUndefinedOrNull(sortedTransactions) ? (
             <Box sx={{ padding: "12px" }}>
               <LoadingRow>
                 <div />
@@ -197,7 +196,7 @@ export function Transactions({
         </Box>
       </Box>
 
-      {nonUndefinedOrNull(filteredTransactions) && !loading && filteredTransactions.length > 0 ? (
+      {nonUndefinedOrNull(filteredTransactions) && filteredTransactions.length > 0 ? (
         <Box sx={{ padding: styleProps?.padding ?? "16px" }}>
           <Pagination page={page} maxItems={maxItems} length={filteredTransactions.length} onPageChange={setPage} />
         </Box>

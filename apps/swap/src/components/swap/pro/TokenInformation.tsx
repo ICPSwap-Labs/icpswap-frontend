@@ -60,13 +60,18 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
   const { result: tokenAnalysis } = useTokenAnalysis(tokenId);
 
   const marketCap = useMemo(() => {
-    if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(tokenPrice)) {
+    if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(tokenPrice) && tokenAnalysis.marketAmount) {
       return new BigNumber(tokenAnalysis.marketAmount).multipliedBy(tokenPrice).toString();
     }
   }, [tokenAnalysis, tokenPrice]);
 
   const circulating = useMemo(() => {
-    if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(tokenSupply) && nonUndefinedOrNull(token)) {
+    if (
+      nonUndefinedOrNull(tokenAnalysis) &&
+      nonUndefinedOrNull(tokenSupply) &&
+      nonUndefinedOrNull(token) &&
+      nonUndefinedOrNull(tokenAnalysis.marketAmount)
+    ) {
       return `${new BigNumber(
         new BigNumber(tokenAnalysis.marketAmount).dividedBy(parseTokenAmount(tokenSupply, token.decimals)).toFixed(4),
       ).multipliedBy(100)}%`;
@@ -157,7 +162,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
             </Card>
             <Card title={t`Holders`} fontSize="12px">
               <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, textAlign: "center" }}>
-                {tokenAnalysis ? formatAmount(tokenAnalysis.holders.toString()) : "--"}
+                {tokenAnalysis ? formatAmount(tokenAnalysis.holders) : "--"}
               </Typography>
             </Card>
             <Card title={t("common.volume24h")} fontSize="12px">
