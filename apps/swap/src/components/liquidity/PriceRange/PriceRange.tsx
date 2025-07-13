@@ -382,7 +382,7 @@ export const PriceRange = memo(
                           baseCurrency={baseCurrency}
                           quoteCurrency={quoteCurrency}
                           rangeValue={rangeValue}
-                          setRangeValue={setRangeValue}
+                          setRangeValue={handleRange}
                         />
                       ) : null}
 

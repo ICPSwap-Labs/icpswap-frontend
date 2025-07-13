@@ -13,7 +13,7 @@ export interface AutoPriceRangeButtonProps {
   quoteCurrency: Token | undefined;
   pool: Pool | Null;
   rangeValue: string | Null;
-  setRangeValue: (value: string | null) => void;
+  setRangeValue: (value: string) => void;
 }
 
 export const AutoPriceRangeButton = memo(
