@@ -6,7 +6,6 @@ import Background from "components/Background";
 
 import V3Event from "./V3Event";
 import Header from "./Header";
-import { SnsTips } from "./SnsTips";
 import { SubnetState } from "./SubnetState";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -55,7 +54,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   const [show, setShow] = useState(true);
   const [globalTipShow, setGlobalTipShow] = useState(false);
-  const [snsTipShow, setSnsTipShow] = useState(true);
 
   const isSwapPro = useMemo(() => {
     return location.pathname === "/swap/pro";
@@ -80,7 +78,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <Box className={`${classes.mainContent} ${location.pathname === "/swap/pro" ? "pro" : ""}`}>
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
         {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
-        {snsTipShow && location.pathname.includes("sns") ? <SnsTips onClose={() => setSnsTipShow(false)} /> : null}
 
         <main
           className={`${classes.content}${isSwapPro ? " pro-padding" : ""}${
