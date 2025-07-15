@@ -24,6 +24,7 @@ import { useAvailableFarmsForPool, useLiquidityIsStakedByOwner } from "hooks/sta
 import { useIsLimitOrder } from "hooks/swap/limit-order";
 import { useTranslation } from "react-i18next";
 import { infoRoutesConfigs } from "routes/info.config";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface PositionInfoProps {
   position: Position;
@@ -38,6 +39,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
   const history = useHistory();
   const positionState = usePositionState(position);
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const principal = useAccountPrincipal();
 
   const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
@@ -156,7 +158,11 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
               <TextButton sx={{ fontWeight: 500 }}>{t("common.transfer.position")}</TextButton>
             </TransferPosition>
 
-            <Link to={`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}?pair=${position.pool.id}`}>
+            <Link
+              to={`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}?pair=${position.pool.id}${
+                principal ? `&principal=${principal?.toString()}` : ""
+              }`}
+            >
               <Flex gap="0 4px" sx={{ cursor: "pointer" }}>
                 <img src="/images/history.svg" alt="" />
                 <Typography color="text.secondary" fontSize="12px">

@@ -63,7 +63,9 @@ export interface _SERVICE {
   get: ActorMethod<[bigint, bigint, Array<string>], RecordPage>;
   getByPool: ActorMethod<[bigint, bigint, string], RecordPage>;
   getByToken: ActorMethod<[bigint, bigint, string], RecordPage>;
+  getByUser: ActorMethod<[bigint, bigint, Principal, string], RecordPage>;
   getFirstBlock: ActorMethod<[], bigint>;
+  getMine: ActorMethod<[bigint, bigint, string], RecordPage>;
   getOwners: ActorMethod<[], Array<Principal>>;
   getTx: ActorMethod<[bigint, bigint], RecordPage>;
   getTxCount: ActorMethod<[], bigint>;

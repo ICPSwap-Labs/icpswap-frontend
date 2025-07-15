@@ -8,6 +8,7 @@ import { ToolsWrapper, SneedLockedPositions, BlackHolePositions } from "componen
 import { useEffect, useState } from "react";
 import i18n from "i18n/index";
 import { useTranslation } from "react-i18next";
+import { TitleTextPanels } from "components/UI/panel";
 
 enum Panel {
   BlackHole = "BlackHole",
@@ -42,7 +43,7 @@ export default function LockedPositions() {
     history.push(`/info-tools/locked-positions${search}`);
   };
 
-  const handlePanelClick = (panel: Panel) => {
+  const handlePanelClick = (panel: string) => {
     const search = locationSearchReplace(location.search, "panel", panel);
     history.push(`/info-tools/locked-positions${search}`);
   };
@@ -60,27 +61,13 @@ export default function LockedPositions() {
 
       <ToolsWrapper>
         <Flex
-          gap="0 24px"
           sx={{
             padding: "24px",
             borderBottom: `1px solid ${theme.palette.background.level1}`,
             "@media(max-width:640px)": { padding: "16px" },
           }}
         >
-          {panels.map((panel) => (
-            <Typography
-              key={panel.value}
-              sx={{
-                fontSize: "20px",
-                fontWeight: 600,
-                color: activePanel === panel.value ? "text.primary" : "text.secondary",
-                cursor: "pointer",
-              }}
-              onClick={() => handlePanelClick(panel.value)}
-            >
-              {panel.label}
-            </Typography>
-          ))}
+          <TitleTextPanels panels={panels} onPanelClick={handlePanelClick} />
         </Flex>
 
         <Box
