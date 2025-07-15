@@ -3,7 +3,7 @@ import { ClickAwayListener } from "@mui/base";
 import { Search } from "react-feather";
 
 import { MenuProps } from "./types";
-import { Theme, useTheme, Box, Checkbox, Popper, TextField, InputAdornment } from "../Mui";
+import { useTheme, Box, Checkbox, Popper, TextField, InputAdornment } from "../Mui";
 import { NoData } from "../NoData";
 
 export interface DropDownMenuProps {
@@ -42,7 +42,7 @@ export function DropDownMenu({
   onMenuClick,
   anchor,
 }: DropDownMenuProps) {
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
   const [search, setSearch] = useState<undefined | string>(undefined);
 
   const handleClose = () => {

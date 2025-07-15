@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { Typography, TextFieldProps, Grid, Box, makeStyles, Theme } from "components/Mui";
+import { Typography, Grid, Box, makeStyles, Theme } from "components/Mui";
 import { Flex, Select } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, Wrapper, MainCard, NumberFilledTextField, AuthButton } from "components/index";
@@ -211,20 +211,7 @@ export default function CreateProject() {
                     >
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateTimePicker
-                          // @ts-ignore
-                          renderInput={(params: TextFieldProps) => (
-                            <FilledTextField
-                              fullWidth
-                              {...params}
-                              textFieldProps={{
-                                slotProps: {
-                                  ...(params?.slotProps ?? {}),
-                                },
-                              }}
-                              helperText=""
-                            />
-                          )}
-                          value={values.startDateTime}
+                          value={dayjs(values.startDateTime)}
                           onChange={(newValue: any) => {
                             handleFieldChange(timeParser(newValue), "startDateTime");
                           }}
@@ -240,18 +227,7 @@ export default function CreateProject() {
                     >
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateTimePicker
-                          // @ts-ignore
-                          renderInput={(params: TextFieldProps) => (
-                            <FilledTextField
-                              fullWidth
-                              {...params}
-                              textFieldProps={{
-                                ...(params?.InputProps ?? {}),
-                              }}
-                              helperText=""
-                            />
-                          )}
-                          value={values.endDateTime}
+                          value={dayjs(values.endDateTime)}
                           onChange={(newValue: any) => {
                             handleFieldChange(timeParser(newValue), "endDateTime");
                           }}

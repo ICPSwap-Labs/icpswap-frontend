@@ -72,7 +72,7 @@
     "@icpswap/ui": "workspace:*",
     "@icpswap/utils": "workspace:*",
     "@mdx-js/react": "^1.6.22",
-    "@mui/x-date-pickers": "5.0.13",
+    "@mui/x-date-pickers": "8.8.0",
     "@nfid/identitykit": "1.0.7",
     "@noble/hashes": "^1.6.1",
     "@reduxjs/toolkit": "^1.9.7",

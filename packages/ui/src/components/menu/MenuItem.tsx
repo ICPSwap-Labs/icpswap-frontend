@@ -4,7 +4,7 @@ import { useTheme, Typography, BoxProps } from "../Mui";
 import { Flex } from "../Grid/Flex";
 
 export interface MenuItemProps {
-  onMenuClick: (value: any) => void;
+  onMenuClick?: (value: any) => void;
   active?: boolean;
   label?: ReactNode;
   icon?: ReactNode;
@@ -48,7 +48,11 @@ export function MenuItem({
           },
         },
       }}
-      onClick={() => onMenuClick(value)}
+      onClick={() => {
+        if (onMenuClick) {
+          onMenuClick(value);
+        }
+      }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >

@@ -3,7 +3,7 @@ import { SelectPair, InfoWrapper } from "components/index";
 import { useHistory, useLocation } from "react-router-dom";
 import { useState, useCallback } from "react";
 import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
-import { locationSearchReplace } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, locationSearchReplace } from "@icpswap/utils";
 import {
   Header,
   HeaderCell,
@@ -21,6 +21,7 @@ import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
 import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 import { SwapTransactionsDownload } from "components/info/tools/SwapTransactionsDownload";
+import { TimeRange } from "components/TimeRange/TimeRange";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -52,12 +53,18 @@ export default function SwapTransactions() {
   const { pair, principal } = useParsedQueryString() as { pair: string; principal: string | undefined };
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PageSize });
+  const [startTime, setStartTime] = useState<undefined | number>(
+    new BigNumber(new Date().getTime()).minus(180 * 24 * 3600 * 1000).toNumber(),
+  );
+  const [endTime, setEndTime] = useState<undefined | number>(new Date().getTime());
 
   const { result, loading } = useSwapTransactions({
     principal,
     poolId: pair,
     page: pagination.pageNum,
     limit: PageSize,
+    startTime,
+    endTime,
   });
 
   const transactions = result?.content;
@@ -87,6 +94,11 @@ export default function SwapTransactions() {
     openTip(t`Copy Success`, TIP_SUCCESS);
   }, []);
 
+  const handleTimeRangeChange = useCallback((startTime: number, endTime: number) => {
+    setStartTime(startTime);
+    setEndTime(endTime);
+  }, []);
+
   return (
     <InfoWrapper size="small">
       <BreadcrumbsV1
@@ -96,7 +108,15 @@ export default function SwapTransactions() {
       <Box sx={{ height: "20px", width: "100%" }} />
 
       <ToolsWrapper
-        title={t("common.swap.transactions")}
+        title={
+          <Flex fullWidth justify="space-between">
+            <Typography color="inherit" fontSize="inherit" fontWeight="inherit">
+              {t("common.swap.transactions")}
+            </Typography>
+
+            <SwapTransactionsDownload pair={pair} principal={principal} startTime={startTime} endTime={endTime} />
+          </Flex>
+        }
         action={
           <Box
             sx={{
@@ -123,10 +143,10 @@ export default function SwapTransactions() {
                 },
               }}
             >
-              <PrincipalSearcher
-                placeholder="Search the principal for swap transactions"
-                onPrincipalChange={handleAddressChange}
-              />
+              <PrincipalSearcher placeholder="Enter Principal ID to search" onPrincipalChange={handleAddressChange} />
+
+              <TimeRange defaultRange={180} onChange={handleTimeRangeChange} />
+
               <Flex sx={{ width: "fit-content", minWidth: "214px" }} gap="0 4px">
                 <Typography>{t("common.select.pair.colon")}</Typography>
 
@@ -141,8 +161,6 @@ export default function SwapTransactions() {
               </Flex>
               {pair ? <Typography>Swap pool canister ID: {pair}</Typography> : null}
             </Flex>
-
-            <SwapTransactionsDownload pair={pair} principal={principal} />
           </Box>
         }
       >
@@ -163,20 +181,7 @@ export default function SwapTransactions() {
                 <HeaderCell field="timestamp">{t("common.time")}</HeaderCell>
               </Header>
 
-              {(transactions ?? []).map((transaction, index) => (
-                <TransactionRow
-                  key={`${String(transaction.txTime)}_${index}`}
-                  transaction={transaction}
-                  className={classes.wrapper}
-                  onCopy={handleCopy}
-                />
-              ))}
-
-              {(transactions ?? []).length === 0 && !loading ? (
-                <NoData tip={t("info.tools.swap.transactions.empty")} />
-              ) : null}
-
-              {loading ? (
+              {loading || isUndefinedOrNull(transactions) ? (
                 <Box sx={{ padding: "16px" }}>
                   <LoadingRow>
                     <div />
@@ -189,25 +194,36 @@ export default function SwapTransactions() {
                     <div />
                   </LoadingRow>
                 </Box>
-              ) : null}
+              ) : transactions.length > 0 ? (
+                <>
+                  {transactions.map((transaction, index) => (
+                    <TransactionRow
+                      key={`${String(transaction.txTime)}_${index}`}
+                      transaction={transaction}
+                      className={classes.wrapper}
+                      onCopy={handleCopy}
+                    />
+                  ))}
 
-              {!loading && !!transactions?.length ? (
-                <Box
-                  sx={{
-                    padding: "24px",
-                    "@media screen and (max-width: 780px)": {
-                      padding: "16px",
-                    },
-                  }}
-                >
-                  <Pagination
-                    num={pagination.pageNum}
-                    total={result?.totalElements ?? 0}
-                    onPageChange={handlePageChange}
-                    mt="0px"
-                  />
-                </Box>
-              ) : null}
+                  <Box
+                    sx={{
+                      padding: "24px",
+                      "@media screen and (max-width: 780px)": {
+                        padding: "16px",
+                      },
+                    }}
+                  >
+                    <Pagination
+                      num={pagination.pageNum}
+                      total={result?.totalElements ?? 0}
+                      onPageChange={handlePageChange}
+                      mt="0px"
+                    />
+                  </Box>
+                </>
+              ) : (
+                <NoData tip={t("info.tools.swap.transactions.empty")} />
+              )}
             </Box>
           </Box>
         </Box>

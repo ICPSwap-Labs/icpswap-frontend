@@ -55,6 +55,10 @@ export async function icpswap_fetch_post<T>(api: string, data?: any): Promise<St
   return await fetch_post<T>(`${ICPSWAP_API}${api}`, data);
 }
 
+export async function icpswap_fetch_get<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {
+  return await fetch_get<T>(`${ICPSWAP_API}${api}`, data);
+}
+
 export async function icpswap_info_fetch_post<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {
   return await fetch_post<T>(`${ICPSWAP_API}/info${api}`, data);
 }
