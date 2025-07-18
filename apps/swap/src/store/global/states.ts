@@ -15,6 +15,8 @@ export interface GlobalState {
   walletConnector: boolean;
   bridgeTokens: string[];
   tokenBalances: { [key: string]: string };
+  defaultTokens: string[];
+  defaultChartType: string | undefined;
 }
 
 export const initialState: GlobalState = {
@@ -29,4 +31,6 @@ export const initialState: GlobalState = {
   walletConnector: false,
   bridgeTokens: [],
   tokenBalances: {},
+  defaultTokens: [],
+  defaultChartType: undefined,
 };

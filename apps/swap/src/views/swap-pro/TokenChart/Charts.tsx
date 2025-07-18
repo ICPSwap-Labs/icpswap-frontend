@@ -1,6 +1,6 @@
 import { useEffect, useContext, useRef, useState } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { TokenCharts, TokenChartsRef, TextButton } from "@icpswap/ui";
+import { TokenCharts as TokenChartsUI, TokenChartsRef, TextButton } from "@icpswap/ui";
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
 import { useToken, uesTokenPairWithIcp } from "hooks/index";
 import { Null } from "@icpswap/types";
@@ -10,7 +10,7 @@ import { Trans } from "react-i18next";
 import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 import { DensityChart } from "components/info/DensityChart";
 
-export default function TokenChartInfo() {
+export function TokenCharts() {
   const theme = useTheme();
   const [priceTokenId, setPriceTokenId] = useState<string | Null>(null);
   const { token, chartView } = useContext(SwapProContext);
@@ -47,7 +47,7 @@ export default function TokenChartInfo() {
         },
       }}
     >
-      <TokenCharts
+      <TokenChartsUI
         ref={tokenChartsRef}
         canisterId={priceToken?.address}
         background={3}

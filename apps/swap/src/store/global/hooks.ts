@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { ICP } from "@icpswap/tokens";
-import { parseTokenAmount, BigNumber } from "@icpswap/utils";
+import { parseTokenAmount, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
@@ -9,6 +9,8 @@ import {
   useTokensFromList,
   getLimitedInfinityCallV1,
   getAllSwapTokens,
+  getGlobalSettingTokens,
+  getGlobalSettingChart,
 } from "@icpswap/hooks";
 import { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import { setStorageTokenInfo } from "hooks/token/index";
@@ -23,6 +25,8 @@ import {
   updateWalletConnector,
   updateBridgeTokens,
   updateTokenBalance,
+  updateDefaultTokens,
+  updateDefaultChartType,
 } from "./actions";
 
 export function useGlobalTokenList() {
@@ -249,4 +253,49 @@ export function useStateTokenBalanceManager(
   );
 
   return [stateBalance, callback];
+}
+
+// Fetch the global settings
+export function useGlobalDefaultTokens() {
+  return useAppSelector((state) => state.global.defaultTokens);
+}
+
+export function useFetchGlobalDefaultTokens() {
+  const defaultTokens = useGlobalDefaultTokens();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function call() {
+      if (defaultTokens.length === 0) {
+        const __defaultTokens = await getGlobalSettingTokens();
+        dispatch(updateDefaultTokens(__defaultTokens.map((token) => token.toString())));
+      }
+    }
+
+    call();
+  }, [defaultTokens, dispatch]);
+
+  return useMemo(() => defaultTokens, [defaultTokens]);
+}
+
+export function useGlobalDefaultChartType() {
+  return useAppSelector((state) => state.global.defaultChartType);
+}
+
+export function useFetchGlobalDefaultChartType() {
+  const defaultChartType = useGlobalDefaultChartType();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function call() {
+      if (isUndefinedOrNull(defaultChartType)) {
+        const __defaultChartType = await getGlobalSettingChart();
+        dispatch(updateDefaultChartType(__defaultChartType));
+      }
+    }
+
+    call();
+  }, [defaultChartType, dispatch]);
+
+  return useMemo(() => defaultChartType, [defaultChartType]);
 }

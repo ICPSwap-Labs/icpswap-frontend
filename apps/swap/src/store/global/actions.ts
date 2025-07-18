@@ -19,3 +19,7 @@ export const updateWalletConnector = createAction<boolean>("global/updateWalletC
 export const updateBridgeTokens = createAction<string[]>("global/updateBridgeTokens");
 
 export const updateTokenBalance = createAction<{ canisterId: string; balance: string }>("global/updateTokenBalance");
+
+export const updateDefaultTokens = createAction<string[]>("global/updateDefaultTokens");
+
+export const updateDefaultChartType = createAction<string>("global/updateDefaultChartType");

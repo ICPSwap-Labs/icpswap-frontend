@@ -3,3 +3,6 @@ export type { _SERVICE as ExchangeRate } from "./ExchangeRate";
 
 export { idlFactory as LiquidityLocksInterfaceFactory } from "./LiquidityLocks.did";
 export type { _SERVICE as LiquidityLocksService } from "./LiquidityLocks";
+
+export { idlFactory as SettingInterfaceFactory } from "./setting.did";
+export type { _SERVICE as SettingService } from "./setting";
