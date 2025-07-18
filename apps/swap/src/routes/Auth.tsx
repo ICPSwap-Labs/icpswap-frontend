@@ -2,16 +2,24 @@ import { Route, Switch, useLocation } from "react-router-dom";
 import { Layout } from "components/Layout/index";
 import PageNotFound from "components/404";
 import { Maintenance } from "components/Maintenance";
-import React from "react";
+import React, { useMemo } from "react";
+import { useSettingMaintenance } from "@icpswap/hooks";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 import { routeConfigs } from "./config";
-
-const maintenancePages: string[] = [];
 
 export default function MainRoutes() {
   const location = useLocation();
 
   const allPaths = routeConfigs.map((element) => element.path);
+
+  const { result: __maintenancePages } = useSettingMaintenance();
+
+  const maintenancePages = useMemo(() => {
+    if (isUndefinedOrNull(__maintenancePages)) return [];
+
+    return __maintenancePages.map(([, path]) => path);
+  }, [__maintenancePages]);
 
   return (
     <Route path={allPaths}>
