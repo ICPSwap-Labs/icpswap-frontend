@@ -1,6 +1,7 @@
 import { Typography, Button, useMediaQuery, useTheme, Box } from "components/Mui";
 import { IsSneedOwner, MainCard } from "components/index";
 import {
+  BigNumber,
   isUndefinedOrNull,
   isValidAccount,
   isValidPrincipal,
@@ -124,7 +125,11 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
           <Typography>{t("common.apr")}</Typography>
 
           <Typography color="text.primary">
-            {nonUndefinedOrNull(apr) ? <APRPanel value={numToPercent(apr, 2)} /> : "--"}
+            {nonUndefinedOrNull(apr) ? (
+              <APRPanel value={numToPercent(new BigNumber(apr).dividedBy(100).toString(), 2)} />
+            ) : (
+              "--"
+            )}
           </Typography>
         </Flex>
 

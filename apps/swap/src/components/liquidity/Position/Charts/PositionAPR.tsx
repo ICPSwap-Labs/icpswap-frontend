@@ -70,7 +70,7 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
             {latestPositionValue ? (
               <>
                 <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-                  {new BigNumber(nonUndefinedOrNull(latestValue) ? latestValue : latestPositionValue.value).toFixed(2)}%
+                  {numToPercent(nonUndefinedOrNull(latestValue) ? latestValue : latestPositionValue.value, 2)}
                 </Typography>
 
                 <Typography
