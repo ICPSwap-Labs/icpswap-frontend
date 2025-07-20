@@ -26,7 +26,7 @@ const tools = [
     path: "/info-tools/valuation",
   },
   {
-    label: i18n.t("common.position.transfer"),
+    label: i18n.t("common.transfer.position"),
     image: "/images/info/tools/PositionTransfer.svg",
     path: "/info-tools/position-transactions",
   },
