@@ -1,11 +1,12 @@
 import { useState, useCallback, memo, useEffect, useMemo } from "react";
 import { Button, CircularProgress } from "components/Mui";
-import { Flex, Image, Tooltip } from "@icpswap/ui";
+import { Flex, Tooltip } from "@icpswap/ui";
 import { useDownloadSwapTransactions } from "hooks/info/swap/index";
 import { useTranslation } from "react-i18next";
 import { Null } from "@icpswap/types";
 import { isUndefinedOrNull, mockALinkAndOpen } from "@icpswap/utils";
 import { getDownloadSwapTransactionsLink } from "@icpswap/hooks";
+import { Download } from "react-feather";
 
 interface SwapTransactionsProps {
   pair: string;
@@ -51,11 +52,7 @@ export function __SwapTransactions({ pair, principal, startTime, endTime }: Swap
     <Flex gap="0 8px">
       <Button variant="contained" onClick={handleDownload} disabled={disabled}>
         <Flex gap="0 4px">
-          {loading ? (
-            <CircularProgress color="inherit" size={16} />
-          ) : (
-            <Image src="/images/download.svg" sx={{ width: "16px", height: "16px", borderRadius: "0px" }} />
-          )}
+          {loading ? <CircularProgress color="inherit" size={16} /> : <Download size={18} />}
           {t("common.export.to.csv")}
         </Flex>
       </Button>

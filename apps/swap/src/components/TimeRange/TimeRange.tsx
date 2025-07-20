@@ -31,15 +31,22 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
   const [startTime, setStartTime] = useState<number | string | undefined>(undefined);
   const [endTime, setEndTime] = useState<number | string | undefined>(undefined);
 
-  // Set default range
-  useEffect(() => {
-    if (nonUndefinedOrNull(defaultRange)) {
-      const range = TimeRanges.find((range) => range.value === defaultRange);
+  const handleSetRange = useCallback(
+    (rangeValue: number) => {
+      const range = TimeRanges.find((range) => range.value === rangeValue);
       if (range) {
         setRange(range);
       }
+    },
+    [setRange, onChange],
+  );
+
+  // Set default range
+  useEffect(() => {
+    if (nonUndefinedOrNull(defaultRange)) {
+      handleSetRange(defaultRange);
     }
-  }, [defaultRange]);
+  }, [defaultRange, handleSetRange]);
 
   const handleClick = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.target);
@@ -51,24 +58,23 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
 
   const handleTimeRangeChange = useCallback(
     (value: number) => {
-      const range = TimeRanges.find((element) => element.value === value);
+      const __range = TimeRanges.find((element) => element.value === value);
 
-      if (nonUndefinedOrNull(range)) {
-        if (range.value === 0) {
+      if (nonUndefinedOrNull(__range) && __range.value !== range?.value) {
+        if (__range.value === 0) {
           setDateRangeOpen(true);
         } else {
           const now = new Date().getTime();
           const start = new BigNumber(now)
-            .minus(new BigNumber(range.value).multipliedBy(24).multipliedBy(3600).multipliedBy(1000))
+            .minus(new BigNumber(__range.value).multipliedBy(24).multipliedBy(3600).multipliedBy(1000))
             .toNumber();
 
           onChange(start, now);
+          setRange(__range);
         }
-
-        setRange(range);
       }
     },
-    [onChange, setRange],
+    [onChange, range, setRange],
   );
 
   // Set default startTime/endTime
@@ -84,10 +90,15 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
       setStartTime(startTime);
       setEndTime(endTime);
       setDateRangeOpen(false);
+      handleSetRange(0);
       onChange(startTime, endTime);
     },
-    [onChange],
+    [onChange, handleSetRange],
   );
+
+  const handleRangeSelectorClose = useCallback(() => {
+    setDateRangeOpen(false);
+  }, [setDateRangeOpen, handleSetRange]);
 
   return (
     <>
@@ -132,7 +143,13 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
       />
 
       {dateRangeOpen ? (
-        <TimeRangeSelector open startTime={startTime} endTime={endTime} onConfirm={handleRangeDateChange} />
+        <TimeRangeSelector
+          open
+          startTime={startTime}
+          endTime={endTime}
+          onConfirm={handleRangeDateChange}
+          onClose={handleRangeSelectorClose}
+        />
       ) : null}
     </>
   );

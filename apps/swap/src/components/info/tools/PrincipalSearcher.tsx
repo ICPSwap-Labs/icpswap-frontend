@@ -47,7 +47,7 @@ export function PrincipalSearcher({ onPrincipalChange, placeholder }: PrincipalS
               },
             },
           }}
-          placeholderSize="12px"
+          placeholderSize="14px"
           onChange={onPrincipalChange}
           background={theme.palette.background.level1}
         />

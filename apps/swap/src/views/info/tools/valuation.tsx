@@ -281,7 +281,7 @@ export default function SwapScanValuation() {
                 },
               }}
               onChange={handleSearchChange}
-              placeholderSize="12px"
+              placeholderSize="14px"
               background={theme.palette.background.level1}
             />
 

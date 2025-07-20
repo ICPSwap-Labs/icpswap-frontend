@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Flex, Modal } from "@icpswap/ui";
 import { Button, Typography } from "components/Mui";
-import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker, DatePickerProps } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
+
+const MAX_RANGE_TIMESTAMP = 180 * 24 * 3600 * 1000;
 
 interface TimeRangeSelectorProps {
   open: boolean;
@@ -47,6 +49,7 @@ export function TimeRangeSelector({
       if (value) {
         setInnerStartTime(value.valueOf() as number);
       }
+      setInnerEndTime(undefined);
     },
     [onStartTimeChange],
   );
@@ -66,6 +69,15 @@ export function TimeRangeSelector({
     }
   }, [innerStartTime, innerEndTime]);
 
+  const maxEndTime = useMemo(() => {
+    const now = new Date().getTime();
+
+    if (isUndefinedOrNull(innerStartTime)) return dayjs(now);
+    if (new BigNumber(innerStartTime + MAX_RANGE_TIMESTAMP).isGreaterThan(now)) return dayjs(now);
+
+    return dayjs(innerStartTime + MAX_RANGE_TIMESTAMP);
+  }, [innerStartTime]);
+
   return (
     <Modal open={open} title={t("time.range.title")} onClose={onClose} onCancel={onClose}>
       <Typography>{t("time.range.desc")}</Typography>
@@ -74,29 +86,20 @@ export function TimeRangeSelector({
         <Flex gap="0 12px">
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              value={dayjs(innerStartTime)}
+              value={nonUndefinedOrNull(innerStartTime) ? dayjs(innerStartTime) : null}
               onChange={handleStartTimeChange}
               format="YYYY-MM-DD"
-              minDate={
-                innerEndTime
-                  ? dayjs(new BigNumber(innerEndTime).minus(180 * 24 * 60 * 60 * 1000).toNumber())
-                  : undefined
-              }
-              maxDate={innerEndTime ? dayjs(innerEndTime) : undefined}
+              maxDate={dayjs(new Date().getTime())}
             />
           </LocalizationProvider>
           <Typography color="text.primary">{t("common.to")}</Typography>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-              value={dayjs(innerEndTime)}
+              value={nonUndefinedOrNull(innerEndTime) ? dayjs(innerEndTime) : null}
               onChange={handleEndTimeChange}
               format="YYYY-MM-DD"
-              minDate={innerStartTime ? dayjs(innerStartTime) : undefined}
-              maxDate={
-                innerStartTime
-                  ? dayjs(new BigNumber(innerStartTime).plus(180 * 24 * 60 * 60 * 1000).toNumber())
-                  : undefined
-              }
+              minDate={innerStartTime ? dayjs(innerStartTime) : dayjs()}
+              maxDate={maxEndTime}
             />
           </LocalizationProvider>
         </Flex>

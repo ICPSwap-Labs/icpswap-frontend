@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 const PageSize = 10;
+const DEFAULT_PAGINATION = { pageNum: 1, pageSize: PageSize };
 
 export default function SwapTransactions() {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ export default function SwapTransactions() {
 
   const { pair, principal } = useParsedQueryString() as { pair: string; principal: string | undefined };
 
-  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PageSize });
+  const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
   const [startTime, setStartTime] = useState<undefined | number>(
     new BigNumber(new Date().getTime()).minus(180 * 24 * 3600 * 1000).toNumber(),
   );
@@ -70,7 +71,7 @@ export default function SwapTransactions() {
   const transactions = result?.content;
 
   const handlePairChange = (pairId: string | undefined) => {
-    setPagination({ pageNum: 1, pageSize: 10 });
+    setPagination(DEFAULT_PAGINATION);
 
     const search = locationSearchReplace(location.search, "pair", pairId);
 
@@ -78,7 +79,7 @@ export default function SwapTransactions() {
   };
 
   const handleAddressChange = (address: string | Null) => {
-    setPagination({ pageNum: 1, pageSize: 10 });
+    setPagination(DEFAULT_PAGINATION);
 
     const search = locationSearchReplace(location.search, "principal", address);
 
@@ -97,6 +98,7 @@ export default function SwapTransactions() {
   const handleTimeRangeChange = useCallback((startTime: number, endTime: number) => {
     setStartTime(startTime);
     setEndTime(endTime);
+    setPagination(DEFAULT_PAGINATION);
   }, []);
 
   return (
