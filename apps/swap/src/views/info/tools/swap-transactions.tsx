@@ -53,11 +53,13 @@ export default function SwapTransactions() {
 
   const { pair, principal } = useParsedQueryString() as { pair: string; principal: string | undefined };
 
+  const now = new Date().getTime();
+
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
   const [startTime, setStartTime] = useState<undefined | number>(
-    new BigNumber(new Date().getTime()).minus(180 * 24 * 3600 * 1000).toNumber(),
+    new BigNumber(now).minus(180 * 24 * 3600 * 1000).toNumber(),
   );
-  const [endTime, setEndTime] = useState<undefined | number>(new Date().getTime());
+  const [endTime, setEndTime] = useState<undefined | number>(now);
 
   const { result, loading } = useSwapTransactions({
     principal,
@@ -96,9 +98,9 @@ export default function SwapTransactions() {
   }, []);
 
   const handleTimeRangeChange = useCallback((startTime: number, endTime: number) => {
+    setPagination(DEFAULT_PAGINATION);
     setStartTime(startTime);
     setEndTime(endTime);
-    setPagination(DEFAULT_PAGINATION);
   }, []);
 
   return (
