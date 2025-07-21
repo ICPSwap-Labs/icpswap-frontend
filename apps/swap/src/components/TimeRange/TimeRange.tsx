@@ -60,10 +60,12 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
     (value: number) => {
       const __range = TimeRanges.find((element) => element.value === value);
 
-      if (nonUndefinedOrNull(__range) && __range.value !== range?.value) {
+      if (nonUndefinedOrNull(__range)) {
         if (__range.value === 0) {
           setDateRangeOpen(true);
         } else {
+          if (__range.value === range?.value) return;
+
           const now = new Date().getTime();
           const start = new BigNumber(now)
             .minus(new BigNumber(__range.value).multipliedBy(24).multipliedBy(3600).multipliedBy(1000))
