@@ -1,3 +1,4 @@
+import { nonUndefinedOrNull } from "@icpswap/utils";
 import { useState, useMemo, useEffect } from "react";
 
 export function useLimitedInfinityCall<T>(
@@ -82,6 +83,8 @@ export async function getLimitedInfinityCall<T>(
   return data;
 }
 
+let infinityCallAbort = false;
+
 /**
  * @description getLimitedInfinityCall
  * @param callback The call to fetch the data
@@ -94,11 +97,19 @@ export async function getLimitedInfinityCallV1<T>(
   call_rounds = 10,
   start_page?: number,
 ) {
+  infinityCallAbort = false;
+
   let data: T[] = [];
   let fetch_index = 0;
   let fetch_done = false;
 
   const fetch = async (index: number) => {
+    if (infinityCallAbort) {
+      data = [];
+      fetch_done = true;
+      return;
+    }
+
     fetch_index += 1;
 
     await Promise.all(
@@ -127,4 +138,8 @@ export async function getLimitedInfinityCallV1<T>(
   await fetch(fetch_index);
 
   return data;
+}
+
+export function abortInfinityCallV1(value?: boolean) {
+  infinityCallAbort = nonUndefinedOrNull(value) ? value : true;
 }

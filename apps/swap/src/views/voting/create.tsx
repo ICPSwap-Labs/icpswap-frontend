@@ -309,18 +309,7 @@ export default function VotingCreateProposal() {
                     <Box>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateTimePicker
-                          // @ts-ignore
-                          renderInput={(params: any) => (
-                            <FilledTextField
-                              fullWidth
-                              {...params}
-                              textFieldProps={{
-                                ...(params?.InputProps ?? {}),
-                              }}
-                              helperText=""
-                            />
-                          )}
-                          value={values.startDateTime}
+                          value={dayjs(values.startDateTime)}
                           onChange={(newValue: any) => {
                             onFiledChange(timeParser(newValue), "startDateTime");
                           }}
@@ -332,18 +321,7 @@ export default function VotingCreateProposal() {
                     <Box>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateTimePicker
-                          // @ts-ignore
-                          renderInput={(params: any) => (
-                            <FilledTextField
-                              fullWidth
-                              {...params}
-                              textFieldProps={{
-                                ...(params?.InputProps ?? {}),
-                              }}
-                              helperText=""
-                            />
-                          )}
-                          value={values.endDateTime}
+                          value={dayjs(values.endDateTime)}
                           onChange={(newValue: any) => {
                             onFiledChange(timeParser(newValue), "endDateTime");
                           }}

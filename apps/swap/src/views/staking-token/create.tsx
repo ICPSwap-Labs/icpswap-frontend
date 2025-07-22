@@ -261,17 +261,6 @@ export default function CreateStakingTokenPool() {
                   >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateTimePicker
-                        renderInput={(params: any) => (
-                          <FilledTextField
-                            fullWidth
-                            {...params}
-                            textFieldProps={{
-                              ...(params?.InputProps ?? {}),
-                              disableUnderline: true,
-                            }}
-                            helperText=""
-                          />
-                        )}
                         value={values.startDateTime ? dayjs(values.startDateTime) : null}
                         onChange={(newValue: any) => {
                           handleFieldChange(
@@ -292,17 +281,6 @@ export default function CreateStakingTokenPool() {
                   >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DateTimePicker
-                        renderInput={(params: any) => (
-                          <FilledTextField
-                            fullWidth
-                            {...params}
-                            textFieldProps={{
-                              ...(params?.InputProps ?? {}),
-                              disableUnderline: true,
-                            }}
-                            helperText=""
-                          />
-                        )}
                         value={values.endDateTime ? dayjs(values.endDateTime) : null}
                         onChange={(newValue: any) => {
                           handleFieldChange(timeParser(new Date(newValue.toDate()).getTime()).getTime(), "endDateTime");

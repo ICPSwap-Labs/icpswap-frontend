@@ -1,10 +1,9 @@
 import React, { useState, useRef, ReactNode } from "react";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { ChevronDown } from "react-feather";
 import CloseIcon from "@mui/icons-material/Close";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 
 import { makeStyles, Theme, Typography, Box } from "../Mui";
-
 import { MenuProps } from "./types";
 
 interface StyleProps {
@@ -136,8 +135,9 @@ export function SelectPanel({
           {showClose && !!value ? (
             <CloseIcon sx={{ cursor: "pointer" }} onClick={handleEmptyValue} />
           ) : (
-            <KeyboardArrowDownIcon
-              sx={{ transition: "all 300ms", rotate: open ? "180deg" : "0deg", cursor: "pointer" }}
+            <ChevronDown
+              style={{ transition: "all 300ms", rotate: open ? "180deg" : "0deg", cursor: "pointer" }}
+              size={16}
             />
           )}
         </Box>

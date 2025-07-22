@@ -715,5 +715,21 @@ export function componentStyleOverrides(theme: { [key: string]: any }) {
         },
       },
     },
+    MuiPickersTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiPickersInputBase-root": {
+            background: colors.darkLevel1,
+            borderRadius: "12px",
+          },
+          "& .MuiPickersOutlinedInput-notchedOutline": {
+            borderColor: "transparent",
+          },
+          "& .MuiPickersInputBase-root.Mui-focused:not(.Mui-error) .MuiPickersOutlinedInput-notchedOutline": {
+            borderColor: "#ffffff",
+          },
+        },
+      },
+    },
   };
 }

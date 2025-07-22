@@ -113,13 +113,13 @@ export function useFetchAllSwapTokens() {
       if (allSwapTokens.length > 0 || loading) return;
 
       setLoading(true);
-      const data = await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(fetch, 1000, 2);
+      const allTokens = await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(fetch, 1000, 2);
 
-      const swapTokens = data.map((e) => {
-        const standard = parseTokenStandards(e);
+      const swapTokens = allTokens.map((token) => {
+        const standard = parseTokenStandards(token);
 
         return {
-          ...e,
+          ...token,
           standard,
         };
       });
