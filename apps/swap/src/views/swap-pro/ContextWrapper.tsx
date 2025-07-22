@@ -3,14 +3,17 @@ import { Box, useTheme, useMediaQuery } from "components/Mui";
 import { useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { SwapContext } from "components/swap/index";
-import { ChartButton } from "@icpswap/ui";
+import { ChartButton, ChartView } from "@icpswap/ui";
 import { SwapProContext, PoolTokensInformation } from "components/swap/pro";
-import { DefaultChartView, Tab } from "constants/index";
+import { Tab } from "constants/index";
+import { useFetchGlobalDefaultChartType } from "store/global/hooks";
+import { nonUndefinedOrNull } from "@icpswap/utils";
+import { getChartView } from "utils/swap/chartType";
 
 import HotTokens from "./HotTokens";
 import Swap from "./Swap";
 import TokenTvlAndLiquidityLocks from "./Token";
-import TokenChartWrapper from "./TokenChart";
+import { TokenChartWrapper } from "./TokenChart";
 import Transactions from "./Transactions";
 import { SearchWrapper } from "./layout/SearchWrapper";
 import TokenChartInfo from "./TokenChart/Token";
@@ -22,7 +25,7 @@ export function SwapProContextWrapper() {
   const { inputToken, outputToken, poolId } = useContext(SwapContext);
 
   const [activeTab, setActiveTab] = useState<Tab>(Tab.Swap);
-  const [chartView, setChartView] = useState<ChartButton | null>(DefaultChartView);
+  const [chartView, setChartView] = useState<ChartButton | null>(null);
 
   const inputTokenInfo = useInfoToken(inputToken?.address);
   const outputTokenInfo = useInfoToken(outputToken?.address);
@@ -47,11 +50,26 @@ export function SwapProContextWrapper() {
 
   const { result: tokenListInfo } = useTokenListTokenInfo(tokenId);
 
+  const defaultChartType = useFetchGlobalDefaultChartType();
+
   useEffect(() => {
-    if (token) {
-      setChartView(DefaultChartView);
+    if (inputToken && outputToken && nonUndefinedOrNull(defaultChartType)) {
+      const chartView = getChartView(defaultChartType);
+
+      if (chartView) {
+        setChartView({
+          label: chartView as unknown as string,
+          value: chartView,
+          tokenId:
+            chartView === ChartView.PRICE
+              ? defaultChartType === "Token0"
+                ? inputToken.address
+                : outputToken.address
+              : undefined,
+        });
+      }
     }
-  }, [token, setChartView, poolId]);
+  }, [inputToken, outputToken, defaultChartType, setChartView, poolId]);
 
   return (
     <SwapProContext.Provider

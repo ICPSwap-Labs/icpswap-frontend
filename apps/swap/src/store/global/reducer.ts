@@ -6,6 +6,8 @@ import {
   updateWalletConnector,
   updateBridgeTokens,
   updateTokenBalance,
+  updateDefaultTokens,
+  updateDefaultChartType,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -31,5 +33,11 @@ export default createReducer(initialState, (builder) => {
         ...state.tokenBalances,
         [canisterId]: balance,
       };
+    })
+    .addCase(updateDefaultTokens, (state, { payload }) => {
+      state.defaultTokens = payload;
+    })
+    .addCase(updateDefaultChartType, (state, { payload }) => {
+      state.defaultChartType = payload;
     });
 });
