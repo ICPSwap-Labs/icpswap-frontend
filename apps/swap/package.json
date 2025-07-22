@@ -5,8 +5,6 @@
     "dev": "node ./scripts/env.js dev ic && PORT=3000 craco start",
     "dev:local": "node ./scripts/env.js dev local && PORT=3000 craco start",
     "build": "CI=false && node ./scripts/env.js pro ic && craco build",
-    "deploy:ic": "node ./scripts/env.js pro ic && ./scripts/deploy-ic.sh",
-    "deploy:release": "node ./scripts/env.js pro ic && ./scripts/deploy-release.sh",
     "test": "craco test",
     "lint": "eslint src --fix",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
