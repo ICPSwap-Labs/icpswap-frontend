@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Flex, Modal } from "@icpswap/ui";
 import { Button, Typography } from "components/Mui";
-import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, toEndTimeOfDay, toStartTimeOfDay } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -65,17 +65,17 @@ export function TimeRangeSelector({
 
   const handleConfirm = useCallback(() => {
     if (nonUndefinedOrNull(innerStartTime) && nonUndefinedOrNull(innerEndTime)) {
-      onConfirm(innerStartTime, innerEndTime);
+      onConfirm(toStartTimeOfDay(innerStartTime), toEndTimeOfDay(innerEndTime));
     }
   }, [innerStartTime, innerEndTime]);
 
   const maxEndTime = useMemo(() => {
     const now = new Date().getTime();
 
-    if (isUndefinedOrNull(innerStartTime)) return dayjs(now);
-    if (new BigNumber(innerStartTime + MAX_RANGE_TIMESTAMP).isGreaterThan(now)) return dayjs(now);
+    if (isUndefinedOrNull(innerStartTime)) return dayjs(toEndTimeOfDay(now));
+    if (new BigNumber(innerStartTime + MAX_RANGE_TIMESTAMP).isGreaterThan(now)) return dayjs(toEndTimeOfDay(now));
 
-    return dayjs(innerStartTime + MAX_RANGE_TIMESTAMP);
+    return dayjs(toEndTimeOfDay(innerStartTime + MAX_RANGE_TIMESTAMP));
   }, [innerStartTime]);
 
   return (

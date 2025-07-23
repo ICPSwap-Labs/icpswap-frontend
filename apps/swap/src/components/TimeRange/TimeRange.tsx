@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Flex, DropDownMenu } from "@icpswap/ui";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, nonUndefinedOrNull, toEndTimeOfDay, toStartTimeOfDay } from "@icpswap/utils";
 import { ChevronDown } from "react-feather";
 import { TimeRangeSelector } from "components/TimeRange/TimeRangeSelector";
 import dayjs from "dayjs";
@@ -82,9 +82,10 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
   // Set default startTime/endTime
   useEffect(() => {
     const now = new Date().getTime();
+    const endTime = toEndTimeOfDay(now);
 
-    setEndTime(now);
-    setStartTime(new BigNumber(now).minus(180 * 24 * 3600 * 1000).toString());
+    setEndTime(endTime);
+    setStartTime(toStartTimeOfDay(new BigNumber(endTime).minus(180 * 24 * 3600 * 1000).toString()));
   }, []);
 
   const handleRangeDateChange = useCallback(
