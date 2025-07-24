@@ -8,7 +8,6 @@ import { nftRoutes } from "./nft.config";
 import { swapRoutes } from "./swap.config";
 import { farmRoutes } from "./farm.config";
 import { stakeRoutes } from "./stake.config";
-import { votingRoutes } from "./voting.config";
 import { claimRoutes } from "./claim.config";
 import { RouteDefinition } from "./type";
 
@@ -35,6 +34,5 @@ export const routeConfigs: RouteDefinition[] = [
   ...nftRoutes,
   ...nnsRoutes,
   ...swapRoutes,
-  ...votingRoutes,
   ...claimRoutes,
 ];

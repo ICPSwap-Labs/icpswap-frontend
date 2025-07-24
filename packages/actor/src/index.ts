@@ -8,6 +8,5 @@ export * from "./other";
 export * from "./swap";
 export * from "./staking";
 export * from "./token-claim";
-export * from "./voting";
 export * from "./actor";
 export * from "./ActorName";
