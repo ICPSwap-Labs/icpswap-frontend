@@ -113,7 +113,17 @@ export default function SwapTransactions() {
 
       <ToolsWrapper
         title={
-          <Flex fullWidth justify="space-between">
+          <Flex
+            fullWidth
+            justify="space-between"
+            sx={{
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                alignItems: "flex-start",
+                gap: "10px 0",
+              },
+            }}
+          >
             <Typography color="inherit" fontSize="inherit" fontWeight="inherit">
               {t("common.swap.transactions")}
             </Typography>

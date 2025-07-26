@@ -83,13 +83,27 @@ export function TimeRangeSelector({
       <Typography>{t("time.range.desc")}</Typography>
 
       <Flex vertical gap="32px 0" align="flex-start" fullWidth sx={{ margin: "32px 0 0 0" }}>
-        <Flex gap="0 12px">
+        <Flex
+          gap="0 12px"
+          sx={{
+            "@media(max-width: 640px)": {
+              flexDirection: "column",
+              gap: "12px 0",
+              width: "100%",
+            },
+          }}
+        >
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
               value={nonUndefinedOrNull(innerStartTime) ? dayjs(innerStartTime) : null}
               onChange={handleStartTimeChange}
               format="YYYY-MM-DD"
               maxDate={dayjs(new Date().getTime())}
+              sx={{
+                "@media(max-width: 640px)": {
+                  width: "100%",
+                },
+              }}
             />
           </LocalizationProvider>
           <Typography color="text.primary">{t("common.to")}</Typography>
@@ -100,6 +114,11 @@ export function TimeRangeSelector({
               format="YYYY-MM-DD"
               minDate={innerStartTime ? dayjs(innerStartTime) : dayjs()}
               maxDate={maxEndTime}
+              sx={{
+                "@media(max-width: 640px)": {
+                  width: "100%",
+                },
+              }}
             />
           </LocalizationProvider>
         </Flex>
