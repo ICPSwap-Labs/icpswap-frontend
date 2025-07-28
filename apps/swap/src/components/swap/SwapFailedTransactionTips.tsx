@@ -42,7 +42,7 @@ export const SwapFailedTransactionTips = memo(
 
     useEffect(() => {
       if (swapFailedTransactions && swapFailedTransactions.length > 0) {
-        updateNeedCheckOrNot(false);
+        updateNeedCheckOrNot(true);
       }
     }, [swapFailedTransactions]);
 
