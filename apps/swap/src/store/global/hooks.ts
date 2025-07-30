@@ -3,8 +3,7 @@ import { ICP } from "@icpswap/tokens";
 import { parseTokenAmount, BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useXDR2USD, useTokensFromList, getLimitedInfinityCallV1, getAllSwapTokens } from "@icpswap/hooks";
-import { getGlobalSettingTokens, getGlobalSettingChart } from "@icpswap/hooks";
+import { useXDR2USD, useTokensFromList, getLimitedInfinityCallV1, getAllSwapTokens , getGlobalSettingTokens, getGlobalSettingChart } from "@icpswap/hooks";
 import { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import { setStorageTokenInfo } from "hooks/token/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
@@ -116,13 +115,13 @@ export function useFetchAllSwapTokens() {
       if (allSwapTokens.length > 0 || loading) return;
 
       setLoading(true);
-      const data = await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(fetch, 1000, 2);
+      const allTokens = await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(fetch, 1000, 2);
 
-      const swapTokens = data.map((e) => {
-        const standard = parseTokenStandards(e);
+      const swapTokens = allTokens.map((token) => {
+        const standard = parseTokenStandards(token);
 
         return {
-          ...e,
+          ...token,
           standard,
         };
       });

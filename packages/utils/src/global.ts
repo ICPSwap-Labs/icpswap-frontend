@@ -88,3 +88,11 @@ export function splitArr<T>(arr: T[], length: number) {
 
   return result;
 }
+
+export function toDoubleNumber(val: number | string) {
+  const __val = Number(val);
+
+  if (__val < 10) return `0${__val}`;
+
+  return val.toString();
+}

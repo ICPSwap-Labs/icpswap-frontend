@@ -390,6 +390,7 @@
   "GLUC2q": "Deploy",
   "GOctE4": "Show closed positions",
   "common.export": "Export",
+  "common.export.to.csv": "Export to CSV",
   "nft.description.input": "Enter the NFT description",
   "stake.create.name": "Staking pool's name",
   "common.revoke": "Revoke",
@@ -1426,7 +1427,7 @@
   "farm.your.empty": "No farming positions. <highlight>Start farming</highlight>",
   "stake.your.empty": "No staked tokens. <highlight>Stake now</highlight>",
   "swap.price.deviation": "Price Deviation:",
-  "info.tools.swap.transactions.empty": "No swap history yet.",
+  "info.tools.swap.transactions.empty": "No transactions found.",
   "info.tools.positions.empty": "No liquidity positions yet.",
   "info.tools.pool.balances.empty": "No pool balance.",
   "info.tools.user.wallet.value.empty": "Holds no tokens.",
@@ -1451,5 +1452,7 @@
   "swap.reclaim.empty": "No withdrawable tokens found",
   "stake.reclaim.empty": "No tokens to reclaim",
   "claim.transactions.empty": "No claim history yet",
-  "claim.empty": "No airdrops available to claim"
+  "claim.empty": "No airdrops available to claim",
+  "time.range.title": "Select a Time Range",
+  "time.range.desc": "Select a range within the past 6 months."
 }
