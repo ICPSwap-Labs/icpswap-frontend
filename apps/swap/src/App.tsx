@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { useAppSelector } from "store/hooks";
 import { CssBaseline, StyledEngineProvider, ThemeProvider } from "components/Mui";
-import { useFetchGlobalDefaultTokens } from "store/global/hooks";
+import { useFetchGlobalDefaultTokens, useFetchGlobalTokenList } from "store/global/hooks";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { useConnectManager } from "store/auth/hooks";
 import { usePlugExternalDisconnect } from "hooks/auth/usePlug";
@@ -40,6 +40,7 @@ export default function App() {
   usePlugExternalDisconnect();
   useFetchSnsAllTokensInfo();
   useFetchGlobalDefaultTokens();
+  useFetchGlobalTokenList();
 
   const { open: connectorModalOpen, isConnected } = useConnectManager();
 
