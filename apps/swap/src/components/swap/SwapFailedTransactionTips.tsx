@@ -4,7 +4,7 @@ import { Flex, Checkbox } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 import { Null } from "@icpswap/types";
 import { useSwapFailedTransactions } from "@icpswap/hooks";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nanosecond2Millisecond, nonUndefinedOrNull } from "@icpswap/utils";
 import { swapTransactionActionFormat } from "utils/transaction";
 
 export interface SwapFailedTransactionTipsProps {
@@ -19,6 +19,7 @@ export const SwapFailedTransactionTips = memo(
     const { t } = useTranslation();
     const [checked, setChecked] = useState(false);
     const [tokenSymbol, setTokenSymbol] = useState<string | undefined>(undefined);
+    const [outOfCyclesFailedTransactions, setOutOfCyclesFailedTransaction] = useState<bigint[]>([]);
 
     const handleCheck = useCallback((check: boolean) => {
       setChecked(check);
@@ -31,22 +32,49 @@ export const SwapFailedTransactionTips = memo(
       async function call() {
         if (isUndefinedOrNull(swapFailedTransactions) || swapFailedTransactions.length === 0) return undefined;
 
-        const failedTransaction = swapFailedTransactions[0]?.[1];
-        const { tokens } = await swapTransactionActionFormat(failedTransaction.action);
+        const failedFTransactionsWithMessage = await Promise.all(
+          swapFailedTransactions.map(async ([index, transaction]) => {
+            const { message, tokens } = await swapTransactionActionFormat(transaction.action);
+            return {
+              index,
+              message,
+              tokens,
+              time: transaction.timestamp,
+            };
+          }),
+        );
+
+        // Only the message includes "is out of cycles" can be trigger the error tips
+        // And the time must after 2025/07/20
+        const outOfCyclesFailedTransaction = failedFTransactionsWithMessage.filter(({ message, time }) => {
+          if (!message) return false;
+          return (
+            message.includes("out of cycles") &&
+            new BigNumber(nanosecond2Millisecond(time)).isGreaterThan(new Date("2025-07-20T08:00:00").getTime())
+          );
+        });
+
+        if (outOfCyclesFailedTransaction.length === 0) return;
+
+        const failedTransaction = outOfCyclesFailedTransaction[0];
+        const tokens = failedTransaction.tokens;
         const tokenSymbol = tokens[0].symbol;
         setTokenSymbol(tokenSymbol);
+        setOutOfCyclesFailedTransaction(outOfCyclesFailedTransaction.map(({ index }) => index));
       }
 
       call();
     }, [swapFailedTransactions]);
 
     useEffect(() => {
-      if (swapFailedTransactions && swapFailedTransactions.length > 0) {
+      if (outOfCyclesFailedTransactions && outOfCyclesFailedTransactions.length > 0) {
         updateNeedCheckOrNot(true);
       }
-    }, [swapFailedTransactions]);
+    }, [outOfCyclesFailedTransactions]);
 
-    return swapFailedTransactions && swapFailedTransactions.length > 0 && nonUndefinedOrNull(tokenSymbol) ? (
+    return outOfCyclesFailedTransactions &&
+      outOfCyclesFailedTransactions.length > 0 &&
+      nonUndefinedOrNull(tokenSymbol) ? (
       <Box
         sx={{
           padding: ui === "pro" ? "10px" : "16px",
