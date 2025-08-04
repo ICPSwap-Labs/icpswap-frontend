@@ -48,9 +48,4 @@ export const routes: Route[] = [
     name: "NFTs",
     path: `/info-nfts`,
   },
-  {
-    key: "info-wrap",
-    name: "WICP",
-    path: "/info-wrap",
-  },
 ];

@@ -107,11 +107,6 @@ export const routes: Route[] = [
   //   link: "https://forms.gle/E1WAEfemwDBnLmY66",
   // },
   {
-    key: "wrap",
-    name: "WICP",
-    path: "/swap/v2/wrap",
-  },
-  {
     key: "version",
     name: `Version ${version}`,
     path: "",

@@ -16,7 +16,6 @@ const SwapFindMisTransferToken = Loadable(lazy(() => import("../views/swap-liqui
 const SwapRevokeApprove = Loadable(lazy(() => import("../views/swap-liquidity-v3/RevokeApprove")));
 const PCMReclaim = Loadable(lazy(() => import("../views/swap-liquidity-v3/PCMReclaim")));
 const Position = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/Position")));
-const Wrap = Loadable(lazy(() => import("../views/swap-v2/wrap/index")));
 
 const StaticTitlesAndDescriptions = {
   Swap: i18n.t("title.swap"),
@@ -31,7 +30,6 @@ export const swapRoutesConfigs = {
   SWAP_RECLAIM: "/swap/withdraw",
   SWAP_REVOKE: "/swap/revoke-approve",
   SWAP_PRO: "/swap/pro",
-  SWAP_WRAP: "/swap/v2/wrap",
   SWAP_PCM_RECLAIM: "/swap/pcm/reclaim",
   SWAP_MIS_TRANSFER: "/swap/find-mis-transferred-token",
 
@@ -75,7 +73,6 @@ export const swapRoutes: RouteDefinition[] = [
     getElement: () => <SwapPro />,
     getTitle: () => StaticTitlesAndDescriptions.Swap_pro,
   },
-  { path: swapRoutesConfigs.SWAP_WRAP, getElement: () => <Wrap />, getTitle: () => StaticTitlesAndDescriptions.Swap },
   {
     path: swapRoutesConfigs.LIQUIDITY,
     getElement: () => <Liquidity />,
