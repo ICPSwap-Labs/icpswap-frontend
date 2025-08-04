@@ -4,7 +4,7 @@ import { parseTokenAmount, BigNumber, nonUndefinedOrNull } from "@icpswap/utils"
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useXDR2USD, useTokensFromList, getLimitedInfinityCallV1, getAllSwapTokens } from "@icpswap/hooks";
-import { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import { setStorageTokenInfo } from "hooks/token/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
 import { parseTokenStandards } from "utils/parseTokenStandards";
@@ -15,6 +15,7 @@ import {
   updateWalletConnector,
   updateBridgeTokens,
   updateTokenBalance,
+  updateGlobalMinterInfo,
 } from "store/global/actions";
 
 export function useGlobalTokenList() {
@@ -196,4 +197,21 @@ export function useStateTokenBalanceManager(
   );
 
   return [stateBalance, callback];
+}
+
+export function useGlobalMinterInfoManager(): [
+  ChainKeyETHMinterInfo | undefined,
+  (minterInfo: ChainKeyETHMinterInfo) => void,
+] {
+  const globalMinterInfo = useAppSelector((state) => state.global.globalMinterInfo);
+  const dispatch = useAppDispatch();
+
+  const callback = useCallback(
+    (minterInfo: ChainKeyETHMinterInfo) => {
+      dispatch(updateGlobalMinterInfo({ minterInfo }));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [globalMinterInfo, callback], [globalMinterInfo, callback]);
 }

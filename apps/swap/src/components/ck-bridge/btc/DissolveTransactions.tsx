@@ -1,12 +1,11 @@
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { parseTokenAmount } from "@icpswap/utils";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
-import { useUserTxs } from "store/wallet/hooks";
+import { useBTCDissolveTxs } from "store/wallet/hooks";
 import { StoredTxValue } from "types/ckBTC";
-import { useFetchUserTxStates } from "hooks/ck-bridge/index";
 import { useTranslation } from "react-i18next";
+import { bitcoinTransactionExplorer } from "constants/ckBTC";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -51,11 +50,11 @@ function Transaction({ transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography>
+          <Typography component="div">
             {transaction.txid ? (
-              <Typography className={classes.txLink}>
+              <Typography className={classes.txLink} component="div">
                 <ALink
-                  link={`https://explorer.btc.com/btc/transaction/${transaction.txid}`}
+                  link={bitcoinTransactionExplorer(transaction.txid)}
                   color="secondary"
                   textDecorationColor="secondary"
                   align="right"
@@ -86,10 +85,7 @@ export interface DissolveTransactionProps {
 
 export function DissolveTransactions() {
   const { t } = useTranslation();
-  const principal = useAccountPrincipalString();
-  const transactions = useUserTxs(principal);
-
-  useFetchUserTxStates();
+  const transactions = useBTCDissolveTxs();
 
   return (
     <MainCard level={1}>
@@ -97,12 +93,15 @@ export function DissolveTransactions() {
 
       <Box>
         <>
-          {transactions?.map((transaction, index) => (
-            <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-              <Transaction transaction={transaction} />
-            </Box>
-          ))}
-          {transactions?.length === 0 || !transactions ? <NoData tip={t("ck.empty")} /> : null}
+          {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+            <NoData tip={t("ck.empty")} />
+          ) : (
+            transactions.map((transaction, index) => (
+              <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+                <Transaction transaction={transaction} />
+              </Box>
+            ))
+          )}
         </>
       </Box>
     </MainCard>

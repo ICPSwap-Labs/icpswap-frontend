@@ -6,6 +6,7 @@ import {
   updateWalletConnector,
   updateBridgeTokens,
   updateTokenBalance,
+  updateGlobalMinterInfo,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -31,5 +32,8 @@ export default createReducer(initialState, (builder) => {
         ...state.tokenBalances,
         [canisterId]: balance,
       };
+    })
+    .addCase(updateGlobalMinterInfo, (state, { payload }) => {
+      state.globalMinterInfo = payload.minterInfo;
     });
 });

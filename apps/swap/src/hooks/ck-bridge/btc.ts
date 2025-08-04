@@ -1,5 +1,5 @@
 import { useCallsData } from "@icpswap/hooks";
-import { resultFormat, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, availableArgsNull, isUndefinedOrNull } from "@icpswap/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ckBtcMinter } from "actor/ckBTC";
 import { Principal } from "@dfinity/principal";
@@ -8,20 +8,79 @@ import {
   useUpdateUserBTCDepositAddress,
   useUserBTCWithdrawAddress,
   useUpdateUserBTCWithdrawAddress,
-  useUserTxs,
-  useUpdateUserTx,
+  useBTCDissolveTxs,
 } from "store/wallet/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { TxState } from "types/ckBTC";
+import { BitcoinTxResponse, BitcoinTransaction, TxState } from "types/ckBTC";
 import { Null } from "@icpswap/types";
+import { isBitcoinTransactionUnFinalized, isBitcoinTxUnFinalized, isBtcMintTransaction } from "utils/web3/ck-bridge";
+import { useRefreshTriggerManager } from "hooks/useGlobalContext";
+import { BTC_MINT_REFRESH } from "constants/ckBTC";
+import useSwr from "swr";
+import useSWRImmutable from "swr/immutable";
+import { useBitcoinAllTxResponse } from "store/web3/hooks";
 
-import { useIntervalFetch } from "../useIntervalFetch";
+export function useFetchBitcoinBlockNumber(): number | undefined {
+  const { data } = useSwr(
+    "bitcoinBlocknumber",
+    async () => {
+      try {
+        const result = await fetch(`https://blockchain.info/q/getblockcount`);
+        return (await result.json()) as number;
+      } catch (error) {
+        return undefined;
+      }
+    },
+    {
+      refreshInterval: 30000,
+    },
+  );
+
+  return data;
+}
+
+export function useBitcoinBlockNumber() {
+  const { data } = useSWRImmutable<number>("bitcoinBlocknumber");
+  return data;
+}
+
+export function useBtcUnconfirmedDissolveHashes() {
+  const dissolveTxs = useBTCDissolveTxs();
+  const principal = useAccountPrincipalString();
+  const block = useBitcoinBlockNumber();
+  const allBitcoinTxResponse = useBitcoinAllTxResponse();
+
+  const unconfirmedHashes = useMemo(() => {
+    if (
+      isUndefinedOrNull(dissolveTxs) ||
+      isUndefinedOrNull(principal) ||
+      isUndefinedOrNull(block) ||
+      isUndefinedOrNull(allBitcoinTxResponse)
+    )
+      return [];
+
+    return dissolveTxs
+      .filter((tx) => {
+        if (!tx.txid) return false;
+
+        const allTxResponse = allBitcoinTxResponse[principal];
+        const txResponse = allTxResponse?.[tx.txid];
+        if (!txResponse) return true;
+        return isBitcoinTxUnFinalized(txResponse, block);
+      })
+      .map((tx) => tx.txid);
+  }, [dissolveTxs, allBitcoinTxResponse, block, principal]);
+
+  return useMemo(() => unconfirmedHashes, [JSON.stringify(unconfirmedHashes)]);
+}
 
 export function isEndedState(state: TxState) {
   return !(state !== "Confirmed" && state !== "AmountTooLow");
 }
 
-export function useBtcDepositAddress(principal: string | undefined, subaccount?: Uint8Array) {
+export function useBtcDepositAddress(subaccount?: Uint8Array) {
+  const principal = useAccountPrincipalString();
+
   const [address, setAddress] = useState<Null | string>(null);
   const [loading, setLoading] = useState(false);
 
@@ -94,45 +153,6 @@ export function useBtcWithdrawAddress() {
   );
 }
 
-type VOut = {
-  scriptpubkey: string;
-  scriptpubkey_address: string;
-  scriptpubkey_asm: string;
-  scriptpubkey_type: string;
-  value: number;
-};
-
-type VIn = {
-  txid: string;
-  vout: number;
-  prevout: {
-    scriptpubkey: string;
-    scriptpubkey_asm: string;
-    scriptpubkey_type: string;
-    scriptpubkey_address: string;
-    value: 200000;
-  };
-  scriptsig: string;
-  scriptsig_asm: string;
-};
-
-export type BTCTx = {
-  fee: number;
-  locktime: number;
-  size: number;
-  status: {
-    confirmed: boolean;
-    block_height?: number;
-    block_hash?: string;
-    block_time?: number;
-  };
-  version: number;
-  txid: string;
-  weight: number;
-  vout: VOut[];
-  vin: VIn[];
-};
-
 export function useBtcTransactions(address: string | undefined | null, refresh?: number | boolean) {
   return useCallsData(
     useCallback(async () => {
@@ -140,7 +160,7 @@ export function useBtcTransactions(address: string | undefined | null, refresh?:
 
       try {
         const result = await fetch(`https://blockstream.info/api/address/${address}/txs`);
-        return (await result.json()) as BTCTx[];
+        return (await result.json()) as BitcoinTransaction[];
       } catch (error) {
         return undefined;
       }
@@ -149,63 +169,72 @@ export function useBtcTransactions(address: string | undefined | null, refresh?:
   );
 }
 
-export function useBtcTransaction(tx: string | undefined, reload?: boolean) {
+export function useBtcMintTransactions() {
+  const { result: address } = useBtcDepositAddress();
+  const [refresh] = useRefreshTriggerManager(BTC_MINT_REFRESH);
+  const { result: allTransactions, loading } = useBtcTransactions(address, refresh);
+
+  const mintTransactions = useMemo(() => {
+    if (isUndefinedOrNull(address) || isUndefinedOrNull(allTransactions)) return undefined;
+    return allTransactions.filter((ele) => !isBtcMintTransaction(ele, address));
+  }, [allTransactions, address]);
+
+  return useMemo(() => ({ result: mintTransactions, loading }), [mintTransactions, loading]);
+}
+
+export function useBtcMintUnconfirmedTransactions() {
+  const { result: transactions } = useBtcMintTransactions();
+  const block = useBitcoinBlockNumber();
+
+  return useMemo(() => {
+    if (isUndefinedOrNull(transactions) || isUndefinedOrNull(block)) return [];
+    return transactions.filter((transaction) => isBitcoinTransactionUnFinalized(transaction, block));
+  }, [transactions, block]);
+}
+
+export async function getBtcTransactionResponse(tx: string) {
+  try {
+    const result = await fetch(`https://blockchain.info/rawtx/${tx}`);
+    const json = await result.json();
+    return json as BitcoinTxResponse;
+  } catch (error) {
+    return undefined;
+  }
+}
+
+export function useBtcTransactionResponse(tx: string | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!tx) return undefined;
-
-      try {
-        const result = await fetch(`https://blockchain.info/rawtx/${tx}`);
-        const json = await result.json();
-        return json as BTCTx[];
-      } catch (error) {
-        return undefined;
-      }
+      return await getBtcTransactionResponse(tx);
     }, [tx]),
     reload,
   );
 }
 
-export function useFetchUserTxStates() {
+export function useBtcUnconfirmedMintHashes() {
+  const { result: mintTxs } = useBtcMintTransactions();
+  const block = useBitcoinBlockNumber();
   const principal = useAccountPrincipalString();
-  const txs = useUserTxs(principal);
-  const updateUserTx = useUpdateUserTx();
+  const allTxResponse = useBitcoinAllTxResponse();
 
-  useEffect(() => {
-    async function call() {
-      if (txs && txs.length && !!principal) {
-        for (let i = 0; i < txs.length; i++) {
-          const block_index = BigInt(txs[i].block_index);
-          const { state } = txs[i];
-          if (!isEndedState(state)) {
-            const res = await (await ckBtcMinter()).retrieve_btc_status({ block_index });
-            updateUserTx(principal, block_index, res, undefined);
-          }
-        }
-      }
-    }
+  const unConfirmedHashes = useMemo(() => {
+    if (
+      isUndefinedOrNull(mintTxs) ||
+      isUndefinedOrNull(block) ||
+      isUndefinedOrNull(principal) ||
+      isUndefinedOrNull(allTxResponse)
+    )
+      return [];
 
-    const timer = setInterval(() => {
-      call();
-    }, 10000);
+    return mintTxs
+      .filter((tx) => {
+        const txResponse = allTxResponse[tx.txid];
+        if (!txResponse) return true;
+        return isBitcoinTxUnFinalized(txResponse, block);
+      })
+      .map((tx) => tx.txid);
+  }, [mintTxs, block, principal, allTxResponse]);
 
-    return () => {
-      clearInterval(timer);
-    };
-  }, [txs, principal]);
-}
-
-export function useBtcCurrentBlock() {
-  const call = async () => {
-    try {
-      const result = await fetch(`https://blockchain.info/q/getblockcount`);
-      return (await result.json()) as number;
-    } catch (error) {
-      return undefined;
-    }
-  };
-
-  const block = useIntervalFetch(call, undefined, 30000);
-
-  return useMemo(() => block, [block]);
+  return useMemo(() => unConfirmedHashes, [JSON.stringify(unConfirmedHashes)]);
 }

@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Box, useMediaQuery, Drawer } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
-
-import LogoSection from "../../LogoSection";
-import ProfileSection from "./ProfileSection";
-import Navbar from "../Navbar";
-import MobileNavbar from "../Navbar/mobile/Navbar";
+import LogoSection from "components/LogoSection";
+import ProfileSection from "components/Layout/Header/ProfileSection";
+import Navbar from "components/Layout/Navbar";
+import MobileNavbar from "components/Layout/Navbar/mobile/Navbar";
+import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
@@ -40,6 +40,7 @@ export default function Header() {
             "@media(max-width: 640px)": { gap: "0 8px" },
           }}
         >
+          <CkGlobalEvents />
           <ProfileSection />
         </Flex>
 

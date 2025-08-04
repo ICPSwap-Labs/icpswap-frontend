@@ -1,14 +1,22 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateTX, updateErc20TX, updateWithdrawTX } from "./actions";
+import { Erc20DissolveTx } from "types/web3";
+import {
+  updateEthMintTx,
+  updateErc20TX,
+  updateEthDissolveTX,
+  updateEthereumTxResponse,
+  updateErc20DissolveTx,
+  updateBitcoinTxResponse,
+} from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {
   builder
-    .addCase(updateTX, (state, { payload }) => {
+    .addCase(updateEthMintTx, (state, { payload }) => {
       const allTx = state.tx[`${payload.principal}`] ? [payload.tx, ...state.tx[`${payload.principal}`]] : [payload.tx];
       state.tx[`${payload.principal}`] = allTx;
     })
-    .addCase(updateWithdrawTX, (state, { payload }) => {
+    .addCase(updateEthDissolveTX, (state, { payload }) => {
       const otherStates = state.withdrawTx[`${payload.principal}`]
         ? [...state.withdrawTx[`${payload.principal}`]].filter(
             (transaction) => transaction.block_index !== String(payload.tx.block_index),
@@ -38,5 +46,32 @@ export default createReducer(initialState, (builder) => {
       const key = `${payload.principal}_${payload.ledger_id}`;
       const allTx = state.erc20Transactions[key] ? [payload.tx, ...state.erc20Transactions[key]] : [payload.tx];
       state.erc20Transactions[key] = allTx;
+    })
+    .addCase(updateEthereumTxResponse, (state, { payload }) => {
+      state.ethTxResponse[payload.principal] = {
+        ...(state.ethTxResponse[payload.principal] ?? {}),
+        [payload.hash]: payload.response,
+      };
+    })
+    .addCase(updateErc20DissolveTx, (state, { payload }) => {
+      const index = state.erc20DissolveTxs.findIndex(
+        (dissolveTx) => dissolveTx.withdrawal_id === payload.tx.withdrawal_id,
+      );
+
+      let __erc20DissolveTxs: Erc20DissolveTx[] = [];
+
+      if (index === -1) {
+        __erc20DissolveTxs = [...state.erc20DissolveTxs, payload.tx];
+      } else {
+        __erc20DissolveTxs = [...state.erc20DissolveTxs].splice(index, 1, payload.tx);
+      }
+
+      state.erc20DissolveTxs = __erc20DissolveTxs;
+    })
+    .addCase(updateBitcoinTxResponse, (state, { payload }) => {
+      state.bitcoinTxResponse[payload.principal] = {
+        ...(state.bitcoinTxResponse[payload.principal] ?? {}),
+        [payload.hash]: payload.response,
+      };
     });
 });

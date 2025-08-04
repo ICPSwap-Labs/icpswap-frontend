@@ -1,14 +1,21 @@
-import { useMemo } from "react";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
-import { parseTokenAmount } from "@icpswap/utils";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { Flex, LoadingRow } from "@icpswap/ui";
-import { useBtcTransactions, BTCTx } from "hooks/ck-bridge/index";
+import { useBtcMintTransactions } from "hooks/ck-bridge/index";
 import { Null } from "@icpswap/types";
 import dayjs from "dayjs";
 import { RotateCcw } from "react-feather";
 import { useRefreshTriggerManager } from "hooks/index";
 import { useTranslation } from "react-i18next";
+import {
+  bitcoinAddressExplorer,
+  bitcoinBlockExplorer,
+  bitcoinTransactionExplorer,
+  BTC_MINT_REFRESH,
+} from "constants/ckBTC";
+import { BitcoinTransaction } from "types/ckBTC";
+import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -21,25 +28,8 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function getTransactionAmountOut(transaction: BTCTx | undefined, address: string | undefined | null) {
-  if (!transaction || !address) return "--";
-
-  let amount: number | string = "--";
-
-  for (let i = 0; i < transaction.vout.length; i++) {
-    const trans = transaction.vout[i];
-
-    if (trans.scriptpubkey_address === address) {
-      amount = trans.value;
-      break;
-    }
-  }
-
-  return amount;
-}
-
 interface TransactionProps {
-  transaction: BTCTx;
+  transaction: BitcoinTransaction;
   address: string | Null;
   block: string | number | Null;
 }
@@ -72,10 +62,10 @@ function Transaction({ transaction, address, block }: TransactionProps) {
 
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.height")}</Typography>
-          <Typography color="text.primary">
+          <Typography color="text.primary" component="div">
             {transaction.status.block_height ? (
               <ALink
-                link={`https://explorer.btc.com/btc/block/${transaction.status.block_height}`}
+                link={bitcoinBlockExplorer(transaction.status.block_height)}
                 color="text.primary"
                 textDecorationColor="text.primary"
               >
@@ -90,9 +80,9 @@ function Transaction({ transaction, address, block }: TransactionProps) {
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography className={classes.txLink}>
+          <Typography className={classes.txLink} component="div">
             <ALink
-              link={`https://explorer.btc.com/btc/transaction/${transaction.txid}`}
+              link={bitcoinTransactionExplorer(transaction.txid)}
               color="secondary"
               textDecorationColor="secondary"
               align="right"
@@ -104,9 +94,9 @@ function Transaction({ transaction, address, block }: TransactionProps) {
 
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.from")}</Typography>
-          <Typography className={classes.txLink}>
+          <Typography className={classes.txLink} component="div">
             <ALink
-              link={`https://explorer.btc.com/btc/address/${transaction.vin[0]?.prevout.scriptpubkey_address}`}
+              link={bitcoinAddressExplorer(transaction.vin[0]?.prevout.scriptpubkey_address)}
               color="secondary"
               textDecorationColor="secondary"
               align="right"
@@ -118,22 +108,24 @@ function Transaction({ transaction, address, block }: TransactionProps) {
 
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.to")}</Typography>
-          <Typography className={classes.txLink}>
-            <ALink
-              link={`https://explorer.btc.com/btc/address/${address}`}
-              color="secondary"
-              textDecorationColor="secondary"
-              align="right"
-            >
-              {address}
-            </ALink>
+          <Typography className={classes.txLink} component="div">
+            {address ? (
+              <ALink
+                link={bitcoinAddressExplorer(address)}
+                color="secondary"
+                textDecorationColor="secondary"
+                align="right"
+              >
+                {address}
+              </ALink>
+            ) : null}
           </Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.amount")}</Typography>
           <Typography color="text.primary">
-            {parseTokenAmount(getTransactionAmountOut(transaction, address), 8).toFormat()}
+            {parseTokenAmount(getBitcoinAmountFromTrans(transaction, address), 8).toFormat()}
           </Typography>
         </Flex>
 
@@ -148,23 +140,6 @@ function Transaction({ transaction, address, block }: TransactionProps) {
   );
 }
 
-function isTransactionContainedFrom(transaction: BTCTx, address: string) {
-  if (!transaction || !address) return false;
-
-  let contained = false;
-
-  for (let i = 0; i < transaction.vin.length; i++) {
-    const trans = transaction.vin[i];
-
-    if (trans.prevout.scriptpubkey_address === address) {
-      contained = true;
-      break;
-    }
-  }
-
-  return contained;
-}
-
 export interface MintTransactionProps {
   refresh?: boolean | number;
   btc_address: string | Null;
@@ -173,14 +148,8 @@ export interface MintTransactionProps {
 
 export function MintTransactions({ btc_address, block }: MintTransactionProps) {
   const { t } = useTranslation();
-  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("BtcMintTransactions");
-
-  const { result: transactions, loading } = useBtcTransactions(btc_address, refreshTrigger);
-
-  const slicedTransactions = useMemo(() => {
-    if (!btc_address) return [];
-    return transactions?.filter((ele) => !isTransactionContainedFrom(ele, btc_address)).slice(0, 8);
-  }, [transactions, btc_address]);
+  const [, setRefreshTrigger] = useRefreshTriggerManager(BTC_MINT_REFRESH);
+  const { result: transactions, loading } = useBtcMintTransactions();
 
   return (
     <MainCard level={1}>
@@ -214,12 +183,15 @@ export function MintTransactions({ btc_address, block }: MintTransactionProps) {
           </Box>
         ) : (
           <>
-            {slicedTransactions?.map((transaction, index) => (
-              <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                <Transaction transaction={transaction} address={btc_address} block={block} />
-              </Box>
-            ))}
-            {transactions?.length === 0 || !transactions ? <NoData tip={t("ck.empty")} /> : null}
+            {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+              <NoData tip={t("ck.empty")} />
+            ) : (
+              transactions.map((transaction, index) => (
+                <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+                  <Transaction transaction={transaction} address={btc_address} block={block} />
+                </Box>
+              ))
+            )}
           </>
         )}
       </Box>

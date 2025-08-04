@@ -1,13 +1,11 @@
 import { useTheme, Box, Typography, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
-import { toSignificant, parseTokenAmount } from "@icpswap/utils";
+import { toSignificant, parseTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import dayjs from "dayjs";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import { TX } from "types/web3";
 import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
-import { useTransaction } from "hooks/web3/useTransaction";
 import { Flex } from "@icpswap/ui";
-import { usePrincipalTX } from "store/web3/hooks";
+import { useEthMintTxs, useEthTxResponse } from "store/web3/hooks";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => ({
@@ -29,7 +27,7 @@ function Transaction({ transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
-  const trans = useTransaction(transaction.hash);
+  const transactionResponse = useEthTxResponse(transaction.hash);
 
   return (
     <Box
@@ -50,13 +48,13 @@ function Transaction({ transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.height")}</Typography>
           <Typography>
-            {trans?.blockNumber ? (
+            {transactionResponse?.blockNumber ? (
               <ALink
-                link={`${EXPLORER_BLOCK_LINK}/${trans.blockNumber}`}
+                link={`${EXPLORER_BLOCK_LINK}/${transactionResponse.blockNumber}`}
                 color="secondary"
                 textDecorationColor="secondary"
               >
-                {trans.blockNumber}
+                {transactionResponse.blockNumber}
               </ALink>
             ) : (
               "--"
@@ -108,14 +106,12 @@ function Transaction({ transaction }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.amount")}</Typography>
-
           <Typography>{toSignificant(parseTokenAmount(transaction.value, 18).toString())}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.confirmations")}</Typography>
-
-          <Typography>{trans ? trans.confirmations : "--"}</Typography>
+          <Typography>{transactionResponse ? transactionResponse.confirmations : "--"}</Typography>
         </Flex>
       </Flex>
     </Box>
@@ -124,8 +120,7 @@ function Transaction({ transaction }: TransactionProps) {
 
 export function EthMintTransactions() {
   const { t } = useTranslation();
-  const principal = useAccountPrincipalString();
-  const transactions = usePrincipalTX(principal);
+  const transactions = useEthMintTxs();
 
   return (
     <MainCard level={1}>
@@ -137,8 +132,11 @@ export function EthMintTransactions() {
 
       <Box>
         <>
-          {transactions?.map((transaction, index) => <Transaction key={index} transaction={transaction} />)}
-          {transactions?.length === 0 || !transactions ? <NoData tip={t("ck.empty")} /> : null}
+          {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+            <NoData tip={t("ck.empty")} />
+          ) : (
+            transactions.map((transaction, index) => <Transaction key={index} transaction={transaction} />)
+          )}
         </>
       </Box>
     </MainCard>

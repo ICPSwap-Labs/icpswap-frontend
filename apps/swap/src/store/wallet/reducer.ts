@@ -3,7 +3,7 @@ import {
   updateTaggedTokens,
   deleteTaggedTokens,
   updateCK_BTCAddresses,
-  updateRetrieveState,
+  updateBTCDissolveTx,
   updateWalletSortType,
   updateSortBalance,
 } from "./actions";
@@ -33,7 +33,7 @@ export default createReducer(initialState, (builder) => {
         [`${payload.principal}_${payload.type}`]: payload.address,
       };
     })
-    .addCase(updateRetrieveState, (state, { payload }) => {
+    .addCase(updateBTCDissolveTx, (state, { payload }) => {
       const states = state.retrieveState[`${payload.principal}`]
         ? [...state.retrieveState[`${payload.principal}`]].filter(
             (state) => state.block_index !== String(payload.block_index),

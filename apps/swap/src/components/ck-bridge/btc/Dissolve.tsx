@@ -4,10 +4,9 @@ import { nonUndefinedOrNull, parseTokenAmount, BigNumber } from "@icpswap/utils"
 import { useTheme, Box, Typography, CircularProgress, TextField } from "components/Mui";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useCallback, useMemo, useState } from "react";
-import { useActiveChain } from "hooks/web3/index";
 import { Flex } from "@icpswap/ui";
 import { InputWrapper } from "components/ck-bridge";
-import { DISSOLVE_FEE } from "constants/ckBTC";
+import { DISSOLVE_FEE, BTC_DISSOLVE_REFRESH } from "constants/ckBTC";
 import { useDissolve } from "hooks/ck-btc/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { validate } from "bitcoin-address-validation";
@@ -23,12 +22,11 @@ interface BtcBridgeDissolveProps {
 export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const chainId = useActiveChain();
 
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
-  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("BridgeBtcDissolve");
+  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager(BTC_DISSOLVE_REFRESH);
 
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, refresh: refreshTrigger });
 
@@ -41,7 +39,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, token, chainId, address]);
+  }, [amount, token, address]);
 
   const handleMax = useCallback(() => {
     if (!tokenBalance) return;

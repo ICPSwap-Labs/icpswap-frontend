@@ -16,10 +16,10 @@ export const updateCK_BTCAddresses = createAction<{
   type: BTCAddressType;
 }>("wallet/updateCK_BTCAddresses");
 
-export const updateRetrieveState = createAction<{
+export const updateBTCDissolveTx = createAction<{
   principal: string;
   block_index: number;
   state: TxState;
   txid: string;
   value: string;
-}>("wallet/updateRetrieveState");
+}>("wallet/updateBTCDissolveTx");

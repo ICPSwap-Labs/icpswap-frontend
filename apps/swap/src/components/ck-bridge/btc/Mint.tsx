@@ -233,16 +233,6 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
         align="flex-start"
         sx={{ padding: "16px", borderRadius: "16px", border: `1px solid ${theme.palette.background.level4}` }}
       >
-        {/* <Flex fullWidth justify="space-between">
-          <Typography>
-            <Trans>Minimum Minting Amount</Trans>
-          </Typography>
-
-          <Typography>
-            <Trans>0.001 ckBTC</Trans>
-          </Typography>
-        </Flex> */}
-
         <Flex fullWidth justify="space-between">
           <Typography>{t("bitcoin.kyt.fee")}</Typography>
           <Typography>0.00002 ckBTC</Typography>

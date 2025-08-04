@@ -18,7 +18,6 @@ import { isAddress } from "utils/web3/index";
 import { useDissolveCallback } from "hooks/ck-eth/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
-import { useFetchUserTxStates } from "hooks/ck-eth";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
@@ -33,10 +32,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
   const { t } = useTranslation();
   const theme = useTheme();
   const { account } = useWeb3React();
-
   const principal = useAccountPrincipal();
-
-  useFetchUserTxStates();
 
   const symbol = useTokenSymbol({
     token,

@@ -7,10 +7,13 @@ import {
   updateTaggedTokens,
   deleteTaggedTokens,
   updateCK_BTCAddresses,
-  updateRetrieveState,
+  updateBTCDissolveTx,
   updateWalletSortType,
   updateSortBalance,
-} from "./actions";
+} from "store/wallet/actions";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useBitcoinBlockNumber } from "hooks/ck-bridge";
 
 export function toHexString(byteArray: number[]) {
   return Array.from(byteArray, (byte) => {
@@ -94,7 +97,7 @@ export function useUpdateUserBTCWithdrawAddress() {
   );
 }
 
-export function useUpdateUserTx() {
+export function useUpdateUserBTCTx() {
   const dispatch = useAppDispatch();
 
   return useCallback(
@@ -103,7 +106,7 @@ export function useUpdateUserTx() {
       const txIdString = txid ? toHexString([...txid].reverse()) : "";
 
       dispatch(
-        updateRetrieveState({
+        updateBTCDissolveTx({
           principal,
           block_index: Number(block_index),
           txid: txIdString,
@@ -116,16 +119,37 @@ export function useUpdateUserTx() {
   );
 }
 
-export function useUserTxs(principal: string | undefined) {
-  const states = useAppSelector((state) => state.wallet.retrieveState);
+export function useBTCDissolveTxs() {
+  const principal = useAccountPrincipalString();
+  const allDissolveTxs = useAppSelector((state) => state.wallet.retrieveState);
 
   return useMemo(() => {
-    if (principal && states) {
-      return states[principal];
-    }
+    if (isUndefinedOrNull(principal)) return undefined;
+    return allDissolveTxs[principal];
+  }, [principal, allDissolveTxs]);
+}
 
-    return undefined;
-  }, [principal, states]);
+export function useBitcoinDissolveTxs() {
+  const allDissolveTxs = useAppSelector((state) => state.wallet.retrieveState);
+  const principal = useAccountPrincipalString();
+
+  return useMemo(() => {
+    if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(principal)) return undefined;
+    return allDissolveTxs[principal];
+  }, [principal, allDissolveTxs]);
+}
+
+export function useBTCDissolveUnFinalizedTxs() {
+  const block = useBitcoinBlockNumber();
+  const dissolveTxs = useBitcoinDissolveTxs();
+
+  return useMemo(() => {
+    if (isUndefinedOrNull(block) || isUndefinedOrNull(dissolveTxs)) return undefined;
+
+    return dissolveTxs.filter((tx) => {
+      return tx.state !== "Confirmed";
+    });
+  }, [dissolveTxs, block]);
 }
 
 export function useWalletSortType() {

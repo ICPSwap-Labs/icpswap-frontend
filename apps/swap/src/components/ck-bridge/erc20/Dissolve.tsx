@@ -19,6 +19,7 @@ import { isAddress } from "utils/web3/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
 
 export interface Erc20DissolveProps {
   token: Token;
@@ -41,7 +42,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
-  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("Erc20Dissolve");
+  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager(ERC20_DISSOLVE_REFRESH);
 
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
   const ercTokenBalance = useBridgeTokenBalance({
