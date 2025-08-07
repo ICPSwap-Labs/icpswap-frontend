@@ -1,19 +1,15 @@
 import { useCallback, useMemo } from "react";
-import { useEthDissolveTxs, useEthUnTxFinalizedTxs, useErc20DissolveTxs, useErc20AllMintTxs } from "store/web3/hooks";
+import { useEthDissolveTxs, useEthUnTxFinalizedTxs } from "store/web3/hooks";
 import { isUndefinedOrNull } from "@icpswap/utils";
 
 export function useEthUnFinalizedMintHashes() {
   const mintTxs = useEthUnTxFinalizedTxs();
-  const dissolveTxs = useEthDissolveTxs();
-
-  const erc20DissolveTxs = useErc20DissolveTxs();
-  const erc20MintTxs = useErc20AllMintTxs();
 
   return useMemo(() => {
     if (isUndefinedOrNull(mintTxs)) return [];
 
     return mintTxs.map((mintTx) => mintTx.hash);
-  }, [mintTxs, dissolveTxs, erc20DissolveTxs, erc20MintTxs]);
+  }, [mintTxs]);
 }
 
 export function useEthUnFinalizedDissolveHashes() {

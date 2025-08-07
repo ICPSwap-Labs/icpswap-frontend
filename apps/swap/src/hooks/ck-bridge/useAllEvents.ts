@@ -13,5 +13,5 @@ export function useAllEvents() {
 
   return useMemo(() => {
     return [...ethEvents, ...erc20DissolveEvents, ...erc20MintEvents, ...btcDissolveEvents, ...btcMintEvents];
-  }, [ethEvents, erc20MintEvents, btcDissolveEvents, btcMintEvents]);
+  }, [ethEvents, erc20MintEvents, btcDissolveEvents, btcMintEvents, erc20DissolveEvents]);
 }

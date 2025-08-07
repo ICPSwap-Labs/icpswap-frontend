@@ -160,7 +160,11 @@ export function useBtcTransactions(address: string | undefined | null, refresh?:
 
       try {
         const result = await fetch(`https://blockstream.info/api/address/${address}/txs`);
-        return (await result.json()) as BitcoinTransaction[];
+        const jsonResult = (await result.json()) as BitcoinTransaction[] | { error: string; message: string };
+
+        if ("error" in jsonResult) return undefined;
+
+        return jsonResult;
       } catch (error) {
         return undefined;
       }

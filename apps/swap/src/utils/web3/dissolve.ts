@@ -12,6 +12,10 @@ export function isEthereumMintFinalized(transactionResponse: TransactionResponse
   return !new BigNumber(transactionResponse.confirmations).isLessThan(ETHEREUM_CONFIRMATIONS);
 }
 
+export function isEthereumMintFinalizedByConfirmations(confirmations: number) {
+  return !new BigNumber(confirmations).isLessThan(ETHEREUM_CONFIRMATIONS);
+}
+
 export function isErc20Finalized(status: WithdrawalStatus) {
   return "TxFinalized" in status;
 }

@@ -54,16 +54,17 @@ export default createReducer(initialState, (builder) => {
       };
     })
     .addCase(updateErc20DissolveTx, (state, { payload }) => {
-      const index = state.erc20DissolveTxs.findIndex(
-        (dissolveTx) => dissolveTx.withdrawal_id === payload.tx.withdrawal_id,
-      );
+      const index = state.erc20DissolveTxs.findIndex((dissolveTx) => {
+        if (!dissolveTx) return false;
+        return dissolveTx.withdrawal_id === payload.tx.withdrawal_id;
+      });
 
       let __erc20DissolveTxs: Erc20DissolveTx[] = [];
 
       if (index === -1) {
         __erc20DissolveTxs = [...state.erc20DissolveTxs, payload.tx];
       } else {
-        __erc20DissolveTxs = [...state.erc20DissolveTxs].splice(index, 1, payload.tx);
+        __erc20DissolveTxs[index] = payload.tx;
       }
 
       state.erc20DissolveTxs = __erc20DissolveTxs;

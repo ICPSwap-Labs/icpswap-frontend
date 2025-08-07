@@ -2,13 +2,16 @@ import { useMemo } from "react";
 import { useEthDissolveTxs, useEthUnTxFinalizedTxs } from "store/web3/hooks";
 import { ckETH } from "@icpswap/tokens";
 import { EthereumMintTransactionEvent } from "types/web3";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 export function useEthEvents() {
   const ethMintTxs = useEthUnTxFinalizedTxs();
   const allEthDissolveTx = useEthDissolveTxs();
 
   const ethMintEvents: EthereumMintTransactionEvent[] = useMemo(() => {
-    return (ethMintTxs ?? []).map((mintTx) => {
+    if (isUndefinedOrNull(ethMintTxs)) return [];
+
+    return ethMintTxs.map((mintTx) => {
       return {
         hash: mintTx.hash,
         amount: mintTx.value,

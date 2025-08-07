@@ -49,5 +49,5 @@ export function useEthDissolveTxWatcher() {
     return () => {
       clearInterval(timer);
     };
-  }, [txs?.length, principal, openTip]);
+  }, [txs, principal, openTip]);
 }

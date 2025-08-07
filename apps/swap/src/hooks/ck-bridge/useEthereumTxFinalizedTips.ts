@@ -1,8 +1,7 @@
 import { useEffect, useMemo } from "react";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useUpdateEthereumTxResponse } from "store/web3/hooks";
+import { getEthereumTxResponse } from "store/web3/hooks";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useWeb3React } from "@web3-react/core";
+import { isEthereumMintFinalizedByConfirmations } from "utils/web3/dissolve";
 import { useSuccessTip } from "hooks/useTips";
 import {
   useErc20UnFinalizedDissolveHashes,
@@ -10,16 +9,11 @@ import {
   useIsErc20MintHash,
 } from "hooks/ck-bridge/erc20";
 import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes, useIsEthMintHash } from "hooks/ck-bridge/eth";
-import { useEthereumConfirmationsByBlockCallback } from "hooks/ck-bridge/useEthereumConfirmations";
-import { isEthereumMintFinalizedByConfirmations } from "utils/web3/dissolve";
+import { useEthereumConfirmationsCallback } from "./useEthereumConfirmations";
 
-const INTERVAL_TIME = 20000;
-
-export function useEthereumTxWatcher() {
+export function useEthereumTxFinalizedTips() {
   const [openTip] = useSuccessTip();
-  const principal = useAccountPrincipalString();
-  const { provider } = useWeb3React();
-  const updateEthereumTxResponse = useUpdateEthereumTxResponse();
+
   const isEthMintHash = useIsEthMintHash();
   const isErc20MintHash = useIsErc20MintHash();
 
@@ -32,36 +26,28 @@ export function useEthereumTxWatcher() {
     return [...ethDissolveHashes, ...ethMintHashes, ...erc20DissolveHashes, ...erc20MintHashes];
   }, [ethDissolveHashes, ethMintHashes, erc20DissolveHashes, erc20MintHashes]);
 
-  const getConfirmations = useEthereumConfirmationsByBlockCallback();
+  const getConfirmations = useEthereumConfirmationsCallback();
 
   useEffect(() => {
     async function call() {
-      if (ethereumHashes.length === 0 || isUndefinedOrNull(principal) || isUndefinedOrNull(provider)) return;
+      if (ethereumHashes.length === 0) return;
 
       for (let i = 0; i < ethereumHashes.length; i++) {
         const hash = ethereumHashes[i];
-        const transaction = await provider.getTransaction(hash);
+        const transactionResponse = getEthereumTxResponse(hash);
 
-        const confirmations = getConfirmations(transaction.blockNumber);
+        if (isUndefinedOrNull(transactionResponse)) return;
+
+        const confirmations = getConfirmations(transactionResponse);
 
         if (isUndefinedOrNull(confirmations)) return;
 
         if ((isEthMintHash(hash) || isErc20MintHash(hash)) && isEthereumMintFinalizedByConfirmations(confirmations)) {
           openTip("Mint is successfully");
         }
-
-        updateEthereumTxResponse(hash, transaction);
       }
     }
 
-    const timer = setInterval(() => {
-      call();
-    }, INTERVAL_TIME);
-
     call();
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [ethereumHashes, provider, principal]);
+  }, [ethereumHashes, isEthMintHash, openTip, getConfirmations]);
 }

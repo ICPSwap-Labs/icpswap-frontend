@@ -6,6 +6,7 @@ import { useBitcoinTxResponse, useEthTxResponse } from "store/web3/hooks";
 import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
 import { useBitcoinBlockNumber } from "hooks/ck-bridge";
 import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
+import { useEthereumConfirmationsByBlock } from "hooks/ck-bridge/useEthereumConfirmations";
 
 interface ConfirmationsUIProps {
   confirmations: number;
@@ -16,9 +17,11 @@ function ConfirmationsUI({ confirmations, currentConfirmations }: ConfirmationsU
   const theme = useTheme();
 
   const width = useMemo(() => {
-    return !new BigNumber(currentConfirmations ?? 0).isLessThan(confirmations)
+    if (isUndefinedOrNull(currentConfirmations)) return "0%";
+
+    return !new BigNumber(currentConfirmations).isLessThan(confirmations)
       ? "100%"
-      : numToPercent(new BigNumber(currentConfirmations ?? 0).dividedBy(confirmations).toNumber());
+      : numToPercent(new BigNumber(currentConfirmations).dividedBy(confirmations).toNumber());
   }, [confirmations, currentConfirmations]);
 
   return (
@@ -42,10 +45,9 @@ interface EthereumConfirmationsProps {
 
 export function EthereumConfirmations({ hash }: EthereumConfirmationsProps) {
   const transactionResponse = useEthTxResponse(hash);
+  const confirmations = useEthereumConfirmationsByBlock(transactionResponse?.blockNumber);
 
-  return (
-    <ConfirmationsUI confirmations={ETHEREUM_CONFIRMATIONS} currentConfirmations={transactionResponse?.confirmations} />
-  );
+  return <ConfirmationsUI confirmations={ETHEREUM_CONFIRMATIONS} currentConfirmations={confirmations} />;
 }
 
 interface BitcoinConfirmationsProps {

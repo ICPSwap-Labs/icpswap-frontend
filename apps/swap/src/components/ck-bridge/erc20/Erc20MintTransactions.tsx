@@ -1,6 +1,6 @@
 import { useTheme, Box, Typography, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
-import { BigNumber, isUndefinedOrNull, parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount, toSignificant } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { TX } from "types/web3";
 import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
@@ -10,6 +10,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
+import { useEthereumConfirmations } from "hooks/ck-bridge/useEthereumConfirmations";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -32,6 +33,7 @@ function Transaction({ token, transaction }: TransactionProps) {
   const theme = useTheme();
   const classes = useStyles();
   const transactionResponse = useEthTxResponse(transaction.hash);
+  const confirmations = useEthereumConfirmations(transactionResponse);
 
   const amount = useMemo(() => {
     if (isUndefinedOrNull(token)) return undefined;
@@ -129,7 +131,7 @@ function Transaction({ token, transaction }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.confirmations")}</Typography>
-          <Typography>{transactionResponse ? transactionResponse.confirmations : "--"}</Typography>
+          <Typography>{nonUndefinedOrNull(confirmations) ? confirmations : "--"}</Typography>
         </Flex>
       </Flex>
     </Box>

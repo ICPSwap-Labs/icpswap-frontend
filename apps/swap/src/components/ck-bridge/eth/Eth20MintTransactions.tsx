@@ -1,12 +1,13 @@
 import { useTheme, Box, Typography, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
-import { toSignificant, parseTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
+import { toSignificant, parseTokenAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { TX } from "types/web3";
 import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
 import { Flex } from "@icpswap/ui";
 import { useEthMintTxs, useEthTxResponse } from "store/web3/hooks";
 import { useTranslation } from "react-i18next";
+import { useEthereumConfirmations } from "hooks/ck-bridge/useEthereumConfirmations";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -28,6 +29,7 @@ function Transaction({ transaction }: TransactionProps) {
   const theme = useTheme();
   const classes = useStyles();
   const transactionResponse = useEthTxResponse(transaction.hash);
+  const confirmations = useEthereumConfirmations(transactionResponse);
 
   return (
     <Box
@@ -111,7 +113,7 @@ function Transaction({ transaction }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.confirmations")}</Typography>
-          <Typography>{transactionResponse ? transactionResponse.confirmations : "--"}</Typography>
+          <Typography>{nonUndefinedOrNull(confirmations) ? confirmations : "--"}</Typography>
         </Flex>
       </Flex>
     </Box>

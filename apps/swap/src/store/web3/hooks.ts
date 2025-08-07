@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { Erc20DissolveTx, TX } from "types/web3";
 import type { RetrieveEthStatus, TxState, EthTransaction, TxFinalizedStatus } from "types/ckETH";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import {
   updateEthMintTx,
   updateEthDissolveTX,
@@ -16,6 +16,7 @@ import { TransactionResponse } from "@ethersproject/abstract-provider";
 import store from "store/index";
 import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
 import { BitcoinTxResponse } from "types/ckBTC";
+import { useEthereumConfirmationsCallback } from "hooks/ck-bridge/useEthereumConfirmations";
 
 export function useUpdateEthMintTx() {
   const dispatch = useAppDispatch();
@@ -40,19 +41,22 @@ export function useEthMintTxs() {
 
 export function useEthUnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
-  const allMintTxs = useEthMintTxs();
+  const allEthMintTxs = useEthMintTxs();
   const allTxsResponse = store.getState().web3.ethTxResponse;
+  const getConfirmations = useEthereumConfirmationsCallback();
 
   return useMemo(() => {
-    if (isUndefinedOrNull(principal) || isUndefinedOrNull(allMintTxs)) return undefined;
+    if (isUndefinedOrNull(principal) || isUndefinedOrNull(allEthMintTxs)) return undefined;
 
     const allUserTxsResponse = allTxsResponse[principal];
-    return allMintTxs.filter((tx) => {
+
+    return allEthMintTxs.filter((tx) => {
       const txResponse = allUserTxsResponse[tx.hash];
       if (!txResponse) return true;
-      return new BigNumber(txResponse.confirmations).isLessThan(ETHEREUM_CONFIRMATIONS);
+      const confirmations = getConfirmations(txResponse);
+      return nonUndefinedOrNull(confirmations) ? new BigNumber(confirmations).isLessThan(ETHEREUM_CONFIRMATIONS) : true;
     });
-  }, [principal, allMintTxs, allTxsResponse]);
+  }, [principal, getConfirmations, allEthMintTxs, allTxsResponse]);
 }
 
 export function useUpdateEthereumTxResponse() {
@@ -83,6 +87,14 @@ export function useEthTxResponse(hash: string | undefined) {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(hash)) return undefined;
     return allEthTxResponses[principal]?.[hash];
   }, [principal, allEthTxResponses, hash]);
+}
+
+export function getEthereumTxResponse(hash: string) {
+  const principal = store.getState().auth.principal;
+  const ethereumTxResponses = store.getState().web3.ethTxResponse;
+
+  if (isUndefinedOrNull(principal)) return undefined;
+  return ethereumTxResponses[principal]?.[hash];
 }
 
 export function useUpdateEthDissolveTx() {
@@ -235,20 +247,21 @@ export function useErc20UnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
   const allMintTxs = useErc20AllMintTxs();
   const allTxsResponse = store.getState().web3.ethTxResponse;
+  const getConfirmations = useEthereumConfirmationsCallback();
 
   return useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(allMintTxs)) return undefined;
 
     const allUserTxsResponse = allTxsResponse[principal];
 
-    if (isUndefinedOrNull(allUserTxsResponse)) return undefined;
-
     return allMintTxs.filter((tx) => {
+      if (!allUserTxsResponse) return true;
       const txResponse = allUserTxsResponse[tx.hash];
-      if (!txResponse) return false;
-      return new BigNumber(txResponse.confirmations).isLessThan(ETHEREUM_CONFIRMATIONS);
+      if (!txResponse) return true;
+      const confirmations = getConfirmations(txResponse);
+      return nonUndefinedOrNull(confirmations) ? new BigNumber(confirmations).isLessThan(ETHEREUM_CONFIRMATIONS) : true;
     });
-  }, [principal, allMintTxs, allTxsResponse]);
+  }, [principal, getConfirmations, allMintTxs, allTxsResponse]);
 }
 
 export function useUpdateErc20DissolveTx() {
@@ -268,7 +281,7 @@ export function useErc20DissolveTxs() {
 
   return useMemo(() => {
     if (isUndefinedOrNull(principal)) return undefined;
-    return erc20DissolveTxs.filter((dissolveTx) => dissolveTx.from === principal);
+    return erc20DissolveTxs.filter((dissolveTx) => !!dissolveTx && dissolveTx.from === principal);
   }, [principal, erc20DissolveTxs]);
 }
 
