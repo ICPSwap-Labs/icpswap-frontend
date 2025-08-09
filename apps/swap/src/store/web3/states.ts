@@ -18,6 +18,7 @@ export interface Web3State {
       [hash: string]: BitcoinTxResponse;
     };
   };
+  ethereumFinalizedHashes: string[];
 }
 
 export const initialState: Web3State = {
@@ -27,4 +28,5 @@ export const initialState: Web3State = {
   ethTxResponse: {},
   erc20DissolveTxs: [],
   bitcoinTxResponse: {},
+  ethereumFinalizedHashes: [],
 };

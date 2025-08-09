@@ -7,7 +7,6 @@ export function useEthUnFinalizedMintHashes() {
 
   return useMemo(() => {
     if (isUndefinedOrNull(mintTxs)) return [];
-
     return mintTxs.map((mintTx) => mintTx.hash);
   }, [mintTxs]);
 }
@@ -17,7 +16,6 @@ export function useEthUnFinalizedDissolveHashes() {
 
   return useMemo(() => {
     if (isUndefinedOrNull(dissolveTxs)) return [];
-
     return dissolveTxs.filter((tx) => !!tx.hash && tx.state !== "TxFinalized").map((tx) => tx.hash) as string[];
   }, [dissolveTxs]);
 }
@@ -27,7 +25,8 @@ export function useIsEthMintHash() {
 
   return useCallback(
     (hash: string) => {
-      return !!(mintTxs ?? []).find((mintTx) => mintTx.hash === hash);
+      if (!mintTxs) return false;
+      return !!mintTxs.find((mintTx) => mintTx.hash === hash);
     },
     [mintTxs],
   );

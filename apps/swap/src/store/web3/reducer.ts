@@ -7,6 +7,7 @@ import {
   updateEthereumTxResponse,
   updateErc20DissolveTx,
   updateBitcoinTxResponse,
+  updateEthereumFinalizedHashes,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -74,5 +75,8 @@ export default createReducer(initialState, (builder) => {
         ...(state.bitcoinTxResponse[payload.principal] ?? {}),
         [payload.hash]: payload.response,
       };
+    })
+    .addCase(updateEthereumFinalizedHashes, (state, { payload }) => {
+      state.ethereumFinalizedHashes = [...state.ethereumFinalizedHashes, payload];
     });
 });

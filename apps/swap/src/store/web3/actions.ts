@@ -20,3 +20,5 @@ export const updateBitcoinTxResponse = createAction<{
   hash: string;
   response: BitcoinTxResponse;
 }>("web3/updateBitcoinTxResponse");
+
+export const updateEthereumFinalizedHashes = createAction<string>("web3/updateEthereumFinalizedHashes");

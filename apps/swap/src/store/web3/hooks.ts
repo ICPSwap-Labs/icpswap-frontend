@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { Erc20DissolveTx, TX } from "types/web3";
 import type { RetrieveEthStatus, TxState, EthTransaction, TxFinalizedStatus } from "types/ckETH";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import {
   updateEthMintTx,
   updateEthDissolveTX,
@@ -11,12 +11,13 @@ import {
   updateEthereumTxResponse,
   updateErc20DissolveTx,
   updateBitcoinTxResponse,
+  updateEthereumFinalizedHashes,
 } from "store/web3/actions";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import store from "store/index";
-import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
 import { BitcoinTxResponse } from "types/ckBTC";
 import { useEthereumConfirmationsCallback } from "hooks/ck-bridge/useEthereumConfirmations";
+import { isEthereumMintFinalizedByConfirmations } from "utils/web3/dissolve";
 
 export function useUpdateEthMintTx() {
   const dispatch = useAppDispatch();
@@ -54,7 +55,11 @@ export function useEthUnTxFinalizedTxs() {
       const txResponse = allUserTxsResponse[tx.hash];
       if (!txResponse) return true;
       const confirmations = getConfirmations(txResponse);
-      return nonUndefinedOrNull(confirmations) ? new BigNumber(confirmations).isLessThan(ETHEREUM_CONFIRMATIONS) : true;
+
+      // The ethereum block number is not fetch yey, the confirmations is undefined when reload the page
+      // If confirmations is undefined and you return false, it will cause events to display with a delay.
+      // If confirmations is undefined and you return true, it will cause events to appear briefly and disappear when the page refreshes.
+      return nonUndefinedOrNull(confirmations) ? !isEthereumMintFinalizedByConfirmations(confirmations) : false;
     });
   }, [principal, getConfirmations, allEthMintTxs, allTxsResponse]);
 }
@@ -254,13 +259,20 @@ export function useErc20UnTxFinalizedTxs() {
 
     const allUserTxsResponse = allTxsResponse[principal];
 
-    return allMintTxs.filter((tx) => {
+    const unFinalizedTxs = allMintTxs.filter((tx) => {
       if (!allUserTxsResponse) return true;
       const txResponse = allUserTxsResponse[tx.hash];
       if (!txResponse) return true;
+
       const confirmations = getConfirmations(txResponse);
-      return nonUndefinedOrNull(confirmations) ? new BigNumber(confirmations).isLessThan(ETHEREUM_CONFIRMATIONS) : true;
+
+      // The ethereum block number is not fetch yey, the confirmations is undefined when reload the page
+      // If confirmations is undefined and you return false, it will cause events to display with a delay.
+      // If confirmations is undefined and you return true, it will cause events to appear briefly and disappear when the page refreshes.
+      return nonUndefinedOrNull(confirmations) ? !isEthereumMintFinalizedByConfirmations(confirmations) : false;
     });
+
+    return unFinalizedTxs;
   }, [principal, getConfirmations, allMintTxs, allTxsResponse]);
 }
 
@@ -322,4 +334,19 @@ export function useBitcoinTxResponse(hash: string | undefined) {
     if (isUndefinedOrNull(hash)) return undefined;
     return allBitcoinTxResponse?.[hash];
   }, [allBitcoinTxResponse, hash]);
+}
+
+export function useEthereumFinalizedHashesManager(): [Array<string>, (hash: string) => void] {
+  const ethereumFinalizedHashes = useAppSelector((state) => state.web3.ethereumFinalizedHashes);
+
+  const dispatch = useAppDispatch();
+
+  const callback = useCallback(
+    (hash: string) => {
+      dispatch(updateEthereumFinalizedHashes(hash));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [ethereumFinalizedHashes, callback], [callback, ethereumFinalizedHashes]);
 }
