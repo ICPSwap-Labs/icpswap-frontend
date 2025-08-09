@@ -16,7 +16,7 @@ import {
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import store from "store/index";
 import { BitcoinTxResponse } from "types/ckBTC";
-import { useEthereumConfirmationsCallback } from "hooks/ck-bridge/useEthereumConfirmations";
+import { useEthereumConfirmationsByBlockCallback } from "hooks/ck-bridge/useEthereumConfirmations";
 import { isEthereumMintFinalizedByConfirmations } from "utils/web3/dissolve";
 
 export function useUpdateEthMintTx() {
@@ -44,7 +44,7 @@ export function useEthUnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
   const allEthMintTxs = useEthMintTxs();
   const allTxsResponse = store.getState().web3.ethTxResponse;
-  const getConfirmations = useEthereumConfirmationsCallback();
+  const getConfirmations = useEthereumConfirmationsByBlockCallback();
 
   return useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(allEthMintTxs)) return undefined;
@@ -54,7 +54,7 @@ export function useEthUnTxFinalizedTxs() {
     return allEthMintTxs.filter((tx) => {
       const txResponse = allUserTxsResponse[tx.hash];
       if (!txResponse) return true;
-      const confirmations = getConfirmations(txResponse);
+      const confirmations = getConfirmations(Number(tx.block));
 
       // The ethereum block number is not fetch yey, the confirmations is undefined when reload the page
       // If confirmations is undefined and you return false, it will cause events to display with a delay.
@@ -252,7 +252,7 @@ export function useErc20UnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
   const allMintTxs = useErc20AllMintTxs();
   const allTxsResponse = store.getState().web3.ethTxResponse;
-  const getConfirmations = useEthereumConfirmationsCallback();
+  const getConfirmations = useEthereumConfirmationsByBlockCallback();
 
   return useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(allMintTxs)) return undefined;
@@ -264,7 +264,7 @@ export function useErc20UnTxFinalizedTxs() {
       const txResponse = allUserTxsResponse[tx.hash];
       if (!txResponse) return true;
 
-      const confirmations = getConfirmations(txResponse);
+      const confirmations = getConfirmations(Number(tx.block));
 
       // The ethereum block number is not fetch yey, the confirmations is undefined when reload the page
       // If confirmations is undefined and you return false, it will cause events to display with a delay.
