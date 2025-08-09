@@ -84,6 +84,9 @@ export function CkGlobalEvents() {
         gap: "0 10px",
         borderRadius: "48px",
         background: theme.palette.background.level3,
+        "@media(max-width: 640px)": {
+          maxWidth: "330px",
+        },
       }}
     >
       <Pagination total={allEvents.length} current={current} onNext={setCurrent} onPrev={setCurrent} />

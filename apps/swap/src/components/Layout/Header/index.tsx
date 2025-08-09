@@ -7,11 +7,13 @@ import ProfileSection from "components/Layout/Header/ProfileSection";
 import Navbar from "components/Layout/Navbar";
 import MobileNavbar from "components/Layout/Navbar/mobile/Navbar";
 import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
+import { useMediaQuery640 } from "hooks/theme";
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);
 
   const matchDownMD = useMediaQuery("(max-width:960px)");
+  const matchDown640 = useMediaQuery640();
 
   const handleToggleDrawer = () => {
     setDrawerOpen(true);
@@ -40,7 +42,7 @@ export default function Header() {
             "@media(max-width: 640px)": { gap: "0 8px" },
           }}
         >
-          <CkGlobalEvents />
+          {!matchDown640 ? <CkGlobalEvents /> : null}
           <ProfileSection />
         </Flex>
 
