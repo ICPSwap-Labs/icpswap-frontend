@@ -3,6 +3,7 @@ import { Erc20DissolveTx, TX } from "types/web3";
 import { DissolveTx } from "types/ckETH";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { BitcoinTxResponse } from "types/ckBTC";
+import { WithdrawalDetail } from "@icpswap/types";
 
 export const updateEthMintTx = createAction<{ principal: string; tx: TX }>("web3/updateEthMintTx");
 export const updateEthDissolveTX = createAction<{ principal: string; tx: DissolveTx }>("web3/updateEthDissolveTX");
@@ -22,3 +23,5 @@ export const updateBitcoinTxResponse = createAction<{
 }>("web3/updateBitcoinTxResponse");
 
 export const updateEthereumFinalizedHashes = createAction<string>("web3/updateEthereumFinalizedHashes");
+
+export const updateErc20DissolveStatus = createAction<WithdrawalDetail>("web3/updateErc20DissolveStatus");

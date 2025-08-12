@@ -10,7 +10,11 @@ import {
   Erc20MintTransactionEvent,
   BtcTransactionEventUI,
 } from "components/ck-bridge/TxEvent";
-import { BitcoinConfirmations, EthereumConfirmations } from "components/ck-bridge/TxConfirmation";
+import {
+  BitcoinConfirmations,
+  Erc20DissolveConfirmations,
+  EthereumConfirmations,
+} from "components/ck-bridge/TxConfirmation";
 import {
   isBtcTransactionEvent,
   isErc20DissolveTransactionEvent,
@@ -102,7 +106,9 @@ export function CkGlobalEvents() {
       ) : null}
       <Divider />
       {currentEvent.chain === "eth" || currentEvent.chain === "erc20" ? (
-        currentEvent.hash ? (
+        isErc20DissolveTransactionEvent(currentEvent) ? (
+          <Erc20DissolveConfirmations withdraw_id={currentEvent.withdrawal_id} />
+        ) : currentEvent.hash ? (
           <EthereumConfirmations hash={currentEvent.hash} />
         ) : null
       ) : currentEvent.chain === "btc" ? (

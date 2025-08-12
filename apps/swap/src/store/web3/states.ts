@@ -2,6 +2,7 @@ import { Erc20DissolveTx, TX } from "types/web3";
 import { DissolveTx } from "types/ckETH";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { BitcoinTxResponse } from "types/ckBTC";
+import { WithdrawalDetail } from "@icpswap/types";
 
 export interface Web3State {
   tx: { [principal: string]: TX[] };
@@ -19,6 +20,9 @@ export interface Web3State {
     };
   };
   ethereumFinalizedHashes: string[];
+  erc20DissolveDetails: {
+    [withdrawal_id: string]: WithdrawalDetail;
+  };
 }
 
 export const initialState: Web3State = {
@@ -29,4 +33,5 @@ export const initialState: Web3State = {
   erc20DissolveTxs: [],
   bitcoinTxResponse: {},
   ethereumFinalizedHashes: [],
+  erc20DissolveDetails: {},
 };

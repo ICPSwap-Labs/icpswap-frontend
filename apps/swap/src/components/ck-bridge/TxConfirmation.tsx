@@ -2,11 +2,12 @@ import { Flex } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, numToPercent } from "@icpswap/utils";
 import { Box, Typography, useTheme } from "components/Mui";
 import { useMemo } from "react";
-import { useBitcoinTxResponse, useEthTxResponse } from "store/web3/hooks";
+import { useBitcoinTxResponse, useErc20DissolveDetails, useEthTxResponse } from "store/web3/hooks";
 import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
 import { useBitcoinBlockNumber } from "hooks/ck-bridge";
 import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
 import { useEthereumConfirmationsByBlock } from "hooks/ck-bridge/useEthereumConfirmations";
+import { erc20DissolveStatus } from "utils/web3/dissolve";
 
 interface ConfirmationsUIProps {
   confirmations: number;
@@ -48,6 +49,22 @@ export function EthereumConfirmations({ hash }: EthereumConfirmationsProps) {
   const confirmations = useEthereumConfirmationsByBlock(transactionResponse?.blockNumber);
 
   return <ConfirmationsUI confirmations={ETHEREUM_CONFIRMATIONS} currentConfirmations={confirmations} />;
+}
+
+interface Erc20DissolveConfirmations {
+  withdraw_id: string;
+}
+
+export function Erc20DissolveConfirmations({ withdraw_id }: Erc20DissolveConfirmations) {
+  const erc20DissolveDetails = useErc20DissolveDetails(withdraw_id);
+
+  return (
+    <Flex sx={{ gap: "0 4px" }}>
+      <Typography sx={{ fontSize: "12px" }}>
+        {erc20DissolveDetails?.status ? erc20DissolveStatus(erc20DissolveDetails?.status) : "--"}
+      </Typography>
+    </Flex>
+  );
 }
 
 interface BitcoinConfirmationsProps {

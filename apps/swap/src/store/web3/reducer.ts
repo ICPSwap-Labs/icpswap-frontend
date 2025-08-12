@@ -8,6 +8,7 @@ import {
   updateErc20DissolveTx,
   updateBitcoinTxResponse,
   updateEthereumFinalizedHashes,
+  updateErc20DissolveStatus,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -78,5 +79,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateEthereumFinalizedHashes, (state, { payload }) => {
       state.ethereumFinalizedHashes = [...state.ethereumFinalizedHashes, payload];
+    })
+    .addCase(updateErc20DissolveStatus, (state, { payload }) => {
+      state.erc20DissolveDetails[payload.withdrawal_id.toString()] = payload;
     });
 });

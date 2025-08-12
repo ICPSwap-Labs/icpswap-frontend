@@ -12,12 +12,14 @@ import {
   updateErc20DissolveTx,
   updateBitcoinTxResponse,
   updateEthereumFinalizedHashes,
+  updateErc20DissolveStatus,
 } from "store/web3/actions";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import store from "store/index";
 import { BitcoinTxResponse } from "types/ckBTC";
 import { useEthereumConfirmationsByBlockCallback } from "hooks/ck-bridge/useEthereumConfirmations";
 import { isEthereumMintFinalizedByConfirmations } from "utils/web3/dissolve";
+import { WithdrawalDetail } from "@icpswap/types";
 
 export function useUpdateEthMintTx() {
   const dispatch = useAppDispatch();
@@ -349,4 +351,24 @@ export function useEthereumFinalizedHashesManager(): [Array<string>, (hash: stri
   );
 
   return useMemo(() => [ethereumFinalizedHashes, callback], [callback, ethereumFinalizedHashes]);
+}
+
+export function useErc20DissolveDetails(withdrawal_id: string | undefined) {
+  const allDissolveDetails = useAppSelector((state) => state.web3.erc20DissolveDetails);
+
+  return useMemo(() => {
+    if (!withdrawal_id) return undefined;
+    return allDissolveDetails[withdrawal_id];
+  }, [allDissolveDetails, withdrawal_id]);
+}
+
+export function useErc20DissolveDetailsManager() {
+  const dispatch = useAppDispatch();
+
+  return useCallback(
+    (withdraw_detail: WithdrawalDetail) => {
+      dispatch(updateErc20DissolveStatus(withdraw_detail));
+    },
+    [dispatch],
+  );
 }

@@ -6,12 +6,15 @@ import { MINTER_CANISTER_ID, ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
 import { Principal } from "@dfinity/principal";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
+import { useErc20DissolveDetailsManager } from "store/web3/hooks";
 
 export function useErc20DissolveTxs() {
   const principal = useAccountPrincipalString();
   const [refresh, setRefresh] = useRefreshTriggerManager(ERC20_DISSOLVE_REFRESH);
   const [dissolveTxs, setDissolveTxs] = useState<undefined | WithdrawalDetail[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const erc20DissolveDetailsManager = useErc20DissolveDetailsManager();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -45,6 +48,10 @@ export function useErc20DissolveTxs() {
   useEffect(() => {
     if (result) {
       setDissolveTxs(result);
+
+      result.forEach((erc20DissolveDetails) => {
+        erc20DissolveDetailsManager(erc20DissolveDetails);
+      });
     }
   }, [result]);
 
