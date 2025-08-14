@@ -8,6 +8,8 @@ import {
   updateEthereumFinalizedHashes,
   updateErc20DissolveStatus,
   updateErc20DissolveCompletedTxs,
+  updateBitcoinFinalizedHashes,
+  cleanBitcoinFinalizedHashes,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -68,5 +70,11 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateErc20DissolveCompletedTxs, (state, { payload }) => {
       state.erc20DissolveCompletedTxs = [...new Set([...state.erc20DissolveCompletedTxs, ...payload])];
+    })
+    .addCase(updateBitcoinFinalizedHashes, (state, { payload }) => {
+      state.bitcoinFinalizedTxs = [...new Set([...state.bitcoinFinalizedTxs, ...payload])];
+    })
+    .addCase(cleanBitcoinFinalizedHashes, (state) => {
+      state.bitcoinFinalizedTxs = [];
     });
 });

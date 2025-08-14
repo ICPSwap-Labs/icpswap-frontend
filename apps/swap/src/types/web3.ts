@@ -31,7 +31,7 @@ export type Erc20DissolveTransactionEvent = {
 };
 
 export type BitcoinTransactionEvent = {
-  hash: string;
+  hash: string | undefined;
   amount: string;
   type: BridgeType;
   chain: BridgeChain;

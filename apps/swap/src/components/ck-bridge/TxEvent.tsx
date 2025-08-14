@@ -116,7 +116,7 @@ export function BtcTransactionEventUI({ event }: BtcTransactionEventProps) {
   const history = useHistory();
   const handleClick = useCallback(() => {
     history.push(
-      `/ck-bridge?tokenId=${ckETH.address}&chain=${event.type === "mint" ? ckBridgeChain.btc : ckBridgeChain.icp}`,
+      `/ck-bridge?tokenId=${ckBTC.address}&chain=${event.type === "mint" ? ckBridgeChain.btc : ckBridgeChain.icp}`,
     );
   }, [history, event]);
 

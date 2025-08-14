@@ -2,8 +2,8 @@ import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
-import { useBTCDissolveTxs } from "store/wallet/hooks";
-import { StoredTxValue } from "types/ckBTC";
+import { useBitcoinDissolveTxs } from "store/wallet/hooks";
+import { BitcoinTx } from "types/ckBTC";
 import { useTranslation } from "react-i18next";
 import { bitcoinTransactionExplorer } from "constants/ckBTC";
 
@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface TransactionProps {
-  transaction: StoredTxValue;
+  transaction: BitcoinTx;
 }
 
 function Transaction({ transaction }: TransactionProps) {
@@ -85,7 +85,7 @@ export interface DissolveTransactionProps {
 
 export function DissolveTransactions() {
   const { t } = useTranslation();
-  const transactions = useBTCDissolveTxs();
+  const transactions = useBitcoinDissolveTxs();
 
   return (
     <MainCard level={1}>

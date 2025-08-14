@@ -8,12 +8,17 @@ import {
   useUpdateUserBTCDepositAddress,
   useUserBTCWithdrawAddress,
   useUpdateUserBTCWithdrawAddress,
-  useBTCDissolveTxs,
+  useBitcoinDissolveTxs,
 } from "store/wallet/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { BitcoinTxResponse, BitcoinTransaction, TxState } from "types/ckBTC";
+import { BitcoinTxResponse, BitcoinTransaction } from "types/ckBTC";
 import { Null } from "@icpswap/types";
-import { isBitcoinTransactionUnFinalized, isBitcoinTxUnFinalized, isBtcMintTransaction } from "utils/web3/ck-bridge";
+import {
+  isBitcoinTransactionUnFinalized,
+  isBitcoinTxUnFinalized,
+  isBitcoinTxUnFinalizedByBlock,
+  isBtcMintTransaction,
+} from "utils/web3/ck-bridge";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
 import { BTC_MINT_REFRESH } from "constants/ckBTC";
 import useSwr from "swr";
@@ -32,7 +37,7 @@ export function useFetchBitcoinBlockNumber(): number | undefined {
       }
     },
     {
-      refreshInterval: 30000,
+      refreshInterval: 10000,
     },
   );
 
@@ -45,7 +50,7 @@ export function useBitcoinBlockNumber() {
 }
 
 export function useBtcUnconfirmedDissolveHashes() {
-  const dissolveTxs = useBTCDissolveTxs();
+  const dissolveTxs = useBitcoinDissolveTxs();
   const principal = useAccountPrincipalString();
   const block = useBitcoinBlockNumber();
   const allBitcoinTxResponse = useBitcoinAllTxResponse();
@@ -62,20 +67,15 @@ export function useBtcUnconfirmedDissolveHashes() {
     return dissolveTxs
       .filter((tx) => {
         if (!tx.txid) return false;
-
         const allTxResponse = allBitcoinTxResponse[principal];
         const txResponse = allTxResponse?.[tx.txid];
         if (!txResponse) return true;
         return isBitcoinTxUnFinalized(txResponse, block);
       })
-      .map((tx) => tx.txid);
+      .map((tx) => tx.txid) as string[];
   }, [dissolveTxs, allBitcoinTxResponse, block, principal]);
 
   return useMemo(() => unconfirmedHashes, [JSON.stringify(unconfirmedHashes)]);
-}
-
-export function isEndedState(state: TxState) {
-  return !(state !== "Confirmed" && state !== "AmountTooLow");
 }
 
 export function useBtcDepositAddress(subaccount?: Uint8Array) {
@@ -153,21 +153,24 @@ export function useBtcWithdrawAddress() {
   );
 }
 
+export async function getBitcoinTransactions(address: string) {
+  try {
+    const result = await fetch(`https://blockstream.info/api/address/${address}/txs`);
+    const jsonResult = (await result.json()) as BitcoinTransaction[] | { error: string; message: string };
+
+    if ("error" in jsonResult) return undefined;
+
+    return jsonResult;
+  } catch (error) {
+    return undefined;
+  }
+}
+
 export function useBtcTransactions(address: string | undefined | null, refresh?: number | boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!address) return undefined;
-
-      try {
-        const result = await fetch(`https://blockstream.info/api/address/${address}/txs`);
-        const jsonResult = (await result.json()) as BitcoinTransaction[] | { error: string; message: string };
-
-        if ("error" in jsonResult) return undefined;
-
-        return jsonResult;
-      } catch (error) {
-        return undefined;
-      }
+      return await getBitcoinTransactions(address);
     }, [address]),
     refresh,
   );
@@ -216,29 +219,27 @@ export function useBtcTransactionResponse(tx: string | undefined, reload?: boole
   );
 }
 
-export function useBtcUnconfirmedMintHashes() {
-  const { result: mintTxs } = useBtcMintTransactions();
+export function useBitcoinUnFinalizedMintHashes() {
+  const { result: mintTransactions } = useBtcMintTransactions();
   const block = useBitcoinBlockNumber();
-  const principal = useAccountPrincipalString();
-  const allTxResponse = useBitcoinAllTxResponse();
 
-  const unConfirmedHashes = useMemo(() => {
-    if (
-      isUndefinedOrNull(mintTxs) ||
-      isUndefinedOrNull(block) ||
-      isUndefinedOrNull(principal) ||
-      isUndefinedOrNull(allTxResponse)
-    )
-      return [];
+  const unFinalizedHashes = useMemo(() => {
+    if (isUndefinedOrNull(mintTransactions) || isUndefinedOrNull(block)) return [];
 
-    return mintTxs
+    return mintTransactions
       .filter((tx) => {
-        const txResponse = allTxResponse[tx.txid];
-        if (!txResponse) return true;
-        return isBitcoinTxUnFinalized(txResponse, block);
+        return isBitcoinTxUnFinalizedByBlock(tx.status.block_height, block);
       })
       .map((tx) => tx.txid);
-  }, [mintTxs, block, principal, allTxResponse]);
+  }, [mintTransactions, block]);
 
-  return useMemo(() => unConfirmedHashes, [JSON.stringify(unConfirmedHashes)]);
+  return useMemo(() => unFinalizedHashes, [JSON.stringify(unFinalizedHashes)]);
+}
+
+export function useBitcoinConfirmations(block: number | null | undefined) {
+  const currentBlock = useBitcoinBlockNumber();
+
+  return useMemo(() => {
+    return currentBlock && block ? Number(currentBlock) - block : undefined;
+  }, [currentBlock, block]);
 }

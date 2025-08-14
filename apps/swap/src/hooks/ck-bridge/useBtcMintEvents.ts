@@ -6,13 +6,13 @@ import { useBtcDepositAddress, useBtcMintUnconfirmedTransactions } from "hooks/c
 import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
 
 export function useBtcMintEvents() {
-  const btcMintTxs = useBtcMintUnconfirmedTransactions();
+  const bitcoinMintTransactions = useBtcMintUnconfirmedTransactions();
   const { result: address } = useBtcDepositAddress();
 
   const btcMintEvents: BitcoinTransactionEvent[] = useMemo(() => {
-    if (isUndefinedOrNull(btcMintTxs) || isUndefinedOrNull(address)) return [];
+    if (isUndefinedOrNull(bitcoinMintTransactions) || isUndefinedOrNull(address)) return [];
 
-    return btcMintTxs.map((tx) => {
+    return bitcoinMintTransactions.map((tx) => {
       return {
         hash: tx.txid,
         amount: getBitcoinAmountFromTrans(tx, address).toString(),
@@ -21,7 +21,7 @@ export function useBtcMintEvents() {
         token: ckBTC.address,
       };
     });
-  }, [btcMintTxs, address]);
+  }, [bitcoinMintTransactions, address]);
 
   return useMemo(() => btcMintEvents, [btcMintEvents]);
 }

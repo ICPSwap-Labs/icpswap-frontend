@@ -11,9 +11,10 @@ import {
   BtcTransactionEventUI,
 } from "components/ck-bridge/TxEvent";
 import {
-  BitcoinConfirmations,
   Erc20DissolveConfirmations,
   EthereumConfirmations,
+  BitcoinDissolveConfirmations,
+  BitcoinMintConfirmations,
 } from "components/ck-bridge/TxConfirmation";
 import {
   isBtcTransactionEvent,
@@ -120,9 +121,13 @@ export function CkGlobalEvents() {
           <EthereumConfirmations hash={currentEvent.hash} />
         ) : null
       ) : currentEvent.chain === "btc" ? (
-        currentEvent.hash ? (
-          <BitcoinConfirmations hash={currentEvent.hash} />
-        ) : null
+        currentEvent.type === "mint" ? (
+          currentEvent.hash ? (
+            <BitcoinMintConfirmations hash={currentEvent.hash} />
+          ) : null
+        ) : (
+          <BitcoinDissolveConfirmations hash={currentEvent.hash} />
+        )
       ) : null}
     </Box>
   );

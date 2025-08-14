@@ -1,25 +1,20 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { RetrieveBtcStatus, TxState } from "types/ckBTC";
+import { BitcoinTx } from "types/ckBTC";
 import { Principal } from "@dfinity/principal";
 import { SortBalanceEnum, WalletSortType } from "types/index";
 import {
   updateTaggedTokens,
   deleteTaggedTokens,
   updateCK_BTCAddresses,
-  updateBTCDissolveTx,
+  updateBitcoinDissolveTxs,
   updateWalletSortType,
   updateSortBalance,
 } from "store/wallet/actions";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useBitcoinBlockNumber } from "hooks/ck-bridge";
-
-export function toHexString(byteArray: number[]) {
-  return Array.from(byteArray, (byte) => {
-    return `0${(byte & 0xff).toString(16)}`.slice(-2);
-  }).join("");
-}
+import { isBitcoinDissolveEnded } from "utils/web3/ck-bridge";
 
 export function useTaggedTokens() {
   return useAppSelector((state) => state.wallet.taggedTokens);
@@ -97,46 +92,37 @@ export function useUpdateUserBTCWithdrawAddress() {
   );
 }
 
-export function useUpdateUserBTCTx() {
+export function useBitcoinDissolveTxsManager() {
   const dispatch = useAppDispatch();
+  const principal = useAccountPrincipalString();
 
   return useCallback(
-    (principal: string, block_index: bigint, status: undefined | RetrieveBtcStatus, value: string | undefined) => {
-      const txid = status ? Object.values(status)[0]?.txid : undefined;
-      const txIdString = txid ? toHexString([...txid].reverse()) : "";
-
-      dispatch(
-        updateBTCDissolveTx({
-          principal,
-          block_index: Number(block_index),
-          txid: txIdString,
-          state: (status ? Object.keys(status)[0] : "") as TxState,
-          value: value ?? "",
-        }),
-      );
+    (tx: BitcoinTx) => {
+      if (isUndefinedOrNull(principal)) return;
+      dispatch(updateBitcoinDissolveTxs(tx));
     },
-    [dispatch],
+    [dispatch, principal],
   );
 }
 
-export function useBTCDissolveTxs() {
-  const principal = useAccountPrincipalString();
-  const allDissolveTxs = useAppSelector((state) => state.wallet.retrieveState);
-
-  return useMemo(() => {
-    if (isUndefinedOrNull(principal)) return undefined;
-    return allDissolveTxs[principal];
-  }, [principal, allDissolveTxs]);
-}
-
 export function useBitcoinDissolveTxs() {
-  const allDissolveTxs = useAppSelector((state) => state.wallet.retrieveState);
+  const allDissolveTxs = useAppSelector((state) => state.wallet.bitcoinDissolveTxs);
   const principal = useAccountPrincipalString();
 
   return useMemo(() => {
     if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(principal)) return undefined;
-    return allDissolveTxs[principal];
+    return allDissolveTxs.filter((tx) => tx.principal === principal);
   }, [principal, allDissolveTxs]);
+}
+
+export function useBitcoinDissolveTx(hash: string | undefined) {
+  const allDissolveTxs = useBitcoinDissolveTxs();
+
+  return useMemo(() => {
+    if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(hash)) return undefined;
+
+    return allDissolveTxs.find((tx) => tx.txid === hash);
+  }, [allDissolveTxs, hash]);
 }
 
 export function useBTCDissolveUnFinalizedTxs() {
@@ -147,7 +133,7 @@ export function useBTCDissolveUnFinalizedTxs() {
     if (isUndefinedOrNull(block) || isUndefinedOrNull(dissolveTxs)) return undefined;
 
     return dissolveTxs.filter((tx) => {
-      return tx.state !== "Confirmed";
+      return !isBitcoinDissolveEnded(tx.state);
     });
   }, [dissolveTxs, block]);
 }

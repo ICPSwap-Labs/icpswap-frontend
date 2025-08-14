@@ -4,10 +4,11 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { useMemo } from "react";
 import { useBitcoinTxResponse, useErc20DissolveDetails, useEthTxResponse } from "store/web3/hooks";
 import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
-import { useBitcoinBlockNumber } from "hooks/ck-bridge";
+import { useBitcoinConfirmations } from "hooks/ck-bridge";
 import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
 import { useEthereumConfirmationsByBlock } from "hooks/ck-bridge/useEthereumConfirmations";
 import { erc20DissolveStatus } from "utils/web3/dissolve";
+import { useBitcoinDissolveTx } from "store/wallet/hooks";
 
 interface ConfirmationsUIProps {
   confirmations: number;
@@ -67,19 +68,27 @@ export function Erc20DissolveConfirmations({ withdraw_id }: Erc20DissolveConfirm
   );
 }
 
-interface BitcoinConfirmationsProps {
+interface BitcoinMintConfirmationsProps {
   hash: string;
 }
 
-export function BitcoinConfirmations({ hash }: BitcoinConfirmationsProps) {
+export function BitcoinMintConfirmations({ hash }: BitcoinMintConfirmationsProps) {
   const transactionResponse = useBitcoinTxResponse(hash);
-  const block = useBitcoinBlockNumber();
-
-  const confirmations = useMemo(() => {
-    if (isUndefinedOrNull(block) || isUndefinedOrNull(transactionResponse?.block_height)) return undefined;
-
-    return Number(block) - Number(transactionResponse.block_height);
-  }, [block, transactionResponse]);
+  const confirmations = useBitcoinConfirmations(transactionResponse?.block_height);
 
   return <ConfirmationsUI confirmations={BITCOIN_CONFIRMATIONS} currentConfirmations={confirmations} />;
+}
+
+interface BitcoinDissolveConfirmationsProps {
+  hash: string | undefined;
+}
+
+export function BitcoinDissolveConfirmations({ hash }: BitcoinDissolveConfirmationsProps) {
+  const bitcoinTx = useBitcoinDissolveTx(hash);
+
+  return (
+    <Flex sx={{ gap: "0 4px" }}>
+      <Typography sx={{ fontSize: "12px" }}>{bitcoinTx?.state ?? "Pending"}</Typography>
+    </Flex>
+  );
 }

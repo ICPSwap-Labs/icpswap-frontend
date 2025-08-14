@@ -2,7 +2,7 @@ import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { Flex, LoadingRow } from "@icpswap/ui";
-import { useBtcMintTransactions } from "hooks/ck-bridge/index";
+import { useBitcoinConfirmations, useBtcMintTransactions } from "hooks/ck-bridge/index";
 import { Null } from "@icpswap/types";
 import dayjs from "dayjs";
 import { RotateCcw } from "react-feather";
@@ -31,13 +31,14 @@ const useStyles = makeStyles(() => ({
 interface TransactionProps {
   transaction: BitcoinTransaction;
   address: string | Null;
-  block: string | number | Null;
 }
 
-function Transaction({ transaction, address, block }: TransactionProps) {
+function Transaction({ transaction, address }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
+
+  const confirmations = useBitcoinConfirmations(transaction.status.block_height);
 
   return (
     <Box
@@ -131,9 +132,7 @@ function Transaction({ transaction, address, block }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.confirmations")}</Typography>
-          <Typography color="text.primary">
-            {block && transaction.status.block_height ? Number(block) - transaction.status.block_height : "--"}
-          </Typography>
+          <Typography color="text.primary">{confirmations ?? "--"}</Typography>
         </Flex>
       </Flex>
     </Box>
@@ -143,10 +142,9 @@ function Transaction({ transaction, address, block }: TransactionProps) {
 export interface MintTransactionProps {
   refresh?: boolean | number;
   btc_address: string | Null;
-  block: string | number | Null;
 }
 
-export function MintTransactions({ btc_address, block }: MintTransactionProps) {
+export function MintTransactions({ btc_address }: MintTransactionProps) {
   const { t } = useTranslation();
   const [, setRefreshTrigger] = useRefreshTriggerManager(BTC_MINT_REFRESH);
   const { result: transactions, loading } = useBtcMintTransactions();
@@ -188,7 +186,7 @@ export function MintTransactions({ btc_address, block }: MintTransactionProps) {
             ) : (
               transactions.map((transaction, index) => (
                 <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                  <Transaction transaction={transaction} address={btc_address} block={block} />
+                  <Transaction transaction={transaction} address={btc_address} />
                 </Box>
               ))
             )}

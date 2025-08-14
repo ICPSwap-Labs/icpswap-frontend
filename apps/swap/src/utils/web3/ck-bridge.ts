@@ -1,7 +1,7 @@
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { RetrieveBtcStatus } from "candid/ckBTCMint";
 import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
-import { BitcoinTransaction, BitcoinTxResponse } from "types/ckBTC";
+import { BitcoinTransaction, BitcoinTxResponse, BitcoinTxState } from "types/ckBTC";
 import {
   EthereumMintTransactionEvent,
   Erc20DissolveTransactionEvent,
@@ -78,4 +78,26 @@ export function isBitcoinTxUnFinalized(tx: BitcoinTxResponse, block: number) {
   return isUndefinedOrNull(tx.block_height)
     ? true
     : new BigNumber(block).minus(tx.block_height).isLessThan(BITCOIN_CONFIRMATIONS);
+}
+
+export function isBitcoinTxUnFinalizedByBlock(txBlock: number | undefined, block: number) {
+  return isUndefinedOrNull(txBlock) ? true : new BigNumber(block).minus(txBlock).isLessThan(BITCOIN_CONFIRMATIONS);
+}
+
+export function bitcoinDissolveState(status: RetrieveBtcStatus | undefined) {
+  return (status ? Object.keys(status)[0] : "") as BitcoinTxState;
+}
+
+export function isBitcoinDissolveEnded(state: BitcoinTxState) {
+  return !(state !== "Confirmed" && state !== "AmountTooLow");
+}
+
+export function bitcoinBytesToHexString(byteArray: number[]) {
+  return Array.from(byteArray, (byte) => {
+    return `0${(byte & 0xff).toString(16)}`.slice(-2);
+  }).join("");
+}
+
+export function getBitcoinTxFromStatus(status: RetrieveBtcStatus | undefined) {
+  return status ? Object.values(status)[0]?.txid : undefined;
 }

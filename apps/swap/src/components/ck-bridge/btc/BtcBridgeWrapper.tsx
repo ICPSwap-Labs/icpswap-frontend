@@ -68,11 +68,7 @@ export function BtcBridgeWrapper({
             </MainCard>
 
             <Box sx={{ margin: "12px 0 0 0" }}>
-              {bridgeType === "mint" ? (
-                <MintTransactions btc_address={btc_address} block={block} />
-              ) : (
-                <DissolveTransactions />
-              )}
+              {bridgeType === "mint" ? <MintTransactions btc_address={btc_address} /> : <DissolveTransactions />}
             </Box>
           </Box>
         </Box>

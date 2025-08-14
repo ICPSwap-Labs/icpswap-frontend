@@ -13,6 +13,8 @@ import {
   updateEthereumFinalizedHashes,
   updateErc20DissolveStatus,
   updateErc20DissolveCompletedTxs,
+  updateBitcoinFinalizedHashes,
+  cleanBitcoinFinalizedHashes,
 } from "store/web3/actions";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import store from "store/index";
@@ -317,9 +319,29 @@ export function useBitcoinTxResponse(hash: string | undefined) {
   }, [allBitcoinTxResponse, hash]);
 }
 
+export function useBitcoinFinalizedTxsManager(): [Array<string>, (hashes: string[]) => void] {
+  const bitcoinFinalizedTxs = useAppSelector((state) => state.web3.bitcoinFinalizedTxs);
+  const dispatch = useAppDispatch();
+
+  const callback = useCallback(
+    (hashes: string[]) => {
+      dispatch(updateBitcoinFinalizedHashes(hashes));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [bitcoinFinalizedTxs, callback], [callback, bitcoinFinalizedTxs]);
+}
+
+export function useCleanBitcoinFinalizedTxs() {
+  const dispatch = useAppDispatch();
+  return useCallback(() => {
+    dispatch(cleanBitcoinFinalizedHashes());
+  }, [dispatch]);
+}
+
 export function useEthereumFinalizedHashesManager(): [Array<string>, (hash: string) => void] {
   const ethereumFinalizedHashes = useAppSelector((state) => state.web3.ethereumFinalizedHashes);
-
   const dispatch = useAppDispatch();
 
   const callback = useCallback(
