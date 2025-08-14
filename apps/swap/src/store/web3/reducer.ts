@@ -1,14 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { Erc20DissolveTx } from "types/web3";
 import {
   updateEthMintTx,
   updateErc20TX,
   updateEthDissolveTX,
   updateEthereumTxResponse,
-  updateErc20DissolveTx,
   updateBitcoinTxResponse,
   updateEthereumFinalizedHashes,
   updateErc20DissolveStatus,
+  updateErc20DissolveCompletedTxs,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -55,22 +54,6 @@ export default createReducer(initialState, (builder) => {
         [payload.hash]: payload.response,
       };
     })
-    .addCase(updateErc20DissolveTx, (state, { payload }) => {
-      const index = state.erc20DissolveTxs.findIndex((dissolveTx) => {
-        if (!dissolveTx) return false;
-        return dissolveTx.withdrawal_id === payload.tx.withdrawal_id;
-      });
-
-      let __erc20DissolveTxs: Erc20DissolveTx[] = [];
-
-      if (index === -1) {
-        __erc20DissolveTxs = [...state.erc20DissolveTxs, payload.tx];
-      } else {
-        __erc20DissolveTxs[index] = payload.tx;
-      }
-
-      state.erc20DissolveTxs = __erc20DissolveTxs;
-    })
     .addCase(updateBitcoinTxResponse, (state, { payload }) => {
       state.bitcoinTxResponse[payload.principal] = {
         ...(state.bitcoinTxResponse[payload.principal] ?? {}),
@@ -82,5 +65,8 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateErc20DissolveStatus, (state, { payload }) => {
       state.erc20DissolveDetails[payload.withdrawal_id.toString()] = payload;
+    })
+    .addCase(updateErc20DissolveCompletedTxs, (state, { payload }) => {
+      state.erc20DissolveCompletedTxs = [...new Set([...state.erc20DissolveCompletedTxs, ...payload])];
     });
 });

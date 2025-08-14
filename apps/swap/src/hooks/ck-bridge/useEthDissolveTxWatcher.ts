@@ -7,6 +7,7 @@ import { DissolveTx } from "types/ckETH";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { useSuccessTip } from "hooks/useTips";
 import { isTxFinalized } from "utils/web3/dissolve";
+import { useTranslation } from "react-i18next";
 
 const INTERVAL = 10000;
 
@@ -19,6 +20,7 @@ export function useEthDissolveTxWatcher() {
   const txs = useEthDissolveTxs();
   const updateEthDissolveTx = useUpdateEthDissolveTx();
   const [openTip] = useSuccessTip();
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function call() {
@@ -31,7 +33,7 @@ export function useEthDissolveTxWatcher() {
             const res = await (await chainKeyETHMinter(MINTER_ID)).retrieve_eth_status(block_index);
 
             if (isTxFinalized(res)) {
-              openTip(`Eth dissolve is successfully, block ${tx.block_index}`);
+              openTip(t("ck.dissolve.completed", "ETH"));
             }
 
             updateEthDissolveTx(principal, block_index, res, undefined);

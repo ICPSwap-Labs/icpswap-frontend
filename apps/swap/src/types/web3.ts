@@ -6,7 +6,7 @@ export type TX = {
   gas?: string;
   timestamp: string;
   block: string;
-  ledger?: string;
+  ledger: string;
 };
 
 export type BridgeChain = "eth" | "btc" | "erc20";
@@ -44,13 +44,3 @@ export type BridgeTransactionEvent =
   | BitcoinTransactionEvent;
 
 export type Erc20DissolveStatus = "TxFinalized" | "TxSent" | "TxCreated" | "Pending";
-
-export type Erc20DissolveTx = {
-  hash: string | undefined;
-  from: string;
-  to: string;
-  value: string;
-  token_symbol: string;
-  withdrawal_id: string;
-  state: Erc20DissolveStatus;
-};

@@ -31,8 +31,8 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
   const { t } = useTranslation();
   const theme = useTheme();
   const { account } = useWeb3React();
-
   const principal = useAccountPrincipal();
+  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager(ERC20_DISSOLVE_REFRESH);
 
   const symbol = useTokenSymbol({
     token,
@@ -41,8 +41,6 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
 
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
-
-  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager(ERC20_DISSOLVE_REFRESH);
 
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
   const ercTokenBalance = useBridgeTokenBalance({

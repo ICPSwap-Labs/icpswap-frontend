@@ -8,12 +8,15 @@ import { toHexString } from "utils/web3/index";
 import { useUpdateEthMintTx } from "store/web3/hooks";
 import { Null } from "@icpswap/types";
 import { bytesStringOfNullSubAccount } from "constants/ckETH";
+import { useTranslation } from "react-i18next";
+import { ckETH } from "@icpswap/tokens";
 
 export interface MinterProps {
   minter_address: string | Null;
 }
 
 export function useMintCallback({ minter_address }: MinterProps) {
+  const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const { provider } = useWeb3React();
   const blockNumber = useBlockNumber();
@@ -55,7 +58,7 @@ export function useMintCallback({ minter_address }: MinterProps) {
         });
 
       if (result) {
-        openTip("ckETH minting in progress: Transaction submitted and pending confirmation.", MessageTypes.success);
+        openTip(t("ck.mint.submitted", { symbol: "ETH" }), MessageTypes.success);
 
         updateUserTx(principal, {
           timestamp: String(new Date().getTime()),
@@ -65,6 +68,7 @@ export function useMintCallback({ minter_address }: MinterProps) {
           to: result.to,
           value: result.value.toString(),
           gas: result.gasPrice?.toString(),
+          ledger: ckETH.address,
         });
       }
 

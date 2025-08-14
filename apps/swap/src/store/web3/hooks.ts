@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { Erc20DissolveTx, TX } from "types/web3";
+import { TX } from "types/web3";
 import type { RetrieveEthStatus, TxState, EthTransaction, TxFinalizedStatus } from "types/ckETH";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
@@ -9,10 +9,10 @@ import {
   updateEthDissolveTX,
   updateErc20TX,
   updateEthereumTxResponse,
-  updateErc20DissolveTx,
   updateBitcoinTxResponse,
   updateEthereumFinalizedHashes,
   updateErc20DissolveStatus,
+  updateErc20DissolveCompletedTxs,
 } from "store/web3/actions";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import store from "store/index";
@@ -278,27 +278,6 @@ export function useErc20UnTxFinalizedTxs() {
   }, [principal, getConfirmations, allMintTxs, allTxsResponse]);
 }
 
-export function useUpdateErc20DissolveTx() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (tx: Erc20DissolveTx) => {
-      dispatch(updateErc20DissolveTx({ tx }));
-    },
-    [dispatch],
-  );
-}
-
-export function useErc20DissolveTxs() {
-  const principal = useAccountPrincipalString();
-  const erc20DissolveTxs = useAppSelector((state) => state.web3.erc20DissolveTxs);
-
-  return useMemo(() => {
-    if (isUndefinedOrNull(principal)) return undefined;
-    return erc20DissolveTxs.filter((dissolveTx) => !!dissolveTx && dissolveTx.from === principal);
-  }, [principal, erc20DissolveTxs]);
-}
-
 export function useUpdateBitcoinTxResponse() {
   const dispatch = useAppDispatch();
   const principal = useAccountPrincipalString();
@@ -362,6 +341,14 @@ export function useErc20DissolveDetails(withdrawal_id: string | undefined) {
   }, [allDissolveDetails, withdrawal_id]);
 }
 
+export function useAllErc20DissolveDetails() {
+  const allDissolveDetails = useAppSelector((state) => state.web3.erc20DissolveDetails);
+
+  return useMemo(() => {
+    return Object.values(allDissolveDetails);
+  }, [allDissolveDetails]);
+}
+
 export function useErc20DissolveDetailsManager() {
   const dispatch = useAppDispatch();
 
@@ -371,4 +358,18 @@ export function useErc20DissolveDetailsManager() {
     },
     [dispatch],
   );
+}
+
+export function useErc20DissolveCompletedTxsManager(): [Array<string>, (completedTxs: string[]) => void] {
+  const dispatch = useAppDispatch();
+  const erc20DissolveCompletedTxs = useAppSelector((state) => state.web3.erc20DissolveCompletedTxs);
+
+  const callback = useCallback(
+    (withdrawal_id: string[]) => {
+      dispatch(updateErc20DissolveCompletedTxs(withdrawal_id));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [erc20DissolveCompletedTxs, callback], [erc20DissolveCompletedTxs, callback]);
 }

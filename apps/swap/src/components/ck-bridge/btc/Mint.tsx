@@ -46,7 +46,7 @@ export function BtcBridgeMint({ token, balance, btc_address }: BtcBridgeMintProp
     const result = await refreshBtcBalance(principal.toString(), undefined);
 
     if ("OK" in result) {
-      openTip(t("ck.bitcoin.mint.success"), MessageTypes.success);
+      openTip(t("ck.mint.submitted", { symbol: "BTC" }), MessageTypes.success);
       setRefreshTrigger();
       setLoading(false);
       return;

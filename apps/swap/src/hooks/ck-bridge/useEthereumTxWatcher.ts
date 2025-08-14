@@ -13,6 +13,8 @@ import { useErc20UnFinalizedDissolveHashes, useErc20UnFinalizedMintHashes } from
 import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "hooks/ck-bridge/eth";
 import { useEthereumConfirmationsByBlockCallback } from "hooks/ck-bridge/useEthereumConfirmations";
 import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
+import { __getTokenInfo } from "hooks/token";
+import { useTranslation } from "react-i18next";
 
 const INTERVAL_TIME = 20000;
 
@@ -57,6 +59,7 @@ export function useEthereumTxTips() {
   const [openTip] = useSuccessTip();
   const ethMintTxs = useEthMintTxs();
   const erc20MintTxs = useErc20AllMintTxs();
+  const { t } = useTranslation();
 
   const [ethereumFinalizedHashes, updateFinalizedHash] = useEthereumFinalizedHashesManager();
 
@@ -68,13 +71,17 @@ export function useEthereumTxTips() {
 
       for (let i = 0; i < allTxs.length; i++) {
         const tx = allTxs[i];
-
         const confirmations = getConfirmations(Number(tx.block));
 
         if (isUndefinedOrNull(confirmations)) return;
 
         if (confirmations === ETHEREUM_CONFIRMATIONS && !ethereumFinalizedHashes.includes(tx.hash)) {
-          openTip("Mint is successfully");
+          const token = await __getTokenInfo(tx.ledger);
+
+          if (token) {
+            openTip(t("ck.mint.completed", { symbol: token.symbol.replace("ck", "") }));
+          }
+
           updateFinalizedHash(tx.hash);
         }
       }

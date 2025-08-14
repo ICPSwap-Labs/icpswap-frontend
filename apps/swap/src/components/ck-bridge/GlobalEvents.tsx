@@ -21,6 +21,7 @@ import {
   isErc20MintTransactionEvent,
   isEthTransactionEvent,
 } from "utils/web3/ck-bridge";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 interface PaginationProps {
   total: number;
@@ -75,10 +76,17 @@ export function CkGlobalEvents() {
   const [current, setCurrent] = useState<number>(0);
 
   const currentEvent = useMemo(() => {
-    return allEvents[current];
+    const event = allEvents[current];
+
+    if (isUndefinedOrNull(event)) {
+      setCurrent(0);
+      return allEvents[0];
+    }
+
+    return event;
   }, [current, allEvents]);
 
-  return allEvents.length === 0 ? null : (
+  return isUndefinedOrNull(currentEvent) ? null : (
     <Box
       sx={{
         padding: "0 12px",

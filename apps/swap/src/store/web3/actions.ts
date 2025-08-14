@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { Erc20DissolveTx, TX } from "types/web3";
+import { TX } from "types/web3";
 import { DissolveTx } from "types/ckETH";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { BitcoinTxResponse } from "types/ckBTC";
@@ -14,7 +14,6 @@ export const updateEthereumTxResponse = createAction<{
 }>("web3/updateEthereumTxResponse");
 
 export const updateErc20TX = createAction<{ principal: string; ledger_id: string; tx: TX }>("web3/updateErc20TX");
-export const updateErc20DissolveTx = createAction<{ tx: Erc20DissolveTx }>("web3/updateErc20DissolveTx");
 
 export const updateBitcoinTxResponse = createAction<{
   principal: string;
@@ -25,3 +24,5 @@ export const updateBitcoinTxResponse = createAction<{
 export const updateEthereumFinalizedHashes = createAction<string>("web3/updateEthereumFinalizedHashes");
 
 export const updateErc20DissolveStatus = createAction<WithdrawalDetail>("web3/updateErc20DissolveStatus");
+
+export const updateErc20DissolveCompletedTxs = createAction<string[]>("web3/updateErc20DissolveCompletedTxs");

@@ -67,7 +67,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
         });
 
         if (response) {
-          openTip(t("ck.minting.progress", { symbol: `ck${erc20.symbol}` }), MessageTypes.success);
+          openTip(t("ck.mint.submitted", { symbol: erc20.symbol }), MessageTypes.success);
         }
 
         if (response && response.hash) {
@@ -79,6 +79,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
             to: response.to,
             value: formatAmount,
             gas: response.gasPrice?.toString(),
+            ledger: token.address,
           });
         }
 

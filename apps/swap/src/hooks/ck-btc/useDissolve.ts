@@ -6,6 +6,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { Null, ResultStatus } from "@icpswap/types";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { useUpdateUserBTCTx } from "store/wallet/hooks";
+import { useTranslation } from "react-i18next";
 
 export interface DissolveProps {
   amount: string | number | Null;
@@ -20,6 +21,7 @@ export function useDissolve() {
 
   const approve = useApprove();
   const updateBTCTx = useUpdateUserBTCTx();
+  const { t } = useTranslation();
 
   const dissolve_call = useCallback(
     async ({ amount, address, token }: DissolveProps) => {
@@ -42,7 +44,8 @@ export function useDissolve() {
       if (dissolveResult === ResultStatus.ERROR) {
         openTip(dissolveMessage ?? `Failed to dissolve`, MessageTypes.error);
       } else {
-        openTip(`Dissolve successfully`, MessageTypes.success);
+        openTip(t("ck.dissolve.submitted", { symbol: "BTC" }), MessageTypes.success);
+
         if (data?.block_index) {
           updateBTCTx(principal, data.block_index, undefined, approveAmount.toString());
         }

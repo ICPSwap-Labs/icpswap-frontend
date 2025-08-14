@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
-import { useErc20DissolveTxs, useErc20AllMintTxs, useErc20UnTxFinalizedTxs } from "store/web3/hooks";
+import { useErc20AllMintTxs, useErc20UnTxFinalizedTxs, useAllErc20DissolveDetails } from "store/web3/hooks";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { erc20DissolveHash, erc20DissolveStatus } from "utils/web3/dissolve";
 
 export function useErc20UnFinalizedMintHashes() {
   const erc20MintTxs = useErc20UnTxFinalizedTxs();
@@ -13,11 +14,19 @@ export function useErc20UnFinalizedMintHashes() {
 }
 
 export function useErc20UnFinalizedDissolveHashes() {
-  const erc20DissolveTxs = useErc20DissolveTxs();
+  const erc20DissolveTxs = useAllErc20DissolveDetails();
 
   return useMemo(() => {
     if (isUndefinedOrNull(erc20DissolveTxs)) return [];
-    return erc20DissolveTxs.filter((tx) => !!tx.hash && tx.state !== "TxFinalized").map((tx) => tx.hash) as string[];
+
+    return erc20DissolveTxs
+      .filter((tx) => {
+        const state = erc20DissolveStatus(tx.status);
+        const hash = erc20DissolveHash(tx.status);
+
+        return !!hash && state !== "TxFinalized";
+      })
+      .map((tx) => erc20DissolveHash(tx.status)) as string[];
   }, [erc20DissolveTxs]);
 }
 
