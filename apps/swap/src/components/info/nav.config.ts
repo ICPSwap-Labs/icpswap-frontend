@@ -44,11 +44,6 @@ export const routes: Route[] = [
     path: "/info-claim",
   },
   {
-    key: "info-nfts",
-    name: "NFTs",
-    path: `/info-nfts`,
-  },
-  {
     key: "info-wrap",
     name: "WICP",
     path: "/info-wrap",
