@@ -14,6 +14,8 @@ export interface GlobalState {
   bridgeTokens: string[];
   tokenBalances: { [key: string]: string };
   globalMinterInfo: ChainKeyETHMinterInfo | undefined;
+  defaultTokens: string[];
+  defaultChartType: string | undefined;
 }
 
 export const initialState: GlobalState = {
@@ -28,4 +30,6 @@ export const initialState: GlobalState = {
   bridgeTokens: [],
   tokenBalances: {},
   globalMinterInfo: undefined,
+  defaultTokens: [],
+  defaultChartType: undefined,
 };

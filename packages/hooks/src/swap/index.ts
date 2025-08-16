@@ -13,3 +13,4 @@ export * from "./usePositionCharts";
 export * from "./useTokenAnalysis";
 export * from "./useMultiPositionInfos";
 export * from "./useSwapInstallers";
+export * from "./useSwapTransactionsError";

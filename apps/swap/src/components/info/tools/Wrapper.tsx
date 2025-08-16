@@ -22,6 +22,7 @@ export function ToolsWrapper({ title, action, children }: ToolsWrapperProps) {
             borderBottom: `1px solid ${theme.palette.background.level1}`,
             "@media(max-width:640px)": { padding: "16px" },
           }}
+          component="div"
         >
           {title}
         </Typography>

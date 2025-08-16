@@ -31,6 +31,20 @@ export type {
   LimitTransactionResult,
   PoolInstaller,
   DepositAndSwapArgs,
+  SwapFailedTransaction,
+  AddLimitOrderInfo,
+  WithdrawInfo,
+  RemoveLimitOrderInfo,
+  OneStepSwapInfo,
+  DepositInfo,
+  RefundInfo,
+  SwapInfo,
+  ExecuteLimitOrderInfo,
+  TransferPositionInfo,
+  DecreaseLiquidityInfo,
+  ClaimInfo,
+  FailedTransactionAction,
+  AddLiquidityInfo,
 } from "@icpswap/candid";
 
 export type LimitOrder = {

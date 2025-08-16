@@ -20,7 +20,7 @@ export function AvgAprCell({ farmId, farmInfo }: AvgAprCellProps) {
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
   const apr = useMemo(() => {
-    return avgAPR ? `${new BigNumber(avgAPR).toFixed(2)}%` : null;
+    return avgAPR && avgAPR !== Infinity ? `${new BigNumber(avgAPR).toFixed(2)}%` : null;
   }, [avgAPR]);
 
   const { totalRewardAmount, totalRewardUSD } = useMemo(() => {

@@ -24,7 +24,7 @@ import { useGlobalContext, useRefreshTrigger, useSwapNoLiquidityManager } from "
 import { useTranslation } from "react-i18next";
 import { useSwapCallback } from "hooks/swap/useSwapCallback";
 import { SwapSuccessModal } from "components/swap/SwapSuccessModal";
-import { TokenOutOfCycles } from "components/swap/TokenOutOfCycles";
+import { SwapFailedTransactionTips } from "components/swap/SwapFailedTransactionTips";
 
 export interface SwapWrapperRef {
   setInputAmount: (amount: string) => void;
@@ -339,12 +339,11 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
 
       <Impact showImpact={exceedImpact} onCheckChange={(checked) => setImpactChecked(checked)} />
 
-      <TokenOutOfCycles
-        inputToken={inputToken}
-        outputToken={outputToken}
+      <SwapFailedTransactionTips
+        poolId={poolId}
         onCheckChange={(checked) => setOutOfCyclesChecked(checked)}
-        updateTokensOutOfCycles={(tokenIds: string[]) => {
-          if (tokenIds.length > 0) {
+        updateNeedCheckOrNot={(needCheck: boolean) => {
+          if (needCheck) {
             setOutOfCyclesChecked(false);
           }
         }}

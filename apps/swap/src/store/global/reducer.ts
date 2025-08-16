@@ -7,6 +7,8 @@ import {
   updateBridgeTokens,
   updateTokenBalance,
   updateGlobalMinterInfo,
+  updateDefaultTokens,
+  updateDefaultChartType,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -35,5 +37,11 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateGlobalMinterInfo, (state, { payload }) => {
       state.globalMinterInfo = payload.minterInfo;
+    })
+    .addCase(updateDefaultTokens, (state, { payload }) => {
+      state.defaultTokens = payload;
+    })
+    .addCase(updateDefaultChartType, (state, { payload }) => {
+      state.defaultChartType = payload;
     });
 });

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { makeStyles, Box, Theme } from "components/Mui";
-import { Flex, GlobalTips } from "@icpswap/ui";
+import { Flex } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
 import Background from "components/Background";
 import { useMediaQuery640 } from "hooks/theme";
@@ -9,6 +9,8 @@ import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
 import V3Event from "./V3Event";
 import Header from "./Header";
 import { SubnetState } from "./SubnetState";
+import { GlobalTips } from "./GlobalTips";
+import { Ads } from "./ads/Ad";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -57,7 +59,6 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const matchDown640 = useMediaQuery640();
 
   const [show, setShow] = useState(true);
-  const [globalTipShow, setGlobalTipShow] = useState(false);
 
   const isSwapPro = useMemo(() => {
     return location.pathname === "/swap/pro";
@@ -70,12 +71,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         sx={{
           position: "sticky",
           top: 0,
-          padding: "0 20px",
-          height: "64px",
-          backgroundColor: "#0B132F",
-          zIndex: 3,
+          zIndex: 1000,
         }}
+        vertical
+        align="flex-start"
       >
+        <Ads />
         <Header />
       </Flex>
 
@@ -87,7 +88,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
       <Box className={`${classes.mainContent} ${location.pathname === "/swap/pro" ? "pro" : ""}`}>
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
-        {globalTipShow ? <GlobalTips onClose={() => setGlobalTipShow(false)} /> : null}
+
+        <GlobalTips />
 
         <main
           className={`${classes.content}${isSwapPro ? " pro-padding" : ""}${

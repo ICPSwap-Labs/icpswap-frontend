@@ -18,3 +18,7 @@ export const updateTokenBalance = createAction<{ canisterId: string; balance: st
 export const updateGlobalMinterInfo = createAction<{ minterInfo: ChainKeyETHMinterInfo }>(
   "global/updateGlobalMinterInfo",
 );
+
+export const updateDefaultTokens = createAction<string[]>("global/updateDefaultTokens");
+
+export const updateDefaultChartType = createAction<string>("global/updateDefaultChartType");
