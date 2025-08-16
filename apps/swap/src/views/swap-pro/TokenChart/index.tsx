@@ -3,7 +3,7 @@ import type { InfoTokenRealTimeDataResponse, TokenListMetadata } from "@icpswap/
 import { SwapProCardWrapper } from "components/swap/pro";
 
 import Token from "./Token";
-import TokenCharts from "./Charts";
+import { TokenCharts } from "./Charts";
 import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
 
 export interface TokenChartWrapperProps {
@@ -11,7 +11,7 @@ export interface TokenChartWrapperProps {
   tokenListInfo: TokenListMetadata | undefined;
 }
 
-export default function TokenChartWrapper({ infoToken, tokenListInfo }: TokenChartWrapperProps) {
+export function TokenChartWrapper({ infoToken, tokenListInfo }: TokenChartWrapperProps) {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 

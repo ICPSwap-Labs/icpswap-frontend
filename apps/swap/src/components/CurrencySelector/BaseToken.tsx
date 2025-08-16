@@ -2,19 +2,8 @@ import { Flex, TokenImage } from "components/index";
 import { useTheme, Typography } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { useCallback } from "react";
-import { useToken } from "hooks";
-
-const BASE_TOKEN_IDS = [
-  "ryjl3-tyaaa-aaaaa-aaaba-cai", // ICP
-  "ca6gz-lqaaa-aaaaq-aacwa-cai", // ICS
-  "xevnm-gaaaa-aaaar-qafnq-cai", // ckUSDC,
-  "mxzaz-hqaaa-aaaar-qaada-cai", // ckBTC,
-  "ss2fx-dyaaa-aaaar-qacoq-cai", // ckETH,
-  "cngnf-vqaaa-aaaar-qag4q-cai", // ckUSDT,
-  "7pail-xaaaa-aaaas-aabmq-cai", // BOB
-  "oj6if-riaaa-aaaaq-aaeha-cai", // ALICE
-  "k45jy-aiaaa-aaaaq-aadcq-cai", // MOTOKO
-];
+import { useToken } from "hooks/index";
+import { useFetchGlobalDefaultTokens } from "store/global/hooks";
 
 export interface BaseTokenProps {
   token_id: string;
@@ -68,6 +57,8 @@ export interface BaseTokensProps {
 }
 
 export function BaseTokens({ onTokenClick }: BaseTokensProps) {
+  const defaultTokens = useFetchGlobalDefaultTokens();
+
   return (
     <Flex
       sx={{
@@ -81,7 +72,7 @@ export function BaseTokens({ onTokenClick }: BaseTokensProps) {
       gap="12px"
       wrap="wrap"
     >
-      {BASE_TOKEN_IDS.map((base_token_id) => (
+      {defaultTokens.map((base_token_id) => (
         <BaseToken key={base_token_id} token_id={base_token_id} onTokenClick={onTokenClick} />
       ))}
     </Flex>

@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
 import { Box, Typography } from "./Mui";
 import { Flex } from "./Grid/Flex";
+import { Link } from "./Link";
 
 function CloseIcon() {
   return (
@@ -22,24 +22,27 @@ function CloseIcon() {
 
 export interface GlobalTipsProps {
   onClose?: () => void;
-  children?: ReactNode;
+  content: string;
+  link?: string | undefined;
 }
 
-export function GlobalTips({ children, onClose }: GlobalTipsProps) {
+export function GlobalTips({ content, link, onClose }: GlobalTipsProps) {
   return (
     <Flex sx={{ width: "1wh", height: "52px", background: "#B79C4A", padding: "0 20px" }} gap="0 10px">
-      <Typography
-        sx={{
-          color: "#ffffff",
-          cursor: "pointer",
-          "@media(max-width: 640px)": { fontSize: "12px" },
-        }}
-      >
-        {children}
-      </Typography>
+      <Link link={link}>
+        <Typography
+          sx={{
+            color: "#ffffff",
+            cursor: "pointer",
+            "@media(max-width: 640px)": { fontSize: "12px" },
+          }}
+        >
+          {content}
+        </Typography>
+      </Link>
 
       {onClose ? (
-        <Box sx={{ cursor: "pointer" }} onClick={onClose}>
+        <Box sx={{ cursor: "pointer", width: "20px", height: "20px" }} onClick={onClose}>
           <CloseIcon />
         </Box>
       ) : null}

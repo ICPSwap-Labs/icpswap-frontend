@@ -1,14 +1,15 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Null } from "@icpswap/types";
 import { ChevronDown } from "react-feather";
 
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Button } from "../Mui";
 import { DropDownMenu } from "../Select";
 import { ChartButton } from "./TokenCharts";
 import { ChartView } from "./types";
 
 export interface ChartViewSelectorProps {
-  chartsViews?: ChartButton[];
+  options?: ChartButton[];
   chartView: ChartButton | Null;
   onChartsViewChange: (val: ChartButton) => void;
   maxHeight?: string;
@@ -16,7 +17,7 @@ export interface ChartViewSelectorProps {
 
 export const ChartViewSelector = ({
   chartView,
-  chartsViews,
+  options,
   onChartsViewChange,
   maxHeight = "240px",
 }: ChartViewSelectorProps) => {
@@ -37,10 +38,22 @@ export const ChartViewSelector = ({
     setAnchorEl(null);
   };
 
+  const label = useMemo(() => {
+    if (isUndefinedOrNull(chartView)) return undefined;
+
+    const result = options.find(
+      (option) =>
+        option.value === chartView.value &&
+        (nonUndefinedOrNull(chartView.tokenId) ? chartView.tokenId === option.tokenId : true),
+    );
+
+    return result?.label;
+  }, [chartView, options]);
+
   return (
     <>
       <Button onClick={handleClick} className="secondary" variant="contained">
-        {chartView?.label}
+        {label}
         <ChevronDown size={16} color="#8492c4" style={{ position: "relative", top: "1px", margin: "0 0 0 4px" }} />
       </Button>
 
@@ -48,14 +61,14 @@ export const ChartViewSelector = ({
         anchor={anchorEl}
         onMenuClick={handleClose}
         onClose={handleClose}
-        menus={chartsViews.map((element) => ({
+        menus={options.map((element) => ({
           label: element.label,
           value: element.tokenId ? `${element.value}_${element.tokenId}` : element.value,
         }))}
         minMenuWidth="140px"
         menuMaxHeight={maxHeight}
         onChange={(value: any) => {
-          const chart = chartsViews.find(
+          const chart = options.find(
             (element) => (element.tokenId ? `${element.value}_${element.tokenId}` : element.value) === value,
           );
           handleChartViewChange(chart);

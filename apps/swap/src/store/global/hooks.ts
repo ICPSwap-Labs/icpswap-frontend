@@ -1,10 +1,17 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { ICP } from "@icpswap/tokens";
-import { parseTokenAmount, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
+import { parseTokenAmount, BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useXDR2USD, useTokensFromList, getLimitedInfinityCallV1, getAllSwapTokens } from "@icpswap/hooks";
-import { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, IcpSwapAPITokenInfo, Null } from "@icpswap/types";
+import {
+  useXDR2USD,
+  useTokensFromList,
+  getLimitedInfinityCallV1,
+  getAllSwapTokens,
+  getGlobalSettingTokens,
+  getGlobalSettingChart,
+} from "@icpswap/hooks";
 import { setStorageTokenInfo } from "hooks/token/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
 import { parseTokenStandards } from "utils/parseTokenStandards";
@@ -15,6 +22,9 @@ import {
   updateWalletConnector,
   updateBridgeTokens,
   updateTokenBalance,
+  updateGlobalMinterInfo,
+  updateDefaultTokens,
+  updateDefaultChartType,
 } from "store/global/actions";
 
 export function useGlobalTokenList() {
@@ -113,13 +123,13 @@ export function useFetchAllSwapTokens() {
       if (allSwapTokens.length > 0 || loading) return;
 
       setLoading(true);
-      const data = await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(fetch, 1000, 2);
+      const allTokens = await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(fetch, 1000, 2);
 
-      const swapTokens = data.map((e) => {
-        const standard = parseTokenStandards(e);
+      const swapTokens = allTokens.map((token) => {
+        const standard = parseTokenStandards(token);
 
         return {
-          ...e,
+          ...token,
           standard,
         };
       });
@@ -196,4 +206,66 @@ export function useStateTokenBalanceManager(
   );
 
   return [stateBalance, callback];
+}
+
+export function useGlobalMinterInfoManager(): [
+  ChainKeyETHMinterInfo | undefined,
+  (minterInfo: ChainKeyETHMinterInfo) => void,
+] {
+  const globalMinterInfo = useAppSelector((state) => state.global.globalMinterInfo);
+  const dispatch = useAppDispatch();
+
+  const callback = useCallback(
+    (minterInfo: ChainKeyETHMinterInfo) => {
+      dispatch(updateGlobalMinterInfo({ minterInfo }));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [globalMinterInfo, callback], [globalMinterInfo, callback]);
+}
+
+// Fetch the global settings
+export function useGlobalDefaultTokens() {
+  return useAppSelector((state) => state.global.defaultTokens);
+}
+
+export function useFetchGlobalDefaultTokens() {
+  const defaultTokens = useGlobalDefaultTokens();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function call() {
+      if (defaultTokens.length === 0) {
+        const __defaultTokens = await getGlobalSettingTokens();
+        dispatch(updateDefaultTokens(__defaultTokens.map((token) => token.toString())));
+      }
+    }
+
+    call();
+  }, [defaultTokens, dispatch]);
+
+  return useMemo(() => defaultTokens, [defaultTokens]);
+}
+
+export function useGlobalDefaultChartType() {
+  return useAppSelector((state) => state.global.defaultChartType);
+}
+
+export function useFetchGlobalDefaultChartType() {
+  const defaultChartType = useGlobalDefaultChartType();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    async function call() {
+      if (isUndefinedOrNull(defaultChartType)) {
+        const __defaultChartType = await getGlobalSettingChart();
+        dispatch(updateDefaultChartType(__defaultChartType));
+      }
+    }
+
+    call();
+  }, [defaultChartType, dispatch]);
+
+  return useMemo(() => defaultChartType, [defaultChartType]);
 }

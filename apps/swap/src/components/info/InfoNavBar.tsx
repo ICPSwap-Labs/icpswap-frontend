@@ -67,11 +67,10 @@ export function InfoNavBar() {
   const ref = useRef(null);
   const pathName = location.pathname;
 
-  const matchUpLG = useMediaQuery(theme.breakpoints.up("lg"));
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const RoutesNumber = matchDownMD ? (matchDownSM ? 3 : 4) : matchUpLG ? 6 : 5;
+  const RoutesNumber = matchDownMD ? (matchDownSM ? 3 : 4) : 7;
 
   const [open, setOpen] = useState(false);
 

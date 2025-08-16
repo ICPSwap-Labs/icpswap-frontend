@@ -63,11 +63,6 @@ export const routes: Route[] = [
     path: "/info-overview",
   },
   {
-    key: "marketplace",
-    name: `NFT`,
-    path: "/marketplace/collections",
-  },
-  {
     key: "/token-claim",
     name: `Claim`,
     path: "/token-claim",

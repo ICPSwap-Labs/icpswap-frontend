@@ -35,6 +35,20 @@ export type {
   LimitOrderKey,
   LimitOrderValue,
   DepositAndSwapArgs,
+  Transaction as SwapFailedTransaction,
+  AddLimitOrderInfo,
+  WithdrawInfo,
+  RemoveLimitOrderInfo,
+  OneStepSwapInfo,
+  DepositInfo,
+  RefundInfo,
+  SwapInfo,
+  ExecuteLimitOrderInfo,
+  TransferPositionInfo,
+  DecreaseLiquidityInfo,
+  ClaimInfo,
+  Action as FailedTransactionAction,
+  AddLiquidityInfo,
 } from "./SwapPool";
 
 export { idlFactory as TicketInterfaceFactory } from "./Ticket.did";

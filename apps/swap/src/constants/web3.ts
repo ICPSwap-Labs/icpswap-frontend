@@ -47,3 +47,5 @@ export const EXPLORER_BLOCK_LINKS = {
   [ChainId.MAINNET]: `https://etherscan.io/block`,
   [ChainId.SEPOLIA]: `https://sepolia.etherscan.io/block`,
 };
+
+export const ETHEREUM_CONFIRMATIONS = 32;

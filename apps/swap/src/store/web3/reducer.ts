@@ -1,14 +1,25 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateTX, updateErc20TX, updateWithdrawTX } from "./actions";
+import {
+  updateEthMintTx,
+  updateErc20TX,
+  updateEthDissolveTX,
+  updateEthereumTxResponse,
+  updateBitcoinTxResponse,
+  updateEthereumFinalizedHashes,
+  updateErc20DissolveStatus,
+  updateErc20DissolveCompletedTxs,
+  updateBitcoinFinalizedHashes,
+  cleanBitcoinFinalizedHashes,
+} from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {
   builder
-    .addCase(updateTX, (state, { payload }) => {
+    .addCase(updateEthMintTx, (state, { payload }) => {
       const allTx = state.tx[`${payload.principal}`] ? [payload.tx, ...state.tx[`${payload.principal}`]] : [payload.tx];
       state.tx[`${payload.principal}`] = allTx;
     })
-    .addCase(updateWithdrawTX, (state, { payload }) => {
+    .addCase(updateEthDissolveTX, (state, { payload }) => {
       const otherStates = state.withdrawTx[`${payload.principal}`]
         ? [...state.withdrawTx[`${payload.principal}`]].filter(
             (transaction) => transaction.block_index !== String(payload.tx.block_index),
@@ -38,5 +49,32 @@ export default createReducer(initialState, (builder) => {
       const key = `${payload.principal}_${payload.ledger_id}`;
       const allTx = state.erc20Transactions[key] ? [payload.tx, ...state.erc20Transactions[key]] : [payload.tx];
       state.erc20Transactions[key] = allTx;
+    })
+    .addCase(updateEthereumTxResponse, (state, { payload }) => {
+      state.ethTxResponse[payload.principal] = {
+        ...(state.ethTxResponse[payload.principal] ?? {}),
+        [payload.hash]: payload.response,
+      };
+    })
+    .addCase(updateBitcoinTxResponse, (state, { payload }) => {
+      state.bitcoinTxResponse[payload.principal] = {
+        ...(state.bitcoinTxResponse[payload.principal] ?? {}),
+        [payload.hash]: payload.response,
+      };
+    })
+    .addCase(updateEthereumFinalizedHashes, (state, { payload }) => {
+      state.ethereumFinalizedHashes = [...state.ethereumFinalizedHashes, payload];
+    })
+    .addCase(updateErc20DissolveStatus, (state, { payload }) => {
+      state.erc20DissolveDetails[payload.withdrawal_id.toString()] = payload;
+    })
+    .addCase(updateErc20DissolveCompletedTxs, (state, { payload }) => {
+      state.erc20DissolveCompletedTxs = [...new Set([...state.erc20DissolveCompletedTxs, ...payload])];
+    })
+    .addCase(updateBitcoinFinalizedHashes, (state, { payload }) => {
+      state.bitcoinFinalizedTxs = [...new Set([...state.bitcoinFinalizedTxs, ...payload])];
+    })
+    .addCase(cleanBitcoinFinalizedHashes, (state) => {
+      state.bitcoinFinalizedTxs = [];
     });
 });

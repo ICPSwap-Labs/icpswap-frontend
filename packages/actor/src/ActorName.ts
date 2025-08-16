@@ -55,4 +55,6 @@ export enum ActorName {
   BaseIndex = "BaseIndex",
 
   LiquidityLocks = "LiquidityLocks",
+
+  Setting = "Setting",
 }

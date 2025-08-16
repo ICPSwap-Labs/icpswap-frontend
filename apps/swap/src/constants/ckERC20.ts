@@ -6,7 +6,7 @@ const MINTER_ID = {
   [ChainId.SEPOLIA]: "jzenf-aiaaa-aaaar-qaa7q-cai",
 };
 
-export const MINTER_CANISTER_ID = MINTER_ID[chain];
+export const MINTER_CANISTER_ID: string = MINTER_ID[chain];
 
 export const ERC20_MINTER_DASHBOARD = getMinterDashboard(MINTER_ID[chain]);
 
@@ -25,3 +25,5 @@ export enum WithdrawalState {
   TxCreated = "TxCreated",
   Pending = "Pending",
 }
+
+export const ERC20_DISSOLVE_REFRESH = "ERC20_DISSOLVE_REFRESH";

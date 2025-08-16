@@ -70,5 +70,8 @@
   },
   "LimitTransaction": {
     "ic": "kxmnw-xyaaa-aaaag-qndsq-cai"
+  },
+  "Setting": {
+    "ic": "jtpkf-3yaaa-aaaag-qniia-cai"
   }
 }

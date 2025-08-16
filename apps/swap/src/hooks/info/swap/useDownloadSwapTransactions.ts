@@ -1,67 +1,95 @@
-/* eslint-disable no-loop-func */
-import { getBaseStorages, getBaseTransactions } from "@icpswap/hooks";
-import type { BaseTransaction, Null } from "@icpswap/types";
-import { useCallback, useMemo, useState } from "react";
-import { enumToString, timestampFormat, writeFileOneSheet } from "@icpswap/utils";
+import { getSwapTransactions, getLimitedInfinityCallV1, abortInfinityCallV1 } from "@icpswap/hooks";
+import type { Null, InfoTransactionResponse } from "@icpswap/types";
+import { useCallback, useMemo } from "react";
+import { BigNumber, enumToString, splitArr, timestampFormat, writeFileOneSheet } from "@icpswap/utils";
 
-const MAX_DOWNLOAD_LENGTH = 10000;
+export function getSwapDetails(transaction: InfoTransactionResponse) {
+  const type = enumToString(transaction.actionType);
 
-export interface useDownloadUserAllSwapTransactionsProps {
+  const token0Amount = new BigNumber(transaction.token0AmountIn).isEqualTo(0)
+    ? transaction.token0AmountOut
+    : transaction.token0AmountIn;
+
+  const token1Amount = new BigNumber(transaction.token1AmountIn).isEqualTo(0)
+    ? transaction.token1AmountOut
+    : transaction.token1AmountIn;
+
+  switch (type) {
+    case "Swap":
+      return `${token0Amount} ${transaction.token0Symbol} → ${token1Amount} ${transaction.token1Symbol}`;
+
+    case "IncreaseLiquidity":
+    case "AddLiquidity":
+    case "Mint":
+    case "DecreaseLiquidity":
+    case "Claim":
+      return `${token0Amount} ${transaction.token0Symbol} + ${token1Amount} ${transaction.token1Symbol}`;
+
+    default:
+      return null;
+  }
+}
+
+export interface useUserAllSwapTransactionsProps {
+  principal: string | Null;
   pair: string | Null;
 }
 
-export function useDownloadSwapTransactions({ pair }: useDownloadUserAllSwapTransactionsProps) {
-  const [loading, setLoading] = useState(false);
+export function useDownloadSwapTransactions() {
+  const download = useCallback(async ({ principal, pair }: useUserAllSwapTransactionsProps) => {
+    const fetch = async (page: number, limit: number) => {
+      const result = await getSwapTransactions({
+        principal,
+        page,
+        limit,
+        poolId: pair,
+      });
 
-  const download = useCallback(async () => {
-    setLoading(true);
+      return result.content;
+    };
 
-    const storageIds = await getBaseStorages();
+    const allTransactions = await getLimitedInfinityCallV1<InfoTransactionResponse>(fetch, 5000);
 
-    if (!storageIds) return;
+    const allFormattedTransactions = allTransactions.map((transaction) => {
+      const token0Amount = new BigNumber(transaction.token0AmountIn).isEqualTo(0)
+        ? transaction.token0AmountOut
+        : transaction.token0AmountIn;
 
-    let transactions: BaseTransaction[] = [];
+      const token1Amount = new BigNumber(transaction.token1AmountIn).isEqualTo(0)
+        ? transaction.token1AmountOut
+        : transaction.token1AmountIn;
 
-    for (let i = 0; i < storageIds.length; i++) {
-      const storageId = storageIds[i];
-
-      let offset = 0;
-      const limit = 1000;
-
-      const fetch = async (storageId: string) => {
-        const result = await getBaseTransactions(storageId, offset, limit, pair ? [pair] : []);
-        const _transactions = result.content;
-
-        transactions = transactions.concat(_transactions);
-
-        if (_transactions.length === limit && transactions.length < MAX_DOWNLOAD_LENGTH) {
-          offset = limit + offset;
-          await fetch(storageId);
-        }
+      return {
+        Timestamp: timestampFormat(transaction.txTime),
+        "User Principal":
+          transaction.fromPrincipalId === transaction.poolId ? transaction.toPrincipalId : transaction.fromPrincipalId,
+        "Pool CanisterID": transaction.poolId,
+        "Action Type": transaction.actionType,
+        Details: getSwapDetails(transaction),
+        Pair: `${transaction.token0Symbol}/${transaction.token1Symbol}`,
+        "From Token": transaction.token0Symbol,
+        "From Amount": token0Amount,
+        "To Token": transaction.token1Symbol,
+        "To Amount": token1Amount,
+        "From Token Price": transaction.token0Price,
+        "To Token Price": transaction.token1Price,
+        "Trade Value(USD)":
+          transaction.actionType === "Swap"
+            ? transaction.token0TxValue
+            : new BigNumber(transaction.token0TxValue).plus(transaction.token1TxValue).toString(),
       };
+    });
 
-      await fetch(storageId);
+    if (allFormattedTransactions.length > 50000) {
+      const transactionsChunks = splitArr(allFormattedTransactions, 50000);
 
-      if (transactions.length >= MAX_DOWNLOAD_LENGTH) {
-        break;
-      }
+      transactionsChunks.forEach((chunk, index) => {
+        writeFileOneSheet(chunk, `SwapTransactions${index}`);
+      });
+    } else if (allFormattedTransactions.length > 0) {
+      writeFileOneSheet(allFormattedTransactions, "SwapTransactions");
     }
+  }, []);
 
-    const downloadData = transactions.map((e) => ({
-      ...e,
-      action: enumToString(e.action),
-      liquidityChange: e.liquidityChange.toString(),
-      liquidityTotal: e.liquidityTotal.toString(),
-      poolFee: e.poolFee.toString(),
-      tick: e.tick.toString(),
-      timestamp: e.timestamp.toString(),
-      date: timestampFormat(e.timestamp * BigInt(1000)),
-    }));
-
-    writeFileOneSheet(downloadData, "swap-scan-transaction-list");
-
-    setLoading(false);
-  }, [pair]);
-
-  return useMemo(() => ({ loading, download }), [loading, download]);
+  return useMemo(() => ({ download, abort: abortInfinityCallV1 }), [download]);
 }

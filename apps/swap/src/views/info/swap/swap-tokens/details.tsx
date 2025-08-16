@@ -1,7 +1,7 @@
 import { Typography, Box, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
 import { InfoWrapper, Breadcrumbs, TextButton, TokenImage, MainCard, ImportToNns } from "components/index";
-import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice, nonUndefinedOrNull } from "@icpswap/utils";
 import { useParsedQueryString, useInfoToken } from "@icpswap/hooks";
 import {
   GridAutoRows,
@@ -27,12 +27,14 @@ import { useToken, uesTokenPairWithIcp } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
 import { Holders } from "components/info/tokens";
 import { ICP } from "@icpswap/tokens";
-import { DefaultChartView, TRADING_VIEW_DESCRIPTIONS } from "constants/index";
+import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 import i18n from "i18n/index";
 import { useTranslation, Trans } from "react-i18next";
 import { useMediaQuery640 } from "hooks/theme";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 import { InfoTokenPrices } from "components/info/swap/TokenPriceWithIcp";
+import { useFetchGlobalDefaultChartType } from "store/global/hooks";
+import { getChartView } from "utils/swap/chartType";
 
 enum TabValue {
   Transactions = "Transactions",
@@ -63,7 +65,7 @@ function TokenChartsViewSelector({ token, chartView, setChartView }: TokenCharts
     { label: `TVL`, value: ChartView.TVL },
   ];
 
-  return <ChartViewSelector chartsViews={ChartsViewButtons} chartView={chartView} onChartsViewChange={setChartView} />;
+  return <ChartViewSelector options={ChartsViewButtons} chartView={chartView} onChartsViewChange={setChartView} />;
 }
 
 export default function TokenDetails() {
@@ -80,13 +82,14 @@ export default function TokenDetails() {
   const [, token] = useToken(canisterId);
 
   const [activeTab, setActiveTab] = useState<TabValue>(TabValue.Transactions);
-
-  const [chartView, setChartView] = useState<Null | ChartButton>(DefaultChartView);
+  const [chartView, setChartView] = useState<Null | ChartButton>(null);
 
   const handleCopy = () => {
     copyToClipboard(canisterId);
     openTips("Copy Successfully", TIP_SUCCESS);
   };
+
+  const defaultChartType = useFetchGlobalDefaultChartType();
 
   useEffect(() => {
     if (chartView && tokenChartsRef.current) {
@@ -102,8 +105,14 @@ export default function TokenDetails() {
         value: ChartView.PRICE,
         tokenId: canisterId,
       });
+    } else if (nonUndefinedOrNull(defaultChartType)) {
+      const chartView = getChartView(defaultChartType);
+
+      if (chartView) {
+        setChartView({ label: chartView as unknown as string, value: chartView });
+      }
     }
-  }, [token, canisterId]);
+  }, [token, defaultChartType, canisterId]);
 
   const tokenPairWithIcp = uesTokenPairWithIcp({ tokenId: canisterId });
 
