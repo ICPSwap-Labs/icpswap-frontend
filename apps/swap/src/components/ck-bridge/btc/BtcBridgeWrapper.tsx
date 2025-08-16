@@ -4,8 +4,7 @@ import { Box } from "components/Mui";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
 import { Wrapper } from "components/index";
-import { useBridgeTokenBalance, useBtcDepositAddress, useBtcCurrentBlock } from "hooks/ck-bridge/index";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useBridgeTokenBalance, useBtcDepositAddress, useBitcoinBlockNumber } from "hooks/ck-bridge/index";
 import { useRefreshTriggerManager } from "hooks/index";
 
 import { TopContent } from "../TopContent";
@@ -35,12 +34,11 @@ export function BtcBridgeWrapper({
   onBridgeChainChange,
   targetTokenBridgeChain,
 }: BtcBridgeWrapperProps) {
-  const principal = useAccountPrincipal();
   const [refreshTrigger] = useRefreshTriggerManager("BtcBalance");
 
-  const { result: btc_address } = useBtcDepositAddress(principal?.toString());
+  const { result: btc_address } = useBtcDepositAddress();
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
-  const block = useBtcCurrentBlock();
+  const block = useBitcoinBlockNumber();
 
   return (
     <Wrapper>
@@ -70,11 +68,7 @@ export function BtcBridgeWrapper({
             </MainCard>
 
             <Box sx={{ margin: "12px 0 0 0" }}>
-              {bridgeType === "mint" ? (
-                <MintTransactions btc_address={btc_address} block={block} />
-              ) : (
-                <DissolveTransactions />
-              )}
+              {bridgeType === "mint" ? <MintTransactions btc_address={btc_address} /> : <DissolveTransactions />}
             </Box>
           </Box>
         </Box>

@@ -8,7 +8,7 @@ import { ERC20Token, Token } from "@icpswap/swap-sdk";
 import { calculateGasMargin } from "utils/web3/calculateGasMargin";
 import { ApprovalState, useApproveCallback } from "hooks/web3/useApproveCallback";
 import { Null } from "@icpswap/types";
-import { useUpdateErc20TX } from "store/web3/hooks";
+import { useUpdateErc20MintTX } from "store/web3/hooks";
 import { bytesStringOfNullSubAccount } from "constants/ckETH";
 import { useTranslation } from "react-i18next";
 
@@ -22,7 +22,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
-  const updateErc20Tx = useUpdateErc20TX();
+  const updateErc20Tx = useUpdateErc20MintTX();
   const helperContract = useEthMinterHelperContract(helperContractAddress);
 
   const [loading, setLoading] = useState(false);
@@ -67,7 +67,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
         });
 
         if (response) {
-          openTip(t("ck.minting.progress", { symbol: `ck${erc20.symbol}` }), MessageTypes.success);
+          openTip(t("ck.mint.submitted", { symbol: erc20.symbol }), MessageTypes.success);
         }
 
         if (response && response.hash) {
@@ -77,8 +77,9 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
             hash: response.hash,
             from: response.from,
             to: response.to,
-            value: amount.toString(),
+            value: formatAmount,
             gas: response.gasPrice?.toString(),
+            ledger: token.address,
           });
         }
 

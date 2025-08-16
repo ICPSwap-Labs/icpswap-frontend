@@ -8,12 +8,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { MINTER_ID } from "constants/ckETH";
 import { useToken } from "hooks/useCurrency";
 import { useHistory } from "react-router-dom";
-import { useFetchFinalizedBlock, useFetchBlockNumber } from "hooks/web3/useBlockNumber";
 
 export default function CkBridge() {
-  useFetchFinalizedBlock();
-  useFetchBlockNumber();
-
   const [token, setToken] = useState<Token>(ckUSDC);
   const [bridgeChain, setBridgeChain] = useState<ckBridgeChain>(ckBridgeChain.eth);
 

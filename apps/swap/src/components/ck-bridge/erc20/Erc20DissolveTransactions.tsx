@@ -1,17 +1,16 @@
 import { useTheme, makeStyles, Box, Typography } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { parseTokenAmount } from "@icpswap/utils";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { LoadingRow, Flex } from "@icpswap/ui";
-import { useWithdrawErc20TokenStatus, useChainKeyMinterInfo } from "@icpswap/hooks";
-import type { WithdrawalSearchParameter, WithdrawalDetail, ChainKeyETHMinterInfo } from "@icpswap/types";
+import { useChainKeyMinterInfo } from "@icpswap/hooks";
+import type { WithdrawalDetail, ChainKeyETHMinterInfo } from "@icpswap/types";
 import { useMemo } from "react";
 import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "constants/ckERC20";
-import { Principal } from "@dfinity/principal";
 import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
 import { useToken } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -78,9 +77,9 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography>
+          <Typography component="div">
             {hash ? (
-              <Typography className={classes.txLink}>
+              <Typography className={classes.txLink} component="div">
                 <ALink
                   link={`${EXPLORER_TX_LINK}/${hash}`}
                   color="secondary"
@@ -119,7 +118,7 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.recipient")}</Typography>
 
-          <Typography className={classes.txLink}>
+          <Typography className={classes.txLink} component="div">
             <ALink
               link={`${EXPLORER_ADDRESS_LINK}/${transaction.recipient_address}`}
               color="secondary"
@@ -137,31 +136,13 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
 }
 
 export interface DissolveRecordsProps {
-  refresh?: boolean | number;
   token: Token | undefined;
 }
 
-export function Erc20DissolveTransactions({ refresh, token }: DissolveRecordsProps) {
+export function Erc20DissolveTransactions({ token }: DissolveRecordsProps) {
   const { t } = useTranslation();
-  const principal = useAccountPrincipalString();
   const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
-
-  const params = useMemo(() => {
-    if (!principal) return undefined;
-
-    return {
-      BySenderAccount: {
-        owner: Principal.fromText(principal),
-        subaccount: [],
-      },
-    } as WithdrawalSearchParameter;
-  }, [principal]);
-
-  const { result: withdrawalResult, loading } = useWithdrawErc20TokenStatus({
-    minter_id: MINTER_CANISTER_ID,
-    params,
-    refresh,
-  });
+  const { result: withdrawalResult, loading } = useErc20DissolveTxs();
 
   const transactions = useMemo(() => {
     if (!token || !withdrawalResult) return [];
@@ -200,12 +181,15 @@ export function Erc20DissolveTransactions({ refresh, token }: DissolveRecordsPro
           </Box>
         ) : (
           <>
-            {transactions?.map((transaction, index) => (
-              <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                <Transaction transaction={transaction} minterInfo={minterInfo} />
-              </Box>
-            ))}
-            {transactions?.length === 0 || !transactions ? <NoData tip={t("ck.empty")} /> : null}
+            {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+              <NoData tip={t("ck.empty")} />
+            ) : (
+              transactions.map((transaction, index) => (
+                <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+                  <Transaction transaction={transaction} minterInfo={minterInfo} />
+                </Box>
+              ))
+            )}
           </>
         )}
       </Box>

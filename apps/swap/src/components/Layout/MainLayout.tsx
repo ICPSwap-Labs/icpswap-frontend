@@ -3,6 +3,8 @@ import { makeStyles, Box, Theme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
 import Background from "components/Background";
+import { useMediaQuery640 } from "hooks/theme";
+import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
 
 import V3Event from "./V3Event";
 import Header from "./Header";
@@ -54,6 +56,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const classes = useStyles();
   const location = useLocation();
 
+  const matchDown640 = useMediaQuery640();
+
   const [show, setShow] = useState(true);
 
   const isSwapPro = useMemo(() => {
@@ -75,6 +79,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         <Ads />
         <Header />
       </Flex>
+
+      {matchDown640 ? (
+        <Flex fullWidth justify="center" sx={{ padding: "15px 0" }}>
+          <CkGlobalEvents />
+        </Flex>
+      ) : null}
 
       <Box className={`${classes.mainContent} ${location.pathname === "/swap/pro" ? "pro" : ""}`}>
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
