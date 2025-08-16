@@ -7,7 +7,6 @@ export * from "./nft";
 export * from "./staking-farm";
 export * from "./staking-token";
 export * from "./token-claim";
-export * from "./voting";
 export * from "./ext-nft";
 export * from "./sns";
 export * from "./charts";
