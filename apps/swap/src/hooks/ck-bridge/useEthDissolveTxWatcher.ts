@@ -33,7 +33,7 @@ export function useEthDissolveTxWatcher() {
             const res = await (await chainKeyETHMinter(MINTER_ID)).retrieve_eth_status(block_index);
 
             if (isTxFinalized(res)) {
-              openTip(t("ck.dissolve.completed", "ETH"));
+              openTip(t("ck.dissolve.completed", { symbol: "ETH" }));
             }
 
             updateEthDissolveTx(principal, block_index, res, undefined);

@@ -2,6 +2,7 @@ import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useBlockNumber } from "hooks/web3";
 import { useCallback, useMemo } from "react";
+import { useGlobalMinterInfoManager } from "store/global/hooks";
 
 export function useEthereumConfirmations(transactionResponse: TransactionResponse | undefined) {
   const blockNumber = useBlockNumber();
@@ -50,5 +51,24 @@ export function useEthereumConfirmationsCallback() {
       return Number(blockNumber) - transactionResponse.blockNumber;
     },
     [blockNumber],
+  );
+}
+
+export function useEthereumTxBlockSynced() {
+  const [minterInfo] = useGlobalMinterInfoManager();
+
+  return useCallback(
+    (block: number, erc20?: boolean) => {
+      if (isUndefinedOrNull(minterInfo)) return undefined;
+
+      const syncedBlock = erc20
+        ? minterInfo.last_erc20_scraped_block_number[0]
+        : minterInfo.last_eth_scraped_block_number[0];
+
+      if (isUndefinedOrNull(syncedBlock)) return false;
+
+      return Number(syncedBlock) - block >= 0;
+    },
+    [minterInfo],
   );
 }

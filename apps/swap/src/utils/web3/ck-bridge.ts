@@ -3,13 +3,13 @@ import { RetrieveBtcStatus } from "candid/ckBTCMint";
 import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
 import { BitcoinTransaction, BitcoinTxResponse, BitcoinTxState } from "types/ckBTC";
 import {
-  EthereumMintTransactionEvent,
+  EthereumTransactionEvent,
   Erc20DissolveTransactionEvent,
   BridgeTransactionEvent,
   BitcoinTransactionEvent,
 } from "types/web3";
 
-export function isEthTransactionEvent(event: BridgeTransactionEvent): event is EthereumMintTransactionEvent {
+export function isEthTransactionEvent(event: BridgeTransactionEvent): event is EthereumTransactionEvent {
   return event.chain === "eth";
 }
 
@@ -17,7 +17,7 @@ export function isErc20DissolveTransactionEvent(event: BridgeTransactionEvent): 
   return event.chain === "erc20" && event.type === "dissolve";
 }
 
-export function isErc20MintTransactionEvent(event: BridgeTransactionEvent): event is EthereumMintTransactionEvent {
+export function isErc20MintTransactionEvent(event: BridgeTransactionEvent): event is EthereumTransactionEvent {
   return event.chain === "erc20" && event.type === "mint";
 }
 

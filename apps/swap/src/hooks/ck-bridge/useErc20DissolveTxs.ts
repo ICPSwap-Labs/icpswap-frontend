@@ -7,6 +7,7 @@ import { Principal } from "@dfinity/principal";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
 import { useErc20DissolveCompletedTxsManager, useErc20DissolveDetailsManager } from "store/web3/hooks";
+import { isErc20Finalized } from "utils/web3/dissolve";
 
 const INTERVAL = 10000;
 
@@ -34,7 +35,7 @@ export function useErc20DissolveTxs() {
         } as WithdrawalSearchParameter,
       });
 
-      const completedTxs = result.map((tx) => tx.withdrawal_id.toString());
+      const completedTxs = result.filter((tx) => isErc20Finalized(tx.status)).map((tx) => tx.withdrawal_id.toString());
 
       erc20DissolveCompletedManager(completedTxs);
     }

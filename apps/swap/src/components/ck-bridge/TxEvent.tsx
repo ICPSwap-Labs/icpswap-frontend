@@ -9,7 +9,7 @@ import { useErc20TokenFromSymbol } from "hooks/ck-bridge/useErc20TokenFromSymbol
 import { useCallback } from "react";
 import { ArrowRight } from "react-feather";
 import { useHistory } from "react-router-dom";
-import { BitcoinTransactionEvent, Erc20DissolveTransactionEvent, EthereumMintTransactionEvent } from "types/web3";
+import { BitcoinTransactionEvent, Erc20DissolveTransactionEvent, EthereumTransactionEvent } from "types/web3";
 
 const CHIAN_ICP_LOGO = "/images/ck-bridge/chain-icp.svg";
 const CHIAN_ETH_LOGO = "/images/ck-bridge/chain-eth.svg";
@@ -41,7 +41,7 @@ function TransactionEventUI({ logo0, logo1, tokenLogo, amount, onClick }: Transa
 }
 
 interface ETHTransactionEventProps {
-  event: EthereumMintTransactionEvent;
+  event: EthereumTransactionEvent;
 }
 
 export function ETHTransactionEvent({ event }: ETHTransactionEventProps) {
@@ -87,7 +87,7 @@ export function Erc20DissolveTransactionEventUI({ event }: Erc20DissolveTransact
 }
 
 interface Erc20MintTransactionEventProps {
-  event: EthereumMintTransactionEvent;
+  event: EthereumTransactionEvent;
 }
 
 export function Erc20MintTransactionEvent({ event }: Erc20MintTransactionEventProps) {

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
 import { erc20DissolveHash, isErc20Finalized } from "utils/web3/dissolve";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { Erc20DissolveTransactionEvent, EthereumMintTransactionEvent } from "types/web3";
+import { Erc20DissolveTransactionEvent, EthereumTransactionEvent } from "types/web3";
 import { useErc20UnTxFinalizedTxs } from "store/web3/hooks";
 
 export function useErc20DissolveEvents() {
@@ -31,7 +31,7 @@ export function useErc20DissolveEvents() {
 export function useErc20MintEvents() {
   const erc20MintTxs = useErc20UnTxFinalizedTxs();
 
-  const erc20MintEvents: EthereumMintTransactionEvent[] = useMemo(() => {
+  const erc20MintEvents: EthereumTransactionEvent[] = useMemo(() => {
     if (isUndefinedOrNull(erc20MintTxs)) return [];
 
     return erc20MintTxs
@@ -44,7 +44,7 @@ export function useErc20MintEvents() {
           token: tx.ledger,
         };
       })
-      .filter((tx) => !!tx.token) as EthereumMintTransactionEvent[];
+      .filter((tx) => !!tx.token) as EthereumTransactionEvent[];
   }, [erc20MintTxs]);
 
   return useMemo(() => erc20MintEvents, [erc20MintEvents]);

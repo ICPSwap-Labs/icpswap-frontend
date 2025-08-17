@@ -11,8 +11,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useSuccessTip } from "hooks/useTips";
 import { useErc20UnFinalizedDissolveHashes, useErc20UnFinalizedMintHashes } from "hooks/ck-bridge/erc20";
 import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "hooks/ck-bridge/eth";
-import { useEthereumConfirmationsByBlockCallback } from "hooks/ck-bridge/useEthereumConfirmations";
-import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
+import { useEthereumTxBlockSynced } from "hooks/ck-bridge/useEthereumConfirmations";
 import { __getTokenInfo } from "hooks/token";
 import { useTranslation } from "react-i18next";
 
@@ -62,8 +61,7 @@ export function useEthereumTxTips() {
   const { t } = useTranslation();
 
   const [ethereumFinalizedHashes, updateFinalizedHash] = useEthereumFinalizedHashesManager();
-
-  const getConfirmations = useEthereumConfirmationsByBlockCallback();
+  const ethereumBlockSynced = useEthereumTxBlockSynced();
 
   useEffect(() => {
     async function call() {
@@ -71,11 +69,10 @@ export function useEthereumTxTips() {
 
       for (let i = 0; i < allTxs.length; i++) {
         const tx = allTxs[i];
-        const confirmations = getConfirmations(Number(tx.block));
 
-        if (isUndefinedOrNull(confirmations)) return;
+        const isSynced = ethereumBlockSynced(Number(tx.block));
 
-        if (confirmations === ETHEREUM_CONFIRMATIONS && !ethereumFinalizedHashes.includes(tx.hash)) {
+        if (isSynced && !ethereumFinalizedHashes.includes(tx.hash)) {
           const token = await __getTokenInfo(tx.ledger);
 
           if (token) {
@@ -88,5 +85,5 @@ export function useEthereumTxTips() {
     }
 
     call();
-  }, [ethMintTxs, erc20MintTxs, getConfirmations, ethereumFinalizedHashes, updateFinalizedHash]);
+  }, [ethMintTxs, erc20MintTxs, ethereumBlockSynced, ethereumFinalizedHashes, updateFinalizedHash]);
 }

@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { TX } from "types/web3";
 import type { RetrieveEthStatus, TxState, EthTransaction, TxFinalizedStatus } from "types/ckETH";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import {
   updateEthMintTx,
   updateEthDissolveTX,
@@ -19,8 +19,7 @@ import {
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import store from "store/index";
 import { BitcoinTxResponse } from "types/ckBTC";
-import { useEthereumConfirmationsByBlockCallback } from "hooks/ck-bridge/useEthereumConfirmations";
-import { isEthereumMintFinalizedByConfirmations } from "utils/web3/dissolve";
+import { useEthereumTxBlockSynced } from "hooks/ck-bridge/useEthereumConfirmations";
 import { WithdrawalDetail } from "@icpswap/types";
 
 export function useUpdateEthMintTx() {
@@ -47,25 +46,19 @@ export function useEthMintTxs() {
 export function useEthUnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
   const allEthMintTxs = useEthMintTxs();
-  const allTxsResponse = store.getState().web3.ethTxResponse;
-  const getConfirmations = useEthereumConfirmationsByBlockCallback();
+  const blockSynced = useEthereumTxBlockSynced();
 
   return useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(allEthMintTxs)) return undefined;
 
-    const allUserTxsResponse = allTxsResponse[principal];
-
     return allEthMintTxs.filter((tx) => {
-      const txResponse = allUserTxsResponse[tx.hash];
-      if (!txResponse) return true;
-      const confirmations = getConfirmations(Number(tx.block));
+      const synced = blockSynced(Number(tx.block));
 
-      // The ethereum block number is not fetch yey, the confirmations is undefined when reload the page
-      // If confirmations is undefined and you return false, it will cause events to display with a delay.
-      // If confirmations is undefined and you return true, it will cause events to appear briefly and disappear when the page refreshes.
-      return nonUndefinedOrNull(confirmations) ? !isEthereumMintFinalizedByConfirmations(confirmations) : false;
+      if (isUndefinedOrNull(synced)) return false;
+
+      return !synced;
     });
-  }, [principal, getConfirmations, allEthMintTxs, allTxsResponse]);
+  }, [principal, allEthMintTxs, blockSynced]);
 }
 
 export function useUpdateEthereumTxResponse() {
@@ -254,30 +247,22 @@ export function useErc20MintTx() {
 
 export function useErc20UnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
-  const allMintTxs = useErc20AllMintTxs();
+  const erc20MintTxs = useErc20AllMintTxs();
   const allTxsResponse = store.getState().web3.ethTxResponse;
-  const getConfirmations = useEthereumConfirmationsByBlockCallback();
+  const blockSynced = useEthereumTxBlockSynced();
 
   return useMemo(() => {
-    if (isUndefinedOrNull(principal) || isUndefinedOrNull(allMintTxs)) return undefined;
+    if (isUndefinedOrNull(principal) || isUndefinedOrNull(erc20MintTxs)) return undefined;
 
-    const allUserTxsResponse = allTxsResponse[principal];
+    const unFinalizedTxs = erc20MintTxs.filter((tx) => {
+      const synced = blockSynced(Number(tx.block), true);
+      if (isUndefinedOrNull(synced)) return false;
 
-    const unFinalizedTxs = allMintTxs.filter((tx) => {
-      if (!allUserTxsResponse) return true;
-      const txResponse = allUserTxsResponse[tx.hash];
-      if (!txResponse) return true;
-
-      const confirmations = getConfirmations(Number(tx.block));
-
-      // The ethereum block number is not fetch yey, the confirmations is undefined when reload the page
-      // If confirmations is undefined and you return false, it will cause events to display with a delay.
-      // If confirmations is undefined and you return true, it will cause events to appear briefly and disappear when the page refreshes.
-      return nonUndefinedOrNull(confirmations) ? !isEthereumMintFinalizedByConfirmations(confirmations) : false;
+      return !synced;
     });
 
     return unFinalizedTxs;
-  }, [principal, getConfirmations, allMintTxs, allTxsResponse]);
+  }, [principal, blockSynced, erc20MintTxs, allTxsResponse]);
 }
 
 export function useUpdateBitcoinTxResponse() {

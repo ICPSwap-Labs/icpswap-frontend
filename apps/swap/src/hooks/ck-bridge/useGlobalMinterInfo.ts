@@ -1,11 +1,10 @@
-import { useChainKeyMinterInfo } from "@icpswap/hooks";
+import { useIntervalChainKeyMinterInfo } from "@icpswap/hooks";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useEffect } from "react";
 import { useGlobalMinterInfoManager } from "store/global/hooks";
 
 export function useGlobalMinterInfo() {
-  const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
-
+  const minterInfo = useIntervalChainKeyMinterInfo(MINTER_CANISTER_ID);
   const [, updateGlobalMinterInfo] = useGlobalMinterInfoManager();
 
   useEffect(() => {

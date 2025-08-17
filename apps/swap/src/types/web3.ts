@@ -13,7 +13,7 @@ export type BridgeChain = "eth" | "btc" | "erc20";
 
 export type BridgeType = "mint" | "dissolve";
 
-export type EthereumMintTransactionEvent = {
+export type EthereumTransactionEvent = {
   hash: string | undefined;
   amount: string;
   type: BridgeType;
@@ -38,9 +38,6 @@ export type BitcoinTransactionEvent = {
   token: string;
 };
 
-export type BridgeTransactionEvent =
-  | Erc20DissolveTransactionEvent
-  | EthereumMintTransactionEvent
-  | BitcoinTransactionEvent;
+export type BridgeTransactionEvent = Erc20DissolveTransactionEvent | EthereumTransactionEvent | BitcoinTransactionEvent;
 
 export type Erc20DissolveStatus = "TxFinalized" | "TxSent" | "TxCreated" | "Pending";

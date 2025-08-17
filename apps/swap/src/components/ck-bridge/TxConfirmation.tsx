@@ -2,13 +2,16 @@ import { Flex } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, numToPercent } from "@icpswap/utils";
 import { Box, Typography, useTheme } from "components/Mui";
 import { useMemo } from "react";
-import { useBitcoinTxResponse, useErc20DissolveDetails, useEthTxResponse } from "store/web3/hooks";
-import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
+import { useBitcoinTxResponse, useErc20DissolveDetails, useEthDissolveTx, useEthTxResponse } from "store/web3/hooks";
 import { useBitcoinConfirmations } from "hooks/ck-bridge";
 import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
-import { useEthereumConfirmationsByBlock } from "hooks/ck-bridge/useEthereumConfirmations";
 import { erc20DissolveStatus } from "utils/web3/dissolve";
 import { useBitcoinDissolveTx } from "store/wallet/hooks";
+import { useGlobalMinterInfoManager } from "store/global/hooks";
+
+function Arrow() {
+  return <Typography>Δ</Typography>;
+}
 
 interface ConfirmationsUIProps {
   confirmations: number;
@@ -41,15 +44,62 @@ function ConfirmationsUI({ confirmations, currentConfirmations }: ConfirmationsU
   );
 }
 
-interface EthereumConfirmationsProps {
+interface EthereumMintConfirmationsProps {
   hash: string;
+  erc20?: boolean;
 }
 
-export function EthereumConfirmations({ hash }: EthereumConfirmationsProps) {
+export function EthereumMintConfirmations({ hash, erc20 }: EthereumMintConfirmationsProps) {
   const transactionResponse = useEthTxResponse(hash);
-  const confirmations = useEthereumConfirmationsByBlock(transactionResponse?.blockNumber);
+  const [minterInfo] = useGlobalMinterInfoManager();
 
-  return <ConfirmationsUI confirmations={ETHEREUM_CONFIRMATIONS} currentConfirmations={confirmations} />;
+  const { last_erc20_scraped_block, last_eth_scraped_block } = useMemo(() => {
+    if (isUndefinedOrNull(minterInfo)) return {};
+
+    return {
+      last_eth_scraped_block: minterInfo.last_eth_scraped_block_number[0],
+      last_erc20_scraped_block: minterInfo.last_erc20_scraped_block_number[0],
+    };
+  }, [minterInfo]);
+
+  const block = useMemo(() => {
+    if (isUndefinedOrNull(transactionResponse)) return undefined;
+
+    const txBlockNumber = transactionResponse.blockNumber;
+
+    if (isUndefinedOrNull(txBlockNumber)) return undefined;
+
+    if (erc20) {
+      if (isUndefinedOrNull(last_erc20_scraped_block)) return undefined;
+      return Number(txBlockNumber) - Number(last_erc20_scraped_block);
+    }
+
+    if (isUndefinedOrNull(last_eth_scraped_block)) return undefined;
+
+    return Number(txBlockNumber) - Number(last_eth_scraped_block);
+  }, [last_erc20_scraped_block, last_eth_scraped_block, transactionResponse, erc20]);
+
+  return (
+    <Flex sx={{ gap: "0 3px" }}>
+      <Arrow />
+      <Typography sx={{ fontSize: "12px", color: "text.primary" }}>{block ?? "--"}</Typography>
+      <Typography sx={{ fontSize: "12px" }}>blocks</Typography>
+    </Flex>
+  );
+}
+
+interface EthereumDissolveConfirmationsProps {
+  hash: string | undefined;
+}
+
+export function EthereumDissolveConfirmations({ hash }: EthereumDissolveConfirmationsProps) {
+  const ethereumDissolveTx = useEthDissolveTx(hash);
+
+  return (
+    <Flex sx={{ gap: "0 4px" }}>
+      <Typography sx={{ fontSize: "12px" }}>{ethereumDissolveTx?.state ? ethereumDissolveTx?.state : "--"}</Typography>
+    </Flex>
+  );
 }
 
 interface Erc20DissolveConfirmations {

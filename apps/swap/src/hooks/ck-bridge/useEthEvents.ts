@@ -1,14 +1,14 @@
 import { useMemo } from "react";
 import { useEthDissolveTxs, useEthUnTxFinalizedTxs } from "store/web3/hooks";
 import { ckETH } from "@icpswap/tokens";
-import { EthereumMintTransactionEvent } from "types/web3";
+import { EthereumTransactionEvent } from "types/web3";
 import { isUndefinedOrNull } from "@icpswap/utils";
 
 export function useEthEvents() {
   const ethMintTxs = useEthUnTxFinalizedTxs();
   const allEthDissolveTx = useEthDissolveTxs();
 
-  const ethMintEvents: EthereumMintTransactionEvent[] = useMemo(() => {
+  const ethMintEvents: EthereumTransactionEvent[] = useMemo(() => {
     if (isUndefinedOrNull(ethMintTxs)) return [];
 
     return ethMintTxs.map((mintTx) => {
@@ -22,7 +22,7 @@ export function useEthEvents() {
     });
   }, [ethMintTxs]);
 
-  const ethDissolveEvents: EthereumMintTransactionEvent[] = useMemo(() => {
+  const ethDissolveEvents: EthereumTransactionEvent[] = useMemo(() => {
     return (allEthDissolveTx ?? [])
       .filter((dissolveTx) => {
         return dissolveTx.state !== "TxFinalized";

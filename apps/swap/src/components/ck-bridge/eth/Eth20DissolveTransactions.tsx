@@ -4,7 +4,7 @@ import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { ckETH } from "@icpswap/tokens";
 import { Flex } from "@icpswap/ui";
 import { EXPLORER_TX_LINK } from "constants/ckERC20";
-import { useEthDissolveTxs } from "store/web3/hooks";
+import { useEthDissolveTxs, useEthTxResponse } from "store/web3/hooks";
 import { DissolveTx } from "types/ckETH";
 import { useTranslation } from "react-i18next";
 
@@ -27,6 +27,7 @@ function Transaction({ transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
+  const txResponse = useEthTxResponse(transaction.hash);
 
   return (
     <Box
@@ -40,7 +41,7 @@ function Transaction({ transaction }: TransactionProps) {
       <Flex vertical gap="12px 0" align="flex-start">
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.block")}</Typography>
-          <Typography color="text.primary">{transaction.block_index}</Typography>
+          <Typography color="text.primary">{txResponse?.blockNumber}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
