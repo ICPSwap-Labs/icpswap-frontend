@@ -29,7 +29,7 @@ export function Erc20NetworkState({ token, minterInfo }: Erc20NetworkStateProps)
         <EthereumFinalizedBlock />
         {minterInfo ? (
           <Box sx={{ margin: "8px 0 0 0" }}>
-            <LastSyncBlock minterInfo={minterInfo} />
+            <LastSyncBlock minterInfo={minterInfo} erc20 />
           </Box>
         ) : null}
       </Box>
