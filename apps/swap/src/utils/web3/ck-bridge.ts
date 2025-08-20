@@ -52,9 +52,9 @@ export function getBitcoinAmountFromTrans(
   transaction: BitcoinTransaction | undefined,
   address: string | undefined | null,
 ) {
-  if (!transaction || !address) return "--";
+  if (!transaction || !address) return undefined;
 
-  let amount: number | string = "--";
+  let amount: number | string | undefined;
 
   for (let i = 0; i < transaction.vout.length; i++) {
     const trans = transaction.vout[i];

@@ -15,7 +15,7 @@ export function useBtcMintEvents() {
     return bitcoinMintTransactions.map((tx) => {
       return {
         hash: tx.txid,
-        amount: getBitcoinAmountFromTrans(tx, address).toString(),
+        amount: getBitcoinAmountFromTrans(tx, address)?.toString() ?? "",
         type: "mint",
         chain: "btc",
         token: ckBTC.address,

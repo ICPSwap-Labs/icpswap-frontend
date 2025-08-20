@@ -18,7 +18,7 @@ interface ConfirmationsUIProps {
   currentConfirmations: number | undefined;
 }
 
-function ConfirmationsUI({ confirmations, currentConfirmations }: ConfirmationsUIProps) {
+export function ConfirmationsUI({ confirmations, currentConfirmations }: ConfirmationsUIProps) {
   const theme = useTheme();
 
   const width = useMemo(() => {
@@ -126,7 +126,21 @@ export function BitcoinMintConfirmations({ hash }: BitcoinMintConfirmationsProps
   const transactionResponse = useBitcoinTxResponse(hash);
   const confirmations = useBitcoinConfirmations(transactionResponse?.block_height);
 
-  return <ConfirmationsUI confirmations={BITCOIN_CONFIRMATIONS} currentConfirmations={confirmations} />;
+  const block = useMemo(() => {
+    if (isUndefinedOrNull(confirmations)) return undefined;
+
+    const block = BITCOIN_CONFIRMATIONS - confirmations;
+
+    return block < 0 ? 0 : block;
+  }, [BITCOIN_CONFIRMATIONS, confirmations]);
+
+  return (
+    <Flex sx={{ gap: "0 3px" }}>
+      <Arrow />
+      <Typography sx={{ fontSize: "12px", color: "text.primary" }}>{block ?? "--"}</Typography>
+      <Typography sx={{ fontSize: "12px" }}>blocks</Typography>
+    </Flex>
+  );
 }
 
 interface BitcoinDissolveConfirmationsProps {
