@@ -3,12 +3,12 @@ import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { ChainId } from "@icpswap/constants";
 import { SUPPORTED_CHAINS } from "constants/web3";
-import { useWeb3React } from "@web3-react/core";
+import { useAccount, useChainId } from "wagmi";
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { ERC20Token } from "@icpswap/swap-sdk";
-
 import { Null } from "@icpswap/types";
+
 import { addTransaction, cancelTransaction, removeTransaction } from "./reducer";
 import { TransactionDetails, TransactionInfo, TransactionType } from "./types";
 
@@ -18,7 +18,9 @@ export function useTransactionAdder(): (
   info: TransactionInfo,
   deadline?: number,
 ) => void {
-  const { chainId, account } = useWeb3React();
+  const chainId = useChainId();
+  const { address: account } = useAccount();
+
   const dispatch = useAppDispatch();
 
   return useCallback(
@@ -37,7 +39,8 @@ export function useTransactionAdder(): (
 }
 
 export function useTransactionRemover() {
-  const { chainId, account } = useWeb3React();
+  const chainId = useChainId();
+  const { address: account } = useAccount();
   const dispatch = useAppDispatch();
 
   return useCallback(
@@ -71,8 +74,7 @@ export function useMultichainTransactions(): [TransactionDetails, ChainId][] {
 
 // returns all the transactions for the current chain
 function useAllTransactions(): { [txHash: string]: TransactionDetails } {
-  const { chainId } = useWeb3React();
-
+  const chainId = useChainId();
   const state = useAppSelector((state) => state.transactions);
 
   return chainId ? state[chainId] ?? {} : {};
@@ -144,7 +146,7 @@ export function useHasPendingRevocation(token?: ERC20Token, spender?: string): b
 
 export function usePendingTransactions(): TransactionDetails[] {
   const allTransactions = useAllTransactions();
-  const { account } = useWeb3React();
+  const { address: account } = useAccount();
 
   return useMemo(
     () => Object.values(allTransactions).filter((tx) => tx.from === account && isPendingTx(tx)),

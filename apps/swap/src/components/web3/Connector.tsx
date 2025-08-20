@@ -1,41 +1,29 @@
-import { useWeb3React } from "@web3-react/core";
-import { Connector } from "@web3-react/types";
 import { Button } from "components/Mui";
-import { injectedConnection } from "utils/web3/connection";
 import { DEFAULT_CHAIN_ID } from "constants/web3";
 import { useCallback } from "react";
 import { isMobile } from "react-device-detect";
+import { useConnect, useChainId } from "wagmi";
+import { metaMask } from "wagmi/connectors";
 
 export interface Web3ButtonConnectorProps {
   chainId?: number;
 }
 
-export function Web3ButtonConnector({ chainId }: Web3ButtonConnectorProps) {
-  const { account, chainId: currChainId } = useWeb3React();
-
-  const tryActivation = useCallback(
-    async (connector: Connector) => {
-      try {
-        await connector.activate(chainId ?? DEFAULT_CHAIN_ID);
-      } catch (error) {
-        console.error(`web3-react connection error: ${error}`);
-      }
-    },
-    [chainId],
-  );
+export function Web3ButtonConnector() {
+  const { connect } = useConnect();
+  const currChainId = useChainId();
 
   const handleConnect = useCallback(async () => {
     if (isMobile) {
-      // if (!account) {
-      //   window.open("https://metamask.io/download/");
-      // }
       return;
     }
 
-    if (!account || (!!account && currChainId !== (chainId ?? DEFAULT_CHAIN_ID))) {
-      tryActivation(injectedConnection.connector);
+    try {
+      await connect({ connector: metaMask() });
+    } catch (error) {
+      console.error(`web3-react connection error: ${error}`);
     }
-  }, [isMobile, account, currChainId, chainId, DEFAULT_CHAIN_ID]);
+  }, [isMobile, currChainId, DEFAULT_CHAIN_ID]);
 
   return (
     <Button sx={{ maxWidth: "100%" }} variant="contained" onClick={handleConnect} disabled={isMobile}>

@@ -19,12 +19,12 @@ import { wagmiConfig } from "constants/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DisableIframe } from "components/DisableIframe";
 import { PublicTokenOverview, Null } from "@icpswap/types";
+import Web3Provider from "components/Web3Injector";
+import { FullscreenLoading } from "components/index";
+import NavigationScroll from "components/NavigationScroll";
 
 import { GlobalFetch } from "./GlobalFetch";
-import Web3Provider from "./components/Web3Injector";
 import { useFetchAllSwapTokens } from "./store/global/hooks";
-import { FullscreenLoading } from "./components/index";
-import NavigationScroll from "./components/NavigationScroll";
 import { theme } from "./theme";
 import Routes from "./routes";
 

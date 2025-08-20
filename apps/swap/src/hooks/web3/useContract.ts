@@ -1,5 +1,5 @@
 import { Contract } from "@ethersproject/contracts";
-import { useWeb3React } from "@web3-react/core";
+import { useAccount } from "wagmi";
 import { chain, SUPPORTED_CHAINS } from "constants/web3";
 import { useMemo } from "react";
 import { getContract } from "utils/web3/index";
@@ -10,8 +10,8 @@ import type { UniswapInterfaceMulticall, ERC20, EthHelper } from "abis/types";
 import UniswapInterfaceMulticallJson from "abis/UniswapInterfaceMulticall.json";
 import EthHelperABI from "abis/EthHelper.json";
 import ERC20ABI from "abis/ERC20.json";
-
-import { useEthersWeb3Provider } from "./useEthersProvider";
+import { useWeb3React } from "@web3-react/core";
+import { useEthersWeb3Provider } from "hooks/web3/useEthersProvider";
 
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson;
 
@@ -21,7 +21,9 @@ export function useContract<T extends Contract = Contract>(
   ABI: any,
   withSignerIfPossible = true,
 ): T | null {
-  const { provider, account } = useWeb3React();
+  const { provider } = useWeb3React();
+  const { address: account } = useAccount();
+
   const ethersProvider = useEthersWeb3Provider();
 
   return useMemo(() => {

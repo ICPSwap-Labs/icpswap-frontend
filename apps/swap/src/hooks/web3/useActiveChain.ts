@@ -1,9 +1,9 @@
-import { useWeb3React } from "@web3-react/core";
+import { useChainId } from "wagmi";
 import { DEFAULT_CHAIN_ID, SUPPORTED_CHAINS } from "constants/web3";
 import { useMemo } from "react";
 
 export function useActiveChain(): number | undefined {
-  const { chainId } = useWeb3React();
+  const chainId = useChainId();
 
   return chainId ?? DEFAULT_CHAIN_ID;
 }

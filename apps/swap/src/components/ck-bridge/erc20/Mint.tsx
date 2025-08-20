@@ -3,12 +3,10 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { Box, Typography, useTheme } from "components/Mui";
 import { InputWrapper } from "components/ck-bridge";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Web3ButtonConnector } from "components/web3/index";
-import { useWeb3React } from "@web3-react/core";
+import { useAccount } from "wagmi";
 import { useActiveChain } from "hooks/web3/index";
 import { useERC20TokenByChainKeyId } from "hooks/token/index";
 import { ApprovalState } from "hooks/web3/useApproveCallback";
@@ -17,8 +15,8 @@ import { useMintCallback } from "hooks/ck-erc20/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
-
-import { MintExtraContent } from "./MintExtra";
+import { MintExtraContent } from "components/ck-bridge/erc20/MintExtra";
+import { Web3WalletWrapper } from "components/ck-bridge/Web3WalletWrapper";
 
 export interface Erc20MintProps {
   token: Token;
@@ -29,8 +27,7 @@ export interface Erc20MintProps {
 
 export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20MintProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const { account } = useWeb3React();
+  const { address: account } = useAccount();
 
   const principal = useAccountPrincipal();
   const chainId = useActiveChain();
@@ -80,24 +77,7 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
 
   return (
     <>
-      <Box
-        sx={{
-          width: "100%",
-          padding: "20px 16px",
-          background: theme.palette.background.level2,
-          borderRadius: "16px",
-        }}
-      >
-        <Typography>{t("ck.wallet.metamask")}</Typography>
-
-        <Box sx={{ margin: "10px 0 0 0" }}>
-          {account ? (
-            <Typography sx={{ fontSize: "16px", color: "text.primary", wordBreak: "break-all" }}>{account}</Typography>
-          ) : (
-            <Web3ButtonConnector />
-          )}
-        </Box>
-      </Box>
+      <Web3WalletWrapper />
 
       <InputWrapper
         value={amount}

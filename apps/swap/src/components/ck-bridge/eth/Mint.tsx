@@ -3,20 +3,18 @@ import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { Box, Typography, useTheme } from "components/Mui";
 import { InputWrapper } from "components/ck-bridge";
 import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Web3ButtonConnector } from "components/web3/index";
-import { useWeb3React } from "@web3-react/core";
+import { useAccount } from "wagmi";
 import { useActiveChain } from "hooks/web3/index";
 import { chainIdToNetwork, chain } from "constants/web3";
 import { useMintCallback } from "hooks/ck-eth/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
-
-import { MintExtraContent } from "./MintExtra";
+import { MintExtraContent } from "components/ck-bridge/eth/MintExtra";
+import { Web3WalletWrapper } from "components/ck-bridge/Web3WalletWrapper";
 
 export interface EthMintProps {
   token: Token;
@@ -26,8 +24,7 @@ export interface EthMintProps {
 
 export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const { account } = useWeb3React();
+  const { address } = useAccount();
 
   const principal = useAccountPrincipal();
   const chainId = useActiveChain();
@@ -69,24 +66,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
 
   return (
     <>
-      <Box
-        sx={{
-          width: "100%",
-          padding: "20px 16px",
-          background: theme.palette.background.level2,
-          borderRadius: "16px",
-        }}
-      >
-        <Typography>{t("ck.wallet.metamask")}</Typography>
-
-        <Box sx={{ margin: "10px 0 0 0" }}>
-          {account ? (
-            <Typography sx={{ fontSize: "16px", color: "text.primary", wordBreak: "break-all" }}>{account}</Typography>
-          ) : (
-            <Web3ButtonConnector />
-          )}
-        </Box>
-      </Box>
+      <Web3WalletWrapper />
 
       <InputWrapper
         value={amount}
@@ -102,7 +82,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
         fullWidth
         size="large"
         onClick={handleMint}
-        disabled={loading || !account || !!mint_error || oisyButtonDisabled}
+        disabled={loading || !address || !!mint_error || oisyButtonDisabled}
         loading={loading}
       >
         {mint_error === undefined ? t("common.mint.symbol", { symbol: "ckETH" }) : mint_error}

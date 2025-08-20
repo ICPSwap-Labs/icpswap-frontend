@@ -1,4 +1,4 @@
-import { useWeb3React } from "@web3-react/core";
+import { useAccount } from "wagmi";
 import { useCallback } from "react";
 import { BigNumber } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
@@ -6,7 +6,7 @@ import { useCallsData } from "@icpswap/hooks";
 import { useERC20Contract } from "./useContract";
 
 export function useERC20Balance(contractAddress: string | undefined, reload?: number) {
-  const { account } = useWeb3React();
+  const { address: account } = useAccount();
   const contract = useERC20Contract(contractAddress);
 
   return useCallsData(
