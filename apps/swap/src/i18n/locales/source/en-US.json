@@ -263,7 +263,7 @@
   "wallet.token.sync": "Sync your tokens here",
   "stake.enter.reward.id": "Enter reward token ID",
   "nft.create.canister.to.mint": "Create a canister to mint your NFTs",
-  "ether.latest.block": "Last synced block height (Ethereum): {{block}}",
+  "ether.latest.block": "Last synced block height ({{chain}}): {{block}}",
   "voting.cast.description": "Are you sure want to cast this vote? This action cannot be undone",
   "info.swap.pool.empty": "If the token or trading pair you're searching for isn't in the Tokenlist, try adjusting the settings to display all tokens and trading pairs.",
   "ck.ether.block.height": "Ethereum network block height: {{block}}",

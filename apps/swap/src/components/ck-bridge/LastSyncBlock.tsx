@@ -19,7 +19,10 @@ export function LastSyncBlock({ minterInfo, erc20 }: LastSyncBlockProps) {
 
   return (
     <Typography sx={{ margin: "8px 0 0 0", fontSize: "12px" }}>
-      {t("ether.latest.block", { block: last_block ? last_block.toString() : "--" })}
+      {t("ether.latest.block", {
+        block: last_block ? last_block.toString() : "--",
+        chain: erc20 ? "erc20" : "Ethereum",
+      })}
     </Typography>
   );
 }
