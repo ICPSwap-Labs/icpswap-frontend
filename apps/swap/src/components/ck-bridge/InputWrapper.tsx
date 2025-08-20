@@ -40,7 +40,7 @@ export function InputWrapper({ value, token, balance, chain, onInput, onMax }: I
   );
 
   const usdValue = useMemo(() => {
-    if (isUndefinedOrNull(tokenUSDPrice) || isUndefinedOrNull(value)) return undefined;
+    if (isUndefinedOrNull(tokenUSDPrice) || isUndefinedOrNull(value) || value === "") return undefined;
     return new BigNumber(tokenUSDPrice).multipliedBy(value).toString();
   }, [tokenUSDPrice, value]);
 
