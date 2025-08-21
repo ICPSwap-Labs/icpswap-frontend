@@ -29,5 +29,5 @@ export function useErc20DissolveTxWatcher() {
     }
 
     call();
-  }, [erc20DissolveTxs]);
+  }, [erc20DissolveTxs, erc20DissolveCompletedTxs]);
 }
