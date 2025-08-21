@@ -101,7 +101,7 @@ export function Erc20MintTransactionEvent({ event }: Erc20MintTransactionEventPr
     <TransactionEventUI
       logo0={event.type === "mint" ? CHIAN_ETH_LOGO : CHIAN_ICP_LOGO}
       logo1={event.type === "mint" ? CHIAN_ICP_LOGO : CHIAN_ETH_LOGO}
-      tokenLogo={ckETH.logo}
+      tokenLogo={token?.logo}
       amount={token ? formatAmount(parseTokenAmount(event.amount, token.decimals).toString()) : undefined}
       onClick={handleClick}
     />

@@ -28,10 +28,8 @@ export interface Erc20MintProps {
 export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20MintProps) {
   const { t } = useTranslation();
   const { address: account } = useAccount();
-
   const principal = useAccountPrincipal();
   const chainId = useActiveChain();
-
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
   const erc20Token = useERC20TokenByChainKeyId(token.address, minterInfo);
