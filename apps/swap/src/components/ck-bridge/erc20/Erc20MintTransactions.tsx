@@ -1,16 +1,16 @@
 import { useTheme, Box, Typography, makeStyles } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
-import { toSignificant } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount, toSignificant } from "@icpswap/utils";
 import dayjs from "dayjs";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import { TX } from "types/web3";
 import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
-import { useTransaction } from "hooks/web3/useTransaction";
 import { Flex } from "@icpswap/ui";
-import { useUserErc20TX } from "store/web3/hooks";
+import { useErc20MintTxs, useEthTxResponse } from "store/web3/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
+import { useMemo } from "react";
+import { useEthereumConfirmations } from "hooks/ck-bridge/useEthereumConfirmations";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -25,13 +25,26 @@ const useStyles = makeStyles(() => ({
 
 interface TransactionProps {
   transaction: TX;
+  token: Token | Null;
 }
 
-function Transaction({ transaction }: TransactionProps) {
+function Transaction({ token, transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
-  const trans = useTransaction(transaction.hash);
+  const transactionResponse = useEthTxResponse(transaction.hash);
+  const confirmations = useEthereumConfirmations(transactionResponse);
+
+  const amount = useMemo(() => {
+    if (isUndefinedOrNull(token)) return undefined;
+
+    // The time that the value has changed to formatted with decimals
+    const codeUpgradeTime = 1753717359197;
+
+    return new BigNumber(transaction.timestamp).isLessThan(codeUpgradeTime)
+      ? transaction.value
+      : parseTokenAmount(transaction.value, token.decimals).toString();
+  }, [transaction, token]);
 
   return (
     <Box
@@ -51,14 +64,14 @@ function Transaction({ transaction }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.height")}</Typography>
-          <Typography>
-            {trans?.blockNumber ? (
+          <Typography component="div">
+            {transactionResponse?.blockNumber ? (
               <ALink
-                link={`${EXPLORER_BLOCK_LINK}/${trans.blockNumber}`}
+                link={`${EXPLORER_BLOCK_LINK}/${transactionResponse.blockNumber}`}
                 color="secondary"
                 textDecorationColor="secondary"
               >
-                {trans.blockNumber}
+                {transactionResponse.blockNumber}
               </ALink>
             ) : (
               "--"
@@ -69,7 +82,7 @@ function Transaction({ transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography className={classes.txLink}>
+          <Typography className={classes.txLink} component="div">
             <ALink link={`${EXPLORER_TX_LINK}/${transaction.hash}`} color="secondary" textDecorationColor="secondary">
               {transaction.hash}
             </ALink>
@@ -78,11 +91,14 @@ function Transaction({ transaction }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.from")}</Typography>
-
-          <Typography className={classes.txLink}>
-            {trans ? (
-              <ALink link={`${EXPLORER_ADDRESS_LINK}/${trans.from}`} color="secondary" textDecorationColor="secondary">
-                {trans.from}
+          <Typography className={classes.txLink} component="div">
+            {transactionResponse ? (
+              <ALink
+                link={`${EXPLORER_ADDRESS_LINK}/${transactionResponse.from}`}
+                color="secondary"
+                textDecorationColor="secondary"
+              >
+                {transactionResponse.from}
               </ALink>
             ) : (
               "--"
@@ -93,10 +109,14 @@ function Transaction({ transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.to")}</Typography>
 
-          <Typography className={classes.txLink}>
-            {trans?.to ? (
-              <ALink link={`${EXPLORER_ADDRESS_LINK}/${trans.to}`} color="secondary" textDecorationColor="secondary">
-                {trans.to}
+          <Typography className={classes.txLink} component="div">
+            {transactionResponse?.to ? (
+              <ALink
+                link={`${EXPLORER_ADDRESS_LINK}/${transactionResponse.to}`}
+                color="secondary"
+                textDecorationColor="secondary"
+              >
+                {transactionResponse.to}
               </ALink>
             ) : (
               "--"
@@ -106,14 +126,12 @@ function Transaction({ transaction }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.amount")}</Typography>
-
-          <Typography>{toSignificant(transaction.value)}</Typography>
+          <Typography>{amount ? toSignificant(amount) : "--"}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.confirmations")}</Typography>
-
-          <Typography>{trans ? trans.confirmations : "--"}</Typography>
+          <Typography>{nonUndefinedOrNull(confirmations) ? confirmations : "--"}</Typography>
         </Flex>
       </Flex>
     </Box>
@@ -128,8 +146,7 @@ export interface Erc20MintTransactionsProps {
 
 export function Erc20MintTransactions({ token, ledger }: Erc20MintTransactionsProps) {
   const { t } = useTranslation();
-  const principal = useAccountPrincipalString();
-  const transactions = useUserErc20TX(principal, ledger);
+  const transactions = useErc20MintTxs(ledger);
 
   return (
     <MainCard level={1}>
@@ -141,8 +158,13 @@ export function Erc20MintTransactions({ token, ledger }: Erc20MintTransactionsPr
 
       <Box>
         <>
-          {transactions?.map((transaction, index) => <Transaction key={index} transaction={transaction} />)}
-          {transactions?.length === 0 || !transactions ? <NoData tip={t("ck.empty")} /> : null}
+          {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+            <NoData tip={t("ck.empty")} />
+          ) : (
+            transactions.map((transaction, index) => (
+              <Transaction key={index} transaction={transaction} token={token} />
+            ))
+          )}
         </>
       </Box>
     </MainCard>

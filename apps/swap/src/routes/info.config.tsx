@@ -17,10 +17,6 @@ const Farm = Loadable(lazy(() => import("../views/info/farm")));
 const FarmDetails = Loadable(lazy(() => import("../views/info/farm/Details")));
 const TokenClaim = Loadable(lazy(() => import("../views/info/token-claim")));
 const TokenClaimTransactions = Loadable(lazy(() => import("../views/info/token-claim/transactions")));
-const NFTs = Loadable(lazy(() => import("../views/info/nft/NFTs")));
-const NFTDetails = Loadable(lazy(() => import("../views/info/nft/Details")));
-const NFTInfo = Loadable(lazy(() => import("../views/info/nft/NFTInfo")));
-const MarketPlace = Loadable(lazy(() => import("../views/info/marketplace")));
 const Tools = Loadable(lazy(() => import("../views/info/tools")));
 const ToolsBurn = Loadable(lazy(() => import("../views/info/tools/burn")));
 const ToolsValuation = Loadable(lazy(() => import("../views/info/tools/valuation")));
@@ -50,10 +46,6 @@ export const infoRoutesConfigs = {
   INFO_WRAP: "/info-wrap",
   INFO_CLAIM: "/info-claim",
   INFO_CLAIM_TRANSACTIONS: "/info-claim/transactions/:id",
-  INFO_NFTS: "/info-nfts",
-  INFO_NFTS_CANISTER: "/info-nfts/canister/:id",
-  INFO_NFTS_INFO: "/info-nfts/info/:canisterId/:id",
-  INFO_MARKETPLACE: "/info-marketplace",
   INFO_TOOLS: "/info-tools",
   INFO_TOOLS_BURN: "/info-tools/burn",
   INFO_TOOLS_VALUATION: "/info-tools/valuation",
@@ -121,22 +113,6 @@ export const infoRoutes: RouteDefinition[] = [
   {
     path: "/info-claim/transactions/:id",
     getElement: () => <TokenClaimTransactions />,
-    getTitle: () => StaticTitlesAndDescriptions.Info,
-  },
-  { path: infoRoutesConfigs.INFO_NFTS, getElement: () => <NFTs />, getTitle: () => StaticTitlesAndDescriptions.Info },
-  {
-    path: "/info-nfts/canister/:id",
-    getElement: () => <NFTDetails />,
-    getTitle: () => StaticTitlesAndDescriptions.Info,
-  },
-  {
-    path: "/info-nfts/info/:canisterId/:id",
-    getElement: () => <NFTInfo />,
-    getTitle: () => StaticTitlesAndDescriptions.Info,
-  },
-  {
-    path: infoRoutesConfigs.INFO_MARKETPLACE,
-    getElement: () => <MarketPlace />,
     getTitle: () => StaticTitlesAndDescriptions.Info,
   },
   { path: infoRoutesConfigs.INFO_TOOLS, getElement: () => <Tools />, getTitle: () => StaticTitlesAndDescriptions.Info },

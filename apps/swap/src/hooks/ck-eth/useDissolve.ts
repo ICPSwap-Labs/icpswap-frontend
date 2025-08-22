@@ -7,7 +7,7 @@ import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import { withdraw_eth } from "@icpswap/hooks";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { useUpdateUserWithdrawTx } from "store/web3/hooks";
+import { useUpdateEthDissolveTx } from "store/web3/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
 
@@ -16,7 +16,7 @@ export function useDissolveCallback() {
   const principal = useAccountPrincipalString();
   const [loading, setLoading] = useState(false);
 
-  const updateUserTx = useUpdateUserWithdrawTx();
+  const updateUserTx = useUpdateEthDissolveTx();
   const [openTip] = useTips();
   const approve = useApprove();
 
@@ -50,7 +50,7 @@ export function useDissolveCallback() {
       if (withdraw_status === ResultStatus.ERROR) {
         openTip(withdraw_message ?? t("ck.ether.dissolve.loading"), MessageTypes.error);
       } else {
-        openTip(t("ck.ether.dissolution.submitted"), MessageTypes.success);
+        openTip(t("ck.dissolve.submitted", { symbol: "ETH" }), MessageTypes.success);
         if (data?.block_index) {
           updateUserTx(principal, data.block_index, undefined, withdraw_amount.toString());
         }

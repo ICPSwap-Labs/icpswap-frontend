@@ -65,12 +65,6 @@
   "TokenList": {
     "ic": "k37c6-riaaa-aaaag-qcyza-cai"
   },
-  "VotingFileCanister": {
-    "ic": "7suwn-jiaaa-aaaan-qa3jq-cai"
-  },
-  "VoteController": {
-    "ic": "7htha-iaaaa-aaaan-qa3ka-cai"
-  },
   "LiquidityLocks": {
     "ic": "ihzcl-aiaaa-aaaah-aebvq-cai"
   },

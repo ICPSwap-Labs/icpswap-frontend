@@ -11,6 +11,7 @@ import type {
 import { Principal } from "@dfinity/principal";
 
 import { useCallsData } from "../useCallData";
+import { useInterval } from "../useInterval";
 
 export interface WithdrawErc20TokenArgs {
   ledger_id: Principal;
@@ -72,6 +73,15 @@ export function useChainKeyMinterInfo(minter_id: string | Null) {
       return await getChainKeyMinterInfo(minter_id);
     }, [minter_id]),
   );
+}
+
+export function useIntervalChainKeyMinterInfo(minter_id: string | Null) {
+  const callback = useCallback(async () => {
+    if (!minter_id) return undefined;
+    return await getChainKeyMinterInfo(minter_id);
+  }, [minter_id]);
+
+  return useInterval<ChainKeyETHMinterInfo | undefined>(callback);
 }
 
 export async function getChainKeyTransactionPrice(minter_id: string) {

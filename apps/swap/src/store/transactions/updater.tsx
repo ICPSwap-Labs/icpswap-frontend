@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { TransactionReceipt } from "@ethersproject/abstract-provider";
-import { useWeb3React } from "@web3-react/core";
+import { useChainId } from "wagmi";
 import LibUpdater from "hooks/transactions/updater";
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
@@ -23,10 +23,7 @@ export function toSerializableReceipt(receipt: TransactionReceipt): Serializable
 }
 
 export default function Updater() {
-  // const analyticsContext = useTrace();
-  const { chainId } = useWeb3React();
-
-  // const addPopup = useAddPopup();
+  const chainId = useChainId();
 
   // speed up popup dismissal time if on L2
   // const isL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId));

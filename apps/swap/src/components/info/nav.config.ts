@@ -42,10 +42,5 @@ export const routes: Route[] = [
     key: "info-claim",
     name: i18n.t("nav.token.claim"),
     path: "/info-claim",
-  },
-  {
-    key: "info-nfts",
-    name: "NFTs",
-    path: `/info-nfts`,
-  },
+  }
 ];

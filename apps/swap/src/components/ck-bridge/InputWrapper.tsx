@@ -1,15 +1,21 @@
 import { NumberTextField, MaxButton } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
-import { BigNumber, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatDollarAmount,
+  isUndefinedOrNull,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
 import { useTokenSymbol } from "hooks/ck-bridge";
 import { useTranslation } from "react-i18next";
-
-import { TokenImageWithChain } from "./ChainImage";
+import { TokenImageWithChain } from "components/ck-bridge/ChainImage";
+import { useUSDPrice } from "hooks/index";
 
 export interface InputWrapperProps {
   token: Token | Null;
@@ -23,8 +29,8 @@ export interface InputWrapperProps {
 export function InputWrapper({ value, token, balance, chain, onInput, onMax }: InputWrapperProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-
   const symbol = useTokenSymbol({ token, bridgeChain: chain });
+  const tokenUSDPrice = useUSDPrice(token);
 
   const handleInput = useCallback(
     (value: string) => {
@@ -32,6 +38,11 @@ export function InputWrapper({ value, token, balance, chain, onInput, onMax }: I
     },
     [onInput],
   );
+
+  const usdValue = useMemo(() => {
+    if (isUndefinedOrNull(tokenUSDPrice) || isUndefinedOrNull(value) || value === "") return undefined;
+    return new BigNumber(tokenUSDPrice).multipliedBy(value).toString();
+  }, [tokenUSDPrice, value]);
 
   return (
     <Box
@@ -76,15 +87,18 @@ export function InputWrapper({ value, token, balance, chain, onInput, onMax }: I
         ) : null}
       </Flex>
 
-      <Flex justify="flex-end" gap="0 6px">
-        <Typography>
-          {t("common.balance.colon")}&nbsp;
-          {balance && token
-            ? toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString())
-            : "--"}
-        </Typography>
+      <Flex justify="space-between" fullWidth>
+        <Typography>{usdValue ? `≈${formatDollarAmount(usdValue)}` : " "}</Typography>
+        <Flex justify="flex-end" gap="0 6px">
+          <Typography>
+            {t("common.balance.colon")}&nbsp;
+            {balance && token
+              ? toSignificantWithGroupSeparator(parseTokenAmount(balance, token.decimals).toString())
+              : "--"}
+          </Typography>
 
-        <MaxButton onClick={onMax} />
+          <MaxButton onClick={onMax} />
+        </Flex>
       </Flex>
     </Box>
   );

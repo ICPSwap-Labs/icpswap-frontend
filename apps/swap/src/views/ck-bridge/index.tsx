@@ -1,19 +1,15 @@
-import { useChainKeyMinterInfo, useParsedQueryString } from "@icpswap/hooks";
+import { useParsedQueryString } from "@icpswap/hooks";
 import { ckBridgeChain } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { ckBTC, ckUSDC, ckETH } from "@icpswap/tokens";
 import { Erc20BridgeWrapper, BtcBridgeWrapper, EthBridgeWrapper } from "components/ck-bridge";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { MINTER_ID } from "constants/ckETH";
 import { useToken } from "hooks/useCurrency";
 import { useHistory } from "react-router-dom";
-import { useFetchFinalizedBlock, useFetchBlockNumber } from "hooks/web3/useBlockNumber";
+import { useGlobalMinterInfoManager } from "store/global/hooks";
 
 export default function CkBridge() {
-  useFetchFinalizedBlock();
-  useFetchBlockNumber();
-
   const [token, setToken] = useState<Token>(ckUSDC);
   const [bridgeChain, setBridgeChain] = useState<ckBridgeChain>(ckBridgeChain.eth);
 
@@ -26,7 +22,7 @@ export default function CkBridge() {
 
   const [, tokenFromUrl] = useToken(tokenId);
 
-  const { result: minterInfo } = useChainKeyMinterInfo(MINTER_ID);
+  const [minterInfo] = useGlobalMinterInfoManager();
 
   const bridgeTokenType = useMemo(() => {
     if (!token || !minterInfo) return;

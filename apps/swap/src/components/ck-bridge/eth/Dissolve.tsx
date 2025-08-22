@@ -13,15 +13,16 @@ import { Box, Typography, useTheme, CircularProgress, TextField } from "componen
 import { InputWrapper, EthFee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useWeb3React } from "@web3-react/core";
+import { useAccount } from "wagmi";
 import { isAddress } from "utils/web3/index";
 import { useDissolveCallback } from "hooks/ck-eth/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
-import { useFetchUserTxStates } from "hooks/ck-eth";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { Flex } from "@icpswap/ui";
+import { DisconnectButton } from "components/ck-bridge/Disconnect";
 
 export interface EthDissolveProps {
   token: Token;
@@ -32,11 +33,8 @@ export interface EthDissolveProps {
 export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { account } = useWeb3React();
-
+  const { address: account } = useAccount();
   const principal = useAccountPrincipal();
-
-  useFetchUserTxStates();
 
   const symbol = useTokenSymbol({
     token,
@@ -45,9 +43,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
 
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
-
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("Erc20Dissolve");
-
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
   const ercTokenBalance = useBridgeTokenBalance({
     token,
@@ -117,36 +113,50 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
         <Typography sx={{ fontSize: "16px" }}>{t("ck.receiving.address", { symbol })}</Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
-          <TextField
-            sx={{
-              "& input": {
-                lineHeight: "1.15rem",
-                fontSize: "16px",
-              },
-              "& textarea": {
-                lineHeight: "1.15rem",
-                fontSize: "16px",
-              },
-              "& input::placeholder": {
-                fontSize: "16px",
-              },
-              "& textarea::placeholder": {
-                fontSize: "16px",
-              },
-            }}
-            variant="standard"
-            onChange={({ target: { value } }) => setAddress(value)}
-            value={address}
-            multiline
-            slotProps={{
-              input: {
-                disableUnderline: true,
-              },
-            }}
+          <Flex
             fullWidth
-            autoComplete="off"
-            placeholder={t("common.enter.address")}
-          />
+            gap="0 2px"
+            sx={{
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                gap: "10px",
+                alignItems: "flex-start",
+              },
+            }}
+          >
+            <TextField
+              sx={{
+                "& input": {
+                  lineHeight: "1.15rem",
+                  fontSize: "16px",
+                },
+                "& textarea": {
+                  lineHeight: "1.15rem",
+                  fontSize: "16px",
+                },
+                "& input::placeholder": {
+                  fontSize: "16px",
+                },
+                "& textarea::placeholder": {
+                  fontSize: "16px",
+                },
+              }}
+              variant="standard"
+              onChange={({ target: { value } }) => setAddress(value)}
+              value={address}
+              multiline
+              slotProps={{
+                input: {
+                  disableUnderline: true,
+                },
+              }}
+              fullWidth
+              autoComplete="off"
+              placeholder={t("common.enter.address")}
+            />
+
+            <DisconnectButton />
+          </Flex>
         </Box>
       </Box>
 

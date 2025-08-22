@@ -34,7 +34,7 @@ export async function getAllSwapTokens(page: number, size: number) {
     limit: size,
   });
 
-  return result.data;
+  return result?.data;
 }
 
 export function useAllSwapTokens() {

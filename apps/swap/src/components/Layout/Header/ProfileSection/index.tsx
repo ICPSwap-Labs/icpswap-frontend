@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useTheme,
   Popper,
@@ -15,9 +15,9 @@ import { useAccountPrincipal, useConnectorStateConnected, useConnectManager, use
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage, Image } from "components/Image/index";
 import { ChevronDown } from "react-feather";
-import { useHistory } from "react-router-dom";
 import { Connector } from "constants/wallet";
 import { useTranslation } from "react-i18next";
+import { ToWallet } from "components/Layout/Header/ToWallet";
 
 import { AccountSection } from "./Account";
 import Principal from "./Principal";
@@ -35,7 +35,6 @@ export default function ProfileSection() {
   const prevOpen = useRef(open);
   const principal = useAccountPrincipal();
   const isConnected = useConnectorStateConnected();
-  const history = useHistory();
   const connector = useConnector();
 
   const { showConnector, disconnect } = useConnectManager();
@@ -61,19 +60,9 @@ export default function ProfileSection() {
     prevOpen.current = open;
   }, [open]);
 
-  const handleToWallet = useCallback(() => {
-    history.push("/wallet");
-  }, [history]);
-
   return (
     <Flex gap="0 4px">
-      {isConnected ? (
-        <Image
-          src="/images/wallet.svg"
-          sx={{ width: "30px", height: "30px", cursor: "pointer" }}
-          onClick={handleToWallet}
-        />
-      ) : null}
+      {isConnected ? <ToWallet /> : null}
 
       <Box ref={anchorRef} onClick={isConnected ? handleToggle : handleConnectWallet} sx={{ zIndex: 10 }}>
         {isConnected ? (

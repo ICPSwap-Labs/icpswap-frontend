@@ -17,11 +17,6 @@ const MINTER_MAPS = {
   [ChainId.SEPOLIA]: "jzenf-aiaaa-aaaar-qaa7q-cai",
 };
 
-const DASHBOARD = {
-  [ChainId.MAINNET]: `https://dashboard.internetcomputer.org/ethereum`,
-  [ChainId.SEPOLIA]: `https://${MINTER_MAPS[ChainId.SEPOLIA]}.raw.icp0.io/dashboard`,
-};
-
 const CANISTER = {
   [ChainId.MAINNET]: `https://dashboard.internetcomputer.org/canister/${LEDGER_ID[chain]}`,
   [ChainId.SEPOLIA]: `https://dashboard.internetcomputer.org/canister/${LEDGER_ID[chain]}`,
@@ -30,8 +25,6 @@ const CANISTER = {
 export const ckETH_LEDGER_ID = LEDGER_ID[chain];
 
 export const MINTER_ID = MINTER_MAPS[chain];
-
-export const ckETH_DASHBOARD = DASHBOARD[chain];
 
 export const ckETH_CANISTER = CANISTER[chain];
 
