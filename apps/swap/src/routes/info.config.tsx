@@ -15,7 +15,6 @@ const Stake = Loadable(lazy(() => import("../views/info/stake")));
 const StakeDetails = Loadable(lazy(() => import("../views/info/stake/Details")));
 const Farm = Loadable(lazy(() => import("../views/info/farm")));
 const FarmDetails = Loadable(lazy(() => import("../views/info/farm/Details")));
-const Wrap = Loadable(lazy(() => import("../views/info/wrap")));
 const TokenClaim = Loadable(lazy(() => import("../views/info/token-claim")));
 const TokenClaimTransactions = Loadable(lazy(() => import("../views/info/token-claim/transactions")));
 const Tools = Loadable(lazy(() => import("../views/info/tools")));
@@ -106,7 +105,6 @@ export const infoRoutes: RouteDefinition[] = [
     getElement: () => <FarmDetails />,
     getTitle: () => StaticTitlesAndDescriptions.Info,
   },
-  { path: infoRoutesConfigs.INFO_WRAP, getElement: () => <Wrap />, getTitle: () => StaticTitlesAndDescriptions.Info },
   {
     path: infoRoutesConfigs.INFO_CLAIM,
     getElement: () => <TokenClaim />,
