@@ -15,11 +15,12 @@ import {
   updateErc20DissolveCompletedTxs,
   updateBitcoinFinalizedHashes,
   cleanBitcoinFinalizedHashes,
+  cleanEthereumFinalizedHashes,
 } from "store/web3/actions";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import store from "store/index";
 import { BitcoinTxResponse } from "types/ckBTC";
-import { useEthereumTxBlockSynced } from "hooks/ck-bridge/useEthereumConfirmations";
+import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
 import { WithdrawalDetail } from "@icpswap/types";
 
 export function useUpdateEthMintTx() {
@@ -46,7 +47,7 @@ export function useEthMintTxs() {
 export function useEthUnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
   const allEthMintTxs = useEthMintTxs();
-  const blockSynced = useEthereumTxBlockSynced();
+  const blockSynced = useEthereumTxSyncFinalized();
 
   return useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(allEthMintTxs)) return undefined;
@@ -249,7 +250,7 @@ export function useErc20UnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
   const erc20MintTxs = useErc20AllMintTxs();
   const allTxsResponse = store.getState().web3.ethTxResponse;
-  const blockSynced = useEthereumTxBlockSynced();
+  const blockSynced = useEthereumTxSyncFinalized();
 
   return useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(erc20MintTxs)) return undefined;
@@ -337,6 +338,14 @@ export function useEthereumFinalizedHashesManager(): [Array<string>, (hash: stri
   );
 
   return useMemo(() => [ethereumFinalizedHashes, callback], [callback, ethereumFinalizedHashes]);
+}
+
+export function useCleanEthereumFinalizedHashes() {
+  const dispatch = useAppDispatch();
+
+  return useCallback(() => {
+    dispatch(cleanEthereumFinalizedHashes());
+  }, [dispatch]);
 }
 
 export function useErc20DissolveDetails(withdrawal_id: string | undefined) {

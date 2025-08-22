@@ -80,6 +80,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
             value: formatAmount,
             gas: response.gasPrice?.toString(),
             ledger: token.address,
+            tokenSymbol: token.symbol,
           });
         }
 

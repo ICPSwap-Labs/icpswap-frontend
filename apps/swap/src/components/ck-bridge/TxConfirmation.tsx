@@ -7,7 +7,7 @@ import { useBitcoinConfirmations } from "hooks/ck-bridge";
 import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
 import { erc20DissolveStatus } from "utils/web3/dissolve";
 import { useBitcoinDissolveTx } from "store/wallet/hooks";
-import { useGlobalMinterInfoManager } from "store/global/hooks";
+import { useEthereumTxBlocksToSyncedBlock } from "hooks/ck-bridge/useEthereumConfirmations";
 
 function Arrow() {
   return <Typography>Δ</Typography>;
@@ -51,33 +51,12 @@ interface EthereumMintConfirmationsProps {
 
 export function EthereumMintConfirmations({ hash, erc20 }: EthereumMintConfirmationsProps) {
   const transactionResponse = useEthTxResponse(hash);
-  const [minterInfo] = useGlobalMinterInfoManager();
-
-  const { last_erc20_scraped_block, last_eth_scraped_block } = useMemo(() => {
-    if (isUndefinedOrNull(minterInfo)) return {};
-
-    return {
-      last_eth_scraped_block: minterInfo.last_eth_scraped_block_number[0],
-      last_erc20_scraped_block: minterInfo.last_erc20_scraped_block_number[0],
-    };
-  }, [minterInfo]);
+  const getBlocksToSyncedBlock = useEthereumTxBlocksToSyncedBlock();
 
   const block = useMemo(() => {
-    if (isUndefinedOrNull(transactionResponse)) return undefined;
-
-    const txBlockNumber = transactionResponse.blockNumber;
-
-    if (isUndefinedOrNull(txBlockNumber)) return undefined;
-
-    if (erc20) {
-      if (isUndefinedOrNull(last_erc20_scraped_block)) return undefined;
-      return Number(txBlockNumber) - Number(last_erc20_scraped_block);
-    }
-
-    if (isUndefinedOrNull(last_eth_scraped_block)) return undefined;
-
-    return Number(txBlockNumber) - Number(last_eth_scraped_block);
-  }, [last_erc20_scraped_block, last_eth_scraped_block, transactionResponse, erc20]);
+    if (isUndefinedOrNull(transactionResponse) || isUndefinedOrNull(transactionResponse.blockNumber)) return undefined;
+    return getBlocksToSyncedBlock(transactionResponse.blockNumber, erc20);
+  }, [getBlocksToSyncedBlock, transactionResponse, erc20]);
 
   return (
     <Flex sx={{ gap: "0 3px" }}>

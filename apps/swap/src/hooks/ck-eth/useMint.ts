@@ -69,6 +69,7 @@ export function useMintCallback({ minter_address }: MinterProps) {
           value: result.value.toString(),
           gas: result.gasPrice?.toString(),
           ledger: ckETH.address,
+          tokenSymbol: ckETH.symbol,
         });
       }
 

@@ -11,7 +11,7 @@ import { useWeb3React } from "@web3-react/core";
 import { useSuccessTip } from "hooks/useTips";
 import { useErc20UnFinalizedDissolveHashes, useErc20UnFinalizedMintHashes } from "hooks/ck-bridge/erc20";
 import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "hooks/ck-bridge/eth";
-import { useEthereumTxBlockSynced } from "hooks/ck-bridge/useEthereumConfirmations";
+import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
 import { __getTokenInfo } from "hooks/token";
 import { useTranslation } from "react-i18next";
 
@@ -56,34 +56,35 @@ export function useEthereumTxWatcher() {
 
 export function useEthereumTxTips() {
   const [openTip] = useSuccessTip();
-  const ethMintTxs = useEthMintTxs();
-  const erc20MintTxs = useErc20AllMintTxs();
+  const ethereumTxs = useEthMintTxs();
+  const erc20Txs = useErc20AllMintTxs();
   const { t } = useTranslation();
 
   const [ethereumFinalizedHashes, updateFinalizedHash] = useEthereumFinalizedHashesManager();
-  const ethereumBlockSynced = useEthereumTxBlockSynced();
+  const ethereumBlockSynced = useEthereumTxSyncFinalized();
+
+  const allTxs = useMemo(() => {
+    return (ethereumTxs ?? []).concat(erc20Txs ?? []);
+  }, [ethereumTxs, erc20Txs]);
+
+  const isSyncedTxs = useMemo(() => {
+    return allTxs.filter((tx) => {
+      return ethereumBlockSynced(Number(tx.block));
+    });
+  }, [ethereumBlockSynced, allTxs]);
 
   useEffect(() => {
     async function call() {
-      const allTxs = [...(ethMintTxs ?? []), ...(erc20MintTxs ?? [])];
+      for (let i = 0; i < isSyncedTxs.length; i++) {
+        const tx = isSyncedTxs[i];
 
-      for (let i = 0; i < allTxs.length; i++) {
-        const tx = allTxs[i];
-
-        const isSynced = ethereumBlockSynced(Number(tx.block));
-
-        if (isSynced && !ethereumFinalizedHashes.includes(tx.hash)) {
-          const token = await __getTokenInfo(tx.ledger);
-
-          if (token) {
-            openTip(t("ck.mint.completed", { symbol: token.symbol.replace("ck", "") }));
-          }
-
+        if (!ethereumFinalizedHashes.includes(tx.hash)) {
           updateFinalizedHash(tx.hash);
+          openTip(t("ck.mint.completed", { symbol: tx.tokenSymbol?.replace("ck", "") }));
         }
       }
     }
 
     call();
-  }, [ethMintTxs, erc20MintTxs, ethereumBlockSynced, ethereumFinalizedHashes, updateFinalizedHash]);
+  }, [isSyncedTxs, ethereumFinalizedHashes, updateFinalizedHash]);
 }

@@ -7,6 +7,7 @@ export type TX = {
   timestamp: string;
   block: string;
   ledger: string;
+  tokenSymbol: string;
 };
 
 export type BridgeChain = "eth" | "btc" | "erc20";
