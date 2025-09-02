@@ -1410,7 +1410,7 @@
   "service.stake.create.storage.canister": "Failed to created storage canister",
   "common.display.only.list": "Show only listed tokens",
   "common.transfer.to": "Transfer to",
-  "swap.history": "Swap histroy",
+  "swap.history": "Swap history",
   "swap.help.tooltip0": "ICPSwap's innovative limit order: No 0.3% fee, earn 0.24% instead.",
   "swap.help.tooltip1": "Your limit order will execute when another swap matches your price. If the swap price hits your limit but the volume isn’t enough, your order may not execute.",
   "swap.help.tooltip2": "New to limit orders? Learn More Here!",

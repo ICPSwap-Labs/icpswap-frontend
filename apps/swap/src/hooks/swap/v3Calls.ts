@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { getSwapTokenArgs } from "hooks/token/index";
-import { userStorage, swapPool } from "@icpswap/actor";
+import { swapPool } from "@icpswap/actor";
 import {
   useCallsData,
-  getInfoUserStorageIds,
   quote,
   getSwapPoolMetadata,
   getSwapPosition,
@@ -11,9 +10,9 @@ import {
   createSwapPool,
   _getSwapPoolAllBalance,
 } from "@icpswap/hooks";
-import { resultFormat, isAvailablePageArgs, isUndefinedOrNull, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, isUndefinedOrNull, availableArgsNull } from "@icpswap/utils";
 import { FeeAmount } from "@icpswap/swap-sdk";
-import type { Null, PaginationResult, SwapPoolData, UserStorageTransaction } from "@icpswap/types";
+import type { Null, SwapPoolData } from "@icpswap/types";
 import BigNumber from "bignumber.js";
 import { swapFactory_update_call } from "actor/swap";
 import { UserPosition } from "types/swap";
@@ -254,23 +253,23 @@ export function usePoolTokenAmountsFromKey(key: Key | undefined) {
   return useMemo(() => ({ result: result[0], loading }), [result, loading]);
 }
 
-export function useUserSwapTransactions(principal: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!principal || !isAvailablePageArgs(offset, limit)) return undefined;
+// export function useUserSwapTransactions(principal: string | undefined, offset: number, limit: number) {
+//   return useCallsData(
+//     useCallback(async () => {
+//       if (!principal || !isAvailablePageArgs(offset, limit)) return undefined;
 
-      const storageIds = await getInfoUserStorageIds(principal);
+//       const storageIds = await getInfoUserStorageIds(principal);
 
-      if (!storageIds || storageIds.length === 0) return undefined;
+//       if (!storageIds || storageIds.length === 0) return undefined;
 
-      const storageId = storageIds[storageIds.length - 1];
+//       const storageId = storageIds[storageIds.length - 1];
 
-      return resultFormat<PaginationResult<UserStorageTransaction>>(
-        await (await userStorage(storageId)).get(principal, BigInt(offset), BigInt(limit), []),
-      ).data;
-    }, [principal, offset, limit]),
-  );
-}
+//       return resultFormat<PaginationResult<UserStorageTransaction>>(
+//         await (await userStorage(storageId)).get(principal, BigInt(offset), BigInt(limit), []),
+//       ).data;
+//     }, [principal, offset, limit]),
+//   );
+// }
 
 export async function getSwapPoolAvailable(canisterId: string) {
   const result = resultFormat<{ whitelist: string[]; available: boolean }>(
