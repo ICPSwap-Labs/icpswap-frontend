@@ -9,18 +9,9 @@ import { useToken } from "hooks/index";
 import { ArrowUpRight } from "react-feather";
 import { Link, SwapTransactionPriceTip } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
-import i18n from "i18n";
 import { useUserSwapTransactions } from "@icpswap/hooks";
 import { useMemo } from "react";
-
-export const RECORD_TYPE: { [key: string]: string } = {
-  swap: i18n.t("common.swap"),
-  increaseLiquidity: i18n.t("swap.add.liquidity"),
-  decreaseLiquidity: i18n.t("swap.remove.liquidity"),
-  mint: i18n.t("swap.add.liquidity"),
-  addLiquidity: i18n.t("swap.add.liquidity"),
-  claim: i18n.t("common.collect"),
-};
+import { SwapTransactionType } from "components/swap/SwapTransactionType";
 
 interface SwapTransactionItemProps {
   transaction: InfoTransactionResponse;
@@ -70,7 +61,9 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
 
       <Box sx={{ flex: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>{RECORD_TYPE[transaction.actionType.toLowerCase()]}</Typography>
+          <Typography>
+            <SwapTransactionType transaction={transaction} />
+          </Typography>
           <Typography sx={{ fontSize: "12px" }}>{dayjs(Number(transaction.txTime)).format(DAYJS_FORMAT)}</Typography>
         </Box>
         <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, margin: "8px 0 0 0" }}>
