@@ -15,28 +15,25 @@ import { useAccountPrincipal, useConnectorStateConnected, useConnectManager, use
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage, Image } from "components/Image/index";
 import { ChevronDown } from "react-feather";
-import { useHistory } from "react-router-dom";
 import { Connector } from "constants/wallet";
 import { useTranslation } from "react-i18next";
-
-import { AccountSection } from "./Account";
-import Principal from "./Principal";
-import LogOutSection from "../LogOutSection";
-import { BalanceAndValue } from "./BalanceAndValue";
+import { AccountSection } from "components/Layout/Header/ProfileSection/Account";
+import Principal from "components/Layout/Header/ProfileSection/Principal";
+import LogOutSection from "components/Layout/Header/LogOutSection";
+import { BalanceAndValue } from "components/Layout/Header/ProfileSection/BalanceAndValue";
+import { useWalletContext } from "components/Wallet/context";
 
 export default function ProfileSection() {
   const { t } = useTranslation();
   const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
-
   const [open, setOpen] = useState(false);
-
   const anchorRef = useRef<HTMLDivElement | null>(null);
   const prevOpen = useRef(open);
   const principal = useAccountPrincipal();
   const isConnected = useConnectorStateConnected();
-  const history = useHistory();
   const connector = useConnector();
+  const { setOpen: setWalletOpen } = useWalletContext();
 
   const { showConnector, disconnect } = useConnectManager();
 
@@ -62,8 +59,8 @@ export default function ProfileSection() {
   }, [open]);
 
   const handleToWallet = useCallback(() => {
-    history.push("/wallet");
-  }, [history]);
+    setWalletOpen(true);
+  }, [setWalletOpen]);
 
   return (
     <Flex gap="0 4px">

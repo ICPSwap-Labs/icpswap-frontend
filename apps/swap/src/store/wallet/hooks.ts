@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import { RetrieveBtcStatus, TxState } from "types/ckBTC";
 import { Principal } from "@dfinity/principal";
 import { SortBalanceEnum, WalletSortType } from "types/index";
+import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import {
   updateTaggedTokens,
   deleteTaggedTokens,
@@ -10,7 +11,9 @@ import {
   updateRetrieveState,
   updateWalletSortType,
   updateSortBalance,
-} from "./actions";
+  updateHideSmallBalance,
+  updateRemovedWalletDefaultTokens,
+} from "store/wallet/actions";
 
 export function toHexString(byteArray: number[]) {
   return Array.from(byteArray, (byte) => {
@@ -18,16 +21,54 @@ export function toHexString(byteArray: number[]) {
   }).join("");
 }
 
+export function useRemovedWalletDefaultTokens() {
+  return useAppSelector((state) => state.wallet.removedWalletDefaultTokens);
+}
+
+export function useRemovedWalletDefaultTokensManager(): [string[], (tokenId: string, add?: boolean) => void] {
+  const dispatch = useAppDispatch();
+  const removedWalletDefaultTokens = useRemovedWalletDefaultTokens();
+
+  const callback = useCallback(
+    (token: string, add?: boolean) => {
+      dispatch(updateRemovedWalletDefaultTokens({ tokenId: token, add }));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [removedWalletDefaultTokens, callback], [removedWalletDefaultTokens, callback]);
+}
+
+export function useDisplayedTokensInWallet() {
+  const removedWalletDefaultTokens = useRemovedWalletDefaultTokens();
+
+  return useMemo(() => {
+    return DISPLAY_IN_WALLET_BY_DEFAULT.filter((tokenId) => !removedWalletDefaultTokens.includes(tokenId));
+  }, [removedWalletDefaultTokens, DISPLAY_IN_WALLET_BY_DEFAULT]);
+}
+
 export function useTaggedTokens() {
-  return useAppSelector((state) => state.wallet.taggedTokens);
+  const taggedTokens = useAppSelector((state) => state.wallet.taggedTokens);
+  const displayedWalletDefaultTokens = useDisplayedTokensInWallet();
+
+  return useMemo(() => {
+    return [...new Set([...displayedWalletDefaultTokens, ...taggedTokens])];
+  }, [taggedTokens, displayedWalletDefaultTokens]);
 }
 
 export function useUpdateTaggedTokenCallback() {
   const dispatch = useAppDispatch();
+  const [, removedWalletDefaultTokens] = useRemovedWalletDefaultTokensManager();
 
   return useCallback(
     (tokens: string[]) => {
       dispatch(updateTaggedTokens(tokens));
+
+      tokens.forEach((token) => {
+        if (DISPLAY_IN_WALLET_BY_DEFAULT.includes(token)) {
+          removedWalletDefaultTokens(token, true);
+        }
+      });
     },
     [dispatch],
   );
@@ -35,10 +76,17 @@ export function useUpdateTaggedTokenCallback() {
 
 export function useDeleteTaggedTokenCallback() {
   const dispatch = useAppDispatch();
+  const [, removedWalletDefaultTokens] = useRemovedWalletDefaultTokensManager();
 
   return useCallback(
     (tokens: string[]) => {
       dispatch(deleteTaggedTokens(tokens));
+
+      tokens.forEach((token) => {
+        if (DISPLAY_IN_WALLET_BY_DEFAULT.includes(token)) {
+          removedWalletDefaultTokens(token, false);
+        }
+      });
     },
     [dispatch],
   );
@@ -162,4 +210,18 @@ export function useSortBalanceManager() {
   );
 
   return useMemo(() => ({ sortBalance, updateSortBalance: update }), [update, sortBalance]);
+}
+
+export function useHideSmallBalanceManager(): [boolean, (hidden: boolean) => void] {
+  const dispatch = useAppDispatch();
+  const hideSmallBalance = useAppSelector((state) => state.wallet.hideSmallBalance);
+
+  const callback = useCallback(
+    (hidden: boolean) => {
+      dispatch(updateHideSmallBalance(hidden));
+    },
+    [dispatch, updateHideSmallBalance],
+  );
+
+  return useMemo(() => [hideSmallBalance, callback], [hideSmallBalance, callback]);
 }

@@ -7,12 +7,16 @@ export interface WalletState {
   retrieveState: { [key: string]: StoredTxValue[] };
   sort: WalletSortType;
   sortBalance: SortBalanceEnum;
+  hideSmallBalance: boolean;
+  removedWalletDefaultTokens: string[];
 }
 
 export const initialState: WalletState = {
   ckBTCAddresses: {},
   retrieveState: {},
   taggedTokens: [],
-  sort: "Default",
+  sort: "High",
   sortBalance: SortBalanceEnum.ALL,
+  hideSmallBalance: false,
+  removedWalletDefaultTokens: [],
 };

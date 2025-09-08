@@ -1,7 +1,7 @@
 import { ICP, ICS, ckUSDC, ckBTC, ckETH } from "@icpswap/tokens";
 import { Connector } from "constants/wallet";
 
-export const DISPLAY_IN_WALLET_FOREVER = [ICP.address, ICS.address, ckUSDC.address, ckBTC.address, ckETH.address];
+export const DISPLAY_IN_WALLET_BY_DEFAULT = [ICP.address, ICS.address, ckUSDC.address, ckBTC.address, ckETH.address];
 
 export const NO_HIDDEN_TOKENS = [ICP.address];
 
@@ -56,3 +56,11 @@ export const ConnectorConfigs: ConnectorConfig[] = [
 ];
 
 export { Connector } from "@icpswap/actor";
+
+export const ADDRESS_BOOK_REFRESH = "ADDRESS_BOOK_REFRESH";
+
+export const TOKEN_BALANCE_REFRESH = "TOKEN_BALANCE_REFRESH";
+
+export const TOKEN_ASSETS_REFRESH = "TOKEN_ASSETS_REFRESH";
+
+export const WALLET_DRAWER_WIDTH = 382;

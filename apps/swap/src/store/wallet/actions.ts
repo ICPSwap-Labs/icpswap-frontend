@@ -23,3 +23,9 @@ export const updateRetrieveState = createAction<{
   txid: string;
   value: string;
 }>("wallet/updateRetrieveState");
+
+export const updateHideSmallBalance = createAction<boolean>("wallet/updateHideSmallBalance");
+
+export const updateRemovedWalletDefaultTokens = createAction<{ tokenId: string; add?: boolean }>(
+  "wallet/updateRemovedWalletDefaultTokens",
+);

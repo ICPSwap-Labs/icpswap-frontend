@@ -6,7 +6,8 @@ import { useTheme, Box, Popper, makeStyles } from "../Mui";
 const useStyles = makeStyles(() => {
   return {
     popper: {
-      zIndex: 1101,
+      // Drawer zIndex is 1200
+      zIndex: 1201,
     },
   };
 });

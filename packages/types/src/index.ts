@@ -15,3 +15,4 @@ export * from "./token-list";
 export * from "./chainKeyToken";
 export * from "./icpswap-api";
 export * from "./info-api";
+export * from "./address-book";

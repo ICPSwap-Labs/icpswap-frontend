@@ -3,6 +3,7 @@ import { makeStyles, Box, Theme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
 import Background from "components/Background";
+import { WalletIndex } from "components/Wallet/WalletIndex";
 
 import V3Event from "./V3Event";
 import Header from "./Header";
@@ -93,6 +94,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </Box>
 
       <Background />
+
+      <WalletIndex />
     </>
   );
 }

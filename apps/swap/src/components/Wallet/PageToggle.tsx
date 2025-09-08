@@ -1,8 +1,7 @@
-import { useMemo, useContext } from "react";
+import { useMemo } from "react";
 import { Typography, Box } from "components/Mui";
 import i18n from "i18n/index";
-
-import walletContext from "./context";
+import { useWalletContext } from "components/Wallet/context";
 
 type Item = {
   name: string;
@@ -21,7 +20,7 @@ const DISPLAY_ITEMS: Item[] = [
 ];
 
 export default function WalletPageToggle() {
-  const { page, setPage } = useContext(walletContext);
+  const { page, setPage } = useWalletContext();
 
   const currentDisplay = useMemo(() => {
     return DISPLAY_ITEMS.filter((item) => item.pageName === page)[0].pageName;

@@ -1,4 +1,4 @@
-import { useContext, useMemo, useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Box, Typography } from "components/Mui";
 import { formatDollarTokenPrice, formatIcpAmount, principalToAccount } from "@icpswap/utils";
 import { useSuccessTip } from "hooks/useTips";
@@ -9,8 +9,7 @@ import Copy, { CopyRef } from "components/Copy";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 import { Flex, Tooltip } from "components/index";
 import { useTranslation } from "react-i18next";
-
-import WalletContext from "./context";
+import { useWalletContext } from "components/Wallet/context";
 
 export interface AddressWrapperProps {
   address: string | undefined;
@@ -90,7 +89,7 @@ export default function WalletAccount() {
     setRefreshCounter,
     totalValue,
     totalUSDBeforeChange,
-  } = useContext(WalletContext);
+  } = useWalletContext();
 
   const useTotalICPValue = useMemo(() => {
     if (icpPrice) return totalValue.dividedBy(icpPrice);

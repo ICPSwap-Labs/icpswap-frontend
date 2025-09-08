@@ -149,6 +149,8 @@ declare module "@mui/material/styles" {
   function createTheme(themeOptions: ThemeOptions): Theme;
 
   function ThemeProvider<T = DefaultTheme>(props: ThemeProviderProps<T>): React.ReactElement<ThemeProviderProps<T>>;
+
+  function styled(args: ayn): any;
 }
 
 declare type Nullable<T> = T | null;

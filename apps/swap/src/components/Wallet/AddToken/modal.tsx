@@ -4,7 +4,7 @@ import { useTaggedTokenManager } from "store/wallet/hooks";
 import { ImportToken } from "components/ImportToken/index";
 import { Modal, FilledTextField, NoData, Flex } from "components/index";
 import { useGlobalTokenList } from "store/global/hooks";
-import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
+import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { isValidPrincipal, classNames } from "@icpswap/utils";
 import { Search as SearchIcon } from "react-feather";
@@ -88,8 +88,8 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
   const { taggedTokens } = useTaggedTokenManager();
 
   const yourTokens: string[] = useMemo(() => {
-    return [...new Set(DISPLAY_IN_WALLET_FOREVER.map((e) => e).concat(taggedTokens))];
-  }, [DISPLAY_IN_WALLET_FOREVER, taggedTokens]);
+    return [...new Set(DISPLAY_IN_WALLET_BY_DEFAULT.map((e) => e).concat(taggedTokens))];
+  }, [DISPLAY_IN_WALLET_BY_DEFAULT, taggedTokens]);
 
   const { snsTokens, noneSnsTokens } = useMemo(() => {
     if (!snsAllTokensInfo) return {};
@@ -105,7 +105,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
 
     sortedGlobalTokenList
       .filter((token) => {
-        return !DISPLAY_IN_WALLET_FOREVER.includes(token.canisterId);
+        return !DISPLAY_IN_WALLET_BY_DEFAULT.includes(token.canisterId);
       })
       .forEach((token) => {
         const snsTokenInfo = snsAllTokensInfo.find((nns) => tokenEqualToNnsLedger(nns, token.canisterId));

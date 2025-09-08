@@ -6,17 +6,16 @@ import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
 import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
 import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
-import { DISPLAY_IN_WALLET_FOREVER } from "constants/wallet";
+import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import { useGlobalTokenList } from "store/global/hooks";
 import BigNumber from "bignumber.js";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
-
-import WalletContext from "./context";
+import { useWalletContext } from "components/Wallet/context";
 
 export default function WalletTokenList() {
   const { taggedTokens } = useTaggedTokenManager();
-  const { allTokenUSDMap, noUSDTokens } = useContext(WalletContext);
+  const { allTokenUSDMap, noUSDTokens } = useWalletContext();
   const { sort } = useWalletSortManager();
 
   const globalTokenList = useGlobalTokenList();
@@ -24,11 +23,10 @@ export default function WalletTokenList() {
 
   const tokens = useMemo(() => {
     const tokenIds = [
-      ...DISPLAY_IN_WALLET_FOREVER,
       ...(chain === ChainId.SEPOLIA ? [ckSepoliaUSDCTokenInfo.canisterId, ckSepoliaETHTokenInfo.canisterId] : []),
     ];
 
-    return [...new Set([...tokenIds, ...taggedTokens.filter((id) => !DISPLAY_IN_WALLET_FOREVER.includes(id))])];
+    return [...new Set([...tokenIds, ...taggedTokens])];
   }, [taggedTokens, globalTokenList]);
 
   const sortedTokens = useMemo(() => {
