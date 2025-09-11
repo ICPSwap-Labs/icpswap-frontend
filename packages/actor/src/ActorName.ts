@@ -57,4 +57,6 @@ export enum ActorName {
   LiquidityLocks = "LiquidityLocks",
 
   Setting = "Setting",
+
+  SocialMedia = "SocialMedia",
 }

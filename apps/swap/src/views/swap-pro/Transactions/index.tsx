@@ -15,6 +15,7 @@ import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
 import { AutoRefresh } from "./AutoRefresh";
 import { AddLiquidity } from "./AddLiquidity";
+import { SocialMedia } from "./SocialMedia";
 
 enum Tabs {
   TRANSACTIONS = "TRANSACTIONS",
@@ -27,6 +28,7 @@ enum Tabs {
   LIMIT = "LIMIT",
   LIMIT_PENDING = "LIMIT_PENDING",
   LIMIT_HISTORY = "LIMIT_HISTORY",
+  SOCIAL_MEDIA = "SOCIAL_MEDIA",
 }
 
 const Menus = [
@@ -55,6 +57,7 @@ const Menus = [
     ],
   },
   { label: i18n.t("common.holders"), value: Tabs.TOKEN_HOLDERS },
+  { label: i18n.t("common.social.media"), value: Tabs.SOCIAL_MEDIA },
 ];
 
 let AUTO_REFRESH_COUNTER = 0;
@@ -194,6 +197,7 @@ export default function Transactions() {
         {activeTab === Tabs.TOKEN_HOLDERS ? <Holders tokenId={token?.address} /> : null}
         {activeSubTab === Tabs.LIMIT_PENDING ? <PendingTablePro poolId={poolId} /> : null}
         {activeSubTab === Tabs.LIMIT_HISTORY ? <HistoryTablePro poolId={poolId} /> : null}
+        {activeTab === Tabs.SOCIAL_MEDIA ? <SocialMedia /> : null}
       </Box>
     </SwapProCardWrapper>
   );

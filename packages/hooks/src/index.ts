@@ -29,3 +29,4 @@ export * from "./icpswap-api";
 export * from "./ic";
 export * from "./useParsedUrlPath";
 export * from "./setting";
+export * from "./social-media";
