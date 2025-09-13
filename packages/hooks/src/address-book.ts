@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 import { addressBook } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
+import { AddressBook, ResultStatus } from "@icpswap/types";
 
-import { ResultStatus } from "@icpswap/types";
 import { useCallsData } from "./useCallData";
 
 export async function getAddressBook() {
-  return await (await addressBook(true)).get();
+  return resultFormat<Array<AddressBook>>(await (await addressBook(true)).get()).data;
 }
 
 export function useAddressBook(refresh?: number) {

@@ -13,11 +13,11 @@ enum Colors {
 }
 
 enum Labels {
-  Token = "Token",
+  Token = "Tokens",
   Lp = "LP positions",
   Limit = "Limit orders",
-  Stake = "Staking pool",
-  Farm = "Farm pool",
+  Stake = "Staking pools",
+  Farm = "Farms",
 }
 
 interface DistributionProps {
@@ -70,7 +70,7 @@ export function Distribution({ addressOverview }: DistributionProps) {
   return (
     <Box sx={{ padding: "0 16px" }}>
       <Flex justify="space-between" fullWidth>
-        <Typography sx={{ fontSize: "16px", color: "text.primary" }}>Distribution</Typography>
+        <Typography sx={{ fontSize: "16px", color: "text.primary" }}>Allocation</Typography>
       </Flex>
 
       <Flex sx={{ margin: "32px 0 0 0 " }}>

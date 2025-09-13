@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { mockALinkAndOpen } from "@icpswap/utils";
 

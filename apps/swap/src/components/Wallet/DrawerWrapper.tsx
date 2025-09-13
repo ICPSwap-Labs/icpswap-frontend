@@ -1,5 +1,5 @@
 import { ReactNode, useCallback } from "react";
-import { Box, Typography } from "components/Mui";
+import { Box, BoxProps, Typography } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { WALLET_DRAWER_WIDTH } from "constants/wallet";
@@ -15,6 +15,7 @@ interface DrawerWrapperProps {
   rightIcon?: ReactNode;
   footer?: ReactNode;
   prevPage?: WalletManagerPage;
+  wrapperSX?: BoxProps["sx"];
 }
 
 export function DrawerWrapper({
@@ -28,6 +29,7 @@ export function DrawerWrapper({
   rightIcon,
   footer,
   prevPage,
+  wrapperSX,
 }: DrawerWrapperProps) {
   const { setPages } = useWalletContext();
 
@@ -48,7 +50,9 @@ export function DrawerWrapper({
         padding: padding ?? "12px",
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        height: "100%",
+        overflow: "auto",
+        ...wrapperSX,
       }}
     >
       {noHeader === false ? (

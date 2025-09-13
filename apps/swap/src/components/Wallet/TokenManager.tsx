@@ -3,7 +3,7 @@ import { useToken, useTokens } from "hooks";
 import { IOSSwitch } from "components/switch/IOSSwitch";
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Box, Typography, InputAdornment, useTheme } from "components/Mui";
-import { FilledTextField, Flex, LoadingRow, TokenImage } from "components/index";
+import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
 import { useGlobalTokenList } from "store/global/hooks";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { isUndefinedOrNull, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
@@ -247,6 +247,8 @@ export function TokenManager() {
         <Box sx={{ width: "100%", overflowX: "hidden", margin: "24px 0 0 0", padding: "0 0 12px 0" }}>
           {nonUndefinedOrNull(importableToken) ? (
             <ImportableToken tokenId={importableToken} />
+          ) : tokens.length === 0 ? (
+            <NoData />
           ) : (
             tokens.map((token) => <TokenRow key={token.address} token={token} />)
           )}

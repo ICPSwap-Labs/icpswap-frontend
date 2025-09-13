@@ -2,10 +2,10 @@ import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
 import { useState, useMemo, useCallback } from "react";
 import { Box, Typography, useTheme, Button, CircularProgress } from "components/Mui";
 import { FilledTextField, Flex } from "components/index";
-import { isUndefinedOrNull, isValidAccount, isValidPrincipal } from "@icpswap/utils";
+import { isUndefinedOrNull, isValidAccount, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 import { useWalletContext } from "components/Wallet/context";
-import { addAddressBook } from "@icpswap/hooks";
+import { addAddressBook, useAddressBook } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 
 export function AddAddress() {
@@ -52,6 +52,20 @@ export function AddAddress() {
     setLoading(false);
   }, [name, address, handlePrev]);
 
+  const { result: addresses } = useAddressBook();
+
+  const error = useMemo(() => {
+    if (isUndefinedOrNull(addresses)) return t("common.save");
+    if (isUndefinedOrNull(name) || isUndefinedOrNull(address)) return t("Enter name & address");
+    if (isValidAddress === false) return t("invalid.address");
+
+    const isExist = !!addresses.find((addressBook) => addressBook.name === name || addressBook.address === address);
+
+    if (isExist) return t("wallet.address.name.exist");
+
+    return undefined;
+  }, [addresses, name, address, loading, isValidAddress]);
+
   return (
     <DrawerWrapper
       padding="12px"
@@ -59,16 +73,16 @@ export function AddAddress() {
       onPrev={handlePrev}
       showRightIcon
       footer={
-        <Box sx={{ width: "100%", padding: "0 12px" }}>
+        <Box sx={{ width: "100%" }}>
           <Button
             variant="contained"
             fullWidth
             size="large"
-            disabled={!name || !address || isValidAddress === false || loading}
+            disabled={nonUndefinedOrNull(error) || loading}
             onClick={handleSave}
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
           >
-            {t("common.save")}
+            {error ?? t("common.save")}
           </Button>
         </Box>
       }
@@ -80,6 +94,7 @@ export function AddAddress() {
 
           <Box sx={{ width: "100%" }}>
             <FilledTextField
+              value={name}
               contained
               borderRadius="16px"
               background={theme.palette.background.level3}
@@ -87,6 +102,13 @@ export function AddAddress() {
               fullWidth
               placeholder="Enter a name under 20 characters"
               onChange={(value: string) => handleValueChange("name", value)}
+              textFieldProps={{
+                slotProps: {
+                  htmlInput: {
+                    maxLength: 20,
+                  },
+                },
+              }}
             />
           </Box>
         </Flex>
@@ -105,6 +127,7 @@ export function AddAddress() {
               fullWidth
               placeholder="Enter the Account ID/Principal ID "
               onChange={(value: string) => handleValueChange("address", value)}
+              value={address}
             />
           </Box>
         </Flex>

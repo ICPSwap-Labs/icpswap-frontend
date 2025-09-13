@@ -1,6 +1,6 @@
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useCallback, useRef } from "react";
-import { Box, Typography, InputAdornment, useTheme, Button } from "components/Mui";
+import React, { useState, useCallback, useRef } from "react";
+import { Box, Typography, InputAdornment, useTheme, Button, CircularProgress } from "components/Mui";
 import { FilledTextField, Flex, LoadingRow, NoData, TextButton } from "components/index";
 import { Search as SearchIcon } from "react-feather";
 import { useAddressBook, useDebouncedChangeHandler } from "@icpswap/hooks";
@@ -14,6 +14,7 @@ import { useRefreshTriggerManager } from "hooks";
 import { ADDRESS_BOOK_REFRESH } from "constants/index";
 import { JdenticonAvatar } from "components/JdenticonAvatar";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useContactFilter } from "hooks/wallet/useContactFilter";
 
 interface AddressBookRowProps {
   addressBook: AddressBookType;
@@ -21,6 +22,7 @@ interface AddressBookRowProps {
 
 function AddressBookRow({ addressBook }: AddressBookRowProps) {
   const copyRef = useRef<CopyRef>(null);
+  const { deleteAddressBookLoading, deleteAddressBook } = useWalletContext();
 
   const handleCopy = () => {
     if (copyRef) {
@@ -48,7 +50,11 @@ function AddressBookRow({ addressBook }: AddressBookRowProps) {
             </Typography>
           </Box>
 
-          <AddressBookManager addressBook={addressBook} />
+          {deleteAddressBookLoading && addressBook.id === deleteAddressBook?.id ? (
+            <CircularProgress size={18} sx={{ color: "#ffffff" }} />
+          ) : (
+            <AddressBookManager addressBook={addressBook} />
+          )}
         </Flex>
       </Flex>
 
@@ -63,18 +69,25 @@ export function AddressBook() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [refreshTrigger] = useRefreshTriggerManager(ADDRESS_BOOK_REFRESH);
   const { setPages, setAddAddressBookPrevPage } = useWalletContext();
-  const [, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, setSearchKeyword, 300);
+  const [searchValue, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, setSearchKeyword, 300);
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.Index);
   }, [setPages]);
 
-  const handleAddAddress = useCallback(() => {
-    setPages(WalletManagerPage.AddAddress);
-    setAddAddressBookPrevPage(WalletManagerPage.AddressBook);
-  }, [setPages]);
+  const handleAddAddress = useCallback(
+    (event?: React.MouseEvent) => {
+      event?.stopPropagation();
+
+      setPages(WalletManagerPage.AddAddress);
+      setAddAddressBookPrevPage(WalletManagerPage.AddressBook);
+    },
+    [setPages],
+  );
 
   const { result: addresses, loading } = useAddressBook(refreshTrigger);
+
+  const filteredAddresses = useContactFilter({ search: searchKeyword, addresses });
 
   return (
     <DrawerWrapper
@@ -92,7 +105,7 @@ export function AddressBook() {
       onRightIconClick={handlePrev}
       footer={
         nonUndefinedOrNull(addresses) && addresses.length > 0 ? (
-          <Box sx={{ width: "100%", padding: "0 12px" }}>
+          <Box sx={{ width: "100%" }}>
             <Button variant="contained" fullWidth size="large" onClick={handleAddAddress}>
               {t("wallet.add.address")}
             </Button>
@@ -103,6 +116,7 @@ export function AddressBook() {
       <Box sx={{ height: "100%", overflow: "auto" }}>
         <Box sx={{ margin: "24px 0 0 0" }}>
           <FilledTextField
+            value={searchValue}
             contained
             borderRadius="16px"
             background={theme.palette.background.level1}
@@ -137,13 +151,13 @@ export function AddressBook() {
               <div />
               <div />
             </LoadingRow>
-          ) : !addresses || addresses.length === 0 ? (
+          ) : !filteredAddresses || filteredAddresses.length === 0 ? (
             <NoData
               tip={
                 <Trans
                   components={{
                     highlight: (
-                      <TextButton onClick={handleAddAddress}>
+                      <TextButton onClick={() => handleAddAddress()}>
                         <Trans>Add a new address</Trans>
                       </TextButton>
                     ),
@@ -153,7 +167,9 @@ export function AddressBook() {
               }
             />
           ) : (
-            addresses.map((addressBook) => <AddressBookRow key={addressBook.id.toString()} addressBook={addressBook} />)
+            filteredAddresses.map((addressBook) => (
+              <AddressBookRow key={addressBook.id.toString()} addressBook={addressBook} />
+            ))
           )}
         </Box>
       </Box>

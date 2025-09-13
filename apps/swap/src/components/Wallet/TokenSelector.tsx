@@ -179,7 +179,7 @@ export function TokenSelector() {
 
   return (
     <DrawerWrapper padding="12px" title="Select tokens" prevPage={WalletManagerPage.Send}>
-      <Box id="tokens-wrapper" sx={{ height: "calc(100vh - 24px - 12px)", overflow: "auto" }}>
+      <Box id="tokens-wrapper" sx={{ height: "calc(100vh - 24px - 12px - 16px)", overflow: "auto" }}>
         <Box sx={{ margin: "24px 0 0 0" }}>
           <FilledTextField
             contained
@@ -207,8 +207,7 @@ export function TokenSelector() {
         <Box sx={{ width: "100%", overflowX: "hidden", margin: "24px 0 0 0", padding: "0 0 12px 0" }}>
           <Box
             sx={{
-              height: "calc(100vh - 24px - 12px - 24px - 48px - 24px - 12px - 5px)",
-              width: slicedTokens.length < PAGE_SIZE ? "100%" : "361px",
+              height: "calc(100vh - 24px - 12px - 24px - 48px - 24px - 12px - 5px - 16px)",
               overflow: "auto",
             }}
             id="scrollableDiv"

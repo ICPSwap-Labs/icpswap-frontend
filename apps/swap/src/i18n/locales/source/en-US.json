@@ -484,7 +484,7 @@
   "common.volume24h": "Volume(24H)",
   "markdown.uploading.image": "Uploading image",
   "KsqhWn": "Staking",
-  "Kw1+qc": "Invalid address",
+  "invalid.address": "Invalid address",
   "Kx9NEt": "Invalid token",
   "swap.estimated.fee": "Estimated transfer fee",
   "tools.wallet.valuation": "Wallet valuation",
@@ -1458,7 +1458,7 @@
   "time.range.desc": "Select a range within the past 6 months.",
   "common.search.token.desc": "Search name or canister ID",
   "wallet.address.book": "Address book",
-  "wallet.edit.address": "Eidt address",
+  "wallet.edit.address": "Edit address",
   "common.search": "Search",
   "common.save": "Save",
   "wallet.address.empty": "No addresses found,  <highlight>Add a new address</highlight>",
@@ -1469,5 +1469,7 @@
   "wallet.select.contact": "Select contact",
   "wallet.send.enter.address.amount": "Enter address & amount",
   "common.send": "Send",
-  "common.view.info": "View on info"
+  "common.view.info": "View on info",
+  "wallet.estimated.total.balance": "Est. Total Balance",
+  "wallet.address.name.exist": "The name or address already exists"
 }

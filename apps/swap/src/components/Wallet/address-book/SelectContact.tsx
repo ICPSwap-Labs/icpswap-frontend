@@ -1,5 +1,5 @@
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useCallback, useRef, useMemo } from "react";
+import { useState, useCallback, useRef } from "react";
 import { Box, Typography, InputAdornment, useTheme } from "components/Mui";
 import { FilledTextField, Flex, LoadingRow, NoData, TextButton } from "components/index";
 import { Search as SearchIcon } from "react-feather";
@@ -12,6 +12,7 @@ import Copy, { CopyRef } from "components/Copy";
 import { useRefreshTriggerManager } from "hooks/index";
 import { ADDRESS_BOOK_REFRESH } from "constants/index";
 import { JdenticonAvatar } from "components/JdenticonAvatar";
+import { useContactFilter } from "hooks/wallet/useContactFilter";
 import { isUndefinedOrNull } from "@icpswap/utils";
 
 interface AddressBookRowProps {
@@ -72,7 +73,7 @@ export function SelectContact() {
   const [, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, setSearchKeyword, 300);
 
   const handlePrev = useCallback(() => {
-    setPages(WalletManagerPage.Index);
+    setPages(WalletManagerPage.Send);
   }, [setPages]);
 
   const handleAddAddress = useCallback(() => {
@@ -82,17 +83,7 @@ export function SelectContact() {
 
   const { result: addresses, loading } = useAddressBook(refreshTrigger);
 
-  const filteredAddresses = useMemo(() => {
-    if (isUndefinedOrNull(addresses)) return [];
-    if (searchKeyword === "") return addresses;
-
-    return addresses.filter((address) => {
-      return (
-        address.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-        address.address.toLowerCase().includes(searchKeyword.toLowerCase())
-      );
-    });
-  }, [addresses, searchKeyword]);
+  const filteredAddresses = useContactFilter({ search: searchKeyword, addresses });
 
   return (
     <DrawerWrapper
@@ -143,7 +134,7 @@ export function SelectContact() {
               <div />
               <div />
             </LoadingRow>
-          ) : filteredAddresses.length === 0 ? (
+          ) : filteredAddresses.length === 0 || isUndefinedOrNull(filteredAddresses) ? (
             <NoData
               tip={
                 <Trans

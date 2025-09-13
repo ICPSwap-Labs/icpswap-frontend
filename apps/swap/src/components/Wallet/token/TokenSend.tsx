@@ -10,6 +10,7 @@ import {
   isValidPrincipal,
   nonUndefinedOrNull,
   parseTokenAmount,
+  principalToAccount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
@@ -170,6 +171,12 @@ export function TokenSend() {
     setPages(WalletManagerPage.TokenSelector, false);
   }, [setPages]);
 
+  const isOwner = useMemo(() => {
+    if (isUndefinedOrNull(principal) || isUndefinedOrNull(address)) return undefined;
+    if (address.includes("-")) return principal === address;
+    return principalToAccount(principal) === address;
+  }, [principal, address]);
+
   return (
     <DrawerWrapper
       padding="12px"
@@ -178,12 +185,12 @@ export function TokenSend() {
       showRightIcon
       onRightIconClick={handlePrev}
       footer={
-        <Box sx={{ width: "100%", padding: "0 12px" }}>
+        <Box sx={{ width: "100%" }}>
           <Button
             variant="contained"
             fullWidth
             size="large"
-            disabled={disableSend}
+            disabled={disableSend || isOwner}
             onClick={handleSend}
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
           >
@@ -220,6 +227,7 @@ export function TokenSend() {
               inputPadding="0px"
               onChange={handleAddressChange}
             />
+
             <Flex fullWidth justify={selectedContact ? "space-between" : "flex-end"}>
               {selectedContact ? <AddressBookLabel name={selectedContact.name} /> : null}
 
@@ -229,6 +237,18 @@ export function TokenSend() {
             </Flex>
           </Box>
         </Box>
+
+        {isValidAddress === false ? (
+          <Typography color="text.danger" fontSize={12} sx={{ margin: "8px 0 0 0" }}>
+            Invalid address. Please check and try again
+          </Typography>
+        ) : null}
+
+        {isOwner === true ? (
+          <Typography color="text.danger" fontSize={12} sx={{ margin: "8px 0 0 0" }}>
+            You can’t send funds to your own wallet
+          </Typography>
+        ) : null}
       </Box>
 
       <Box sx={{ margin: "16px 0 0 0" }}>

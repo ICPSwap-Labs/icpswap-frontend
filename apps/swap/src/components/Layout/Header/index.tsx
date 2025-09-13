@@ -2,11 +2,10 @@ import { useState } from "react";
 import { Box, useMediaQuery, Drawer } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
-
-import LogoSection from "../../LogoSection";
-import ProfileSection from "./ProfileSection";
-import Navbar from "../Navbar";
-import MobileNavbar from "../Navbar/mobile/Navbar";
+import LogoSection from "components/LogoSection";
+import Navbar from "components/Layout/Navbar";
+import MobileNavbar from "components/Layout/Navbar/mobile/Navbar";
+import ProfileSection from "components/Layout/Header/ProfileSection";
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);

@@ -29,6 +29,8 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
     WalletManagerPage.AddressBook,
   );
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
+  const [removeTokenId, setRemoveTokenId] = useState<string | undefined>(undefined);
+  const [deleteAddressBookLoading, setDeleteAddressBookLoading] = useState<boolean>(false);
 
   const handleTotalValueChange = (tokenId: string, value: BigNumber) => {
     setTotalValue((prevState) => ({ ...prevState, [tokenId]: value }));
@@ -63,6 +65,11 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
 
   const closeDrawer = useCallback(() => {
     setOpen(false);
+    handleSetPage(WalletManagerPage.Index);
+  }, [setOpen, handleSetPage]);
+
+  const openDrawer = useCallback(() => {
+    setOpen(true);
     handleSetPage(WalletManagerPage.Index);
   }, [setOpen, handleSetPage]);
 
@@ -105,6 +112,11 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
         logoutConfirmOpen,
         setLogoutConfirmOpen,
         closeDrawer,
+        openDrawer,
+        removeTokenId,
+        setRemoveTokenId,
+        deleteAddressBookLoading,
+        setDeleteAddressBookLoading,
       }}
     >
       {children}

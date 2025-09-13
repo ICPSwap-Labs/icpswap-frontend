@@ -37,7 +37,7 @@ export function Header() {
         </Flex>
         <Flex gap="0 8px">
           <Typography fontSize="12px">PID - {principal ? shorten(principal, 4) : ""}</Typography>
-          <Copy content={account} color={theme.palette.text.secondary} />
+          <Copy content={principal} color={theme.palette.text.secondary} />
         </Flex>
       </Flex>
     </Box>

@@ -25,6 +25,7 @@ export interface EstimatedBalanceUIProps {
   valueChange?: string | undefined;
   showButtons?: boolean;
   onRefresh?: () => void;
+  noValueChange?: boolean;
 }
 
 export function EstimatedBalanceUI({
@@ -34,6 +35,7 @@ export function EstimatedBalanceUI({
   valueChange,
   showButtons,
   onRefresh,
+  noValueChange,
 }: EstimatedBalanceUIProps) {
   const classes = useStyles();
   const { setTokenReceiveId, setPages } = useWalletContext();
@@ -72,9 +74,11 @@ export function EstimatedBalanceUI({
 
         <Box sx={{ margin: "6px 0 0 0", display: "flex", gap: "0 8px", alignItems: "center" }}>
           <Typography>≈{icpValue ? formatIcpAmount(icpValue.toString()) : 0}&nbsp;ICP</Typography>
-          <Typography sx={{ color: USDChangeColor }} component="span">
-            {valueChange ? `${usdChangeType === "down" ? "" : "+"}${valueChange}` : "--"}
-          </Typography>
+          {!noValueChange ? (
+            <Typography sx={{ color: USDChangeColor }} component="span">
+              {valueChange ? `${usdChangeType === "down" ? "" : "+"}${valueChange}` : "--"}
+            </Typography>
+          ) : null}
         </Box>
       </Box>
 

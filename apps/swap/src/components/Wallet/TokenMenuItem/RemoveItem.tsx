@@ -1,25 +1,31 @@
 import { useCallback } from "react";
 import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
-import { useTaggedTokenManager } from "store/wallet/hooks";
+import { useWalletContext } from "components/Wallet/context";
+import { useTranslation } from "react-i18next";
 
 interface RemoveItemProps {
   tokenId: string;
   isLast?: boolean;
+  onRemoveClick?: () => void;
 }
 
-export function RemoveItem({ tokenId, isLast }: RemoveItemProps) {
+export function RemoveItem({ tokenId, isLast, onRemoveClick }: RemoveItemProps) {
   const theme = useTheme();
-  const { deleteTaggedTokens } = useTaggedTokenManager();
+  const { t } = useTranslation();
+  const { setRemoveTokenId } = useWalletContext();
 
   const handleRemoveToken = useCallback(() => {
-    deleteTaggedTokens([tokenId]);
-  }, [deleteTaggedTokens, tokenId]);
+    setRemoveTokenId(tokenId);
+    if (onRemoveClick) {
+      onRemoveClick();
+    }
+  }, [setRemoveTokenId, tokenId, onRemoveClick]);
 
   return (
     <MenuItem
       value="Remove"
-      label="Remove"
+      label={t("common.remove")}
       onMenuClick={handleRemoveToken}
       background={theme.palette.background.level3}
       activeBackground={theme.palette.background.level1}

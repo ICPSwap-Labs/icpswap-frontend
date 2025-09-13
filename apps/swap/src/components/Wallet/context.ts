@@ -51,6 +51,8 @@ export interface WalletContextProps {
   setEditAddressBook: (addressBook: AddressBook) => void;
   deleteAddressBook: AddressBook | undefined;
   setDeleteAddressBook: (addressBook: AddressBook | undefined) => void;
+  deleteAddressBookLoading: boolean;
+  setDeleteAddressBookLoading: (loading: boolean) => void;
   selectedContact: AddressBook | undefined;
   setSelectedContact: (contact: AddressBook | undefined) => void;
   sendToken: Token;
@@ -62,6 +64,9 @@ export interface WalletContextProps {
   logoutConfirmOpen: boolean;
   setLogoutConfirmOpen: (open: boolean) => void;
   closeDrawer: () => void;
+  openDrawer: () => void;
+  removeTokenId: string | undefined;
+  setRemoveTokenId: (tokenId: string | undefined) => void;
 }
 
 export const WalletContext = createContext<WalletContextProps>({

@@ -5,7 +5,7 @@ import { FilledTextField, Flex } from "components/index";
 import { isUndefinedOrNull, isValidAccount, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { editAddressBook } from "@icpswap/hooks";
+import { editAddressBook, useAddressBook } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
 
@@ -15,7 +15,7 @@ export function EditAddress() {
   const [name, setName] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
-  const { setPages, editAddressBook: addressBook } = useWalletContext();
+  const { setPages, editAddressBook: addressBook, deleteAddressBookLoading } = useWalletContext();
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.AddressBook);
@@ -72,6 +72,22 @@ export function EditAddress() {
     }
   }, [addressBook, removeAddressHandler]);
 
+  const { result: addresses } = useAddressBook();
+
+  const error = useMemo(() => {
+    if (isUndefinedOrNull(addresses) || isUndefinedOrNull(addressBook)) return t("common.save");
+    if (isUndefinedOrNull(name) || isUndefinedOrNull(address)) return t("Enter name & address");
+    if (isValidAddress === false) return t("invalid.address");
+
+    const isExist = !!addresses
+      .filter((__addressBook) => __addressBook.id !== addressBook.id)
+      .find((addressBook) => addressBook.name === name || addressBook.address === address);
+
+    if (isExist) return t("wallet.address.name.exist");
+
+    return undefined;
+  }, [addresses, name, address, loading, isValidAddress, addressBook]);
+
   return (
     <DrawerWrapper
       padding="12px"
@@ -79,21 +95,27 @@ export function EditAddress() {
       onPrev={handlePrev}
       showRightIcon
       rightIcon={
-        <Box sx={{ width: "24px", height: "24px" }} onClick={handleRemoveAddress}>
-          <img width="100%" height="100%" src="/images/wallet/remove0.svg" alt="" />
-        </Box>
+        deleteAddressBookLoading ? (
+          <Box sx={{ width: "24px", height: "24px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <CircularProgress sx={{ color: "#ffffff" }} size={18} />
+          </Box>
+        ) : (
+          <Box sx={{ width: "24px", height: "24px" }} onClick={handleRemoveAddress}>
+            <img width="100%" height="100%" src="/images/wallet/remove0.svg" alt="" />
+          </Box>
+        )
       }
       footer={
-        <Box sx={{ width: "100%", padding: "0 12px" }}>
+        <Box sx={{ width: "100%" }}>
           <Button
             variant="contained"
             fullWidth
             size="large"
-            disabled={!name || !address || isValidAddress === false || loading || isEdited === false}
+            disabled={nonUndefinedOrNull(error) || loading || isEdited === false}
             onClick={handleSave}
             startIcon={loading ? <CircularProgress size={20} color="inherit" /> : null}
           >
-            {t("common.save")}
+            {error ?? t("common.save")}
           </Button>
         </Box>
       }
@@ -112,6 +134,13 @@ export function EditAddress() {
               fullWidth
               placeholder="Enter a name under 20 characters"
               onChange={(value: string) => handleValueChange("name", value)}
+              textFieldProps={{
+                slotProps: {
+                  htmlInput: {
+                    maxLength: 20,
+                  },
+                },
+              }}
             />
           </Box>
         </Flex>

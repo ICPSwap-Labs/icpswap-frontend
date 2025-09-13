@@ -4,6 +4,7 @@ import { EstimatedBalanceUI } from "components/Wallet/assets/EstimatedBalanceUI"
 import { AddressOverview, Null } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
+import { useTranslation } from "react-i18next";
 
 interface DistributionEstimatedBalanceProps {
   addressOverview: AddressOverview | Null;
@@ -11,6 +12,7 @@ interface DistributionEstimatedBalanceProps {
 }
 
 export function DistributionEstimatedBalance({ addressOverview, onRefresh }: DistributionEstimatedBalanceProps) {
+  const { t } = useTranslation();
   const icpPrice = useUSDPrice(ICP);
 
   const { icpValue, usdValue } = useMemo(() => {
@@ -29,6 +31,12 @@ export function DistributionEstimatedBalance({ addressOverview, onRefresh }: Dis
   }, [addressOverview, icpPrice]);
 
   return (
-    <EstimatedBalanceUI title="Estimated total balance" onRefresh={onRefresh} icpValue={icpValue} usdValue={usdValue} />
+    <EstimatedBalanceUI
+      title={t("wallet.estimated.total.balance")}
+      onRefresh={onRefresh}
+      icpValue={icpValue}
+      usdValue={usdValue}
+      noValueChange
+    />
   );
 }

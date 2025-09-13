@@ -22,36 +22,51 @@ export function Confirm({ open, title, content, onCancel, onConfirm, cancelText,
     <Box
       sx={{
         position: "absolute",
+        right: 0,
+        top: 0,
         width: "100%",
         height: "100vh",
-        borderRadius: "24px",
-        background: "rgba(0, 0, 0, 0.50)",
-        maxWidth: `${WALLET_DRAWER_WIDTH}px`,
-        padding: "24px",
+        background: "transparent",
+        // Drawer index is 1200
+        zIndex: 1201,
       }}
     >
-      <Box sx={{ background: theme.palette.background.level2, borderRadius: "12px", padding: "16px" }}>
-        <Flex fullWidth justify="space-between">
-          <Typography sx={{ color: "text.primary", fontSize: "18px" }}>{title}</Typography>
-          <Box sx={{ width: "24px", height: "24px", cursor: "pointer" }} onClick={onCancel}>
-            <img width="24px" height="24px" src="/images/wallet/close.svg" alt="" />
-          </Box>
-        </Flex>
+      <Box
+        sx={{
+          position: "absolute",
+          right: 0,
+          top: 0,
+          width: "100%",
+          height: "100vh",
+          borderRadius: "24px",
+          background: "rgba(0, 0, 0, 0.50)",
+          maxWidth: `${WALLET_DRAWER_WIDTH}px`,
+          padding: "24px",
+        }}
+      >
+        <Box sx={{ background: theme.palette.background.level2, borderRadius: "12px", padding: "16px" }}>
+          <Flex fullWidth justify="space-between">
+            <Typography sx={{ color: "text.primary", fontSize: "18px" }}>{title}</Typography>
+            <Box sx={{ width: "24px", height: "24px", cursor: "pointer" }} onClick={onCancel}>
+              <img width="24px" height="24px" src="/images/wallet/close.svg" alt="" />
+            </Box>
+          </Flex>
 
-        <Typography sx={{ color: "text.primary", margin: "24px 0 0 0", lineHeight: "20px" }}>{content}</Typography>
+          <Typography sx={{ color: "text.primary", margin: "24px 0 0 0", lineHeight: "20px" }}>{content}</Typography>
 
-        <Flex sx={{ margin: "32px 0 0 0" }} gap="0 16px">
-          <Box sx={{ flex: 1 }}>
-            <Button size="large" variant="contained" className="secondary" fullWidth onClick={onCancel}>
-              {cancelText ?? t("common.cancel")}
-            </Button>
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <Button size="large" variant="contained" fullWidth onClick={onConfirm}>
-              {confirmText ?? t("common.confirm")}
-            </Button>
-          </Box>
-        </Flex>
+          <Flex sx={{ margin: "32px 0 0 0" }} gap="0 16px">
+            <Box sx={{ flex: 1 }}>
+              <Button size="large" variant="contained" className="secondary" fullWidth onClick={onCancel}>
+                {cancelText ?? t("common.cancel")}
+              </Button>
+            </Box>
+            <Box sx={{ flex: 1 }}>
+              <Button size="large" variant="contained" fullWidth onClick={onConfirm}>
+                {confirmText ?? t("common.confirm")}
+              </Button>
+            </Box>
+          </Flex>
+        </Box>
       </Box>
     </Box>
   ) : null;
