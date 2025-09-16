@@ -22,6 +22,8 @@ export interface PoolCurrentPriceProps {
   showUsdValue?: boolean;
   showInverted?: boolean;
   onInverted?: (inverted: boolean) => void;
+  iconColor?: string;
+  per?: boolean;
 }
 
 export function PoolCurrentPrice({
@@ -38,6 +40,8 @@ export function PoolCurrentPrice({
   symbolColor = "text.secondary",
   symbolSize,
   showUsdValue = true,
+  iconColor,
+  per,
 }: PoolCurrentPriceProps) {
   const theme = useTheme();
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -74,14 +78,22 @@ export function PoolCurrentPrice({
   const label = useMemo(() => {
     if (isUndefinedOrNull(baseToken) || isUndefinedOrNull(quoteToken)) return undefined;
 
-    return manuallyInverted
-      ? `${tokenSymbolEllipsis({
+    return per
+      ? manuallyInverted
+        ? `${tokenSymbolEllipsis({
+            symbol: baseToken.symbol,
+          })} per ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`
+        : `${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} per ${tokenSymbolEllipsis({
+            symbol: baseToken.symbol,
+          })}`
+      : manuallyInverted
+      ? `1 ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} = ${price} ${tokenSymbolEllipsis({
           symbol: baseToken.symbol,
-        })} per ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`
-      : `${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} per ${tokenSymbolEllipsis({
+        })}`
+      : `1 ${tokenSymbolEllipsis({
           symbol: baseToken.symbol,
-        })}`;
-  }, [baseToken, quoteToken, manuallyInverted]);
+        })} = ${price} ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`;
+  }, [price, per, baseToken, quoteToken, manuallyInverted]);
 
   return (
     <Flex
@@ -102,14 +114,16 @@ export function PoolCurrentPrice({
     >
       {price && label ? (
         <>
-          <Typography
-            sx={{
-              color: priceColor,
-              fontSize: priceSize ?? fontSize,
-            }}
-          >
-            {formatTokenPrice(price)}
-          </Typography>
+          {per ? (
+            <Typography
+              sx={{
+                color: priceColor,
+                fontSize: priceSize ?? fontSize,
+              }}
+            >
+              {formatTokenPrice(price)}
+            </Typography>
+          ) : null}
 
           <Typography
             sx={{
@@ -146,7 +160,7 @@ export function PoolCurrentPrice({
         <SyncAltIcon
           sx={{
             fontSize: "1rem",
-            color: theme.palette.text.secondary,
+            color: iconColor ?? theme.palette.text.secondary,
           }}
         />
       ) : null}

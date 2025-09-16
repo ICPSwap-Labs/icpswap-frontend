@@ -4,11 +4,10 @@ import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { TabPanel, Tab } from "components/index";
 import { useTranslation } from "react-i18next";
-import { SelectPair } from "components/Select/SelectPair";
 import { LimitContext } from "components/swap/limit-order/context";
-
-import { PendingList } from "./pending";
-import { HistoryList } from "./history";
+import { PendingList } from "components/swap/limit-order/pending";
+import { HistoryList } from "components/swap/limit-order/history";
+import { LimitPendingTabOptions } from "components/swap/limit-order/LimitPendingTabOptions";
 
 enum LimitTab {
   Pending = "Pending",
@@ -18,22 +17,13 @@ enum LimitTab {
 export function TransactionForSimpleMode() {
   const { t } = useTranslation();
   const theme = useTheme();
-
   const { selectedPool } = useContext(LimitContext);
   const [activeTab, setActiveTab] = useState(LimitTab.Pending);
+  const [pair, setPair] = useState<Null | string>(null);
 
   const handleTableChange = useCallback((tab: Tab) => {
     setActiveTab(tab.key);
   }, []);
-
-  const [pair, setPair] = useState<Null | string>(null);
-
-  const handlePairChange = useCallback(
-    (id: string | undefined) => {
-      setPair(id);
-    },
-    [setPair],
-  );
 
   useEffect(() => {
     if (selectedPool) {
@@ -85,33 +75,9 @@ export function TransactionForSimpleMode() {
             },
           }}
         >
-          <Flex
-            gap="0 4px"
-            sx={{
-              display: activeTab === "Pending" ? "flex" : "none",
-              minWidth: "240px",
-              width: "fit-content",
-              "@media(max-width: 640px)": {
-                justifyContent: "flex-start",
-              },
-            }}
-            justify="flex-end"
-          >
-            <Typography>{t("common.select.pair.colon")}</Typography>
-            <SelectPair
-              value={pair}
-              panelPadding="0"
-              showClean={false}
-              onPairChange={handlePairChange}
-              search
-              allPair
-              showBackground={false}
-            />
-          </Flex>
-
-          {pair === "ALL PAIR" ? (
-            <Typography sx={{ fontSize: "12px" }}>Fetching multiple limit orders may take some time.</Typography>
-          ) : null}
+          <Box sx={{ display: activeTab === LimitTab.Pending ? "block" : "none" }}>
+            <LimitPendingTabOptions onPairChange={setPair} pair={pair} pool={selectedPool} />
+          </Box>
 
           {activeTab === LimitTab.History ? <Typography>{t("swap.limit.history.description")}</Typography> : null}
         </Flex>
