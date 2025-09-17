@@ -76,7 +76,7 @@ export function TransactionForSimpleMode() {
           }}
         >
           <Box sx={{ display: activeTab === LimitTab.Pending ? "block" : "none" }}>
-            <LimitPendingTabOptions onPairChange={setPair} pair={pair} pool={selectedPool} />
+            <LimitPendingTabOptions onPairChange={setPair} pair={pair} />
           </Box>
 
           {activeTab === LimitTab.History ? <Typography>{t("swap.limit.history.description")}</Typography> : null}

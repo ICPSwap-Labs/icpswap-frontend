@@ -24,6 +24,7 @@ export interface PoolCurrentPriceProps {
   onInverted?: (inverted: boolean) => void;
   iconColor?: string;
   per?: boolean;
+  align?: string;
 }
 
 export function PoolCurrentPrice({
@@ -42,6 +43,7 @@ export function PoolCurrentPrice({
   showUsdValue = true,
   iconColor,
   per,
+  align,
 }: PoolCurrentPriceProps) {
   const theme = useTheme();
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -112,58 +114,65 @@ export function PoolCurrentPrice({
         }
       }}
     >
-      {price && label ? (
-        <>
-          {per ? (
+      <Typography component="div" sx={{ textAlign: align ?? "left" }}>
+        {price && label ? (
+          <>
+            {per ? (
+              <Typography
+                sx={{
+                  color: priceColor,
+                  fontSize: priceSize ?? fontSize,
+                }}
+              >
+                {formatTokenPrice(price)}
+              </Typography>
+            ) : null}
+
             <Typography
               sx={{
-                color: priceColor,
-                fontSize: priceSize ?? fontSize,
+                fontSize: symbolSize ?? fontSize,
+                color: symbolColor,
               }}
+              component="span"
             >
-              {formatTokenPrice(price)}
+              {label}
             </Typography>
-          ) : null}
 
+            {baseTokenUSDPrice && quoteTokenUSDPrice && showUsdValue ? (
+              <Typography
+                sx={{
+                  fontSize: usdValueSize ?? fontSize,
+                  color: usdValueColor,
+                  margin: "0 0 0 4px",
+                }}
+                component="span"
+              >
+                ({formatDollarAmount(manuallyInverted ? quoteTokenUSDPrice : baseTokenUSDPrice)})
+              </Typography>
+            ) : null}
+
+            {showInverted ? (
+              <SyncAltIcon
+                sx={{
+                  fontSize: "1rem",
+                  color: iconColor ?? theme.palette.text.secondary,
+                  margin: "0 0 0 4px",
+                  verticalAlign: "middle",
+                }}
+              />
+            ) : null}
+          </>
+        ) : (
           <Typography
             sx={{
-              fontSize: symbolSize ?? fontSize,
-              color: symbolColor,
+              fontSize: "12px",
             }}
+            component="div"
           >
-            {label}
+            --
           </Typography>
-        </>
-      ) : (
-        <Typography
-          sx={{
-            fontSize: "12px",
-          }}
-          component="div"
-        >
-          --
-        </Typography>
-      )}
-
-      {baseTokenUSDPrice && quoteTokenUSDPrice && showUsdValue ? (
-        <Typography
-          sx={{
-            fontSize: usdValueSize ?? fontSize,
-            color: usdValueColor,
-          }}
-        >
-          ({formatDollarAmount(manuallyInverted ? quoteTokenUSDPrice : baseTokenUSDPrice)})
-        </Typography>
-      ) : null}
-
-      {showInverted ? (
-        <SyncAltIcon
-          sx={{
-            fontSize: "1rem",
-            color: iconColor ?? theme.palette.text.secondary,
-          }}
-        />
-      ) : null}
+        )}
+      </Typography>
     </Flex>
   );
 }

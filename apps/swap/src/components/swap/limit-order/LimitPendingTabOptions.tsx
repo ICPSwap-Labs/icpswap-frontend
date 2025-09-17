@@ -3,19 +3,14 @@ import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 import { SelectPair } from "components/Select/SelectPair";
-import { PoolCurrentPrice } from "components/swap/PoolCurrentPrice";
-import { useMediaQuery640 } from "hooks/theme";
-import { Pool } from "@icpswap/swap-sdk";
 
 interface LimitPendingTabOptionsProps {
   onPairChange: (pair: string | undefined) => void;
   pair: string | Null;
-  pool: Pool | Null;
 }
 
-export function LimitPendingTabOptions({ pair, pool, onPairChange }: LimitPendingTabOptionsProps) {
+export function LimitPendingTabOptions({ pair, onPairChange }: LimitPendingTabOptionsProps) {
   const { t } = useTranslation();
-  const matchDown640 = useMediaQuery640();
 
   return (
     <>
@@ -29,21 +24,6 @@ export function LimitPendingTabOptions({ pair, pool, onPairChange }: LimitPendin
           },
         }}
       >
-        <Flex gap="0 4px">
-          <Typography>{t("common.current.price.colon")}</Typography>
-
-          <PoolCurrentPrice
-            pool={pool}
-            showInverted
-            fontSize={matchDown640 ? "14px" : "16px"}
-            usdValueColor="text.primary"
-            symbolColor="text.primary"
-            showUsdValue={false}
-            iconColor="#ffffff"
-            per={false}
-          />
-        </Flex>
-
         <Flex
           gap="0 4px"
           sx={{

@@ -16,6 +16,7 @@ import { usePoolByPoolId } from "hooks/swap/usePools";
 import { useTranslation } from "react-i18next";
 import { CancelLimitConfirm, LimitDetails, LimitDealRatio } from "components/swap/limit-order/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { PoolCurrentPrice } from "components/swap/PoolCurrentPrice";
 
 export interface PendingRowProps {
   onCancelSuccess?: () => void;
@@ -27,7 +28,6 @@ export interface PendingRowProps {
 export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: PendingRowProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-
   const [showLimitDetails, setShowLimitDetails] = useState(false);
   const [showLimitConfirm, setShowLimitConfirm] = useState(false);
   const [invertPrice, setInvertPrice] = useState(false);
@@ -119,9 +119,28 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
           </Typography>
         </Flex>
 
+        <Flex justify="flex-end">
+          <PoolCurrentPrice
+            pool={pool}
+            showInverted
+            fontSize="16px"
+            usdValueColor="text.primary"
+            symbolColor="text.primary"
+            showUsdValue={false}
+            iconColor="#ffffff"
+            per={false}
+            align="right"
+          />
+        </Flex>
+
         <Flex gap="0 2px" justify="flex-end">
           <Typography
-            sx={{ color: "text.primary", cursor: "pointer", display: "flex", gap: "0 2px", alignItems: "center" }}
+            sx={{
+              color: "text.primary",
+              cursor: "pointer",
+              fontSize: "16px",
+              textAlign: "right",
+            }}
             onClick={handleInvert}
           >
             {limitPrice ? (
@@ -133,7 +152,7 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
                   : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
                       outputToken.symbol
                     }`}
-                <SyncAltIcon sx={{ fontSize: "1rem" }} />
+                <SyncAltIcon sx={{ fontSize: "1rem", margin: "0 0 0 2px", verticalAlign: "middle" }} />
               </>
             ) : (
               "--"
@@ -142,7 +161,7 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
         </Flex>
 
         <Flex gap="0 8px" justify="flex-end">
-          <LimitDealRatio limit={order} position={position} />
+          <LimitDealRatio limit={order} position={position} width="60px" />
         </Flex>
 
         <Flex justify="flex-end">
