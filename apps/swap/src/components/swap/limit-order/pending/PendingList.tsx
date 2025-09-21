@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => {
   return {
     wrapper: {
       display: "grid",
-      gridTemplateColumns: "repeat(5, 1fr) 130px 80px",
+      gridTemplateColumns: "repeat(4, 1fr) 140px 80px",
       gap: "0 4px",
     },
   };

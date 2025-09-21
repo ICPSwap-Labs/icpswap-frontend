@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, nanosecond2Millisecond, formatTokenPrice, formatAmount } from "@icpswap/utils";
+import { BigNumber, nanosecond2Millisecond, formatTokenPrice, formatAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { Flex, TextButton } from "@icpswap/ui";
 import { LimitOrder as LimitOrderType } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -85,6 +85,11 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
     setInvertPrice(!invertPrice);
   }, [invertPrice, setInvertPrice]);
 
+  const isSorted = useMemo(() => {
+    if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return undefined;
+    return inputToken.sortsBefore(outputToken);
+  }, [inputToken, outputToken]);
+
   return (
     <>
       <Box
@@ -119,45 +124,46 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
           </Typography>
         </Flex>
 
-        <Flex justify="flex-end">
-          <PoolCurrentPrice
-            pool={pool}
-            showInverted
-            fontSize="16px"
-            usdValueColor="text.primary"
-            symbolColor="text.primary"
-            showUsdValue={false}
-            iconColor="#ffffff"
-            per={false}
-            align="right"
-          />
-        </Flex>
+        <Flex>
+          <Box>
+            <Flex gap="0 2px" sx={{ margin: "0 0 12px 0" }}>
+              <Typography
+                sx={{
+                  color: "text.primary",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  textAlign: "right",
+                }}
+                onClick={handleInvert}
+              >
+                {limitPrice ? (
+                  <>
+                    {invertPrice
+                      ? `1 ${outputToken.symbol} = ${formatTokenPrice(
+                          new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
+                        )} ${inputToken.symbol}`
+                      : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
+                          outputToken.symbol
+                        }`}
+                    <SyncAltIcon sx={{ fontSize: "1rem", margin: "0 0 0 2px", verticalAlign: "middle" }} />
+                  </>
+                ) : (
+                  "--"
+                )}
+              </Typography>
+            </Flex>
 
-        <Flex gap="0 2px" justify="flex-end">
-          <Typography
-            sx={{
-              color: "text.primary",
-              cursor: "pointer",
-              fontSize: "16px",
-              textAlign: "right",
-            }}
-            onClick={handleInvert}
-          >
-            {limitPrice ? (
-              <>
-                {invertPrice
-                  ? `1 ${outputToken.symbol} = ${formatTokenPrice(
-                      new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
-                    )} ${inputToken.symbol}`
-                  : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
-                      outputToken.symbol
-                    }`}
-                <SyncAltIcon sx={{ fontSize: "1rem", margin: "0 0 0 2px", verticalAlign: "middle" }} />
-              </>
-            ) : (
-              "--"
-            )}
-          </Typography>
+            <PoolCurrentPrice
+              pool={pool}
+              fontSize="16px"
+              usdValueColor="text.primary"
+              symbolColor="text.primary"
+              showUsdValue={false}
+              iconColor="#ffffff"
+              per={false}
+              outerInvert={isUndefinedOrNull(isSorted) ? undefined : isSorted ? invertPrice : !invertPrice}
+            />
+          </Box>
         </Flex>
 
         <Flex gap="0 8px" justify="flex-end">

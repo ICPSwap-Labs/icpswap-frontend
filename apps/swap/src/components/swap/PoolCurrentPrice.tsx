@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { BoxProps, Typography, useTheme } from "components/Mui";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useUSDPriceById } from "hooks/index";
-import { formatDollarAmount, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import { formatDollarAmount, formatTokenPrice, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PoolCurrentPriceProps {
@@ -25,6 +25,7 @@ export interface PoolCurrentPriceProps {
   iconColor?: string;
   per?: boolean;
   align?: string;
+  outerInvert?: boolean;
 }
 
 export function PoolCurrentPrice({
@@ -44,6 +45,7 @@ export function PoolCurrentPrice({
   iconColor,
   per,
   align,
+  outerInvert,
 }: PoolCurrentPriceProps) {
   const theme = useTheme();
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -69,12 +71,14 @@ export function PoolCurrentPrice({
   const baseTokenUSDPrice = useUSDPriceById(baseToken?.address);
   const quoteTokenUSDPrice = useUSDPriceById(quoteToken?.address);
 
-  const price = useMemo(() => {
+  const formattedTokenPrice = useMemo(() => {
     if (isUndefinedOrNull(quoteToken) || isUndefinedOrNull(baseToken) || isUndefinedOrNull(pool)) return undefined;
 
-    return manuallyInverted
+    const price = manuallyInverted
       ? pool.priceOf(quoteToken).toFixed(quoteToken.decimals)
       : pool.priceOf(baseToken).toFixed(baseToken.decimals);
+
+    return formatTokenPrice(price);
   }, [pool, quoteToken, manuallyInverted]);
 
   const label = useMemo(() => {
@@ -89,13 +93,19 @@ export function PoolCurrentPrice({
             symbol: baseToken.symbol,
           })}`
       : manuallyInverted
-      ? `1 ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} = ${price} ${tokenSymbolEllipsis({
+      ? `1 ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({
           symbol: baseToken.symbol,
         })}`
       : `1 ${tokenSymbolEllipsis({
           symbol: baseToken.symbol,
-        })} = ${price} ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`;
-  }, [price, per, baseToken, quoteToken, manuallyInverted]);
+        })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`;
+  }, [formattedTokenPrice, per, baseToken, quoteToken, manuallyInverted]);
+
+  useEffect(() => {
+    if (nonUndefinedOrNull(outerInvert)) {
+      setManuallyInverted(outerInvert);
+    }
+  }, [outerInvert]);
 
   return (
     <Flex
@@ -115,7 +125,7 @@ export function PoolCurrentPrice({
       }}
     >
       <Typography component="div" sx={{ textAlign: align ?? "left" }}>
-        {price && label ? (
+        {formattedTokenPrice && label ? (
           <>
             {per ? (
               <Typography
@@ -124,7 +134,7 @@ export function PoolCurrentPrice({
                   fontSize: priceSize ?? fontSize,
                 }}
               >
-                {formatTokenPrice(price)}
+                {formattedTokenPrice}
               </Typography>
             ) : null}
 
