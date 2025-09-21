@@ -81,7 +81,7 @@ export type AddressOverview = {
   positionValue: string;
   stakeValue: string;
   tokenList: {
-    tokens: Array<{ token: string; balance: number }>;
+    tokens: Array<{ token: string; balance: number; amount: number }>;
     totalBalance: number;
     user: string;
   };

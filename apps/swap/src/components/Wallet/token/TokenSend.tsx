@@ -33,7 +33,15 @@ function usePrincipalStandard(tokenId: string, standard: string) {
 
 function AddressBookLabel({ name }: { name: string }) {
   return (
-    <Box sx={{ borderRadius: "8px", background: "rgba(183, 156, 74, 0.26)", padding: "4px 8px", color: "#B79C4A" }}>
+    <Box
+      sx={{
+        borderRadius: "8px",
+        background: "rgba(183, 156, 74, 0.26)",
+        padding: "4px 8px",
+        color: "#B79C4A",
+        fontSize: "12px",
+      }}
+    >
       {name}
     </Box>
   );
@@ -159,9 +167,20 @@ export function TokenSend() {
 
     if (usePrincipalStandard(token.address, token.standard)) {
       if (!isValidPrincipal(address)) return t("common.invalid.principal.id");
-    } else if (!isValidAccount(address) && !isValidPrincipal(address))
+    } else if (!isValidAccount(address) && !isValidPrincipal(address)) {
       return t("wallet.send.error.invalid.principal.account");
-  }, [address, token, amount]);
+    }
+
+    if (amount && new BigNumber(amount).isGreaterThan(parseTokenAmount(balance ?? 0, token.decimals))) {
+      return t("common.error.insufficient.balance");
+    }
+
+    if (!new BigNumber(amount).minus(parseTokenAmount(token.transFee, token.decimals)).isGreaterThan(0)) {
+      return t("common.error.greater.than.fee");
+    }
+
+    return undefined;
+  }, [address, token, amount, balance]);
 
   const disableSend = useMemo(() => {
     return isValidAddress === false || loading || nonUndefinedOrNull(error);

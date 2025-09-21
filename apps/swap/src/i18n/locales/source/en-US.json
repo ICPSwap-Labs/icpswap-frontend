@@ -800,7 +800,7 @@
   "aWyAWS": "Select the creator royalties",
   "aZhdc2": "Invalid reward token",
   "common.failed.approve.error": "Failed to approve {{message}}",
-  "acQ0rH": "Must be greater than trans fee",
+  "common.error.greater.than.fee": "Must be greater than trans fee",
   "afkuUs": "Invalid date range",
   "common.floor.price": "Floor price",
   "claim.your.records": "Your records",
@@ -1471,5 +1471,6 @@
   "common.send": "Send",
   "common.view.info": "View on info",
   "wallet.estimated.total.balance": "Est. Total Balance",
-  "wallet.address.name.exist": "The name or address already exists"
+  "wallet.address.name.exist": "The name or address already exists",
+  "wallet.token.removed.success": "Token removed successfully"
 }

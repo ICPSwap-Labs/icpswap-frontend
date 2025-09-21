@@ -1,29 +1,9 @@
-import { Box, makeStyles } from "components/Mui";
+import { Box } from "components/Mui";
 import { useSyncYourTokensHandler } from "hooks/wallet/useSyncYourTokens";
-
-const ANIMATION_TIME = 1000;
-
-const useStyles = makeStyles(() => {
-  return {
-    rotate: {
-      "&.loading": {
-        animation: `$loading ${ANIMATION_TIME}ms`,
-        animationIterationCount: "infinite",
-      },
-    },
-    "@keyframes loading": {
-      "0%": {
-        transform: "rotate(0deg)",
-      },
-      "100%": {
-        transform: "rotate(360deg)",
-      },
-    },
-  };
-});
+import { useRotateAnimationLoading, ROTATE_ANIMATION_LOADING_CLASS } from "components/theme";
 
 export function SyncYourTokens() {
-  const classes = useStyles();
+  const classes = useRotateAnimationLoading();
   const { loading, syncYourTokensHandler } = useSyncYourTokensHandler();
 
   return (
@@ -34,7 +14,7 @@ export function SyncYourTokens() {
         cursor: "pointer",
       }}
       onClick={syncYourTokensHandler}
-      className={`${classes.rotate}${loading ? " loading" : ""}`}
+      className={`${classes.rotateAnimationLoading}${loading ? ` ${ROTATE_ANIMATION_LOADING_CLASS}` : ""}`}
     >
       <img src="/images/wallet/refresh.svg" alt="" />
     </Box>

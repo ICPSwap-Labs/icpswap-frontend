@@ -39,32 +39,41 @@ export function Distribution({ addressOverview }: DistributionProps) {
         value: addressOverview.tokenValue,
         color: Colors.Token,
         percent: new BigNumber(addressOverview.tokenValue).dividedBy(totalValue).toString(),
+        usd: new BigNumber(addressOverview.tokenValue),
       },
       {
         label: Labels.Limit,
         value: addressOverview.limitOrderValue,
         color: Colors.Limit,
         percent: new BigNumber(addressOverview.limitOrderValue).dividedBy(totalValue).toString(),
+        usd: new BigNumber(addressOverview.limitOrderValue),
       },
       {
         label: Labels.Lp,
         value: addressOverview.positionValue,
         color: Colors.Lp,
         percent: new BigNumber(addressOverview.positionValue).dividedBy(totalValue).toString(),
+        usd: new BigNumber(addressOverview.positionValue),
       },
       {
         label: Labels.Stake,
         value: addressOverview.stakeValue,
         color: Colors.Stake,
         percent: new BigNumber(addressOverview.stakeValue).dividedBy(totalValue).toString(),
+        usd: new BigNumber(addressOverview.stakeValue),
       },
       {
         label: Labels.Farm,
         value: addressOverview.farmValue,
         color: Colors.Farm,
         percent: new BigNumber(addressOverview.farmValue).dividedBy(totalValue).toString(),
+        usd: new BigNumber(addressOverview.farmValue),
       },
-    ];
+    ].sort((a, b) => {
+      if (new BigNumber(a.usd).isLessThan(b.usd)) return 1;
+      if (new BigNumber(a.usd).isGreaterThan(b.usd)) return -1;
+      return 0;
+    });
   }, [addressOverview]);
 
   return (
