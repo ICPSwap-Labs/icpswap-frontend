@@ -48,18 +48,20 @@ export function SocialMedia() {
   return (
     <Box sx={{ width: "100%", overflow: "auto" }}>
       <Flex fullWidth vertical align="flex-start" gap="16px 0">
-        {loading || isUndefinedOrNull(tokenNews) ? (
-          <LoadingRow>
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-            <div />
-          </LoadingRow>
-        ) : tokenNews.length === 0 ? (
+        {loading ? (
+          <Box sx={{ width: "100%", padding: "24px" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        ) : isUndefinedOrNull(tokenNews) || tokenNews.length === 0 ? (
           <Flex fullWidth justify="center">
             <NoData />
           </Flex>
