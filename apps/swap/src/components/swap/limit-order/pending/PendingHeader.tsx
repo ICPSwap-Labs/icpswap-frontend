@@ -13,7 +13,7 @@ export function PendingHeader({ wrapperClasses }: PendingHeaderProps) {
       <HeaderCell>{t("common.time")}</HeaderCell>
       <HeaderCell>{t("common.you.pay")}</HeaderCell>
       <HeaderCell>{t("common.you.receive")}</HeaderCell>
-      <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
+      <HeaderCell>Limit/Current price</HeaderCell>
       <HeaderCell align="right">{t("common.filled")}</HeaderCell>
       <HeaderCell align="right">&nbsp;</HeaderCell>
     </Flex>
