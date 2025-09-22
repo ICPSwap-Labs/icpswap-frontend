@@ -66,6 +66,7 @@ export default {
   darkLevel3: "#212946",
   darkLevel4: "#29314f",
   darkLevel5: "#273051",
+  wallet: "#1B223F",
 
   // text variants
   darkTextPrimary: "#ffffff",

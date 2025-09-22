@@ -74,3 +74,16 @@ export interface IcpSwapAPITokenDetail {
     [key: string]: string;
   };
 }
+
+export type AddressOverview = {
+  farmValue: string;
+  limitOrderValue: string;
+  positionValue: string;
+  stakeValue: string;
+  tokenList: {
+    tokens: Array<{ token: string; balance: number; amount: number }>;
+    totalBalance: number;
+    user: string;
+  };
+  tokenValue: string;
+};

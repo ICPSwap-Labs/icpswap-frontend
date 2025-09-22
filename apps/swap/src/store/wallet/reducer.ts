@@ -6,6 +6,8 @@ import {
   updateBitcoinDissolveTxs,
   updateWalletSortType,
   updateSortBalance,
+  updateHideSmallBalance,
+  updateRemovedWalletDefaultTokens,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -56,5 +58,21 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateSortBalance, (state, { payload }) => {
       state.sortBalance = payload;
+    })
+    .addCase(updateHideSmallBalance, (state, { payload }) => {
+      state.hideSmallBalance = payload;
+    })
+    .addCase(updateRemovedWalletDefaultTokens, (state, { payload }) => {
+      if (payload.add) {
+        const __removedWalletDefaultTokens = [...state.removedWalletDefaultTokens];
+        const index = __removedWalletDefaultTokens.findIndex((tokenId) => tokenId === payload.tokenId);
+        if (index !== -1) {
+          __removedWalletDefaultTokens.splice(index, 1);
+        }
+
+        state.removedWalletDefaultTokens = __removedWalletDefaultTokens;
+      } else {
+        state.removedWalletDefaultTokens = [...new Set([...state.removedWalletDefaultTokens, payload.tokenId])];
+      }
     });
 });
