@@ -3,7 +3,7 @@ import {
   updateTaggedTokens,
   deleteTaggedTokens,
   updateCK_BTCAddresses,
-  updateRetrieveState,
+  updateBitcoinDissolveTxs,
   updateWalletSortType,
   updateSortBalance,
   updateHideSmallBalance,
@@ -35,31 +35,23 @@ export default createReducer(initialState, (builder) => {
         [`${payload.principal}_${payload.type}`]: payload.address,
       };
     })
-    .addCase(updateRetrieveState, (state, { payload }) => {
-      const states = state.retrieveState[`${payload.principal}`]
-        ? [...state.retrieveState[`${payload.principal}`]].filter(
-            (state) => state.block_index !== String(payload.block_index),
-          )
-        : [];
+    .addCase(updateBitcoinDissolveTxs, (state, { payload }) => {
+      const old_state = [...state.bitcoinDissolveTxs];
+      const index = old_state.findIndex((tx) => tx.id === payload.id);
 
-      const old_state = (
-        state.retrieveState[`${payload.principal}`] ? [...state.retrieveState[`${payload.principal}`]] : []
-      ).filter((state) => state.block_index === String(payload.block_index))[0];
+      if (index === -1) {
+        old_state.unshift(payload);
+      } else {
+        old_state.splice(index, 1, payload);
+      }
 
-      states.unshift({
-        state: payload.state,
-        txid: payload.txid,
-        block_index: String(payload.block_index),
-        value: payload.value ? payload.value : old_state ? old_state.value : "",
-      });
-
-      const _states = states.sort((a, b) => {
+      const dissolveTxs = old_state.sort((a, b) => {
         if (Number(a.block_index) > Number(b.block_index)) return -1;
         if (Number(a.block_index) < Number(b.block_index)) return 1;
         return 0;
       });
 
-      state.retrieveState[`${payload.principal}`] = _states;
+      state.bitcoinDissolveTxs = dissolveTxs;
     })
     .addCase(updateWalletSortType, (state, { payload }) => {
       state.sort = payload;

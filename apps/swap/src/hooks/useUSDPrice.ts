@@ -4,6 +4,7 @@ import { ICP } from "@icpswap/tokens";
 import { useMemo } from "react";
 import { WRAPPED_ICP } from "constants/tokens";
 import { useInfoToken } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
 
 export function useICPPrice(): number | undefined {
   const icpTokenInfo = useInfoToken(ICP.address);
@@ -14,7 +15,7 @@ export function useICPPrice(): number | undefined {
   }, [icpTokenInfo]);
 }
 
-export function useUSDPrice(token: Token | undefined): string | number | undefined {
+export function useUSDPrice(token: Token | Null): string | number | undefined {
   const tokenId = useMemo(() => {
     if (isUndefinedOrNull(token)) return null;
 

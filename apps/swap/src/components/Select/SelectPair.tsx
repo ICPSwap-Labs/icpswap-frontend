@@ -1,5 +1,5 @@
 import { Box, Typography } from "components/Mui";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Select } from "components/Select/ForToken";
 import { TokenPair } from "components/TokenPair";
 import type { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
@@ -8,11 +8,12 @@ import { Principal } from "@dfinity/principal";
 import { useStateSwapAllTokens } from "store/global/hooks";
 import { useAllSwapPools } from "store/swap/hooks";
 import { useTranslation } from "react-i18next";
+import type { MenuProps } from "components/Select/types";
+import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
 
-import type { MenuProps } from "./types";
-
-function isTokenHide(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
+function isFilteredByNameOrSymbol(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
   if (!search) return false;
+  if (isValidPrincipal(search)) return false;
   if (!tokenInfo) return true;
 
   if (
@@ -20,6 +21,23 @@ function isTokenHide(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined)
     !tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
   )
     return true;
+
+  return false;
+}
+
+function isFilterByAddress(
+  search: string | undefined,
+  token0: IcpSwapAPITokenInfo,
+  token1: IcpSwapAPITokenInfo,
+  poolId: string,
+) {
+  if (isUndefinedOrNull(search)) return false;
+  // TODO: Perhaps token0 and token1 is undefined, fix it.
+  if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1)) return true;
+
+  if (isValidPrincipal(search)) {
+    return !(search === token0.ledgerId || search === token1.ledgerId || search === poolId);
+  }
 
   return false;
 }
@@ -153,19 +171,23 @@ export function SelectPair({
     }
   };
 
-  const handleFilterMenu = (menu: MenuProps) => {
-    if (!menu.additional) return false;
+  const menuFilter = useCallback(
+    (menu: MenuProps) => {
+      if (!menu.additional) return false;
 
-    const additional = JSON.parse(menu.additional) as {
-      token0: IcpSwapAPITokenInfo;
-      token1: IcpSwapAPITokenInfo;
-    };
+      const additional = JSON.parse(menu.additional) as {
+        token0: IcpSwapAPITokenInfo;
+        token1: IcpSwapAPITokenInfo;
+      };
 
-    return (
-      (isTokenHide(additional.token0, search) && isTokenHide(additional.token1, search)) ||
-      (!!filter && filter(additional.token0))
-    );
-  };
+      return (
+        (isFilteredByNameOrSymbol(additional.token0, search) && isFilteredByNameOrSymbol(additional.token1, search)) ||
+        (!!filter && filter(additional.token0)) ||
+        isFilterByAddress(search, additional.token0, additional.token1, menu.value)
+      );
+    },
+    [search, filter],
+  );
 
   return (
     <Select
@@ -178,7 +200,7 @@ export function SelectPair({
       border={border}
       onSearch={setSearch}
       search={hasSearch}
-      menuFilter={handleFilterMenu}
+      menuFilter={menuFilter}
       filled={filled}
       fullHeight={fullHeight}
       showBackground={showBackground}

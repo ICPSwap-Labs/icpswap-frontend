@@ -6,16 +6,16 @@ import { useRefreshTriggerManager } from "hooks/index";
 import { useLimitOrders } from "hooks/swap/limit-order/useLimitOrders";
 import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
 import { useScrollToTop } from "hooks/useScrollToTop";
-
-import { PendingHeader } from "./PendingHeader";
-import { PendingRow } from "./PendingRow";
-import { LimitTransactionsEmpty } from "../Empty";
+import { PendingHeader } from "components/swap/limit-order/pending/PendingHeader";
+import { PendingRow } from "components/swap/limit-order/pending/PendingRow";
+import { LimitTransactionsEmpty } from "components/swap/limit-order/Empty";
 
 const useStyles = makeStyles(() => {
   return {
     wrapper: {
       display: "grid",
-      gridTemplateColumns: "repeat(5, 1fr) 80px",
+      gridTemplateColumns: "repeat(4, 1fr) 140px 80px",
+      gap: "0 4px",
     },
   };
 });

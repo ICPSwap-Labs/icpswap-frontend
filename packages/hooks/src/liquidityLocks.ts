@@ -9,6 +9,14 @@ import { useCallsData } from "./useCallData";
 import { useMultiPositionInfos, useMultiPositionInfosByIds } from "./swap/useMultiPositionInfos";
 import { getSinglePoolMultiPositions } from "./swap/useSinglePoolMultiPositions";
 
+export function getPoolLockedPositionIds(poolId: string) {
+  if (poolId === "wlv64-biaaa-aaaag-qcrlq-cai") return [24, 20, 1].map((e) => BigInt(e));
+  // CLOUD/ICP
+  if (poolId === "3s6gf-uqaaa-aaaag-qcdlq-cai") return [BigInt(1), BigInt(2)];
+
+  return undefined;
+}
+
 export function useLiquidityLockIds(tokenIds: string[] | Null) {
   return useCallsData(
     useCallback(async () => {
@@ -35,8 +43,7 @@ export function useExtraBlackHoleLiquidityLocks(pool: Pool | Null): Position[] |
 
   const positionIds: bigint[] | undefined = useMemo(() => {
     if (!poolId) return undefined;
-    if (poolId === "wlv64-biaaa-aaaag-qcrlq-cai") return [24, 20, 1].map((e) => BigInt(e));
-    return undefined;
+    return getPoolLockedPositionIds(poolId);
   }, [poolId]);
 
   const { result: positions } = useMultiPositionInfosByIds(poolId, positionIds);
@@ -60,8 +67,7 @@ export function useExtraBlackHoleLiquidityLocks(pool: Pool | Null): Position[] |
 export function useExtraBlackHolePositionInfos(poolId: string | Null) {
   const positionIds: bigint[] | undefined = useMemo(() => {
     if (!poolId) return undefined;
-    if (poolId === "wlv64-biaaa-aaaag-qcrlq-cai") return [24, 20, 1].map((e) => BigInt(e));
-    return undefined;
+    return getPoolLockedPositionIds(poolId);
   }, [poolId]);
 
   const { result: positions } = useMultiPositionInfosByIds(poolId, positionIds);

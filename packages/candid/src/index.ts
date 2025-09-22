@@ -10,6 +10,5 @@ export * from "./staking-token";
 export * from "./swap";
 export * from "./token";
 export * from "./token-claim";
-export * from "./voting";
 export * from "./other";
 export * from "./chainKeyToken";

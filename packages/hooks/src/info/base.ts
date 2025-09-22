@@ -1,5 +1,11 @@
 import { useCallback } from "react";
-import { resultFormat, icpswap_info_fetch_get, icpswap_fetch_get, nonUndefinedOrNull } from "@icpswap/utils";
+import {
+  resultFormat,
+  icpswap_info_fetch_get,
+  icpswap_fetch_get,
+  nonUndefinedOrNull,
+  isUndefinedOrNull,
+} from "@icpswap/utils";
 import { baseIndex, baseStorage } from "@icpswap/actor";
 import type { PaginationResult, BaseTransaction, InfoTransactionResponse, PageResponse, Null } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
@@ -75,6 +81,24 @@ export function useSwapTransactions({
 }: UseSwapTransactionsProps) {
   return useCallsData(
     useCallback(async () => {
+      return await getSwapTransactions({ principal, poolId, page, limit, tokenId, startTime, endTime });
+    }, [page, poolId, principal, limit, tokenId, startTime, endTime]),
+  );
+}
+
+export function useUserSwapTransactions({
+  page,
+  poolId,
+  principal,
+  limit,
+  tokenId,
+  startTime,
+  endTime,
+}: UseSwapTransactionsProps) {
+  return useCallsData(
+    useCallback(async () => {
+      if (isUndefinedOrNull(principal)) return undefined;
+
       return await getSwapTransactions({ principal, poolId, page, limit, tokenId, startTime, endTime });
     }, [page, poolId, principal, limit, tokenId, startTime, endTime]),
   );

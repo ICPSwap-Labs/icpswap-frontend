@@ -5,7 +5,9 @@ import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { Null, ResultStatus } from "@icpswap/types";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { useUpdateUserTx } from "store/wallet/hooks";
+import { useBitcoinDissolveTxsManager } from "store/wallet/hooks";
+import { useTranslation } from "react-i18next";
+import { BitcoinTx } from "types/ckBTC";
 
 export interface DissolveProps {
   amount: string | number | Null;
@@ -19,7 +21,8 @@ export function useDissolve() {
   const [loading, setLoading] = useState(false);
 
   const approve = useApprove();
-  const updateUserTx = useUpdateUserTx();
+  const bitcoinDissolveTxManager = useBitcoinDissolveTxsManager();
+  const { t } = useTranslation();
 
   const dissolve_call = useCallback(
     async ({ amount, address, token }: DissolveProps) => {
@@ -42,9 +45,19 @@ export function useDissolve() {
       if (dissolveResult === ResultStatus.ERROR) {
         openTip(dissolveMessage ?? `Failed to dissolve`, MessageTypes.error);
       } else {
-        openTip(`Dissolve successfully`, MessageTypes.success);
+        openTip(t("ck.dissolve.submitted", { symbol: "BTC" }), MessageTypes.success);
+
         if (data?.block_index) {
-          updateUserTx(principal, data.block_index, undefined, approveAmount.toString());
+          const tx: BitcoinTx = {
+            principal,
+            txid: undefined,
+            value: approveAmount.toString(),
+            id: crypto.randomUUID(),
+            block_index: data.block_index.toString(),
+            state: "Pending",
+          };
+
+          bitcoinDissolveTxManager(tx);
         }
       }
 
@@ -52,7 +65,7 @@ export function useDissolve() {
 
       return dissolveResult === ResultStatus.OK;
     },
-    [approve, updateUserTx, principal],
+    [approve, bitcoinDissolveTxManager, principal],
   );
 
   return useMemo(() => ({ loading, dissolve_call }), [loading, dissolve_call]);

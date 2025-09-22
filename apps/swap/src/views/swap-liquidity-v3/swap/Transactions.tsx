@@ -1,41 +1,42 @@
 import { Typography, Box, useTheme } from "components/Mui";
-import { useUserSwapTransactions } from "hooks/swap/v3Calls";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { enumToString, BigNumber } from "@icpswap/utils";
 import { LoadingRow, NoData, TokenImage } from "components/index";
-import type { UserStorageTransaction } from "@icpswap/types";
+import type { InfoTransactionResponse } from "@icpswap/types";
 import dayjs from "dayjs";
 import { DAYJS_FORMAT } from "constants/index";
 import { useToken } from "hooks/index";
 import { ArrowUpRight } from "react-feather";
 import { Link, SwapTransactionPriceTip } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
-import i18n from "i18n";
-
-export const RECORD_TYPE: { [key: string]: string } = {
-  swap: i18n.t("common.swap"),
-  increaseLiquidity: i18n.t("swap.add.liquidity"),
-  decreaseLiquidity: i18n.t("swap.remove.liquidity"),
-  mint: i18n.t("swap.add.liquidity"),
-  addLiquidity: i18n.t("swap.add.liquidity"),
-  claim: i18n.t("common.collect"),
-};
+import { useUserSwapTransactions } from "@icpswap/hooks";
+import { useMemo } from "react";
+import { SwapTransactionType } from "components/swap/SwapTransactionType";
 
 interface SwapTransactionItemProps {
-  transaction: UserStorageTransaction;
+  transaction: InfoTransactionResponse;
 }
 
 function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
   const theme = useTheme();
 
-  const amount0 = new BigNumber(transaction.token0ChangeAmount).toFormat();
-  const amount1 = new BigNumber(transaction.token1ChangeAmount).toFormat();
+  const token0Amount = useMemo(() => {
+    return new BigNumber(transaction.token0AmountIn).isEqualTo(0)
+      ? transaction.token0AmountOut
+      : transaction.token0AmountIn;
+  }, [transaction]);
+
+  const token1Amount = useMemo(() => {
+    return new BigNumber(transaction.token1AmountIn).isEqualTo(0)
+      ? transaction.token1AmountOut
+      : transaction.token1AmountIn;
+  }, [transaction]);
 
   const symbol0 = transaction.token0Symbol;
   const symbol1 = transaction.token1Symbol;
 
-  const [, token0] = useToken(transaction.token0Id);
-  const [, token1] = useToken(transaction.token1Id);
+  const [, token0] = useToken(transaction.token0LedgerId);
+  const [, token1] = useToken(transaction.token1LedgerId);
 
   return (
     <Box
@@ -60,21 +61,21 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
 
       <Box sx={{ flex: 1 }}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>{RECORD_TYPE[enumToString(transaction.action)]}</Typography>
-          <Typography sx={{ fontSize: "12px" }}>
-            {dayjs(Number(transaction.timestamp * BigInt(1000))).format(DAYJS_FORMAT)}
+          <Typography>
+            <SwapTransactionType transaction={transaction} />
           </Typography>
+          <Typography sx={{ fontSize: "12px" }}>{dayjs(Number(transaction.txTime)).format(DAYJS_FORMAT)}</Typography>
         </Box>
         <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, margin: "8px 0 0 0" }}>
-          {enumToString(transaction.action) === "swap" ? (
+          {enumToString(transaction.actionType) === "swap" ? (
             <>
-              {amount0} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> to {amount1}{" "}
-              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> to{" "}
+              {token1Amount} <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
             </>
           ) : (
             <>
-              {amount0} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> and {amount1}{" "}
-              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> and{" "}
+              {token1Amount} <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
             </>
           )}
         </Typography>
@@ -88,8 +89,24 @@ export function SwapTransactions() {
   const principal = useAccountPrincipalString();
   const theme = useTheme();
 
-  const { loading, result } = useUserSwapTransactions(principal, 0, 100);
-  const transactions = !principal ? undefined : result?.content;
+  const { startTime, endTime } = useMemo(() => {
+    const now = new Date().getTime();
+    const startTime = new BigNumber(now).minus(180 * 24 * 3600 * 1000).toNumber();
+    const endTime = now;
+
+    return { startTime, endTime };
+  }, []);
+
+  const { result, loading } = useUserSwapTransactions({
+    principal,
+    poolId: undefined,
+    page: 1,
+    limit: 100,
+    startTime,
+    endTime,
+  });
+
+  const transactions = result?.content;
 
   return (
     <>

@@ -8,8 +8,6 @@ export * from "./exchange_rate";
 export * from "./nft";
 export * from "./staking-farm";
 export * from "./staking-token";
-export * from "./voting";
-export * from "./wrap";
 export * from "./token";
 export * from "./token-claim";
 export * from "./usePromisesAwait";

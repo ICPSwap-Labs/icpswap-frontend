@@ -1,10 +1,10 @@
-import { StoredTxValue } from "types/ckBTC";
+import { BitcoinTx } from "types/ckBTC";
 import { WalletSortType, SortBalanceEnum } from "types/index";
 
 export interface WalletState {
   taggedTokens: string[];
   ckBTCAddresses: { [key: string]: string };
-  retrieveState: { [key: string]: StoredTxValue[] };
+  bitcoinDissolveTxs: BitcoinTx[];
   sort: WalletSortType;
   sortBalance: SortBalanceEnum;
   hideSmallBalance: boolean;
@@ -13,7 +13,7 @@ export interface WalletState {
 
 export const initialState: WalletState = {
   ckBTCAddresses: {},
-  retrieveState: {},
+  bitcoinDissolveTxs: [],
   taggedTokens: [],
   sort: "High",
   sortBalance: SortBalanceEnum.ALL,

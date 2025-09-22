@@ -2,7 +2,6 @@ import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { ChainId } from "@icpswap/constants";
 import { useWeb3React } from "@web3-react/core";
 import { useBlockNumber, useCurrentBlockTimestamp } from "hooks/web3/index";
-// import { useFastForwardBlockNumber } from "lib/hooks/useBlockNumber";
 import ms from "ms";
 import { useCallback, useEffect } from "react";
 import { useTransactionRemover } from "store/transactions/hooks";

@@ -2,7 +2,7 @@
 import { MaxUint256 } from "@ethersproject/constants";
 import type { TransactionResponse } from "@ethersproject/providers";
 import { ERC20Token } from "@icpswap/swap-sdk";
-import { useWeb3React } from "@web3-react/core";
+import { useAccount, useChainId } from "wagmi";
 import { useERC20Contract } from "hooks/web3/useContract";
 import { useCallback, useMemo } from "react";
 import { calculateGasMargin } from "utils/web3/calculateGasMargin";
@@ -23,7 +23,7 @@ function useApprovalStateForSpender(
   spender: string | Null,
   useIsPendingApproval: (token?: ERC20Token | Null, spender?: string | Null) => boolean,
 ): ApprovalState {
-  const { account } = useWeb3React();
+  const { address: account } = useAccount();
 
   const pendingApproval = useIsPendingApproval(token, spender);
   const { tokenAllowance } = useERC20TokenAllowance(token, account ?? undefined, spender, pendingApproval);
@@ -58,7 +58,7 @@ export function useApproval(
       }
   >,
 ] {
-  const { chainId } = useWeb3React();
+  const chainId = useChainId();
 
   // check the current approval status
   const approvalState = useApprovalStateForSpender(amountToApprove, token, spender, useIsPendingApproval);

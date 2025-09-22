@@ -3,8 +3,8 @@ import { shorten } from "@icpswap/utils";
 import { useAccountPrincipal, useConnectorStateConnected, useConnectManager } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage } from "components/Image/index";
-import { useTranslation } from "react-i18next";
 import { useWalletContext } from "components/Wallet/context";
+import { useTranslation } from "react-i18next";
 
 export default function ProfileSection() {
   const { t } = useTranslation();
@@ -12,6 +12,7 @@ export default function ProfileSection() {
   const principal = useAccountPrincipal();
   const isConnected = useConnectorStateConnected();
   const { openDrawer } = useWalletContext();
+
   const { showConnector, disconnect } = useConnectManager();
 
   const handleConnectWallet = async () => {

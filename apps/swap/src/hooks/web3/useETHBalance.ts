@@ -1,10 +1,10 @@
-import { useWeb3React } from "@web3-react/core";
+import { useAccount } from "wagmi";
 import { useEffect, useMemo, useState } from "react";
 import { BigNumber } from "@icpswap/utils";
 import Web3 from "web3";
 
 export function useETHBalance(reload?: boolean) {
-  const { account } = useWeb3React();
+  const { address: account } = useAccount();
   const [balance, setBalance] = useState<BigNumber | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 

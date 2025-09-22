@@ -12,13 +12,16 @@ import { Box, Typography, useTheme, CircularProgress, TextField } from "componen
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
 import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useWeb3React } from "@web3-react/core";
+import { useAccount } from "wagmi";
 import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { isAddress } from "utils/web3/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
+import { DisconnectButton } from "components/ck-bridge/Disconnect";
+import { Flex } from "@icpswap/ui";
 
 export interface Erc20DissolveProps {
   token: Token;
@@ -29,9 +32,9 @@ export interface Erc20DissolveProps {
 export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { account } = useWeb3React();
-
+  const { address: account } = useAccount();
   const principal = useAccountPrincipal();
+  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager(ERC20_DISSOLVE_REFRESH);
 
   const symbol = useTokenSymbol({
     token,
@@ -40,8 +43,6 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
 
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
-
-  const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("Erc20Dissolve");
 
   const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
   const ercTokenBalance = useBridgeTokenBalance({
@@ -107,7 +108,17 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
         <Typography sx={{ fontSize: "16px" }}>{t("ck.receiving.address", { symbol })}</Typography>
 
         <Box sx={{ margin: "12px 0 0 0" }}>
-          <Box sx={{ width: "100%" }}>
+          <Flex
+            fullWidth
+            gap="0 4px"
+            sx={{
+              "@media(max-width: 640px)": {
+                flexDirection: "column",
+                gap: "10px",
+                alignItems: "flex-start",
+              },
+            }}
+          >
             <TextField
               sx={{
                 "& input": {
@@ -138,7 +149,9 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
               autoComplete="off"
               placeholder={t("common.enter.address")}
             />
-          </Box>
+
+            <DisconnectButton />
+          </Flex>
         </Box>
       </Box>
 
