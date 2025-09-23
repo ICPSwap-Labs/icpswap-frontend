@@ -15,6 +15,7 @@ import { LogoutConfirm } from "components/Wallet/LogoutConfirm";
 import { RemoveTokenConfirm } from "components/Wallet/token/RemoveTokenConfirm";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useMediaQuery640 } from "hooks/theme";
 
 const components = {
   [WalletManagerPage.Index]: <TokenAssetsWrapper />,
@@ -30,6 +31,7 @@ const components = {
 
 export function WalletIndex() {
   const theme = useTheme();
+  const mediaQuery640 = useMediaQuery640();
   const principal = useAccountPrincipalString();
   const { open, setOpen, pages, setPages } = useWalletContext();
 
@@ -41,6 +43,10 @@ export function WalletIndex() {
     setOpen(false);
     setPages(WalletManagerPage.Index);
   }, [setOpen, setPages]);
+
+  const handleStopPropagation = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  }, []);
 
   return (
     <>
@@ -55,7 +61,7 @@ export function WalletIndex() {
             width: "100%",
             maxWidth: `${WALLET_DRAWER_WIDTH}px`,
             background: "transparent",
-            padding: "8px 8px 8px 0",
+            padding: "8px",
           },
 
           "& ::-webkit-scrollbar-thumb": {
@@ -64,9 +70,21 @@ export function WalletIndex() {
         }}
       >
         <Box
-          sx={{ background: theme.palette.background.wallet, borderRadius: "24px", height: "100%", overflow: "hidden" }}
+          sx={{ width: "100%", padding: mediaQuery640 ? "60px 0 0 0" : "0px", overflow: "hidden", height: "100%" }}
+          onClick={handleDrawerClose}
         >
-          {components[pages[0]]}
+          <Box
+            sx={{
+              background: theme.palette.background.wallet,
+              borderRadius: "24px",
+              overflow: "hidden",
+              width: "100%",
+              height: "100%",
+            }}
+            onClick={handleStopPropagation}
+          >
+            {components[pages[0]]}
+          </Box>
         </Box>
       </Drawer>
 
