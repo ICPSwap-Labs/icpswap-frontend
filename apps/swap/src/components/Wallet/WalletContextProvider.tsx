@@ -31,6 +31,7 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const [removeTokenId, setRemoveTokenId] = useState<string | undefined>(undefined);
   const [deleteAddressBookLoading, setDeleteAddressBookLoading] = useState<boolean>(false);
+  const [xtcTopUpShow, setXTCTopUpShow] = useState<boolean>(false);
 
   const handleTotalValueChange = (tokenId: string, value: BigNumber) => {
     setTotalValue((prevState) => ({ ...prevState, [tokenId]: value }));
@@ -117,6 +118,8 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
         setRemoveTokenId,
         deleteAddressBookLoading,
         setDeleteAddressBookLoading,
+        xtcTopUpShow,
+        setXTCTopUpShow,
       }}
     >
       {children}

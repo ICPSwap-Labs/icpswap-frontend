@@ -67,6 +67,8 @@ export interface WalletContextProps {
   openDrawer: () => void;
   removeTokenId: string | undefined;
   setRemoveTokenId: (tokenId: string | undefined) => void;
+  xtcTopUpShow: boolean;
+  setXTCTopUpShow: (show: boolean) => void;
 }
 
 export const WalletContext = createContext<WalletContextProps>({
