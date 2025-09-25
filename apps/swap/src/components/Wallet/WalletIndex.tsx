@@ -16,6 +16,7 @@ import { RemoveTokenConfirm } from "components/Wallet/token/RemoveTokenConfirm";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { useMediaQuery640 } from "hooks/theme";
+import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
 
 const components = {
   [WalletManagerPage.Index]: <TokenAssetsWrapper />,
@@ -33,7 +34,7 @@ export function WalletIndex() {
   const theme = useTheme();
   const mediaQuery640 = useMediaQuery640();
   const principal = useAccountPrincipalString();
-  const { open, setOpen, pages, setPages } = useWalletContext();
+  const { open, setOpen, pages, setPages, xtcTopUpShow, setXTCTopUpShow } = useWalletContext();
 
   useEffect(() => {
     setPages(WalletManagerPage.Index);
@@ -47,6 +48,10 @@ export function WalletIndex() {
   const handleStopPropagation = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   }, []);
+
+  const handleXTCCloseTopUp = useCallback(() => {
+    setXTCTopUpShow(false);
+  }, [setXTCTopUpShow]);
 
   return (
     <>
@@ -91,6 +96,7 @@ export function WalletIndex() {
       <DeleteAddressConfirm />
       <LogoutConfirm />
       <RemoveTokenConfirm />
+      <XTCTopUpModal open={xtcTopUpShow} onClose={handleXTCCloseTopUp} />
     </>
   );
 }

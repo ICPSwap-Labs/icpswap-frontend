@@ -20,7 +20,7 @@ import { useAccountPrincipal } from "store/auth/hooks";
 import { XTC, TOKEN_STANDARD } from "constants/tokens";
 import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
 import { ckBridgeChain } from "@icpswap/constants";
-import XTCTopUpModal from "components/XTCTopup/index";
+import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
 import { useHistory } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";

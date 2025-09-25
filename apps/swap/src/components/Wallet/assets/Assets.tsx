@@ -26,10 +26,12 @@ import {
   ConvertItem,
   TransactionItem,
   SwapItem,
+  TopUpItem,
 } from "components/Wallet/TokenMenuItem/index";
 import { useTokenDataManager } from "hooks/wallet/useTokenDataManager";
 import { SyncYourTokens } from "components/Wallet/assets/SyncYourTokens";
 import { DotLoading } from "components/index";
+import { XTC } from "constants/tokens";
 
 interface TokenRowProps {
   tokenId: string;
@@ -131,6 +133,7 @@ function TokenRow({ tokenId }: TokenRowProps) {
           <TokenReceiveItem tokenId={tokenId} />
           <TransactionItem tokenId={tokenId} isBridgeToken={allBridgeTokens.includes(tokenId)} />
           {allBridgeTokens.includes(tokenId) ? <ConvertItem tokenId={tokenId} /> : null}
+          {tokenId === XTC.address ? <TopUpItem tokenId={tokenId} /> : null}
           <RemoveItem tokenId={tokenId} isLast onRemoveClick={handleClose} />
         </MenuWrapper>
       </Box>
