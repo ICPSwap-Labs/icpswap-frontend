@@ -8,6 +8,7 @@ export interface IcpSwapAPITokenInfo {
   symbol: string;
   totalSupply: string;
   logo: string;
+  standardArray: string[] | undefined;
 }
 
 export type IcpSwapAPIPageResult<T> = {
