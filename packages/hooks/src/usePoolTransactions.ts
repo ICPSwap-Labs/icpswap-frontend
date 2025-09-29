@@ -32,7 +32,7 @@ export function usePoolTransactions({ poolId, offset, limit, cache, refresh }: U
 
         setLoading(true);
         const result = await getPoolTransactions(poolId, offset, limit);
-        setTransactions(result.content);
+        setTransactions(result?.content);
         setLoading(false);
       }
     }

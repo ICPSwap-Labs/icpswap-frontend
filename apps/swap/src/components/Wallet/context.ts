@@ -23,7 +23,16 @@ export enum WalletManagerPage {
   AddAddress = "AddAddress",
   EditAddress = "EditAddress",
   SelectContact = "SelectContact",
+  Convert = "Convert",
 }
+
+export type ConvertToIcp = {
+  tokenId: string;
+  icpAmount: string;
+  poolId: string;
+  amount: string;
+  token: Token;
+};
 
 export interface WalletContextProps {
   open: boolean;
@@ -69,6 +78,12 @@ export interface WalletContextProps {
   setRemoveTokenId: (tokenId: string | undefined) => void;
   xtcTopUpShow: boolean;
   setXTCTopUpShow: (show: boolean) => void;
+  tokensConvertToSwap: Array<ConvertToIcp> | undefined;
+  setTokensConvertToIcp: (amount: Array<ConvertToIcp> | undefined) => void;
+  convertedTokenIds: string[];
+  setConvertedTokenIds: (tokenIds: string[]) => void;
+  convertLoading: boolean;
+  setConvertLoading: (loading: boolean) => void;
 }
 
 export const WalletContext = createContext<WalletContextProps>({
