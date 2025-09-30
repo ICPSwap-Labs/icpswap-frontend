@@ -15,11 +15,18 @@ export interface ConnectorConfig {
   disabled?: boolean;
 }
 
+export const IIv2ProviderUrl = "https://id.ai";
+
 export const ConnectorConfigs: ConnectorConfig[] = [
   {
-    label: "Internet Identity",
+    label: "Internet Identity 1.0",
     value: Connector.IC,
     logo: "/images/connect/InternetIdentity.svg",
+  },
+  {
+    label: "Internet Identity 2.0",
+    value: Connector.IIV2,
+    logo: "/images/connect/iiv2.svg",
   },
   { label: "Plug", value: Connector.PLUG, logo: "/images/connect/Plug.svg" },
   {

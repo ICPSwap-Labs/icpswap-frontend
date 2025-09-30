@@ -28,6 +28,7 @@ export enum Connector {
   ME = "ME",
   Metamask = "MetaMask",
   Oisy = "Oisy",
+  IIV2 = "IIV2",
 }
 
 export function isICConnector(connector: Connector) {
