@@ -1474,9 +1474,9 @@
   "wallet.estimated.total.balance": "Est. Total Balance",
   "wallet.address.name.exist": "The name or address already exists",
   "wallet.token.removed.success": "Token removed successfully",
-  "wallet.convert.icp": "Convert (Small) balances to ICP",
+  "wallet.convert.icp": "Convert small balances to ICP",
   "wallet.convert.icp.title": "Convert to ICP",
   "common.convert": "Convert",
   "common.will.receive": "You will receive",
-  "wallet.convert.description": "*Tokens worth less than ${{worth}} can be converted. Delisted tokens cannot be converted."
+  "wallet.convert.description": "Convert tokens under ${{worth}}. Excludes unlisted tokens."
 }
