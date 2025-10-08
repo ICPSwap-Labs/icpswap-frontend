@@ -1,5 +1,5 @@
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Box, Typography, Button, Checkbox, CircularProgress } from "components/Mui";
 import { Flex, LoadingRow, NoData } from "components/index";
 import { useTranslation } from "react-i18next";
@@ -49,8 +49,14 @@ function SmallBalanceRow({ amount, icpAmount, infoToken, checked, onCheckedChang
 
 export function BalanceConvert() {
   const { t } = useTranslation();
-  const { setPages, setTokensConvertToIcp, convertLoading, convertedTokenIds } = useWalletContext();
-  const [checkedTokenIds, setCheckedTokenIds] = useState<string[]>([]);
+  const {
+    setPages,
+    setTokensConvertToIcp,
+    convertLoading,
+    convertedTokenIds,
+    checkedConvertTokenIds,
+    setCheckedConvertTokenIds,
+  } = useWalletContext();
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.Index);
@@ -81,54 +87,60 @@ export function BalanceConvert() {
       );
     });
 
-    return filteredResult.map((element) => {
-      const { smallBalanceResult, infoToken } = element as {
-        tokenId: string;
-        smallBalanceResult: SmallBalanceResult;
-        infoToken: InfoTokenRealTimeDataResponse;
-      };
+    return filteredResult
+      .map((element) => {
+        const { smallBalanceResult, infoToken } = element as {
+          tokenId: string;
+          smallBalanceResult: SmallBalanceResult;
+          infoToken: InfoTokenRealTimeDataResponse;
+        };
 
-      const amount = parseTokenAmount(smallBalanceResult.balance, smallBalanceResult.token.decimals);
-      const usdValue = amount.multipliedBy(infoToken.price);
+        const amount = parseTokenAmount(smallBalanceResult.balance, smallBalanceResult.token.decimals);
+        const usdValue = amount.multipliedBy(infoToken.price);
 
-      return {
-        amount,
-        usdValue,
-        infoToken,
-        icpAmount: smallBalanceResult.icpAmount,
-        balance: smallBalanceResult.balance,
-        poolId: smallBalanceResult.poolId,
-        token: smallBalanceResult.token,
-      };
-    });
+        return {
+          amount,
+          usdValue,
+          infoToken,
+          icpAmount: smallBalanceResult.icpAmount,
+          balance: smallBalanceResult.balance,
+          poolId: smallBalanceResult.poolId,
+          token: smallBalanceResult.token,
+        };
+      })
+      .sort((a, b) => {
+        if (a.icpAmount < b.icpAmount) return 1;
+        if (a.icpAmount > b.icpAmount) return -1;
+        return 0;
+      });
   }, [result, convertedTokenIds]);
 
   const handleTokenChecked = useCallback(
     (checked: boolean, tokenId: string) => {
       if (checked) {
-        if (!checkedTokenIds.includes(tokenId)) {
-          setCheckedTokenIds([...checkedTokenIds, tokenId]);
+        if (!checkedConvertTokenIds.includes(tokenId)) {
+          setCheckedConvertTokenIds([...checkedConvertTokenIds, tokenId]);
         }
         return;
       }
 
-      if (checkedTokenIds.includes(tokenId)) {
-        const __checkedTokenIds = [...checkedTokenIds];
+      if (checkedConvertTokenIds.includes(tokenId)) {
+        const __checkedTokenIds = [...checkedConvertTokenIds];
         const index = __checkedTokenIds.findIndex((checkedId) => checkedId === tokenId);
 
         if (index !== -1) {
           __checkedTokenIds.splice(index, 1);
-          setCheckedTokenIds(__checkedTokenIds);
+          setCheckedConvertTokenIds(__checkedTokenIds);
         }
       }
     },
-    [checkedTokenIds, setCheckedTokenIds],
+    [checkedConvertTokenIds, setCheckedConvertTokenIds],
   );
 
   const checkedSmallBalances = useMemo(() => {
     if (isUndefinedOrNull(smallBalances)) return undefined;
-    return smallBalances.filter(({ infoToken }) => checkedTokenIds.includes(infoToken.tokenLedgerId));
-  }, [smallBalances, checkedTokenIds]);
+    return smallBalances.filter(({ infoToken }) => checkedConvertTokenIds.includes(infoToken.tokenLedgerId));
+  }, [smallBalances, checkedConvertTokenIds]);
 
   const checkedSmallBalancesIcpAmount = useMemo(() => {
     if (isUndefinedOrNull(checkedSmallBalances)) return undefined;
@@ -140,24 +152,24 @@ export function BalanceConvert() {
 
   const isSelectedAll = useMemo(() => {
     if (isUndefinedOrNull(smallBalances)) return false;
-    return smallBalances.length === checkedTokenIds.length && checkedTokenIds.length !== 0;
-  }, [smallBalances, checkedTokenIds]);
+    return smallBalances.length === checkedConvertTokenIds.length && checkedConvertTokenIds.length !== 0;
+  }, [smallBalances, checkedConvertTokenIds]);
 
   const handleSelectAll = useCallback(() => {
     if (isUndefinedOrNull(smallBalances)) return;
 
     if (isSelectedAll) {
-      setCheckedTokenIds([]);
+      setCheckedConvertTokenIds([]);
     } else {
       const allTokenIds = smallBalances.map((element) => element.infoToken.tokenLedgerId);
-      setCheckedTokenIds(allTokenIds);
+      setCheckedConvertTokenIds(allTokenIds);
     }
-  }, [smallBalances, setCheckedTokenIds, isSelectedAll]);
+  }, [smallBalances, setCheckedConvertTokenIds, isSelectedAll]);
 
   const handleConvert = useCallback(() => {
-    if (checkedTokenIds.length === 0 || isUndefinedOrNull(checkedSmallBalances)) return;
+    if (checkedConvertTokenIds.length === 0 || isUndefinedOrNull(checkedSmallBalances)) return;
 
-    const convertToIcp = checkedTokenIds
+    const convertToIcp = checkedConvertTokenIds
       .map((tokenId) => {
         const balanceResult = checkedSmallBalances.find((element) => element.infoToken.tokenLedgerId === tokenId);
         if (isUndefinedOrNull(balanceResult)) return undefined;
@@ -173,7 +185,7 @@ export function BalanceConvert() {
       .filter((element) => nonUndefinedOrNull(element)) as Array<ConvertToIcp>;
 
     setTokensConvertToIcp(convertToIcp);
-  }, [checkedTokenIds, checkedSmallBalances, setTokensConvertToIcp]);
+  }, [checkedConvertTokenIds, checkedSmallBalances, setTokensConvertToIcp]);
 
   return (
     <DrawerWrapper
@@ -196,7 +208,7 @@ export function BalanceConvert() {
                 {checkedSmallBalancesIcpAmount
                   ? formatAmount(parseTokenAmount(checkedSmallBalancesIcpAmount, ICP.decimals).toString())
                   : "0"}{" "}
-                ICP
+                {ICP.symbol}
               </Typography>
             </Flex>
 
@@ -206,7 +218,7 @@ export function BalanceConvert() {
                 fullWidth
                 size="large"
                 onClick={handleConvert}
-                disabled={convertLoading || isUndefinedOrNull(smallBalances) || smallBalances.length === 0}
+                disabled={convertLoading || checkedConvertTokenIds.length === 0}
                 startIcon={convertLoading ? <CircularProgress sx={{ color: "inherit" }} size="20px" /> : null}
               >
                 {t("common.convert")}
@@ -223,7 +235,7 @@ export function BalanceConvert() {
           </Typography>
         </Box>
 
-        <Box sx={{ margin: "12px 0 0 0" }}>
+        <Box sx={{ margin: "12px 0 0 0", padding: "0 0 20px 0" }}>
           {loading ? (
             <LoadingRow>
               <div />
@@ -246,7 +258,7 @@ export function BalanceConvert() {
                   usdValue={usdValue}
                   infoToken={infoToken}
                   icpAmount={icpAmount}
-                  checked={checkedTokenIds.includes(infoToken.tokenLedgerId)}
+                  checked={checkedConvertTokenIds.includes(infoToken.tokenLedgerId)}
                   onCheckedChange={handleTokenChecked}
                 />
               ))}

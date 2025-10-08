@@ -10,6 +10,7 @@ export function useConvertCallback() {
     setTokensConvertToIcp,
     setConvertLoading,
     convertLoading: loading,
+    setCheckedConvertTokenIds,
   } = useWalletContext();
   const convertToSwap = useConvertSwap();
 
@@ -35,6 +36,7 @@ export function useConvertCallback() {
 
     setTokensConvertToIcp(undefined);
     setConvertLoading(false);
+    setCheckedConvertTokenIds([]);
   }, [tokensConvertToSwap, convertToSwap, setTokensConvertToIcp]);
 
   return useMemo(() => ({ loading, callback }), [callback, loading]);

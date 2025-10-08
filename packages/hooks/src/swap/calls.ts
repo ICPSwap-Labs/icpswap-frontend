@@ -118,7 +118,7 @@ export async function withdraw(poolId: string, token: string, fee: bigint, amoun
   return resultFormat<bigint>(await (await swapPool(poolId, true)).withdraw({ token, fee, amount }));
 }
 
-export async function quote(poolId: string, args: SwapArgs) {
+export async function quote(poolId: string, args: SwapArgs): Promise<bigint | undefined> {
   const quote_result = await (await swapPool(poolId)).quote(args);
   return resultFormat<bigint>(quote_result).data;
 }

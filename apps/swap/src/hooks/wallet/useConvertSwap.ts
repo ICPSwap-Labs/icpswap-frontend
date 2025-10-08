@@ -25,7 +25,7 @@ export function useTransferOrApprove() {
 
   return useCallback(
     async ({ amount, inputAllowance, poolId, token }: UseTransferOrApproveProps) => {
-      if (!principal || isUndefinedOrNull(inputAllowance)) return false;
+      if (!principal) return false;
 
       // if use transfer, need 2 multiply fee to transfer and deposit
       // if use approve, allowance is not enough need 2 multiply fee, if allowance is enough, need 1 multiply fee
@@ -33,6 +33,8 @@ export function useTransferOrApprove() {
         const actualSwapAmount = new BigNumber(amount).minus(token.transFee * 2).toString();
         return await transfer(token, getTokenActualTransferRawAmount(actualSwapAmount, token), poolId);
       }
+
+      if (isUndefinedOrNull(inputAllowance)) return false;
 
       if (new BigNumber(amount).isLessThanOrEqualTo(inputAllowance.toString())) return true;
 
@@ -60,7 +62,8 @@ export function useSwapCallback() {
 
   return useCallback(
     async ({ amount, inputAllowance, poolId, token }: UseSwapCallbackProps) => {
-      if (!principal || isUndefinedOrNull(inputAllowance)) return false;
+      if (!principal) return false;
+      if (!isUseTransfer(token) && isUndefinedOrNull(inputAllowance)) return false;
 
       const outputToken = ICP;
 
@@ -70,7 +73,7 @@ export function useSwapCallback() {
       // if use approve, allowance is not enough need 2 multiply fee, if allowance is enough, need 1 multiply fee
       const actualSwapAmount = isUseTransfer(token)
         ? new BigNumber(amount).minus(token.transFee * 2).toString()
-        : new BigNumber(amount).isLessThanOrEqualTo(inputAllowance.toString())
+        : new BigNumber(amount).isLessThanOrEqualTo((inputAllowance ?? BigInt(0)).toString())
         ? new BigNumber(amount).minus(token.transFee * 1).toString()
         : new BigNumber(amount).minus(token.transFee * 2).toString();
 
@@ -122,7 +125,12 @@ export function useConvertSwap() {
     async ({ balance, token, poolId }: SwapCallbackArgs) => {
       if (isUndefinedOrNull(principal)) return false;
 
-      const inputAllowance = await allowance({ canisterId: token.address, spender: poolId, owner: principal });
+      let inputAllowance: bigint | undefined;
+
+      if (!isUseTransfer(token)) {
+        inputAllowance = await allowance({ canisterId: token.address, spender: poolId, owner: principal });
+      }
+
       const result = await approveOrTransfer({ amount: balance, inputAllowance, poolId, token });
 
       if (result === false) return false;

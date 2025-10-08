@@ -35,6 +35,7 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
   const [tokensConvertToSwap, setTokensConvertToIcp] = useState<Array<ConvertToIcp> | undefined>(undefined);
   const [convertedTokenIds, setConvertedTokenIds] = useState<string[]>([]);
   const [convertLoading, setConvertLoading] = useState<boolean>(false);
+  const [checkedConvertTokenIds, setCheckedConvertTokenIds] = useState<string[]>([]);
 
   const handleTotalValueChange = (tokenId: string, value: BigNumber) => {
     setTotalValue((prevState) => ({ ...prevState, [tokenId]: value }));
@@ -143,6 +144,8 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
         setConvertedTokenIds: handleUpdateConvertedTokenIds,
         convertLoading,
         setConvertLoading,
+        checkedConvertTokenIds,
+        setCheckedConvertTokenIds,
       }}
     >
       {children}

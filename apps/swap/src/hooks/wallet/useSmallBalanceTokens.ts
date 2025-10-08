@@ -73,7 +73,7 @@ export function useSmallBalanceTokens() {
             return {
               token,
               balance,
-              icpAmount,
+              icpAmount: icpAmount ?? BigInt(0),
               poolId: pool.canisterId.toString(),
             };
           });

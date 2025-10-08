@@ -84,6 +84,8 @@ export interface WalletContextProps {
   setConvertedTokenIds: (tokenIds: string[]) => void;
   convertLoading: boolean;
   setConvertLoading: (loading: boolean) => void;
+  checkedConvertTokenIds: string[];
+  setCheckedConvertTokenIds: (tokenIds: string[]) => void;
 }
 
 export const WalletContext = createContext<WalletContextProps>({
