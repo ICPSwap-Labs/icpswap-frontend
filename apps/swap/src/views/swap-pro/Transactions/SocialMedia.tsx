@@ -1,13 +1,16 @@
 /* eslint-disable react/no-danger */
 
 import { Box, Typography, useTheme } from "components/Mui";
-import { useTokenNews } from "@icpswap/hooks";
-import { LoadingRow, Flex, NoData } from "@icpswap/ui";
+import { LoadingRow, Flex, NoData, SimplePagination } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useSwapProContext } from "components/swap/pro";
 import { SocialMediaResult } from "@icpswap/types";
 import dayjs from "dayjs";
 import { sanitize } from "utils/html";
+import { useTokenSocialMedias } from "hooks/useTokenSocialMedia";
+import { useMemo, useState } from "react";
+
+const MAX_ITEMS = 10;
 
 interface TokenNewsItemProps {
   tokenNews: SocialMediaResult;
@@ -20,6 +23,7 @@ function TokenNewsItem({ tokenNews }: TokenNewsItemProps) {
     <Box sx={{ padding: "16px", borderBottom: `1px solid ${theme.palette.background.level1}` }}>
       <Typography
         sx={{ color: "text.primary", fontWeight: 600, fontSize: "16px", "& a": { color: theme.colors.secondaryMain } }}
+        component="div"
       >
         <div dangerouslySetInnerHTML={{ __html: sanitize(tokenNews.title) }} />
       </Typography>
@@ -34,6 +38,7 @@ function TokenNewsItem({ tokenNews }: TokenNewsItemProps) {
           margin: "12px 0 0 0",
           "& a": { color: theme.colors.secondaryMain },
         }}
+        component="div"
       >
         <div dangerouslySetInnerHTML={{ __html: sanitize(tokenNews.content) }} />
       </Typography>
@@ -43,7 +48,15 @@ function TokenNewsItem({ tokenNews }: TokenNewsItemProps) {
 
 export function SocialMedia() {
   const { token } = useSwapProContext();
-  const { result: tokenNews, loading } = useTokenNews(token?.symbol, 0, 100);
+  const { result: tokenNews, loading } = useTokenSocialMedias(token?.address);
+
+  const [page, setPage] = useState(1);
+
+  const sliceResult = useMemo(() => {
+    if (isUndefinedOrNull(tokenNews)) return [];
+
+    return tokenNews.slice(MAX_ITEMS * (page - 1), page * MAX_ITEMS);
+  }, [page, tokenNews]);
 
   return (
     <Box sx={{ width: "100%", overflow: "auto" }}>
@@ -66,7 +79,15 @@ export function SocialMedia() {
             <NoData />
           </Flex>
         ) : (
-          tokenNews.map((news, index) => <TokenNewsItem key={index} tokenNews={news} />)
+          <>
+            {sliceResult.map((news, index) => (
+              <TokenNewsItem key={index} tokenNews={news} />
+            ))}
+
+            <Box mb="20px" sx={{ width: "100%" }}>
+              <SimplePagination page={page} maxItems={MAX_ITEMS} length={tokenNews.length} onPageChange={setPage} />
+            </Box>
+          </>
         )}
       </Flex>
     </Box>
