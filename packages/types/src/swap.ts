@@ -62,3 +62,12 @@ export type PCMMetadata = {
   tokenCid: Principal;
   factoryCid: Principal;
 };
+
+export enum API_SWAP_TRANSACTIONS_TYPES {
+  SWAP = "Swap",
+  INCREASE = "IncreaseLiquidity",
+  ADD = "AddLiquidity",
+  MINT = "Mint",
+  DECREASE = "DecreaseLiquidity",
+  COLLECT = "Claim",
+}
