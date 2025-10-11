@@ -22,7 +22,13 @@ function TokenNewsItem({ tokenNews }: TokenNewsItemProps) {
   return (
     <Box sx={{ padding: "16px", borderBottom: `1px solid ${theme.palette.background.level1}` }}>
       <Typography
-        sx={{ color: "text.primary", fontWeight: 600, fontSize: "16px", "& a": { color: theme.colors.secondaryMain } }}
+        sx={{
+          color: "text.primary",
+          fontWeight: 600,
+          fontSize: "16px",
+          lineHeight: 1.6,
+          "& a": { color: theme.colors.secondaryMain },
+        }}
         component="div"
       >
         <div dangerouslySetInnerHTML={{ __html: sanitize(tokenNews.title) }} />
