@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Modal, MaxButton, Flex, FilledTextField, NumberFilledTextField } from "components/index";
 import { Box, Button, Typography } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -11,6 +11,8 @@ import {
   isValidPrincipal,
   BigNumber,
   isUndefinedOrNull,
+  nonUndefinedOrNull,
+  isUndefinedOrNullOrEmpty,
 } from "@icpswap/utils";
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
 import { useXTCTopUp } from "hooks/token/dip20";
@@ -44,15 +46,14 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
     if (field === "canisterId") {
       setCanisterId(value);
     } else if (field === "amount") {
-      setAmount(amount);
+      setAmount(value);
     }
   };
 
   const XTCTopUp = useXTCTopUp();
 
   const handleTopUp = useCallback(async () => {
-    if (loading || isUndefinedOrNull(canisterId) || isUndefinedOrNull(amount) || canisterId === "" || amount === "")
-      return;
+    if (loading || isUndefinedOrNullOrEmpty(canisterId) || isUndefinedOrNullOrEmpty(amount)) return;
 
     if (onClose) onClose();
     setTopUpLoading(true);
@@ -69,29 +70,33 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
     if (status === ResultStatus.OK) {
       openTip(t`Top-up successfully`, TIP_SUCCESS);
       if (onTopUpSuccess) onTopUpSuccess();
+      setAmount(undefined);
+      setCanisterId(undefined);
     } else {
       openTip(getLocaleMessage(message) ?? message, TIP_ERROR);
     }
 
     setTopUpLoading(false);
-  }, [topUpLoading, setTopUpLoading, canisterId, name]);
+  }, [topUpLoading, setTopUpLoading, canisterId, amount]);
 
   const handleMax = useCallback(() => {
-    if (balance) {
+    if (nonUndefinedOrNull(balance)) {
       const amount = parseTokenAmount(balance, XTC.decimals).toFixed(XTC_TOP_UP_AMOUNT_DECIMALS);
-
       if (!new BigNumber(amount).isEqualTo(0)) {
         setAmount(amount);
       }
     }
   }, [balance]);
 
-  let errorMessage = "";
-  if (amount && XTC && new BigNumber(Number(amount)).isGreaterThan(parseTokenAmount(balance ?? 0, XTC.decimals)))
-    errorMessage = t("common.error.insufficient.balance");
-  if (!amount) errorMessage = t`Enter top-up XTC amount`;
-  if (canisterId && !isValidPrincipal(canisterId)) errorMessage = t("common.error.invalid.canister.id");
-  if (!canisterId) errorMessage = t("xtc.enter.canister");
+  const error = useMemo(() => {
+    if (isUndefinedOrNull(balance)) return t("common.submit");
+    if (isUndefinedOrNullOrEmpty(canisterId)) return t("xtc.enter.canister");
+    if (!isValidPrincipal(canisterId)) return t("common.error.invalid.canister.id");
+    if (isUndefinedOrNullOrEmpty(amount) || new BigNumber(amount).isEqualTo(0)) return t`Enter top-up XTC amount`;
+    if (new BigNumber(Number(amount)).isGreaterThan(parseTokenAmount(balance, XTC.decimals)))
+      return t("common.error.insufficient.balance");
+    return undefined;
+  }, [canisterId, balance, amount]);
 
   return (
     <Modal open={open} title={t("wallet.topUp.xtc")} onClose={onClose}>
@@ -141,13 +146,13 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
 
       <Flex fullWidth align="center" sx={{ margin: "12px 0 0 0" }}>
         <Typography color="text.primary" component="span">
-          {t("common.fee.colon.amount", { amount: XTC ? parseTokenAmount(XTC.transFee, XTC?.decimals).toFormat() : 0 })}
+          {t("common.fee.colon.amount", { amount: parseTokenAmount(XTC.transFee, XTC.decimals).toFormat() })}
         </Typography>
       </Flex>
 
       <Box mt="40px">
-        <Button size="large" fullWidth variant="contained" disabled={!!errorMessage} onClick={handleTopUp}>
-          {errorMessage || t("common.submit")}
+        <Button size="large" fullWidth variant="contained" disabled={!!error} onClick={handleTopUp}>
+          {error || t("common.submit")}
         </Button>
       </Box>
     </Modal>

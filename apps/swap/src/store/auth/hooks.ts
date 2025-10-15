@@ -277,7 +277,7 @@ export function useConnectManager() {
     }
 
     await authDisconnect();
-  }, [connector]);
+  }, [connector, identityKitDisconnect]);
 
   const { loading } = useInitialConnect();
   useIdentityKitInitialConnect();

@@ -10,6 +10,7 @@ export type CreateActorArgs = {
 export interface WalletConnectorConfig {
   whitelist: string[];
   host: string;
+  providerUrl?: string;
 }
 
 export type ConnectCallback = () => Promise<void>;
