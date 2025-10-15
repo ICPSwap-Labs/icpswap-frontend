@@ -58,5 +58,6 @@ export enum ActorName {
 
   Setting = "Setting",
 
+  SocialMedia = "SocialMedia",
   AddressBook = "AddressBook",
 }
