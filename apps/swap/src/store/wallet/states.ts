@@ -7,12 +7,16 @@ export interface WalletState {
   bitcoinDissolveTxs: BitcoinTx[];
   sort: WalletSortType;
   sortBalance: SortBalanceEnum;
+  hideSmallBalance: boolean;
+  removedWalletDefaultTokens: string[];
 }
 
 export const initialState: WalletState = {
   ckBTCAddresses: {},
   bitcoinDissolveTxs: [],
   taggedTokens: [],
-  sort: "Default",
+  sort: "High",
   sortBalance: SortBalanceEnum.ALL,
+  hideSmallBalance: false,
+  removedWalletDefaultTokens: [],
 };

@@ -1,5 +1,5 @@
 import { formatDollarAmount, formatAmount, enumToString, shorten, BigNumber } from "@icpswap/utils";
-import type { InfoTransactionResponse } from "@icpswap/types";
+import { type InfoTransactionResponse, API_SWAP_TRANSACTIONS_TYPES } from "@icpswap/types";
 import dayjs from "dayjs";
 import { Copy } from "react-feather";
 
@@ -9,6 +9,14 @@ import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { TableRow, BodyCell } from "../Table";
 import { Link } from "../Link";
 import { ValueLabel } from "./ValueLabel";
+
+const DOUBLE_TX_VALUE_TYPES: string[] = [
+  API_SWAP_TRANSACTIONS_TYPES.ADD,
+  API_SWAP_TRANSACTIONS_TYPES.INCREASE,
+  API_SWAP_TRANSACTIONS_TYPES.DECREASE,
+  API_SWAP_TRANSACTIONS_TYPES.MINT,
+  API_SWAP_TRANSACTIONS_TYPES.COLLECT,
+];
 
 function OverflowTokenSymbolBodyCell({ symbol }: { symbol: string }) {
   return (
@@ -30,7 +38,7 @@ export function ActionTypeFormat(transaction: InfoTransactionResponse) {
   const type = enumToString(transaction.actionType);
 
   switch (type) {
-    case "Swap":
+    case API_SWAP_TRANSACTIONS_TYPES.SWAP:
       return (
         <BodyCell>
           Swap&nbsp;
@@ -40,9 +48,9 @@ export function ActionTypeFormat(transaction: InfoTransactionResponse) {
         </BodyCell>
       );
 
-    case "IncreaseLiquidity":
-    case "AddLiquidity":
-    case "Mint":
+    case API_SWAP_TRANSACTIONS_TYPES.INCREASE:
+    case API_SWAP_TRANSACTIONS_TYPES.ADD:
+    case API_SWAP_TRANSACTIONS_TYPES.MINT:
       return (
         <BodyCell>
           Add&nbsp;
@@ -51,7 +59,7 @@ export function ActionTypeFormat(transaction: InfoTransactionResponse) {
           <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
         </BodyCell>
       );
-    case "DecreaseLiquidity":
+    case API_SWAP_TRANSACTIONS_TYPES.DECREASE:
       return (
         <BodyCell>
           Remove&nbsp;
@@ -60,7 +68,7 @@ export function ActionTypeFormat(transaction: InfoTransactionResponse) {
           <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
         </BodyCell>
       );
-    case "Claim":
+    case API_SWAP_TRANSACTIONS_TYPES.COLLECT:
       return (
         <BodyCell>
           Collect&nbsp;
@@ -102,13 +110,21 @@ export function TransactionRow({ transaction, className, onCopy }: TransactionRo
     return transaction.fromPrincipalId;
   }, [transaction]);
 
+  const txValue = useMemo(() => {
+    if (DOUBLE_TX_VALUE_TYPES.includes(transaction.actionType)) {
+      return new BigNumber(transaction.token0TxValue).plus(transaction.token1TxValue).toString();
+    }
+
+    return transaction.token0TxValue;
+  }, [transaction]);
+
   return (
     <TableRow className={className} borderBottom={`1px solid ${theme.palette.border.level1}`}>
       <BodyCell>{ActionTypeFormat(transaction)}</BodyCell>
 
       <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
-        {formatDollarAmount(transaction.token0TxValue)}
-        <ValueLabel value={transaction.token0TxValue} />
+        {formatDollarAmount(txValue)}
+        <ValueLabel value={txValue} />
       </BodyCell>
 
       <BodyCell sx={{ gap: "0 4px" }}>

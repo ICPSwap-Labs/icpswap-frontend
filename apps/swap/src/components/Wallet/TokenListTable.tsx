@@ -1,4 +1,4 @@
-import { useState, useContext, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { Typography, Box, useTheme, makeStyles } from "components/Mui";
 import {
   formatDollarAmount,
@@ -13,14 +13,14 @@ import {
 } from "@icpswap/utils";
 import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal, ImportToNns } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_FOREVER } from "constants/index";
-import WalletContext from "components/Wallet/context";
+import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/index";
+import { useWalletContext } from "components/Wallet/context";
 import { useToken } from "hooks/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { XTC, TOKEN_STANDARD } from "constants/tokens";
 import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
 import { ckBridgeChain } from "@icpswap/constants";
-import XTCTopUpModal from "components/XTCTopup/index";
+import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
 import { useHistory } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
@@ -115,7 +115,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [receiveOpen, setReceiveOpen] = useState(false);
-  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useContext(WalletContext);
+  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletContext();
   const { sortBalance } = useSortBalanceManager();
 
   const infoTokenAddress = useMemo(() => {
@@ -334,7 +334,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
       </Box>
 
       <Box sx={{ margin: "24px 0 0 0", display: "flex", justifyContent: "space-between", gap: "0 5px" }}>
-        {DISPLAY_IN_WALLET_FOREVER.includes(canisterId) ? null : <RemoveToken canisterId={canisterId} />}
+        {DISPLAY_IN_WALLET_BY_DEFAULT.includes(canisterId) ? null : <RemoveToken canisterId={canisterId} />}
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "12px", flexWrap: "wrap" }}>
           {SWAP_BUTTON_EXCLUDE.includes(canisterId) ? null : <Button label="Swap" onClick={handleToSwap} />}
 

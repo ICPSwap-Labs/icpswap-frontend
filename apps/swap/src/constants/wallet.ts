@@ -1,7 +1,7 @@
 import { ICP, ICS, ckUSDC, ckBTC, ckETH } from "@icpswap/tokens";
 import { Connector } from "constants/wallet";
 
-export const DISPLAY_IN_WALLET_FOREVER = [ICP.address, ICS.address, ckUSDC.address, ckBTC.address, ckETH.address];
+export const DISPLAY_IN_WALLET_BY_DEFAULT = [ICP.address, ICS.address, ckUSDC.address, ckBTC.address, ckETH.address];
 
 export const NO_HIDDEN_TOKENS = [ICP.address];
 
@@ -15,11 +15,18 @@ export interface ConnectorConfig {
   disabled?: boolean;
 }
 
+export const IIv2ProviderUrl = "https://id.ai";
+
 export const ConnectorConfigs: ConnectorConfig[] = [
   {
-    label: "Internet Identity",
+    label: "Internet Identity 1.0",
     value: Connector.IC,
     logo: "/images/connect/InternetIdentity.svg",
+  },
+  {
+    label: "Internet Identity 2.0",
+    value: Connector.IIV2,
+    logo: "/images/connect/iiv2.svg",
   },
   { label: "Plug", value: Connector.PLUG, logo: "/images/connect/Plug.svg" },
   {
@@ -56,3 +63,13 @@ export const ConnectorConfigs: ConnectorConfig[] = [
 ];
 
 export { Connector } from "@icpswap/actor";
+
+export const ADDRESS_BOOK_REFRESH = "ADDRESS_BOOK_REFRESH";
+
+export const TOKEN_BALANCE_REFRESH = "TOKEN_BALANCE_REFRESH";
+
+export const TOKEN_ASSETS_REFRESH = "TOKEN_ASSETS_REFRESH";
+
+export const WALLET_DRAWER_WIDTH = 382;
+
+export const WALLET_TOKEN_SELECTOR_REFRESH = "WALLET_TOKEN_SELECTOR_REFRESH";

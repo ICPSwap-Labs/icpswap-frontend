@@ -6,7 +6,7 @@ export const FREE_LIQUIDITY_NAME = "Free liquidity";
 
 export enum ckBridgeChain {
   eth = "Ethereum",
-  icp = "Internet Computer",
+  icp = "InternetComputer",
   btc = "Bitcoin",
 }
 

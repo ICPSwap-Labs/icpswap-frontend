@@ -89,6 +89,7 @@ export function themePalette(theme: { [key: string]: any }) {
       level4: isDark ? theme.colors.darkLevel4 : theme.colors.lightLevel4,
       level5: isDark ? theme.colors.darkLevel5 : theme.colors.lightLevel5,
       success: theme.colors.success,
+      wallet: theme.colors.wallet,
     },
     border: {
       normal: isDark ? `1px solid ${theme.colors.color0}` : `1px solid ${theme.colors.lightGray200BorderColor}`,

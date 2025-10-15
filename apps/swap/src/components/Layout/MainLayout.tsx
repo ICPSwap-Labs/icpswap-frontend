@@ -3,6 +3,7 @@ import { makeStyles, Box, Theme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { useLocation } from "react-router-dom";
 import Background from "components/Background";
+import { WalletIndex } from "components/Wallet/WalletIndex";
 import { useMediaQuery640 } from "hooks/theme";
 import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
 
@@ -103,6 +104,8 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </Box>
 
       <Background />
+
+      <WalletIndex />
     </>
   );
 }

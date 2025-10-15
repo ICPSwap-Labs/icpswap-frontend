@@ -255,8 +255,10 @@ function FilledTextField(
                   ...textFieldProps?.sx,
                 }}
                 slotProps={{
+                  ...textFieldProps?.slotProps,
                   input: {
                     disableUnderline: true,
+                    autoComplete: "off",
                     ...textFieldProps?.slotProps?.input,
                   },
                 }}

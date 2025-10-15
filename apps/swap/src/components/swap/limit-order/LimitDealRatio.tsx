@@ -8,9 +8,10 @@ import { useLimitDealRatio } from "hooks/swap/limit-order/index";
 export interface LimitDealRatioProps {
   position: Position | Null;
   limit: LimitOrder | Null;
+  width?: string;
 }
 
-export function LimitDealRatio({ position, limit }: LimitDealRatioProps) {
+export function LimitDealRatio({ position, limit, width = "100px" }: LimitDealRatioProps) {
   const theme = useTheme();
 
   const dealRatio = useLimitDealRatio({ position, limit });
@@ -20,7 +21,7 @@ export function LimitDealRatio({ position, limit }: LimitDealRatioProps) {
       <Box
         sx={{
           position: "relative",
-          width: "100px",
+          width,
           height: "6px",
           background: theme.colors.color0,
           borderRadius: "20px",

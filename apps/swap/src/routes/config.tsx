@@ -15,14 +15,12 @@ const StaticTitlesAndDescriptions = {
   CkBridge: i18n.t("title.ck-bridge"),
 };
 
-const Wallet = Loadable(lazy(() => import("../views/wallet/index")));
 const NFTMint = Loadable(lazy(() => import("../views/nft/Mint")));
 const NFTCanisterList = Loadable(lazy(() => import("../views/nft/CanisterList")));
 const NFTCanisterCreate = Loadable(lazy(() => import("../views/nft/CanisterCreate")));
 const CkBridge = Loadable(lazy(() => import("../views/ck-bridge")));
 
 export const routeConfigs: RouteDefinition[] = [
-  { path: "/wallet", getElement: () => <Wallet /> },
   { path: "/info-tools/nft/canister/create", getElement: () => <NFTCanisterCreate /> },
   { path: "/info-tools/nft/mint", getElement: () => <NFTMint /> },
   { path: "/info-tools/nft/canister/list", getElement: () => <NFTCanisterList /> },

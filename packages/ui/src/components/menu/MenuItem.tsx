@@ -14,8 +14,13 @@ export interface MenuItemProps {
   onMouseLeave?: BoxProps["onMouseLeave"];
   disabled?: boolean;
   background?: string;
+  activeBackground?: string;
   isFirst?: boolean;
   isLast?: boolean;
+  height?: string;
+  padding?: string;
+  rightIcon?: ReactNode;
+  labelColor?: string;
 }
 
 export function MenuItem({
@@ -31,33 +36,40 @@ export function MenuItem({
   background,
   isFirst,
   isLast,
+  activeBackground,
+  height = "44px",
+  padding = "0 24px",
+  rightIcon,
+  labelColor,
 }: MenuItemProps) {
   const theme = useTheme();
+  const __background = background ?? theme.palette.background.level1;
+  const __activeBackground = activeBackground ?? theme.palette.background.level3;
 
   return (
     <Flex
       fullWidth
       sx={{
-        background: background ?? theme.palette.background.level1,
-        padding: "0 24px",
-        height: "44px",
+        background: __background,
+        padding,
+        height,
         "&.active": {
-          background: theme.palette.background.level3,
+          background: __activeBackground,
         },
         "&:hover": {
-          background: disabled ? theme.palette.background.level1 : theme.palette.background.level3,
+          background: disabled ? __background : __activeBackground,
           "& svg": {
             color: "text.primary",
           },
           "& .nav-bar-label": {
-            color: disabled ? "text.secondary" : "text.primary",
+            color: disabled ? "text.secondary" : labelColor ?? "text.primary",
           },
         },
-
         borderTopLeftRadius: isFirst ? "12px" : "0",
         borderTopRightRadius: isFirst ? "12px" : "0",
         borderBottomLeftRadius: isLast ? "12px" : "0",
         borderBottomRightRadius: isLast ? "12px" : "0",
+        cursor: "pointer",
       }}
       onClick={() => {
         if (onMenuClick) onMenuClick(value);
@@ -66,15 +78,16 @@ export function MenuItem({
       onMouseLeave={onMouseLeave}
     >
       {label ? (
-        <Flex sx={{ color: active ? "text.primary" : "text.secondary" }} gap="0 10px" fullWidth>
+        <Flex gap="0 10px" fullWidth justify={rightIcon ? "space-between" : "flex-start"}>
           {icon}
           <Typography
             className="nav-bar-label"
-            sx={{ fontSize: "14px", color: active ? "text.primary" : "text.secondary" }}
+            sx={{ fontSize: "14px", color: labelColor ?? (active ? "text.primary" : "text.secondary") }}
             component="div"
           >
             {label}
           </Typography>
+          {rightIcon}
         </Flex>
       ) : null}
 

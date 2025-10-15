@@ -16,4 +16,10 @@ export const updateCK_BTCAddresses = createAction<{
   type: BTCAddressType;
 }>("wallet/updateCK_BTCAddresses");
 
+export const updateHideSmallBalance = createAction<boolean>("wallet/updateHideSmallBalance");
+
+export const updateRemovedWalletDefaultTokens = createAction<{ tokenId: string; add?: boolean }>(
+  "wallet/updateRemovedWalletDefaultTokens",
+);
+
 export const updateBitcoinDissolveTxs = createAction<BitcoinTx>("wallet/updateBitcoinDissolveTxs");

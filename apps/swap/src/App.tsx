@@ -19,6 +19,7 @@ import { wagmiConfig } from "constants/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DisableIframe } from "components/DisableIframe";
 import { PublicTokenOverview, Null } from "@icpswap/types";
+import { WalletContextProvider } from "components/Wallet/WalletContextProvider";
 import Web3Provider from "components/Web3Injector";
 import { FullscreenLoading } from "components/index";
 import NavigationScroll from "components/NavigationScroll";
@@ -61,34 +62,36 @@ export default function App() {
         <QueryClientProvider client={queryClient}>
           <StyledEngineProvider injectFirst>
             <Web3Provider>
-              <TransactionsUpdater />
-              <ThemeProvider theme={theme(customization)}>
-                <SnackbarProvider maxSnack={100}>
-                  <GlobalContext.Provider
-                    value={{
-                      AllPools,
-                      refreshTriggers,
-                      setRefreshTriggers: handleRefreshTriggers,
-                      infoAllTokens,
-                      setInfoAllTokens,
-                    }}
-                  >
-                    <ActorInitial>
-                      <CssBaseline />
-                      <NavigationScroll>
-                        <ErrorBoundary>
-                          <Routes />
-                        </ErrorBoundary>
-                        <FullscreenLoading />
-                        <GlobalSteps />
-                        <GlobalFetch />
-                        {isConnected ? <RiskStatement /> : null}
-                        {connectorModalOpen ? <WalletConnector /> : null}
-                      </NavigationScroll>
-                    </ActorInitial>
-                  </GlobalContext.Provider>
-                </SnackbarProvider>
-              </ThemeProvider>
+              <WalletContextProvider>
+                <TransactionsUpdater />
+                <ThemeProvider theme={theme(customization)}>
+                  <SnackbarProvider maxSnack={100}>
+                    <GlobalContext.Provider
+                      value={{
+                        AllPools,
+                        refreshTriggers,
+                        setRefreshTriggers: handleRefreshTriggers,
+                        infoAllTokens,
+                        setInfoAllTokens,
+                      }}
+                    >
+                      <ActorInitial>
+                        <CssBaseline />
+                        <NavigationScroll>
+                          <ErrorBoundary>
+                            <Routes />
+                          </ErrorBoundary>
+                          <FullscreenLoading />
+                          <GlobalSteps />
+                          <GlobalFetch />
+                          {isConnected ? <RiskStatement /> : null}
+                          {connectorModalOpen ? <WalletConnector /> : null}
+                        </NavigationScroll>
+                      </ActorInitial>
+                    </GlobalContext.Provider>
+                  </SnackbarProvider>
+                </ThemeProvider>
+              </WalletContextProvider>
             </Web3Provider>
           </StyledEngineProvider>
         </QueryClientProvider>

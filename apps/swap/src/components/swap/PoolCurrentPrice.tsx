@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { BoxProps, Typography, useTheme } from "components/Mui";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useUSDPriceById } from "hooks/index";
-import { formatDollarAmount, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import { formatDollarAmount, formatTokenPrice, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PoolCurrentPriceProps {
@@ -22,6 +22,10 @@ export interface PoolCurrentPriceProps {
   showUsdValue?: boolean;
   showInverted?: boolean;
   onInverted?: (inverted: boolean) => void;
+  iconColor?: string;
+  per?: boolean;
+  align?: string;
+  outerInvert?: boolean;
 }
 
 export function PoolCurrentPrice({
@@ -38,6 +42,10 @@ export function PoolCurrentPrice({
   symbolColor = "text.secondary",
   symbolSize,
   showUsdValue = true,
+  iconColor,
+  per,
+  align,
+  outerInvert,
 }: PoolCurrentPriceProps) {
   const theme = useTheme();
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -63,25 +71,41 @@ export function PoolCurrentPrice({
   const baseTokenUSDPrice = useUSDPriceById(baseToken?.address);
   const quoteTokenUSDPrice = useUSDPriceById(quoteToken?.address);
 
-  const price = useMemo(() => {
+  const formattedTokenPrice = useMemo(() => {
     if (isUndefinedOrNull(quoteToken) || isUndefinedOrNull(baseToken) || isUndefinedOrNull(pool)) return undefined;
 
-    return manuallyInverted
+    const price = manuallyInverted
       ? pool.priceOf(quoteToken).toFixed(quoteToken.decimals)
       : pool.priceOf(baseToken).toFixed(baseToken.decimals);
+
+    return formatTokenPrice(price);
   }, [pool, quoteToken, manuallyInverted]);
 
   const label = useMemo(() => {
     if (isUndefinedOrNull(baseToken) || isUndefinedOrNull(quoteToken)) return undefined;
 
-    return manuallyInverted
-      ? `${tokenSymbolEllipsis({
+    return per
+      ? manuallyInverted
+        ? `${tokenSymbolEllipsis({
+            symbol: baseToken.symbol,
+          })} per ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`
+        : `${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} per ${tokenSymbolEllipsis({
+            symbol: baseToken.symbol,
+          })}`
+      : manuallyInverted
+      ? `1 ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({
           symbol: baseToken.symbol,
-        })} per ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`
-      : `${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} per ${tokenSymbolEllipsis({
+        })}`
+      : `1 ${tokenSymbolEllipsis({
           symbol: baseToken.symbol,
-        })}`;
-  }, [baseToken, quoteToken, manuallyInverted]);
+        })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`;
+  }, [formattedTokenPrice, per, baseToken, quoteToken, manuallyInverted]);
+
+  useEffect(() => {
+    if (nonUndefinedOrNull(outerInvert)) {
+      setManuallyInverted(outerInvert);
+    }
+  }, [outerInvert]);
 
   return (
     <Flex
@@ -100,56 +124,65 @@ export function PoolCurrentPrice({
         }
       }}
     >
-      {price && label ? (
-        <>
+      <Typography component="div" sx={{ textAlign: align ?? "left" }}>
+        {formattedTokenPrice && label ? (
+          <>
+            {per ? (
+              <Typography
+                sx={{
+                  color: priceColor,
+                  fontSize: priceSize ?? fontSize,
+                }}
+              >
+                {formattedTokenPrice}
+              </Typography>
+            ) : null}
+
+            <Typography
+              sx={{
+                fontSize: symbolSize ?? fontSize,
+                color: symbolColor,
+              }}
+              component="span"
+            >
+              {label}
+            </Typography>
+
+            {baseTokenUSDPrice && quoteTokenUSDPrice && showUsdValue ? (
+              <Typography
+                sx={{
+                  fontSize: usdValueSize ?? fontSize,
+                  color: usdValueColor,
+                  margin: "0 0 0 4px",
+                }}
+                component="span"
+              >
+                ({formatDollarAmount(manuallyInverted ? quoteTokenUSDPrice : baseTokenUSDPrice)})
+              </Typography>
+            ) : null}
+
+            {showInverted ? (
+              <SyncAltIcon
+                sx={{
+                  fontSize: "1rem",
+                  color: iconColor ?? theme.palette.text.secondary,
+                  margin: "0 0 0 4px",
+                  verticalAlign: "middle",
+                }}
+              />
+            ) : null}
+          </>
+        ) : (
           <Typography
             sx={{
-              color: priceColor,
-              fontSize: priceSize ?? fontSize,
+              fontSize: "12px",
             }}
+            component="div"
           >
-            {formatTokenPrice(price)}
+            --
           </Typography>
-
-          <Typography
-            sx={{
-              fontSize: symbolSize ?? fontSize,
-              color: symbolColor,
-            }}
-          >
-            {label}
-          </Typography>
-        </>
-      ) : (
-        <Typography
-          sx={{
-            fontSize: "12px",
-          }}
-          component="div"
-        >
-          --
-        </Typography>
-      )}
-
-      {baseTokenUSDPrice && quoteTokenUSDPrice && showUsdValue ? (
-        <Typography
-          sx={{
-            fontSize: usdValueSize ?? fontSize,
-            color: usdValueColor,
-          }}
-        >
-          ({formatDollarAmount(manuallyInverted ? quoteTokenUSDPrice : baseTokenUSDPrice)})
-        </Typography>
-      ) : null}
-
-      {showInverted ? (
-        <SyncAltIcon
-          sx={{
-            fontSize: "1rem",
-            color: theme.palette.text.secondary,
-          }}
-        />
-      ) : null}
+        )}
+      </Typography>
     </Flex>
   );
 }

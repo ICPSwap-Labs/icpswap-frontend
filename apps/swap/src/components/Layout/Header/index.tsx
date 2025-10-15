@@ -3,9 +3,9 @@ import { Box, useMediaQuery, Drawer } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import DensityMediumIcon from "@mui/icons-material/DensityMedium";
 import LogoSection from "components/LogoSection";
-import ProfileSection from "components/Layout/Header/ProfileSection";
 import Navbar from "components/Layout/Navbar";
 import MobileNavbar from "components/Layout/Navbar/mobile/Navbar";
+import ProfileSection from "components/Layout/Header/ProfileSection";
 import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
 import { useMediaQuery640 } from "hooks/theme";
 

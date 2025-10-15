@@ -16,13 +16,15 @@ export function useAddressAlias({ principal, account, accountTextual }: UseAddre
       if (isUndefinedOrNull(principal) && isUndefinedOrNull(account) && isUndefinedOrNull(accountTextual))
         return undefined;
 
-      return (
-        await icpswap_fetch_post<string>(`/info/address/alias`, {
-          principal,
-          accountId: account,
-          accountTextual,
-        })
-      ).data;
+      const result = await icpswap_fetch_post<string>(`/info/address/alias`, {
+        principal,
+        accountId: account,
+        accountTextual,
+      });
+
+      if (isUndefinedOrNull(result)) return undefined;
+
+      return result.data;
     }, [principal, account, accountTextual]),
   );
 }

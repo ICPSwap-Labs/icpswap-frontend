@@ -29,7 +29,7 @@ export class InternetIdentityConnector implements ConnectorAbstract {
     this.config = {
       whitelist: config.whitelist,
       host: config.host,
-      providerUrl: "https://identity.ic0.app",
+      providerUrl: config.providerUrl ?? "https://identity.ic0.app",
       dev: false,
     };
   }
@@ -108,5 +108,4 @@ export class InternetIdentityConnector implements ConnectorAbstract {
 export const InternetIdentity = {
   connector: InternetIdentityConnector,
   id: "ii",
-  type: Connector.IC,
 };
