@@ -183,7 +183,7 @@ export function Assets() {
         </Flex>
       </Flex>
 
-      <Box sx={{ margin: "26px 0 0 0 " }}>
+      <Box sx={{ margin: "22px 0 0 0 " }}>
         {sortedTokens.map((tokenId) => (
           <TokenRow key={tokenId} tokenId={tokenId} />
         ))}

@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect, ReactNode } from "react";
-import { WalletManagerPage, WalletContext, TokenBalance, Page } from "components/Wallet/context";
+import { WalletManagerPage, WalletContext, TokenBalance, Page, ConvertToIcp } from "components/Wallet/context";
 import { BigNumber } from "@icpswap/utils";
 import type { AddressBook as AddressBookType } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
@@ -32,6 +32,10 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
   const [removeTokenId, setRemoveTokenId] = useState<string | undefined>(undefined);
   const [deleteAddressBookLoading, setDeleteAddressBookLoading] = useState<boolean>(false);
   const [xtcTopUpShow, setXTCTopUpShow] = useState<boolean>(false);
+  const [tokensConvertToSwap, setTokensConvertToIcp] = useState<Array<ConvertToIcp> | undefined>(undefined);
+  const [convertedTokenIds, setConvertedTokenIds] = useState<string[]>([]);
+  const [convertLoading, setConvertLoading] = useState<boolean>(false);
+  const [checkedConvertTokenIds, setCheckedConvertTokenIds] = useState<string[]>([]);
 
   const handleTotalValueChange = (tokenId: string, value: BigNumber) => {
     setTotalValue((prevState) => ({ ...prevState, [tokenId]: value }));
@@ -73,6 +77,20 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
     setOpen(true);
     handleSetPage(WalletManagerPage.Index);
   }, [setOpen, handleSetPage]);
+
+  const handleUpdateConvertedTokenIds = useCallback(
+    (tokenIds: string[], clear?: boolean) => {
+      if (clear) {
+        setConvertedTokenIds([]);
+        return;
+      }
+
+      setConvertedTokenIds((prevState) => {
+        return [...new Set([...prevState, ...tokenIds])];
+      });
+    },
+    [setConvertedTokenIds],
+  );
 
   return (
     <WalletContext.Provider
@@ -120,6 +138,14 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
         setDeleteAddressBookLoading,
         xtcTopUpShow,
         setXTCTopUpShow,
+        tokensConvertToSwap,
+        setTokensConvertToIcp,
+        convertedTokenIds,
+        setConvertedTokenIds: handleUpdateConvertedTokenIds,
+        convertLoading,
+        setConvertLoading,
+        checkedConvertTokenIds,
+        setCheckedConvertTokenIds,
       }}
     >
       {children}

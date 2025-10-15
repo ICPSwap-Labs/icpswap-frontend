@@ -19,7 +19,7 @@ interface TokenMenuItemProps {
   panel?: boolean;
 }
 
-function isTokenHide(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
+function isTokenFilteredBySearch(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
   if (!!search && isValidPrincipal(search) && tokenInfo.ledgerId.toString() !== search) return true;
   if (
     !!search &&
@@ -33,7 +33,7 @@ function isTokenHide(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined)
 
 function TokenMenuItem({ tokenInfo, symbol, search, color, panel }: TokenMenuItemProps) {
   const hide = useMemo(() => {
-    return isTokenHide(tokenInfo, search);
+    return isTokenFilteredBySearch(tokenInfo, search);
   }, [search, tokenInfo]);
 
   return hide ? null : (
@@ -109,7 +109,7 @@ export function SelectToken({
 
     const tokenInfo = JSON.parse(menu.additional) as IcpSwapAPITokenInfo;
 
-    return isTokenHide(tokenInfo, search) || (!!filter && filter(tokenInfo));
+    return isTokenFilteredBySearch(tokenInfo, search) || (!!filter && filter(tokenInfo));
   };
 
   return (

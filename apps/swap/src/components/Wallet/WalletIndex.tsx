@@ -17,6 +17,8 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { useMediaQuery640 } from "hooks/theme";
 import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
+import { BalanceConvert } from "components/Wallet/BalanceConvert/BalanceConvert";
+import { ConvertToIcpConfirm } from "components/Wallet/BalanceConvert/Confirm";
 
 const components = {
   [WalletManagerPage.Index]: <TokenAssetsWrapper />,
@@ -28,6 +30,7 @@ const components = {
   [WalletManagerPage.AddAddress]: <AddAddress />,
   [WalletManagerPage.EditAddress]: <EditAddress />,
   [WalletManagerPage.SelectContact]: <SelectContact />,
+  [WalletManagerPage.Convert]: <BalanceConvert />,
 };
 
 export function WalletIndex() {
@@ -96,6 +99,7 @@ export function WalletIndex() {
       <DeleteAddressConfirm />
       <LogoutConfirm />
       <RemoveTokenConfirm />
+      <ConvertToIcpConfirm />
       <XTCTopUpModal open={xtcTopUpShow} onClose={handleXTCCloseTopUp} />
     </>
   );

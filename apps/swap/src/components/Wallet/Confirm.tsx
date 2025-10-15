@@ -1,5 +1,5 @@
 import { Flex } from "@icpswap/ui";
-import { Box, Button, Typography, useTheme } from "components/Mui";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { WALLET_DRAWER_WIDTH } from "constants/wallet";
@@ -12,9 +12,21 @@ interface ConfirmProps {
   onConfirm: () => void;
   confirmText?: string;
   cancelText?: string;
+  noCancel?: boolean;
+  confirmLoading?: boolean;
 }
 
-export function Confirm({ open, title, content, onCancel, onConfirm, cancelText, confirmText }: ConfirmProps) {
+export function Confirm({
+  open,
+  title,
+  content,
+  onCancel,
+  onConfirm,
+  cancelText,
+  confirmText,
+  noCancel = false,
+  confirmLoading,
+}: ConfirmProps) {
   const theme = useTheme();
   const { t } = useTranslation();
 
@@ -52,16 +64,21 @@ export function Confirm({ open, title, content, onCancel, onConfirm, cancelText,
             </Box>
           </Flex>
 
-          <Typography sx={{ color: "text.primary", margin: "24px 0 0 0", lineHeight: "20px" }}>{content}</Typography>
+          <Typography sx={{ color: "text.primary", margin: "24px 0 0 0", lineHeight: "20px" }} component="div">
+            {content}
+          </Typography>
 
           <Flex sx={{ margin: "32px 0 0 0" }} gap="0 16px">
+            {noCancel ? null : (
+              <Box sx={{ flex: 1 }}>
+                <Button size="large" variant="contained" className="secondary" fullWidth onClick={onCancel}>
+                  {cancelText ?? t("common.cancel")}
+                </Button>
+              </Box>
+            )}
             <Box sx={{ flex: 1 }}>
-              <Button size="large" variant="contained" className="secondary" fullWidth onClick={onCancel}>
-                {cancelText ?? t("common.cancel")}
-              </Button>
-            </Box>
-            <Box sx={{ flex: 1 }}>
-              <Button size="large" variant="contained" fullWidth onClick={onConfirm}>
+              <Button size="large" variant="contained" fullWidth onClick={onConfirm} disabled={confirmLoading}>
+                {confirmLoading ? <CircularProgress color="inherit" size={20} /> : null}
                 {confirmText ?? t("common.confirm")}
               </Button>
             </Box>
