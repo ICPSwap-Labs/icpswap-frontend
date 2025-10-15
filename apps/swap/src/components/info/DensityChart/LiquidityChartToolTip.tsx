@@ -20,8 +20,8 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
   const theme = useTheme();
   const { t } = useTranslation();
 
-  const price0 = chartProps?.payload?.[0]?.payload.price0;
-  const price1 = chartProps?.payload?.[0]?.payload.price1;
+  const price0 = chartProps?.payload?.[0]?.payload.price0 as number;
+  const price1 = chartProps?.payload?.[0]?.payload.price1 as number;
   const tvlToken0 = chartProps?.payload?.[0]?.payload.tvlToken0;
   const tvlToken1 = chartProps?.payload?.[0]?.payload.tvlToken1;
   const index = chartProps?.payload?.[0]?.payload.index;
@@ -80,6 +80,12 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
     };
   }, [data, index, currentPrice, price0]);
 
+  const price0IsLessThanCurrentPrice = useMemo(() => {
+    if (isUndefinedOrNull(currentPrice) || isUndefinedOrNull(price0)) return true;
+
+    return currentPrice < price0;
+  }, [currentPrice, price0]);
+
   return (
     <Box
       sx={{
@@ -133,10 +139,10 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
         <>
           <GridRowBetween>
             <Typography color="text.primary" fontSize="12px">
-              {currentPrice && price0 && currentPrice < price0 ? token0?.symbol : token1?.symbol} Locked:{" "}
+              {price0IsLessThanCurrentPrice ? token0?.symbol : token1?.symbol} Locked:{" "}
             </Typography>
             <Typography color="text.primary" fontSize="12px">
-              {currentPrice && price0 && currentPrice < price0
+              {price0IsLessThanCurrentPrice
                 ? `${tvlToken0 ? formatAmount(tvlToken0) : ""} ${token0?.symbol}`
                 : `${tvlToken1 ? formatAmount(tvlToken1) : ""} ${token1?.symbol}`}
             </Typography>
@@ -147,9 +153,13 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
             </Typography>
             <Typography color="text.primary" fontSize="12px">
               {lockedToken0Amount && lockedToken1Amount
-                ? `${formatAmount(lockedToken1Amount)} ${token1?.symbol} → ${formatAmount(
-                    lockedToken0Amount,
-                  )} ${token0?.symbol}`
+                ? price0IsLessThanCurrentPrice
+                  ? `${formatAmount(lockedToken1Amount)} ${token1?.symbol} → ${formatAmount(
+                      lockedToken0Amount,
+                    )} ${token0?.symbol}`
+                  : `${formatAmount(lockedToken0Amount)} ${token0?.symbol} → ${formatAmount(
+                      lockedToken1Amount,
+                    )} ${token1?.symbol}`
                 : ""}
             </Typography>
           </GridRowBetween>
