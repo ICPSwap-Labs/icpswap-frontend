@@ -14,7 +14,14 @@ import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
 import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
 import { WalletContext } from "components/Wallet/context";
-import { BigNumber, formatAmount, formatDollarAmount, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatAmount,
+  formatDollarAmount,
+  formatDollarTokenPrice,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+} from "@icpswap/utils";
 import { TokenImage } from "components/Image";
 import { useRefreshTrigger, useToken, useUSDPrice } from "hooks/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
@@ -95,13 +102,11 @@ function TokenRow({ tokenId }: TokenRowProps) {
             <TokenImage logo={token?.logo} tokenId={tokenId} size="40px" />
 
             <Box>
-              <Typography sx={{ fontSize: "16px", color: "text.primary", fontWeight: 500 }}>
+              <Typography sx={{ fontSize: "14px", color: "text.primary", fontWeight: 500 }}>
                 {token?.name ?? "--"}
               </Typography>
-              <Typography fontSize="14px" sx={{ margin: "6px 0 0 0" }}>
-                {nonUndefinedOrNull(tokenBalance) && nonUndefinedOrNull(token)
-                  ? `${formatAmount(parseTokenAmount(tokenBalance, token.decimals).toString())} ${token.symbol}`
-                  : "--"}
+              <Typography fontSize="12px" sx={{ margin: "6px 0 0 0" }}>
+                {nonUndefinedOrNull(tokenPrice) ? `${formatDollarTokenPrice(tokenPrice)}` : "--"}
               </Typography>
             </Box>
           </Flex>
@@ -109,13 +114,21 @@ function TokenRow({ tokenId }: TokenRowProps) {
           {loading ? (
             <DotLoading loading />
           ) : (
-            <Typography sx={{ fontWeight: "500", color: "text.primary", fontSize: "16px" }}>
-              {nonUndefinedOrNull(tokenPrice) && nonUndefinedOrNull(tokenBalance) && token
-                ? `${formatDollarAmount(
-                    parseTokenAmount(tokenBalance, token.decimals).multipliedBy(tokenPrice).toString(),
-                  )}`
-                : "--"}
-            </Typography>
+            <Flex vertical gap="6px 0" align="flex-end">
+              <Typography sx={{ fontWeight: "500", color: "text.primary", fontSize: "14px" }}>
+                {nonUndefinedOrNull(tokenBalance) && nonUndefinedOrNull(token)
+                  ? `${formatAmount(parseTokenAmount(tokenBalance, token.decimals).toString())}`
+                  : "--"}
+              </Typography>
+
+              <Typography sx={{ fontSize: "12px" }}>
+                {nonUndefinedOrNull(tokenPrice) && nonUndefinedOrNull(tokenBalance) && token
+                  ? `${formatDollarAmount(
+                      parseTokenAmount(tokenBalance, token.decimals).multipliedBy(tokenPrice).toString(),
+                    )}`
+                  : "--"}
+              </Typography>
+            </Flex>
           )}
         </Flex>
 
