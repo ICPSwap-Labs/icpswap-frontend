@@ -26,7 +26,7 @@ export async function getTokenBalance(canisterId: string, account: string | Prin
   const standard = getTokenStandard(canisterId);
 
   if (standard === TOKEN_STANDARD.EXT) {
-    let address = "";
+    let address: string | undefined;
 
     if (!subAccount) {
       if (isPrincipal(account)) {
@@ -43,6 +43,11 @@ export async function getTokenBalance(canisterId: string, account: string | Prin
         if (isPrincipal(account)) {
           address = AccountIdentifier.fromPrincipal({
             principal: account,
+            subAccount: sub,
+          }).toHex();
+        } else if (isValidPrincipal(account)) {
+          address = AccountIdentifier.fromPrincipal({
+            principal: Principal.fromText(account),
             subAccount: sub,
           }).toHex();
         }

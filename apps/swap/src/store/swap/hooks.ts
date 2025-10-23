@@ -184,7 +184,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     if (isUndefinedOrNull(__inputToken) || isUndefinedOrNull(__outputToken)) return t("common.select.a.token");
     if (!parsedAmount) return t("common.enter.input.amount");
     if (!typedValue || typedValue === "0") return t("common.error.amount.large.than.fee");
-    if (!inputTokenSubBalance || isUndefinedOrNull(inputTokenUnusedBalance)) return t("common.swap");
+    if (isUndefinedOrNull(inputTokenSubBalance) || isUndefinedOrNull(inputTokenUnusedBalance)) return t("common.swap");
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
     if (tokenInsufficient === "INSUFFICIENT")
