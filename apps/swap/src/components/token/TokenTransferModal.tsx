@@ -13,7 +13,6 @@ import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { getLocaleMessage } from "i18n/service";
 import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
-import { useWalletContext } from "components/Wallet/context";
 import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
 import { Principal } from "@dfinity/principal";
 import { useUSDPriceById } from "hooks/useUSDPrice";
@@ -21,6 +20,7 @@ import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { MaxButton, Flex } from "@icpswap/ui";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -60,7 +60,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
   const [openTip] = useTips();
   const [openFullLoading, closeFullLoading] = useFullscreenLoading();
 
-  const { refreshTotalBalance, setRefreshTotalBalance } = useWalletContext();
+  const { refreshTotalBalance, setRefreshTotalBalance } = useWalletTokenContext();
 
   const { result: balance } = useTokenBalance(token.address, principal);
   const tokenUSDPrice = useUSDPriceById(token.address);

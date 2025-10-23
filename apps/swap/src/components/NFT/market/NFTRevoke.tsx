@@ -4,14 +4,15 @@ import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity
 import { ResultStatus, Identity as TypeIdentity } from "types/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
-import type { NFTTokenMetadata } from "@icpswap/types";
+import type { NFTTokenMetadata, Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 export default function NFTInfo({
   metadata,
   onRevokeSuccess,
 }: {
-  metadata: NFTTokenMetadata;
+  metadata: NFTTokenMetadata | Null;
   onRevokeSuccess?: () => void;
 }) {
   const { t } = useTranslation();
@@ -19,7 +20,7 @@ export default function NFTInfo({
   const [openErrorTip] = useErrorTip();
 
   const handleCancel = async (identity: TypeIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-    if (loading) return;
+    if (loading || isUndefinedOrNull(metadata)) return;
 
     const { status, message } = await cancel(identity, metadata.cId, metadata.tokenId);
 

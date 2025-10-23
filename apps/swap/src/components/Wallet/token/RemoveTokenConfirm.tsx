@@ -2,15 +2,15 @@ import { useState, useCallback } from "react";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Confirm } from "components/Wallet/Confirm";
 import { useTranslation } from "react-i18next";
-import { useWalletContext } from "components/Wallet/context";
 import { useRemoveTokenHandler } from "hooks/wallet/useRemoveToken";
 import { useTips, TIP_SUCCESS } from "hooks/index";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 export function RemoveTokenConfirm() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(false);
   const [openTip] = useTips();
-  const { setRemoveTokenId, removeTokenId } = useWalletContext();
+  const { setRemoveTokenId, removeTokenId } = useWalletTokenContext();
 
   const removeTokenHandler = useRemoveTokenHandler();
 

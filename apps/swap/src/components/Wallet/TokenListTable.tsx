@@ -14,7 +14,6 @@ import {
 import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal, ImportToNns } from "components/index";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/index";
-import { useWalletContext } from "components/Wallet/context";
 import { useToken } from "hooks/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { XTC, TOKEN_STANDARD } from "constants/tokens";
@@ -30,6 +29,7 @@ import { useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalanceEnum } from "types/index";
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 import { ReceiveModal } from "./Receive";
 import { RemoveToken } from "./RemoveToken";
@@ -115,7 +115,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [receiveOpen, setReceiveOpen] = useState(false);
-  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletContext();
+  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletTokenContext();
   const { sortBalance } = useSortBalanceManager();
 
   const infoTokenAddress = useMemo(() => {

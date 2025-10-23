@@ -22,6 +22,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { WALLET_TOKEN_SELECTOR_REFRESH } from "constants/wallet";
 import { useRotateAnimationLoading, ROTATE_ANIMATION_LOADING_CLASS } from "components/theme";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 function isTokenFiltered(token: Token, search: string) {
   return !(
@@ -38,7 +39,8 @@ interface TokenRowUIProps {
 }
 
 function TokenRowUI({ token, balance, tokenValue }: TokenRowUIProps) {
-  const { setSendToken, setPages } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { setSendToken } = useWalletTokenContext();
 
   const handleSelectToken = useCallback(() => {
     setSendToken(token);

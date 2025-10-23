@@ -6,18 +6,18 @@ import { deleteAddressBook } from "@icpswap/hooks";
 import { useRefreshTriggerManager } from "hooks/index";
 import { ADDRESS_BOOK_REFRESH } from "constants/wallet";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 
 export function DeleteAddressConfirm() {
   const { t } = useTranslation();
   const [, setRefreshTrigger] = useRefreshTriggerManager(ADDRESS_BOOK_REFRESH);
+  const { pages, setPages } = useWalletContext();
   const {
     deleteAddressBook: addressBook,
     setDeleteAddressBook,
-    pages,
-    setPages,
     deleteAddressBookLoading,
     setDeleteAddressBookLoading,
-  } = useWalletContext();
+  } = useWalletAddressBookContext();
 
   const handleCancel = useCallback(() => {
     setDeleteAddressBook(undefined);

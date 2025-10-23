@@ -5,7 +5,14 @@ import { useICPAmountUSDValue } from "store/global/hooks";
 import { useAccount } from "store/auth/hooks";
 import NFTVerifyLabel from "components/NFT/VerifyLabel";
 import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
-import { formatDollarAmount, mockALinkAndOpen, shorten, timestampFormat, BigNumber } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  mockALinkAndOpen,
+  shorten,
+  timestampFormat,
+  BigNumber,
+  isUndefinedOrNull,
+} from "@icpswap/utils";
 import { useNFTOrderInfo } from "hooks/nft/trade";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import NFTTransfer from "components/NFT/Transfer";
@@ -14,7 +21,7 @@ import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import NFTBuyReview from "components/NFT/market/NFTBuyReview";
 import NFTRevoke from "components/NFT/market/NFTRevoke";
 import { TextButton } from "components/index";
-import { type NFTTokenMetadata } from "@icpswap/types";
+import { Null, type NFTTokenMetadata } from "@icpswap/types";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import NFTCanisterLink from "components/info/NFTCanisterLink";
 import { TwitterIcon } from "assets/images/Twitter";
@@ -94,7 +101,9 @@ export type NFTMetadata2 = { k: string; v: string };
 
 export type NFTMetadata = NFTMetadata1 | NFTMetadata2;
 
-export function metadataFormat(metadata: NFTTokenMetadata): NFTMetadata[] {
+export function metadataFormat(metadata: NFTTokenMetadata | Null): NFTMetadata[] {
+  if (isUndefinedOrNull(metadata)) return [];
+
   if (!!metadata.metadata && !!metadata.metadata[0]) {
     return JSON.parse(arrayBufferToString(Uint8Array.from(metadata.metadata[0])));
   }
@@ -196,11 +205,11 @@ export default function NFTInfo({
 
   const { result: canisterMetadata } = useCanisterMetadata(canisterId);
 
-  const metadata = useNFTMetadata(canisterId, tokenId, reload);
+  const { metadata } = useNFTMetadata(canisterId, tokenId, reload);
 
   const NFTMetadata = metadataFormat(metadata);
 
-  const isOwner = metadata.owner === account;
+  const isOwner = metadata?.owner === account;
 
   const { result: orderInfo } = useNFTOrderInfo(canisterId, tokenId, reload);
 
@@ -232,7 +241,7 @@ export default function NFTInfo({
   const handleToTwitter = () => {
     const twitterLink = `https://twitter.com/intent/tweet?url=${APP_URL}/wallet/nft/view/${canisterId}/${tokenId}&text=Look at ${
       isOwner ? "my" : "this"
-    } NFT "${metadata.name}" on ICPSwap (The Hub of Future Decentralized Finance)! &via=ICPSwap`;
+    } NFT "${metadata?.name}" on ICPSwap (The Hub of Future Decentralized Finance)! &via=ICPSwap`;
 
     mockALinkAndOpen(twitterLink, "NFT_share_to_Twitter");
   };
@@ -309,7 +318,7 @@ export default function NFTInfo({
               <Typography component="span" sx={{ marginRight: "5px" }}>
                 {t("common.owned.by")}
               </Typography>
-              <TextButton>{shorten(metadata.owner, 12)}</TextButton>
+              <TextButton>{shorten(metadata?.owner, 12)}</TextButton>
             </Box>
             {Boolean(orderInfo?.price) && (
               <Grid container mt="25px" alignItems="end">
@@ -383,12 +392,12 @@ export default function NFTInfo({
                 <DetailsItem
                   label={t`Token ID`}
                   value={
-                    !!metadata.cId && (!!metadata.tokenId || metadata.tokenId === 0)
+                    metadata && !!metadata.cId && (!!metadata.tokenId || metadata.tokenId === 0)
                       ? encodeTokenIdentifier(metadata.cId, metadata.tokenId)
                       : "--"
                   }
                 />
-                {!metadata.filePath?.includes("base64") ? (
+                {metadata && !metadata.filePath?.includes("base64") ? (
                   <DetailsItem
                     label={t("common.file.link")}
                     value={
@@ -404,10 +413,10 @@ export default function NFTInfo({
                     }
                   />
                 ) : null}
-                <DetailsItem label={t("nft.mint.time")} value={timestampFormat(metadata.mintTime)} />
+                <DetailsItem label={t("nft.mint.time")} value={metadata ? timestampFormat(metadata.mintTime) : "--"} />
                 <DetailsItem
                   label={t("nft.minter")}
-                  value={<Copy content={metadata.minter ?? ""}>{shorten(metadata.minter, 12)}</Copy>}
+                  value={<Copy content={metadata?.minter ?? ""}>{shorten(metadata?.minter, 12)}</Copy>}
                 />
                 <Flex fullWidth vertical align="flex-start" gap="8px">
                   <Typography
@@ -435,7 +444,7 @@ export default function NFTInfo({
           <Box className={classes.collectionsWrapper}>
             <DetailsToggle title={t("common.about.collections")}>
               <Flex fullWidth vertical gap="15px" align="flex-start">
-                <DetailsItem label={t`NFT Canister ID`} value={<NFTCanisterLink canisterId={metadata.cId} />} />
+                <DetailsItem label={t`NFT Canister ID`} value={<NFTCanisterLink canisterId={metadata?.cId} />} />
                 <Flex fullWidth vertical align="flex-start" gap="8px">
                   <Typography
                     sx={{
@@ -491,7 +500,7 @@ export default function NFTInfo({
           ) : null}
         </Box>
       </Box>
-      {transferModalOpen ? (
+      {transferModalOpen && metadata ? (
         <NFTTransfer
           canisterId={canisterId}
           nft={metadata}
@@ -500,7 +509,7 @@ export default function NFTInfo({
           onTransferSuccess={handleTransferSuccess}
         />
       ) : null}
-      {sellModalOpen ? (
+      {sellModalOpen && metadata ? (
         <NFTSell
           canisterId={canisterId}
           nft={metadata}

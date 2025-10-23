@@ -70,7 +70,7 @@ export default function NFTCard({ order }: { order: TradeOrder }) {
 
   const isOwner = order?.seller === account;
 
-  const NFTMetadata = useNFTMetadata(order.nftCid, order.tokenIndex);
+  const { metadata } = useNFTMetadata(order.nftCid, order.tokenIndex);
 
   return (
     <>
@@ -84,7 +84,7 @@ export default function NFTCard({ order }: { order: TradeOrder }) {
         <Box className={classes.imgBox} onClick={handleCardClick}>
           <Box sx={{ padding: "12px", marginTop: "-100%" }}>
             <Box sx={{ background: theme.palette.background.level3, borderRadius: "8px" }}>
-              <NFTAvatar metadata={NFTMetadata} />
+              <NFTAvatar metadata={metadata} />
             </Box>
           </Box>
         </Box>
