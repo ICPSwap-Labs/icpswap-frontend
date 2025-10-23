@@ -3,6 +3,7 @@ import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { useToken } from "hooks/index";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 interface TokenSendItemProps {
   tokenId: string;
@@ -10,7 +11,8 @@ interface TokenSendItemProps {
 
 export function TokenSendItem({ tokenId }: TokenSendItemProps) {
   const theme = useTheme();
-  const { setPages, setSendToken } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { setSendToken } = useWalletTokenContext();
   const [, token] = useToken(tokenId);
 
   const handleSend = useCallback(() => {

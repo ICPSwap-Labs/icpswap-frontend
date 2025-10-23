@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from "react";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
-import { useWalletContext } from "components/Wallet/context";
 import { BigNumber, isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useToken } from "hooks/index";
 import { useInfoToken } from "@icpswap/hooks";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 interface UseTokenDataManagerProps {
   tokenId: string;
@@ -13,7 +13,7 @@ interface UseTokenDataManagerProps {
 
 export function useTokenDataManager({ tokenId, tokenBalance, balanceLoading }: UseTokenDataManagerProps) {
   const [, token] = useToken(tokenId);
-  const { setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletContext();
+  const { setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletTokenContext();
 
   const infoTokenAddress = useMemo(() => {
     if (tokenId === WRAPPED_ICP.address) return ICP.address;

@@ -1,4 +1,4 @@
-import { useMemo, useContext } from "react";
+import { useMemo } from "react";
 import { Box } from "components/Mui";
 import TokenListTable from "components/Wallet/TokenListTable";
 import TokenListHeader from "components/Wallet/TokenListHeader";
@@ -6,16 +6,15 @@ import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
 import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
 import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
-import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import { useGlobalTokenList } from "store/global/hooks";
 import BigNumber from "bignumber.js";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
-import { useWalletContext } from "components/Wallet/context";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 export default function WalletTokenList() {
   const { taggedTokens } = useTaggedTokenManager();
-  const { allTokenUSDMap, noUSDTokens } = useWalletContext();
+  const { allTokenUSDMap, noUSDTokens } = useWalletTokenContext();
   const { sort } = useWalletSortManager();
 
   const globalTokenList = useGlobalTokenList();

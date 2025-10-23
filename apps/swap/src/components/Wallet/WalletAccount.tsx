@@ -9,7 +9,7 @@ import Copy, { CopyRef } from "components/Copy";
 import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 import { Flex, Tooltip } from "components/index";
 import { useTranslation } from "react-i18next";
-import { useWalletContext } from "components/Wallet/context";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 export interface AddressWrapperProps {
   address: string | undefined;
@@ -89,7 +89,7 @@ export default function WalletAccount() {
     setRefreshCounter,
     totalValue,
     totalUSDBeforeChange,
-  } = useWalletContext();
+  } = useWalletTokenContext();
 
   const useTotalICPValue = useMemo(() => {
     if (icpPrice) return totalValue.dividedBy(icpPrice);

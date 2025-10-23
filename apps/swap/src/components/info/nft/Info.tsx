@@ -179,7 +179,7 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
 
   const { result: canisterMetadata } = useNFTCanisterMetadata(canisterId);
 
-  const metadata = useNFTMetadata(canisterId, tokenId);
+  const { metadata } = useNFTMetadata(canisterId, tokenId);
 
   const NFTMetadata = metadataFormat(metadata);
 

@@ -1478,5 +1478,7 @@
   "wallet.convert.icp.title": "Convert to ICP",
   "common.convert": "Convert",
   "common.will.receive": "You will receive",
-  "wallet.convert.description": "Convert tokens under ${{worth}}. Excludes unlisted tokens."
+  "wallet.convert.description": "Convert tokens under ${{worth}}. Excludes unlisted tokens.",
+  "wallet.nft.send.placeholder": "Enter the memo",
+  "common.invalid.account.id": "Invalid account ID"
 }

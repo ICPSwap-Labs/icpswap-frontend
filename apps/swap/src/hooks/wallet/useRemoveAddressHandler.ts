@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import type { AddressBook as AddressBookType } from "@icpswap/types";
-import { useWalletContext } from "components/Wallet/context";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 
 export function useRemoveAddressHandler() {
-  const { setDeleteAddressBook } = useWalletContext();
+  const { setDeleteAddressBook } = useWalletAddressBookContext();
 
   return useCallback(
     (addressBook: AddressBookType) => {

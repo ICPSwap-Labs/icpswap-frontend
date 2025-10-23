@@ -7,11 +7,13 @@ import { useTranslation } from "react-i18next";
 import { useWalletContext } from "components/Wallet/context";
 import { addAddressBook, useAddressBook } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 
 export function AddAddress() {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { setPages, addAddressBookPrevPage } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { addAddressBookPrevPage } = useWalletAddressBookContext();
 
   const [name, setName] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);

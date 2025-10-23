@@ -3,6 +3,7 @@ import { Box, Drawer, useTheme } from "components/Mui";
 import { TokenAssetsWrapper } from "components/Wallet/TokenAssetsWrapper";
 import { TokenManager } from "components/Wallet/TokenManager";
 import { WalletManagerPage, useWalletContext } from "components/Wallet/context";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 import { TokenReceive, TokenSend } from "components/Wallet/token/index";
 import { TokenSelector } from "components/Wallet/TokenSelector";
 import { AddressBook } from "components/Wallet/address-book/AddressBook";
@@ -19,6 +20,9 @@ import { useMediaQuery640 } from "hooks/theme";
 import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
 import { BalanceConvert } from "components/Wallet/BalanceConvert/BalanceConvert";
 import { ConvertToIcpConfirm } from "components/Wallet/BalanceConvert/Confirm";
+import { NFTCanister } from "components/Wallet/NFT/NFTCanister";
+import { NFTTokenDetails } from "components/Wallet/NFT/NFTTokenDetails";
+import { NFTSend } from "components/Wallet/NFT/NFTSend";
 
 const components = {
   [WalletManagerPage.Index]: <TokenAssetsWrapper />,
@@ -31,13 +35,17 @@ const components = {
   [WalletManagerPage.EditAddress]: <EditAddress />,
   [WalletManagerPage.SelectContact]: <SelectContact />,
   [WalletManagerPage.Convert]: <BalanceConvert />,
+  [WalletManagerPage.NFTCanister]: <NFTCanister />,
+  [WalletManagerPage.NFTTokenDetails]: <NFTTokenDetails />,
+  [WalletManagerPage.NFTSend]: <NFTSend />,
 };
 
 export function WalletIndex() {
   const theme = useTheme();
   const mediaQuery640 = useMediaQuery640();
   const principal = useAccountPrincipalString();
-  const { open, setOpen, pages, setPages, xtcTopUpShow, setXTCTopUpShow } = useWalletContext();
+  const { open, setOpen, pages, setPages } = useWalletContext();
+  const { xtcTopUpShow, setXTCTopUpShow } = useWalletTokenContext();
 
   useEffect(() => {
     setPages(WalletManagerPage.Index);

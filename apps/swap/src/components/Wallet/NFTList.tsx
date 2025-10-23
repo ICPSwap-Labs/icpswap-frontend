@@ -1,4 +1,4 @@
-import { useMemo, useContext } from "react";
+import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography, Avatar, useTheme } from "components/Mui";
 import { ImageLoading } from "@icpswap/ui";
@@ -9,7 +9,6 @@ import { isICPSwapOfficial } from "utils/index";
 import { useSelectedCanistersManager, useEXTManager } from "store/nft/hooks";
 import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
 import type { NFTControllerInfo, EXTCollection, ExtNft } from "@icpswap/types";
-import { useWalletContext } from "components/Wallet/context";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 
 const ICPSwapPositionNFTs = [
@@ -95,8 +94,7 @@ export function NFTCanisterCard({ canister }: NFTCardProps) {
   const account = useAccount();
   const history = useHistory();
 
-  const { refreshCounter } = useWalletContext();
-  const { result: count } = useCanisterUserNFTCount(canister.cid, account, refreshCounter);
+  const { result: count } = useCanisterUserNFTCount(canister.cid, account);
   const { result: logo } = useCanisterLogo(canister.cid);
 
   const handleCardClick = () => {
