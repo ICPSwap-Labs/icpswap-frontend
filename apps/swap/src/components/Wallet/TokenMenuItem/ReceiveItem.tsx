@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 interface TokenReceiveItemProps {
   tokenId: string;
@@ -9,7 +10,8 @@ interface TokenReceiveItemProps {
 
 export function TokenReceiveItem({ tokenId }: TokenReceiveItemProps) {
   const theme = useTheme();
-  const { setPages, setTokenReceiveId } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { setTokenReceiveId } = useWalletTokenContext();
 
   const handleReceive = useCallback(() => {
     setPages(WalletManagerPage.Receive, false);

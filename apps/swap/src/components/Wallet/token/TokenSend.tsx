@@ -26,30 +26,20 @@ import { tokenTransfer } from "hooks/token/calls";
 import { getLocaleMessage } from "i18n/service";
 import { TOKEN_BALANCE_REFRESH } from "constants/wallet";
 import { ICP } from "@icpswap/tokens";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useWalletTokenContext } from "components/Wallet/token/context";
+import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
 
 function usePrincipalStandard(tokenId: string, standard: string) {
   return (standard.includes("DIP20") || standard.includes("ICRC")) && tokenId !== ICP.address;
 }
 
-function AddressBookLabel({ name }: { name: string }) {
-  return (
-    <Box
-      sx={{
-        borderRadius: "8px",
-        background: "rgba(183, 156, 74, 0.26)",
-        padding: "4px 8px",
-        color: "#B79C4A",
-        fontSize: "12px",
-      }}
-    >
-      {name}
-    </Box>
-  );
-}
-
 export function TokenSend() {
   const theme = useTheme();
-  const { setPages, selectedContact, sendToken: token, setSelectedContact } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { sendToken: token } = useWalletTokenContext();
+  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookContext();
+
   const principal = useAccountPrincipalString();
   const { t } = useTranslation();
   const [openTip] = useTips();
@@ -65,7 +55,8 @@ export function TokenSend() {
 
   const handleAddressBook = useCallback(() => {
     setPages(WalletManagerPage.SelectContact, false);
-  }, [setPages]);
+    setSelectContactPrevPage(WalletManagerPage.Send);
+  }, [setPages, setSelectContactPrevPage]);
 
   useEffect(() => {
     if (selectedContact) {
@@ -199,7 +190,7 @@ export function TokenSend() {
   return (
     <DrawerWrapper
       padding="12px"
-      title="Send"
+      title={t("common.send")}
       onPrev={handlePrev}
       showRightIcon
       onRightIconClick={handlePrev}

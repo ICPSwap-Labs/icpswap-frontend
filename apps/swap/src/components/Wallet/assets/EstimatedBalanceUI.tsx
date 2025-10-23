@@ -4,6 +4,7 @@ import { Flex } from "@icpswap/ui";
 import { RotateCcw } from "react-feather";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { formatDollarTokenPrice, formatIcpAmount } from "@icpswap/utils";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 const useStyles = makeStyles(() => {
   return {
@@ -38,7 +39,8 @@ export function EstimatedBalanceUI({
   noValueChange,
 }: EstimatedBalanceUIProps) {
   const classes = useStyles();
-  const { setTokenReceiveId, setPages } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { setTokenReceiveId } = useWalletTokenContext();
 
   const usdChangeType = valueChange && valueChange.includes("-") ? "down" : "up";
   const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";

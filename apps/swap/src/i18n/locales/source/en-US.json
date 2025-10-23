@@ -1486,5 +1486,7 @@
   "info.swap.positions.holders.percent": "The top {{number}} positions collectively own {{percent}} ({{usdValue}}) of {{poolName}}",
   "common.position.total.value.colon": "Positions total value: ",
   "common.total.positions": "Total positions: ",
-  "common.top.positions": "The top {{number}} positions"
+  "common.top.positions": "The top {{number}} positions",
+  "wallet.nft.send.placeholder": "Enter the memo",
+  "common.invalid.account.id": "Invalid account ID"
 }

@@ -16,7 +16,7 @@ import { isValidAccount } from "@icpswap/utils";
 import Modal from "components/modal/index";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { useAccount } from "store/auth/hooks";
-import { useNFTTransferCallback, useCanisterMetadata } from "hooks/nft/useNFTCalls";
+import { useNFTTransfer, useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import Identity, { CallbackProps } from "components/Identity";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
 import type { NFTTokenMetadata } from "@icpswap/types";
@@ -78,13 +78,13 @@ export default function NFTTransfer({
   const metadata = useNFTByMetadata(nft);
   const { result: canisterMetadata } = useCanisterMetadata(canisterId);
 
-  const nftTransfer = useNFTTransferCallback();
+  const nftTransfer = useNFTTransfer();
 
   const transferSubmitCallback = useCallback(
     async (identity, { loading, closeLoading }) => {
       if (loading || !account) return;
 
-      const result = await nftTransfer(canisterId, identity, {
+      const result = await nftTransfer(canisterId, {
         from: { address: account },
         to: { address: to },
         memo: [...(memo ? stringToArrayBuffer(memo) : stringToArrayBuffer("TRANSFER"))],

@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
-import { useWalletContext } from "components/Wallet/context";
 import { useTranslation } from "react-i18next";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 interface RemoveItemProps {
   tokenId: string;
@@ -13,7 +13,7 @@ interface RemoveItemProps {
 export function RemoveItem({ tokenId, isLast, onRemoveClick }: RemoveItemProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { setRemoveTokenId } = useWalletContext();
+  const { setRemoveTokenId } = useWalletTokenContext();
 
   const handleRemoveToken = useCallback(() => {
     setRemoveTokenId(tokenId);

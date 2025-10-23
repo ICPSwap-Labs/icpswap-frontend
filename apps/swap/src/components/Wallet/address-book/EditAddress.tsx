@@ -8,6 +8,7 @@ import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { editAddressBook, useAddressBook } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 
 export function EditAddress() {
   const theme = useTheme();
@@ -15,7 +16,8 @@ export function EditAddress() {
   const [name, setName] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
-  const { setPages, editAddressBook: addressBook, deleteAddressBookLoading } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { editAddressBook: addressBook, deleteAddressBookLoading } = useWalletAddressBookContext();
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.AddressBook);

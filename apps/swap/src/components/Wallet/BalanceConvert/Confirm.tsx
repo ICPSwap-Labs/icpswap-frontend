@@ -9,15 +9,15 @@ import {
 } from "@icpswap/utils";
 import { Confirm } from "components/Wallet/Confirm";
 import { useTranslation } from "react-i18next";
-import { useWalletContext } from "components/Wallet/context";
 import { useConvertCallback } from "hooks/wallet/useConvertCallback";
 import { useUSDPrice } from "hooks/index";
 import { Box, Typography } from "components/Mui";
 import { ICP } from "@icpswap/tokens";
+import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
 
 export function ConvertToIcpConfirm() {
   const { t } = useTranslation();
-  const { tokensConvertToSwap, setTokensConvertToIcp, convertLoading } = useWalletContext();
+  const { tokensConvertToSwap, setTokensConvertToIcp, convertLoading } = useBalanceConvertContext();
   const icpPrice = useUSDPrice(ICP);
   const { callback: convertTokensToIcp } = useConvertCallback();
 
