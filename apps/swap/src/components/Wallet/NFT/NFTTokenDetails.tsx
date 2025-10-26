@@ -8,6 +8,7 @@ import NFTAvatar from "components/NFT/NFTAvatar";
 import { useTranslation } from "react-i18next";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import { isUndefinedOrNull, shorten } from "@icpswap/utils";
+import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
 
 export function NFTTokenDetails() {
   const { setPages } = useWalletContext();
@@ -27,13 +28,15 @@ export function NFTTokenDetails() {
     setPages(WalletManagerPage.NFTSend);
   }, [setPages, metadata, setSendingNFTMetadata]);
 
+  const closePage = useClosePageBackToNFT();
+
   return displayedNFTTokenInfo ? (
     <DrawerWrapper
       padding="12px"
       title={t("common.details")}
       onPrev={handlePrev}
       showRightIcon
-      onRightIconClick={handlePrev}
+      onRightIconClick={closePage}
     >
       <Box
         sx={{

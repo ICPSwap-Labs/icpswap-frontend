@@ -22,6 +22,7 @@ import { nftTransfer } from "hooks/nft/useNFTCalls";
 import { encodeTokenIdentifier, stringToArrayBuffer } from "utils";
 import { ResultStatus } from "@icpswap/types";
 import { getLocaleMessage } from "i18n/service";
+import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
 
 export function NFTSend() {
   const theme = useTheme();
@@ -123,13 +124,15 @@ export function NFTSend() {
     return principalToAccount(principal) === address;
   }, [principal, address]);
 
+  const closePage = useClosePageBackToNFT();
+
   return sendingNFTMetadata ? (
     <DrawerWrapper
       padding="12px"
       title={t("common.send")}
       onPrev={handlePrev}
       showRightIcon
-      onRightIconClick={handlePrev}
+      onRightIconClick={closePage}
       footer={
         <Box sx={{ width: "100%" }}>
           <Button

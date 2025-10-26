@@ -4,6 +4,11 @@ import { Token } from "@icpswap/swap-sdk";
 
 export type TokenBalance = { [tokenId: string]: BigNumber };
 
+export enum AssetsType {
+  Token = "Token",
+  NFTS = "NFTs",
+}
+
 export interface WalletTokenContextProps {
   refreshTotalBalance?: boolean;
   setRefreshTotalBalance?: (refreshTotalBalance: boolean) => void;
@@ -28,6 +33,10 @@ export interface WalletTokenContextProps {
   setRemoveTokenId: (tokenId: string | undefined) => void;
   xtcTopUpShow: boolean;
   setXTCTopUpShow: (show: boolean) => void;
+  activeAssetsTab: AssetsType;
+  setActiveAssetsTab: (tab: AssetsType) => void;
+  displayedAssetsTabs: AssetsType[];
+  setDisplayedAssetsTabs: (tabs: Array<AssetsType>) => void;
 }
 
 export const WalletTokenContext = createContext<WalletTokenContextProps>({
