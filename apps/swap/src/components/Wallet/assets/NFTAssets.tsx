@@ -57,22 +57,21 @@ function NFTRowUI({ logo, name, amount, onClick }: NFTRowUIProps) {
               {name}
             </Typography>
 
-            {nonUndefinedOrNull(amount) ? (
-              <Flex
-                sx={{
-                  margin: "6px 0 0 0",
-                  padding: "0 8px",
-                  height: "20px",
-                  borderRadius: "40px",
-                  background: "#4F5A84",
-                  width: "fit-content",
-                }}
-              >
-                <Typography fontSize="12px" color="text.primary">
-                  {amount}
-                </Typography>
-              </Flex>
-            ) : null}
+            <Flex
+              sx={{
+                margin: "6px 0 0 0",
+                padding: "0 8px",
+                height: "20px",
+                borderRadius: "40px",
+                background: "#4F5A84",
+                width: "fit-content",
+                visibility: nonUndefinedOrNull(amount) ? "visible" : "hidden",
+              }}
+            >
+              <Typography fontSize="12px" color="text.primary">
+                {amount}
+              </Typography>
+            </Flex>
           </Box>
         </Flex>
       </Flex>
@@ -103,7 +102,12 @@ function NFTRow({ info }: NFTRowProps) {
 
   return (
     <Box sx={{ padding: "0 12px", width: "100%" }}>
-      <NFTRowUI amount={count ? Number(count) : undefined} logo={logo} name={info.name} onClick={handleNFTClick} />
+      <NFTRowUI
+        amount={nonUndefinedOrNull(count) ? Number(count) : undefined}
+        logo={logo}
+        name={info.name}
+        onClick={handleNFTClick}
+      />
     </Box>
   );
 }
