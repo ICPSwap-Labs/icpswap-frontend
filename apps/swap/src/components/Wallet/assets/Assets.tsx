@@ -1,15 +1,11 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Box, Typography } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { WalletManager } from "components/Wallet/WalletManager";
 import { SyncYourTokens } from "components/Wallet/assets/SyncYourTokens";
 import { TokenAssets } from "components/Wallet/assets/TokenAssets";
 import { NFTAssets } from "components/Wallet/assets/NFTAssets";
-
-enum AssetsType {
-  Token = "Token",
-  NFTS = "NFTs",
-}
+import { useWalletTokenContext, AssetsType } from "components/Wallet/token/context";
 
 const Tabs = [
   { label: AssetsType.Token, value: AssetsType.Token },
@@ -17,18 +13,17 @@ const Tabs = [
 ];
 
 export function Assets() {
-  const [activeTab, setActiveTab] = useState<AssetsType>(AssetsType.Token);
-  const [displayedTabs, setDisplayTabs] = useState<Array<AssetsType>>([AssetsType.Token]);
+  const { activeAssetsTab, setActiveAssetsTab, displayedAssetsTabs, setDisplayedAssetsTabs } = useWalletTokenContext();
 
   const handleSetActiveTab = useCallback(
     (tab: AssetsType) => {
-      setActiveTab(tab);
+      setActiveAssetsTab(tab);
 
-      if (!displayedTabs.includes(tab)) {
-        setDisplayTabs([...displayedTabs, tab]);
+      if (!displayedAssetsTabs.includes(tab)) {
+        setDisplayedAssetsTabs([...displayedAssetsTabs, tab]);
       }
     },
-    [displayedTabs, setActiveTab],
+    [displayedAssetsTabs, setActiveAssetsTab, setDisplayedAssetsTabs],
   );
 
   return (
@@ -37,9 +32,10 @@ export function Assets() {
         <Flex gap="0 20px">
           {Tabs.map((element) => (
             <Typography
+              key={element.value}
               sx={{
                 fontSize: "16px",
-                color: activeTab === element.value ? "text.primary" : "text.secondary",
+                color: activeAssetsTab === element.value ? "text.primary" : "text.secondary",
                 cursor: "pointer",
               }}
               onClick={() => handleSetActiveTab(element.value)}
@@ -49,7 +45,7 @@ export function Assets() {
           ))}
         </Flex>
 
-        {activeTab === AssetsType.Token ? (
+        {activeAssetsTab === AssetsType.Token ? (
           <Flex gap="0 16px">
             <SyncYourTokens />
             <WalletManager />
@@ -57,14 +53,14 @@ export function Assets() {
         ) : null}
       </Flex>
 
-      {displayedTabs.includes(AssetsType.Token) ? (
-        <Box sx={{ display: activeTab === AssetsType.Token ? "block" : "none" }}>
+      {displayedAssetsTabs.includes(AssetsType.Token) ? (
+        <Box sx={{ display: activeAssetsTab === AssetsType.Token ? "block" : "none" }}>
           <TokenAssets />
         </Box>
       ) : null}
 
-      {displayedTabs.includes(AssetsType.Token) ? (
-        <Box sx={{ display: activeTab === AssetsType.NFTS ? "block" : "none" }}>
+      {displayedAssetsTabs.includes(AssetsType.Token) ? (
+        <Box sx={{ display: activeAssetsTab === AssetsType.NFTS ? "block" : "none" }}>
           <NFTAssets />
         </Box>
       ) : null}
