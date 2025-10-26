@@ -23,6 +23,7 @@ import { ConvertToIcpConfirm } from "components/Wallet/BalanceConvert/Confirm";
 import { NFTCanister } from "components/Wallet/NFT/NFTCanister";
 import { NFTTokenDetails } from "components/Wallet/NFT/NFTTokenDetails";
 import { NFTSend } from "components/Wallet/NFT/NFTSend";
+import { NFTImporter } from "components/Wallet/NFT/NFTImporter";
 
 const components = {
   [WalletManagerPage.Index]: <TokenAssetsWrapper />,
@@ -38,6 +39,7 @@ const components = {
   [WalletManagerPage.NFTCanister]: <NFTCanister />,
   [WalletManagerPage.NFTTokenDetails]: <NFTTokenDetails />,
   [WalletManagerPage.NFTSend]: <NFTSend />,
+  [WalletManagerPage.NFTImporter]: <NFTImporter />,
 };
 
 export function WalletIndex() {

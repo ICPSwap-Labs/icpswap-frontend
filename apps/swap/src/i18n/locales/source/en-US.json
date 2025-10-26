@@ -1379,6 +1379,7 @@
   "maintenance.title": "🚧 Page under maintenance 🚧",
   "common.close": "Close",
   "common.enter.address": "Enter the address",
+  "common.enter.canister.id": "Enter the canister ID",
   "ck.ether.dissolve.loading": "Transaction for dissolving ckETH failed to submit",
   "stake.create.enter.reward.token": "Enter the reward token",
   "common.fdv.usd": "FDV (USD)",
@@ -1480,5 +1481,6 @@
   "common.will.receive": "You will receive",
   "wallet.convert.description": "Convert tokens under ${{worth}}. Excludes unlisted tokens.",
   "wallet.nft.send.placeholder": "Enter the memo",
-  "common.invalid.account.id": "Invalid account ID"
+  "common.invalid.account.id": "Invalid account ID",
+  "wallet.nft.import": "Import NFT"
 }

@@ -24,6 +24,8 @@ export enum WalletManagerPage {
   NFTCanister = "NFTCanister",
   NFTTokenDetails = "NFTTokenDetails",
   NFTSend = "NFTSend",
+  NFTImporter = "NFTImporter",
+  NFTExtCanister = "NFTExtCanister",
 }
 
 export type ConvertToIcp = {
