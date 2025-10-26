@@ -1,83 +1,22 @@
 import { useCallback, useMemo } from "react";
-import { Box, useTheme, Typography, Avatar } from "components/Mui";
+import { Box } from "components/Mui";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { useAccount } from "store/auth/hooks";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
 import { isICPSwapOfficial } from "utils/index";
-import type { NFTControllerInfo } from "@icpswap/types";
-import { useSelectedCanistersManager } from "store/nft/hooks";
+import { useEXTManager, useSelectedCanistersManager } from "store/nft/hooks";
 import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
+import type { NFTControllerInfo, EXTCollection, ExtNft } from "@icpswap/types";
+import { NFTAssetsRowUI } from "components/Wallet/NFT/NFTAssetsRowUI";
 
 const ICPSwapPositionNFTs = [
   "jwh2l-aqaaa-aaaan-qatdq-cai",
   "brx5n-xqaaa-aaaan-qanqa-cai",
   "4lnl6-hqaaa-aaaag-qblla-cai",
 ];
-
-interface NFTRowUIProps {
-  logo: string | undefined;
-  name: string;
-  amount: number | undefined;
-  onClick?: () => void;
-}
-
-function NFTRowUI({ logo, name, amount, onClick }: NFTRowUIProps) {
-  const theme = useTheme();
-
-  return (
-    <Box>
-      <Flex
-        sx={{
-          background: theme.palette.background.level3,
-          padding: "16px",
-          borderRadius: "12px",
-          cursor: "pointer",
-          overflow: "hidden",
-        }}
-        justify="space-between"
-        onClick={onClick}
-      >
-        <Flex gap="0 12px" sx={{ overflow: "hidden" }}>
-          <Avatar style={{ width: "48px", height: "48px" }} src={logo ?? ""}>
-            &nbsp;
-          </Avatar>
-
-          <Box sx={{ overflow: "hidden", flex: 1 }}>
-            <Typography
-              sx={{
-                color: "text.primary",
-                fontWeight: 500,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {name}
-            </Typography>
-
-            <Flex
-              sx={{
-                margin: "6px 0 0 0",
-                padding: "0 8px",
-                height: "20px",
-                borderRadius: "40px",
-                background: "#4F5A84",
-                width: "fit-content",
-                visibility: nonUndefinedOrNull(amount) ? "visible" : "hidden",
-              }}
-            >
-              <Typography fontSize="12px" color="text.primary">
-                {amount}
-              </Typography>
-            </Flex>
-          </Box>
-        </Flex>
-      </Flex>
-    </Box>
-  );
-}
 
 interface NFTRowProps {
   info: NFTControllerInfo;
@@ -102,13 +41,71 @@ function NFTRow({ info }: NFTRowProps) {
 
   return (
     <Box sx={{ padding: "0 12px", width: "100%" }}>
-      <NFTRowUI
+      <NFTAssetsRowUI
         amount={nonUndefinedOrNull(count) ? Number(count) : undefined}
         logo={logo}
         name={info.name}
         onClick={handleNFTClick}
       />
     </Box>
+  );
+}
+
+interface ExtNFTRowProps {
+  metadata: EXTCollection;
+  userAllExtNfts: ExtNft[] | undefined;
+}
+
+function ExtNFTRow({ metadata, userAllExtNfts }: ExtNFTRowProps) {
+  const { setDisplayedNFTInfo } = useWalletNFTContext();
+  const { setPages } = useWalletContext();
+
+  const handleNFTClick = useCallback(() => {
+    setDisplayedNFTInfo({
+      id: metadata.canister,
+      name: metadata.name,
+    });
+
+    setPages(WalletManagerPage.NFTCanister, false);
+  }, [setDisplayedNFTInfo, setPages, metadata]);
+
+  const count = useMemo(() => {
+    if (isUndefinedOrNull(userAllExtNfts)) return undefined;
+    return userAllExtNfts.filter((element) => element.canister === metadata.id).length;
+  }, [userAllExtNfts, metadata]);
+
+  return (
+    <Box sx={{ padding: "0 12px", width: "100%" }}>
+      <NFTAssetsRowUI
+        amount={nonUndefinedOrNull(count) ? Number(count) : undefined}
+        logo={metadata.avatar}
+        name={metadata.name}
+        onClick={handleNFTClick}
+      />
+    </Box>
+  );
+}
+
+function ExtNFTs() {
+  const account = useAccount();
+  const { result: userAllExtNfts } = useExtUserNFTs(account);
+  const { nfts: importedExtNFTIds } = useEXTManager();
+  const { result: extNFTs } = useEXTAllCollections();
+
+  const importedExtNFTs = useMemo(() => {
+    if (isUndefinedOrNull(extNFTs) || isUndefinedOrNull(importedExtNFTIds)) return [];
+
+    return importedExtNFTIds
+      .map((nft) => extNFTs.find((element) => element.id === nft.canisterId))
+      .filter((element) => nonUndefinedOrNull(element)) as Array<EXTCollection>;
+  }, [importedExtNFTIds, extNFTs]);
+
+  return (
+    <>
+      {importedExtNFTs.map((element) => (
+        <ExtNFTRow key={element.id} metadata={element} userAllExtNfts={userAllExtNfts} />
+      ))}
+    </>
   );
 }
 
@@ -145,6 +142,8 @@ export function NFTAssets() {
         </Box>
       ) : (
         <Flex gap="12px 0" fullWidth align="flex-start" vertical>
+          <ExtNFTs />
+
           {nftCanisterList.map((element) => (
             <NFTRow key={element.cid} info={element} />
           ))}

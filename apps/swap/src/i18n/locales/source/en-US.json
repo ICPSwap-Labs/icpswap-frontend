@@ -1379,6 +1379,7 @@
   "maintenance.title": "🚧 Page under maintenance 🚧",
   "common.close": "Close",
   "common.enter.address": "Enter the address",
+  "common.enter.canister.id": "Enter the canister ID",
   "ck.ether.dissolve.loading": "Transaction for dissolving ckETH failed to submit",
   "stake.create.enter.reward.token": "Enter the reward token",
   "common.fdv.usd": "FDV (USD)",
@@ -1488,5 +1489,6 @@
   "common.total.positions": "Total positions: ",
   "common.top.positions": "The top {{number}} positions",
   "wallet.nft.send.placeholder": "Enter the memo",
-  "common.invalid.account.id": "Invalid account ID"
+  "common.invalid.account.id": "Invalid account ID",
+  "wallet.nft.import": "Import NFT"
 }

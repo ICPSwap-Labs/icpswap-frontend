@@ -4,8 +4,9 @@ import { Flex } from "@icpswap/ui";
 import { WalletManager } from "components/Wallet/WalletManager";
 import { SyncYourTokens } from "components/Wallet/assets/SyncYourTokens";
 import { TokenAssets } from "components/Wallet/assets/TokenAssets";
-import { NFTAssets } from "components/Wallet/assets/NFTAssets";
+import { NFTAssets } from "components/Wallet/NFT/NFTAssets";
 import { useWalletTokenContext, AssetsType } from "components/Wallet/token/context";
+import { NFTImportIcon } from "components/Wallet/NFT/NFTImportIcon";
 
 const Tabs = [
   { label: AssetsType.Token, value: AssetsType.Token },
@@ -49,6 +50,12 @@ export function Assets() {
           <Flex gap="0 16px">
             <SyncYourTokens />
             <WalletManager />
+          </Flex>
+        ) : null}
+
+        {activeAssetsTab === AssetsType.NFTS ? (
+          <Flex gap="0 16px">
+            <NFTImportIcon />
           </Flex>
         ) : null}
       </Flex>
