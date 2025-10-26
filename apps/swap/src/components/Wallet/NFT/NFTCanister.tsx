@@ -1,7 +1,7 @@
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
 import { useState, useCallback } from "react";
 import { Box, Typography } from "components/Mui";
-import { LoadingRow } from "components/index";
+import { LoadingRow, NoData } from "components/index";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { useAccount } from "store/auth/hooks";
 import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
@@ -9,6 +9,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { useCanisterNFTs } from "hooks/nft/useNFTCalls";
 import type { NFTTokenMetadata } from "@icpswap/types";
 import NFTAvatar from "components/NFT/NFTAvatar";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 interface NFTRowProps {
   nft: NFTTokenMetadata;
@@ -100,9 +101,13 @@ export function NFTCanister() {
                 <div />
               </LoadingRow>
             </Box>
+          ) : isUndefinedOrNull(nfts) || nfts.length === 0 ? (
+            <NoData tip="No NFTs found" />
           ) : (
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "28px 16px", width: "100%" }}>
-              {nfts?.map((nft) => <NFTRow key={nft.tokenId} nft={nft} />)}
+              {nfts.map((nft) => (
+                <NFTRow key={nft.tokenId} nft={nft} />
+              ))}
             </Box>
           )}
         </InfiniteScroll>
