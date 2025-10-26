@@ -2,7 +2,7 @@ import { useState, useMemo, ReactNode } from "react";
 import { BigNumber } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
-import { WalletTokenContext, type TokenBalance } from "components/Wallet/token/context";
+import { WalletTokenContext, type TokenBalance, AssetsType } from "components/Wallet/token/context";
 
 interface WalletTokenContextProviderProps {
   children: ReactNode;
@@ -20,6 +20,9 @@ export function WalletTokenContextProvider({ children }: WalletTokenContextProvi
   const [removeTokenId, setRemoveTokenId] = useState<string | undefined>(undefined);
   const [xtcTopUpShow, setXTCTopUpShow] = useState<boolean>(false);
   const [refreshCounter, setRefreshCounter] = useState<number>(0);
+
+  const [activeAssetsTab, setActiveAssetsTab] = useState<AssetsType>(AssetsType.Token);
+  const [displayedAssetsTabs, setDisplayedAssetsTabs] = useState<Array<AssetsType>>([AssetsType.Token]);
 
   const handleTotalValueChange = (tokenId: string, value: BigNumber) => {
     setTotalValue((prevState) => ({ ...prevState, [tokenId]: value }));
@@ -67,6 +70,10 @@ export function WalletTokenContextProvider({ children }: WalletTokenContextProvi
         setRemoveTokenId,
         xtcTopUpShow,
         setXTCTopUpShow,
+        activeAssetsTab,
+        setActiveAssetsTab,
+        displayedAssetsTabs,
+        setDisplayedAssetsTabs,
       }}
     >
       {children}
