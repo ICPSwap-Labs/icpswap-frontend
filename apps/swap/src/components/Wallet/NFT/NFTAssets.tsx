@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { Box } from "components/Mui";
 import { Flex, LoadingRow } from "@icpswap/ui";
-import { useAccount } from "store/auth/hooks";
+import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
 import { isICPSwapOfficial } from "utils/index";
@@ -62,11 +62,11 @@ function ExtNFTRow({ metadata, userAllExtNfts }: ExtNFTRowProps) {
 
   const handleNFTClick = useCallback(() => {
     setDisplayedNFTInfo({
-      id: metadata.canister,
+      id: metadata.id,
       name: metadata.name,
     });
 
-    setPages(WalletManagerPage.NFTCanister, false);
+    setPages(WalletManagerPage.NFTExtCanister, false);
   }, [setDisplayedNFTInfo, setPages, metadata]);
 
   const count = useMemo(() => {
@@ -87,8 +87,8 @@ function ExtNFTRow({ metadata, userAllExtNfts }: ExtNFTRowProps) {
 }
 
 function ExtNFTs() {
-  const account = useAccount();
-  const { result: userAllExtNfts } = useExtUserNFTs(account);
+  const principal = useAccountPrincipalString();
+  const { result: userAllExtNfts } = useExtUserNFTs(principal);
   const { nfts: importedExtNFTIds } = useEXTManager();
   const { result: extNFTs } = useEXTAllCollections();
 
