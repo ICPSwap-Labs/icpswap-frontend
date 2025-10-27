@@ -1,5 +1,10 @@
 import { useState, ReactNode } from "react";
-import { WalletNFTContext, type DisplayedNFTInfo, type DisplayedNFTTokenInfo } from "components/Wallet/NFT/NFTContext";
+import {
+  ExtNFTSendInfo,
+  WalletNFTContext,
+  type DisplayedNFTInfo,
+  type DisplayedNFTTokenInfo,
+} from "components/Wallet/NFT/NFTContext";
 import { NFTTokenMetadata } from "@icpswap/types";
 
 interface WalletContextProviderProps {
@@ -10,6 +15,7 @@ export function WalletNFTContextProvider({ children }: WalletContextProviderProp
   const [displayedNFTInfo, setDisplayedNFTInfo] = useState<DisplayedNFTInfo | undefined>(undefined);
   const [displayedNFTTokenInfo, setDisplayedNFTTokenInfo] = useState<DisplayedNFTTokenInfo | undefined>(undefined);
   const [sendingNFTMetadata, setSendingNFTMetadata] = useState<NFTTokenMetadata | undefined>(undefined);
+  const [extNFTSendingInfo, setExtNFTSendingInfo] = useState<ExtNFTSendInfo | undefined>(undefined);
 
   return (
     <WalletNFTContext.Provider
@@ -20,6 +26,8 @@ export function WalletNFTContextProvider({ children }: WalletContextProviderProp
         setDisplayedNFTTokenInfo,
         sendingNFTMetadata,
         setSendingNFTMetadata,
+        extNFTSendingInfo,
+        setExtNFTSendingInfo,
       }}
     >
       {children}
