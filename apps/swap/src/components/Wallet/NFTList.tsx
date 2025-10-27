@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography, Avatar, useTheme } from "components/Mui";
 import { ImageLoading } from "@icpswap/ui";
 import NFTListHeader from "components/Wallet/NFTListHeader";
-import { useAccount } from "store/auth/hooks";
+import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 import { NoData } from "components/index";
 import { isICPSwapOfficial } from "utils/index";
 import { useSelectedCanistersManager, useEXTManager } from "store/nft/hooks";
@@ -128,8 +128,7 @@ export default function NFTList() {
   const { result, loading } = useNFTCanisterList(0, 1000);
   const nftCanisters = result?.content;
   const [userSelectedCanisters] = useSelectedCanistersManager();
-
-  const account = useAccount();
+  const principal = useAccountPrincipalString();
 
   const list = useMemo(() => {
     return nftCanisters?.filter((canister) => {
@@ -151,7 +150,7 @@ export default function NFTList() {
       .filter((e) => !!e) as EXTCollection[];
   }, [nfts, extAllCollections]);
 
-  const { result: userAllExtNfts } = useExtUserNFTs(account);
+  const { result: userAllExtNfts } = useExtUserNFTs(principal);
 
   return (
     <Box>

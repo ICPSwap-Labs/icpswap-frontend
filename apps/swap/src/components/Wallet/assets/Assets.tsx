@@ -66,8 +66,8 @@ export function Assets() {
         </Box>
       ) : null}
 
-      {displayedAssetsTabs.includes(AssetsType.Token) ? (
-        <Box sx={{ display: activeAssetsTab === AssetsType.NFTS ? "block" : "none" }}>
+      {activeAssetsTab === AssetsType.NFTS ? (
+        <Box>
           <NFTAssets />
         </Box>
       ) : null}
