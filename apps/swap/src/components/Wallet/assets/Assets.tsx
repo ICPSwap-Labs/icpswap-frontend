@@ -7,6 +7,7 @@ import { TokenAssets } from "components/Wallet/assets/TokenAssets";
 import { NFTAssets } from "components/Wallet/NFT/NFTAssets";
 import { useWalletTokenContext, AssetsType } from "components/Wallet/token/context";
 import { NFTImportIcon } from "components/Wallet/NFT/NFTImportIcon";
+import { NFTSettings } from "components/Wallet/NFT/NFTSettings";
 
 const Tabs = [
   { label: AssetsType.Token, value: AssetsType.Token },
@@ -56,6 +57,7 @@ export function Assets() {
         {activeAssetsTab === AssetsType.NFTS ? (
           <Flex gap="0 16px">
             <NFTImportIcon />
+            <NFTSettings />
           </Flex>
         ) : null}
       </Flex>

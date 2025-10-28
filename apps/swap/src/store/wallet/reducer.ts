@@ -8,6 +8,7 @@ import {
   updateSortBalance,
   updateHideSmallBalance,
   updateRemovedWalletDefaultTokens,
+  updateHideZeroNFT,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -74,5 +75,8 @@ export default createReducer(initialState, (builder) => {
       } else {
         state.removedWalletDefaultTokens = [...new Set([...state.removedWalletDefaultTokens, payload.tokenId])];
       }
+    })
+    .addCase(updateHideZeroNFT, (state, { payload }) => {
+      state.hideZeroNFT = payload;
     });
 });
