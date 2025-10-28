@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box } from "components/Mui";
-import { Flex, LoadingRow } from "@icpswap/ui";
+import { Flex, LoadingRow, NoData } from "@icpswap/ui";
 import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
@@ -11,6 +11,7 @@ import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import type { NFTControllerInfo, EXTCollection, ExtNft } from "@icpswap/types";
 import { NFTAssetsRowUI } from "components/Wallet/NFT/NFTAssetsRowUI";
+import { useHideZeroNFTManager } from "store/wallet/hooks";
 
 const ICPSwapPositionNFTs = [
   "jwh2l-aqaaa-aaaan-qatdq-cai",
@@ -20,12 +21,14 @@ const ICPSwapPositionNFTs = [
 
 interface NFTRowProps {
   info: NFTControllerInfo;
+  updateHidedNFTs: (id: string, num: number) => void;
 }
 
-function NFTRow({ info }: NFTRowProps) {
+function NFTRow({ info, updateHidedNFTs }: NFTRowProps) {
   const account = useAccount();
   const { setDisplayedNFTInfo } = useWalletNFTContext();
   const { setPages } = useWalletContext();
+  const [hideZeroNFT] = useHideZeroNFTManager();
 
   const { result: count } = useCanisterUserNFTCount(info.cid, account);
   const { result: logo } = useCanisterLogo(info.cid);
@@ -39,8 +42,24 @@ function NFTRow({ info }: NFTRowProps) {
     setPages(WalletManagerPage.NFTCanister, false);
   }, [setDisplayedNFTInfo, setPages, info]);
 
+  const isHidden = useMemo(() => {
+    return nonUndefinedOrNull(count) && hideZeroNFT && Number(count) === 0;
+  }, [count, hideZeroNFT]);
+
+  useEffect(() => {
+    if (isHidden && nonUndefinedOrNull(count)) {
+      updateHidedNFTs(info.cid, Number(count));
+    }
+  }, [info, count, hideZeroNFT]);
+
   return (
-    <Box sx={{ padding: "0 12px", width: "100%" }}>
+    <Box
+      sx={{
+        padding: "0 12px",
+        width: "100%",
+        display: isHidden ? "none" : "block",
+      }}
+    >
       <NFTAssetsRowUI
         amount={nonUndefinedOrNull(count) ? Number(count) : undefined}
         logo={logo}
@@ -54,11 +73,13 @@ function NFTRow({ info }: NFTRowProps) {
 interface ExtNFTRowProps {
   metadata: EXTCollection;
   userAllExtNfts: ExtNft[] | undefined;
+  updateHidedNFTs: (id: string, num: number) => void;
 }
 
-function ExtNFTRow({ metadata, userAllExtNfts }: ExtNFTRowProps) {
+function ExtNFTRow({ metadata, userAllExtNfts, updateHidedNFTs }: ExtNFTRowProps) {
   const { setDisplayedNFTInfo } = useWalletNFTContext();
   const { setPages } = useWalletContext();
+  const [hideZeroNFT] = useHideZeroNFTManager();
 
   const handleNFTClick = useCallback(() => {
     setDisplayedNFTInfo({
@@ -74,8 +95,18 @@ function ExtNFTRow({ metadata, userAllExtNfts }: ExtNFTRowProps) {
     return userAllExtNfts.filter((element) => element.canister === metadata.id).length;
   }, [userAllExtNfts, metadata]);
 
+  const isHidden = useMemo(() => {
+    return nonUndefinedOrNull(count) && hideZeroNFT && Number(count) === 0;
+  }, [count, hideZeroNFT]);
+
+  useEffect(() => {
+    if (nonUndefinedOrNull(count)) {
+      updateHidedNFTs(metadata.id, count);
+    }
+  }, [metadata, count, hideZeroNFT]);
+
   return (
-    <Box sx={{ padding: "0 12px", width: "100%" }}>
+    <Box sx={{ padding: "0 12px", width: "100%", display: isHidden ? "none" : "block" }}>
       <NFTAssetsRowUI
         amount={nonUndefinedOrNull(count) ? Number(count) : undefined}
         logo={metadata.avatar}
@@ -86,24 +117,40 @@ function ExtNFTRow({ metadata, userAllExtNfts }: ExtNFTRowProps) {
   );
 }
 
-function ExtNFTs() {
+interface ExtNFTsProps {
+  updateHidedNFTs: (id: string) => void;
+  updateExtNFTsLength: (num: number) => void;
+}
+
+function ExtNFTs({ updateHidedNFTs, updateExtNFTsLength }: ExtNFTsProps) {
   const principal = useAccountPrincipalString();
   const { result: userAllExtNfts } = useExtUserNFTs(principal);
   const { nfts: importedExtNFTIds } = useEXTManager();
   const { result: extNFTs } = useEXTAllCollections();
 
   const importedExtNFTs = useMemo(() => {
-    if (isUndefinedOrNull(extNFTs) || isUndefinedOrNull(importedExtNFTIds)) return [];
+    if (isUndefinedOrNull(extNFTs) || isUndefinedOrNull(importedExtNFTIds)) return undefined;
 
     return importedExtNFTIds
       .map((nft) => extNFTs.find((element) => element.id === nft.canisterId))
       .filter((element) => nonUndefinedOrNull(element)) as Array<EXTCollection>;
   }, [importedExtNFTIds, extNFTs]);
 
+  useEffect(() => {
+    if (nonUndefinedOrNull(importedExtNFTs)) {
+      updateExtNFTsLength(importedExtNFTs.length);
+    }
+  }, [updateExtNFTsLength, importedExtNFTs]);
+
   return (
     <>
-      {importedExtNFTs.map((element) => (
-        <ExtNFTRow key={element.id} metadata={element} userAllExtNfts={userAllExtNfts} />
+      {(importedExtNFTs ?? []).map((element) => (
+        <ExtNFTRow
+          key={element.id}
+          metadata={element}
+          userAllExtNfts={userAllExtNfts}
+          updateHidedNFTs={updateHidedNFTs}
+        />
       ))}
     </>
   );
@@ -111,6 +158,9 @@ function ExtNFTs() {
 
 export function NFTAssets() {
   const { result: nftResult, loading } = useNFTCanisterList(0, 1000);
+  const [hidedNFTs, setHidedNFTs] = useState<Array<string>>([]);
+  const [extNFTsLength, setExtNFTsLength] = useState<number | undefined>(undefined);
+  const [hideZeroNFT] = useHideZeroNFTManager();
 
   const [userSelectedCanisters] = useSelectedCanistersManager();
 
@@ -124,6 +174,22 @@ export function NFTAssets() {
       );
     });
   }, [userSelectedCanisters, nftResult]);
+
+  const handleUpdateHidedNFTs = useCallback(
+    (canisterId: string) => {
+      setHidedNFTs((prevState) => {
+        return [...new Set([...prevState, canisterId])];
+      });
+    },
+    [setHidedNFTs],
+  );
+
+  const noData = useMemo(() => {
+    // always has NFT list, so only hideZeroNFT is true there will be no data
+    if (hideZeroNFT === false) return false;
+    if (isUndefinedOrNull(extNFTsLength)) return false;
+    return hidedNFTs.length === extNFTsLength + nftCanisterList.length;
+  }, [hidedNFTs, nftCanisterList, extNFTsLength, hideZeroNFT]);
 
   return (
     <Box sx={{ margin: "22px 0 20px 0" }}>
@@ -140,15 +206,17 @@ export function NFTAssets() {
             <div />
           </LoadingRow>
         </Box>
-      ) : (
-        <Flex gap="12px 0" fullWidth align="flex-start" vertical>
-          <ExtNFTs />
+      ) : noData ? (
+        <NoData tip="No NFTs found" />
+      ) : null}
 
-          {nftCanisterList.map((element) => (
-            <NFTRow key={element.cid} info={element} />
-          ))}
-        </Flex>
-      )}
+      <Flex gap="12px 0" fullWidth align="flex-start" vertical sx={{ display: !noData ? "flex" : "none" }}>
+        <ExtNFTs updateHidedNFTs={handleUpdateHidedNFTs} updateExtNFTsLength={setExtNFTsLength} />
+
+        {nftCanisterList.map((element) => (
+          <NFTRow key={element.cid} info={element} updateHidedNFTs={handleUpdateHidedNFTs} />
+        ))}
+      </Flex>
     </Box>
   );
 }
