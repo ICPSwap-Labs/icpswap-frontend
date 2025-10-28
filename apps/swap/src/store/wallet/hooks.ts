@@ -13,6 +13,7 @@ import {
   updateSortBalance,
   updateHideSmallBalance,
   updateRemovedWalletDefaultTokens,
+  updateHideZeroNFT,
 } from "store/wallet/actions";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -240,4 +241,18 @@ export function useHideSmallBalanceManager(): [boolean, (hidden: boolean) => voi
   );
 
   return useMemo(() => [hideSmallBalance, callback], [hideSmallBalance, callback]);
+}
+
+export function useHideZeroNFTManager(): [boolean, (hidden: boolean) => void] {
+  const dispatch = useAppDispatch();
+  const hideZeroNFT = useAppSelector((state) => state.wallet.hideZeroNFT);
+
+  const callback = useCallback(
+    (hidden: boolean) => {
+      dispatch(updateHideZeroNFT(hidden));
+    },
+    [dispatch],
+  );
+
+  return useMemo(() => [hideZeroNFT, callback], [hideZeroNFT, callback]);
 }

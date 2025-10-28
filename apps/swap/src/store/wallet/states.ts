@@ -9,6 +9,7 @@ export interface WalletState {
   sortBalance: SortBalanceEnum;
   hideSmallBalance: boolean;
   removedWalletDefaultTokens: string[];
+  hideZeroNFT: boolean;
 }
 
 export const initialState: WalletState = {
@@ -19,4 +20,5 @@ export const initialState: WalletState = {
   sortBalance: SortBalanceEnum.ALL,
   hideSmallBalance: false,
   removedWalletDefaultTokens: [],
+  hideZeroNFT: false,
 };

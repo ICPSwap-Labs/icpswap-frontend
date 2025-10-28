@@ -23,3 +23,5 @@ export const updateRemovedWalletDefaultTokens = createAction<{ tokenId: string; 
 );
 
 export const updateBitcoinDissolveTxs = createAction<BitcoinTx>("wallet/updateBitcoinDissolveTxs");
+
+export const updateHideZeroNFT = createAction<boolean>("wallet/updateHideZeroNFT");
