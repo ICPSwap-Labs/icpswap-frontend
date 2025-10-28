@@ -99,7 +99,7 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
     <Modal
       open={open}
       onClose={onClose}
-      title={t("nft.import")}
+      title={t("wallet.nft.import")}
       dialogProps={{
         sx: {
           "& .MuiPaper-root": {

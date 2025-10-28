@@ -22,7 +22,7 @@ export function NFTImporter() {
   const { nfts: importedNFTs, importNFT } = useEXTManager();
 
   const handlePrev = useCallback(() => {
-    setPages(WalletManagerPage.NFTTokenDetails);
+    setPages(WalletManagerPage.Index);
     setSelectedContact(undefined);
   }, [setPages, setSelectedContact]);
 
