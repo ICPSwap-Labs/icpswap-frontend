@@ -32,13 +32,18 @@ export function useTokenDataManager({ tokenId, tokenBalance, balanceLoading }: U
     if (token && token.decimals !== undefined && token.transFee !== undefined && tokenBalance && infoToken) {
       setTotalValue(token.address, parseTokenAmount(tokenBalance, token.decimals).multipliedBy(infoToken.price));
 
-      const usdBeforeChange = new BigNumber(infoToken.price).div(
-        new BigNumber(infoToken.priceChange24H).dividedBy(100).plus(1),
-      );
+      const priceBeforeChangePercent = new BigNumber(infoToken.priceChange24H).dividedBy(100).plus(1);
+
+      // If priceBeforeChangePercent is equal to 0, the current price is 0
+      // The previous price can't be calculated
+      // So ignore this token's usd value
+      const priceBeforeChange = priceBeforeChangePercent.isEqualTo(0)
+        ? 0
+        : new BigNumber(infoToken.price).div(priceBeforeChangePercent);
 
       setTotalUSDBeforeChange(
         token.address,
-        parseTokenAmount(tokenBalance, token.decimals).multipliedBy(usdBeforeChange),
+        parseTokenAmount(tokenBalance, token.decimals).multipliedBy(priceBeforeChange),
       );
     }
   }, [tokenBalance, infoToken, token, tokenPrice]);
