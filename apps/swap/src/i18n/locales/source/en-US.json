@@ -1481,5 +1481,6 @@
   "wallet.convert.description": "Convert tokens under ${{worth}}. Excludes unlisted tokens.",
   "wallet.nft.send.placeholder": "Enter the memo",
   "common.invalid.account.id": "Invalid account ID",
-  "wallet.nft.import": "Import NFT"
+  "wallet.nft.import": "Import NFT",
+  "common.invalid.canister.id": "Invalid canister ID"
 }

@@ -48,7 +48,7 @@ export function NFTImporter() {
   const error = useMemo(() => {
     if (isUndefinedOrNull(extNFTs)) return t("common.import");
     if (isUndefinedOrNullOrEmpty(address)) return t("common.enter.canister.id");
-    if (!isValidPrincipal(address)) return t("common.invalid.principal.id");
+    if (!isValidPrincipal(address)) return t("common.invalid.canister.id");
 
     const metadata = extNFTs.find((element) => element.id === address);
     if (isUndefinedOrNull(metadata)) return "Non-existent canister ID";
