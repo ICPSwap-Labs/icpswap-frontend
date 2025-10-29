@@ -1481,6 +1481,7 @@
   "wallet.convert.description": "Convert tokens under ${{worth}}. Excludes unlisted tokens.",
   "wallet.nft.send.placeholder": "Enter the memo",
   "common.invalid.account.id": "Invalid account ID",
+  "common.invalid.canister.id": "Invalid canister ID",
   "wallet.nft.import": "Import NFT",
   "info.swap.tokens.holders.percent": "The top 100 holders collectively own {{percent}} ({{amount}} Tokens) of {{symbol}}",
   "common.token.total.supply.colon": "Token total supply: ",
