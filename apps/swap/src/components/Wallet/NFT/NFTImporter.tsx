@@ -9,10 +9,12 @@ import { useWalletAddressBookContext } from "components/Wallet/address-book/cont
 import { useEXTAllCollections } from "@icpswap/hooks";
 import { useEXTManager } from "store/nft/hooks";
 import { NFT_STANDARDS } from "@icpswap/constants";
+import { useTips, TIP_SUCCESS } from "hooks/useTips";
 
 export function NFTImporter() {
   const theme = useTheme();
   const { t } = useTranslation();
+  const [openTips] = useTips();
   const { setPages } = useWalletContext();
   const { selectedContact, setSelectedContact } = useWalletAddressBookContext();
 
@@ -42,6 +44,7 @@ export function NFTImporter() {
   const handleImport = useCallback(async () => {
     if (isUndefinedOrNull(address)) return;
     importNFT({ canisterId: address, standard: NFT_STANDARDS.EXT });
+    openTips("NFTs imported successfully.", TIP_SUCCESS);
     setPages(WalletManagerPage.Index);
   }, [address, setPages, importNFT]);
 
