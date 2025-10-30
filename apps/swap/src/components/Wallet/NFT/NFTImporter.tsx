@@ -57,7 +57,7 @@ export function NFTImporter() {
     if (isUndefinedOrNull(metadata)) return "Non-existent canister ID";
 
     const isImported = nonUndefinedOrNull(importedNFTs.find((element) => element.canisterId === address));
-    if (isImported) return "The token exists";
+    if (isImported) return t("common.canister.id.exists");
 
     return undefined;
   }, [address, extNFTs, importedNFTs]);
