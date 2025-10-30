@@ -13,9 +13,10 @@ interface FarmRowProps {
   showState: boolean;
   your?: boolean;
   filterState: FilterState;
+  isFirst?: boolean;
 }
 
-export function FarmRow({ farmId, wrapperSx, showState, your, filterState }: FarmRowProps) {
+export function FarmRow({ farmId, wrapperSx, showState, your, filterState, isFirst }: FarmRowProps) {
   const principal = useAccountPrincipal();
 
   const { result: farmInitArgs } = useFarmInitArgs(farmId);
@@ -32,6 +33,7 @@ export function FarmRow({ farmId, wrapperSx, showState, your, filterState }: Far
         showState={showState}
         wrapperSx={wrapperSx}
         initArgs={farmInitArgs}
+        isFirst={isFirst}
       />
     ) : (
       <LiveFarmRow
@@ -43,9 +45,17 @@ export function FarmRow({ farmId, wrapperSx, showState, your, filterState }: Far
         state={state}
         wrapperSx={wrapperSx}
         initArgs={farmInitArgs}
+        isFirst={isFirst}
       />
     )
   ) : (
-    <EmptyRow farmId={farmId} filterState={filterState} your={your} showState={showState} wrapperSx={wrapperSx} />
+    <EmptyRow
+      farmId={farmId}
+      filterState={filterState}
+      your={your}
+      showState={showState}
+      wrapperSx={wrapperSx}
+      isFirst={isFirst}
+    />
   );
 }

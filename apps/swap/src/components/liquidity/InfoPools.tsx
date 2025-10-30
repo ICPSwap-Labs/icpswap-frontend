@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback } from "react";
 import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme, BoxProps } from "components/Mui";
 import { useHistory } from "react-router-dom";
-import { NoData, TokenImage, TabPanel, type Tab, ObserverWrapper, ScrollTop } from "components/index";
+import { NoData, TokenImage, TabPanel, type Tab, ScrollTop } from "components/index";
 import {
   Header,
   HeaderCell,
@@ -18,7 +18,14 @@ import {
 } from "@icpswap/ui";
 import { useTokensFromList, useNodeInfoAllPools, useDebouncedChangeHandler, getPoolAPR } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { BigNumber, formatDollarAmount, isUndefinedOrNull, percentToNum, urlStringFormat } from "@icpswap/utils";
+import {
+  BigNumber,
+  formatDollarAmount,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
+  percentToNum,
+  urlStringFormat,
+} from "@icpswap/utils";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { Search } from "react-feather";
@@ -35,7 +42,6 @@ const useStyles = makeStyles((theme: Theme) => {
       borderRadius: "12px",
     },
     wrapper: {
-      position: "sticky",
       display: "grid",
       gridGap: "1em",
       alignItems: "center",
@@ -320,7 +326,6 @@ export function InfoPools() {
   const [page, setPage] = useState(START_PAGE);
   const [timeBase, setTimeBase] = useState<"24H" | "7D">("24H");
   const [debounceSearchToken, debounceSetSearchToken] = useDebouncedChangeHandler(searchToken, setSearchToken, 300);
-  const [headerInViewport, setHeaderInViewport] = useState(true);
 
   const { result: tokenList } = useTokensFromList();
   const { result: allSwapPools } = useNodeInfoAllPools();
@@ -434,20 +439,6 @@ export function InfoPools() {
 
   return (
     <>
-      <Box
-        sx={{
-          display: headerInViewport ? "none" : "block",
-          position: "sticky",
-          top: "64px",
-          background: theme.palette.background.level3,
-          zIndex: 10,
-          width: "100%",
-          maxWidth: "1200px",
-        }}
-      >
-        <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" timeBase={timeBase} />
-      </Box>
-
       <Box className={classes.card} id="scroll-main-wrapper">
         <Box
           sx={{
@@ -511,13 +502,32 @@ export function InfoPools() {
           </Flex>
         </Box>
 
-        <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box sx={{ width: "100%" }}>
+          <Box
+            sx={{
+              position: "sticky",
+              top: "64px",
+              background: theme.palette.background.level3,
+              zIndex: 10,
+              width: "100%",
+              maxWidth: "1200px",
+            }}
+          >
+            <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" timeBase={timeBase} />
+          </Box>
+
           <Box
             sx={{
               minWidth: "1200px",
+              height: nonUndefinedOrNull(slicedPools)
+                ? `${new BigNumber(slicedPools.length).multipliedBy(73).toString()}px`
+                : "640px",
               "@media(max-width: 640px)": {
                 width: "100%",
                 minWidth: "auto",
+                height: nonUndefinedOrNull(slicedPools)
+                  ? `${new BigNumber(slicedPools.length).multipliedBy(65).toString()}px`
+                  : "640px",
               },
             }}
           >
@@ -538,13 +548,6 @@ export function InfoPools() {
             >
               {slicedPools && slicedPools.length > 0 ? (
                 <>
-                  <ObserverWrapper
-                    scrollInViewport={() => setHeaderInViewport(true)}
-                    scrollOutViewport={() => setHeaderInViewport(false)}
-                  >
-                    <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" timeBase={timeBase} />
-                  </ObserverWrapper>
-
                   {(slicedPools ?? []).map((pool, index) => (
                     <PoolRow key={pool.poolId} index={index + 1} pool={pool} timeBase={timeBase} />
                   ))}

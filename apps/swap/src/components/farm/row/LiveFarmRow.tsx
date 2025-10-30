@@ -22,6 +22,7 @@ interface LiveFarmRowProps {
   farmInfo: FarmInfo | Null;
   state: FarmState;
   initArgs: InitFarmArgs | Null;
+  isFirst?: boolean;
 }
 
 export function LiveFarmRow({
@@ -33,6 +34,7 @@ export function LiveFarmRow({
   showState,
   filterState,
   initArgs,
+  isFirst,
 }: LiveFarmRowProps) {
   const theme = useTheme();
 
@@ -47,10 +49,11 @@ export function LiveFarmRow({
             },
           },
           "& .row-item": {
-            borderTop: `1px solid ${theme.palette.background.level1}`,
+            borderTop: isFirst ? "none" : `1px solid ${theme.palette.background.level1}`,
             padding: "20px 0",
             "&:first-of-type": {
               padding: "20px 0 20px 24px",
+              borderTop: "none",
             },
             "&:last-of-type": {
               padding: "20px 24px 20px 0",
