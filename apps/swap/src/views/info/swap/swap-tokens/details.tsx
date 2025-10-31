@@ -35,6 +35,7 @@ import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 import { InfoTokenPrices } from "components/info/swap/TokenPriceWithIcp";
 import { useFetchGlobalDefaultChartType } from "store/global/hooks";
 import { getChartView } from "utils/swap/chartType";
+import { TokenHoldersCharts } from "components/info/tokens/TokenHoldersCharts";
 
 enum TabValue {
   Transactions = "Transactions",
@@ -394,7 +395,12 @@ export default function TokenDetails() {
             {activeTab === TabValue.Transactions ? (
               <TokenTransactions canisterId={canisterId} styleProps={{ padding: "24px" }} />
             ) : null}
-            {activeTab === TabValue.Holders ? <Holders tokenId={canisterId} styleProps={{ padding: "24px" }} /> : null}
+            {activeTab === TabValue.Holders ? (
+              <>
+                <TokenHoldersCharts tokenId={canisterId} />
+                <Holders tokenId={canisterId} styleProps={{ padding: "24px" }} />
+              </>
+            ) : null}
           </Box>
         </MainCard>
       </Box>
