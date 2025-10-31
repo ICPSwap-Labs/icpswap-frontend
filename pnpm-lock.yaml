@@ -67,6 +67,9 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.13
+      jotai:
+        specifier: ^2.15.0
+        version: 2.15.0(@babel/core@7.26.0)(@babel/template@7.25.9)(@types/react@18.2.0)(react@18.2.0)
       jsbi:
         specifier: ^4.3.0
         version: 4.3.0
@@ -8311,6 +8314,24 @@ packages:
   jiti@2.4.0:
     resolution: {integrity: sha512-H5UpaUI+aHOqZXlYOaFP/8AzKsg+guWu+Pr3Y8i7+Y3zr1aXAvCvTAQ1RxSc6oVD8R8c7brgNtTVP91E7upH/g==}
     hasBin: true
+
+  jotai@2.15.0:
+    resolution: {integrity: sha512-nbp/6jN2Ftxgw0VwoVnOg0m5qYM1rVcfvij+MZx99Z5IK13eGve9FJoCwGv+17JvVthTjhSmNtT5e1coJnr6aw==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@babel/core': '>=7.0.0'
+      '@babel/template': '>=7.0.0'
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   jpeg-js@0.4.4:
     resolution: {integrity: sha512-WZzeDOEtTOBK4Mdsar0IqEU5sMr3vSV2RqkAIzUEV2BHnUfKGyswWFPFwK5EeDo93K3FohSHbLAjj0s1Wzd+dg==}
@@ -22922,6 +22943,13 @@ snapshots:
   jiti@1.21.6: {}
 
   jiti@2.4.0: {}
+
+  jotai@2.15.0(@babel/core@7.26.0)(@babel/template@7.25.9)(@types/react@18.2.0)(react@18.2.0):
+    optionalDependencies:
+      '@babel/core': 7.26.0
+      '@babel/template': 7.25.9
+      '@types/react': 18.2.0
+      react: 18.2.0
 
   jpeg-js@0.4.4: {}
 

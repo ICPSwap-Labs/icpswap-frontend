@@ -1482,5 +1482,9 @@
   "info.swap.tokens.holders.percent": "The top 100 holders collectively own {{percent}} ({{amount}} Tokens) of {{symbol}}",
   "common.token.total.supply.colon": "Token total supply: ",
   "common.token.total.holders.colon": "Total token holders: ",
-  "common.token.top.100.holders": "{{symbol}} top 100 token holders"
+  "common.token.top.100.holders": "{{symbol}} top 100 token holders",
+  "info.swap.positions.holders.percent": "The top 10 positions collectively own {{percent}} ({{usdValue}}) of {{poolName}}",
+  "common.position.total.value.colon": "Positions total value: ",
+  "common.total.positions": "Total positions: ",
+  "common.top.positions": "The top {{number}} positions"
 }

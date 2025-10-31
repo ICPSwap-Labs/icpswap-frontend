@@ -10,3 +10,4 @@ export * from "./usePositionTransactions";
 export * from "./token";
 export * from "./pool";
 export * from "./nns";
+export * from "./usePoolPositionHolders";
