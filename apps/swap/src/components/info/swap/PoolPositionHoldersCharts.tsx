@@ -91,7 +91,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
             color: "#ffffff",
           },
           headerFormat: " ",
-          pointFormat: "AID: {point.aid}<br/><br />{series.name}: <b>{point.percentage:.2f}%</b>",
+          pointFormat: "AID: {point.aid}<br/>{series.name}: <b>{point.percentage:.2f}%</b>",
         },
         accessibility: {
           point: {

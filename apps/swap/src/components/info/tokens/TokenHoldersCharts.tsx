@@ -1,13 +1,13 @@
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { useTokenHolders } from "@icpswap/hooks";
-import { Flex, getTextualAddress, LoadingRow } from "@icpswap/ui";
-import { BigNumber, isUndefinedOrNull, principalToAccount, shorten } from "@icpswap/utils";
+import { Flex, LoadingRow } from "@icpswap/ui";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { useToken } from "hooks/index";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
-import * as Highcharts from "highcharts";
+import { useInitialHighcharts } from "./Highcharts";
 
 const OTHER_ACCOUNTS = "Other accounts";
 
@@ -68,91 +68,7 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
     return [...top100Holders, otherAccounts];
   }, [result, top100HoldPercent, top100HoldAmount, totalSupply]);
 
-  useEffect(() => {
-    if (charts.length) {
-      // @ts-ignore
-      // The TypeScript compilation shows errors, but the code functions correctly.
-      // These errors can be safely ignored, as the official Highcharts documentation uses the same approach.
-      Highcharts.chart("highcharts-id", {
-        title: undefined,
-        credits: false,
-        chart: {
-          type: "pie",
-          backgroundColor: "#212946",
-          plotBackgroundColor: null,
-          plotBorderWidth: null,
-          plotShadow: false,
-        },
-        tooltip: {
-          valueSuffix: "%",
-          backgroundColor: "rgba(33, 41, 70, 0.70)",
-          borderRadius: 8,
-          borderColor: "rgba(73, 88, 142, 0.70)",
-          borderWidth: 2,
-          style: {
-            color: "#ffffff",
-          },
-          headerFormat: " ",
-          pointFormat: "AID: {point.aid}<br/>PID: {point.pid}<br />{series.name}: <b>{point.percentage:.2f}%</b>",
-        },
-        accessibility: {
-          point: {
-            valueSuffix: "%",
-          },
-        },
-        plotOptions: {
-          pie: {
-            allowPointSelect: true,
-            cursor: "pointer",
-            dataLabels: {
-              enabled: true,
-              format: '<span style="font-size: 1em">{point.name}',
-              style: {
-                color: "#ffffff",
-                fontWeight: 400,
-                fontFamily: "Poppins",
-                fontSize: "12px",
-              },
-            },
-          },
-        },
-        series: [
-          {
-            name: "Tokens",
-            colorByPoint: true,
-            data: charts.map((element) => {
-              const pid = element.address.includes("-") ? element.address : undefined;
-              const aid = element.address.includes("-") ? principalToAccount(element.address) : element.address;
-
-              const textualAddress =
-                element.address !== OTHER_ACCOUNTS
-                  ? getTextualAddress({
-                      shorten: true,
-                      shortenLength: 6,
-                      owner: pid,
-                      account: aid,
-                      alias: element.alias,
-                      subaccount: element.sub,
-                    })
-                  : undefined;
-
-              const name =
-                element.address === OTHER_ACCOUNTS
-                  ? "Other accounts"
-                  : textualAddress ?? (pid ? `${shorten(element.address, 4)}/${shorten(aid, 4)}` : shorten(aid, 4));
-
-              return {
-                name,
-                y: new BigNumber(element.percent).toNumber(),
-                pid: pid ?? "",
-                aid,
-              };
-            }),
-          },
-        ],
-      });
-    }
-  }, [charts]);
+  useInitialHighcharts({ id: "highcharts-id", charts });
 
   return (
     <Box sx={{ width: "100%", padding: "0 25px" }}>
