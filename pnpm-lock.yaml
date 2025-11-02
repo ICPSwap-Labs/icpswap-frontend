@@ -621,6 +621,9 @@ importers:
       '@icpswap/utils':
         specifier: workspace:*
         version: link:../utils
+      '@tanstack/react-query':
+        specifier: 5.28.14
+        version: 5.28.14(react@18.2.0)
       bignumber.js:
         specifier: ^9.0.1
         version: 9.1.2

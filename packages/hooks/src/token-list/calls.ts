@@ -1,7 +1,8 @@
 import { tokenList } from "@icpswap/actor";
-import type { TokenListMetadata, IcpSwapAPIPageResult, IcpSwapAPITokenInfo } from "@icpswap/types";
-import { useCallback } from "react";
-import { icpswap_fetch_post, resultFormat } from "@icpswap/utils";
+import type { TokenListMetadata, IcpSwapAPIPageResult, IcpSwapAPITokenInfo, TokensTreeMapRow } from "@icpswap/types";
+import { useCallback, useMemo } from "react";
+import { icpswap_fetch_get, icpswap_fetch_post, resultFormat } from "@icpswap/utils";
+import { useQuery } from "@tanstack/react-query";
 
 import { useCallsData } from "../useCallData";
 import { getLimitedInfinityCallV1 } from "../useLimitedInfinityCall";
@@ -48,4 +49,22 @@ export function useAllSwapTokens() {
       return await getLimitedInfinityCallV1<IcpSwapAPITokenInfo>(call, 1000, 2);
     }, []),
   );
+}
+
+export async function getTokensTreeMapData(): Promise<TokensTreeMapRow[] | undefined> {
+  return (await icpswap_fetch_get<Array<TokensTreeMapRow>>("/info/token/chart/list")).data;
+}
+
+export function useTokensTreeMapData(): {
+  loading: boolean;
+  result: TokensTreeMapRow[] | undefined;
+} {
+  const { data, isPending } = useQuery({
+    queryKey: ["tokens-tree-map"],
+    queryFn: async () => {
+      return await getTokensTreeMapData();
+    },
+  });
+
+  return useMemo(() => ({ loading: isPending, result: data }), [data, isPending]);
 }
