@@ -1,7 +1,7 @@
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import BigNumber from "bignumber.js";
 
-import { Typography } from "./Mui";
+import { Typography, TypographyProps } from "./Mui";
 
 export interface ProportionProps {
   value: bigint | number | string | undefined | null;
@@ -9,6 +9,7 @@ export interface ProportionProps {
   fontSize?: string;
   fontWeight?: number;
   showArrow?: boolean;
+  component?: TypographyProps["component"];
 }
 
 function isUp(value: bigint | number | string | undefined | null) {
@@ -47,7 +48,7 @@ function ProportionIcon({ type }: ProportionIconProps) {
   ) : null;
 }
 
-export function Proportion({ value, fontSize, showArrow = true, ...props }: ProportionProps) {
+export function Proportion({ value, fontSize, showArrow = true, component, ...props }: ProportionProps) {
   const type = isUp(value) ? ProportionType.UP : isDown(value) ? ProportionType.DOWN : ProportionType.EQUAL;
   const proportion = isZero(value) ? "0.00%" : value ? `${new BigNumber(Number(value)).toFixed(2)}%` : undefined;
 
@@ -61,6 +62,7 @@ export function Proportion({ value, fontSize, showArrow = true, ...props }: Prop
         justifyContent: props.align === "right" ? "flex-end" : "flex-start",
         fontSize: fontSize ?? "inherit",
       }}
+      component={component}
     >
       {proportion ? (
         <>
