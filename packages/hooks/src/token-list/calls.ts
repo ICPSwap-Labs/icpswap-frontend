@@ -51,18 +51,18 @@ export function useAllSwapTokens() {
   );
 }
 
-export async function getTokensTreeMapData(): Promise<TokensTreeMapRow[] | undefined> {
+export async function getTokensFromAPI(): Promise<TokensTreeMapRow[] | undefined> {
   return (await icpswap_fetch_get<Array<TokensTreeMapRow>>("/info/token/chart/list")).data;
 }
 
-export function useTokensTreeMapData(): {
+export function useTokensFromAPI(): {
   loading: boolean;
   result: TokensTreeMapRow[] | undefined;
 } {
   const { data, isPending } = useQuery({
-    queryKey: ["tokens-tree-map"],
+    queryKey: ["info-tokens"],
     queryFn: async () => {
-      return await getTokensTreeMapData();
+      return await getTokensFromAPI();
     },
   });
 

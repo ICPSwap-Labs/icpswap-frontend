@@ -1,12 +1,12 @@
 import { Box, Typography } from "components/Mui";
-import { useTokensTreeMapData } from "@icpswap/hooks";
 import { useMemo } from "react";
 import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { ResponsiveContainer, Treemap, Tooltip } from "recharts";
 import { TreemapNode } from "recharts/types/chart/Treemap";
-import { Flex, Proportion } from "@icpswap/ui";
+import { Flex, LoadingRow, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/Image";
+import { useTokens } from "hooks/info/tokens/index";
 
 const COLORS = [
   { value: -20, color: "#971E27" },
@@ -33,12 +33,10 @@ type TreeMapData = {
 };
 
 export function TokensTreeMap() {
-  const { result, loading } = useTokensTreeMapData();
+  const tokens = useTokens();
 
   const data: Array<TreeMapData> | undefined = useMemo(() => {
-    if (isUndefinedOrNull(result)) return undefined;
-
-    return result
+    return tokens
       .map((element) => {
         let colorMap;
 
@@ -86,7 +84,7 @@ export function TokensTreeMap() {
         if (new BigNumber(a.value).isLessThan(b.value)) return 1;
         return 0;
       });
-  }, [result]);
+  }, [tokens]);
 
   const CustomizedContent = (props: TreemapNode) => {
     const { x, y, width, height, index, name } = props;
@@ -141,90 +139,107 @@ export function TokensTreeMap() {
       </Typography>
 
       <Box sx={{ margin: "24px 0 0 0", width: "100%", height: "300px" }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <Treemap
-            style={{ width: "100%", maxWidth: "500px", maxHeight: "80vh", aspectRatio: 4 / 3 }}
-            data={data}
-            dataKey="value"
-            stroke="#ffffff"
-            content={CustomizedContent}
-            aspectRatio={4 / 3}
-            isAnimationActive={false}
-          >
-            <Tooltip
-              content={(props) => {
-                const payload = props.payload?.[0]?.payload as TreeMapData | undefined;
+        {isUndefinedOrNull(tokens) || tokens.length === 0 ? (
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <Treemap
+              style={{ width: "100%", maxWidth: "500px", maxHeight: "80vh", aspectRatio: 4 / 3 }}
+              data={data}
+              dataKey="value"
+              stroke="#ffffff"
+              content={CustomizedContent}
+              aspectRatio={4 / 3}
+              isAnimationActive={false}
+            >
+              <Tooltip
+                content={(props) => {
+                  const payload = props.payload?.[0]?.payload as TreeMapData | undefined;
 
-                if (isUndefinedOrNull(payload)) return null;
+                  if (isUndefinedOrNull(payload)) return null;
 
-                const { tokenId, logo } = payload;
+                  const { tokenId, logo } = payload;
 
-                return (
-                  <Box
-                    sx={{
-                      padding: "14px 16px",
-                      width: "210px",
-                      zIndex: 10,
-                      borderRadius: "16px",
-                      border: "1px solid rgba(73, 88, 142, 0.70)",
-                      background: "rgba(33, 41, 70, 0.9)",
-                    }}
-                  >
-                    <Flex gap="16px 0" vertical align="flex-start">
-                      <Flex gap="0 8px">
-                        <TokenImage tokenId={tokenId} logo={logo} size="20px" />
-                        <Typography sx={{ fontSize: "18px", color: "#ffffff", fontWeight: 500 }}>
-                          {payload.name.length > 6 ? `${payload.name.slice(0, 6)}...` : payload.name}
-                        </Typography>
-                      </Flex>
+                  return (
+                    <Box
+                      sx={{
+                        padding: "14px 16px",
+                        width: "210px",
+                        zIndex: 10,
+                        borderRadius: "16px",
+                        border: "1px solid rgba(73, 88, 142, 0.70)",
+                        background: "rgba(33, 41, 70, 0.9)",
+                      }}
+                    >
+                      <Flex gap="16px 0" vertical align="flex-start">
+                        <Flex gap="0 8px">
+                          <TokenImage tokenId={tokenId} logo={logo} size="20px" />
+                          <Typography sx={{ fontSize: "18px", color: "#ffffff", fontWeight: 500 }}>
+                            {payload.name.length > 6 ? `${payload.name.slice(0, 6)}...` : payload.name}
+                          </Typography>
+                        </Flex>
 
-                      <Flex gap="0 8px">
-                        <Typography>Price:</Typography>
-                        <Flex gap="0 3px">
-                          <Typography color="text.primary">{formatDollarTokenPrice(payload.price)}</Typography>
-                          <Flex>
-                            <Typography color="text.primary" fontSize="12px">
-                              (
-                            </Typography>
-                            <Proportion
-                              showArrow={false}
-                              value={payload.priceChange24H}
-                              fontSize="12px"
-                              component="span"
-                            />
-                            <Typography color="text.primary" fontSize="12px">
-                              )
-                            </Typography>
+                        <Flex gap="0 8px">
+                          <Typography>Price:</Typography>
+                          <Flex gap="0 3px">
+                            <Typography color="text.primary">{formatDollarTokenPrice(payload.price)}</Typography>
+                            <Flex>
+                              <Typography color="text.primary" fontSize="12px">
+                                (
+                              </Typography>
+                              <Proportion
+                                showArrow={false}
+                                value={payload.priceChange24H}
+                                fontSize="12px"
+                                component="span"
+                              />
+                              <Typography color="text.primary" fontSize="12px">
+                                )
+                              </Typography>
+                            </Flex>
                           </Flex>
                         </Flex>
-                      </Flex>
 
-                      <Flex gap="0 8px">
-                        <Typography>FDV:</Typography>
-                        <Typography color="text.primary">{formatDollarAmount(payload.fdv)}</Typography>
-                      </Flex>
+                        <Flex gap="0 8px">
+                          <Typography>FDV:</Typography>
+                          <Typography color="text.primary">{formatDollarAmount(payload.fdv)}</Typography>
+                        </Flex>
 
-                      <Flex gap="0 8px">
-                        <Typography>Market cap:</Typography>
-                        <Typography color="text.primary">{formatDollarAmount(payload.marketCap)}</Typography>
-                      </Flex>
+                        <Flex gap="0 8px">
+                          <Typography>Market cap:</Typography>
+                          <Typography color="text.primary">{formatDollarAmount(payload.marketCap)}</Typography>
+                        </Flex>
 
-                      <Flex gap="0 8px">
-                        <Typography>TVL:</Typography>
-                        <Typography color="text.primary">{formatDollarAmount(payload.tvl)}</Typography>
-                      </Flex>
+                        <Flex gap="0 8px">
+                          <Typography>TVL:</Typography>
+                          <Typography color="text.primary">{formatDollarAmount(payload.tvl)}</Typography>
+                        </Flex>
 
-                      <Flex gap="0 8px">
-                        <Typography>Volume:</Typography>
-                        <Typography color="text.primary">{formatDollarAmount(payload.volume)}</Typography>
+                        <Flex gap="0 8px">
+                          <Typography>Volume:</Typography>
+                          <Typography color="text.primary">{formatDollarAmount(payload.volume)}</Typography>
+                        </Flex>
                       </Flex>
-                    </Flex>
-                  </Box>
-                );
-              }}
-            />
-          </Treemap>
-        </ResponsiveContainer>
+                    </Box>
+                  );
+                }}
+              />
+            </Treemap>
+          </ResponsiveContainer>
+        )}
       </Box>
     </Box>
   );

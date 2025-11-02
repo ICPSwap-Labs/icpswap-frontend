@@ -77,4 +77,6 @@ export type TokensTreeMapRow = {
   marketCap: string;
   tvlUSD: string;
   volumeUSD24H: string;
+  holder: string;
+  rank: string;
 };
