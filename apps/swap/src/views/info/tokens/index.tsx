@@ -3,7 +3,7 @@ import { MainCard } from "@icpswap/ui";
 import { Tokens } from "components/info/tokens/index";
 import { InfoWrapper } from "components/index";
 import { useTranslation } from "react-i18next";
-import { TokensTreeMap } from "components/info/tokens/TreeMap";
+import { TokensTreeMap, TreeMapColorsLabel } from "components/info/tokens/TreeMap";
 import { useTokensFromAPI } from "@icpswap/hooks";
 import { useTokensManager } from "hooks/info/tokens/index";
 import { memo, useEffect } from "react";
@@ -25,6 +25,9 @@ function __Tokens() {
       <Box sx={{ margin: "8px 0 32px 0" }}>
         <Typography sx={{ fontSize: "14px" }}>{t("common.disclaimer.descriptions")}</Typography>
         <TokensTreeMap />
+        <Box sx={{ margin: "12px 0 0 0" }}>
+          <TreeMapColorsLabel />
+        </Box>
       </Box>
 
       <MainCard>

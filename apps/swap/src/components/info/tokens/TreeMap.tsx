@@ -32,6 +32,21 @@ type TreeMapData = {
   priceChange24H: string;
 };
 
+export function TreeMapColorsLabel() {
+  return (
+    <Flex gap="0 2px">
+      {COLORS.map((element) => (
+        <Flex gap="4px 0" vertical>
+          <Typography sx={{ fontSize: "12px", color: "text.primary" }}>{`${element.value
+            .toString()
+            .replace("-", "")}%`}</Typography>
+          <Box sx={{ width: "60px", height: "8px", borderRadius: "1px 0 0 1px", background: element.color }} />
+        </Flex>
+      ))}
+    </Flex>
+  );
+}
+
 export function TokensTreeMap() {
   const tokens = useTokens();
 
