@@ -12,3 +12,6 @@ export type { _SERVICE as SocialMediaService, ICSNews as SocialMediaResult } fro
 
 export { idlFactory as AddressBookFactory } from "./AddressBook.did";
 export type { _SERVICE as AddressBookService, AddressBook } from "./AddressBook";
+
+export type { _SERVICE as PriceAlertsService, AlertInfo, AlertType, AddAlert as AddAlertArgs } from "./PriceAlerts";
+export { idlFactory as PriceAlertsFactory } from "./PriceAlerts.did";

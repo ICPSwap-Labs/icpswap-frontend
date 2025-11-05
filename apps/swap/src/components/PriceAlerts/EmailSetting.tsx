@@ -1,0 +1,157 @@
+import { sendPriceAlertEmail, verifyPriceAlertEmail } from "@icpswap/hooks";
+import { ResultStatus } from "@icpswap/types";
+import { FilledTextField, Modal, TextButton } from "@icpswap/ui";
+import { isUndefinedOrNull, isUndefinedOrNullOrEmpty } from "@icpswap/utils";
+import { Box, Button, Typography, InputAdornment, CircularProgress } from "components/Mui";
+import { PRICE_ALERTS_MODAL_WIDTH, PRICE_ALERTS_EMAIL_SECOND } from "constants/swap";
+import { TIP_ERROR, TIP_SUCCESS, useTips } from "hooks/index";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useEmailSecondManger, useShowGetCodeManager } from "store/price-alerts/hooks";
+
+interface EmailSettingProps {
+  open: boolean;
+  onClose?: () => void;
+}
+
+export function EmailSetting({ open, onClose }: EmailSettingProps) {
+  const { t } = useTranslation();
+  const principal = useAccountPrincipalString();
+  const [openTip] = useTips();
+
+  const [verifyLoading, setVerifyLoading] = useState(false);
+  const [email, setEmail] = useState<undefined | string>(undefined);
+  const [code, setCode] = useState<string | undefined>(undefined);
+  const [showGetCode, setShowGetCode] = useShowGetCodeManager();
+  const [second, setSecond] = useEmailSecondManger();
+
+  const handleGetCode = useCallback(async () => {
+    if (isUndefinedOrNull(principal) || isUndefinedOrNull(email)) return;
+
+    setShowGetCode(false);
+
+    const { status } = await sendPriceAlertEmail({ principal, email });
+
+    if (status === ResultStatus.OK) {
+      openTip(t("price.alerts.email.send.success"), TIP_SUCCESS);
+    } else {
+      openTip(t("price.alerts.email.send.failed"), TIP_ERROR);
+    }
+  }, [second, setSecond, email, principal]);
+
+  const handleSetEmail = useCallback(
+    (email: string) => {
+      setEmail(email);
+    },
+    [setEmail],
+  );
+
+  const handleSetCode = useCallback(
+    (code: string) => {
+      setCode(code);
+    },
+    [setCode],
+  );
+
+  const handleVerifyEmail = useCallback(async () => {
+    if (isUndefinedOrNull(principal) || isUndefinedOrNull(email) || isUndefinedOrNull(code)) return;
+
+    setVerifyLoading(true);
+
+    const { status, message } = await verifyPriceAlertEmail({ email, principal, code });
+
+    if (status === ResultStatus.OK) {
+      openTip(t("price.alerts.email.verify.success"), TIP_SUCCESS);
+      if (onClose) onClose();
+    } else {
+      openTip(isUndefinedOrNullOrEmpty(message) ? message : t("price.alerts.email.verify.failed"), TIP_ERROR);
+    }
+
+    setVerifyLoading(false);
+  }, [principal, email, code, onClose]);
+
+  useEffect(() => {
+    let timer: number | null;
+
+    function call() {
+      if (showGetCode) return;
+
+      let __second = second;
+
+      timer = setInterval(() => {
+        if (__second === 0) {
+          if (timer) clearInterval(timer);
+          timer = null;
+          setSecond(PRICE_ALERTS_EMAIL_SECOND);
+          setShowGetCode(true);
+          return;
+        }
+
+        __second -= 1;
+        setSecond(__second);
+      }, 1000);
+    }
+
+    call();
+
+    return () => {
+      if (timer) clearInterval(timer);
+      timer = null;
+    };
+  }, [second, showGetCode, setSecond]);
+
+  return (
+    <Modal open={open} title="Create alert" dialogWidth={PRICE_ALERTS_MODAL_WIDTH} onClose={onClose} onCancel={onClose}>
+      <Typography>Email</Typography>
+      <Box sx={{ margin: "9px 0 0 0" }}>
+        <FilledTextField fullWidth placeholder="Enter email" onChange={handleSetEmail} />
+      </Box>
+      <Box sx={{ margin: "12px 0 0 0" }}>
+        <FilledTextField
+          fullWidth
+          placeholder="Enter verification code"
+          textFieldProps={{
+            slotProps: {
+              input: {
+                endAdornment: (
+                  <InputAdornment position="end">
+                    {showGetCode ? (
+                      <TextButton
+                        sx={{
+                          "&:hover": {
+                            textDecoration: "none",
+                          },
+                        }}
+                        onClick={handleGetCode}
+                      >
+                        Get code
+                      </TextButton>
+                    ) : (
+                      <Typography>{second}s</Typography>
+                    )}
+                  </InputAdornment>
+                ),
+                maxLength: 50,
+              },
+            },
+          }}
+          onChange={handleSetCode}
+        />
+      </Box>
+
+      <Box sx={{ margin: "32px 0 0 0" }}>
+        <Button
+          variant="contained"
+          size="large"
+          fullWidth
+          disabled={isUndefinedOrNullOrEmpty(email) || isUndefinedOrNullOrEmpty(code) || verifyLoading}
+          onClick={handleVerifyEmail}
+          startIcon={verifyLoading ? <CircularProgress size={20} color="inherit" /> : null}
+        >
+          {t("common.confirm")}
+        </Button>
+      </Box>
+    </Modal>
+  );
+}

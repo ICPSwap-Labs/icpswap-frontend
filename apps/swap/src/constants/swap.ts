@@ -30,5 +30,9 @@ export enum Tab {
   Limit = "Limit",
 }
 
+export const PRICE_ALERTS_MODAL_WIDTH = "428px";
+
+export const PRICE_ALERTS_EMAIL_SECOND = 60;
+
 export * from "./mint";
 export * from "./liquidity";

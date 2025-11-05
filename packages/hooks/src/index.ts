@@ -31,3 +31,4 @@ export * from "./useParsedUrlPath";
 export * from "./setting";
 export * from "./social-media";
 export * from "./address-book";
+export * from "./price-alerts";

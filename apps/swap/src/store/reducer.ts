@@ -16,6 +16,7 @@ import SnsReducer from "./sns/reducer";
 import TransactionsReducer from "./transactions/reducer";
 import LimitOrderReducer from "./swap/limit-order/reducer";
 import Web3 from "./web3/reducer";
+import PriceAlertsReducer from "./price-alerts/reducer";
 
 export { sessionReducer };
 
@@ -37,4 +38,5 @@ export default {
   limitOrder: LimitOrderReducer,
   web3: Web3,
   sns: SnsReducer,
+  priceAlerts: PriceAlertsReducer,
 };

@@ -1490,5 +1490,9 @@
   "info.swap.positions.holders.percent": "The top 10 positions collectively own {{percent}} ({{usdValue}}) of {{poolName}}",
   "common.position.total.value.colon": "Positions total value: ",
   "common.total.positions": "Total positions: ",
-  "common.top.positions": "The top {{number}} positions"
+  "common.top.positions": "The top {{number}} positions",
+  "price.alerts.email.send.success": "Email sent successfully",
+  "price.alerts.email.send.failed": "Failed to sent email.Please try again later.",
+  "price.alerts.email.verify.success": "Email verify successfully",
+  "price.alerts.email.verify.failed": "Failed to verify email."
 }

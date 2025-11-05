@@ -1,8 +1,25 @@
-import { IcpSwapAPIResult, StatusResult } from "@icpswap/types";
+import { IcpSwapAPIResult, ResultStatus, StatusResult } from "@icpswap/types";
 import { ICPSWAP_API } from "@icpswap/constants";
 
-import { resultFormat } from "./resultFormat";
 import { nonUndefinedOrNull } from "./isUndefinedOrNull";
+
+function resultFormat<T>(result: IcpSwapAPIResult<T> | undefined) {
+  if (result.code === 200) {
+    return {
+      status: ResultStatus.OK,
+      data: result.data,
+      message: "",
+    };
+  } if (result.code === 709) {
+    return {
+      status: ResultStatus.ERROR,
+      data: result.data,
+      message: result.message,
+    };
+  }
+
+  return undefined;
+}
 
 export async function fetch_post<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {
   const fetch_result = await fetch(api, {
@@ -18,9 +35,7 @@ export async function fetch_post<T>(api: string, data?: any): Promise<StatusResu
 
   const result = (await fetch_result.json()) as IcpSwapAPIResult<T> | undefined;
 
-  if (result.code === 200) return resultFormat<T>(result.data);
-
-  return undefined;
+  return resultFormat<T>(result);
 }
 
 export async function fetch_get<T>(api: string, data?: any) {
@@ -46,9 +61,7 @@ export async function fetch_get<T>(api: string, data?: any) {
 
   const result = (await fetch_result.json()) as IcpSwapAPIResult<T> | undefined;
 
-  if (result.code === 200) return resultFormat<T>(result.data);
-
-  return undefined;
+  return resultFormat<T>(result);
 }
 
 export async function icpswap_fetch_post<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {
