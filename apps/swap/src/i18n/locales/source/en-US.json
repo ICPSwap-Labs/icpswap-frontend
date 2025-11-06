@@ -1056,7 +1056,7 @@
   "kc+zZA": "Demo",
   "kc8v8D": "Order is locked",
   "kfcwlE": "Sync failed, please try again",
-  "swap.details.descriptions": "If you have sufficient balance in the swap pool, you may be able to swap directly without needing to deposit.",
+  "swap.details.descriptions": "Your swapped tokens are being processed for withdrawal. No action needed — please wait.",
   "common.deposit": "Deposit",
   "kjKZRI": "Select the proposal type",
   "kjqEGF": "Total unused swap pool creation fess: {0} ICP",

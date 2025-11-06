@@ -5,6 +5,7 @@ import { Flex, TextButton } from "@icpswap/ui";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { useReclaim } from "hooks/swap/useReclaim";
 import { useTranslation } from "react-i18next";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 export interface WithdrawButtonProps {
   token: Token | undefined;
@@ -12,9 +13,17 @@ export interface WithdrawButtonProps {
   balances: UserSwapPoolsBalance[];
   onReclaimSuccess: () => void;
   fontSize?: string;
+  disabled?: () => boolean;
 }
 
-export function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: WithdrawButtonProps) {
+export function WithdrawButton({
+  token,
+  pool,
+  balances,
+  onReclaimSuccess,
+  fontSize,
+  disabled: __disabled,
+}: WithdrawButtonProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
@@ -50,9 +59,10 @@ export function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSi
   }, [__balances, loading, token, pool]);
 
   const disabled = useMemo(() => {
+    if (nonUndefinedOrNull(__disabled) && __disabled() === true) return true;
     if (!__balances || __balances.length === 0 || !token) return true;
     return false;
-  }, [__balances, token]);
+  }, [__balances, token, __disabled]);
 
   return (
     <Flex gap="0 8px">
