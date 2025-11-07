@@ -7,6 +7,7 @@ import { TreemapNode } from "recharts/types/chart/Treemap";
 import { Flex, LoadingRow, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/Image";
 import { useTokens } from "hooks/info/tokens/index";
+import { useMediaQuery640 } from "hooks/theme";
 
 const COLORS = [
   { value: -20, color: "#971E27" },
@@ -34,13 +35,20 @@ type TreeMapData = {
 
 export function TreeMapColorsLabel() {
   return (
-    <Flex gap="0 2px">
+    <Flex fullWidth gap="0 2px">
       {COLORS.map((element) => (
-        <Flex gap="4px 0" vertical>
+        <Flex gap="4px 0" vertical key={element.value} sx={{ width: `${100 / 6}%`, maxWidth: "60px" }}>
           <Typography sx={{ fontSize: "12px", color: "text.primary" }}>{`${element.value
             .toString()
             .replace("-", "")}%`}</Typography>
-          <Box sx={{ width: "60px", height: "8px", borderRadius: "1px 0 0 1px", background: element.color }} />
+          <Box
+            sx={{
+              width: "100%",
+              height: "8px",
+              borderRadius: "1px 0 0 1px",
+              background: element.color,
+            }}
+          />
         </Flex>
       ))}
     </Flex>
@@ -49,6 +57,22 @@ export function TreeMapColorsLabel() {
 
 export function TokensTreeMap() {
   const tokens = useTokens();
+
+  const down640 = useMediaQuery640();
+
+  const fontSizes = useMemo(() => {
+    if (down640) {
+      return {
+        primary: 68,
+        secondary: 26,
+      };
+    }
+
+    return {
+      primary: 72,
+      secondary: 28,
+    };
+  }, [down640]);
 
   const data: Array<TreeMapData> | undefined = useMemo(() => {
     return tokens
@@ -81,7 +105,7 @@ export function TokensTreeMap() {
 
         return {
           name: element.tokenSymbol,
-          value: new BigNumber(element.marketCap).toNumber(),
+          value: new BigNumber(element.volumeUSD24H).toNumber(),
           color: colorMap?.color ?? (element.priceChange24H.includes("-") ? "#ed7171" : "#7ec17e"),
           logo: generateLogoUrl(element.tokenLedgerId),
           price: element.price,
@@ -104,8 +128,8 @@ export function TokensTreeMap() {
   const CustomizedContent = (props: TreemapNode) => {
     const { x, y, width, height, index, name } = props;
 
-    const nameFontSize = 72 / (index + 1);
-    const secondFontSize = 28 / (index + 1);
+    const nameFontSize = fontSizes.primary / (index + 1);
+    const secondFontSize = fontSizes.secondary / (index + 1);
     const margin1 = 4 / (index + 1);
     const margin2 = 8 / (index + 1);
 
@@ -244,7 +268,7 @@ export function TokensTreeMap() {
                         </Flex>
 
                         <Flex gap="0 8px">
-                          <Typography>Volume:</Typography>
+                          <Typography>24h Volume:</Typography>
                           <Typography color="text.primary">{formatDollarAmount(payload.volume)}</Typography>
                         </Flex>
                       </Flex>
