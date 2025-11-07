@@ -1,5 +1,5 @@
 import { Typography, Box, useTheme } from "components/Mui";
-import { toSignificant, BigNumber } from "@icpswap/utils";
+import { toSignificant, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { useInfoPool } from "@icpswap/hooks";
 import { useMemo } from "react";
@@ -18,7 +18,7 @@ export interface TokenPriceProps {
 export function TokenPrice({ token0, token1Symbol, price }: TokenPriceProps) {
   const theme = useTheme();
 
-  return token0 && token1Symbol && price ? (
+  return token0 && token1Symbol && nonUndefinedOrNull(price) ? (
     <Box
       sx={{
         display: "flex",
@@ -55,7 +55,12 @@ export function InfoTokenPrices({ tokenInfo }: { tokenInfo: Token | undefined })
     return pool.token0LedgerId === tokenInfo.address ? pool.token0Price : pool.token1Price;
   }, [pool, tokenInfo?.address]);
 
-  const icpRatio = tokenPrice && icpPrice ? new BigNumber(icpPrice).dividedBy(tokenPrice).toNumber() : undefined;
+  const icpRatio =
+    tokenPrice && icpPrice
+      ? new BigNumber(tokenPrice).isEqualTo(0)
+        ? 0
+        : new BigNumber(icpPrice).dividedBy(tokenPrice).toNumber()
+      : undefined;
   const tokenRatio = tokenPrice && icpPrice ? new BigNumber(tokenPrice).dividedBy(icpPrice).toNumber() : undefined;
 
   return tokenPrice && icpPrice && tokenInfo ? (
