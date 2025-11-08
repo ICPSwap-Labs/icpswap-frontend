@@ -46,6 +46,7 @@ function PoolTokenTvl({ token, amount, tvl }: PoolTokenTvlProps) {
             color: "text.primary",
             fontWeight: 500,
           }}
+          component="div"
         >
           <TokenSymbol symbol={token?.symbol} typographyStyle="inherit" width={106} />
         </Typography>

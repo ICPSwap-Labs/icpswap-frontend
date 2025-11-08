@@ -7,7 +7,8 @@ import { Null } from "@icpswap/types";
 import { useToken } from "hooks/index";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
-import { useInitialHighcharts } from "./Highcharts";
+import { useInitialHighcharts } from "components/info/tokens/Highcharts";
+import { useMediaQuery640 } from "hooks/theme";
 
 const OTHER_ACCOUNTS = "Other accounts";
 
@@ -20,6 +21,7 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
   const theme = useTheme();
   const [, token] = useToken(tokenId);
   const { result } = useTokenHolders(tokenId, 1, 100);
+  const downMedia640 = useMediaQuery640();
 
   const { top100HoldAmount, totalHolders, top100HoldPercent, totalSupply } = useMemo(() => {
     if (isUndefinedOrNull(result)) return {};
@@ -73,11 +75,37 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
   return (
     <Box sx={{ width: "100%", padding: "0 25px" }}>
       <Box sx={{ width: "100%", overflow: "auto", border: "1px solid #29314F", borderRadius: "16px" }}>
-        <Flex sx={{ height: "72px", borderBottom: "1px solid #29314F" }}>
-          <Box sx={{ flex: "50%" }}>
-            <Flex fullWidth gap="0 4px" justify="center">
-              <img width="20px" height="20px" src="/images/icons/bulb.svg" alt="" />
-              <Typography color="text.primary">
+        <Flex
+          sx={{
+            borderBottom: "1px solid #29314F",
+            height: downMedia640 ? "auto" : "72px",
+            padding: downMedia640 ? "0 16px" : "0px",
+          }}
+          vertical={downMedia640}
+        >
+          <Box
+            sx={{
+              flex: downMedia640 ? "100%" : "50%",
+              padding: "16px 0",
+              width: downMedia640 ? "100%" : "fit-content",
+            }}
+          >
+            <Flex
+              fullWidth
+              gap="0 4px"
+              justify={downMedia640 ? "left" : "center"}
+              align={downMedia640 ? "top" : "center"}
+            >
+              <img
+                width={`${downMedia640 ? "16px" : "20px"}`}
+                height={`${downMedia640 ? "16px" : "20px"}`}
+                src="/images/icons/bulb.svg"
+                alt=""
+                style={{ position: "relative", top: downMedia640 ? "4px" : "0px" }}
+              />
+              <Typography
+                sx={{ color: "text.primary", "@media(max-width: 640px)": { fontSize: "12px", lineHeight: "18px" } }}
+              >
                 {t("info.swap.tokens.holders.percent", {
                   percent: top100HoldPercent ? `${top100HoldPercent}%` : "--",
                   amount: top100HoldAmount ? toFormat(new BigNumber(top100HoldAmount).toFixed(2)) : "--",
@@ -87,16 +115,49 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
             </Flex>
           </Box>
 
-          <Box sx={{ flex: "50%", borderLeft: `1px solid ${theme.palette.border["3"]}` }}>
-            <Flex fullWidth justify="center" gap="0 4px">
-              <img width="20px" height="20px" src="/images/icons/bulb.svg" alt="" />
-              <Flex>
-                <Typography color="text.primary" sx={{ paddingRight: "8px" }}>
+          <Box
+            sx={{
+              flex: downMedia640 ? "100%" : "50%",
+              borderLeft: downMedia640 ? "none" : `1px solid ${theme.palette.border["3"]}`,
+              borderTop: downMedia640 ? `1px solid ${theme.palette.border["3"]}` : "none",
+              padding: "16px 0",
+              width: downMedia640 ? "100%" : "fit-content",
+            }}
+          >
+            <Flex
+              fullWidth
+              justify={downMedia640 ? "left" : "center"}
+              gap="0 4px"
+              align={downMedia640 ? "top" : "center"}
+            >
+              <img
+                width={`${downMedia640 ? "16px" : "20px"}`}
+                height={`${downMedia640 ? "16px" : "20px"}`}
+                src="/images/icons/bulb.svg"
+                alt=""
+                style={{ position: "relative", top: downMedia640 ? "4px" : "0px" }}
+              />
+
+              <Flex vertical={downMedia640} gap="10px 0" align={downMedia640 ? "left" : "center"}>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    paddingRight: "8px",
+                    borderRight: "1px solid #ffffff",
+                    "@media(max-width: 640px)": { fontSize: "12px" },
+                  }}
+                >
                   {t("common.token.total.supply.colon")}{" "}
                   {totalSupply ? toFormat(new BigNumber(totalSupply).toFixed(2)) : "--"} {token?.symbol}
                 </Typography>
 
-                <Typography color="text.primary" sx={{ borderLeft: "1px solid #ffffff", paddingLeft: "8px" }}>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    paddingLeft: downMedia640 ? "0px" : "8px",
+                    "@media(max-width: 640px)": { fontSize: "12px" },
+                  }}
+                >
                   {t("common.token.total.holders.colon")} {totalHolders ?? "--"}
                 </Typography>
               </Flex>

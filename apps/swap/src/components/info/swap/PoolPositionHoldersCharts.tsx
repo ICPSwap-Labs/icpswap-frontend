@@ -7,10 +7,11 @@ import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
 import * as Highcharts from "highcharts";
+import { useMediaQuery640 } from "hooks/theme";
 
 const OTHER_ACCOUNTS = "Other accounts";
 const POSITION_SIZE = 20;
-const TOP_NUMBER = 10;
+const TOP_NUMBER = 20;
 
 export interface PoolPositionHoldersChartsProps {
   poolId: string | Null;
@@ -21,6 +22,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
   const { t } = useTranslation();
   const theme = useTheme();
   const { result } = usePoolPositionHolders(poolId, POSITION_SIZE);
+  const downMedia640 = useMediaQuery640();
 
   const { topHoldValue, topHoldPercent, totalPositionsValue, totalPositions } = useMemo(() => {
     if (isUndefinedOrNull(result)) return {};
@@ -112,6 +114,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
                 fontSize: "12px",
               },
             },
+            borderRadius: 0,
           },
         },
         series: [
@@ -137,30 +140,87 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
   return (
     <Box sx={{ width: "100%", padding: "0 25px" }}>
       <Box sx={{ width: "100%", overflow: "auto", border: "1px solid #29314F", borderRadius: "16px" }}>
-        <Flex sx={{ height: "72px", borderBottom: "1px solid #29314F" }}>
-          <Box sx={{ flex: "50%" }}>
-            <Flex fullWidth gap="0 4px" justify="center">
-              <img width="20px" height="20px" src="/images/icons/bulb.svg" alt="" />
-              <Typography color="text.primary">
+        <Flex
+          sx={{
+            height: downMedia640 ? "auto" : "72px",
+            borderBottom: "1px solid #29314F",
+            padding: downMedia640 ? "0 16px" : "0px",
+          }}
+          vertical={downMedia640}
+        >
+          <Box
+            sx={{
+              flex: downMedia640 ? "100%" : "50%",
+              width: downMedia640 ? "100%" : "fit-content",
+              padding: "16px 0",
+            }}
+          >
+            <Flex
+              fullWidth
+              gap="0 4px"
+              justify={downMedia640 ? "left" : "center"}
+              align={downMedia640 ? "top" : "center"}
+            >
+              <img
+                width={`${downMedia640 ? "16px" : "20px"}`}
+                height={`${downMedia640 ? "16px" : "20px"}`}
+                src="/images/icons/bulb.svg"
+                alt=""
+                style={{ position: "relative", top: downMedia640 ? "4px" : "0px" }}
+              />
+              <Typography
+                color="text.primary"
+                sx={{ "@media(max-width: 640px)": { fontSize: "12px", lineHeight: "18px" } }}
+              >
                 {t("info.swap.positions.holders.percent", {
                   percent: topHoldPercent ? `${topHoldPercent}%` : "--",
                   usdValue: topHoldValue ? `$${toFormat(new BigNumber(topHoldValue).toFixed(2))}` : "--",
                   poolName: poolName ?? "",
+                  number: TOP_NUMBER,
                 })}
               </Typography>
             </Flex>
           </Box>
 
-          <Box sx={{ flex: "50%", borderLeft: `1px solid ${theme.palette.border["3"]}` }}>
-            <Flex fullWidth justify="center" gap="0 4px">
-              <img width="20px" height="20px" src="/images/icons/bulb.svg" alt="" />
+          <Box
+            sx={{
+              flex: downMedia640 ? "100%" : "50%",
+              borderLeft: downMedia640 ? "none" : `1px solid ${theme.palette.border["3"]}`,
+              borderTop: downMedia640 ? `1px solid ${theme.palette.border["3"]}` : "none",
+              padding: "16px 0",
+              width: downMedia640 ? "100%" : "fit-content",
+            }}
+          >
+            <Flex
+              fullWidth
+              justify={downMedia640 ? "left" : "center"}
+              gap="0 4px"
+              align={downMedia640 ? "top" : "center"}
+            >
+              <img
+                width={`${downMedia640 ? "16px" : "20px"}`}
+                height={`${downMedia640 ? "16px" : "20px"}`}
+                src="/images/icons/bulb.svg"
+                alt=""
+                style={{ position: "relative", top: downMedia640 ? "4px" : "0px" }}
+              />
               <Flex>
-                <Typography color="text.primary" sx={{ paddingRight: "8px" }}>
+                <Typography
+                  color="text.primary"
+                  sx={{ paddingRight: "8px", "@media(max-width: 640px)": { fontSize: "12px" } }}
+                >
                   {t("common.position.total.value.colon")}{" "}
                   {totalPositionsValue ? `$${toFormat(new BigNumber(totalPositionsValue).toFixed(2))}` : "--"}
                 </Typography>
 
-                <Typography color="text.primary" sx={{ borderLeft: "1px solid #ffffff", paddingLeft: "8px" }}>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    borderLeft: "1px solid #ffffff",
+                    paddingLeft: "8px",
+                    "@media(max-width: 640px)": { fontSize: "12px" },
+                  }}
+                >
                   {t("common.total.positions")} {totalPositions ?? "--"}
                 </Typography>
               </Flex>
