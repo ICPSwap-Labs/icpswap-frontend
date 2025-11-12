@@ -15,7 +15,7 @@ import {
 } from "components/swap/index";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
 import { useConnectorStateConnected } from "store/auth/hooks";
-import { SWAP_REFRESH_KEY } from "constants/index";
+import { SWAP_RECLAIM_REFRESH } from "constants/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 
@@ -91,7 +91,7 @@ export function SwapContextWrapper() {
             >
               <ReclaimTokensInPool
                 pool={cachedPool}
-                refreshKey={SWAP_REFRESH_KEY}
+                refreshKey={SWAP_RECLAIM_REFRESH}
                 onInputTokenClick={handleInputTokenClick}
                 inputToken={inputToken}
               />

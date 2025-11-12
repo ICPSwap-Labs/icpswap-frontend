@@ -1,8 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { Box, Typography, useTheme, makeStyles, Theme } from "components/Mui";
 import { DotLoading } from "components/index";
-import { useParsedQueryString, useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useParsedQueryString } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
 import { AlertTriangle } from "react-feather";
@@ -19,7 +18,8 @@ import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 import colors from "theme/colors";
 import { DepositButton } from "components/swap/reclaim/DepositButton";
 import { WithdrawButton } from "components/swap/reclaim/WithdrawButton";
-import { useIntervalUserWithdrawQueue } from "hooks/swap/useIntervalUserWithdrawQueue";
+import { useUnusedBalanceAndWithdrawQueue } from "hooks/swap/useUnusedBalanceAndWithdrawQueue";
+import { SWAP_REFRESH_KEY } from "constants/index";
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -57,18 +57,11 @@ export function ReclaimTokensInPool({
 }: ReclaimLinkProps) {
   const theme = useTheme();
   const classes = useStyles();
-  const principal = useAccountPrincipal();
   const { reclaim } = useParsedQueryString() as { reclaim: string };
 
   const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
-
-  const userWithdrawQueue = useIntervalUserWithdrawQueue(pool?.id);
-
-  const { balances } = useSwapUserUnusedTokenByPool(
-    pool,
-    principal,
-    refreshKey ? refreshTriggers[refreshKey] : undefined,
-  );
+  const { result } = useUnusedBalanceAndWithdrawQueue(pool, refreshKey ? refreshTriggers[refreshKey] : undefined);
+  const [balances, userWithdrawQueue] = result ?? [[], undefined];
 
   const { token0, token1 } = useMemo(() => {
     if (!pool) return {};
@@ -95,6 +88,8 @@ export function ReclaimTokensInPool({
     if (setRefreshTriggers && nonUndefinedOrNull(refreshKey)) {
       setRefreshTriggers(refreshKey);
     }
+
+    setRefreshTriggers(SWAP_REFRESH_KEY);
   }, [setRefreshTriggers, refreshKey]);
 
   const __fontSize = useMemo(() => {
@@ -135,17 +130,6 @@ export function ReclaimTokensInPool({
     return __availableWithdrawTokens;
   }, [token0, token1, token0TotalAmount, token1TotalAmount]);
 
-  const withdrawDisabled = useCallback(
-    (tokenId: string | undefined) => {
-      if (isUndefinedOrNull(userWithdrawQueue) || isUndefinedOrNull(tokenId)) return true;
-
-      const withdrawItem = userWithdrawQueue.items.find((element) => element.token.address === tokenId);
-
-      return nonUndefinedOrNull(withdrawItem);
-    },
-    [userWithdrawQueue],
-  );
-
   return nonUndefinedOrNull(pool) ? (
     <>
       {availableWithdrawTokens.length > 0 ? (
@@ -177,7 +161,7 @@ export function ReclaimTokensInPool({
                 balances={balances}
                 onReclaimSuccess={handleRefresh}
                 fontSize={__fontSize}
-                disabled={() => withdrawDisabled(availableWithdrawTokens[0].token.address)}
+                userWithdrawQueue={userWithdrawQueue}
               />
               {availableWithdrawTokens.length > 1 ? (
                 <>
@@ -198,7 +182,7 @@ export function ReclaimTokensInPool({
                     balances={balances}
                     onReclaimSuccess={handleRefresh}
                     fontSize={__fontSize}
-                    disabled={() => withdrawDisabled(availableWithdrawTokens[1].token.address)}
+                    userWithdrawQueue={userWithdrawQueue}
                   />
                 </>
               ) : null}
@@ -233,7 +217,7 @@ export function ReclaimTokensInPool({
                     balances={balances}
                     onReclaimSuccess={handleRefresh}
                     fontSize={__fontSize}
-                    disabled={() => withdrawDisabled(token0?.address)}
+                    userWithdrawQueue={userWithdrawQueue}
                   />
                 </Flex>
               </Flex>
@@ -266,7 +250,7 @@ export function ReclaimTokensInPool({
                     balances={balances}
                     onReclaimSuccess={handleRefresh}
                     fontSize={__fontSize}
-                    disabled={() => withdrawDisabled(token1?.address)}
+                    userWithdrawQueue={userWithdrawQueue}
                   />
                 </Flex>
               </Flex>
