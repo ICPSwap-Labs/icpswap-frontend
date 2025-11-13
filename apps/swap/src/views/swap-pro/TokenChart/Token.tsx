@@ -9,9 +9,8 @@ import { TokenListIdentifying } from "components/TokenListIdentifying";
 import { useSwapContext } from "components/swap";
 import { SwapProContext } from "components/swap/pro";
 import { useTranslation } from "react-i18next";
-import { AddPriceAlertsIcon, AddedPriceAlertsIcon } from "components/PriceAlerts";
-
-import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
+import { PriceAlertsIcon } from "components/PriceAlerts";
+import { TokenChartsViewSelector } from "views/swap-pro/TokenChart/TokenChartsViewSelector";
 
 interface MediasProps {
   mediaLinks: undefined | { k: string; v: string }[];
@@ -165,8 +164,7 @@ export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartI
         ) : null}
 
         <Box sx={{ display: "flex", gap: "0 10px" }}>
-          <AddPriceAlertsIcon />
-          <AddedPriceAlertsIcon />
+          <PriceAlertsIcon tokenId={tokenId} />
 
           {!matchDownSM ? <TokenChartsViewSelector /> : null}
 

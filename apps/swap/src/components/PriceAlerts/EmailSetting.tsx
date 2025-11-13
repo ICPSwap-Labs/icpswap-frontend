@@ -102,7 +102,13 @@ export function EmailSetting({ open, onClose }: EmailSettingProps) {
   }, [second, showGetCode, setSecond]);
 
   return (
-    <Modal open={open} title="Create alert" dialogWidth={PRICE_ALERTS_MODAL_WIDTH} onClose={onClose} onCancel={onClose}>
+    <Modal
+      open={open}
+      title={t("price.alerts.create.alert")}
+      dialogWidth={PRICE_ALERTS_MODAL_WIDTH}
+      onClose={onClose}
+      onCancel={onClose}
+    >
       <Typography>Email</Typography>
       <Box sx={{ margin: "9px 0 0 0" }}>
         <FilledTextField fullWidth placeholder="Enter email" onChange={handleSetEmail} />

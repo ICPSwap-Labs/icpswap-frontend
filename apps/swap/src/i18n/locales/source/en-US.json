@@ -1494,5 +1494,14 @@
   "price.alerts.email.send.success": "Email sent successfully",
   "price.alerts.email.send.failed": "Failed to sent email.Please try again later.",
   "price.alerts.email.verify.success": "Email verify successfully",
-  "price.alerts.email.verify.failed": "Failed to verify email."
+  "price.alerts.email.verify.failed": "Failed to verify email.",
+  "price.alerts.rises.to": "Price rises to {{value}}",
+  "price.alerts.drops.to": "Price drops to {{value}}",
+  "price.alerts.24h.increase.to": "24h increase: {{value}}%",
+  "price.alerts.24h.decrease.to": "24h decrease: {{value}}%",
+  "price.alerts.list.title": "Price Alerts",
+  "price.alerts.create.alert": "Create Alert",
+  "price.alerts.select.alert.type": "Select alert type",
+  "price.alerts.alert.type.every.time": "Every time triggered",
+  "price.alerts.alert.type.once.only": "Once only"
 }

@@ -1,8 +1,11 @@
+import { usePriceAlerts } from "@icpswap/hooks";
+import { Null } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { Box, useTheme } from "components/Mui";
 import { PriceAlerts } from "components/PriceAlerts/PriceAlerts";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
-export function AddedPriceAlertsIcon() {
+export function PriceAlertsIcons({ hasAlerts }: { hasAlerts: boolean }) {
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
 
@@ -21,7 +24,11 @@ export function AddedPriceAlertsIcon() {
         }}
         onClick={() => setOpen(true)}
       >
-        <img src="/images/swap/price-alerts-added.svg" alt="" />
+        {hasAlerts ? (
+          <img src="/images/swap/price-alerts-added.svg" alt="" />
+        ) : (
+          <img src="/images/swap/price-alerts-add.svg" alt="" />
+        )}
       </Box>
 
       {open ? <PriceAlerts open={open} onClose={() => setOpen(false)} /> : null}
@@ -29,23 +36,17 @@ export function AddedPriceAlertsIcon() {
   );
 }
 
-export function AddPriceAlertsIcon() {
-  const theme = useTheme();
+interface PriceAlertsIconProps {
+  tokenId: string | Null;
+}
 
-  return (
-    <Box
-      sx={{
-        width: "36px",
-        height: "36px",
-        borderRadius: "12px",
-        background: theme.palette.background.level4,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        cursor: "pointer",
-      }}
-    >
-      <img src="/images/swap/price-alerts-add.svg" alt="" />
-    </Box>
-  );
+export function PriceAlertsIcon({ tokenId }: PriceAlertsIconProps) {
+  const { data } = usePriceAlerts();
+
+  const hasAlerts = useMemo(() => {
+    if (isUndefinedOrNull(tokenId) || isUndefinedOrNull(data)) return undefined;
+    return !!data.find((element) => element.tokenId === tokenId);
+  }, [data, tokenId]);
+
+  return isUndefinedOrNull(hasAlerts) ? null : <PriceAlertsIcons hasAlerts={hasAlerts} />;
 }

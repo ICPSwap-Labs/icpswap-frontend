@@ -5,7 +5,7 @@ import { actor } from "../actor";
 
 export const priceAlerts = (identity?: true) =>
   actor.create<PriceAlertsService>({
-    canisterId: ActorName.PriceAlerts,
+    actorName: ActorName.PriceAlerts,
     idlFactory: PriceAlertsFactory,
     identity,
   });

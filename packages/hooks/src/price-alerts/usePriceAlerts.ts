@@ -1,4 +1,4 @@
-import { Null , AlertInfo, AlertType, AddAlertArgs } from "@icpswap/types";
+import { Null, AlertInfo, AddAlertArgs } from "@icpswap/types";
 import { icpswap_fetch_post, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { useQuery } from "@tanstack/react-query";
 import { priceAlerts } from "@icpswap/actor";

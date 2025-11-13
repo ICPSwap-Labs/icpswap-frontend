@@ -84,6 +84,7 @@ export interface FilledTextFieldProps {
   placeholderSize?: string;
   background?: string;
   textFieldProps?: TextFieldProps;
+  disabledTextColor?: string;
   [x: string]: any;
 }
 
@@ -167,6 +168,7 @@ function UIFilledTextField(
     background,
     labelSize,
     textFieldProps,
+    disabledTextColor,
     ...props
   }: FilledTextFieldProps,
   ref,
@@ -235,6 +237,11 @@ function UIFilledTextField(
                     "& input": {
                       lineHeight: "1.15rem",
                       fontSize: props.fontSize ?? "16px",
+                      "&.Mui-disabled": disabledTextColor
+                        ? {
+                            WebkitTextFillColor: disabledTextColor,
+                          }
+                        : {},
                     },
                     "& textarea": {
                       lineHeight: "1.15rem",
