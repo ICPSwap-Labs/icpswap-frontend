@@ -4,6 +4,7 @@ import { isUndefinedOrNull } from "@icpswap/utils";
 import { Box, useTheme } from "components/Mui";
 import { PriceAlerts } from "components/PriceAlerts/PriceAlerts";
 import { useMemo, useState } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 export function PriceAlertsIcons({ hasAlerts }: { hasAlerts: boolean }) {
   const theme = useTheme();
@@ -41,7 +42,8 @@ interface PriceAlertsIconProps {
 }
 
 export function PriceAlertsIcon({ tokenId }: PriceAlertsIconProps) {
-  const { data } = usePriceAlerts();
+  const principal = useAccountPrincipalString();
+  const { data } = usePriceAlerts(principal);
 
   const hasAlerts = useMemo(() => {
     if (isUndefinedOrNull(tokenId) || isUndefinedOrNull(data)) return undefined;

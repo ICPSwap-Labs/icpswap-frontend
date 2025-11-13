@@ -171,7 +171,7 @@ interface PriceAlertsProps {
 export function PriceAlerts({ open, onClose }: PriceAlertsProps) {
   const principal = useAccountPrincipalString();
   const { isPending: alertEmailPending, data: alertEmail } = usePriceAlertEmail(principal);
-  const { isPending: isAlertsPending, data: alerts, refetch } = usePriceAlerts();
+  const { isPending: isAlertsPending, data: alerts, refetch } = usePriceAlerts(principal);
   const { t } = useTranslation();
   const [showEmail, setShowEmail] = useShowEmailManager();
   const [showCreateAlert, setShowCreateAlert] = useState<boolean>(false);
