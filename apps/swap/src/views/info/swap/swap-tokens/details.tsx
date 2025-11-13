@@ -35,7 +35,7 @@ import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 import { InfoTokenPrices } from "components/info/swap/TokenPriceWithIcp";
 import { useFetchGlobalDefaultChartType } from "store/global/hooks";
 import { getChartView } from "utils/swap/chartType";
-import { TokenHoldersCharts } from "components/info/tokens/TokenHoldersCharts";
+import { TokenHoldersCharts } from "components/info/swap/TokenHoldersCharts";
 
 enum TabValue {
   Transactions = "Transactions",

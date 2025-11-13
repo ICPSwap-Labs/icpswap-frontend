@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
+import { Box, Typography } from "components/Mui";
 import { usePoolPositionHolders } from "@icpswap/hooks";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, shorten } from "@icpswap/utils";
@@ -7,7 +7,7 @@ import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
 import * as Highcharts from "highcharts";
-import { useMediaQuery640 } from "hooks/theme";
+import { PieChartTitle } from "components/info/swap/PieChart/PieChartTitle";
 
 const OTHER_ACCOUNTS = "Other accounts";
 const POSITION_SIZE = 20;
@@ -20,9 +20,7 @@ export interface PoolPositionHoldersChartsProps {
 
 export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHoldersChartsProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
   const { result } = usePoolPositionHolders(poolId, POSITION_SIZE);
-  const downMedia640 = useMediaQuery640();
 
   const { topHoldValue, topHoldPercent, totalPositionsValue, totalPositions } = useMemo(() => {
     if (isUndefinedOrNull(result)) return {};
@@ -140,93 +138,18 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
   return (
     <Box sx={{ width: "100%", padding: "0 25px" }}>
       <Box sx={{ width: "100%", overflow: "auto", border: "1px solid #29314F", borderRadius: "16px" }}>
-        <Flex
-          sx={{
-            height: downMedia640 ? "auto" : "72px",
-            borderBottom: "1px solid #29314F",
-            padding: downMedia640 ? "0 16px" : "0px",
-          }}
-          vertical={downMedia640}
-        >
-          <Box
-            sx={{
-              flex: downMedia640 ? "100%" : "50%",
-              width: downMedia640 ? "100%" : "fit-content",
-              padding: "16px 0",
-            }}
-          >
-            <Flex
-              fullWidth
-              gap="0 4px"
-              justify={downMedia640 ? "left" : "center"}
-              align={downMedia640 ? "top" : "center"}
-            >
-              <img
-                width={`${downMedia640 ? "16px" : "20px"}`}
-                height={`${downMedia640 ? "16px" : "20px"}`}
-                src="/images/icons/bulb.svg"
-                alt=""
-                style={{ position: "relative", top: downMedia640 ? "4px" : "0px" }}
-              />
-              <Typography
-                color="text.primary"
-                sx={{ "@media(max-width: 640px)": { fontSize: "12px", lineHeight: "18px" } }}
-              >
-                {t("info.swap.positions.holders.percent", {
-                  percent: topHoldPercent ? `${topHoldPercent}%` : "--",
-                  usdValue: topHoldValue ? `$${toFormat(new BigNumber(topHoldValue).toFixed(2))}` : "--",
-                  poolName: poolName ?? "",
-                  number: TOP_NUMBER,
-                })}
-              </Typography>
-            </Flex>
-          </Box>
-
-          <Box
-            sx={{
-              flex: downMedia640 ? "100%" : "50%",
-              borderLeft: downMedia640 ? "none" : `1px solid ${theme.palette.border["3"]}`,
-              borderTop: downMedia640 ? `1px solid ${theme.palette.border["3"]}` : "none",
-              padding: "16px 0",
-              width: downMedia640 ? "100%" : "fit-content",
-            }}
-          >
-            <Flex
-              fullWidth
-              justify={downMedia640 ? "left" : "center"}
-              gap="0 4px"
-              align={downMedia640 ? "top" : "center"}
-            >
-              <img
-                width={`${downMedia640 ? "16px" : "20px"}`}
-                height={`${downMedia640 ? "16px" : "20px"}`}
-                src="/images/icons/bulb.svg"
-                alt=""
-                style={{ position: "relative", top: downMedia640 ? "4px" : "0px" }}
-              />
-              <Flex>
-                <Typography
-                  color="text.primary"
-                  sx={{ paddingRight: "8px", "@media(max-width: 640px)": { fontSize: "12px" } }}
-                >
-                  {t("common.position.total.value.colon")}{" "}
-                  {totalPositionsValue ? `$${toFormat(new BigNumber(totalPositionsValue).toFixed(2))}` : "--"}
-                </Typography>
-
-                <Typography
-                  color="text.primary"
-                  sx={{
-                    borderLeft: "1px solid #ffffff",
-                    paddingLeft: "8px",
-                    "@media(max-width: 640px)": { fontSize: "12px" },
-                  }}
-                >
-                  {t("common.total.positions")} {totalPositions ?? "--"}
-                </Typography>
-              </Flex>
-            </Flex>
-          </Box>
-        </Flex>
+        <PieChartTitle
+          content0={t("info.swap.positions.holders.percent", {
+            percent: topHoldPercent ? `${topHoldPercent}%` : "--",
+            usdValue: topHoldValue ? `$${toFormat(new BigNumber(topHoldValue).toFixed(2))}` : "--",
+            poolName: poolName ?? "",
+            number: TOP_NUMBER,
+          })}
+          content1={`${t("common.position.total.value.colon")} ${
+            totalPositionsValue ? `$${toFormat(new BigNumber(totalPositionsValue).toFixed(2))}` : "--"
+          }`}
+          content2={`${t("common.total.positions")} ${totalPositions ?? "--"}`}
+        />
 
         <Box sx={{ margin: "24px 0 0 0" }}>
           <Flex justify="center">
