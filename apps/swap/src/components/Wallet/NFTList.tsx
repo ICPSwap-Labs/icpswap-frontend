@@ -1,15 +1,14 @@
-import { useMemo, useContext } from "react";
+import { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { Grid, Box, Typography, Avatar, useTheme } from "components/Mui";
 import { ImageLoading } from "@icpswap/ui";
 import NFTListHeader from "components/Wallet/NFTListHeader";
-import { useAccount } from "store/auth/hooks";
+import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 import { NoData } from "components/index";
 import { isICPSwapOfficial } from "utils/index";
 import { useSelectedCanistersManager, useEXTManager } from "store/nft/hooks";
 import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
 import type { NFTControllerInfo, EXTCollection, ExtNft } from "@icpswap/types";
-import { useWalletContext } from "components/Wallet/context";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 
 const ICPSwapPositionNFTs = [
@@ -95,8 +94,7 @@ export function NFTCanisterCard({ canister }: NFTCardProps) {
   const account = useAccount();
   const history = useHistory();
 
-  const { refreshCounter } = useWalletContext();
-  const { result: count } = useCanisterUserNFTCount(canister.cid, account, refreshCounter);
+  const { result: count } = useCanisterUserNFTCount(canister.cid, account);
   const { result: logo } = useCanisterLogo(canister.cid);
 
   const handleCardClick = () => {
@@ -130,8 +128,7 @@ export default function NFTList() {
   const { result, loading } = useNFTCanisterList(0, 1000);
   const nftCanisters = result?.content;
   const [userSelectedCanisters] = useSelectedCanistersManager();
-
-  const account = useAccount();
+  const principal = useAccountPrincipalString();
 
   const list = useMemo(() => {
     return nftCanisters?.filter((canister) => {
@@ -153,7 +150,7 @@ export default function NFTList() {
       .filter((e) => !!e) as EXTCollection[];
   }, [nfts, extAllCollections]);
 
-  const { result: userAllExtNfts } = useExtUserNFTs(account);
+  const { result: userAllExtNfts } = useExtUserNFTs(principal);
 
   return (
     <Box>

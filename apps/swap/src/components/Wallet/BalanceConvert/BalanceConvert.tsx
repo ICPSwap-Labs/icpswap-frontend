@@ -9,6 +9,7 @@ import { useSmallBalanceTokens, SmallBalanceResult } from "hooks/wallet/useSmall
 import { __getTokenInfo } from "hooks/token";
 import { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
+import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
 
 const GREATER_THAN_BALANCE_WOULD_BE_FILTERED = 5;
 
@@ -49,14 +50,14 @@ function SmallBalanceRow({ amount, icpAmount, infoToken, checked, onCheckedChang
 
 export function BalanceConvert() {
   const { t } = useTranslation();
+  const { setPages } = useWalletContext();
   const {
-    setPages,
     setTokensConvertToIcp,
     convertLoading,
     convertedTokenIds,
     checkedConvertTokenIds,
     setCheckedConvertTokenIds,
-  } = useWalletContext();
+  } = useBalanceConvertContext();
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.Index);

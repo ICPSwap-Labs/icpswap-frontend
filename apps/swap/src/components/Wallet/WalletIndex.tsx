@@ -3,6 +3,7 @@ import { Box, Drawer, useTheme } from "components/Mui";
 import { TokenAssetsWrapper } from "components/Wallet/TokenAssetsWrapper";
 import { TokenManager } from "components/Wallet/TokenManager";
 import { WalletManagerPage, useWalletContext } from "components/Wallet/context";
+import { useWalletTokenContext, AssetsType } from "components/Wallet/token/context";
 import { TokenReceive, TokenSend } from "components/Wallet/token/index";
 import { TokenSelector } from "components/Wallet/TokenSelector";
 import { AddressBook } from "components/Wallet/address-book/AddressBook";
@@ -19,6 +20,13 @@ import { useMediaQuery640 } from "hooks/theme";
 import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
 import { BalanceConvert } from "components/Wallet/BalanceConvert/BalanceConvert";
 import { ConvertToIcpConfirm } from "components/Wallet/BalanceConvert/Confirm";
+import { NFTCanister } from "components/Wallet/NFT/NFTCanister";
+import { NFTTokenDetails } from "components/Wallet/NFT/NFTTokenDetails";
+import { NFTSend } from "components/Wallet/NFT/NFTSend";
+import { NFTImporter } from "components/Wallet/NFT/NFTImporter";
+import { NFTExtCanister } from "components/Wallet/NFT/NFTExtCanister";
+import { NFTExtTokenDetails } from "components/Wallet/NFT/NFTExtTokenDetails";
+import { NFTExtSend } from "components/Wallet/NFT/NFTExtSend";
 
 const components = {
   [WalletManagerPage.Index]: <TokenAssetsWrapper />,
@@ -31,13 +39,21 @@ const components = {
   [WalletManagerPage.EditAddress]: <EditAddress />,
   [WalletManagerPage.SelectContact]: <SelectContact />,
   [WalletManagerPage.Convert]: <BalanceConvert />,
+  [WalletManagerPage.NFTCanister]: <NFTCanister />,
+  [WalletManagerPage.NFTTokenDetails]: <NFTTokenDetails />,
+  [WalletManagerPage.NFTSend]: <NFTSend />,
+  [WalletManagerPage.NFTImporter]: <NFTImporter />,
+  [WalletManagerPage.NFTExtCanister]: <NFTExtCanister />,
+  [WalletManagerPage.NFTExtTokenDetails]: <NFTExtTokenDetails />,
+  [WalletManagerPage.NFTExtSend]: <NFTExtSend />,
 };
 
 export function WalletIndex() {
   const theme = useTheme();
   const mediaQuery640 = useMediaQuery640();
   const principal = useAccountPrincipalString();
-  const { open, setOpen, pages, setPages, xtcTopUpShow, setXTCTopUpShow } = useWalletContext();
+  const { open, setOpen, pages, setPages } = useWalletContext();
+  const { xtcTopUpShow, setXTCTopUpShow, setActiveAssetsTab } = useWalletTokenContext();
 
   useEffect(() => {
     setPages(WalletManagerPage.Index);
@@ -46,7 +62,8 @@ export function WalletIndex() {
   const handleDrawerClose = useCallback(() => {
     setOpen(false);
     setPages(WalletManagerPage.Index);
-  }, [setOpen, setPages]);
+    setActiveAssetsTab(AssetsType.Token);
+  }, [setOpen, setPages, setActiveAssetsTab]);
 
   const handleStopPropagation = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();

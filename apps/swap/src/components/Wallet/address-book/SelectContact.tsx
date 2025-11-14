@@ -14,13 +14,15 @@ import { ADDRESS_BOOK_REFRESH } from "constants/index";
 import { JdenticonAvatar } from "components/JdenticonAvatar";
 import { useContactFilter } from "hooks/wallet/useContactFilter";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 
 interface AddressBookRowProps {
   addressBook: AddressBookType;
 }
 
 function AddressBookRow({ addressBook }: AddressBookRowProps) {
-  const { setPages, setSelectedContact } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { setSelectedContact, selectContactPrevPage } = useWalletAddressBookContext();
 
   const copyRef = useRef<CopyRef>(null);
 
@@ -34,8 +36,8 @@ function AddressBookRow({ addressBook }: AddressBookRowProps) {
 
   const handleAddressClick = useCallback(() => {
     setSelectedContact(addressBook);
-    setPages(WalletManagerPage.Send);
-  }, [addressBook, setPages, setSelectedContact]);
+    setPages(selectContactPrevPage);
+  }, [addressBook, setPages, setSelectedContact, selectContactPrevPage]);
 
   return (
     <>
@@ -69,12 +71,13 @@ export function SelectContact() {
   const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [refreshTrigger] = useRefreshTriggerManager(ADDRESS_BOOK_REFRESH);
-  const { setPages, setAddAddressBookPrevPage } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { setAddAddressBookPrevPage, selectContactPrevPage } = useWalletAddressBookContext();
   const [, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, setSearchKeyword, 300);
 
   const handlePrev = useCallback(() => {
-    setPages(WalletManagerPage.Send);
-  }, [setPages]);
+    setPages(selectContactPrevPage);
+  }, [selectContactPrevPage]);
 
   const handleAddAddress = useCallback(() => {
     setPages(WalletManagerPage.AddAddress);

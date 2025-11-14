@@ -15,6 +15,7 @@ import { ADDRESS_BOOK_REFRESH } from "constants/index";
 import { JdenticonAvatar } from "components/JdenticonAvatar";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useContactFilter } from "hooks/wallet/useContactFilter";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 
 interface AddressBookRowProps {
   addressBook: AddressBookType;
@@ -22,7 +23,7 @@ interface AddressBookRowProps {
 
 function AddressBookRow({ addressBook }: AddressBookRowProps) {
   const copyRef = useRef<CopyRef>(null);
-  const { deleteAddressBookLoading, deleteAddressBook } = useWalletContext();
+  const { deleteAddressBookLoading, deleteAddressBook } = useWalletAddressBookContext();
 
   const handleCopy = () => {
     if (copyRef) {
@@ -68,7 +69,8 @@ export function AddressBook() {
   const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [refreshTrigger] = useRefreshTriggerManager(ADDRESS_BOOK_REFRESH);
-  const { setPages, setAddAddressBookPrevPage } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { setAddAddressBookPrevPage } = useWalletAddressBookContext();
   const [searchValue, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, setSearchKeyword, 300);
 
   const handlePrev = useCallback(() => {

@@ -8,6 +8,7 @@ import QRCode from "components/qrcode";
 import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 import Copy from "components/Copy/index";
 import { ICP } from "@icpswap/tokens";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 
 enum TAB {
   Principal = "Principal",
@@ -22,7 +23,8 @@ const Tabs = [
 export function TokenReceive() {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState<TAB>(TAB.Principal);
-  const { setPages, tokenReceiveId } = useWalletContext();
+  const { setPages } = useWalletContext();
+  const { tokenReceiveId } = useWalletTokenContext();
   const principal = useAccountPrincipalString();
   const account = useAccount();
 

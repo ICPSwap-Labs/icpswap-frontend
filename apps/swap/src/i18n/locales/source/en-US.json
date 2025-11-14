@@ -613,7 +613,6 @@
   "common.confirmations": "Confirmations",
   "common.txid": "Txid",
   "farm.apr.descriptions": "This's the average APR for the pool. The total reward is {{reward}} ({{rewardUsd}}).",
-  "QeOBT9": "The token exists",
   "common.controllers": "Controllers",
   "ck.description": "Chain Fusion technology enables blockchains like Bitcoin, Ethereum, and Solana to be \"fused\" together with ICP, creating a seamless single-chain end-user experience for multi-chain DApps. Mint native Bitcoin, Ethereum, USDC, USDT, and more on ICP using the ck-Bridge.",
   "Qgf/HL": "Exceed the limit of supply",
@@ -1155,7 +1154,6 @@
   "olNCtw": "The claiming NFT tokenId does not exist",
   "omX5yT": "Participation is not allowed in your region",
   "common.farm": "Farm",
-  "nft.import": "Import NFT",
   "oss9j7": "Earned",
   "common.pool": "Pool",
   "common.default": "Default",
@@ -1379,6 +1377,7 @@
   "maintenance.title": "🚧 Page under maintenance 🚧",
   "common.close": "Close",
   "common.enter.address": "Enter the address",
+  "common.enter.canister.id": "Enter the canister ID",
   "ck.ether.dissolve.loading": "Transaction for dissolving ckETH failed to submit",
   "stake.create.enter.reward.token": "Enter the reward token",
   "common.fdv.usd": "FDV (USD)",
@@ -1486,5 +1485,10 @@
   "info.swap.positions.holders.percent": "The top {{number}} positions collectively own {{percent}} ({{usdValue}}) of {{poolName}}",
   "common.position.total.value.colon": "Positions total value: ",
   "common.total.positions": "Total positions: ",
-  "common.top.positions": "The top {{number}} positions"
+  "common.top.positions": "The top {{number}} positions",
+  "wallet.nft.send.placeholder": "Enter the memo",
+  "common.invalid.account.id": "Invalid account ID",
+  "wallet.nft.import": "Import NFT",
+  "common.invalid.canister.id": "Invalid canister ID",
+  "common.canister.id.exists": "The canister ID exists"
 }

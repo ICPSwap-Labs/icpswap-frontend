@@ -5,7 +5,7 @@ import { MainCard, Breadcrumbs, Wrapper, LoadingRow } from "components/index";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { makeStyles } from "@mui/styles";
-import { useAccount } from "store/auth/hooks";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import type { EXTCollection } from "@icpswap/types";
 import Avatar from "components/Image/Avatar";
 import { useTranslation } from "react-i18next";
@@ -138,10 +138,10 @@ export function CanisterHeader({ collection, count, loading }: NFTCanisterHeader
 export function ExtNftCollectionDetail() {
   const { t } = useTranslation();
   const { id: canisterId } = useParams<{ id: string }>();
-  const account = useAccount();
+  const principal = useAccountPrincipalString();
 
   const [reload, setReload] = useState(false);
-  const { result: userExtAllNfts, loading } = useExtUserNFTs(account, reload);
+  const { result: userExtAllNfts, loading } = useExtUserNFTs(principal, reload);
   const { result: extAllCollections } = useEXTAllCollections();
 
   const collection = useMemo(() => {

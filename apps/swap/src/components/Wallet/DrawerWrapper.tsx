@@ -60,7 +60,19 @@ export function DrawerWrapper({
           <Box sx={{ width: "24px", height: "24px", cursor: "pointer" }} onClick={handlePrev}>
             <img src="/images/wallet/arrow.svg" alt="" />
           </Box>
-          <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "text.primary", flex: 1, textAlign: "center" }}>
+          <Typography
+            sx={{
+              fontSize: "18px",
+              fontWeight: 500,
+              color: "text.primary",
+              flex: 1,
+              textAlign: "center",
+              maxWidth: "219px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {title}
           </Typography>
           <Box
