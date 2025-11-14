@@ -45,6 +45,7 @@ export type {
   ClaimInfo,
   FailedTransactionAction,
   AddLiquidityInfo,
+  UserWithdrawQueueInfo,
 } from "@icpswap/candid";
 
 export type LimitOrder = {

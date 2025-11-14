@@ -1,10 +1,11 @@
 import { useCallback, useMemo, useState } from "react";
 import { CircularProgress } from "components/Mui";
-import type { UserSwapPoolsBalance } from "@icpswap/types";
+import type { UserSwapPoolsBalance, UserWithdrawQueueInfo } from "@icpswap/types";
 import { Flex, TextButton } from "@icpswap/ui";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { useReclaim } from "hooks/swap/useReclaim";
 import { useTranslation } from "react-i18next";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 
 export interface WithdrawButtonProps {
   token: Token | undefined;
@@ -12,9 +13,18 @@ export interface WithdrawButtonProps {
   balances: UserSwapPoolsBalance[];
   onReclaimSuccess: () => void;
   fontSize?: string;
+  disabled?: () => boolean;
+  userWithdrawQueue?: UserWithdrawQueueInfo;
 }
 
-export function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSize }: WithdrawButtonProps) {
+export function WithdrawButton({
+  token,
+  pool,
+  balances,
+  onReclaimSuccess,
+  fontSize,
+  userWithdrawQueue,
+}: WithdrawButtonProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
@@ -50,9 +60,15 @@ export function WithdrawButton({ token, pool, balances, onReclaimSuccess, fontSi
   }, [__balances, loading, token, pool]);
 
   const disabled = useMemo(() => {
+    if (isUndefinedOrNull(token)) return true;
+    if (isUndefinedOrNull(userWithdrawQueue)) return true;
+
+    const withdrawItem = userWithdrawQueue.items.find((element) => element.token.address === token.address);
+    if (nonUndefinedOrNull(withdrawItem)) return true;
+
     if (!__balances || __balances.length === 0 || !token) return true;
     return false;
-  }, [__balances, token]);
+  }, [__balances, token, userWithdrawQueue]);
 
   return (
     <Flex gap="0 8px">
