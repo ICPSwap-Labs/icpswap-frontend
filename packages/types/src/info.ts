@@ -66,3 +66,17 @@ export type PoolPositionHolderResult = {
   totalPositionSize: number;
   positionList: Array<PoolPositionHolderRow>;
 };
+
+export type TokensTreeMapRow = {
+  tokenLedgerId: string;
+  tokenName: string;
+  tokenSymbol: string;
+  price: string;
+  priceChange24H: string;
+  fdv: string;
+  marketCap: string;
+  tvlUSD: string;
+  volumeUSD24H: string;
+  holder: string;
+  rank: string;
+};

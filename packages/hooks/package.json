@@ -28,6 +28,7 @@
     "@icpswap/tokens": "workspace:*",
     "@icpswap/types": "workspace:*",
     "@icpswap/utils": "workspace:*",
-    "bignumber.js": "^9.0.1"
+    "bignumber.js": "^9.0.1",
+    "@tanstack/react-query": "5.28.14"
   }
 }
