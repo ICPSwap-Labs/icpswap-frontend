@@ -1,4 +1,4 @@
-import { shorten, subaccountHexToBytes, toHexString } from "@icpswap/utils";
+import { nonUndefinedOrNull, shorten, subaccountHexToBytes, toHexString } from "@icpswap/utils";
 import { decodeIcrcAccount, encodeIcrcAccount } from "@dfinity/ledger-icrc";
 import { useMemo } from "react";
 import { Principal } from "@dfinity/principal";
@@ -8,6 +8,43 @@ import { Tooltip } from "./Tooltip";
 import { Typography, TypographyProps } from "./Mui";
 import { Flex } from "./Grid/index";
 import { Copy } from "./Copy";
+
+interface GetTextualAddressProps {
+  shorten?: boolean;
+  shortenLength?: number;
+  textualAddress?: string | undefined | null;
+  owner?: string | null;
+  account?: string | null;
+  subaccount?: string | null;
+  alias?: string;
+}
+
+export function getTextualAddress({
+  shorten: isShorten = true,
+  shortenLength = 8,
+  textualAddress,
+  owner: __owner,
+  account: __account,
+  subaccount: __subaccount,
+  alias,
+}: GetTextualAddressProps) {
+  const __textualAddress = nonUndefinedOrNull(textualAddress)
+    ? textualAddress
+    : nonUndefinedOrNull(__owner)
+    ? encodeIcrcAccount({
+        owner: Principal.fromText(__owner),
+        subaccount: __subaccount && __subaccount !== NONE_SUB_HEX ? subaccountHexToBytes(__subaccount) : undefined,
+      })
+    : nonUndefinedOrNull(__account)
+    ? __account
+    : undefined;
+
+  return nonUndefinedOrNull(alias)
+    ? alias
+    : isShorten
+    ? `${shorten(__textualAddress, shortenLength)}`
+    : __textualAddress;
+}
 
 export interface TextualAddressProps {
   copyable?: boolean;

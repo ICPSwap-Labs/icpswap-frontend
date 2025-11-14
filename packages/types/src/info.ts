@@ -47,3 +47,22 @@ export enum VolumeWindow {
   weekly,
   monthly,
 }
+
+export type PoolPositionHolderRow = {
+  accountId: string;
+  dayId: number;
+  poolId: string;
+  positionId: string;
+  snapshotTime: number;
+  token0Amount: string;
+  token0USDPrice: string;
+  token1Amount: string;
+  token1USDPrice: string;
+  value: string;
+};
+
+export type PoolPositionHolderResult = {
+  poolTvlUSD: string;
+  totalPositionSize: number;
+  positionList: Array<PoolPositionHolderRow>;
+};

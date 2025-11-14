@@ -1,7 +1,14 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
-import { formatDollarAmount, formatAmount, parseTokenAmount, explorerLink, BigNumber } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  formatAmount,
+  parseTokenAmount,
+  explorerLink,
+  BigNumber,
+  isUndefinedOrNull,
+} from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
 import { usePoolAPR, useInfoPool } from "@icpswap/hooks";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
@@ -18,6 +25,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
 import { TokenSymbol } from "components/TokenSymbol";
 import { getFee24HFromVolume24H } from "hooks/info/useFee24h";
+import { PoolPositionHoldersCharts } from "components/info/swap/PoolPositionHoldersCharts";
 
 import { PoolChart } from "./components/PoolChart";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
@@ -38,6 +46,7 @@ function PoolTokenTvl({ token, amount, tvl }: PoolTokenTvlProps) {
             color: "text.primary",
             fontWeight: 500,
           }}
+          component="div"
         >
           <TokenSymbol symbol={token?.symbol} typographyStyle="inherit" width={106} />
         </Typography>
@@ -81,6 +90,12 @@ export default function SwapPoolDetails() {
   };
 
   const apr = usePoolAPR({ volumeUSD: pool?.volumeUSD24H, tvlUSD: poolTvlUSD });
+
+  const poolName = useMemo(() => {
+    if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1)) return undefined;
+
+    return `${token0.symbol}/${token1.symbol}`;
+  }, [token0, token1]);
 
   return (
     <InfoWrapper>
@@ -318,7 +333,12 @@ export default function SwapPoolDetails() {
             {tab === TabValue.Transactions ? (
               <PoolTransactions canisterId={canisterId} styleProps={{ padding: "24px" }} />
             ) : null}
-            {tab === TabValue.Positions ? <PositionTable poolId={canisterId} padding="24px" /> : null}
+            {tab === TabValue.Positions ? (
+              <>
+                <PoolPositionHoldersCharts poolId={canisterId} poolName={poolName} />
+                <PositionTable poolId={canisterId} padding="24px" />
+              </>
+            ) : null}
           </Box>
         </MainCard>
       </Box>

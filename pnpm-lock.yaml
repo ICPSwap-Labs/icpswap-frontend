@@ -67,6 +67,9 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.13
+      jotai:
+        specifier: ^2.15.0
+        version: 2.15.0(@babel/core@7.26.0)(@babel/template@7.25.9)(@types/react@18.2.0)(react@18.2.0)
       jsbi:
         specifier: ^4.3.0
         version: 4.3.0
@@ -347,6 +350,9 @@ importers:
       ethers:
         specifier: ^5.7.2
         version: 5.7.2(bufferutil@4.0.8)
+      highcharts:
+        specifier: 12.4.0
+        version: 12.4.0
       i18next:
         specifier: 23.10.0
         version: 23.10.0
@@ -7253,6 +7259,9 @@ packages:
   hey-listen@1.0.8:
     resolution: {integrity: sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==}
 
+  highcharts@12.4.0:
+    resolution: {integrity: sha512-o6UxxfChSUrvrZUbWrAuqL1HO/+exhAUPcZY6nnqLsadZQlnP16d082sg7DnXKZCk1gtfkyfkp6g3qkIZ9miZg==}
+
   history@4.10.1:
     resolution: {integrity: sha512-36nwAD620w12kuzPAsyINPWJqlNbij+hpK1k9XRloDtym8mxzGYl2c17LnV6IAGB2Dmg4tEa7G7DlawS0+qjew==}
 
@@ -8305,6 +8314,24 @@ packages:
   jiti@2.4.0:
     resolution: {integrity: sha512-H5UpaUI+aHOqZXlYOaFP/8AzKsg+guWu+Pr3Y8i7+Y3zr1aXAvCvTAQ1RxSc6oVD8R8c7brgNtTVP91E7upH/g==}
     hasBin: true
+
+  jotai@2.15.0:
+    resolution: {integrity: sha512-nbp/6jN2Ftxgw0VwoVnOg0m5qYM1rVcfvij+MZx99Z5IK13eGve9FJoCwGv+17JvVthTjhSmNtT5e1coJnr6aw==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@babel/core': '>=7.0.0'
+      '@babel/template': '>=7.0.0'
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@babel/core':
+        optional: true
+      '@babel/template':
+        optional: true
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   jpeg-js@0.4.4:
     resolution: {integrity: sha512-WZzeDOEtTOBK4Mdsar0IqEU5sMr3vSV2RqkAIzUEV2BHnUfKGyswWFPFwK5EeDo93K3FohSHbLAjj0s1Wzd+dg==}
@@ -11000,6 +11027,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   sourcemap-codec@1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
@@ -21148,6 +21176,8 @@ snapshots:
 
   hey-listen@1.0.8: {}
 
+  highcharts@12.4.0: {}
+
   history@4.10.1:
     dependencies:
       '@babel/runtime': 7.25.0
@@ -22913,6 +22943,13 @@ snapshots:
   jiti@1.21.6: {}
 
   jiti@2.4.0: {}
+
+  jotai@2.15.0(@babel/core@7.26.0)(@babel/template@7.25.9)(@types/react@18.2.0)(react@18.2.0):
+    optionalDependencies:
+      '@babel/core': 7.26.0
+      '@babel/template': 7.25.9
+      '@types/react': 18.2.0
+      react: 18.2.0
 
   jpeg-js@0.4.4: {}
 
