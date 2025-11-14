@@ -21,6 +21,7 @@ export interface FinishedFarmRowUIProps {
   your?: boolean;
   filterState: FilterState;
   initArgs: InitFarmArgs | Null;
+  isFirst?: boolean;
 }
 
 export function FinishedFarmRowUI({
@@ -31,6 +32,7 @@ export function FinishedFarmRowUI({
   your,
   filterState,
   initArgs,
+  isFirst,
 }: FinishedFarmRowUIProps) {
   const theme = useTheme();
 
@@ -45,7 +47,7 @@ export function FinishedFarmRowUI({
             },
           },
           "& .row-item": {
-            borderTop: `1px solid ${theme.palette.background.level1}`,
+            borderTop: isFirst ? "none" : `1px solid ${theme.palette.background.level1}`,
             padding: "20px 0",
             "&:first-of-type": {
               padding: "20px 0 20px 24px",
