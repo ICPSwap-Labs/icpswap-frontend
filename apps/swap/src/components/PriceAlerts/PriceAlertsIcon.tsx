@@ -3,12 +3,13 @@ import { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { Box, useTheme } from "components/Mui";
 import { PriceAlerts } from "components/PriceAlerts/PriceAlerts";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAlertsOpenManager, useAlertsRefetchManager } from "./state";
 
 export function PriceAlertsIcons({ hasAlerts }: { hasAlerts: boolean }) {
   const theme = useTheme();
-  const [open, setOpen] = useState<boolean>(false);
+  const [, setAlertsOpen] = useAlertsOpenManager();
 
   return (
     <>
@@ -23,7 +24,7 @@ export function PriceAlertsIcons({ hasAlerts }: { hasAlerts: boolean }) {
           justifyContent: "center",
           cursor: "pointer",
         }}
-        onClick={() => setOpen(true)}
+        onClick={() => setAlertsOpen(true)}
       >
         {hasAlerts ? (
           <img src="/images/swap/price-alerts-added.svg" alt="" />
@@ -31,8 +32,6 @@ export function PriceAlertsIcons({ hasAlerts }: { hasAlerts: boolean }) {
           <img src="/images/swap/price-alerts-add.svg" alt="" />
         )}
       </Box>
-
-      {open ? <PriceAlerts open={open} onClose={() => setOpen(false)} /> : null}
     </>
   );
 }
@@ -43,12 +42,27 @@ interface PriceAlertsIconProps {
 
 export function PriceAlertsIcon({ tokenId }: PriceAlertsIconProps) {
   const principal = useAccountPrincipalString();
-  const { data } = usePriceAlerts(principal);
+  const queryResult = usePriceAlerts(principal);
+  const [alertsOpen, setAlertsOpen] = useAlertsOpenManager();
+  const [, setAlertsRefetch] = useAlertsRefetchManager();
+
+  const { data, isPending } = queryResult;
+
+  useEffect(() => {
+    setAlertsRefetch(queryResult);
+  }, [queryResult?.refetch, setAlertsRefetch]);
 
   const hasAlerts = useMemo(() => {
     if (isUndefinedOrNull(tokenId) || isUndefinedOrNull(data)) return undefined;
     return !!data.find((element) => element.tokenId === tokenId);
   }, [data, tokenId]);
 
-  return isUndefinedOrNull(hasAlerts) ? null : <PriceAlertsIcons hasAlerts={hasAlerts} />;
+  return (
+    <>
+      {isUndefinedOrNull(hasAlerts) ? null : <PriceAlertsIcons hasAlerts={hasAlerts} />}
+      {alertsOpen ? (
+        <PriceAlerts open={alertsOpen} onClose={() => setAlertsOpen(false)} isPending={isPending} alerts={data} />
+      ) : null}
+    </>
+  );
 }

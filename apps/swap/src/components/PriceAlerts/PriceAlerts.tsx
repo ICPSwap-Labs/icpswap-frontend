@@ -1,17 +1,18 @@
 import { Flex, LoadingRow, Modal, NoData, Proportion } from "@icpswap/ui";
 import { Box, Button, Typography, useTheme, Collapse } from "components/Mui";
 import { ArrowUp, ChevronUp } from "react-feather";
-import { deletePriceAlert, useInfoToken, usePriceAlertEmail, usePriceAlerts } from "@icpswap/hooks";
+import { deletePriceAlert, useInfoToken, usePriceAlertEmail } from "@icpswap/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { formatDollarTokenPrice, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { ResultStatus, type AlertInfo } from "@icpswap/types";
-import { PRICE_ALERTS_MODAL_WIDTH } from "constants/swap";
+import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
 import { useCallback, useMemo, useState } from "react";
 import { EmailSetting } from "components/PriceAlerts/EmailSetting";
 import { CreateAlertsModal } from "components/PriceAlerts/CreateAlerts";
 import { useTranslation } from "react-i18next";
 import { TIP_ERROR, TIP_SUCCESS, useTips, useToken } from "hooks/index";
-import { useShowEmailManager } from "components/PriceAlerts/state";
+import { useResetEmailManager, useShowEmailManager, useAlertsRefetchManager } from "components/PriceAlerts/state";
+import { TokenImage } from "components/Image";
 
 enum COLOR {
   up = "#54C081",
@@ -25,14 +26,14 @@ type SortedAlerts = {
 
 interface PriceAlertRowProps {
   alert: AlertInfo;
-  refetch: () => void;
 }
 
-function PriceAlertRow({ alert, refetch }: PriceAlertRowProps) {
+function PriceAlertRow({ alert }: PriceAlertRowProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const [openTip] = useTips();
   const [loading, setLoading] = useState(false);
+  const [alertQueryResult] = useAlertsRefetchManager();
 
   const alert_message = useMemo(() => {
     const type = alert.alertType;
@@ -61,13 +62,13 @@ function PriceAlertRow({ alert, refetch }: PriceAlertRowProps) {
 
     if (status === ResultStatus.OK) {
       openTip("Delete alert successfully", TIP_SUCCESS);
-      refetch();
+      if (alertQueryResult?.refetch) alertQueryResult.refetch();
     } else {
       openTip(message ?? "Failed to delete alert", TIP_ERROR);
     }
 
     setLoading(false);
-  }, [alert, openTip, refetch]);
+  }, [alert, openTip, alertQueryResult?.refetch]);
 
   return (
     <Box
@@ -114,11 +115,10 @@ function PriceAlertRow({ alert, refetch }: PriceAlertRowProps) {
 
 interface PriceAlertsGroupProps {
   alerts: Array<AlertInfo>;
-  refetch: () => void;
   tokenId: string;
 }
 
-function PriceAlertsGroup({ alerts, tokenId, refetch }: PriceAlertsGroupProps) {
+function PriceAlertsGroup({ alerts, tokenId }: PriceAlertsGroupProps) {
   const [, token] = useToken(tokenId);
   const infoToken = useInfoToken(tokenId);
 
@@ -131,7 +131,10 @@ function PriceAlertsGroup({ alerts, tokenId, refetch }: PriceAlertsGroupProps) {
   return (
     <Box>
       <Flex fullWidth justify="space-between" sx={{ cursor: "pointer" }} onClick={handleToggle}>
-        <Typography sx={{ color: "text.primary", fontSize: "16px", fontWeight: 500 }}>{token?.symbol}</Typography>
+        <Flex gap="0 8px">
+          <TokenImage size="28px" tokenId={token?.address} logo={token?.logo} />
+          <Typography sx={{ color: "text.primary", fontSize: "16px", fontWeight: 500 }}>{token?.symbol}</Typography>
+        </Flex>
         <Flex gap="0 12px">
           {nonUndefinedOrNull(infoToken) ? (
             <Flex vertical gap="4px 0" align="flex-end">
@@ -155,7 +158,7 @@ function PriceAlertsGroup({ alerts, tokenId, refetch }: PriceAlertsGroupProps) {
       <Collapse in={open} timeout="auto" sx={{ width: "100%" }}>
         <Flex vertical fullWidth align="flex-start" gap="8px 0" sx={{ margin: "16px 0 0 0" }}>
           {alerts.map((element) => (
-            <PriceAlertRow key={element.id.toString()} alert={element} refetch={refetch} />
+            <PriceAlertRow key={element.id.toString()} alert={element} />
           ))}
         </Flex>
       </Collapse>
@@ -166,15 +169,18 @@ function PriceAlertsGroup({ alerts, tokenId, refetch }: PriceAlertsGroupProps) {
 interface PriceAlertsProps {
   open: boolean;
   onClose?: () => void;
+  alerts: AlertInfo[] | undefined;
+  isPending: boolean;
 }
 
-export function PriceAlerts({ open, onClose }: PriceAlertsProps) {
+export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts }: PriceAlertsProps) {
   const principal = useAccountPrincipalString();
-  const { isPending: alertEmailPending, data: alertEmail } = usePriceAlertEmail(principal);
-  const { isPending: isAlertsPending, data: alerts, refetch } = usePriceAlerts(principal);
+  const { isPending: alertEmailPending, data: alertEmail, refetch: refetchAlertEmail } = usePriceAlertEmail(principal);
   const { t } = useTranslation();
   const [showEmail, setShowEmail] = useShowEmailManager();
   const [showCreateAlert, setShowCreateAlert] = useState<boolean>(false);
+  const [, setIsResetEmail] = useResetEmailManager();
+  const [alertQueryResult] = useAlertsRefetchManager();
 
   const handleCreateAlert = useCallback(() => {
     if (alertEmailPending) return;
@@ -186,9 +192,9 @@ export function PriceAlerts({ open, onClose }: PriceAlertsProps) {
     setShowCreateAlert(true);
   }, [alertEmail, alertEmailPending]);
 
-  const handleRefreshAlerts = useCallback(() => {
-    refetch();
-  }, [refetch]);
+  const handleCreateAlertSuccess = useCallback(() => {
+    if (alertQueryResult?.refetch) alertQueryResult.refetch();
+  }, [alertQueryResult?.refetch]);
 
   const sortedAlerts = useMemo(() => {
     if (isUndefinedOrNull(alerts)) return [];
@@ -210,6 +216,16 @@ export function PriceAlerts({ open, onClose }: PriceAlertsProps) {
       return new_alerts;
     }, [] as Array<SortedAlerts>);
   }, [alerts]);
+
+  const handleEmailSettingClose = useCallback(() => {
+    setShowEmail(false);
+    setIsResetEmail(false);
+  }, [setShowEmail, setIsResetEmail]);
+
+  const handleVerifySuccess = useCallback(() => {
+    setShowCreateAlert(true);
+    refetchAlertEmail();
+  }, [setShowCreateAlert, refetchAlertEmail]);
 
   return (
     <>
@@ -237,12 +253,7 @@ export function PriceAlerts({ open, onClose }: PriceAlertsProps) {
           ) : (
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: "30px 0" }}>
               {sortedAlerts.map((element) => (
-                <PriceAlertsGroup
-                  key={element.tokenId.toString()}
-                  alerts={element.alerts}
-                  tokenId={element.tokenId}
-                  refetch={refetch}
-                />
+                <PriceAlertsGroup key={element.tokenId.toString()} alerts={element.alerts} tokenId={element.tokenId} />
               ))}
             </Box>
           )}
@@ -255,13 +266,15 @@ export function PriceAlerts({ open, onClose }: PriceAlertsProps) {
         </Box>
       </Modal>
 
-      {showEmail ? <EmailSetting open={showEmail} onClose={() => setShowEmail(false)} /> : null}
-      {showCreateAlert && alertEmail ? (
+      {showEmail ? (
+        <EmailSetting open={showEmail} onClose={handleEmailSettingClose} onVerifySuccess={handleVerifySuccess} />
+      ) : null}
+      {showCreateAlert ? (
         <CreateAlertsModal
           open={showCreateAlert}
           onClose={() => setShowCreateAlert(false)}
           email={alertEmail}
-          onCreateSuccess={handleRefreshAlerts}
+          onCreateSuccess={handleCreateAlertSuccess}
         />
       ) : null}
     </>

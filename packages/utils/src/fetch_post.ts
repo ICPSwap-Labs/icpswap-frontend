@@ -10,15 +10,13 @@ function resultFormat<T>(result: IcpSwapAPIResult<T> | undefined) {
       data: result.data,
       message: "",
     };
-  } if (result.code === 709) {
-    return {
-      status: ResultStatus.ERROR,
-      data: result.data,
-      message: result.message,
-    };
   }
 
-  return undefined;
+  return {
+    status: ResultStatus.ERROR,
+    data: result.data,
+    message: result.message,
+  };
 }
 
 export async function fetch_post<T>(api: string, data?: any): Promise<StatusResult<T> | undefined> {

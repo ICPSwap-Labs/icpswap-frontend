@@ -1,4 +1,4 @@
-import { PRICE_ALERTS_EMAIL_SECOND } from "constants/swap";
+import { PRICE_ALERTS_EMAIL_SECOND } from "constants/price-alerts";
 
 export interface PriceAlertsState {
   showGetCode: boolean;

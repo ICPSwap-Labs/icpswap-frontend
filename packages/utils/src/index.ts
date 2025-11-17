@@ -36,3 +36,4 @@ export * from "./numDecimals";
 export * from "./fetch_post";
 export * from "./urlStringParse";
 export * from "./replaceBrowserHistoryMultiple";
+export * from "./validateEmail";

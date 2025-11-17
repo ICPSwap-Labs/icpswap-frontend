@@ -1,5 +1,5 @@
 import { Override } from "@icpswap/types";
-import FilledTextField, { FilledTextFieldProps } from "components/Input/FilledTextField";
+import { FilledTextField, FilledTextFieldProps } from "@icpswap/ui";
 import { TextFieldNumberComponent, NumericProps } from "components/Input/NumberTextField";
 
 export type NumberFilledTextFieldProps = Override<FilledTextFieldProps, { numericProps: NumericProps }>;

@@ -1,7 +1,7 @@
 import { Flex, Modal, FilledTextField, TextButton } from "@icpswap/ui";
 import { Box, Button, Typography, useTheme, CircularProgress } from "components/Mui";
 import { SelectToken } from "components/Select/SelectToken";
-import { PRICE_ALERTS_MODAL_WIDTH } from "constants/swap";
+import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
 import { useCallback, useMemo, useState } from "react";
 import { AlertTypeSelector } from "components/PriceAlerts/AlertTypeSelector";
 import { NumberFilledTextField } from "components/Input/NumberFilledTextField";
@@ -10,7 +10,7 @@ import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { addPriceAlert } from "@icpswap/hooks";
 import { ResultStatus, type AlertType } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
-import { useShowEmailManager } from "components/PriceAlerts/state";
+import { useResetEmailManager, useShowEmailManager } from "components/PriceAlerts/state";
 
 interface SelectButtonProps {
   height?: string;
@@ -45,7 +45,7 @@ function SelectButton({ text, height = "48px", active, onClick }: SelectButtonPr
 interface CreateAlertsModalProps {
   open: boolean;
   onClose: () => void;
-  email: string;
+  email: string | undefined;
   onCreateSuccess?: () => void;
 }
 
@@ -59,13 +59,15 @@ export function CreateAlertsModal({ open, onClose, email, onCreateSuccess }: Cre
   const [, token] = useToken(tokenId);
   const [openTip] = useTips();
   const [, setShowEmail] = useShowEmailManager();
+  const [, setIsResetEmail] = useResetEmailManager();
 
   const handleAdd = useCallback(async () => {
     if (
       isUndefinedOrNull(tokenId) ||
       isUndefinedOrNull(alertFrequency) ||
       isUndefinedOrNull(alertType) ||
-      isUndefinedOrNull(targetPrice)
+      isUndefinedOrNull(targetPrice) ||
+      isUndefinedOrNull(email)
     )
       return;
 
@@ -98,6 +100,11 @@ export function CreateAlertsModal({ open, onClose, email, onCreateSuccess }: Cre
     return undefined;
   }, [tokenId, alertFrequency, alertType, targetPrice]);
 
+  const handleChangeEmail = useCallback(() => {
+    setIsResetEmail(true);
+    setShowEmail(true);
+  }, [setIsResetEmail, setShowEmail]);
+
   return (
     <Modal open={open} title={t("price.alerts.create.alert")} dialogWidth={PRICE_ALERTS_MODAL_WIDTH} onClose={onClose}>
       <Flex fullWidth align="flex-start" vertical gap="16px 0">
@@ -128,6 +135,8 @@ export function CreateAlertsModal({ open, onClose, email, onCreateSuccess }: Cre
                 allowNegative: false,
                 maxLength: 20,
               }}
+              fontSize="14px"
+              placeholderSize="14px"
             />
           </Box>
         </Box>
@@ -157,9 +166,15 @@ export function CreateAlertsModal({ open, onClose, email, onCreateSuccess }: Cre
         <Box sx={{ width: "100%" }}>
           <Typography>Email</Typography>
           <Box sx={{ width: "100%", margin: "12px 0 0 0" }}>
-            <FilledTextField value={email} disabled disabledTextColor="#ffffff" />
+            <FilledTextField
+              value={email}
+              disabled
+              disabledTextColor="#ffffff"
+              fontSize="14px"
+              placeholderSize="14px"
+            />
             <Flex sx={{ margin: "12px 0 0 0" }} justify="flex-end">
-              <TextButton onClick={() => setShowEmail(true)}>Change Email</TextButton>
+              <TextButton onClick={handleChangeEmail}>Change Email</TextButton>
             </Flex>
           </Box>
         </Box>

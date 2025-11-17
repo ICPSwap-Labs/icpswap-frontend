@@ -1,21 +1,23 @@
 import { sendPriceAlertEmail, verifyPriceAlertEmail } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { FilledTextField, Modal, TextButton } from "@icpswap/ui";
-import { isUndefinedOrNull, isUndefinedOrNullOrEmpty } from "@icpswap/utils";
+import { isUndefinedOrNull, isUndefinedOrNullOrEmpty, validateEmail } from "@icpswap/utils";
 import { Box, Button, Typography, InputAdornment, CircularProgress } from "components/Mui";
-import { PRICE_ALERTS_MODAL_WIDTH, PRICE_ALERTS_EMAIL_SECOND } from "constants/swap";
+import { PRICE_ALERTS_MODAL_WIDTH, PRICE_ALERTS_EMAIL_SECOND } from "constants/price-alerts";
 import { TIP_ERROR, TIP_SUCCESS, useTips } from "hooks/index";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useEmailSecondManger, useShowGetCodeManager } from "store/price-alerts/hooks";
+import { useResetEmailManager } from "components/PriceAlerts/state";
 
 interface EmailSettingProps {
   open: boolean;
   onClose?: () => void;
+  onVerifySuccess?: () => void;
 }
 
-export function EmailSetting({ open, onClose }: EmailSettingProps) {
+export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
@@ -25,18 +27,19 @@ export function EmailSetting({ open, onClose }: EmailSettingProps) {
   const [code, setCode] = useState<string | undefined>(undefined);
   const [showGetCode, setShowGetCode] = useShowGetCodeManager();
   const [second, setSecond] = useEmailSecondManger();
+  const [isResetEmail] = useResetEmailManager();
 
   const handleGetCode = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(email)) return;
 
     setShowGetCode(false);
 
-    const { status } = await sendPriceAlertEmail({ principal, email });
+    const { status, message } = await sendPriceAlertEmail({ principal, email });
 
     if (status === ResultStatus.OK) {
       openTip(t("price.alerts.email.send.success"), TIP_SUCCESS);
     } else {
-      openTip(t("price.alerts.email.send.failed"), TIP_ERROR);
+      openTip(message ?? t("price.alerts.email.send.failed"), TIP_ERROR);
     }
   }, [second, setSecond, email, principal]);
 
@@ -64,12 +67,13 @@ export function EmailSetting({ open, onClose }: EmailSettingProps) {
     if (status === ResultStatus.OK) {
       openTip(t("price.alerts.email.verify.success"), TIP_SUCCESS);
       if (onClose) onClose();
+      if (onVerifySuccess) onVerifySuccess();
     } else {
-      openTip(isUndefinedOrNullOrEmpty(message) ? message : t("price.alerts.email.verify.failed"), TIP_ERROR);
+      openTip(isUndefinedOrNullOrEmpty(message) ? t("price.alerts.email.verify.failed") : message, TIP_ERROR);
     }
 
     setVerifyLoading(false);
-  }, [principal, email, code, onClose]);
+  }, [principal, email, code, onClose, onVerifySuccess]);
 
   useEffect(() => {
     let timer: number | null;
@@ -101,6 +105,12 @@ export function EmailSetting({ open, onClose }: EmailSettingProps) {
     };
   }, [second, showGetCode, setSecond]);
 
+  const disableGetCode = useMemo(() => {
+    if (isUndefinedOrNull(email)) return true;
+
+    return !validateEmail(email);
+  }, [email]);
+
   return (
     <Modal
       open={open}
@@ -109,9 +119,13 @@ export function EmailSetting({ open, onClose }: EmailSettingProps) {
       onClose={onClose}
       onCancel={onClose}
     >
-      <Typography>Email</Typography>
+      {isResetEmail ? <Typography>New Email</Typography> : <Typography>Email</Typography>}
       <Box sx={{ margin: "9px 0 0 0" }}>
-        <FilledTextField fullWidth placeholder="Enter email" onChange={handleSetEmail} />
+        <FilledTextField
+          fullWidth
+          placeholder={isResetEmail ? "Enter new email" : "Enter email"}
+          onChange={handleSetEmail}
+        />
       </Box>
       <Box sx={{ margin: "12px 0 0 0" }}>
         <FilledTextField
@@ -130,6 +144,7 @@ export function EmailSetting({ open, onClose }: EmailSettingProps) {
                           },
                         }}
                         onClick={handleGetCode}
+                        disabled={disableGetCode}
                       >
                         Get code
                       </TextButton>
