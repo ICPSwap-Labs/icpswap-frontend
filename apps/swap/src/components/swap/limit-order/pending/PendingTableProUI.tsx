@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => {
       alignItems: "center",
       padding: "16px",
       borderBottom: `1px solid ${theme.palette.background.level1}`,
-      gridTemplateColumns: "180px repeat(2, 1fr) 1.5fr 1.5fr 160px",
+      gridTemplateColumns: "180px repeat(2, 1fr) 1.5fr 140px 80px",
     },
   };
 });
@@ -68,7 +68,7 @@ export function PendingTableProUI({
             <HeaderCell>{t("common.time")}</HeaderCell>
             <HeaderCell>{t("common.you.pay")}</HeaderCell>
             <HeaderCell>{t("common.you.receive")}</HeaderCell>
-            <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
+            <HeaderCell align="right">Limit/Current price</HeaderCell>
             <HeaderCell align="right">{t("common.filled")}</HeaderCell>
             <HeaderCell align="right">&nbsp;</HeaderCell>
           </Header>

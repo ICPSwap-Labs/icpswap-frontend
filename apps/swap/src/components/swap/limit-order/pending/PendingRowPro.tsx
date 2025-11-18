@@ -1,5 +1,5 @@
 import { Pool } from "@icpswap/swap-sdk";
-import { TableRow, BodyCell, TextButton } from "@icpswap/ui";
+import { TableRow, BodyCell, TextButton, Flex } from "@icpswap/ui";
 import { LoadingRow, TokenImage } from "components/index";
 import { usePositionWithPool } from "hooks/swap/index";
 import { LimitOrder, Null } from "@icpswap/types";
@@ -11,7 +11,6 @@ import {
   isUndefinedOrNull,
   parseTokenAmount,
   BigNumber,
-  formatTokenPrice,
   formatAmount,
 } from "@icpswap/utils";
 import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
@@ -21,9 +20,9 @@ import { ExternalTipArgs } from "types/index";
 import { useLoadingTip, useErrorTip } from "hooks/useTips";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { LimitDetails, CancelLimitConfirm, LimitDealRatio } from "components/swap/limit-order/index";
+import { LimitAndCurrentPrice } from "components/swap/limit-order/pending/LimitAndCurrentPrice";
 
 export interface PendingRowProProps {
   limitOrder: LimitOrder;
@@ -136,29 +135,19 @@ export function PendingRowPro({
             sx={{ justifyContent: "flex-end", alignItems: "center", gap: "0 4px" }}
             onClick={() => setInvertPrice(!invertPrice)}
           >
-            <Typography sx={{ fontSize: "inherit", color: "inherit", textAlign: "right", wordBreak: "break-word" }}>
-              {limitPrice
-                ? invertPrice
-                  ? `1 ${outputToken.symbol} = ${formatTokenPrice(
-                      new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
-                    )} ${inputToken.symbol}`
-                  : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
-                      outputToken.symbol
-                    }`
-                : "--"}
-            </Typography>
-
-            <SyncAltIcon
-              sx={{
-                fontSize: "1rem",
-                color: "#ffffff",
-              }}
-            />
+            <Flex vertical align="flex-end">
+              <LimitAndCurrentPrice
+                inputToken={inputToken}
+                outputToken={outputToken}
+                limitPrice={limitPrice}
+                pool={pool}
+              />
+            </Flex>
           </BodyCell>
 
           {/* Filled */}
           <BodyCell sx={{ justifyContent: "flex-end" }}>
-            <LimitDealRatio position={position} limit={limitOrder} />
+            <LimitDealRatio position={position} limit={limitOrder} width="60px" />
           </BodyCell>
 
           <BodyCell sx={{ justifyContent: "flex-end" }}>
