@@ -3,9 +3,9 @@ import { ResultStatus } from "@icpswap/types";
 import { FilledTextField, Modal, TextButton } from "@icpswap/ui";
 import { isUndefinedOrNull, isUndefinedOrNullOrEmpty, validateEmail } from "@icpswap/utils";
 import { Box, Button, Typography, InputAdornment, CircularProgress } from "components/Mui";
-import { PRICE_ALERTS_MODAL_WIDTH, PRICE_ALERTS_EMAIL_SECOND } from "constants/price-alerts";
+import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
 import { TIP_ERROR, TIP_SUCCESS, useTips } from "hooks/index";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useEmailSecondManger, useShowGetCodeManager } from "store/price-alerts/hooks";
@@ -26,7 +26,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
   const [email, setEmail] = useState<undefined | string>(undefined);
   const [code, setCode] = useState<string | undefined>(undefined);
   const [showGetCode, setShowGetCode] = useShowGetCodeManager();
-  const [second, setSecond] = useEmailSecondManger();
+  const [second] = useEmailSecondManger();
   const [isResetEmail] = useResetEmailManager();
 
   const handleGetCode = useCallback(async () => {
@@ -41,7 +41,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
     } else {
       openTip(message ?? t("price.alerts.email.send.failed"), TIP_ERROR);
     }
-  }, [second, setSecond, email, principal]);
+  }, [setShowGetCode, email, principal]);
 
   const handleSetEmail = useCallback(
     (email: string) => {
@@ -74,36 +74,6 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
 
     setVerifyLoading(false);
   }, [principal, email, code, onClose, onVerifySuccess]);
-
-  useEffect(() => {
-    let timer: number | null;
-
-    function call() {
-      if (showGetCode) return;
-
-      let __second = second;
-
-      timer = setInterval(() => {
-        if (__second === 0) {
-          if (timer) clearInterval(timer);
-          timer = null;
-          setSecond(PRICE_ALERTS_EMAIL_SECOND);
-          setShowGetCode(true);
-          return;
-        }
-
-        __second -= 1;
-        setSecond(__second);
-      }, 1000);
-    }
-
-    call();
-
-    return () => {
-      if (timer) clearInterval(timer);
-      timer = null;
-    };
-  }, [second, showGetCode, setSecond]);
 
   const disableGetCode = useMemo(() => {
     if (isUndefinedOrNull(email)) return true;

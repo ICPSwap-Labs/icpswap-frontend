@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AlertTypeSelector } from "components/PriceAlerts/AlertTypeSelector";
 import { NumberFilledTextField } from "components/Input/NumberFilledTextField";
 import { TIP_ERROR, TIP_SUCCESS, useTips, useToken } from "hooks/index";
-import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { addPriceAlert } from "@icpswap/hooks";
 import { Null, ResultStatus, type AlertType } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
