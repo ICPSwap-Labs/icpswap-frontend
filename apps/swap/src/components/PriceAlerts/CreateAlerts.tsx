@@ -1,14 +1,14 @@
 import { Flex, Modal, FilledTextField, TextButton } from "@icpswap/ui";
-import { Box, Button, Typography, useTheme, CircularProgress } from "components/Mui";
+import { Box, Button, Typography, useTheme, CircularProgress, InputAdornment } from "components/Mui";
 import { SelectToken } from "components/Select/SelectToken";
 import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AlertTypeSelector } from "components/PriceAlerts/AlertTypeSelector";
 import { NumberFilledTextField } from "components/Input/NumberFilledTextField";
 import { TIP_ERROR, TIP_SUCCESS, useTips, useToken } from "hooks/index";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { addPriceAlert } from "@icpswap/hooks";
-import { ResultStatus, type AlertType } from "@icpswap/types";
+import { Null, ResultStatus, type AlertType } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 import { useResetEmailManager, useShowEmailManager } from "components/PriceAlerts/state";
 
@@ -47,9 +47,10 @@ interface CreateAlertsModalProps {
   onClose: () => void;
   email: string | undefined;
   onCreateSuccess?: () => void;
+  defaultTokenId: string | Null;
 }
 
-export function CreateAlertsModal({ open, onClose, email, onCreateSuccess }: CreateAlertsModalProps) {
+export function CreateAlertsModal({ open, onClose, email, defaultTokenId, onCreateSuccess }: CreateAlertsModalProps) {
   const { t } = useTranslation();
   const [tokenId, setTokenId] = useState<string | undefined>(undefined);
   const [targetPrice, setTargetPrice] = useState<undefined | string>(undefined);
@@ -105,13 +106,31 @@ export function CreateAlertsModal({ open, onClose, email, onCreateSuccess }: Cre
     setShowEmail(true);
   }, [setIsResetEmail, setShowEmail]);
 
+  useEffect(() => {
+    if (defaultTokenId) {
+      setTokenId(defaultTokenId);
+    }
+  }, [defaultTokenId]);
+
+  const isPercentage = useMemo(() => {
+    if (isUndefinedOrNull(alertType)) return false;
+    return alertType.includes("MarginOf");
+  }, [alertType]);
+
+  const handleTargetPriceChange = useCallback(
+    (targetPrice: string) => {
+      setTargetPrice(targetPrice);
+    },
+    [setTargetPrice],
+  );
+
   return (
     <Modal open={open} title={t("price.alerts.create.alert")} dialogWidth={PRICE_ALERTS_MODAL_WIDTH} onClose={onClose}>
       <Flex fullWidth align="flex-start" vertical gap="16px 0">
         <Box sx={{ width: "100%" }}>
           <Typography>Token</Typography>
           <Box sx={{ height: "48px", margin: "12px 0 0 0" }}>
-            <SelectToken filled showClean={false} fullHeight search onTokenChange={setTokenId} />
+            <SelectToken value={tokenId} filled showClean={false} fullHeight search onTokenChange={setTokenId} />
           </Box>
         </Box>
 
@@ -123,12 +142,12 @@ export function CreateAlertsModal({ open, onClose, email, onCreateSuccess }: Cre
         </Box>
 
         <Box sx={{ width: "100%" }}>
-          <Typography>Targe price</Typography>
+          <Typography>{isPercentage ? "Percentage" : "Target price"}</Typography>
           <Box sx={{ width: "100%", margin: "12px 0 0 0" }}>
             <NumberFilledTextField
               value={targetPrice}
               border="none"
-              onChange={(value: string) => setTargetPrice(value)}
+              onChange={handleTargetPriceChange}
               numericProps={{
                 thousandSeparator: true,
                 decimalScale: token?.decimals ?? 18,
@@ -137,6 +156,18 @@ export function CreateAlertsModal({ open, onClose, email, onCreateSuccess }: Cre
               }}
               fontSize="14px"
               placeholderSize="14px"
+              placeholder={isPercentage ? "Enter percentage" : "Enter target price"}
+              textFieldProps={{
+                slotProps: {
+                  input: {
+                    endAdornment: isPercentage ? (
+                      <InputAdornment position="end">
+                        <Typography color="text.primary">%</Typography>
+                      </InputAdornment>
+                    ) : null,
+                  },
+                },
+              }}
             />
           </Box>
         </Box>

@@ -61,7 +61,13 @@ export function PriceAlertsIcon({ tokenId }: PriceAlertsIconProps) {
     <>
       {isUndefinedOrNull(hasAlerts) ? null : <PriceAlertsIcons hasAlerts={hasAlerts} />}
       {alertsOpen ? (
-        <PriceAlerts open={alertsOpen} onClose={() => setAlertsOpen(false)} isPending={isPending} alerts={data} />
+        <PriceAlerts
+          open={alertsOpen}
+          onClose={() => setAlertsOpen(false)}
+          isPending={isPending}
+          alerts={data}
+          defaultTokenId={tokenId}
+        />
       ) : null}
     </>
   );

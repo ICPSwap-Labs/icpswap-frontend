@@ -1,10 +1,10 @@
 import { Flex, LoadingRow, Modal, NoData, Proportion } from "@icpswap/ui";
-import { Box, Button, Typography, useTheme, Collapse } from "components/Mui";
+import { Box, Button, Typography, useTheme, Collapse, CircularProgress } from "components/Mui";
 import { ArrowUp, ChevronUp } from "react-feather";
 import { deletePriceAlert, useInfoToken, usePriceAlertEmail } from "@icpswap/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { formatDollarTokenPrice, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { ResultStatus, type AlertInfo } from "@icpswap/types";
+import { Null, ResultStatus, type AlertInfo } from "@icpswap/types";
 import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
 import { useCallback, useMemo, useState } from "react";
 import { EmailSetting } from "components/PriceAlerts/EmailSetting";
@@ -33,6 +33,7 @@ function PriceAlertRow({ alert }: PriceAlertRowProps) {
   const { t } = useTranslation();
   const [openTip] = useTips();
   const [loading, setLoading] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [alertQueryResult] = useAlertsRefetchManager();
 
   const alert_message = useMemo(() => {
@@ -63,12 +64,13 @@ function PriceAlertRow({ alert }: PriceAlertRowProps) {
     if (status === ResultStatus.OK) {
       openTip("Delete alert successfully", TIP_SUCCESS);
       if (alertQueryResult?.refetch) alertQueryResult.refetch();
+      setVisible(false);
     } else {
       openTip(message ?? "Failed to delete alert", TIP_ERROR);
     }
 
     setLoading(false);
-  }, [alert, openTip, alertQueryResult?.refetch]);
+  }, [alert, openTip, alertQueryResult?.refetch, loading]);
 
   return (
     <Box
@@ -80,7 +82,7 @@ function PriceAlertRow({ alert }: PriceAlertRowProps) {
         cursor: "pointer",
         "&:hover": {
           ".delete-icon": {
-            visibility: "visible",
+            visibility: visible ? "visible" : "hidden",
           },
         },
       }}
@@ -101,13 +103,17 @@ function PriceAlertRow({ alert }: PriceAlertRowProps) {
           </Flex>
         </Flex>
 
-        <Box
-          className="delete-icon"
-          sx={{ width: "20px", height: "20px", cursor: "pointer", visibility: "hidden" }}
-          onClick={handleDeleteAlert}
-        >
-          <img width="100%" height="100%" src="/images/delete.svg" alt="" />
-        </Box>
+        {loading ? (
+          <CircularProgress sx={{ color: "#8492c4" }} size={18} />
+        ) : (
+          <Box
+            className="delete-icon"
+            sx={{ width: "20px", height: "20px", cursor: "pointer", visibility: "hidden" }}
+            onClick={handleDeleteAlert}
+          >
+            <img width="100%" height="100%" src="/images/delete.svg" alt="" />
+          </Box>
+        )}
       </Flex>
     </Box>
   );
@@ -171,9 +177,10 @@ interface PriceAlertsProps {
   onClose?: () => void;
   alerts: AlertInfo[] | undefined;
   isPending: boolean;
+  defaultTokenId?: string | Null;
 }
 
-export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts }: PriceAlertsProps) {
+export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts, defaultTokenId }: PriceAlertsProps) {
   const principal = useAccountPrincipalString();
   const { isPending: alertEmailPending, data: alertEmail, refetch: refetchAlertEmail } = usePriceAlertEmail(principal);
   const { t } = useTranslation();
@@ -275,6 +282,7 @@ export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts 
           onClose={() => setShowCreateAlert(false)}
           email={alertEmail}
           onCreateSuccess={handleCreateAlertSuccess}
+          defaultTokenId={defaultTokenId}
         />
       ) : null}
     </>
