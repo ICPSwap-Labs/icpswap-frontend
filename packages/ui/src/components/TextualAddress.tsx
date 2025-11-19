@@ -1,4 +1,4 @@
-import { nonUndefinedOrNull, shorten, subaccountHexToBytes, toHexString } from "@icpswap/utils";
+import { isValidAccount, nonUndefinedOrNull, shorten, subaccountHexToBytes, toHexString } from "@icpswap/utils";
 import { decodeIcrcAccount, encodeIcrcAccount } from "@dfinity/ledger-icrc";
 import { useMemo } from "react";
 import { Principal } from "@dfinity/principal";
@@ -80,15 +80,20 @@ export function TextualAddress({
         subaccount: __subaccount && __subaccount !== NONE_SUB_HEX ? subaccountHexToBytes(__subaccount) : undefined,
       });
     }
+
     if (!__owner && __account) {
       return __account;
     }
 
     return undefined;
-  }, [textualAddress, __owner, __subaccount]);
+  }, [textualAddress, __owner, __subaccount, __account]);
 
   const { owner, sub } = useMemo(() => {
     if (!__textualAddress) return {};
+
+    if (isValidAccount(__textualAddress)) {
+      return { owner: __textualAddress, sub: undefined };
+    }
 
     try {
       const { owner, subaccount } = decodeIcrcAccount(__textualAddress);
@@ -113,55 +118,48 @@ export function TextualAddress({
   return __textualAddress ? (
     <Tooltip
       tips={
-        owner?.includes("-") ? (
-          <Flex vertical gap="8px 0" align="flex-start">
-            <Flex vertical gap="2px 0" align="flex-start">
-              <Typography color="text.tooltip" style={{ fontSize: "12px" }}>
-                ID:
+        <Flex vertical gap="8px 0" align="flex-start">
+          <Flex vertical gap="2px 0" align="flex-start">
+            <Typography color="text.tooltip" style={{ fontSize: "12px" }}>
+              ID:
+            </Typography>
+            <Copy content={address} onCopy={onCopy}>
+              <Typography color="text.tooltip" style={{ lineHeight: "14px", fontSize: "12px", wordBreak: "break-all" }}>
+                {address}
               </Typography>
-              <Copy content={address} onCopy={onCopy}>
-                <Typography
-                  color="text.tooltip"
-                  style={{ lineHeight: "14px", fontSize: "12px", wordBreak: "break-all" }}
-                >
-                  {address}
-                </Typography>
-              </Copy>
-            </Flex>
-
-            <Flex vertical gap="2px 0" align="flex-start">
-              <Typography color="text.tooltip" style={{ fontSize: "12px" }}>
-                Owner:
-              </Typography>
-              <Copy content={owner} onCopy={onCopy}>
-                <Typography
-                  color="text.tooltip"
-                  style={{ lineHeight: "14px", fontSize: "12px", wordBreak: "break-all" }}
-                >
-                  {owner}
-                </Typography>
-              </Copy>
-            </Flex>
-
-            {sub && sub !== NONE_SUB_HEX ? (
-              <Flex vertical gap="2px 0" align="flex-start">
-                <Typography color="text.tooltip" style={{ fontSize: "12px" }}>
-                  Subaccount:
-                </Typography>
-                <Copy content={sub} onCopy={onCopy}>
-                  <Typography
-                    color="text.tooltip"
-                    style={{ lineHeight: "14px", fontSize: "12px", wordBreak: "break-all" }}
-                  >
-                    {sub}
-                  </Typography>
-                </Copy>
-              </Flex>
-            ) : null}
+            </Copy>
           </Flex>
-        ) : (
-          <></>
-        )
+
+          <Flex vertical gap="2px 0" align="flex-start">
+            <Typography color="text.tooltip" style={{ fontSize: "12px" }}>
+              Owner:
+            </Typography>
+            <Copy content={owner} onCopy={onCopy}>
+              <Typography
+                color="text.tooltip"
+                style={{ lineHeight: "14px", fontSize: "12px", wordBreak: "break-all", cursor: "pointer" }}
+              >
+                {owner}
+              </Typography>
+            </Copy>
+          </Flex>
+
+          {sub && sub !== NONE_SUB_HEX ? (
+            <Flex vertical gap="2px 0" align="flex-start">
+              <Typography color="text.tooltip" style={{ fontSize: "12px" }}>
+                Subaccount:
+              </Typography>
+              <Copy content={sub} onCopy={onCopy}>
+                <Typography
+                  color="text.tooltip"
+                  style={{ lineHeight: "14px", fontSize: "12px", wordBreak: "break-all" }}
+                >
+                  {sub}
+                </Typography>
+              </Copy>
+            </Flex>
+          ) : null}
+        </Flex>
       }
     >
       <Typography sx={{ ...sx }}>
