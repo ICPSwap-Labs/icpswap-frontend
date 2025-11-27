@@ -22,7 +22,6 @@ export default {
 
   // success
   successLight: "#b9f6ca",
-  success200: "#69f0ae",
   successMain: "#00e676",
   successDark: "#54c081",
 

@@ -49,3 +49,7 @@ a {
   -webkit-line-clamp: 2;
   line-clamp: 2;
 }
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}

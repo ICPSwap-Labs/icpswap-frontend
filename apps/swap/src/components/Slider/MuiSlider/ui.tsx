@@ -68,7 +68,7 @@ const ValueLabelComponent = (props: { children: React.ReactChild; value: string 
   );
 };
 
-export default function PercentageSlider(props: SliderProps) {
+export function MuiSlider(props: SliderProps) {
   const classes = useStyle();
 
   return (
