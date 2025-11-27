@@ -84,12 +84,19 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
   return (
     <Modal
       open={open}
-      title={t("price.alerts.create.alert")}
+      title={isResetEmail ? "Change Email" : t("price.alerts.create.alert")}
       dialogWidth={PRICE_ALERTS_MODAL_WIDTH}
       onClose={onClose}
       onCancel={onClose}
     >
-      {isResetEmail ? <Typography>New Email</Typography> : <Typography>Email</Typography>}
+      {isResetEmail ? (
+        <Typography sx={{ lineHeight: "20px" }}>
+          When you change your email address, all previously created alerts will be automatically cancelled. Please
+          re-set any alerts you wish to keep.
+        </Typography>
+      ) : null}
+
+      {isResetEmail ? <Typography sx={{ margin: "32px 0 0 0" }}>New Email</Typography> : <Typography>Email</Typography>}
       <Box sx={{ margin: "9px 0 0 0" }}>
         <FilledTextField
           fullWidth
