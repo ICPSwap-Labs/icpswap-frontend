@@ -51,6 +51,7 @@ export type Value =
 export interface _SERVICE {
   add_alert: ActorMethod<[AddAlert], Result_1>;
   delete_alert: ActorMethod<[bigint], Result_1>;
+  delete_email: ActorMethod<[], Result_1>;
   get_alerts: ActorMethod<[bigint, bigint], Result>;
   get_deleted_alerts: ActorMethod<[bigint, bigint], Array<bigint>>;
   get_user_alerts: ActorMethod<[], Array<AlertInfo>>;

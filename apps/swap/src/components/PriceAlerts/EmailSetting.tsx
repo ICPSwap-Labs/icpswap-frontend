@@ -1,4 +1,4 @@
-import { sendPriceAlertEmail, verifyPriceAlertEmail } from "@icpswap/hooks";
+import { deletePriceAlertEmail, sendPriceAlertEmail, verifyPriceAlertEmail } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { FilledTextField, Modal, TextButton } from "@icpswap/ui";
 import { isUndefinedOrNull, isUndefinedOrNullOrEmpty, validateEmail } from "@icpswap/utils";
@@ -66,6 +66,8 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
 
     if (status === ResultStatus.OK) {
       openTip(t("price.alerts.email.verify.success"), TIP_SUCCESS);
+
+      if (isResetEmail) await deletePriceAlertEmail();
       if (onClose) onClose();
       if (onVerifySuccess) onVerifySuccess();
     } else {
@@ -73,7 +75,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
     }
 
     setVerifyLoading(false);
-  }, [principal, email, code, onClose, onVerifySuccess]);
+  }, [principal, email, code, onClose, onVerifySuccess, isResetEmail]);
 
   const disableGetCode = useMemo(() => {
     if (isUndefinedOrNull(email)) return true;

@@ -55,3 +55,7 @@ export async function addPriceAlert(args: AddAlertArgs) {
 export async function deletePriceAlert(id: bigint) {
   return resultFormat<null>(await (await priceAlerts(true)).delete_alert(id));
 }
+
+export async function deletePriceAlertEmail() {
+  return resultFormat<null>(await (await priceAlerts(true)).delete_email());
+}

@@ -54,6 +54,7 @@ export const idlFactory = ({ IDL }: any) => {
   return IDL.Service({
     add_alert: IDL.Func([AddAlert], [Result_1], []),
     delete_alert: IDL.Func([IDL.Nat], [Result_1], []),
+    delete_email: IDL.Func([], [Result_1], []),
     get_alerts: IDL.Func([IDL.Nat, IDL.Nat], [Result], ["query"]),
     get_deleted_alerts: IDL.Func([IDL.Nat, IDL.Nat], [IDL.Vec(IDL.Nat)], ["query"]),
     get_user_alerts: IDL.Func([], [IDL.Vec(AlertInfo)], ["query"]),
