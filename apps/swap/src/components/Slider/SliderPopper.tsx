@@ -1,5 +1,5 @@
 import { Typography, Popper } from "components/Mui";
-import { percentToNum, numToPercent } from "@icpswap/utils";
+import { percentToNum, BigNumber } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 
 export interface SliderRefProps {
@@ -39,7 +39,8 @@ export const SliderPopper = ({ open, popperAnchor, value }: SliderPopperProps) =
             background: "#FFFFFF",
           }}
         >
-          {value ? numToPercent(percentToNum(value), 2) : "0%"}
+          {/* The slider popper value is no need to show decimals, so Math.ceil is used */}
+          {value ? `${Math.ceil(new BigNumber(percentToNum(value)).multipliedBy(100).toNumber())}%` : "0%"}
         </Typography>
       </Typography>
     </Popper>

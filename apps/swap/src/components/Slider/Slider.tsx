@@ -13,6 +13,7 @@ let MouseDownX: number | null = null;
 // The start amount when dragging the slider
 // It is equal to the value prop because the value prop may not be updated immediately when dragging
 let AMOUNT = "0";
+let POPPER_TIMEOUT: number | null = null;
 
 export interface SliderProps {
   totalAmount: string | Null;
@@ -29,6 +30,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [mouseDown, setMouseDown] = useState(false);
   const [wrapperWidth, setWrapperWidth] = useState<number | null>(null);
+  const [popperOpen, setPopperOpen] = useState(false);
 
   const handleAmountChange = useCallback(
     (amount: string) => {
@@ -70,6 +72,26 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
     }
   }, [wrapperRef]);
 
+  const timeoutClosePopper = useCallback(() => {
+    POPPER_TIMEOUT = setTimeout(() => {
+      setPopperOpen(false);
+      POPPER_TIMEOUT = null;
+    }, 1000);
+  }, [setPopperOpen]);
+
+  const handleOpenPopper = useCallback(() => {
+    setPopperOpen(true);
+
+    if (nonUndefinedOrNull(POPPER_TIMEOUT)) {
+      clearTimeout(POPPER_TIMEOUT);
+      POPPER_TIMEOUT = null;
+    }
+
+    if (mouseDown) return;
+
+    timeoutClosePopper();
+  }, [setPopperOpen, mouseDown, timeoutClosePopper]);
+
   const handleSliderClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
       if (isUndefinedOrNull(totalAmount) || isUndefinedOrNull(wrapperWidth)) return;
@@ -84,8 +106,9 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       });
 
       handleAmountChange(amount);
+      handleOpenPopper();
     },
-    [wrapperWidth, totalAmount, onAmountChange],
+    [wrapperWidth, totalAmount, handleOpenPopper],
   );
 
   const handleMove = useCallback(
@@ -93,6 +116,9 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       if (isUndefinedOrNull(totalAmount) || new BigNumber(totalAmount).isEqualTo(0)) return;
 
       if (mouseDown && nonUndefinedOrNull(wrapperWidth)) {
+        // Show the popper when moving
+        handleOpenPopper();
+
         const startLeft = new BigNumber(wrapperWidth).multipliedBy(new BigNumber(AMOUNT).dividedBy(totalAmount));
         const __percentage = numToPercent(startLeft.plus(moveX).dividedBy(wrapperWidth).toString());
         const percentage = new BigNumber(percentToNum(__percentage)).isGreaterThan(1)
@@ -108,7 +134,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
         MouseDownX = screenX;
       }
     },
-    [mouseDown, wrapperWidth, totalAmount, handleAmountChange],
+    [mouseDown, wrapperWidth, totalAmount, handleAmountChange, handleOpenPopper],
   );
 
   const handleResetAmountBeforeMove = useCallback(() => {
@@ -126,8 +152,9 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       MouseDownX = event.screenX;
 
       setMouseDown(true);
+      handleOpenPopper();
     },
-    [setMouseDown, handleResetAmountBeforeMove],
+    [setMouseDown, handleResetAmountBeforeMove, handleOpenPopper],
   );
 
   const handleTouchStart = useCallback(
@@ -135,14 +162,16 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       event.preventDefault();
       handleResetAmountBeforeMove();
       setMouseDown(true);
+      handleOpenPopper();
       MouseDownX = event.touches[0].screenX;
     },
-    [setMouseDown, handleResetAmountBeforeMove],
+    [setMouseDown, handleResetAmountBeforeMove, handleOpenPopper],
   );
 
   const handleEndMove = useCallback(() => {
     setMouseDown(false);
-  }, [setMouseDown]);
+    timeoutClosePopper();
+  }, [setMouseDown, timeoutClosePopper]);
 
   useEffect(() => {
     const move = (event: MouseEvent) => {
@@ -191,9 +220,9 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       });
 
       onAmountChange(amount);
-      setAmount(amount);
+      handleOpenPopper();
     },
-    [onPercentageChange, totalAmount, onAmountChange],
+    [onPercentageChange, totalAmount, onAmountChange, handleOpenPopper],
   );
 
   return (
@@ -228,11 +257,11 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
                 key={index}
                 sx={{
                   position: "absolute",
-                  width: "4px",
-                  height: "8px",
-                  borderRadius: "10px",
+                  width: "6px",
+                  height: "6px",
+                  borderRadius: "50%",
                   cursor: "pointer",
-                  background: active ? theme.colors.success : trackColor ?? theme.palette.background.level4,
+                  background: active ? theme.colors.success : trackColor ?? "#38405D",
                   left: `${index * SLICE_PERCENT_THRESHOLD}%`,
                   transform: "translate(-50%, -50%)",
                   top: "50%",
@@ -256,12 +285,12 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
           />
         </Flex>
 
-        <SliderPopper open={mouseDown} popperAnchor={popperAnchorRef.current} value={percentage} />
+        <SliderPopper open={popperOpen} popperAnchor={popperAnchorRef.current} value={percentage} />
 
         <Box
           ref={popperAnchorRef}
           sx={{
-            width: "8px",
+            width: "12px",
             height: "12px",
             position: "absolute",
             left: stackPosition,
@@ -274,11 +303,11 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
         >
           <Box
             sx={{
-              width: "8px",
+              width: "12px",
               height: "12px",
               background: theme.palette.background.level3,
               border: `2px solid ${theme.colors.success}`,
-              borderRadius: "10px",
+              borderRadius: "50%",
               cursor: "pointer",
             }}
           />
