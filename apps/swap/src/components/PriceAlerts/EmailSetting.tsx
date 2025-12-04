@@ -100,8 +100,8 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
     >
       {isResetEmail ? (
         <Typography sx={{ lineHeight: "20px" }}>
-          When you change your email address, all previously created alerts will be automatically cancelled. Please
-          re-set any alerts you wish to keep.
+          When you change your email, alerts from your old one won’t be carried over. Please create new alerts if
+          needed.
         </Typography>
       ) : null}
 
