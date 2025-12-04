@@ -7,7 +7,7 @@ import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { isDarkTheme } from "utils";
 import { nonUndefinedOrNull, parseTokenAmount, BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
-import { TokenBalanceSlider } from "components/Slider/index";
+// import { TokenBalanceSlider } from "components/Slider/index";
 import { Null } from "@icpswap/types";
 import { WalletBalance } from "components/swap/WalletBalance";
 import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
@@ -132,7 +132,6 @@ export function SwapDepositAmount({
   currencyBalance,
   subAccountBalance,
   unusedBalance,
-  maxSpentAmount,
   noLiquidity,
   poolId,
 }: SwapDepositAmountProps) {
@@ -227,7 +226,7 @@ export function SwapDepositAmount({
         ) : null}
       </Flex>
 
-      {currency ? (
+      {/* {currency ? (
         <Box sx={{ margin: "8px 0 0 0", width: "50%" }}>
           <TokenBalanceSlider
             value={value.toString()}
@@ -236,7 +235,7 @@ export function SwapDepositAmount({
             onAmountChange={onUserInput}
           />
         </Box>
-      ) : null}
+      ) : null} */}
 
       {locked && <LockMask type={type} />}
     </Box>
