@@ -9,7 +9,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useEmailSecondManger, useShowGetCodeManager } from "store/price-alerts/hooks";
-import { useResetEmailManager } from "components/PriceAlerts/state";
+import { useAlertsRefetchManager, useResetEmailManager } from "components/PriceAlerts/state";
 
 interface EmailSettingProps {
   open: boolean;
@@ -28,6 +28,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
   const [showGetCode, setShowGetCode] = useShowGetCodeManager();
   const [second] = useEmailSecondManger();
   const [isResetEmail] = useResetEmailManager();
+  const [alertQueryResult] = useAlertsRefetchManager();
 
   const handleGetCode = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(email)) return;
@@ -65,9 +66,15 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
     const { status, message } = await verifyPriceAlertEmail({ email, principal, code });
 
     if (status === ResultStatus.OK) {
+      // If resetting email, delete previous alerts
+      // And refetch alerts
+      if (isResetEmail) {
+        await deletePriceAlertEmail();
+        if (alertQueryResult?.refetch) alertQueryResult.refetch();
+      }
+
       openTip(t("price.alerts.email.verify.success"), TIP_SUCCESS);
 
-      if (isResetEmail) await deletePriceAlertEmail();
       if (onClose) onClose();
       if (onVerifySuccess) onVerifySuccess();
     } else {
@@ -75,7 +82,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
     }
 
     setVerifyLoading(false);
-  }, [principal, email, code, onClose, onVerifySuccess, isResetEmail]);
+  }, [principal, email, code, onClose, onVerifySuccess, isResetEmail, alertQueryResult]);
 
   const disableGetCode = useMemo(() => {
     if (isUndefinedOrNull(email)) return true;
