@@ -4,7 +4,7 @@ import { Box, Typography } from "components/Mui";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
-import PercentageSlider from "components/PercentageSlider";
+import { MuiSlider } from "components/Slider/MuiSlider";
 import HeaderTab from "components/swap/Header";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swap/burn/hooks";
@@ -228,7 +228,7 @@ export default function DecreaseLiquidity() {
                   paddingRight: "12px",
                 }}
               >
-                <PercentageSlider
+                <MuiSlider
                   value={new BigNumber(liquidityPercentage?.toString() ?? 0).toNumber()}
                   onChange={(event, value) => setLiquidityPercentage(value)}
                 />

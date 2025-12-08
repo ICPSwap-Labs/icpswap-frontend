@@ -1,8 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { Box, Typography, useTheme, makeStyles, Theme } from "components/Mui";
 import { DotLoading } from "components/index";
-import { useParsedQueryString, useSwapUserUnusedTokenByPool } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useParsedQueryString } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
 import { AlertTriangle } from "react-feather";
@@ -19,6 +18,8 @@ import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 import colors from "theme/colors";
 import { DepositButton } from "components/swap/reclaim/DepositButton";
 import { WithdrawButton } from "components/swap/reclaim/WithdrawButton";
+import { useUnusedBalanceAndWithdrawQueue } from "hooks/swap/useUnusedBalanceAndWithdrawQueue";
+import { SWAP_REFRESH_KEY } from "constants/index";
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -56,16 +57,11 @@ export function ReclaimTokensInPool({
 }: ReclaimLinkProps) {
   const theme = useTheme();
   const classes = useStyles();
-  const principal = useAccountPrincipal();
   const { reclaim } = useParsedQueryString() as { reclaim: string };
 
   const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
-
-  const { balances } = useSwapUserUnusedTokenByPool(
-    pool,
-    principal,
-    refreshKey ? refreshTriggers[refreshKey] : undefined,
-  );
+  const { result } = useUnusedBalanceAndWithdrawQueue(pool, refreshKey ? refreshTriggers[refreshKey] : undefined);
+  const [balances, userWithdrawQueue] = result ?? [[], undefined];
 
   const { token0, token1 } = useMemo(() => {
     if (!pool) return {};
@@ -92,6 +88,8 @@ export function ReclaimTokensInPool({
     if (setRefreshTriggers && nonUndefinedOrNull(refreshKey)) {
       setRefreshTriggers(refreshKey);
     }
+
+    setRefreshTriggers(SWAP_REFRESH_KEY);
   }, [setRefreshTriggers, refreshKey]);
 
   const __fontSize = useMemo(() => {
@@ -163,6 +161,7 @@ export function ReclaimTokensInPool({
                 balances={balances}
                 onReclaimSuccess={handleRefresh}
                 fontSize={__fontSize}
+                userWithdrawQueue={userWithdrawQueue}
               />
               {availableWithdrawTokens.length > 1 ? (
                 <>
@@ -183,6 +182,7 @@ export function ReclaimTokensInPool({
                     balances={balances}
                     onReclaimSuccess={handleRefresh}
                     fontSize={__fontSize}
+                    userWithdrawQueue={userWithdrawQueue}
                   />
                 </>
               ) : null}
@@ -217,6 +217,7 @@ export function ReclaimTokensInPool({
                     balances={balances}
                     onReclaimSuccess={handleRefresh}
                     fontSize={__fontSize}
+                    userWithdrawQueue={userWithdrawQueue}
                   />
                 </Flex>
               </Flex>
@@ -249,6 +250,7 @@ export function ReclaimTokensInPool({
                     balances={balances}
                     onReclaimSuccess={handleRefresh}
                     fontSize={__fontSize}
+                    userWithdrawQueue={userWithdrawQueue}
                   />
                 </Flex>
               </Flex>

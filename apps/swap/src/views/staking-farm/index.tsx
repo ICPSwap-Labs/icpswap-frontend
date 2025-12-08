@@ -1,15 +1,13 @@
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { NoData, MainCard, Flex, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
+import { NoData, MainCard, Flex, Wrapper, ScrollTop } from "components/index";
 import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { isUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { LoadingRow } from "@icpswap/ui";
 import { useHistory } from "react-router-dom";
 import { FarmListHeader, GlobalData, FarmRow } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
-// import { SelectToken } from "components/Select/SelectToken";
-// import { SelectPair } from "components/Select/SelectPair";
 import { Null } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -43,7 +41,6 @@ function MainContent() {
   const [filterPair] = useState<string | Null>(null);
   const [filterToken] = useState<string | Null>(null);
   const [page, setPage] = useState(START_PAGE);
-  const [headerInViewport, setHeaderInViewport] = useState(true);
 
   const __state = useMemo(() => _state ?? FilterState.LIVE, [_state]);
 
@@ -125,14 +122,6 @@ function MainContent() {
     };
   }, [state, matchDownSM, __state]);
 
-  // const handlePairChange = (pairId: string | undefined) => {
-  //   setFilterPair(pairId);
-  // };
-
-  // const handleTokenChange = (tokenId: string | undefined) => {
-  //   setFilterToken(tokenId);
-  // };
-
   const handleScrollNext = useCallback(() => {
     setPage(page + 1);
   }, [setPage, page]);
@@ -142,23 +131,6 @@ function MainContent() {
     return slicedFarms.length !== farms.length;
   }, [slicedFarms, farms]);
 
-  const [headerScrollOutOnTop, setHeaderScrollOutOnTop] = useState(false);
-  useEffect(() => {
-    const onScroll = () => {
-      const target = document.querySelector("#farm-list-header");
-      if (target) {
-        const boundingClientRect = target.getBoundingClientRect();
-        setHeaderScrollOutOnTop(boundingClientRect.top < 50);
-      }
-    };
-
-    window.addEventListener("scroll", onScroll);
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-    };
-  }, []);
-
   return (
     <FarmContext.Provider
       value={{
@@ -167,25 +139,11 @@ function MainContent() {
         deleteUnStakedFarms: handleDeleteUnStakedFarms,
       }}
     >
-      <Box
-        sx={{
-          display: !headerInViewport && headerScrollOutOnTop ? "block" : "none",
-          position: "sticky",
-          top: "64px",
-          background: theme.palette.background.level3,
-          zIndex: 10,
-          width: "100%",
-          maxWidth: "1200px",
-          borderBottom: `1px solid ${theme.palette.background.level1}`,
-        }}
-      >
-        <FarmListHeader state={state} showState={showState} your={your} sx={{ gridTemplateColumns }} />
-      </Box>
-
       <MainCard
         id="farm-scroll-wrapper"
         padding="0"
         sx={{
+          overflow: "visible",
           "@media(max-width: 640px)": {
             padding: "0",
           },
@@ -230,51 +188,22 @@ function MainContent() {
               </Typography>
             ))}
           </Box>
-
-          {/* <Flex
-            justify="flex-end"
-            sx={{
-              flex: 1,
-              "@media(max-width: 640px)": {
-                flexDirection: "column",
-                gap: "16px 0",
-                alignItems: "flex-start",
-              },
-            }}
-            gap="0 20px"
-          >
-            <Flex sx={{ width: "fit-content" }} gap="0 4px">
-              <Typography>{t("common.select.pair.colon")}</Typography>
-
-              <SelectPair
-                showBackground={false}
-                search
-                panelPadding="0px"
-                defaultPanel={<Typography color="text.primary">{t("common.select.all.pair")}</Typography>}
-                onPairChange={handlePairChange}
-              />
-            </Flex>
-
-            <Flex sx={{ width: "fit-content" }} gap="0 4px">
-              <Typography>{t("common.reward.token.colon")}</Typography>
-
-              <SelectToken
-                showBackground={false}
-                search
-                panelPadding="0px"
-                defaultPanel={<Typography color="text.primary">{t("common.token.all")}</Typography>}
-                onTokenChange={handleTokenChange}
-              />
-            </Flex>
-          </Flex> */}
         </Flex>
 
         <Box sx={{ width: "100%", height: "1px", background: theme.palette.background.level1 }} />
 
-        <Box sx={{ width: "100%", overflow: "auto hidden" }}>
-          <ObserverWrapper
-            scrollInViewport={() => setHeaderInViewport(true)}
-            scrollOutViewport={() => setHeaderInViewport(false)}
+        <Box sx={{ width: "100%" }}>
+          <Box
+            sx={{
+              position: "sticky",
+              top: "64px",
+              background: theme.palette.background.level3,
+              zIndex: 10,
+              width: "100%",
+              maxWidth: "1200px",
+              borderBottom: `1px solid ${theme.palette.background.level1}`,
+              overflow: "auto",
+            }}
           >
             <FarmListHeader
               id="farm-list-header"
@@ -283,62 +212,73 @@ function MainContent() {
               your={your}
               sx={{ gridTemplateColumns }}
             />
-          </ObserverWrapper>
+          </Box>
 
-          <InfiniteScroll
-            dataLength={slicedFarms?.length ?? 0}
-            next={handleScrollNext}
-            hasMore={hasMore}
-            loader={
-              <Box sx={{ padding: "24px" }}>
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
-              </Box>
-            }
+          <Box
+            sx={{
+              width: "100%",
+              height:
+                nonUndefinedOrNull(slicedFarms) && slicedFarms.length > 0
+                  ? `${new BigNumber(slicedFarms.length).multipliedBy(74).toString()}px`
+                  : "320px",
+            }}
           >
-            {loading ? (
-              <Box sx={{ padding: "24px" }}>
-                <LoadingRow>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </LoadingRow>
-              </Box>
-            ) : (
-              <>
-                {(unStakedFarms.length === farms?.length || !farms?.length) && !loading ? (
-                  your ? (
-                    <YourFarmEmpty />
-                  ) : (
-                    <NoData tip={t("farm.stake.empty")} />
-                  )
-                ) : null}
+            <InfiniteScroll
+              dataLength={slicedFarms?.length ?? 0}
+              next={handleScrollNext}
+              hasMore={hasMore}
+              loader={
+                <Box sx={{ padding: "24px" }}>
+                  <LoadingRow>
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                  </LoadingRow>
+                </Box>
+              }
+            >
+              {loading ? (
+                <Box sx={{ padding: "24px" }}>
+                  <LoadingRow>
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                    <div />
+                  </LoadingRow>
+                </Box>
+              ) : (
+                <>
+                  {(unStakedFarms.length === farms?.length || !farms?.length) && !loading ? (
+                    your ? (
+                      <YourFarmEmpty />
+                    ) : (
+                      <NoData tip={t("farm.stake.empty")} />
+                    )
+                  ) : null}
 
-                {slicedFarms?.map((farmId) => (
-                  <FarmRow
-                    key={farmId.toString()}
-                    farmId={farmId.toString()}
-                    wrapperSx={{
-                      display: "grid",
-                      gridTemplateColumns,
-                    }}
-                    showState={showState}
-                    your={your}
-                    filterState={__state}
-                  />
-                ))}
-              </>
-            )}
-          </InfiniteScroll>
+                  {slicedFarms?.map((farmId, index) => (
+                    <FarmRow
+                      key={farmId.toString()}
+                      farmId={farmId.toString()}
+                      wrapperSx={{
+                        display: "grid",
+                        gridTemplateColumns,
+                      }}
+                      showState={showState}
+                      your={your}
+                      filterState={__state}
+                      isFirst={index === 0}
+                    />
+                  ))}
+                </>
+              )}
+            </InfiniteScroll>
+          </Box>
         </Box>
       </MainCard>
 

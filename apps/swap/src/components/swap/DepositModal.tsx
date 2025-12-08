@@ -10,7 +10,7 @@ import {
 } from "@icpswap/utils";
 import { Token, Pool } from "@icpswap/swap-sdk";
 import { Flex, Modal } from "@icpswap/ui";
-import PercentageSlider from "components/PercentageSlider/ui";
+import { MuiSlider } from "components/Slider/MuiSlider/ui";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapDepositTokenBalance } from "hooks/swap/useSwapDeposit";
@@ -147,7 +147,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
       </Flex>
 
       <Box mt="20px" sx={{ padding: "0 10px 0 0" }}>
-        <PercentageSlider value={percent} onChange={handleSliderChange} />
+        <MuiSlider value={percent} onChange={handleSliderChange} />
       </Box>
 
       <Button

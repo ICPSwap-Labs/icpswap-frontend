@@ -1,6 +1,6 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, nanosecond2Millisecond, formatTokenPrice, formatAmount, isUndefinedOrNull } from "@icpswap/utils";
+import { nanosecond2Millisecond, formatAmount } from "@icpswap/utils";
 import { Flex, TextButton } from "@icpswap/ui";
 import { LimitOrder as LimitOrderType } from "@icpswap/types";
 import { TokenImage } from "components/index";
@@ -15,8 +15,7 @@ import StepViewButton from "components/Steps/View";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { useTranslation } from "react-i18next";
 import { CancelLimitConfirm, LimitDetails, LimitDealRatio } from "components/swap/limit-order/index";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { PoolCurrentPrice } from "components/swap/PoolCurrentPrice";
+import { LimitAndCurrentPrice } from "components/swap/limit-order/pending/LimitAndCurrentPrice";
 
 export interface PendingRowProps {
   onCancelSuccess?: () => void;
@@ -30,7 +29,6 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
   const theme = useTheme();
   const [showLimitDetails, setShowLimitDetails] = useState(false);
   const [showLimitConfirm, setShowLimitConfirm] = useState(false);
-  const [invertPrice, setInvertPrice] = useState(false);
 
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
@@ -81,15 +79,6 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
     closeLoadingTip(loadingKey);
   }, [position, positionId, cancelLimit, order]);
 
-  const handleInvert = useCallback(() => {
-    setInvertPrice(!invertPrice);
-  }, [invertPrice, setInvertPrice]);
-
-  const isSorted = useMemo(() => {
-    if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return undefined;
-    return inputToken.sortsBefore(outputToken);
-  }, [inputToken, outputToken]);
-
   return (
     <>
       <Box
@@ -126,42 +115,11 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
 
         <Flex>
           <Box>
-            <Flex gap="0 2px" sx={{ margin: "0 0 12px 0" }}>
-              <Typography
-                sx={{
-                  color: "text.primary",
-                  cursor: "pointer",
-                  fontSize: "16px",
-                  textAlign: "right",
-                }}
-                onClick={handleInvert}
-              >
-                {limitPrice ? (
-                  <>
-                    {invertPrice
-                      ? `1 ${outputToken.symbol} = ${formatTokenPrice(
-                          new BigNumber(1).dividedBy(limitPrice.toFixed(inputToken.decimals)).toString(),
-                        )} ${inputToken.symbol}`
-                      : `1 ${inputToken.symbol} = ${formatTokenPrice(limitPrice.toFixed(inputToken.decimals))} ${
-                          outputToken.symbol
-                        }`}
-                    <SyncAltIcon sx={{ fontSize: "1rem", margin: "0 0 0 2px", verticalAlign: "middle" }} />
-                  </>
-                ) : (
-                  "--"
-                )}
-              </Typography>
-            </Flex>
-
-            <PoolCurrentPrice
+            <LimitAndCurrentPrice
+              inputToken={inputToken}
+              outputToken={outputToken}
               pool={pool}
-              fontSize="16px"
-              usdValueColor="text.primary"
-              symbolColor="text.primary"
-              showUsdValue={false}
-              iconColor="#ffffff"
-              per={false}
-              outerInvert={isUndefinedOrNull(isSorted) ? undefined : isSorted ? invertPrice : !invertPrice}
+              limitPrice={limitPrice}
             />
           </Box>
         </Flex>

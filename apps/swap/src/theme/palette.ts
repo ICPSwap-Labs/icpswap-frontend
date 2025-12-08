@@ -39,7 +39,6 @@ export function themePalette(theme: { [key: string]: any }) {
     },
     success: {
       light: theme.colors.successLight,
-      200: theme.colors.success200,
       main: theme.colors.successMain,
       dark: theme.colors.successDark,
     },
@@ -98,6 +97,7 @@ export function themePalette(theme: { [key: string]: any }) {
       1: "#38446C",
       2: "rgba(75, 87, 130, 0.68)",
       3: "#4F5A84",
+      border4: "#29314F",
       level1: theme.colors.darkLevel1,
       level2: theme.colors.darkLevel2,
       level3: theme.colors.darkLevel3,

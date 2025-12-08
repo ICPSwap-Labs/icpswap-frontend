@@ -76,6 +76,7 @@ export function useInitialHighcharts({ id, charts }: UseInitialHighchartsProps) 
                 fontSize: "12px",
               },
             },
+            borderRadius: 0,
           },
         },
         series: [

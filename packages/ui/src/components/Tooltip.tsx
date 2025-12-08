@@ -1,7 +1,7 @@
 import { ReactNode, ReactElement } from "react";
 import { HelpCircle } from "react-feather";
 
-import { Typography, Tooltip as MuiToolTip, Box } from "./Mui";
+import { Typography, Tooltip as MuiToolTip, TooltipProps as MuiTooltipProps, Box } from "./Mui";
 
 export interface TooltipProps {
   background?: string;
@@ -10,6 +10,8 @@ export interface TooltipProps {
   iconColor?: string;
   maxWidth?: string;
   children?: ReactElement;
+  placement?: MuiTooltipProps["placement"];
+  arrow?: boolean;
 }
 
 export function Tooltip({
@@ -19,6 +21,8 @@ export function Tooltip({
   iconSize = "16px",
   children,
   iconColor = "#8492C4",
+  placement,
+  arrow = true,
 }: TooltipProps) {
   return (
     <MuiToolTip
@@ -47,7 +51,8 @@ export function Tooltip({
           {tips}
         </Typography>
       }
-      arrow
+      arrow={arrow}
+      placement={placement}
     >
       {children || (
         <Box

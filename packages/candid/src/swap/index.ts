@@ -49,6 +49,7 @@ export type {
   ClaimInfo,
   Action as FailedTransactionAction,
   AddLiquidityInfo,
+  UserWithdrawQueueInfo,
 } from "./SwapPool";
 
 export { idlFactory as TicketInterfaceFactory } from "./Ticket.did";

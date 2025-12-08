@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
-import { BigNumber, toSignificant, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { useTransformedVolumeData, useTokenCharts } from "@icpswap/hooks";
 import type { Null, InfoTokenDataResponse } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 import { Typography, Box, BoxProps } from "../Mui";
 import { LineChartAlt } from "../LineChart/alt";
 import { BarChartAlt } from "../BarChart/alt";
-import { CandleChart } from "../CandleChart/index";
 import { SwapAnalyticLoading } from "./Loading";
 import { ChartDateButtons } from "./ChartDateButton";
 import { ChartView } from "./types";
@@ -17,46 +16,6 @@ import { MainCard } from "../MainCard";
 import { DexScreener } from "../DexScreener";
 import { DexTools } from "../DexTools";
 import { Select } from "../Select";
-
-function priceChartFormat(data: InfoTokenDataResponse[]) {
-  return data
-    .filter((d) => {
-      // ICVC
-      if (d.tokenLedgerId === "m6xut-mqaaa-aaaaq-aadua-cai") {
-        const time = new Date("2024-08-28").getTime();
-        return new BigNumber(d.beginTime).multipliedBy(1000).isGreaterThan(time);
-      }
-
-      // SNS1
-      if (d.tokenLedgerId === "zfcdd-tqaaa-aaaaq-aaaga-cai") {
-        const time = new Date("2024-03-12").getTime();
-        return !new BigNumber(d.beginTime).multipliedBy(1000).isLessThan(time);
-      }
-
-      return true;
-    })
-    .map((d, index) => {
-      return {
-        ...d,
-        open: d.beginTime.toString() === "1686787200" ? data[index - 1].close : d.open,
-        close:
-          d.beginTime.toString() === "1686787200" || d.beginTime.toString() === "1686873600"
-            ? data[index + 1]?.open ?? d.close
-            : d.close,
-        low:
-          d.beginTime.toString() === "1686787200"
-            ? data[index - 1].close > (data[index + 1]?.open ?? 0)
-              ? data[index + 1]?.open ?? data[index - 1]?.close ?? 0
-              : data[index - 1].close
-            : d.beginTime.toString() === "1686873600"
-            ? data[index - 2].close > (data[index + 1]?.open ?? 0)
-              ? data[index + 1]?.open ?? 0
-              : data[index - 2]?.close ?? 0
-            : d.low,
-        timestamp: undefined,
-      };
-    });
-}
 
 export interface ChartButton {
   label: string;
@@ -133,7 +92,6 @@ export interface TokenChartsProps {
   volume?: number | string;
   background?: number;
   borderRadius?: string;
-  showPrice?: boolean;
   chartButtons?: ChartButton[];
   showTopIfDexScreen?: boolean;
   dexScreenHeight?: string;
@@ -152,7 +110,6 @@ export const TokenCharts = forwardRef(
       volume,
       chartButtons,
       borderRadius,
-      showPrice = true,
       background = 2,
       showTopIfDexScreen = true,
       dexScreenHeight,
@@ -170,7 +127,6 @@ export const TokenCharts = forwardRef(
     const [chartView, setChartView] = useState<ChartView>(ChartView.PRICE);
     const [valueLabel, setValueLabel] = useState<string | undefined>();
     const [latestValue, setLatestValue] = useState<number | undefined>();
-    const [priceData, setPriceData] = useState<PriceLine | null | undefined>(null);
     const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
 
     const { result: tokenChartsResult, loading } = useTokenCharts({
@@ -188,12 +144,6 @@ export const TokenCharts = forwardRef(
         return 0;
       });
     }, [tokenChartsResult]);
-
-    const priceChartData = useMemo(() => {
-      if (!tokenCharts) return undefined;
-
-      return priceChartFormat(tokenCharts);
-    }, [tokenCharts]);
 
     const formattedTvlData = useMemo(() => {
       return tokenCharts.map((data) => {
@@ -216,10 +166,6 @@ export const TokenCharts = forwardRef(
         };
       });
     }, [volumeData]);
-
-    const handlePriceHoverChange = (data: any) => {
-      setPriceData(data as PriceLine);
-    };
 
     const weeklyVolumeData = useTransformedVolumeData(volumeData, "week");
     const monthlyVolumeData = useTransformedVolumeData(volumeData, "month");
@@ -315,10 +261,6 @@ export const TokenCharts = forwardRef(
                   : formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
                 : chartView === ChartView.TVL
                 ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
-                : priceChartData
-                ? showPrice
-                  ? formatDollarTokenPrice(priceChartData[priceChartData.length - 1]?.close)
-                  : ""
                 : "--"}
             </Typography>
 
@@ -332,20 +274,6 @@ export const TokenCharts = forwardRef(
             >
               {valueLabel || ""}
             </Typography>
-
-            {priceData ? (
-              <Typography
-                color="text.primary"
-                fontWeight={500}
-                sx={{
-                  height: "20px",
-                }}
-                fontSize="12px"
-              >
-                O:{toSignificant(priceData.open, 4)} H: {toSignificant(priceData.high, 4)} L:{" "}
-                {toSignificant(priceData.low, 4)} C: {toSignificant(priceData.close, 4)}
-              </Typography>
-            ) : null}
           </Box>
 
           <Box>
@@ -430,18 +358,7 @@ export const TokenCharts = forwardRef(
               <Box sx={{ height: "340px", width: "auto" }} />
             )
           ) : chartView === ChartView.PRICE ? (
-            priceChart ||
-            (priceChartData && priceChartData.length > 0 ? (
-              <CandleChart
-                height={340}
-                data={priceChartData}
-                setValue={setLatestValue}
-                setLabel={setValueLabel}
-                onHoverChange={handlePriceHoverChange}
-              />
-            ) : (
-              <Box sx={{ height: "340px", width: "auto" }} />
-            ))
+            priceChart
           ) : chartView === ChartView.DexScreener ? (
             <DexScreener id={dexScreenId ?? canisterId} height={dexScreenHeight ?? "420px"} />
           ) : chartView === ChartView.DexTools ? (

@@ -14,6 +14,8 @@ export const DEFAULT_SWAP_OUTPUT_ID = isIC ? ICS.address : ICS.address;
 
 export const SWAP_REFRESH_KEY = "swap";
 
+export const SWAP_RECLAIM_REFRESH = "SWAP_RECLAIM_REFRESH";
+
 export const SWAP_CHART_CURRENT_PRICE_COLOR = "#ffffff";
 export const SWAP_CHART_RANGE_PRICE_COLOR = "#8672FF";
 

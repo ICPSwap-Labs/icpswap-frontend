@@ -117,7 +117,7 @@ export function WalletIndex() {
       <LogoutConfirm />
       <RemoveTokenConfirm />
       <ConvertToIcpConfirm />
-      <XTCTopUpModal open={xtcTopUpShow} onClose={handleXTCCloseTopUp} />
+      {xtcTopUpShow ? <XTCTopUpModal open={xtcTopUpShow} onClose={handleXTCCloseTopUp} /> : null}
     </>
   );
 }

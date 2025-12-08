@@ -10,7 +10,7 @@ import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
 import { useSelectedCanistersManager } from "store/nft/hooks";
 import FilledTextField, { FilledTextFiledMenus, FilledTextFieldLabel } from "components/Input/FilledTextField";
 import { Identity as TypeIdentity, CanisterCreateDetails } from "types/index";
-import PercentageSlider from "components/PercentageSlider/Marks";
+import { MuiSlider } from "components/Slider/MuiSlider/Marks";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { BigNumber, parseTokenAmount, isValidUrl, numberToString } from "@icpswap/utils";
@@ -414,7 +414,7 @@ export default function NFTCanisterCreate() {
               </Box>
 
               <Box mt="30px">
-                <PercentageSlider
+                <MuiSlider
                   value={Number(values.royalties ?? 0)}
                   onChange={(event: any, value: string) => onFieldChange(value, "royalties")}
                   size="small"

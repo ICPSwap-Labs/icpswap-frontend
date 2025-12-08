@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import { makeStyles, useTheme, Box, Grid, Typography, Theme } from "components/Mui";
 import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import LockIcon from "assets/images/swap/Lock";
-import { NumberTextField, TokenImage, MaxButton } from "components/index";
+import { NumberTextField, TokenImage } from "components/index";
 import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { isDarkTheme } from "utils";
 import { nonUndefinedOrNull, parseTokenAmount, BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
-import { SwapBalancesSlider } from "components/swap/SwapBalancesSlider";
+// import { TokenBalanceSlider } from "components/Slider/index";
 import { Null } from "@icpswap/types";
 import { WalletBalance } from "components/swap/WalletBalance";
 import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
@@ -130,11 +130,8 @@ export function SwapDepositAmount({
   onUserInput,
   type,
   currencyBalance,
-  showMaxButton,
-  onMax,
   subAccountBalance,
   unusedBalance,
-  maxSpentAmount,
   noLiquidity,
   poolId,
 }: SwapDepositAmountProps) {
@@ -224,30 +221,21 @@ export function SwapDepositAmount({
               ) : null}
 
               <WalletBalance onClick={handleWalletBalanceClick} currencyBalance={currencyBalance} />
-
-              {!!showMaxButton && !!onMax ? <MaxButton onClick={onMax} /> : null}
             </Flex>
           </Flex>
         ) : null}
       </Flex>
 
-      {currency ? (
+      {/* {currency ? (
         <Box sx={{ margin: "8px 0 0 0", width: "50%" }}>
-          <SwapBalancesSlider
+          <TokenBalanceSlider
+            value={value.toString()}
             token={currency}
-            unusedBalance={unusedBalance}
-            subAccountBalance={subAccountBalance}
-            balance={
-              currencyBalance && currency
-                ? formatTokenAmount(currencyBalance.toExact(), currency.decimals).toString()
-                : undefined
-            }
+            totalAmount={maxSpentAmount}
             onAmountChange={onUserInput}
-            amount={value}
-            maxSpentAmount={maxSpentAmount}
           />
         </Box>
-      ) : null}
+      ) : null} */}
 
       {locked && <LockMask type={type} />}
     </Box>

@@ -9,6 +9,7 @@ import { useUpdateTokenStandard, useTokenStandards } from "store/token/cache/hoo
 import { usePoolCanisterIdManager, useUpdateAllSwapPools } from "store/swap/hooks";
 import { updateCanisters } from "store/allCanisters";
 import { updateTokens } from "store/allTokens";
+import { useGlobalTokenList } from "store/global/hooks";
 
 export const Tokens = [XTC, CAT, MOD, BoomDAO, ckSepoliaUSDC, ckSepoliaETH];
 
@@ -21,6 +22,9 @@ export function useInitialTokenStandard() {
   const updateAllSwapPools = useUpdateAllSwapPools();
   const [, updatePoolCanisterId] = usePoolCanisterIdManager();
 
+  const tokensFromTokenList = useGlobalTokenList();
+
+  // All swap tokens
   useEffect(() => {
     if (network === NETWORK.IC) {
       Promise.all([getSwapPools()]).then(([allSwapPools]) => {
@@ -70,6 +74,19 @@ export function useInitialTokenStandard() {
       setUpdated(true);
     }
   }, []);
+
+  // Update the token standards from token list
+  // Some token only exist in token list but not in swap pools
+  useEffect(() => {
+    if (tokensFromTokenList && tokensFromTokenList.length > 0) {
+      const standards = tokensFromTokenList.map((token) => ({
+        canisterId: token.canisterId,
+        standard: token.standard as TOKEN_STANDARD,
+      }));
+
+      updateTokenStandard(standards);
+    }
+  }, [tokensFromTokenList]);
 
   useEffect(() => {
     if (network === NETWORK.IC) {

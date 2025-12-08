@@ -15,10 +15,10 @@ import { Token } from "@icpswap/swap-sdk";
 import { useStakeCall } from "hooks/staking-token/useStake";
 import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import PercentageSlider from "components/PercentageSlider/ui";
 import { useStakingPoolState } from "@icpswap/hooks";
 import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { TokenBalanceSlider } from "components/Slider";
 
 export interface StakeProps {
   poolId: string | undefined;
@@ -32,7 +32,6 @@ export interface StakeProps {
 export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onStakeSuccess }: StakeProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipal();
-  const [percent, setPercent] = useState(0);
   const [amount, setAmount] = useState<string>("");
 
   const stakeTokenPrice = useUSDPrice(stakeToken);
@@ -52,7 +51,6 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
         ).toString();
 
         setAmount(amount);
-        setPercent(100);
       } else {
         setAmount(parseTokenAmount(balance, stakeToken.decimals).toString());
       }
@@ -62,40 +60,8 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
   const handleAmountChange = useCallback(
     (amount: string) => {
       setAmount(amount);
-
-      if (amount === "") {
-        setPercent(0);
-        return;
-      }
-
-      if (balance && stakeToken) {
-        const _balance = parseTokenAmount(balance, stakeToken.decimals);
-
-        if (!_balance.isGreaterThan(amount)) {
-          setPercent(100);
-        } else {
-          setPercent(Number(new BigNumber(amount).dividedBy(_balance).multipliedBy(100).toFixed(0)));
-        }
-      }
     },
-    [balance, stakeToken],
-  );
-
-  const handleSliderChange = useCallback(
-    (event, value) => {
-      setPercent(value);
-
-      if (balance && stakeToken) {
-        if (new BigNumber(balance).isLessThan(stakeToken.transFee)) return;
-
-        const amount = parseTokenAmount(new BigNumber(balance).minus(stakeToken.transFee), stakeToken.decimals)
-          .multipliedBy(value)
-          .dividedBy(100);
-
-        setAmount(amount.toString());
-      }
-    },
-    [balance, stakeToken],
+    [setAmount],
   );
 
   const handleStaking = async () => {
@@ -213,7 +179,14 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
         </Flex>
 
         <Box mt="24px" sx={{ padding: "0 10px 0 0" }}>
-          <PercentageSlider value={percent} onChange={handleSliderChange} />
+          <TokenBalanceSlider
+            value={amount}
+            width="100%"
+            totalAmount={balance && stakeToken ? parseTokenAmount(balance, stakeToken.decimals).toString() : undefined}
+            token={stakeToken}
+            onAmountChange={handleAmountChange}
+            trackColor="#4F5A84"
+          />
         </Box>
 
         <Button

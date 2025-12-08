@@ -52,7 +52,6 @@ export function TokenCharts() {
         canisterId={priceToken?.address}
         background={3}
         borderRadius="0px"
-        showPrice={false}
         showTopIfDexScreen={false}
         dexScreenId={poolId}
         tokenPairWithIcp={tokenPairWithIcp}
