@@ -7,15 +7,15 @@ import {
   isValidPrincipal,
   nonUndefinedOrNull,
   numToPercent,
-  shorten,
+  principalToAccount,
 } from "@icpswap/utils";
-import { Flex, TextButton, APRPanel, Link } from "@icpswap/ui";
+import { Flex, TextButton, APRPanel, Link, TextualAddress } from "@icpswap/ui";
 import { Position } from "@icpswap/swap-sdk";
 import { useAddressAlias, usePositionAPRChartData } from "@icpswap/hooks";
 import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
 import { LimitLabel } from "components/swap/limit-order/index";
 import { usePositionState, useLoadLiquidityPageCallback } from "hooks/liquidity";
-import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
+import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger, useCopySuccess } from "hooks/index";
 import { useCallback, useMemo } from "react";
 import { Null } from "@icpswap/types";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
@@ -40,6 +40,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
   const positionState = usePositionState(position);
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const principal = useAccountPrincipal();
+  const copySuccess = useCopySuccess();
 
   const [, setRefreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
@@ -93,6 +94,14 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     principal: owner ? (isValidPrincipal(owner) ? owner : null) : null,
   });
 
+  const __owner = useMemo(() => {
+    if (isUndefinedOrNull(owner)) return {};
+    if (isValidAccount(owner)) return { account: owner, principal: null };
+    if (isValidPrincipal(owner)) return { account: principalToAccount(owner), principal: owner };
+
+    return {};
+  }, [owner]);
+
   const isLimit = useIsLimitOrder({ poolId: position.pool.id, positionId });
 
   return (
@@ -116,7 +125,14 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
 
           <Flex gap="0 4px">
             <Typography color="text.primary">
-              {owner ? (nonUndefinedOrNull(addressAlias) ? addressAlias : shorten(owner)) : "--"}
+              <TextualAddress
+                owner={__owner.principal}
+                account={__owner.account}
+                alias={addressAlias}
+                sx={{ color: "text.primary" }}
+                onCopy={copySuccess}
+                length={6}
+              />
             </Typography>
 
             <IsSneedOwner isSneed={isSneed} />

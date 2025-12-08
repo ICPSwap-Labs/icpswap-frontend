@@ -344,8 +344,12 @@ export function TokenDetail() {
                 <Typography>{t("common.controllers")}</Typography>
                 <Flex vertical gap="8px 0" align="flex-start">
                   {canisterInfo && canisterInfo.controllers
-                    ? canisterInfo.controllers.map((e) => {
-                        return <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{e}</Typography>;
+                    ? canisterInfo.controllers.map((element) => {
+                        return (
+                          <Typography key={element} sx={{ color: "text.primary", fontSize: "16px" }}>
+                            {element}
+                          </Typography>
+                        );
                       })
                     : "--"}
                 </Flex>
