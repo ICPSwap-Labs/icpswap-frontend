@@ -1,7 +1,5 @@
-import { Slider, Tooltip, tooltipClasses, SliderProps, styled, makeStyles, Theme } from "components/Mui";
+import { Slider, Tooltip, tooltipClasses, styled, makeStyles, Theme } from "components/Mui";
 import { isDarkTheme } from "utils";
-
-const marks = [{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { value: 100 }];
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -47,7 +45,7 @@ const LightTooltip = styled(({ className, ...props }) => <Tooltip {...props} cla
   }),
 );
 
-const ValueLabelComponent = (props: { children: React.ReactChild; value: string | number }) => {
+const ValueLabelComponent = (props: any) => {
   const { children, value } = props;
   const classes = useStyle();
 
@@ -58,7 +56,19 @@ const ValueLabelComponent = (props: { children: React.ReactChild; value: string 
   );
 };
 
-export default function PercentageSlider(props: SliderProps) {
+export type SliderMark = {
+  value: number;
+};
+
+export interface SliderProps {
+  marks?: SliderMark[];
+  [x: string]: any;
+}
+
+export function MuiSlider({
+  marks = [{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { value: 100 }],
+  ...props
+}: SliderProps) {
   const classes = useStyle();
 
   return (

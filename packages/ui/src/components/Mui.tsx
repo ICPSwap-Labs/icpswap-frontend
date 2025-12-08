@@ -19,7 +19,7 @@ export { default as InputAdornment } from "@mui/material/InputAdornment";
 export { default as Avatar, type AvatarProps } from "@mui/material/Avatar";
 export { default as Link } from "@mui/material/Link";
 export { default as makeStyles } from "@mui/styles/makeStyles";
-export { default as Tooltip, tooltipClasses } from "@mui/material/Tooltip";
+export { default as Tooltip, tooltipClasses, type TooltipProps } from "@mui/material/Tooltip";
 export { default as Chip } from "@mui/material/Chip";
 export { default as Menu } from "@mui/material/Menu";
 export { default as Pagination } from "@mui/material/Pagination";
