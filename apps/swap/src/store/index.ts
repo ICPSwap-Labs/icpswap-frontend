@@ -26,6 +26,7 @@ import { Web3State } from "./web3/states";
 import { SnsState } from "./sns/states";
 import { LimitOrderState } from "./swap/limit-order/state";
 import { TransactionsState } from "./transactions/reducer";
+import { PriceAlertsState } from "./price-alerts/states";
 
 interface PersistPartial {
   _persist: PersistState;
@@ -51,6 +52,7 @@ export interface AllState {
   sns: SnsState;
   transactions: TransactionsState;
   limitOrder: LimitOrderState;
+  priceAlerts: PriceAlertsState;
 }
 
 const defaultStorageConfig = {

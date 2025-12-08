@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 
-import { TextField, Typography, Box, Menu, Grid, MenuItem, Theme, makeStyles } from "../Mui";
+import { TextField, Typography, Box, Menu, Grid, MenuItem, Theme, makeStyles, TextFieldProps } from "../Mui";
 import { NoData } from "../NoData";
 
 interface UseStylesProps {
@@ -83,6 +83,8 @@ export interface FilledTextFieldProps {
   fontSize?: string;
   placeholderSize?: string;
   background?: string;
+  textFieldProps?: TextFieldProps;
+  disabledTextColor?: string;
   [x: string]: any;
 }
 
@@ -165,6 +167,8 @@ function UIFilledTextField(
     border,
     background,
     labelSize,
+    textFieldProps,
+    disabledTextColor,
     ...props
   }: FilledTextFieldProps,
   ref,
@@ -230,9 +234,14 @@ function UIFilledTextField(
               {!select ? (
                 <TextField
                   sx={{
-                    "& input": {
+                    "& input.MuiInputBase-input": {
                       lineHeight: "1.15rem",
                       fontSize: props.fontSize ?? "16px",
+                      "&.Mui-disabled": disabledTextColor
+                        ? {
+                            WebkitTextFillColor: disabledTextColor,
+                          }
+                        : {},
                     },
                     "& textarea": {
                       lineHeight: "1.15rem",
@@ -252,8 +261,11 @@ function UIFilledTextField(
                   value={value}
                   multiline={multiline}
                   slotProps={{
+                    ...textFieldProps?.slotProps,
                     input: {
                       disableUnderline: true,
+                      autoComplete: "off",
+                      ...textFieldProps?.slotProps?.input,
                     },
                   }}
                   fullWidth

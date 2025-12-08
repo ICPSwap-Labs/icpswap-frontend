@@ -21,6 +21,7 @@ export type IcpSwapAPIPageResult<T> = {
 export type IcpSwapAPIResult<T> = {
   code: number;
   data: T;
+  message: string;
 };
 
 export type IcpSwapAPITokenHolderDetail = {

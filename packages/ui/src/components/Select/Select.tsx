@@ -83,7 +83,7 @@ export function Select({
 
   return (
     <>
-      <Box ref={wrapperRef}>
+      <Box ref={wrapperRef} sx={{ height: fullHeight ? "100%" : "auto" }}>
         <SelectPanel
           filled={filled}
           showBackground={showBackground}

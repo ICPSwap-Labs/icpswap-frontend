@@ -238,7 +238,7 @@ function FilledTextField(
             {!select ? (
               <TextField
                 sx={{
-                  "& input": {
+                  "& input.MuiInputBase-input": {
                     lineHeight: "1.15rem",
                     fontSize: props.fontSize ?? "16px",
                   },

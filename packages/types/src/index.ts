@@ -16,3 +16,4 @@ export * from "./icpswap-api";
 export * from "./info-api";
 export * from "./social-media";
 export * from "./address-book";
+export * from "./price-alerts";

@@ -60,4 +60,5 @@ export enum ActorName {
 
   SocialMedia = "SocialMedia",
   AddressBook = "AddressBook",
+  PriceAlerts = "PriceAlerts",
 }

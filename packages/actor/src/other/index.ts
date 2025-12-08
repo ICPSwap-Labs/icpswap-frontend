@@ -4,3 +4,4 @@ export * from "./liquidityLocks";
 export * from "./setting";
 export * from "./socialMedia";
 export * from "./addressBook";
+export * from "./priceAlerts";
