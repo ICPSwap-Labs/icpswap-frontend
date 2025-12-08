@@ -268,7 +268,7 @@ importers:
         version: 8.8.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@mui/material@6.1.7(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mui/system@6.1.7(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(date-fns@2.30.0)(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@nfid/identitykit':
         specifier: 1.0.7
-        version: 1.0.7(uxdtoakra4pwm5usgf3a5mva5a)
+        version: 1.0.7(8149cb67a5afae4f5c11947f0b698638)
       '@noble/hashes':
         specifier: ^1.6.1
         version: 1.6.1
@@ -305,15 +305,6 @@ importers:
       '@types/react-router':
         specifier: ^5.1.20
         version: 5.1.20
-      '@web3-react/core':
-        specifier: ^8.2.3
-        version: 8.2.3(@types/react@18.2.0)(bufferutil@4.0.8)(immer@10.1.1)(react@18.2.0)
-      '@web3-react/metamask':
-        specifier: ^8.2.4
-        version: 8.2.4(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
-      '@web3-react/types':
-        specifier: ^8.2.3
-        version: 8.2.3(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
       apexcharts:
         specifier: ^3.54.1
         version: 3.54.1
@@ -2592,10 +2583,6 @@ packages:
     peerDependencies:
       react: ^16.13.1 || ^17.0.0
 
-  '@metamask/detect-provider@1.2.0':
-    resolution: {integrity: sha512-ocA76vt+8D0thgXZ7LxFPyqw3H7988qblgzddTDA6B8a/yU0uKV42QR/DhA+Jh11rJjxW0jKvwb5htA6krNZDQ==}
-    engines: {node: '>= 10'}
-
   '@metamask/eth-json-rpc-provider@1.0.1':
     resolution: {integrity: sha512-whiUMPlAOrVGmX8aKYVPvlKyG4CpQXiNNyt74vE1xb5sPvmx5oA7B/kOi/JdBvhGQq97U1/AVdXEdk2zkP8qyA==}
     engines: {node: '>=14.0.0'}
@@ -4451,20 +4438,6 @@ packages:
 
   '@walletconnect/window-metadata@1.0.1':
     resolution: {integrity: sha512-9koTqyGrM2cqFRW517BPY/iEtUDx2r1+Pwwu5m7sJ7ka79wi3EyqhqcICk/yDmv6jAS1rjKgTKXlEhanYjijcA==}
-
-  '@web3-react/core@8.2.3':
-    resolution: {integrity: sha512-0ezmRKhqQpoa9ct2/3erg60zBXfC/f/liYR1mfSGKtIroRkLnPARigZSV6pI+fi8bhfGJ0RKtFWyTCCWZzdq1w==}
-    peerDependencies:
-      react: '>=16.8'
-
-  '@web3-react/metamask@8.2.4':
-    resolution: {integrity: sha512-4yoqDgvcB0QKUGSk00/fUipA3z5rOXcQYAwE0CABPa5lbTRAIm5i8F0Gj8UW7QO0pQus4UtjX0+JxWdclB7UrA==}
-
-  '@web3-react/store@8.2.3':
-    resolution: {integrity: sha512-qUJQ5pDsYYDra+/+glq2BmIS43HYAiEZ22sLLVh6E75WiZKRNOOqUxBDPe33KTIn718DLt51j+wd2FT+oT/kJQ==}
-
-  '@web3-react/types@8.2.3':
-    resolution: {integrity: sha512-kSG90QkN+n7IOtp10nQ44oS8J7jzfH9EmqnruwBpCGybh1FM/ohyRvUKWYZNfNE4wsjTSpKsINR0/VdDsZMHyg==}
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -12562,21 +12535,6 @@ packages:
   zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
-  zustand@4.4.0:
-    resolution: {integrity: sha512-2dq6wq4dSxbiPTamGar0NlIG/av0wpyWZJGeQYtUOLegIUvhM2Bf86ekPlmgpUtS5uR7HyetSiktYrGsdsyZgQ==}
-    engines: {node: '>=12.7.0'}
-    peerDependencies:
-      '@types/react': '>=16.8'
-      immer: '>=9.0'
-      react: '>=16.8'
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      immer:
-        optional: true
-      react:
-        optional: true
-
   zustand@4.4.1:
     resolution: {integrity: sha512-QCPfstAS4EBiTQzlaGP1gmorkh/UL1Leaj2tdj+zZCZ/9bm0WS7sI2wnfD5lpOszFqWJ1DcPnGoY8RDL61uokw==}
     engines: {node: '>=12.7.0'}
@@ -15306,8 +15264,6 @@ snapshots:
     dependencies:
       react: 18.2.0
 
-  '@metamask/detect-provider@1.2.0': {}
-
   '@metamask/eth-json-rpc-provider@1.0.1':
     dependencies:
       '@metamask/json-rpc-engine': 7.3.3
@@ -15589,10 +15545,10 @@ snapshots:
       '@babel/runtime': 7.25.0
       '@mui/core-downloads-tracker': 6.1.7
       '@mui/system': 6.1.7(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0)
-      '@mui/types': 7.2.19(@types/react@18.2.0)
+      '@mui/types': 7.4.4(@types/react@18.2.0)
       '@mui/utils': 6.1.7(@types/react@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.8
-      '@types/react-transition-group': 4.4.11
+      '@types/react-transition-group': 4.4.12(@types/react@18.2.0)
       clsx: 2.1.1
       csstype: 3.1.3
       prop-types: 15.8.1
@@ -15691,7 +15647,7 @@ snapshots:
       '@babel/runtime': 7.25.0
       '@mui/private-theming': 6.1.7(@types/react@18.2.0)(react@18.2.0)
       '@mui/styled-engine': 6.1.7(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(react@18.2.0)
-      '@mui/types': 7.2.19(@types/react@18.2.0)
+      '@mui/types': 7.4.4(@types/react@18.2.0)
       '@mui/utils': 6.1.7(@types/react@18.2.0)(react@18.2.0)
       clsx: 2.1.1
       csstype: 3.1.3
@@ -15727,8 +15683,8 @@ snapshots:
   '@mui/utils@6.1.7(@types/react@18.2.0)(react@18.2.0)':
     dependencies:
       '@babel/runtime': 7.25.0
-      '@mui/types': 7.2.19(@types/react@18.2.0)
-      '@types/prop-types': 15.7.13
+      '@mui/types': 7.4.4(@types/react@18.2.0)
+      '@types/prop-types': 15.7.15
       clsx: 2.1.1
       prop-types: 15.8.1
       react: 18.2.0
@@ -15780,7 +15736,7 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@nfid/identitykit@1.0.7(uxdtoakra4pwm5usgf3a5mva5a)':
+  '@nfid/identitykit@1.0.7(8149cb67a5afae4f5c11947f0b698638)':
     dependencies:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
       '@dfinity/auth-client': 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
@@ -17753,47 +17709,6 @@ snapshots:
     dependencies:
       '@walletconnect/window-getters': 1.0.1
       tslib: 1.14.1
-
-  '@web3-react/core@8.2.3(@types/react@18.2.0)(bufferutil@4.0.8)(immer@10.1.1)(react@18.2.0)':
-    dependencies:
-      '@web3-react/store': 8.2.3(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
-      '@web3-react/types': 8.2.3(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
-      react: 18.2.0
-      zustand: 4.4.0(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
-    optionalDependencies:
-      '@ethersproject/providers': 5.7.2(bufferutil@4.0.8)
-    transitivePeerDependencies:
-      - '@types/react'
-      - bufferutil
-      - immer
-      - utf-8-validate
-
-  '@web3-react/metamask@8.2.4(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)':
-    dependencies:
-      '@metamask/detect-provider': 1.2.0
-      '@web3-react/types': 8.2.3(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@types/react'
-      - immer
-      - react
-
-  '@web3-react/store@8.2.3(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)':
-    dependencies:
-      '@ethersproject/address': 5.7.0
-      '@web3-react/types': 8.2.3(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
-      zustand: 4.4.0(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@types/react'
-      - immer
-      - react
-
-  '@web3-react/types@8.2.3(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)':
-    dependencies:
-      zustand: 4.4.0(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0)
-    transitivePeerDependencies:
-      - '@types/react'
-      - immer
-      - react
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -27990,14 +27905,6 @@ snapshots:
   zod@3.22.4: {}
 
   zod@3.23.8: {}
-
-  zustand@4.4.0(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0):
-    dependencies:
-      use-sync-external-store: 1.2.0(react@18.2.0)
-    optionalDependencies:
-      '@types/react': 18.2.0
-      immer: 10.1.1
-      react: 18.2.0
 
   zustand@4.4.1(@types/react@18.2.0)(immer@10.1.1)(react@18.2.0):
     dependencies:

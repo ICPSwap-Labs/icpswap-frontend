@@ -41,7 +41,7 @@ function Transaction({ transaction }: TransactionProps) {
       <Flex vertical gap="12px 0" align="flex-start">
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.block")}</Typography>
-          <Typography color="text.primary">{txResponse?.blockNumber}</Typography>
+          <Typography color="text.primary">{txResponse?.blockNumber.toString()}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">

@@ -1,12 +1,12 @@
 export interface SerializableTransactionReceipt {
-  to: string;
+  to: `0x${string}` | null;
   from: string;
-  contractAddress: string;
+  contractAddress: `0x${string}` | null | undefined;
   transactionIndex: number;
   blockHash: string;
   transactionHash: string;
   blockNumber: number;
-  status?: number;
+  status?: "success" | "reverted";
 }
 
 /**

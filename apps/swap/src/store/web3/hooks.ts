@@ -17,7 +17,7 @@ import {
   cleanBitcoinFinalizedHashes,
   cleanEthereumFinalizedHashes,
 } from "store/web3/actions";
-import { TransactionResponse } from "@ethersproject/abstract-provider";
+import { TransactionReceipt } from "viem";
 import store from "store/index";
 import { BitcoinTxResponse } from "types/ckBTC";
 import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
@@ -67,7 +67,7 @@ export function useUpdateEthereumTxResponse() {
   const principal = useAccountPrincipalString();
 
   return useCallback(
-    (hash: string, response: TransactionResponse) => {
+    (hash: string, response: TransactionReceipt) => {
       if (isUndefinedOrNull(principal)) return;
 
       dispatch(

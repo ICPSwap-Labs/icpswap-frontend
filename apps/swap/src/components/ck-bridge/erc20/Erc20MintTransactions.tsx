@@ -71,7 +71,7 @@ function Transaction({ token, transaction }: TransactionProps) {
                 color="secondary"
                 textDecorationColor="secondary"
               >
-                {transactionResponse.blockNumber}
+                {transactionResponse.blockNumber.toString()}
               </ALink>
             ) : (
               "--"
