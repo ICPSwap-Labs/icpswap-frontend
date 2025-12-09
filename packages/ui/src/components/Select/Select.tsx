@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo, ReactNode } from "react";
+import { useEffect, useState, useRef, useMemo, ReactNode, memo } from "react";
 
 import { Box } from "../Mui";
 import { SelectPanel } from "./Panel";
@@ -23,7 +23,7 @@ export interface SelectProps {
   onSearch?: (search: string | undefined) => void;
   customLabel?: boolean;
   border?: boolean;
-  menuFilter?: (menu: MenuProps) => boolean;
+  menuFilter?: (menu: MenuProps, search: string | undefined) => boolean;
   filled?: boolean;
   showClean?: boolean;
   showBackground?: boolean;
@@ -33,7 +33,7 @@ export interface SelectProps {
   panel?: (menu: MenuProps | null | undefined) => ReactNode;
 }
 
-export function Select({
+const __Select = ({
   label,
   value,
   onChange,
@@ -58,7 +58,7 @@ export function Select({
   placeholder,
   panelPadding,
   panel,
-}: SelectProps) {
+}: SelectProps) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const wrapperRef = useRef<HTMLElement | null>(null);
   const [menuWidth, setMenuWidth] = useState<number | undefined>(undefined);
@@ -124,4 +124,6 @@ export function Select({
       />
     </>
   );
-}
+};
+
+export const Select = memo(__Select);
