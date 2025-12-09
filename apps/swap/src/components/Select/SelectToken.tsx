@@ -2,7 +2,7 @@ import { Box, Typography } from "components/Mui";
 import { useEffect, useMemo, useState, ReactNode } from "react";
 import { Select } from "components/Select/ForToken";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
-import { isValidPrincipal } from "@icpswap/utils";
+import { isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import type { IcpSwapAPITokenInfo } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
@@ -20,7 +20,10 @@ interface TokenMenuItemProps {
 }
 
 function isTokenFilteredBySearch(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
-  if (!!search && isValidPrincipal(search) && tokenInfo.ledgerId.toString() !== search) return true;
+  if (nonUndefinedOrNull(search) && isValidPrincipal(search)) {
+    return tokenInfo.ledgerId.toString() !== search;
+  }
+
   if (
     !!search &&
     !!tokenInfo &&
