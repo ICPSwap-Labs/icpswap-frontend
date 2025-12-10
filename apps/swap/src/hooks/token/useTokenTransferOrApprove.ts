@@ -8,6 +8,7 @@ import { isUseTransferByStandard } from "utils/token/index";
 import { tokenTransfer } from "hooks/token/calls";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 export interface UseTokenSubAccountTransferArgs {
   token: Token;
@@ -66,6 +67,8 @@ export function useTokenApprove() {
 
   return useCallback(
     async ({ token, amount, spender, standard, options }: UseTokenApproveArgs) => {
+      if (isUndefinedOrNull(principal)) return false;
+
       const { status, message } = await approve({
         canisterId: token.address,
         spender,

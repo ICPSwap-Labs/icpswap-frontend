@@ -13,7 +13,7 @@ import { Identity as TypeIdentity, CanisterCreateDetails } from "types/index";
 import { MuiSlider } from "components/Slider/MuiSlider/Marks";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { BigNumber, parseTokenAmount, isValidUrl, numberToString } from "@icpswap/utils";
+import { BigNumber, parseTokenAmount, isValidUrl, numberToString, isUndefinedOrNull } from "@icpswap/utils";
 import { useApprove } from "hooks/token/useApprove";
 import { useAccount } from "store/auth/hooks";
 import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
@@ -71,7 +71,7 @@ export default function NFTCanisterCreate() {
   const approve = useApprove();
 
   const handleMint = async (identity: TypeIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-    if (loading) return;
+    if (loading || isUndefinedOrNull(account)) return;
 
     const { status: approveStatus } = await approve({
       canisterId: NFTTradeTokenCanisterId,

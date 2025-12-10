@@ -86,9 +86,8 @@ export function useIncreaseLiquidityCalls() {
 
       const approveToken0 = async () => {
         if (noApproveByTokenInsufficient(token0Insufficient)) return true;
-
         if (amount0Desired !== "0")
-          return await approve({ token: position.pool.token0, amount: amount0Desired, poolId });
+          return await approve({ token: token0, amount: amount0Desired, poolId, standard: token0.standard });
         return true;
       };
 
@@ -96,7 +95,12 @@ export function useIncreaseLiquidityCalls() {
         if (noApproveByTokenInsufficient(token1Insufficient)) return true;
 
         if (amount1Desired !== "0")
-          return await approve({ token: position.pool.token1, amount: amount1Desired, poolId });
+          return await approve({
+            token: token1,
+            amount: amount1Desired,
+            poolId,
+            standard: token1.standard,
+          });
         return true;
       };
 

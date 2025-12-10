@@ -2,7 +2,7 @@ import { useAccountPrincipalString } from "store/auth/hooks";
 import { useCallback, useMemo, useState } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { principalToBytes32 } from "utils/ic/index";
-import { formatTokenAmount } from "@icpswap/utils";
+import { formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { Token } from "@icpswap/swap-sdk";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { ckETH } from "constants/ckETH";
@@ -28,7 +28,7 @@ export function useDissolveCallback() {
 
   const dissolve_call = useCallback(
     async (ckErc20Token: Token, rawAmount: string | number, recipient: string) => {
-      if (!bytes32) return undefined;
+      if (!bytes32 || isUndefinedOrNull(principal)) return undefined;
 
       setLoading(true);
 

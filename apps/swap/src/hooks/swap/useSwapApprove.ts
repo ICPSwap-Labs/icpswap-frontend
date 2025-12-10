@@ -12,7 +12,8 @@ export interface UseSwapApproveArgs {
   amount: string;
   poolId: string;
   options?: TIP_OPTIONS;
-  standard?: TOKEN_STANDARD;
+  // Because some tokens has different standard in different pools, so need to pass standard here
+  standard: TOKEN_STANDARD | string;
 }
 
 export function useSwapApprove() {
@@ -38,7 +39,7 @@ export function useSwapApprove() {
           spender: poolId,
           value: multipleApproveAmount,
           account: principal,
-          standard,
+          standard: standard as TOKEN_STANDARD,
         });
 
         if (status === "err") {

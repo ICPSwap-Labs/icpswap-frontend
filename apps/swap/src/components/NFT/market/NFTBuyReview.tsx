@@ -13,7 +13,7 @@ import {
   WRAPPED_ICP_TOKEN_INFO,
   NFTTradeFee,
 } from "constants/index";
-import { parseTokenAmount, numberToString, formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { parseTokenAmount, numberToString, formatDollarAmount, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { useICPAmountUSDValue } from "store/global/hooks";
 import { useAccount } from "store/auth/hooks";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
@@ -59,7 +59,7 @@ export default function NFTBuyReview({
     .toNumber();
 
   const handleBuyNFT = async (identity: ActorIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-    if (loading) return;
+    if (loading || isUndefinedOrNull(account)) return;
 
     const TradeCanisterId = getCanisterId(CANISTER_NAMES.NFTTrade);
 

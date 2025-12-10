@@ -18,7 +18,6 @@ import {
   ApproveRequest,
   AllowanceRequest,
   MetadataRequest,
-  SetLogoRequest,
   ActualReceivedByTransferRequest,
   BaseTokenResult,
 } from "./BaseTokenAdapter";
