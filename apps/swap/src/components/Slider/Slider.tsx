@@ -1,5 +1,12 @@
 import { Box, useTheme } from "components/Mui";
-import { BigNumber, nonUndefinedOrNull, isUndefinedOrNull, percentToNum, numToPercent } from "@icpswap/utils";
+import {
+  BigNumber,
+  nonUndefinedOrNull,
+  isUndefinedOrNull,
+  percentToNum,
+  numToPercent,
+  isUndefinedOrNullOrEmpty,
+} from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -47,7 +54,8 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
   }, [value]);
 
   const { percentage } = useMemo(() => {
-    if (isUndefinedOrNull(totalAmount) || isUndefinedOrNull(amount)) return { percentage: undefined };
+    // Fix amount may be empty string
+    if (isUndefinedOrNullOrEmpty(totalAmount) || isUndefinedOrNullOrEmpty(amount)) return { percentage: undefined };
 
     const percentage =
       isUndefinedOrNull(amount) || new BigNumber(amount).isEqualTo(0) || new BigNumber(totalAmount).isEqualTo(0)
