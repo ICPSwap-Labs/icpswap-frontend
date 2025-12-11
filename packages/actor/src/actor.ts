@@ -195,6 +195,7 @@ export class Actor {
       // We cannot guarantee the integrity of the response since it could be a replay attack."
       // https://forum.dfinity.org/t/error-occurs-during-intensive-download-requests-involving-multiple-canisters/47942
       retryTimes: 1000,
+      verifyQuerySignatures: false,
     });
   }
 
