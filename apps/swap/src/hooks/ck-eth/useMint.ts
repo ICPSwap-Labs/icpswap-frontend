@@ -3,13 +3,13 @@ import { useMemo, useState, useCallback } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { principalToBytes32 } from "utils/ic/index";
 import { useEthMinterHelperContract, useBlockNumber } from "hooks/web3/index";
-import { useWeb3React } from "@web3-react/core";
 import { toHexString } from "utils/web3/index";
 import { useUpdateEthMintTx } from "store/web3/hooks";
 import { Null } from "@icpswap/types";
 import { bytesStringOfNullSubAccount } from "constants/ckETH";
 import { useTranslation } from "react-i18next";
 import { ckETH } from "@icpswap/tokens";
+import { useEthersWalletProvider } from "hooks/web3/useEthersProvider";
 
 export interface MinterProps {
   minter_address: string | Null;
@@ -18,7 +18,7 @@ export interface MinterProps {
 export function useMintCallback({ minter_address }: MinterProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
-  const { provider } = useWeb3React();
+  const provider = useEthersWalletProvider();
   const blockNumber = useBlockNumber();
   const [openTip] = useTips();
 

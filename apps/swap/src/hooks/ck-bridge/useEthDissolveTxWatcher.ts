@@ -51,5 +51,5 @@ export function useEthDissolveTxWatcher() {
     return () => {
       clearInterval(timer);
     };
-  }, [txs, principal, openTip]);
+  }, [JSON.stringify(txs), principal, openTip]);
 }

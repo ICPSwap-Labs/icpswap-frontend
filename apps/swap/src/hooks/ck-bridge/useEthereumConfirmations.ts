@@ -1,10 +1,10 @@
-import { TransactionResponse } from "@ethersproject/abstract-provider";
+import { TransactionReceipt } from "viem";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useBlockNumber } from "hooks/web3";
 import { useCallback, useMemo } from "react";
 import { useGlobalMinterInfoManager } from "store/global/hooks";
 
-export function useEthereumConfirmations(transactionResponse: TransactionResponse | undefined) {
+export function useEthereumConfirmations(transactionResponse: TransactionReceipt | undefined) {
   const blockNumber = useBlockNumber();
 
   return useMemo(() => {
@@ -15,7 +15,7 @@ export function useEthereumConfirmations(transactionResponse: TransactionRespons
     )
       return undefined;
 
-    return Number(blockNumber) - transactionResponse.blockNumber;
+    return Number(blockNumber) - Number(transactionResponse.blockNumber);
   }, [blockNumber, transactionResponse]);
 }
 
@@ -45,10 +45,10 @@ export function useEthereumConfirmationsCallback() {
   const blockNumber = useBlockNumber();
 
   return useCallback(
-    (transactionResponse: TransactionResponse) => {
+    (transactionResponse: TransactionReceipt) => {
       if (isUndefinedOrNull(blockNumber) || isUndefinedOrNull(transactionResponse.blockNumber)) return undefined;
 
-      return Number(blockNumber) - transactionResponse.blockNumber;
+      return Number(blockNumber) - Number(transactionResponse.blockNumber);
     },
     [blockNumber],
   );

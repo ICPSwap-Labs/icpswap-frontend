@@ -55,7 +55,7 @@ export function EthereumMintConfirmations({ hash, erc20 }: EthereumMintConfirmat
 
   const block = useMemo(() => {
     if (isUndefinedOrNull(transactionResponse) || isUndefinedOrNull(transactionResponse.blockNumber)) return undefined;
-    return getBlocksToSyncedBlock(transactionResponse.blockNumber, erc20);
+    return getBlocksToSyncedBlock(Number(transactionResponse.blockNumber), erc20);
   }, [getBlocksToSyncedBlock, transactionResponse, erc20]);
 
   return (

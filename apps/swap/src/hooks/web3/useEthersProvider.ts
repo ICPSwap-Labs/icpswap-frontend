@@ -1,12 +1,12 @@
 import { Web3Provider } from "@ethersproject/providers";
-import type { Client, Transport, Chain } from "viem";
+import type { Client, Transport, Chain, WalletClient } from "viem";
 import { useMemo } from "react";
-import { useClient } from "wagmi";
+import { useClient, useConnectorClient } from "wagmi";
 import { mainnet } from "wagmi/chains";
 
 const providers = new WeakMap<Client, Web3Provider>();
 
-export function clientToWeb3js(client?: Client<Transport, Chain>) {
+export function clientToWeb3js(client?: Client<Transport, Chain> | WalletClient<Transport, Chain>) {
   if (!client) return undefined;
 
   const { transport } = client;
@@ -19,6 +19,12 @@ export function clientToWeb3js(client?: Client<Transport, Chain>) {
 /** Hook to convert a connected viem Client to an ethers.js Provider. */
 export function useEthersWeb3Provider({ chainId = 1 }: { chainId?: number } = {}) {
   const client = useClient({ chainId });
+
+  return useMemo(() => clientToWeb3js(client), [chainId, client]);
+}
+
+export function useEthersWalletProvider({ chainId = 1 }: { chainId?: number } = {}) {
+  const { data: client } = useConnectorClient({ chainId });
 
   return useMemo(() => clientToWeb3js(client), [chainId, client]);
 }

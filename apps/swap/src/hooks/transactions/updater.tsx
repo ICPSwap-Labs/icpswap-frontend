@@ -1,11 +1,11 @@
-import { TransactionReceipt } from "@ethersproject/abstract-provider";
+import { TransactionReceipt } from "viem";
 import { ChainId } from "@icpswap/constants";
-import { useWeb3React } from "@web3-react/core";
 import { useBlockNumber, useCurrentBlockTimestamp } from "hooks/web3/index";
 import ms from "ms";
 import { useCallback, useEffect } from "react";
 import { useTransactionRemover } from "store/transactions/hooks";
 import { TransactionDetails } from "store/transactions/types";
+import { useAccount, usePublicClient } from "wagmi";
 
 import { CanceledError, retry, RetryableError, RetryOptions } from "./retry";
 
@@ -51,7 +51,8 @@ interface UpdaterProps {
 }
 
 export default function Updater({ pendingTransactions, onCheck, onReceipt }: UpdaterProps): null {
-  const { account, chainId, provider } = useWeb3React();
+  const { address, chainId } = useAccount();
+  const publicClient = usePublicClient();
 
   const lastBlockNumber = useBlockNumber();
   // const fastForwardBlockNumber = useFastForwardBlockNumber();
@@ -60,13 +61,13 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
 
   const getReceipt = useCallback(
     (hash: string) => {
-      if (!provider || !chainId) throw new Error("No provider or chainId");
+      if (!publicClient || !chainId) throw new Error("No provider or chainId");
       const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS;
       return retry(
         () =>
-          provider.getTransactionReceipt(hash).then(async (receipt) => {
+          publicClient.getTransactionReceipt({ hash: hash as `0x${string}` }).then(async (receipt) => {
             if (receipt === null) {
-              if (account) {
+              if (address) {
                 const tx = pendingTransactions[hash];
                 // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
                 if (tx.deadline) {
@@ -85,11 +86,11 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
         retryOptions,
       );
     },
-    [account, blockTimestamp, chainId, pendingTransactions, provider, removeTransaction],
+    [address, blockTimestamp, chainId, pendingTransactions, publicClient, removeTransaction],
   );
 
   useEffect(() => {
-    if (!chainId || !provider || !lastBlockNumber) return;
+    if (!chainId || !publicClient || !lastBlockNumber) return;
 
     const cancels = Object.keys(pendingTransactions)
       .filter((hash) => shouldCheck(lastBlockNumber, pendingTransactions[hash]))
@@ -110,7 +111,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
     return () => {
       cancels.forEach((cancel) => cancel());
     };
-  }, [chainId, provider, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions]);
+  }, [chainId, publicClient, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions]);
 
   return null;
 }

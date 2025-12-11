@@ -2,6 +2,8 @@ import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
 import Web3 from "web3";
 
+const INTERVAL = 5000;
+
 export function useFetchBlockNumber(): number | undefined {
   const { data } = useSwr(
     "ethBlockNumber",
@@ -11,7 +13,7 @@ export function useFetchBlockNumber(): number | undefined {
       return Number(blockNumber);
     },
     {
-      refreshInterval: 3000,
+      refreshInterval: INTERVAL,
     },
   );
 
@@ -32,7 +34,7 @@ export function useFetchFinalizedBlock(): number | undefined {
       return Number(Number(block.number));
     },
     {
-      refreshInterval: 3000,
+      refreshInterval: INTERVAL,
     },
   );
 

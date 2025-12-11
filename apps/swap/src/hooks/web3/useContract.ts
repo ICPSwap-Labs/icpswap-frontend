@@ -1,16 +1,14 @@
 import { Contract } from "@ethersproject/contracts";
 import { useAccount } from "wagmi";
-import { chain, SUPPORTED_CHAINS } from "constants/web3";
+import { chain } from "constants/web3";
 import { useMemo } from "react";
 import { getContract } from "utils/web3/index";
 import { MULTICALL_ADDRESSES } from "@icpswap/constants";
 import { Null } from "@icpswap/types";
-
 import type { UniswapInterfaceMulticall, ERC20, EthHelper } from "abis/types";
 import UniswapInterfaceMulticallJson from "abis/UniswapInterfaceMulticall.json";
 import EthHelperABI from "abis/EthHelper.json";
 import ERC20ABI from "abis/ERC20.json";
-import { useWeb3React } from "@web3-react/core";
 import { useEthersWeb3Provider } from "hooks/web3/useEthersProvider";
 
 const { abi: MulticallABI } = UniswapInterfaceMulticallJson;
@@ -21,7 +19,6 @@ export function useContract<T extends Contract = Contract>(
   ABI: any,
   withSignerIfPossible = true,
 ): T | null {
-  const { provider } = useWeb3React();
   const { address: account } = useAccount();
 
   const ethersProvider = useEthersWeb3Provider();
@@ -34,19 +31,12 @@ export function useContract<T extends Contract = Contract>(
     if (!address) return null;
 
     try {
-      return getContract(
-        address,
-        ABI,
-        provider && provider?.network?.chainId && SUPPORTED_CHAINS.includes(provider?.network?.chainId)
-          ? provider
-          : ethersProvider,
-        withSignerIfPossible && account ? account : undefined,
-      );
+      return getContract(address, ABI, ethersProvider, withSignerIfPossible && account ? account : undefined);
     } catch (error) {
       console.error("Failed to get contract", error);
       return null;
     }
-  }, [addressOrAddressMap, ABI, provider, withSignerIfPossible, account]) as T;
+  }, [addressOrAddressMap, ABI, ethersProvider, withSignerIfPossible, account]) as T;
 }
 
 export function useEthMinterHelperContract(address: string | Null, withSignerIfPossible?: boolean) {
