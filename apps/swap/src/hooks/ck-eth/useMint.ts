@@ -9,7 +9,7 @@ import { Null } from "@icpswap/types";
 import { bytesStringOfNullSubAccount } from "constants/ckETH";
 import { useTranslation } from "react-i18next";
 import { ckETH } from "@icpswap/tokens";
-import { useEthersWalletProvider } from "hooks/web3/useEthersProvider";
+import { useEthersWeb3Provider } from "hooks/web3/useEthersProvider";
 
 export interface MinterProps {
   minter_address: string | Null;
@@ -18,7 +18,7 @@ export interface MinterProps {
 export function useMintCallback({ minter_address }: MinterProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
-  const provider = useEthersWalletProvider();
+  const provider = useEthersWeb3Provider();
   const blockNumber = useBlockNumber();
   const [openTip] = useTips();
 

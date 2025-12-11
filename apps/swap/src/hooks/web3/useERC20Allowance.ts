@@ -1,8 +1,9 @@
-import { useCallsData } from "@icpswap/hooks";
 import { ERC20Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
-import { useERC20Contract } from "hooks/web3/useContract";
-import { useCallback, useMemo } from "react";
+import { erc20Abi } from "abis/abis";
+import { useMemo } from "react";
+import { assume0xAddress } from "utils/wagmi";
+import { useReadContract } from "wagmi";
 
 export interface UseTokenAllowanceArgs {
   tokenAllowance?: string;
@@ -13,24 +14,21 @@ export function useERC20TokenAllowance(
   token?: ERC20Token | Null,
   owner?: string | Null,
   spender?: string | Null,
-  reload?: number | boolean,
+  reload: number | boolean = -1,
 ): UseTokenAllowanceArgs {
-  const contract = useERC20Contract(token?.address, false);
+  const queryEnabled = !!owner && !!token?.address && !!spender;
 
-  // If there is no allowance yet, re-check next observed block.
-  // This guarantees that the tokenAllowance is marked isSyncing upon approval and updated upon being synced.
-  // const [blocksPerFetch, setBlocksPerFetch] = useState<1>();
-  const { result, loading } = useCallsData<string>(
-    useCallback(async () => {
-      if (!owner || !spender) return undefined;
-      const allowance = await contract?.allowance(owner, spender);
-      return allowance?.toString();
-    }, [owner, spender, contract]),
-    reload,
-  );
+  const { data, isLoading } = useReadContract({
+    abi: erc20Abi,
+    address: token?.address as `0x${string}` | undefined,
+    functionName: "allowance",
+    args: queryEnabled ? [assume0xAddress(owner), assume0xAddress(spender)] : undefined,
+    query: { enabled: queryEnabled },
+    scopeKey: `erc20-allowance-${reload}`,
+  });
 
-  const rawAmount = result?.toString(); // convert to a string before using in a hook, to avoid spurious rerenders
+  const rawAmount = data?.toString(); // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(() => (token && rawAmount ? rawAmount : undefined), [token, rawAmount]);
 
-  return useMemo(() => ({ tokenAllowance: allowance, isSyncing: loading }), [allowance, loading]);
+  return useMemo(() => ({ tokenAllowance: allowance, isSyncing: isLoading }), [data, isLoading]);
 }

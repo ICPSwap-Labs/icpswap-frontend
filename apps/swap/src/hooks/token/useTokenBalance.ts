@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Principal } from "@dfinity/principal";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { getTokenStandard } from "store/token/cache/hooks";
@@ -15,10 +15,8 @@ import {
 } from "@icpswap/utils";
 import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
 import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { useCallsData } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
-import { useStateTokenBalanceManager } from "store/global/hooks";
-import { getTokenBalanceKey } from "utils";
+import { useQuery } from "@tanstack/react-query";
 
 export async function getTokenBalance(canisterId: string, account: string | Principal, subAccount?: Uint8Array) {
   if (isNeedBalanceAdapter(canisterId)) return await balanceAdapter(canisterId, account);
@@ -93,35 +91,28 @@ export async function getTokenBalance(canisterId: string, account: string | Prin
 }
 
 export function useTokenBalance(
-  canisterId: string | undefined,
+  tokenId: string | undefined,
   account: string | Principal | Null,
   refresh?: number | boolean | Null,
   sub?: Uint8Array,
 ) {
-  const tokenKey = getTokenBalanceKey(canisterId, account?.toString(), sub);
-
-  const [stateBalance, updateStateBalance] = useStateTokenBalanceManager(tokenKey);
-
-  const { result: balance, loading } = useCallsData(
-    useCallback(async () => {
-      if (!account || !canisterId) return undefined;
-      const result = await getTokenBalance(canisterId, account, sub);
-      const balance = result && nonUndefinedOrNull(result.data) ? result.data.toString() : undefined;
-      const tokenKey = getTokenBalanceKey(canisterId, account.toString(), sub);
-
-      if (tokenKey && nonUndefinedOrNull(balance)) updateStateBalance(tokenKey, balance);
-
+  const { data, isLoading } = useQuery({
+    queryKey: ["getTokenBalance", tokenId, account, sub, refresh],
+    queryFn: async () => {
+      if (!account || !tokenId) return null;
+      const result = await getTokenBalance(tokenId, account, sub);
+      const balance = result && nonUndefinedOrNull(result.data) ? result.data.toString() : null;
       return balance;
-    }, [account, canisterId, sub, updateStateBalance]),
-    refresh,
-  );
+    },
+    enabled: nonUndefinedOrNull(account) && nonUndefinedOrNull(tokenId),
+  });
 
   return useMemo(() => {
     return {
-      loading: isUndefinedOrNull(stateBalance) ? loading : false,
-      result: nonUndefinedOrNull(balance) ? balance.toString() : stateBalance,
+      loading: isUndefinedOrNull(data) ? isLoading : false,
+      result: data?.toString(),
     };
-  }, [loading, balance, stateBalance, canisterId]);
+  }, [isLoading, data]);
 }
 
 export type Balances = {

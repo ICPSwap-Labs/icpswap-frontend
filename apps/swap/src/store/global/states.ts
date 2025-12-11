@@ -12,7 +12,6 @@ export interface GlobalState {
   allSwapTokens: IcpSwapAPITokenInfo[];
   walletConnector: boolean;
   bridgeTokens: string[];
-  tokenBalances: { [key: string]: string };
   globalMinterInfo: ChainKeyETHMinterInfo | undefined;
   defaultTokens: string[];
   defaultChartType: string | undefined;
@@ -28,7 +27,6 @@ export const initialState: GlobalState = {
   allSwapTokens: [],
   walletConnector: false,
   bridgeTokens: [],
-  tokenBalances: {},
   globalMinterInfo: undefined,
   defaultTokens: [],
   defaultChartType: undefined,
