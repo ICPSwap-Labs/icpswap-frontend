@@ -1,10 +1,145 @@
-import React, { useState } from "react";
+import { useState, memo, useCallback, useEffect } from "react";
 import { ClickAwayListener } from "@mui/base";
 import { Search } from "react-feather";
 
 import { MenuProps } from "./types";
-import { useTheme, Box, Checkbox, Popper, TextField, InputAdornment } from "../Mui";
+import { useTheme, Box, Checkbox, Popper, TextField, InputAdornment, BoxProps } from "../Mui";
 import { NoData } from "../NoData";
+
+type MenuFilter = (menu: MenuProps, search: string | undefined) => boolean;
+
+interface MenuItemNodeWrapperUIProps {
+  menu: MenuProps;
+  onClick: (menu: MenuProps) => void;
+  children: React.ReactNode;
+  sx?: BoxProps["sx"];
+}
+
+export function MenuItemNodeWrapperUI({ menu, sx, onClick, children }: MenuItemNodeWrapperUIProps) {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        height: "48px",
+        padding: "0 16px",
+        cursor: "pointer",
+        "&:hover": {
+          background: "#313D67",
+          color: "text.primary",
+        },
+        ...sx,
+      }}
+      onClick={() => onClick(menu)}
+    >
+      {children}
+    </Box>
+  );
+}
+
+interface MenuItemNodeProps {
+  menu: MenuProps;
+  isFiltered: boolean;
+  customLabel?: boolean;
+  multiple?: boolean;
+  value?: any;
+  onClick: (menu: MenuProps) => void;
+  onCheckboxChange: (checked: boolean, selectedValue: any) => void;
+  setFilteredTokens: React.Dispatch<React.SetStateAction<{ [tokenId: string]: boolean }>>;
+}
+
+export const MenuItemNode = memo(
+  ({
+    customLabel,
+    menu,
+    isFiltered,
+    multiple,
+    value,
+    onClick,
+    onCheckboxChange,
+    setFilteredTokens,
+  }: MenuItemNodeProps) => {
+    useEffect(() => {
+      setFilteredTokens((prev) => ({ ...prev, [menu.value]: isFiltered }));
+    }, [isFiltered, menu]);
+
+    return customLabel ? (
+      <Box onClick={() => onClick(menu)} sx={{ ...(isFiltered ? { display: "none" } : {}) }}>
+        {menu.label}
+      </Box>
+    ) : (
+      <MenuItemNodeWrapperUI
+        onClick={() => onClick(menu)}
+        menu={menu}
+        sx={{
+          display: isFiltered ? "none" : "flex",
+        }}
+      >
+        {multiple && (
+          <Box sx={{ margin: "0 5px 0 0" }}>
+            <Checkbox
+              sx={{ padding: 0 }}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+                onCheckboxChange(checked, menu.value)
+              }
+              checked={value?.includes(menu.value)}
+            />
+          </Box>
+        )}
+
+        {menu.label}
+      </MenuItemNodeWrapperUI>
+    );
+  },
+);
+
+interface MenuNodeProps {
+  menus: MenuProps[];
+  customLabel?: boolean;
+  multiple?: boolean;
+  value?: any;
+  onClick: (menu: MenuProps) => void;
+  onCheckboxChange: (checked: boolean, selectedValue: any) => void;
+  menuFilter?: MenuFilter;
+  setFilteredTokens: React.Dispatch<React.SetStateAction<{ [tokenId: string]: boolean }>>;
+  search: string | undefined;
+}
+
+const MenuNode = memo(
+  ({
+    customLabel,
+    menus,
+    multiple,
+    value,
+    onClick,
+    onCheckboxChange,
+    menuFilter,
+    setFilteredTokens,
+    search,
+  }: MenuNodeProps) => {
+    return (
+      <>
+        {menus.map((menu) => {
+          const isFiltered = menuFilter && menuFilter(menu, search);
+
+          return (
+            <MenuItemNode
+              key={menu.value}
+              isFiltered={isFiltered}
+              menu={menu}
+              customLabel={customLabel}
+              multiple={multiple}
+              value={value}
+              onCheckboxChange={onCheckboxChange}
+              onClick={onClick}
+              setFilteredTokens={setFilteredTokens}
+            />
+          );
+        })}
+      </>
+    );
+  },
+);
 
 export interface DropDownMenuProps {
   value?: any;
@@ -17,7 +152,7 @@ export interface DropDownMenuProps {
   search?: boolean;
   onSearch?: (search: string | undefined) => void;
   customLabel?: boolean;
-  menuFilter?: (menu: MenuProps) => boolean;
+  menuFilter?: MenuFilter;
   minMenuWidth?: string;
   anchor: any | undefined;
   onClose: () => void;
@@ -25,7 +160,7 @@ export interface DropDownMenuProps {
   menuWidth?: number;
 }
 
-export function DropDownMenu({
+export const __DropDownMenu = ({
   value,
   onChange,
   menus,
@@ -41,9 +176,10 @@ export function DropDownMenu({
   menuWidth,
   onMenuClick,
   anchor,
-}: DropDownMenuProps) {
+}: DropDownMenuProps) => {
   const theme = useTheme();
   const [search, setSearch] = useState<undefined | string>(undefined);
+  const [filteredTokens, setFilteredTokens] = useState<{ [tokenId: string]: boolean }>({});
 
   const handleClose = () => {
     setSearch(undefined);
@@ -74,28 +210,34 @@ export function DropDownMenu({
     }
   };
 
-  const handleCheckboxChange = (checked: boolean, selectedValue: any) => {
-    if (onChange) {
-      const oldSelected = value ? [...value] : [];
+  const handleCheckboxChange = useCallback(
+    (checked: boolean, selectedValue: any) => {
+      if (onChange) {
+        const oldSelected = value ? [...value] : [];
 
-      if (checked) {
-        const newSelected = [...oldSelected, selectedValue];
-        onChange(newSelected);
-      } else {
-        const index = oldSelected.findIndex((item) => item === selectedValue);
+        if (checked) {
+          const newSelected = [...oldSelected, selectedValue];
+          onChange(newSelected);
+        } else {
+          const index = oldSelected.findIndex((item) => item === selectedValue);
 
-        if (index !== -1) {
-          oldSelected.splice(index, 1);
-          onChange(oldSelected);
+          if (index !== -1) {
+            oldSelected.splice(index, 1);
+            onChange(oldSelected);
+          }
         }
       }
-    }
-  };
+    },
+    [onChange, value],
+  );
 
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    if (onSearch) onSearch(value);
-  };
+  const handleSearchChange = useCallback(
+    (value: string) => {
+      setSearch(value);
+      if (onSearch) onSearch(value);
+    },
+    [onSearch],
+  );
 
   return (
     <Popper
@@ -151,55 +293,26 @@ export function DropDownMenu({
           ) : null}
 
           <Box sx={{ maxHeight: menuMaxHeight ?? "540px", overflow: "hidden auto" }}>
-            {menus.map((menu, index) => {
-              const isFiltered = menuFilter && menuFilter(menu);
+            <MenuNode
+              menus={menus}
+              customLabel={customLabel}
+              multiple={multiple}
+              value={value}
+              onClick={handleMenuItemClick}
+              onCheckboxChange={handleCheckboxChange}
+              menuFilter={menuFilter}
+              setFilteredTokens={setFilteredTokens}
+              search={search}
+            />
 
-              return customLabel ? (
-                <Box
-                  key={menu.value + index}
-                  onClick={() => handleMenuItemClick(menu)}
-                  sx={{ ...(isFiltered ? { display: "none" } : {}) }}
-                >
-                  {menu.label}
-                </Box>
-              ) : (
-                <Box
-                  key={menu.value + index}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    height: "48px",
-                    padding: "0 16px",
-                    cursor: "pointer",
-                    ...(isFiltered ? { display: "none" } : {}),
-                    "&:hover": {
-                      background: "#313D67",
-                      color: "text.primary",
-                    },
-                  }}
-                  onClick={() => handleMenuItemClick(menu)}
-                >
-                  {multiple && (
-                    <Box sx={{ margin: "0 5px 0 0" }}>
-                      <Checkbox
-                        sx={{ padding: 0 }}
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
-                          handleCheckboxChange(checked, menu.value)
-                        }
-                        checked={value?.includes(menu.value)}
-                      />
-                    </Box>
-                  )}
-
-                  {menu.label}
-                </Box>
-              );
-            })}
-
-            {menus.length === 0 ? CustomNoData || <NoData /> : null}
+            {menus.length === 0 || Object.values(filteredTokens).every((isFiltered) => isFiltered)
+              ? CustomNoData || <NoData />
+              : null}
           </Box>
         </Box>
       </ClickAwayListener>
     </Popper>
   );
-}
+};
+
+export const DropDownMenu = memo(__DropDownMenu);

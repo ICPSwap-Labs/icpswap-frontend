@@ -1,8 +1,8 @@
 import { Box, Typography } from "components/Mui";
-import { useEffect, useMemo, useState, ReactNode } from "react";
-import { Select } from "components/Select/ForToken";
+import { useEffect, useMemo, useState, ReactNode, useCallback, memo } from "react";
+import { Select } from "@icpswap/ui";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
-import { isValidPrincipal } from "@icpswap/utils";
+import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import type { IcpSwapAPITokenInfo } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
@@ -20,15 +20,16 @@ interface TokenMenuItemProps {
 }
 
 function isTokenFilteredBySearch(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
-  if (!!search && isValidPrincipal(search) && tokenInfo.ledgerId.toString() !== search) return true;
-  if (
-    !!search &&
-    !!tokenInfo &&
+  if (isUndefinedOrNull(search)) return false;
+
+  if (isValidPrincipal(search)) {
+    return tokenInfo.ledgerId.toString() !== search;
+  }
+
+  return (
     !tokenInfo.symbol.toLocaleLowerCase().includes(search.toLocaleLowerCase()) &&
     !tokenInfo.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
-  )
-    return true;
-  return false;
+  );
 }
 
 function TokenMenuItem({ tokenInfo, symbol, search, color, panel }: TokenMenuItemProps) {
@@ -60,7 +61,7 @@ export interface SelectTokenProps {
   defaultPanel?: ReactNode;
 }
 
-export function SelectToken({
+const __SelectToken = ({
   value: tokenId,
   onTokenChange,
   border,
@@ -72,10 +73,9 @@ export function SelectToken({
   showClean,
   panelPadding,
   defaultPanel,
-}: SelectTokenProps) {
+}: SelectTokenProps) => {
   const { t } = useTranslation();
   const [value, setValue] = useState<string | null>(null);
-  const [search, setSearch] = useState<string | undefined>(undefined);
 
   const allTokensOfSwap = useStateSwapAllTokens();
 
@@ -97,20 +97,25 @@ export function SelectToken({
     });
   }, [allTokensOfSwap]);
 
-  const handleValueChange = (value: string) => {
-    setValue(value);
-    if (onTokenChange) {
-      onTokenChange(value);
-    }
-  };
+  const handleValueChange = useCallback(
+    (value: string) => {
+      setValue(value);
+      if (onTokenChange) {
+        onTokenChange(value);
+      }
+    },
+    [onTokenChange, setValue],
+  );
 
-  const handleFilterMenu = (menu: MenuProps) => {
-    if (!menu.additional) return false;
-
-    const tokenInfo = JSON.parse(menu.additional) as IcpSwapAPITokenInfo;
-
-    return isTokenFilteredBySearch(tokenInfo, search) || (!!filter && filter(tokenInfo));
-  };
+  const handleFilterMenu = useCallback(
+    (menu: MenuProps, search: string | undefined) => {
+      if (!menu.additional) return false;
+      const tokenInfo = JSON.parse(menu.additional) as IcpSwapAPITokenInfo;
+      const isFilter = isTokenFilteredBySearch(tokenInfo, search) || (!!filter && filter(tokenInfo));
+      return isFilter;
+    },
+    [filter],
+  );
 
   return (
     <Select
@@ -121,7 +126,6 @@ export function SelectToken({
       onChange={handleValueChange}
       value={value}
       border={border}
-      onSearch={setSearch}
       search={hasSearch}
       menuFilter={handleFilterMenu}
       filled={filled}
@@ -144,4 +148,6 @@ export function SelectToken({
       }}
     />
   );
-}
+};
+
+export const SelectToken = memo(__SelectToken);
