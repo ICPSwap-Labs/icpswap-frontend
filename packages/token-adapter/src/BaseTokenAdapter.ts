@@ -69,11 +69,6 @@ export type AllowanceResult = BaseTokenResult<bigint>;
 export type MetadataRequest = BaseTokenRequestNoParams;
 export type MetadataResult = BaseTokenResult<Metadata>;
 
-export type SetLogoRequest = BaseTokenIdentityRequest<string>;
-export type SetLogoResult = BaseTokenResult<boolean>;
-export type LogoRequest = BaseTokenRequestNoParams;
-export type LogoResult = BaseTokenResult<string>;
-
 export type ActualReceivedByTransferRequest = {
   amount: BigNumber;
   fee: BigNumber;

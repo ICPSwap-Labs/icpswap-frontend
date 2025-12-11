@@ -11,7 +11,6 @@ import {
   ApproveRequest,
   AllowanceRequest,
   MetadataRequest,
-  SetLogoRequest,
   ActualReceivedByTransferRequest,
 } from "./BaseTokenAdapter";
 import { EXTAdapter, EXTTokenAdapter } from "./EXTAdapter";
@@ -185,7 +184,9 @@ export class TokenAdapter {
 
 export const tokenAdapter = new TokenAdapter();
 
-export const registerTokens = (standards: RegisterProps) => tokenAdapter.register(standards);
+export const registerTokens = (standards: RegisterProps) => {
+  tokenAdapter.register(standards);
+};
 
 tokenAdapter.initialAdapter(TOKEN_STANDARD.EXT, EXTAdapter);
 tokenAdapter.initialAdapter(TOKEN_STANDARD.DIP20, DIP20Adapter);

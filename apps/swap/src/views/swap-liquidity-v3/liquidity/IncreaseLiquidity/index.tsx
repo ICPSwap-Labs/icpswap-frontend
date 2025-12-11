@@ -352,7 +352,7 @@ export default function IncreaseLiquidity() {
                       size="large"
                       onClick={() => setConfirmModalShow(true)}
                     >
-                      {isValid ? t`Add` : errorMessage}
+                      {isValid ? t("common.add") : errorMessage}
                     </AuthButton>
                   </Box>
                 </>

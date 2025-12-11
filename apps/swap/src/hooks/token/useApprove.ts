@@ -1,24 +1,22 @@
 import { useCallback } from "react";
 import { Principal } from "@dfinity/principal";
 import { TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter";
-import { ResultStatus, StatusResult } from "@icpswap/types";
-import { allowance } from "./useAllowance";
+import { StatusResult } from "@icpswap/types";
+import { allowance } from "hooks/token/useAllowance";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 export interface ApproveArgs {
   canisterId: string;
   spender: string;
   value: number | string | bigint;
-  account: string | Principal | undefined;
+  account: string | Principal;
   standard?: TOKEN_STANDARD;
 }
 
 export async function approve({ canisterId, spender, value, account, standard }: ApproveArgs) {
-  if (!account) {
-    return { status: ResultStatus.ERROR, data: undefined, message: "No account" };
-  }
-
-  if (standard) {
+  if (nonUndefinedOrNull(standard)) {
     const adapter = tokenAdapter.getAdapterByName(standard);
+
     return adapter.approve({
       canisterId,
       identity: true,
@@ -45,11 +43,12 @@ export async function approve({ canisterId, spender, value, account, standard }:
 
 export function useApprove(): (approveParams: ApproveArgs) => Promise<StatusResult<boolean>> {
   return useCallback(async ({ canisterId, spender, value, account, standard }: ApproveArgs) => {
-    if (!account)
+    if (!account) {
       return await Promise.resolve({
         status: "err",
         message: "Invalid account",
       } as StatusResult<boolean>);
+    }
 
     const allowedBalance = await allowance({
       canisterId,

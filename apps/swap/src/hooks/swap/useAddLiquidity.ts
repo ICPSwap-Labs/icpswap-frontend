@@ -87,7 +87,12 @@ function useAddLiquidityCalls() {
               (pcmMetadata.passcodePrice + BigInt(pcmToken.transFee)).toString(),
               PassCodeManagerId,
             )
-          : await approve({ token: pcmToken, amount: pcmMetadata.passcodePrice.toString(), poolId: PassCodeManagerId });
+          : await approve({
+              token: pcmToken,
+              amount: pcmMetadata.passcodePrice.toString(),
+              poolId: PassCodeManagerId,
+              standard: pcmToken.standard,
+            });
       };
 
       const depositPCMToken = async () => {
