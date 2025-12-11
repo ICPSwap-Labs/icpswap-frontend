@@ -47,7 +47,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
   }, [value]);
 
   const { percentage } = useMemo(() => {
-    if (isUndefinedOrNull(totalAmount) || isUndefinedOrNull(amount)) return {};
+    if (isUndefinedOrNull(totalAmount) || isUndefinedOrNull(amount)) return { percentage: undefined };
 
     const percentage =
       isUndefinedOrNull(amount) || new BigNumber(amount).isEqualTo(0) || new BigNumber(totalAmount).isEqualTo(0)
