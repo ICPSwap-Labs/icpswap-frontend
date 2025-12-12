@@ -1,20 +1,40 @@
-import { useAccount } from "wagmi";
-import { useCallback } from "react";
-import { BigNumber } from "@icpswap/utils";
-import { useCallsData } from "@icpswap/hooks";
+import { useAccount, useReadContracts } from "wagmi";
+import { useMemo } from "react";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { erc20Abi } from "abis/abis";
 
-import { useERC20Contract } from "./useContract";
+export function useERC20Balance(contractAddress: string | undefined, reload = -1) {
+  const { address: account, chainId } = useAccount();
 
-export function useERC20Balance(contractAddress: string | undefined, reload?: number) {
-  const { address: account } = useAccount();
-  const contract = useERC20Contract(contractAddress);
+  const { data, isLoading } = useReadContracts({
+    contracts: useMemo(() => {
+      if (isUndefinedOrNull(contractAddress) || isUndefinedOrNull(account) || isUndefinedOrNull(chainId))
+        return undefined;
 
-  return useCallsData(
-    useCallback(async () => {
-      if (!contract || !account) return undefined;
-      const result = await contract.balanceOf(account);
-      return new BigNumber(result.toString());
-    }, [contract, account]),
-    reload,
-  );
+      return [
+        {
+          address: contractAddress as `0x${string}`,
+          chainId,
+          abi: erc20Abi,
+          functionName: "balanceOf",
+          args: [account],
+        },
+      ];
+    }, [account, chainId, contractAddress]),
+    query: { enabled: !!account },
+    scopeKey: `erc20-balance-${reload}`,
+  });
+
+  return useMemo(() => {
+    if (!data || !data[0] || data[0]?.status !== "success")
+      return {
+        loading: isLoading,
+        result: undefined,
+      };
+
+    return {
+      result: new BigNumber(data[0].result.toString()),
+      loading: isLoading,
+    };
+  }, [data, isLoading]);
 }

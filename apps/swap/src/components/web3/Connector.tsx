@@ -3,7 +3,7 @@ import { DEFAULT_CHAIN_ID } from "constants/web3";
 import { useCallback } from "react";
 import { isMobile } from "react-device-detect";
 import { useConnect, useChainId } from "wagmi";
-import { metaMask } from "wagmi/connectors";
+import { injected } from "wagmi/connectors";
 
 export interface Web3ButtonConnectorProps {
   chainId?: number;
@@ -14,12 +14,10 @@ export function Web3ButtonConnector() {
   const currChainId = useChainId();
 
   const handleConnect = useCallback(async () => {
-    if (isMobile) {
-      return;
-    }
+    if (isMobile) return;
 
     try {
-      await connect({ connector: metaMask() });
+      await connect({ connector: injected() });
     } catch (error) {
       console.error(`web3-react connection error: ${error}`);
     }

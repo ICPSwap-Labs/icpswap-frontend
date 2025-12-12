@@ -13,8 +13,6 @@ export const updateWalletConnector = createAction<boolean>("global/updateWalletC
 
 export const updateBridgeTokens = createAction<string[]>("global/updateBridgeTokens");
 
-export const updateTokenBalance = createAction<{ canisterId: string; balance: string }>("global/updateTokenBalance");
-
 export const updateGlobalMinterInfo = createAction<{ minterInfo: ChainKeyETHMinterInfo }>(
   "global/updateGlobalMinterInfo",
 );

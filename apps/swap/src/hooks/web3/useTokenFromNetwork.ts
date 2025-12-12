@@ -1,38 +1,68 @@
 import { ERC20Token } from "@icpswap/swap-sdk";
 import { useCallback, useMemo } from "react";
-import { useERC20Contract, useSupportedActiveChain, useWeb3CallsData, useActiveChain } from "hooks/web3/index";
+import { useSupportedActiveChain, useWeb3CallsData, useActiveChain } from "hooks/web3/index";
+import { useAccount, useReadContract } from "wagmi";
+import { erc20Abi } from "abis/abis";
+import { isUndefinedOrNull } from "@icpswap/utils/dist/isUndefinedOrNull";
 
 export function useTokenName(tokenAddress: string | undefined) {
-  const contract = useERC20Contract(tokenAddress, false);
+  const { address: account, chainId } = useAccount();
 
-  return useWeb3CallsData<string>(
-    useCallback(async () => {
-      if (!tokenAddress || !contract) return undefined;
-      return await contract.name();
-    }, [tokenAddress, contract]),
-  );
+  const { data, isLoading } = useReadContract({
+    abi: erc20Abi,
+    address: tokenAddress as `0x${string}` | undefined,
+    chainId,
+    functionName: "name",
+    args: [],
+    query: { enabled: !isUndefinedOrNull(tokenAddress) && !isUndefinedOrNull(account) && !isUndefinedOrNull(chainId) },
+  });
+
+  return useMemo(() => {
+    return {
+      result: data,
+      loading: isLoading,
+    };
+  }, [data, isLoading]);
 }
 
 export function useTokenSymbol(tokenAddress: string | undefined) {
-  const contract = useERC20Contract(tokenAddress, false);
+  const { address: account, chainId } = useAccount();
 
-  return useWeb3CallsData<string>(
-    useCallback(async () => {
-      if (!tokenAddress || !contract) return undefined;
-      return await contract.symbol();
-    }, [tokenAddress, contract]),
-  );
+  const { data, isLoading } = useReadContract({
+    abi: erc20Abi,
+    address: tokenAddress as `0x${string}` | undefined,
+    chainId,
+    functionName: "symbol",
+    args: [],
+    query: { enabled: !isUndefinedOrNull(tokenAddress) && !isUndefinedOrNull(account) && !isUndefinedOrNull(chainId) },
+  });
+
+  return useMemo(() => {
+    return {
+      result: data,
+      loading: isLoading,
+    };
+  }, [data, isLoading]);
 }
 
 export function useTokenDecimals(tokenAddress: string | undefined) {
-  const contract = useERC20Contract(tokenAddress, false);
+  const { address: account, chainId } = useAccount();
 
-  return useWeb3CallsData<number>(
-    useCallback(async () => {
-      if (!tokenAddress || !contract) return undefined;
-      return await contract.decimals();
-    }, [tokenAddress, contract]),
-  );
+  const { data, isLoading } = useReadContract({
+    abi: erc20Abi,
+    address: tokenAddress as `0x${string}` | undefined,
+    chainId,
+    functionName: "decimals",
+    args: [],
+    query: { enabled: !isUndefinedOrNull(tokenAddress) && !isUndefinedOrNull(account) && !isUndefinedOrNull(chainId) },
+  });
+
+  return useMemo(() => {
+    return {
+      result: data,
+      loading: isLoading,
+    };
+  }, [data, isLoading]);
 }
 
 export function useTokenLogo(tokenAddress: string | undefined) {

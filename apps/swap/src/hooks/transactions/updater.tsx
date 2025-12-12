@@ -72,7 +72,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
                 // Remove transactions past their deadline or - if there is no deadline - older than 6 hours.
                 if (tx.deadline) {
                   // Deadlines are expressed as seconds since epoch, as they are used on-chain.
-                  if (blockTimestamp && tx.deadline < blockTimestamp.toNumber()) {
+                  if (blockTimestamp && tx.deadline < blockTimestamp) {
                     removeTransaction(hash);
                   }
                 } else if (tx.addedTime + ms(`6h`) < Date.now()) {
