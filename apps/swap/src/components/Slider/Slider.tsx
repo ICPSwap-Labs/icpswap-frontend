@@ -121,13 +121,14 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
 
   const handleMove = useCallback(
     (moveX: number, screenX: number) => {
-      if (isUndefinedOrNull(totalAmount) || new BigNumber(totalAmount).isEqualTo(0)) return;
+      if (isUndefinedOrNullOrEmpty(totalAmount) || new BigNumber(totalAmount).isEqualTo(0)) return;
 
       if (mouseDown && nonUndefinedOrNull(wrapperWidth)) {
         // Show the popper when moving
         handleOpenPopper();
 
         const startLeft = new BigNumber(wrapperWidth).multipliedBy(new BigNumber(AMOUNT).dividedBy(totalAmount));
+
         const __percentage = numToPercent(startLeft.plus(moveX).dividedBy(wrapperWidth).toString());
         const percentage = new BigNumber(percentToNum(__percentage)).isGreaterThan(1)
           ? "100%"
@@ -146,7 +147,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
   );
 
   const handleResetAmountBeforeMove = useCallback(() => {
-    if (isUndefinedOrNull(amount)) {
+    if (isUndefinedOrNullOrEmpty(amount)) {
       AMOUNT = "0";
     } else {
       AMOUNT = amount;
