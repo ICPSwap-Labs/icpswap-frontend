@@ -22,6 +22,7 @@ import { PublicTokenOverview, Null } from "@icpswap/types";
 import { WalletContextProvider } from "components/Wallet/WalletContextProvider";
 import { FullscreenLoading } from "components/index";
 import NavigationScroll from "components/NavigationScroll";
+import { BeginnerGuide } from "components/BeginnerGuide";
 
 import { GlobalFetch } from "./GlobalFetch";
 import { useFetchAllSwapTokens } from "./store/global/hooks";
@@ -83,6 +84,7 @@ export default function App() {
                         <GlobalSteps />
                         <GlobalFetch />
                         {isConnected ? <RiskStatement /> : null}
+                        <BeginnerGuide />
                         {connectorModalOpen ? <WalletConnector /> : null}
                       </NavigationScroll>
                     </ActorInitial>
