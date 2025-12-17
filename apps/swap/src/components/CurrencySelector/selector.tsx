@@ -8,7 +8,7 @@ import { Search as SearchIcon } from "react-feather";
 import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { TokenListMetadata } from "types/token-list";
-import { useTaggedTokenManager } from "store/wallet/hooks";
+import { useTaggedTokenManager, useSortedTokensManager } from "store/wallet/hooks";
 import { ImportToken } from "components/ImportToken/index";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
 import { Token } from "@icpswap/swap-sdk";
@@ -58,6 +58,7 @@ export default function Selector({
   const globalTokenList = useGlobalTokenList();
 
   const { taggedTokens } = useTaggedTokenManager();
+  const [sortedTokens] = useSortedTokensManager();
 
   const yourTokens: string[] = useMemo(() => {
     return [...new Set(DEFAULT_DISPLAYED_TOKENS.map((e) => e.address).concat(taggedTokens))];
@@ -141,6 +142,10 @@ export default function Selector({
     return hiddenCanisterIds.length === allTokenCanisterIds.length && showImportToken === false;
   }, [hiddenCanisterIds, allTokenCanisterIds, showImportToken]);
 
+  const sortedYourTokens = useMemo(() => {
+    return [...sortedTokens, ...yourTokens.filter((id) => !sortedTokens.includes(id))];
+  }, [sortedTokens, yourTokens]);
+
   return (
     <>
       <Modal
@@ -222,7 +227,7 @@ export default function Selector({
               )}
 
               <Box mt={searchKeyword ? "0px" : "16px"}>
-                {(yourTokens ?? []).map((tokenId) => (
+                {sortedYourTokens.map((tokenId) => (
                   <TokenItem
                     key={tokenId}
                     canisterId={tokenId}

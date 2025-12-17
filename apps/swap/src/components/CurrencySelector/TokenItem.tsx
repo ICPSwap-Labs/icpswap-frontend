@@ -1,7 +1,7 @@
-import React, { useMemo, useEffect } from "react";
-import { useTheme, Typography, Box, Grid, useMediaQuery } from "components/Mui";
+import React, { useMemo, useEffect, useCallback } from "react";
+import { useTheme, Typography, Box, useMediaQuery } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { DotLoading, TokenImage, TokenStandardLabel } from "components/index";
+import { DotLoading, Flex, TokenImage } from "components/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import {
@@ -12,11 +12,11 @@ import {
   formatAmount,
   nonUndefinedOrNull,
 } from "@icpswap/utils";
+import { Image } from "@icpswap/ui";
 import { PlusCircle } from "react-feather";
-import { useTaggedTokenManager } from "store/wallet/hooks";
+import { useTaggedTokenManager, useSortedTokensManager } from "store/wallet/hooks";
 import { Token } from "@icpswap/swap-sdk";
 import { useToken } from "hooks/index";
-import { TOKEN_STANDARD } from "@icpswap/types";
 
 export interface TokenItemProps {
   canisterId: string;
@@ -55,6 +55,7 @@ export function TokenItem({
   const interfacePrice = useUSDPriceById(getBalanceId);
 
   const { taggedTokens, updateTaggedTokens, deleteTaggedTokens } = useTaggedTokenManager();
+  const [sortedTokens, updateSortedTokens, removeSortedTokens] = useSortedTokensManager();
 
   const tokenBalanceAmount = useMemo(() => {
     if (!token || balance === undefined) return undefined;
@@ -105,6 +106,22 @@ export function TokenItem({
     }
   }, [isHidden, canisterId, onTokenHide]);
 
+  const handleSortedToken = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      updateSortedTokens([canisterId]);
+    },
+    [updateSortedTokens, canisterId],
+  );
+
+  const handleRemoveSortedToken = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+      removeSortedTokens([canisterId]);
+    },
+    [removeSortedTokens, canisterId],
+  );
+
   return (
     <Box
       sx={{
@@ -112,7 +129,7 @@ export function TokenItem({
         height: "63px",
         cursor: "pointer",
         padding: matchDownSM ? "0 16px" : "0 24px",
-        gridTemplateColumns: "198px 50px 1fr",
+        gridTemplateColumns: "198px 1fr",
         gap: "0 5px",
         alignItems: "center",
         "&.disabled": {
@@ -134,50 +151,37 @@ export function TokenItem({
       className={`${isDisabled ? "disabled" : ""}${isActive ? " active" : ""}`}
     >
       <Box>
-        <Grid container alignItems="center" gap="0 12px">
+        <Flex fullWidth gap="0 12px">
           <TokenImage logo={token?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={token?.address} />
 
-          <Grid item xs sx={{ overflow: "hidden" }}>
-            <Grid container alignItems="center">
-              <Box sx={{ width: "100%" }}>
-                <Typography
-                  color="text.primary"
-                  sx={{
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    fontSize: "16px",
-                    fontWeight: 500,
-                    "@media (max-width: 580px)": {
-                      fontSize: "14px",
-                    },
-                  }}
-                >
-                  {token?.symbol}
-                </Typography>
-                <Typography
-                  fontSize="12px"
-                  sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", margin: "4px 0 0 0" }}
-                >
-                  {token?.name}
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </Grid>
+          <Box sx={{ width: "100%" }}>
+            <Typography
+              color="text.primary"
+              sx={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                fontSize: "16px",
+                fontWeight: 500,
+                "@media (max-width: 580px)": {
+                  fontSize: "14px",
+                },
+              }}
+            >
+              {token?.symbol}
+            </Typography>
+            <Typography
+              fontSize="12px"
+              sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", margin: "4px 0 0 0" }}
+            >
+              {token?.name}
+            </Typography>
+          </Box>
+        </Flex>
       </Box>
 
       <Box>
-        <TokenStandardLabel
-          standard={token && token.standard ? (token.standard as TOKEN_STANDARD) : null}
-          borderRadius="34px"
-          height="20px"
-          fontSize="10px"
-        />
-      </Box>
-
-      <Box>
-        <Grid container justifyContent="flex-end" alignItems="center">
+        <Flex fullWidth justify="flex-end" align="center" gap="0 12px">
           {!showBalance ? null : loading ? (
             <DotLoading loading />
           ) : (
@@ -217,7 +221,21 @@ export function TokenItem({
           {showBalance || isTagged ? null : (
             <PlusCircle color={theme.themeOption.textSecondary} size="16px" onClick={handleAddToCache} />
           )}
-        </Grid>
+
+          {!showBalance ? null : sortedTokens.includes(canisterId) ? (
+            <Image
+              src="/images/icon-tagged.svg"
+              sx={{ width: "16px", height: "16px", cursor: "pointer" }}
+              onClick={handleRemoveSortedToken}
+            />
+          ) : (
+            <Image
+              src="/images/icon-un-tagged.svg"
+              sx={{ width: "16px", height: "16px", cursor: "pointer" }}
+              onClick={handleSortedToken}
+            />
+          )}
+        </Flex>
       </Box>
     </Box>
   );

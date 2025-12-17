@@ -10,6 +10,7 @@ export interface WalletState {
   hideSmallBalance: boolean;
   removedWalletDefaultTokens: string[];
   hideZeroNFT: boolean;
+  sortedTokens: string[];
 }
 
 export const initialState: WalletState = {
@@ -21,4 +22,5 @@ export const initialState: WalletState = {
   hideSmallBalance: false,
   removedWalletDefaultTokens: [],
   hideZeroNFT: false,
+  sortedTokens: [],
 };
