@@ -119,8 +119,12 @@ export function getLimitOrderSteps({
         { label: i18n.t("common.you.pay"), value: InputTokenAmount },
       ],
       errorActions: [
-        <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>,
-        <TextButton onClick={retry}>{i18n.t("common.retry")}</TextButton>,
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
+        <TextButton key="retry" onClick={retry}>
+          {i18n.t("common.retry")}
+        </TextButton>,
       ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },

@@ -382,6 +382,7 @@ export default function TokenDetails() {
           >
             {tabs.map((tab) => (
               <Typography
+                key={tab.value}
                 variant="h3"
                 sx={{ cursor: "pointer", color: tab.value === activeTab ? "text.primary" : "text.secondary" }}
                 onClick={() => setActiveTab(tab.value)}

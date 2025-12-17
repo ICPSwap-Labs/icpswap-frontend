@@ -1,21 +1,15 @@
-{
-  "settings": {
+module.exports = {
+  settings: {
     "import/resolver": {
-      "node": {
-        "extensions": [".js", ".ts", ".jsx", ".tsx"]
-      }
+      node: {
+        extensions: [".js", ".ts", ".jsx", ".tsx"],
+      },
     },
-    "import/extensions": [".js", ".ts", ".jsx", ".tsx"]
+    "import/extensions": [".js", ".ts", ".jsx", ".tsx"],
   },
-  "plugins": ["lodash"],
-  "extends": [
-    "airbnb",
-    "airbnb/hooks",
-    "prettier",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:react/jsx-runtime"
-  ],
-  "rules": {
+  plugins: ["import", "unused-imports", "lodash", "react", "react-hooks", "@typescript-eslint"],
+  extends: ["prettier", "eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"],
+  rules: {
     "class-methods-use-this": 0,
     "no-bitwise": 0,
     "no-plusplus": 0,
@@ -33,14 +27,14 @@
     "react/self-closing-comp": [
       "error",
       {
-        "component": true,
-        "html": true
-      }
+        component: true,
+        html: true,
+      },
     ],
     "no-nested-ternary": 0,
-    "camelcase": 0,
+    camelcase: 0,
 
-    "react/jsx-filename-extension": ["error", { "extensions": [".tsx"] }],
+    "react/jsx-filename-extension": ["error", { extensions: [".tsx"] }],
     "react/jsx-props-no-spreading": 0,
     "react/no-array-index-key": 0,
     "react/no-unescaped-entities": 0,
@@ -54,10 +48,10 @@
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_"
-      }
+        argsIgnorePattern: "^_",
+        varsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
     ],
     "no-return-await": 0,
     "no-await-in-loop": 0,
@@ -65,7 +59,7 @@
     "no-use-before-define": "off",
     "@typescript-eslint/no-use-before-define": 1,
     "@typescript-eslint/no-shadow": 0,
-    "no-console": ["warn", { "allow": ["info", "warn", "error"] }],
+    "no-console": ["warn", { allow: ["info", "warn", "error"] }],
     "prefer-destructuring": 0,
     "no-underscore-dangle": 0,
     // React
@@ -76,12 +70,12 @@
       "error",
       "ignorePackages",
       {
-        "js": "never",
-        "mjs": "never",
-        "jsx": "never",
-        "ts": "never",
-        "tsx": "never"
-      }
+        js: "never",
+        mjs: "never",
+        jsx: "never",
+        ts: "never",
+        tsx: "never",
+      },
     ],
 
     "no-restricted-syntax": 0,
@@ -93,27 +87,29 @@
     // They need to be removed and fixed as soon as possible
     "@typescript-eslint/explicit-module-boundary-types": 0,
     "@typescript-eslint/no-explicit-any": 0,
-    "radix": 0,
+    radix: 0,
     "jsx-a11y/media-has-caption": 0,
     // Exchange
-    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state", "memo"] }],
+    "no-param-reassign": ["error", { props: true, ignorePropertyModificationsFor: ["state", "memo"] }],
     "react/require-default-props": 0,
     "max-classes-per-file": 0,
     // End temporary rules
-    "jsx-a11y/anchor-is-valid": 0
+    "jsx-a11y/anchor-is-valid": 0,
+    "react/react-in-jsx-scope": 0,
+    "react/display-name": 0,
   },
-  "parserOptions": {
-    "sourceType": "module",
-    "ecmaVersion": 2020
+  parserOptions: {
+    sourceType: "module",
+    ecmaVersion: 2020,
   },
-  "parser": "@typescript-eslint/parser",
-  "ignorePatterns": [
+  parser: "@typescript-eslint/parser",
+  ignorePatterns: [
     "**/*.did.ts",
     "**/*.did.js",
     "craco.config.js",
     "**/*.css",
     "**/*.d.ts",
     "**/scripts/*.js",
-    "**/charting_library/*"
-  ]
-}
+    "**/charting_library/*",
+  ],
+};

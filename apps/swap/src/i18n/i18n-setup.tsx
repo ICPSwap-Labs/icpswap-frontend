@@ -38,7 +38,7 @@ i18n
   })
   .catch(() => undefined);
 
-i18n.on("missingKey", (_lngs, _ns, key, _res) => {
+i18n.on("missingKey", (_lngs, _ns, key) => {
   console.error(new Error(`Missing i18n string key ${key} for language ${i18n.language}`), {
     tags: {
       file: "i18n.ts",

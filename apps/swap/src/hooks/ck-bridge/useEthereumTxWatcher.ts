@@ -11,7 +11,6 @@ import { useSuccessTip } from "hooks/useTips";
 import { useErc20UnFinalizedDissolveHashes, useErc20UnFinalizedMintHashes } from "hooks/ck-bridge/erc20";
 import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "hooks/ck-bridge/eth";
 import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
-import { __getTokenInfo } from "hooks/token";
 import { useTranslation } from "react-i18next";
 import { usePublicClient } from "wagmi";
 

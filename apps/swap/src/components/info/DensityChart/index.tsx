@@ -15,7 +15,7 @@ import { LiquidityChartToolTip } from "./LiquidityChartToolTip";
 import { CurrentPriceLabel } from "./CurrentPriceLabel";
 import { ChartEntry } from "./type";
 
-const MAX_UINT128 = new BigNumber(340282366920938463463374607431768211455);
+const MAX_UINT128 = new BigNumber("340282366920938463463374607431768211455");
 
 interface DensityChartProps {
   address: string | Null;

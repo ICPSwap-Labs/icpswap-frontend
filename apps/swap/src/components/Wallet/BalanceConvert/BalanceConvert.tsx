@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { useWalletContext, WalletManagerPage, ConvertToIcp } from "components/Wallet/context";
 import { BigNumber, formatAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useSmallBalanceTokens, SmallBalanceResult } from "hooks/wallet/useSmallBalanceTokens";
-import { __getTokenInfo } from "hooks/token";
 import { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
 import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
