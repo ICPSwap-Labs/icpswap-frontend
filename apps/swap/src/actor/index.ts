@@ -9,3 +9,4 @@ export const ledgerService = (identity?: Identity) =>
 
 export * from "./token";
 export * from "./swap";
+export * from "./ckBTC";

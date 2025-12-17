@@ -1,4 +1,9 @@
-import { ChainKeyMinterInterfaceFactory, ChainKeyMinterService } from "@icpswap/candid";
+import {
+  ChainKeyMinterInterfaceFactory,
+  ChainKeyMinterService,
+  ckBTCMintFactory,
+  ckBTCMintService,
+} from "@icpswap/candid";
 import { actor } from "../actor";
 
 export const chainKeyETHMinter = (canisterId: string, identity?: true) =>
@@ -7,3 +12,11 @@ export const chainKeyETHMinter = (canisterId: string, identity?: true) =>
     idlFactory: ChainKeyMinterInterfaceFactory,
     identity,
   });
+
+export const ckBTCMinter = (canisterId: string, identity?: true) => {
+  return actor.create<ckBTCMintService>({
+    canisterId,
+    idlFactory: ckBTCMintFactory,
+    identity,
+  });
+};

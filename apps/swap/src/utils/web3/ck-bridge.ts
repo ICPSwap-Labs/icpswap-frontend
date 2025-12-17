@@ -1,5 +1,5 @@
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { RetrieveBtcStatus } from "candid/ckBTCMint";
+import type { RetrieveBtcStatus } from "@icpswap/types";
 import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
 import { BitcoinTransaction, BitcoinTxResponse, BitcoinTxState } from "types/ckBTC";
 import {

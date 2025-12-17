@@ -10,4 +10,5 @@ export type {
   ChainKeyETHMinterInfo,
   Eip1559TransactionPrice,
   RetrieveEthStatus,
+  RetrieveBtcStatus,
 } from "@icpswap/candid";

@@ -13,3 +13,6 @@ export type {
   RetrieveEthStatus,
 } from "./Minter";
 export { idlFactory as ChainKeyMinterInterfaceFactory } from "./Minter.did";
+
+export type { _SERVICE as ckBTCMintService, RetrieveBtcStatus } from "./ckBTCMint";
+export { idlFactory as ckBTCMintFactory } from "./ckBTCMint.did";

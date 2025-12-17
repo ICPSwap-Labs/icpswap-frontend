@@ -1,4 +1,4 @@
-export type { RetrieveBtcStatus } from "../candid/ckBTCMint";
+export type { RetrieveBtcStatus } from "@icpswap/types";
 
 export type BTCAddressType = "deposit" | "withdraw";
 
