@@ -3,8 +3,6 @@ import { Override } from "@icpswap/types";
 import { TOKEN_STANDARD } from "constants/tokens";
 import type { TokenApproveArgs } from "@icpswap/types";
 
-export type { Metadata as DIP20Metadata } from "candid/dip20/dip20";
-
 export type { TokenInfo } from "@icpswap/types";
 
 export type BalanceRequest = { token: string; user: { [key: string]: string | Principal } };

@@ -1,7 +1,7 @@
 import { useCallsData } from "@icpswap/hooks";
 import { resultFormat, availableArgsNull, isUndefinedOrNull } from "@icpswap/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ckBtcMinter } from "actor/ckBTC";
+import { ckBtcMinter } from "actor/index";
 import { Principal } from "@dfinity/principal";
 import {
   useUserBTCDepositAddress,
