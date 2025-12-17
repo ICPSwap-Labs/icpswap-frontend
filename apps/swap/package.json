@@ -6,7 +6,7 @@
     "dev:local": "node ./scripts/env.js dev local && PORT=3000 craco start",
     "build": "CI=false && node ./scripts/env.js pro ic && craco build",
     "test": "craco test",
-    "lint": "eslint src --fix",
+    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "contracts:compile": "pnpm run contracts:compile:abi",
     "clean": "rm -rf build && rm -rf node_modules"

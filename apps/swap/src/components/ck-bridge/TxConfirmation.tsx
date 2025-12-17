@@ -81,11 +81,11 @@ export function EthereumDissolveConfirmations({ hash }: EthereumDissolveConfirma
   );
 }
 
-interface Erc20DissolveConfirmations {
+interface Erc20DissolveConfirmationsProps {
   withdraw_id: string;
 }
 
-export function Erc20DissolveConfirmations({ withdraw_id }: Erc20DissolveConfirmations) {
+export function Erc20DissolveConfirmations({ withdraw_id }: Erc20DissolveConfirmationsProps) {
   const erc20DissolveDetails = useErc20DissolveDetails(withdraw_id);
 
   return (

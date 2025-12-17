@@ -117,7 +117,10 @@ export function VotableNeurons({ voteableNeurons, onCheckedChange, proposal }: P
             if (formattedNeuron.id === undefined) return null;
 
             return (
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Box
+                key={formattedNeuron.id}
+                sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              >
                 <Typography sx={{ fontSize: "12px" }}>{shorten(formattedNeuron.id, 12)}</Typography>
 
                 <Box sx={{ display: "flex", alignItems: "center", gap: "0 8px" }}>

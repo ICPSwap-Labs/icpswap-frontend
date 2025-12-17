@@ -45,7 +45,11 @@ export function getCollectFeeSteps({ positionId, retry, currencyFeeAmount0, curr
           value: <TokenAmount amount={withdrawAmountB} logo={tokenB.logo} />,
         },
       ],
-      errorActions: [<TextButton onClick={retry}>{i18n.t("common.retry")}</TextButton>],
+      errorActions: [
+        <TextButton key="retry" onClick={retry}>
+          {i18n.t("common.retry")}
+        </TextButton>,
+      ],
     },
   ];
 }

@@ -6,11 +6,11 @@ import type { AddressBook as AddressBookType } from "@icpswap/types";
 import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
 import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 
-interface AddressBookManager {
+interface AddressBookManagerProps {
   addressBook: AddressBookType;
 }
 
-export function AddressBookManager({ addressBook }: AddressBookManager) {
+export function AddressBookManager({ addressBook }: AddressBookManagerProps) {
   const ref = useRef(null);
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);

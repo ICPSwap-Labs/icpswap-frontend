@@ -5,7 +5,7 @@ import { useNFTTransaction } from "hooks/nft/useNFTCalls";
 import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
 import { encodeTokenIdentifier } from "utils/index";
 import Pagination from "components/pagination";
-import type { NFTTransaction, PaginationResult } from "@icpswap/types";
+import type { NFTTransaction as NFTTransactionType, PaginationResult } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import { NoData } from "components/index";
 import { useTranslation } from "react-i18next";
@@ -47,7 +47,7 @@ export default function NFTTransaction({
   }, [reload, setPageNum]);
 
   const { content: list, totalElements } = useMemo(
-    () => result ?? ({ totalElements: 0, content: [], offset: 0, limit: 10 } as PaginationResult<NFTTransaction>),
+    () => result ?? ({ totalElements: 0, content: [], offset: 0, limit: 10 } as PaginationResult<NFTTransactionType>),
     [result],
   );
 

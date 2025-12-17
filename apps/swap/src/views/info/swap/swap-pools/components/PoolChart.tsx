@@ -16,6 +16,7 @@ import { DensityChart } from "components/info/DensityChart";
 import { ChartTimeEnum, VolumeWindow } from "@icpswap/types";
 import i18n from "i18n/index";
 import { usePoolCharts } from "@icpswap/hooks";
+import { isUndefinedOrNull } from "@icpswap/utils";
 
 export const chartViews = [
   { label: i18n.t("common.apr"), value: ChartView.APR },
@@ -43,7 +44,8 @@ export function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps
   });
 
   const poolChartsData = useMemo(() => {
-    return poolChartsResult?.content ? [...poolChartsResult?.content].reverse() : [];
+    if (isUndefinedOrNull(poolChartsResult)) return [];
+    return poolChartsResult.content ? [...poolChartsResult.content].reverse() : [];
   }, [poolChartsResult?.content]);
 
   return (
