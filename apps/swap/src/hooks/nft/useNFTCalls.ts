@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PaginationResult, Identity } from "types/index";
+import { PaginationResult } from "types/index";
 import type {
   NFTTokenMetadata,
   NFTTransaction,
@@ -24,9 +24,9 @@ import { swapNFT, NFTCanisterController, NFTCanister } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
 
-export async function approveForAll(identity: Identity, spenderCanisterId: string) {
+export async function approveForAll(spenderCanisterId: string) {
   const spender = principalToAccount(spenderCanisterId);
-  const result = await (await swapNFT(identity)).approveForAll({ spender: { address: spender }, approved: true });
+  const result = await (await swapNFT(true)).approveForAll({ spender: { address: spender }, approved: true });
   return resultFormat(result);
 }
 

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Grid, Box, InputAdornment } from "components/Mui";
 import { MainCard, Breadcrumbs, AuthButton } from "components/index";
@@ -9,17 +9,17 @@ import { useErrorTip } from "hooks/useTips";
 import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
 import { useSelectedCanistersManager } from "store/nft/hooks";
 import FilledTextField, { FilledTextFiledMenus, FilledTextFieldLabel } from "components/Input/FilledTextField";
-import { Identity as TypeIdentity, CanisterCreateDetails } from "types/index";
+import { CanisterCreateDetails } from "types/index";
 import { MuiSlider } from "components/Slider/MuiSlider/Marks";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { BigNumber, parseTokenAmount, isValidUrl, numberToString, isUndefinedOrNull } from "@icpswap/utils";
 import { useApprove } from "hooks/token/useApprove";
 import { useAccount } from "store/auth/hooks";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { getLocaleMessage } from "i18n/service";
 import { CardContent1120 } from "components/Layout/CardContent1120";
 import { useTranslation } from "react-i18next";
+import { useLoadingCallData } from "@icpswap/hooks";
 
 export default function NFTCanisterCreate() {
   const { t } = useTranslation();
@@ -70,57 +70,57 @@ export default function NFTCanisterCreate() {
 
   const approve = useApprove();
 
-  const handleMint = async (identity: TypeIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-    if (loading || isUndefinedOrNull(account)) return;
+  const { loading, callback: handleMint } = useLoadingCallData(
+    useCallback(async () => {
+      if (isUndefinedOrNull(account)) return;
 
-    const { status: approveStatus } = await approve({
-      canisterId: NFTTradeTokenCanisterId,
-      spender: NFTCanisterController,
-      account,
-      value: numberToString(parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals)),
-    });
+      const { status: approveStatus } = await approve({
+        canisterId: NFTTradeTokenCanisterId,
+        spender: NFTCanisterController,
+        account,
+        value: numberToString(parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals)),
+      });
 
-    if (approveStatus === "err") {
-      openErrorTip(t`Failed to approve, please try again.`);
-      return;
-    }
-
-    const { status, data, message } = await createCanister({
-      name: values.name,
-      ownerName: values.minter,
-      introduction: values.introduction,
-      royalties: BigInt(new BigNumber(values.royalties).multipliedBy(100).toString()),
-      image: "",
-      linkMap: (values.socialMediaLinks ?? []).reduce(
-        (previousValue, currentValue) => {
-          if (currentValue.label && currentValue.value) {
-            return [...previousValue, { k: currentValue.label, v: currentValue.value }];
-          }
-          return [...previousValue];
-        },
-        [] as { k: string; v: string }[],
-      ),
-    });
-
-    if (status === "ok") {
-      if (data) {
-        setSelectedCanisters([data]);
-
-        setCanisterId(data);
-
-        const { filePath } = (await uploadRef.current?.uploadCb()) ?? {};
-
-        if (filePath) await setCanisterLogo(data, filePath);
-        if (filePath) await setCanisterLogoInController(data, filePath);
+      if (approveStatus === "err") {
+        openErrorTip(t`Failed to approve, please try again.`);
+        return;
       }
 
-      history.push("/info-tools/nft/canister/list");
-    } else {
-      openErrorTip(getLocaleMessage(message) ?? t`Failed to create NFT collection`);
-    }
+      const { status, data, message } = await createCanister({
+        name: values.name,
+        ownerName: values.minter,
+        introduction: values.introduction,
+        royalties: BigInt(new BigNumber(values.royalties).multipliedBy(100).toString()),
+        image: "",
+        linkMap: (values.socialMediaLinks ?? []).reduce(
+          (previousValue, currentValue) => {
+            if (currentValue.label && currentValue.value) {
+              return [...previousValue, { k: currentValue.label, v: currentValue.value }];
+            }
+            return [...previousValue];
+          },
+          [] as { k: string; v: string }[],
+        ),
+      });
 
-    closeLoading();
-  };
+      if (status === "ok") {
+        if (data) {
+          setSelectedCanisters([data]);
+
+          setCanisterId(data);
+
+          const { filePath } = (await uploadRef.current?.uploadCb()) ?? {};
+
+          if (filePath) await setCanisterLogo(data, filePath);
+          if (filePath) await setCanisterLogoInController(data, filePath);
+        }
+
+        history.push("/info-tools/nft/canister/list");
+      } else {
+        openErrorTip(getLocaleMessage(message) ?? t`Failed to create NFT collection`);
+      }
+    }, [values, NFTMintInfo]),
+  );
 
   const handleSocialMediaAdd = () => {
     if ((values.socialMediaLinks ?? []).length >= 10) return;
@@ -448,17 +448,14 @@ export default function NFTCanisterCreate() {
       </MainCard>
 
       {confirmModal ? (
-        <Identity onSubmit={handleMint} fullScreenLoading>
-          {({ submit }: CallbackProps) => (
-            <CanisterCreateConfirm
-              details={values}
-              open={confirmModal}
-              onClose={() => setConfirmModal(false)}
-              onConfirm={submit}
-              mintInfo={NFTMintInfo}
-            />
-          )}
-        </Identity>
+        <CanisterCreateConfirm
+          details={values}
+          open={confirmModal}
+          onClose={() => setConfirmModal(false)}
+          onConfirm={handleMint}
+          mintInfo={NFTMintInfo}
+          loading={loading}
+        />
       ) : null}
     </CardContent1120>
   );

@@ -1,4 +1,4 @@
-import BigNumber from "bignumber.js";
+import { BigNumber } from "@icpswap/utils";
 import { SAFE_DECIMALS_LENGTH } from "constants/index";
 
 /**

@@ -1,7 +1,8 @@
 import { Token } from "@icpswap/swap-sdk";
 import { Typography } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { ckBTC_MINTER_ID, ckBTC_DASHBOARD } from "constants/ckBTC";
+import { ckBTC_DASHBOARD } from "constants/ckBTC";
+import { ckBTC_MINTER_ID } from "@icpswap/constants";
 import { explorerLink } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 

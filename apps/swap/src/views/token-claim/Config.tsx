@@ -1,13 +1,24 @@
 /* eslint-disable no-param-reassign */
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Typography, Box, Input } from "components/Mui";
 import { FilledTextField, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
-import Identity, { CallbackProps } from "components/Identity";
-import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
-import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
-import { useEvent, setClaimEventReady, setClaimEventState, setClaimEventData } from "@icpswap/hooks";
+import {
+  formatTokenAmount,
+  isValidAccount,
+  numberToString,
+  isValidPrincipal,
+  BigNumber,
+  isUndefinedOrNull,
+} from "@icpswap/utils";
+import { ResultStatus, type StatusResult } from "@icpswap/types";
+import {
+  useEvent,
+  setClaimEventReady,
+  setClaimEventState,
+  setClaimEventData,
+  useLoadingCallData,
+} from "@icpswap/hooks";
 import { read, utils } from "xlsx";
 import { useToken } from "hooks/index";
 import { Principal } from "@dfinity/principal";
@@ -105,45 +116,51 @@ export default function EventConfig() {
     { label: "Closed", value: "closed" },
   ];
 
-  const handleSetReady = async (identity: ActorIdentity) => {
-    const { status: status2, message: message2 } = await setClaimEventReady(eventId, identity);
-    openTip(status2 === ResultStatus.OK ? "Set event ready successfully" : message2, status2);
-  };
+  const { loading: setReadLoading, callback: handleSetReady } = useLoadingCallData(
+    useCallback(async () => {
+      const { status, message } = await setClaimEventReady(eventId);
+      openTip(status === ResultStatus.OK ? "Set event ready successfully" : message, status);
+    }, [eventId]),
+  );
 
-  const handleSetState = async (identity: ActorIdentity) => {
-    const { status: status3, message: message3 } = await setClaimEventState(eventId, stateValue === "live", identity);
-    openTip(status3 === ResultStatus.OK ? "Set event state successfully" : message3, status3);
-  };
+  const { loading, callback: handleSetState } = useLoadingCallData(
+    useCallback(async () => {
+      const { status: status3, message: message3 } = await setClaimEventState(eventId, stateValue === "live");
+      openTip(status3 === ResultStatus.OK ? "Set event state successfully" : message3, status3);
+    }, [eventId, stateValue]),
+  );
 
-  const handleImportUserData = async (identity: ActorIdentity) => {
-    if (!identity || !token) return;
+  const { loading: uploadDataLoading, callback: handleImportUserData } = useLoadingCallData(
+    useCallback(async () => {
+      if (isUndefinedOrNull(token)) return;
 
-    const _userClaims = userClaims.map((ele) => ({
-      user: isValidPrincipal(ele.address) ? { principal: Principal.fromText(ele.address) } : { address: ele.address },
-      quota: BigInt(
-        numberToString(
-          formatTokenAmount(new BigNumber(ele.amount).toFixed(token.decimals, BigNumber.ROUND_DOWN), token.decimals),
+      const _userClaims = userClaims.map((ele) => ({
+        user: isValidPrincipal(ele.address) ? { principal: Principal.fromText(ele.address) } : { address: ele.address },
+        quota: BigInt(
+          numberToString(
+            formatTokenAmount(new BigNumber(ele.amount).toFixed(token.decimals, BigNumber.ROUND_DOWN), token.decimals),
+          ),
         ),
-      ),
-    }));
+      }));
 
-    const promises: Promise<StatusResult<boolean>>[] = [];
+      const promises: Promise<StatusResult<boolean>>[] = [];
 
-    for (let i = 0; i < _userClaims.length; i += 20000) {
-      const userClaims = _userClaims.slice(i, i + 20000);
-      promises.push(setClaimEventData(eventId, userClaims, identity));
-    }
+      for (let i = 0; i < _userClaims.length; i += 20000) {
+        const userClaims = _userClaims.slice(i, i + 20000);
+        promises.push(setClaimEventData(eventId, userClaims));
+      }
 
-    await Promise.all(promises)
-      .then((result) => {
-        result.forEach((res) => {
-          openTip(res.status === ResultStatus.OK ? t`Set event user data successfully` : res.message, res.status);
+      await Promise.all(promises)
+        .then((result) => {
+          result.forEach((res) => {
+            openTip(res.status === ResultStatus.OK ? t`Set event user data successfully` : res.message, res.status);
+          });
+        })
+        .catch((err) => {
+          console.error(err);
         });
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  };
+    }, [token, userClaims]),
+  );
 
   return (
     <>
@@ -159,21 +176,15 @@ export default function EventConfig() {
         <Box sx={{ width: "100px" }}>
           <Box sx={{ display: "grid", gridTemplateColumns: "100px 200px", gap: "0 20px" }}>
             <Typography color="text.primary">Set Ready:</Typography>
-            <Identity onSubmit={handleSetReady}>
-              {({ submit, loading }: CallbackProps) => {
-                return (
-                  <AuthButton
-                    variant="contained"
-                    fullWidth
-                    disabled={!eventId || loading}
-                    onClick={submit}
-                    loading={loading}
-                  >
-                    {eventId ? "Ready" : "Select an event"}
-                  </AuthButton>
-                );
-              }}
-            </Identity>
+            <AuthButton
+              variant="contained"
+              fullWidth
+              disabled={!eventId || setReadLoading}
+              onClick={handleSetReady}
+              loading={setReadLoading}
+            >
+              {eventId ? "Ready" : "Select an event"}
+            </AuthButton>
           </Box>
         </Box>
 
@@ -188,13 +199,9 @@ export default function EventConfig() {
             value={stateValue}
           />
 
-          <Identity onSubmit={handleSetState}>
-            {({ submit, loading }: CallbackProps) => (
-              <AuthButton variant="contained" fullWidth disabled={!eventId} onClick={submit} loading={loading}>
-                {eventId ? "Set State" : "Select an event"}
-              </AuthButton>
-            )}
-          </Identity>
+          <AuthButton variant="contained" fullWidth disabled={!eventId} onClick={handleSetState} loading={loading}>
+            {eventId ? "Set State" : "Select an event"}
+          </AuthButton>
         </Box>
 
         <Box sx={{ display: "grid", gridTemplateColumns: "120px 400px 200px 1fr", gap: "0 20px" }}>
@@ -232,13 +239,15 @@ export default function EventConfig() {
             </AuthButton>
           </Box>
 
-          <Identity onSubmit={handleImportUserData}>
-            {({ submit, loading }: CallbackProps) => (
-              <AuthButton variant="contained" fullWidth disabled={!eventId} onClick={submit} loading={loading}>
-                {eventId ? "Set user data" : "Select an event"}
-              </AuthButton>
-            )}
-          </Identity>
+          <AuthButton
+            variant="contained"
+            fullWidth
+            disabled={!eventId}
+            onClick={handleImportUserData}
+            loading={uploadDataLoading}
+          >
+            {eventId ? "Set user data" : "Select an event"}
+          </AuthButton>
 
           {!!userClaims.length || !!inValidUserClaims.length ? (
             <Box sx={{ display: "flex", gap: "0 10px" }}>

@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect, useRef } from "react";
-import type { ApiResult, CallResult, Null, PaginationResult } from "@icpswap/types";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import type { ApiResult, CallResult, PaginationResult } from "@icpswap/types";
 import { pageArgsFormat, sleep } from "@icpswap/utils";
 
 export type Call<T> = () => Promise<ApiResult<T>>;
@@ -25,38 +25,6 @@ export function useCallsData<T>(fn: Call<T>, reload?: number | string | boolean 
       loading,
     };
   }, [result.current, loading]);
-}
-
-export function useLatestDataCall<T>(fn: Call<T>, refresh?: number | string | boolean | Null) {
-  const [loading, setLoading] = useState(false);
-
-  const indexRef = useRef<number>(0);
-  const resultsRef = useRef<{ [key: string]: T | undefined }>({});
-
-  useEffect(() => {
-    if (fn) {
-      setLoading(true);
-
-      indexRef.current += 1;
-      const index = indexRef.current;
-
-      fn().then((result) => {
-        resultsRef.current = {
-          ...resultsRef.current,
-          [String(index)]: result as T,
-        };
-
-        setLoading(false);
-      });
-    }
-  }, [fn, refresh]);
-
-  return useMemo(() => {
-    return {
-      result: resultsRef.current[indexRef.current] as T | undefined,
-      loading,
-    };
-  }, [resultsRef.current, indexRef.current, loading]);
 }
 
 export function usePaginationAllData<T>(
@@ -132,7 +100,7 @@ export function usePaginationAllData<T>(
                 }
               })
               .catch((error) => {
-                console.log(error);
+                console.error(error);
                 _fetch();
               });
           };
@@ -216,4 +184,22 @@ export async function getPaginationAllDataLimit<T>(
       },
       __result.content ?? ([] as T[]),
     );
+}
+
+export function useLoadingCallData<T>(call: () => Promise<T>) {
+  const [loading, setLoading] = useState(false);
+
+  const __call = useCallback(async () => {
+    setLoading(true);
+    const result = await call();
+    setLoading(false);
+    return result;
+  }, [call]);
+
+  return useMemo(() => {
+    return {
+      callback: __call,
+      loading,
+    };
+  }, [__call, loading]);
 }

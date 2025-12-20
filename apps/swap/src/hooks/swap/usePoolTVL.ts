@@ -1,9 +1,8 @@
 import { useMemo } from "react";
 import { useUSDValue, useUSDPrice } from "hooks/useUSDPrice";
 import { CurrencyAmount, Token, FeeAmount } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
 import { usePoolTokenAmountsFromKey } from "hooks/swap/v3Calls";
-import { formatDollarAmount, numberToString } from "@icpswap/utils";
+import { formatDollarAmount, numberToString, BigNumber } from "@icpswap/utils";
 import { Null } from "@icpswap/types";
 import { useTokenBalance } from "hooks/token";
 

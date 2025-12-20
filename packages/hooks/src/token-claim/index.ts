@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { tokenClaimController, tokenClaimStorage } from "@icpswap/actor";
 import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
-import type { ActorIdentity, PaginationResult, ClaimEventInfo, ClaimQuota, ClaimTransaction } from "@icpswap/types";
+import type { PaginationResult, ClaimEventInfo, ClaimQuota, ClaimTransaction } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { useCallsData } from "../useCallData";
 
@@ -23,20 +23,20 @@ export async function claimToken(eventId: string, storageId: string) {
   return resultFormat<boolean>(await (await tokenClaimStorage(storageId, true)).userClaim(eventId));
 }
 
-export async function createClaimEvent(args: ClaimEventInfo, identity: ActorIdentity) {
-  return resultFormat<string>(await (await tokenClaimController(identity)).create(args));
+export async function createClaimEvent(args: ClaimEventInfo) {
+  return resultFormat<string>(await (await tokenClaimController(true)).create(args));
 }
 
-export async function setClaimEventReady(id: string, identity: ActorIdentity) {
-  return resultFormat<boolean>(await (await tokenClaimController(identity)).ready(id));
+export async function setClaimEventReady(id: string) {
+  return resultFormat<boolean>(await (await tokenClaimController(true)).ready(id));
 }
 
-export async function setClaimEventState(id: string, state: boolean, identity: ActorIdentity) {
-  return resultFormat<boolean>(await (await tokenClaimController(identity)).setStatus(id, state));
+export async function setClaimEventState(id: string, state: boolean) {
+  return resultFormat<boolean>(await (await tokenClaimController(true)).setStatus(id, state));
 }
 
-export async function setClaimEventData(id: string, args: ClaimQuota[], identity: ActorIdentity) {
-  return resultFormat<boolean>(await (await tokenClaimController(identity)).importQuota(id, args));
+export async function setClaimEventData(id: string, args: ClaimQuota[]) {
+  return resultFormat<boolean>(await (await tokenClaimController(true)).importQuota(id, args));
 }
 
 export async function getClaimEvents(offset: number, limit: number) {

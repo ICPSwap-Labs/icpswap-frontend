@@ -1,12 +1,10 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Typography, Box, Grid, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
 import { NoData, LoadingRow, Wrapper, Breadcrumbs, SelectToken } from "components/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { TOKEN_STANDARD, ResultStatus, type IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useToken } from "hooks/index";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity/index";
 import { useTips, MessageTypes } from "hooks/useTips";
-import { Identity as CallIdentity } from "types/global";
 import { ICP } from "@icpswap/tokens";
 import {
   useUserMisTransferredTokens,
@@ -16,6 +14,7 @@ import {
 import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
 import { parseTokenStandards } from "utils/parseTokenStandards";
+import { useLoadingCallData } from "@icpswap/hooks";
 
 interface BalanceItemProps {
   pool: string;
@@ -31,30 +30,29 @@ interface BalanceItemProps {
 export function BalanceItem({ token, symbol, balance, name, pool, data, onClaimSuccess }: BalanceItemProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-
   const [openTip, closeTip] = useTips();
 
-  const handleClaim = async (identity: CallIdentity, { loading }: SubmitLoadingProps) => {
-    if (loading) return;
+  const { loading, callback: handleClaim } = useLoadingCallData(
+    useCallback(async () => {
+      const loadingKey = openTip(
+        `Reclaim your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
+        MessageTypes.loading,
+      );
 
-    const loadingKey = openTip(
-      `Reclaim your ${parseTokenAmount(balance, token.decimals).toFormat()} ${token.symbol}`,
-      MessageTypes.loading,
-    );
+      if (data) {
+        const result = await withdrawMisTransferredToken(pool, token.address, "ICRC1");
 
-    if (data) {
-      const result = await withdrawMisTransferredToken(pool, token.address, "ICRC1");
-
-      if (result.status === ResultStatus.OK) {
-        openTip(`Retrieve ${name} ${token?.symbol} successfully`, MessageTypes.success);
-        if (onClaimSuccess) onClaimSuccess(symbol);
-      } else {
-        openTip(result.message ?? `Failed to retrieve ${name} ${token.symbol}`, MessageTypes.error);
+        if (result.status === ResultStatus.OK) {
+          openTip(`Retrieve ${name} ${token?.symbol} successfully`, MessageTypes.success);
+          if (onClaimSuccess) onClaimSuccess(symbol);
+        } else {
+          openTip(result.message ?? `Failed to retrieve ${name} ${token.symbol}`, MessageTypes.error);
+        }
       }
-    }
 
-    closeTip(loadingKey);
-  };
+      closeTip(loadingKey);
+    }, [balance, token, pool, data, name]),
+  );
 
   return (
     <Grid
@@ -75,20 +73,16 @@ export function BalanceItem({ token, symbol, balance, name, pool, data, onClaimS
         </Box>
 
         <Box>
-          <Identity onSubmit={handleClaim}>
-            {({ submit, loading }: CallbackProps) => (
-              <Button
-                variant="contained"
-                fullWidth
-                size="medium"
-                disabled={loading}
-                onClick={submit}
-                startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-              >
-                {t("common.retrieve")}
-              </Button>
-            )}
-          </Identity>
+          <Button
+            variant="contained"
+            fullWidth
+            size="medium"
+            disabled={loading}
+            onClick={handleClaim}
+            startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+          >
+            {t("common.retrieve")}
+          </Button>
         </Box>
       </Box>
     </Grid>

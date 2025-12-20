@@ -1,6 +1,5 @@
 import { useCallback } from "react";
 import { Token } from "@icpswap/swap-sdk";
-import BigNumber from "bignumber.js";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { useApprove } from "hooks/token/useApprove";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -8,7 +7,7 @@ import { isUseTransferByStandard } from "utils/token/index";
 import { tokenTransfer } from "hooks/token/calls";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { isUndefinedOrNull } from "@icpswap/utils";
+import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 
 export interface UseTokenSubAccountTransferArgs {
   token: Token;

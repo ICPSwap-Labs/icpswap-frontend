@@ -10,10 +10,9 @@ import {
   createSwapPool,
   _getSwapPoolAllBalance,
 } from "@icpswap/hooks";
-import { resultFormat, isUndefinedOrNull, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, isUndefinedOrNull, availableArgsNull, BigNumber } from "@icpswap/utils";
 import { FeeAmount } from "@icpswap/swap-sdk";
 import type { Null, SwapPoolData } from "@icpswap/types";
-import BigNumber from "bignumber.js";
 import { swapFactory_update_call } from "actor/swap";
 import { UserPosition } from "types/swap";
 import { Principal } from "@dfinity/principal";

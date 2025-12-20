@@ -1,7 +1,7 @@
 import { resultFormat, availableArgsNull } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
-import { ckBTCActor } from "actor/ckBTC";
+import { ckBtcActor } from "@icpswap/actor";
 import { useCallback } from "react";
 
 export interface AllowanceArgs {
@@ -13,7 +13,7 @@ export interface AllowanceArgs {
 
 export async function allowance({ spender, spenderSub, owner, ownerSub }: AllowanceArgs) {
   const result = await (
-    await ckBTCActor(true)
+    await ckBtcActor(true)
   ).icrc2_allowance({
     account: { owner, subaccount: availableArgsNull<number[]>(ownerSub) },
     spender: { owner: spender, subaccount: availableArgsNull<number[]>(spenderSub) },

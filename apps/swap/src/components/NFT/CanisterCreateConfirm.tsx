@@ -1,5 +1,5 @@
 import Modal from "components/modal/index";
-import { Typography, Box, Grid, Button } from "components/Mui";
+import { Typography, Box, Grid, Button, CircularProgress } from "components/Mui";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import { CanisterCreateDetails } from "types/index";
 import { parseTokenAmount } from "@icpswap/utils";
@@ -11,12 +11,14 @@ export default ({
   onClose,
   details,
   mintInfo,
+  loading,
 }: {
   open: boolean;
   onConfirm: () => Promise<void>;
   onClose: () => void;
   details: CanisterCreateDetails;
   mintInfo: [bigint, bigint, string, string] | undefined | null;
+  loading: boolean;
 }) => {
   const { t } = useTranslation();
 
@@ -120,7 +122,14 @@ export default ({
               </Button>
             </Grid>
             <Grid item xs>
-              <Button variant="contained" size="large" fullWidth onClick={onConfirm}>
+              <Button
+                variant="contained"
+                size="large"
+                fullWidth
+                onClick={onConfirm}
+                disabled={loading}
+                startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+              >
                 {t("common.confirm")}
               </Button>
             </Grid>

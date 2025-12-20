@@ -1,36 +1,20 @@
 import type { NFTTransferArgs, NFTTransferResult, NFTAllowanceArgs, NFTApproveArgs } from "@icpswap/types";
 import { resultFormat } from "@icpswap/utils";
 import { NFTCanister } from "@icpswap/actor";
-import { Identity } from "types/global";
+
 import { BaseNFTAdapter } from "./BaseNFTAdapter";
 
 export class ICPSwapNFT extends BaseNFTAdapter {
-  public async transfer({
-    canisterId,
-    params,
-    identity,
-  }: {
-    canisterId: string;
-    params: NFTTransferArgs;
-    identity: Identity;
-  }) {
-    return resultFormat<NFTTransferResult>(await (await this.actor(canisterId, identity)).transfer(params));
+  public async transfer({ canisterId, params }: { canisterId: string; params: NFTTransferArgs }) {
+    return resultFormat<NFTTransferResult>(await (await this.actor(canisterId, true)).transfer(params));
   }
 
   public async allowance({ params, canisterId }: { canisterId: string; params: NFTAllowanceArgs }) {
     return resultFormat<bigint>(await (await this.actor(canisterId)).allowance(params));
   }
 
-  public async approve({
-    params,
-    canisterId,
-    identity,
-  }: {
-    identity: Identity;
-    canisterId: string;
-    params: NFTApproveArgs;
-  }) {
-    return resultFormat<void>(await (await this.actor(canisterId, identity)).approve(params));
+  public async approve({ params, canisterId }: { canisterId: string; params: NFTApproveArgs }) {
+    return resultFormat<void>(await (await this.actor(canisterId, true)).approve(params));
   }
 }
 

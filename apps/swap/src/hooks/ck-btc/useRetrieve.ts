@@ -1,5 +1,5 @@
 import { resultFormat, availableArgsNull } from "@icpswap/utils";
-import { ckBtcMinter } from "actor/ckBTC";
+import { ckBtcMinter } from "@icpswap/actor";
 
 export async function retrieveBTC(address: string, amount: bigint) {
   return resultFormat<{
