@@ -6,7 +6,6 @@ import i18n from "i18n/index";
 async function isCurrentAccount() {
   // const { principal } = store.getState().auth;
 
-  // TODO
   // if (window.ic && window.ic.plug && !!principal) {
   //   const plugPrincipal = await window.ic.plug.getPrincipal();
   //   return plugPrincipal.toString() === principal;
@@ -15,8 +14,10 @@ async function isCurrentAccount() {
   return true;
 }
 
-export function useActorSubmit() {
+// Do something before the actor call submit
+export function useBeforeActorSubmit() {
   useEffect(() => {
+    // Check the principal local is equal to the principal in Plug wallet
     actor.onSubmit(async (args: BeforeSubmitArgs) => {
       if (!!args.identity && store.getState().auth.walletType === Connector.PLUG) {
         if (!(await isCurrentAccount())) {

@@ -12,18 +12,18 @@ import {
   Theme,
 } from "components/Mui";
 import { stringToArrayBuffer, encodeTokenIdentifier } from "utils";
-import { isValidAccount } from "@icpswap/utils";
+import { isUndefinedOrNull, isValidAccount } from "@icpswap/utils";
 import Modal from "components/modal/index";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { useAccount } from "store/auth/hooks";
 import { useNFTTransfer, useCanisterMetadata } from "hooks/nft/useNFTCalls";
-import Identity, { CallbackProps } from "components/Identity";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
 import type { NFTTokenMetadata } from "@icpswap/types";
 import { getLocaleMessage } from "i18n/service";
 import { useTranslation } from "react-i18next";
 
 import FileImage from "./FileImage";
+import { useLoadingCallData } from "@icpswap/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -80,9 +80,9 @@ export default function NFTTransfer({
 
   const nftTransfer = useNFTTransfer();
 
-  const transferSubmitCallback = useCallback(
-    async (identity, { loading, closeLoading }) => {
-      if (loading || !account) return;
+  const { loading, callback: handleTransfer } = useLoadingCallData(
+    useCallback(async () => {
+      if (isUndefinedOrNull(account)) return;
 
       const result = await nftTransfer(canisterId, {
         from: { address: account },
@@ -95,8 +95,6 @@ export default function NFTTransfer({
         notify: false,
       });
 
-      closeLoading();
-
       if (result.status === "ok") {
         openSuccessTip(t`Transferred successfully`);
       } else {
@@ -104,8 +102,7 @@ export default function NFTTransfer({
       }
 
       if (onTransferSuccess) onTransferSuccess(result);
-    },
-    [nftTransfer, account, nft, memo, to],
+    }, [nftTransfer, account, nft, memo, to]),
   );
 
   const addressHelpText = useMemo(() => {
@@ -223,21 +220,17 @@ export default function NFTTransfer({
           <Typography color="text.danger">{t("common.warning.transfer.address.supports")}</Typography>
         </Grid>
         <Grid item xs={12} mt={3}>
-          <Identity onSubmit={transferSubmitCallback}>
-            {({ submit, loading }: CallbackProps) => (
-              <Button
-                variant="contained"
-                fullWidth
-                color="primary"
-                size="large"
-                disabled={loading || !!errorMsg}
-                onClick={submit}
-                startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
-              >
-                {errorMsg || (loading ? "" : t`Confirm`)}
-              </Button>
-            )}
-          </Identity>
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            size="large"
+            disabled={loading || !!errorMsg}
+            onClick={handleTransfer}
+            startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
+          >
+            {errorMsg || (loading ? "" : t`Confirm`)}
+          </Button>
         </Grid>
       </Grid>
     </Modal>

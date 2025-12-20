@@ -1,15 +1,20 @@
 /* eslint-disable no-param-reassign */
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Typography, Grid, Box, Input, makeStyles, Theme } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard, AuthButton } from "components/index";
 import { MessageTypes, useTips } from "hooks/useTips";
-import Identity, { CallbackProps } from "components/Identity";
-import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal } from "@icpswap/utils";
+import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal, isUndefinedOrNull } from "@icpswap/utils";
 import BigNumber from "bignumber.js";
-import { ResultStatus, type ActorIdentity, type StatusResult } from "@icpswap/types";
-import { createClaimEvent, setClaimEventData, setClaimEventReady, setClaimEventState } from "@icpswap/hooks";
+import { ResultStatus, type StatusResult } from "@icpswap/types";
+import {
+  createClaimEvent,
+  setClaimEventData,
+  setClaimEventReady,
+  setClaimEventState,
+  useLoadingCallData,
+} from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { read, utils } from "xlsx";
 import { useToken } from "hooks/index";
@@ -83,15 +88,13 @@ export default function CreateTokenClaim() {
   const principal = useAccountPrincipal();
   const [values, setValues] = useState<Values>({ standard: TOKEN_STANDARD.EXT } as Values);
   const [openTip] = useTips();
-  const [loading, setLoading] = useState(false);
 
+  const [tokenId, setTokenId] = useState<string | undefined>(undefined);
   const [userClaims, setUserClaims] = useState<UserClaimItem[]>([]);
-
   const [inValidUserClaims, setInvalidUserClaims] = useState<ExcelClaimItem[]>([]);
 
   const updateTokenStandard = useUpdateTokenStandard();
-
-  const [tokenId, setTokenId] = useState<string | undefined>(undefined);
+  const [, token] = useToken(tokenId);
 
   useEffect(() => {
     async function call() {
@@ -111,8 +114,6 @@ export default function CreateTokenClaim() {
       call();
     }
   }, [values.standard, values.id]);
-
-  const [, token] = useToken(tokenId);
 
   const handleFieldChange = (value: string, field: string) => {
     setValues({ ...values, [field]: value });
@@ -173,12 +174,11 @@ export default function CreateTokenClaim() {
     };
   };
 
-  const handleCreateClaimEvent = async (identity: ActorIdentity) => {
-    if (!identity || loading || !token || !principal) return;
-    setLoading(true);
+  const { loading, callback: handleCreateClaimEvent } = useLoadingCallData(
+    useCallback(async () => {
+      if (isUndefinedOrNull(token) || isUndefinedOrNull(principal)) return;
 
-    const { status, message, data } = await createClaimEvent(
-      {
+      const { status, message, data } = await createClaimEvent({
         tokenName: token.name,
         tokenSymbol: token.symbol,
         tokenDecimals: token.decimals,
@@ -193,51 +193,53 @@ export default function CreateTokenClaim() {
         claimEventCreator: principal,
         claimCanisterId: "",
         claimedUserAmount: BigInt(0),
-      },
-      identity,
-    );
+      });
 
-    openTip(status === ResultStatus.OK ? "Created successfully" : message, status);
+      openTip(status === ResultStatus.OK ? "Created successfully" : message, status);
 
-    if (data) {
-      const _userClaims = userClaims.map((ele) => ({
-        user: isValidPrincipal(ele.address) ? { principal: Principal.fromText(ele.address) } : { address: ele.address },
-        quota: BigInt(
-          numberToString(
-            formatTokenAmount(new BigNumber(ele.amount).toFixed(token.decimals, BigNumber.ROUND_DOWN), token.decimals),
+      if (data) {
+        const _userClaims = userClaims.map((ele) => ({
+          user: isValidPrincipal(ele.address)
+            ? { principal: Principal.fromText(ele.address) }
+            : { address: ele.address },
+          quota: BigInt(
+            numberToString(
+              formatTokenAmount(
+                new BigNumber(ele.amount).toFixed(token.decimals, BigNumber.ROUND_DOWN),
+                token.decimals,
+              ),
+            ),
           ),
-        ),
-      }));
+        }));
 
-      const promises: Promise<StatusResult<boolean>>[] = [];
+        const promises: Promise<StatusResult<boolean>>[] = [];
 
-      for (let i = 0; i < _userClaims.length; i += 20000) {
-        const userClaims = _userClaims.slice(i, i + 20000);
-        promises.push(setClaimEventData(data, userClaims, identity));
+        for (let i = 0; i < _userClaims.length; i += 20000) {
+          const userClaims = _userClaims.slice(i, i + 20000);
+          promises.push(setClaimEventData(data, userClaims));
+        }
+
+        await Promise.all(promises)
+          .then((result) => {
+            result.forEach((res) => {
+              openTip(res.status === ResultStatus.OK ? "Set event user data successfully" : res.message, res.status);
+            });
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+
+        const { status: status2, message: message2 } = await setClaimEventReady(data);
+        openTip(status2 === ResultStatus.OK ? "Set event ready successfully" : message2, status2);
+        const { status: status3, message: message3 } = await setClaimEventState(data, true);
+        openTip(status3 === ResultStatus.OK ? "Set event state successfully" : message3, status3);
       }
 
-      await Promise.all(promises)
-        .then((result) => {
-          result.forEach((res) => {
-            openTip(res.status === ResultStatus.OK ? "Set event user data successfully" : res.message, res.status);
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-
-      const { status: status2, message: message2 } = await setClaimEventReady(data, identity);
-      openTip(status2 === ResultStatus.OK ? "Set event ready successfully" : message2, status2);
-      const { status: status3, message: message3 } = await setClaimEventState(data, true, identity);
-      openTip(status3 === ResultStatus.OK ? "Set event state successfully" : message3, status3);
-    }
-
-    if (status === ResultStatus.OK) {
-      history.push("/token-claim");
-    }
-
-    setLoading(false);
-  };
+      if (status === ResultStatus.OK) {
+        history.push("/token-claim");
+      }
+    }, [token, principal, values, userClaims]),
+  );
 
   const ExcelTotalAmount = token
     ? userClaims.reduce((prev, curr) => {
@@ -373,20 +375,16 @@ export default function CreateTokenClaim() {
               </Box>
             </Grid>
             <Box mt={4}>
-              <Identity onSubmit={handleCreateClaimEvent}>
-                {({ submit }: CallbackProps) => (
-                  <AuthButton
-                    variant="contained"
-                    fullWidth
-                    size="large"
-                    onClick={submit}
-                    disabled={Boolean(errorMsg) || loading}
-                    loading={loading}
-                  >
-                    {errorMsg || t`Create claim event`}
-                  </AuthButton>
-                )}
-              </Identity>
+              <AuthButton
+                variant="contained"
+                fullWidth
+                size="large"
+                onClick={handleCreateClaimEvent}
+                disabled={Boolean(errorMsg) || loading}
+                loading={loading}
+              >
+                {errorMsg || t`Create claim event`}
+              </AuthButton>
             </Box>
           </Box>
         </Grid>

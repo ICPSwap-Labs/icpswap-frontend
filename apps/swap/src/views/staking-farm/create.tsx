@@ -5,11 +5,10 @@ import { Flex, Select } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, Wrapper, MainCard, NumberFilledTextField, AuthButton } from "components/index";
 import { useTips } from "hooks/useTips";
-import Identity, { CallbackProps } from "components/Identity";
 import { formatTokenAmount } from "@icpswap/utils";
 import { createV3Farm, useSwapPoolMetadata } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { type ActorIdentity, ResultStatus } from "@icpswap/types";
+import { ResultStatus } from "@icpswap/types";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -131,8 +130,8 @@ export default function CreateProject() {
   const [, poolToken0] = useToken(poolMetadata?.token0.address);
   const [, poolToken1] = useToken(poolMetadata?.token1.address);
 
-  const handleCreateFarmsEvent = async (identity: ActorIdentity) => {
-    if (!identity || loading || !principal || !rewardToken || !poolToken0 || !poolToken1) return;
+  const handleCreateFarmsEvent = async () => {
+    if (loading || !principal || !rewardToken || !poolToken0 || !poolToken1) return;
 
     setLoading(true);
 
@@ -300,20 +299,16 @@ export default function CreateProject() {
             </Box>
             <Typography sx={{ margin: "10px 0 0 0" }}>FarmControllerId: {FarmControllerId}</Typography>
             <Box mt={4}>
-              <Identity onSubmit={handleCreateFarmsEvent}>
-                {({ submit }: CallbackProps) => (
-                  <AuthButton
-                    variant="contained"
-                    fullWidth
-                    size="large"
-                    onClick={submit}
-                    disabled={Boolean(errorMsg) || loading}
-                    loading={loading}
-                  >
-                    {errorMsg || t`Create farm`}
-                  </AuthButton>
-                )}
-              </Identity>
+              <AuthButton
+                variant="contained"
+                fullWidth
+                size="large"
+                onClick={handleCreateFarmsEvent}
+                disabled={Boolean(errorMsg) || loading}
+                loading={loading}
+              >
+                {errorMsg || t`Create farm`}
+              </AuthButton>
             </Box>
           </Box>
         </Grid>

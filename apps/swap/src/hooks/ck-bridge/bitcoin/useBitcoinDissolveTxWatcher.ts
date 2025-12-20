@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { ckBtcMinter } from "actor/ckBTC";
+import { ckBtcMinter } from "@icpswap/actor";
 import { useBTCDissolveUnFinalizedTxs, useBitcoinDissolveTxsManager } from "store/wallet/hooks";
 import {
   bitcoinBytesToHexString,

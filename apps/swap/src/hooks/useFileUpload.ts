@@ -1,17 +1,15 @@
 import { useMemo, useState } from "react";
 import { nftFile as fileActor } from "@icpswap/actor";
 import { network, NETWORK, host } from "constants/index";
-import { Identity } from "types/index";
 
 export interface UploadChunkRequest {
   batch_id: bigint;
   chunk: Blob;
   canisterId: string;
-  identity?: Identity;
 }
 
-const uploadChunk = async ({ batch_id, chunk, canisterId, identity }: UploadChunkRequest) => {
-  return (await fileActor(canisterId, identity)).create_chunk({
+const uploadChunk = async ({ batch_id, chunk, canisterId }: UploadChunkRequest) => {
+  return (await fileActor(canisterId, true)).create_chunk({
     batch_id,
     content: [...new Uint8Array(await chunk.arrayBuffer())],
   });
@@ -25,13 +23,12 @@ export interface FileUploadResult {
 
 export type UploadCallbackProps = {
   file: File;
-  identity?: Identity;
   canisterId: string;
 };
 
-export default function useFileUpload({ canisterId, fileType }: { canisterId: string; fileType: string }): [
+export default function useFileUpload({ fileType }: { canisterId: string; fileType: string }): [
   FileUploadResult,
-  ({ file, identity, canisterId }: UploadCallbackProps) => Promise<
+  ({ file, canisterId }: UploadCallbackProps) => Promise<
     | {
         filePath: string;
         batchId: bigint;
@@ -45,12 +42,12 @@ export default function useFileUpload({ canisterId, fileType }: { canisterId: st
   const [filePath, setFilePath] = useState<string>("");
   const [batchId, setBatchId] = useState<bigint>(BigInt(0));
 
-  const fileUploadCallback = async ({ file, identity, canisterId }: UploadCallbackProps) => {
+  const fileUploadCallback = async ({ file, canisterId }: UploadCallbackProps) => {
     if (uploading) return;
 
     setUploading(true);
 
-    const actor = await fileActor(canisterId, identity);
+    const actor = await fileActor(canisterId, true);
 
     const { batch_id } = await actor.create_batch();
 
@@ -66,13 +63,12 @@ export default function useFileUpload({ canisterId, fileType }: { canisterId: st
           batch_id,
           chunk,
           canisterId,
-          identity,
         }),
       );
     }
 
     const chunkIds = await Promise.all(promises).catch((err) => {
-      console.log(err);
+      console.error(err);
       setFileError(`Failed to upload, please try again`);
       setUploading(false);
     });

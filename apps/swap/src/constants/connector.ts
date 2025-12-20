@@ -1,7 +1,8 @@
 import { getAllCanisters } from "store/allCanisters";
+import { ckBTC_MINTER_ID } from "@icpswap/constants";
+
 import { ALL_CANISTER_IDS } from "./canister";
 import { LEDGER_CANISTER_ID } from "./icp";
-import { ckBTC_MINTER_ID } from "./ckBTC";
 
 export const DelegationIds = [...ALL_CANISTER_IDS, LEDGER_CANISTER_ID, ckBTC_MINTER_ID];
 

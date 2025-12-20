@@ -1,8 +1,7 @@
 import { Grid, Typography, CircularProgress, useTheme, Box, Theme } from "components/Mui";
 import Modal from "components/modal/index";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { TradeOrder } from "types/nft";
-import { type NFTTokenMetadata, type ActorIdentity, ResultStatus } from "@icpswap/types";
+import { type NFTTokenMetadata, ResultStatus } from "@icpswap/types";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { useNFTBuyCallback } from "hooks/nft/trade";
 import { useApprove } from "hooks/token/useApprove";
@@ -27,6 +26,8 @@ import { TextButton, AuthButton } from "components/index";
 import { useTranslation } from "react-i18next";
 
 import FileImage from "../FileImage";
+import { useLoadingCallData } from "@icpswap/hooks";
+import { useCallback } from "react";
 
 export default function NFTBuyReview({
   order,
@@ -58,35 +59,33 @@ export default function NFTBuyReview({
     .plus(new BigNumber(String(WRAPPED_ICP_TOKEN_INFO.transFee)).multipliedBy(3))
     .toNumber();
 
-  const handleBuyNFT = async (identity: ActorIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-    if (loading || isUndefinedOrNull(account)) return;
+  const { loading, callback: handleBuyNFT } = useLoadingCallData(
+    useCallback(async () => {
+      if (isUndefinedOrNull(account) || isUndefinedOrNull(order)) return;
 
-    const TradeCanisterId = getCanisterId(CANISTER_NAMES.NFTTrade);
+      const TradeCanisterId = getCanisterId(CANISTER_NAMES.NFTTrade);
 
-    const { status: approveStatus, message: approveMessage } = await approve({
-      canisterId: NFTTradeTokenCanisterId,
-      spender: TradeCanisterId,
-      account,
-      value: numberToString(parseTokenAmount(userPay, WRAPPED_ICP_TOKEN_INFO.decimals)),
-    });
+      const { status: approveStatus, message: approveMessage } = await approve({
+        canisterId: NFTTradeTokenCanisterId,
+        spender: TradeCanisterId,
+        account,
+        value: numberToString(parseTokenAmount(userPay, WRAPPED_ICP_TOKEN_INFO.decimals)),
+      });
 
-    if (approveStatus === "err") {
-      openErrorTip(approveMessage);
-      closeLoading();
-      return;
-    }
+      if (approveStatus === "err") {
+        openErrorTip(approveMessage);
+      } else {
+        const { status, message } = await buy(order.nftCid, order.tokenIndex);
 
-    const { status, message } = await buy(identity, order?.nftCid ?? "", order?.tokenIndex ?? 0);
-
-    if (status === ResultStatus.ERROR) {
-      openErrorTip(getLocaleMessage(message) ?? "Transaction failed");
-    } else {
-      openSuccessTip(t("nft.trade.success"));
-      if (onTradeSuccess) onTradeSuccess();
-    }
-
-    closeLoading();
-  };
+        if (status === ResultStatus.ERROR) {
+          openErrorTip(getLocaleMessage(message) ?? "Transaction failed");
+        } else {
+          openSuccessTip(t("nft.trade.success"));
+          if (onTradeSuccess) onTradeSuccess();
+        }
+      }
+    }, [account, onTradeSuccess, userPay, order]),
+  );
 
   const USDValue = useICPAmountUSDValue(order?.price);
 
@@ -228,20 +227,16 @@ export default function NFTBuyReview({
         </Grid>
       </Box>
       <Box mt={3}>
-        <Identity onSubmit={handleBuyNFT} fullScreenLoading>
-          {({ submit, loading }: CallbackProps) => (
-            <AuthButton
-              variant="contained"
-              onClick={submit}
-              disabled={loading}
-              fullWidth
-              size="large"
-              startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-            >
-              {t("common.confirm")}
-            </AuthButton>
-          )}
-        </Identity>
+        <AuthButton
+          variant="contained"
+          onClick={handleBuyNFT}
+          disabled={loading}
+          fullWidth
+          size="large"
+          startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+        >
+          {t("common.confirm")}
+        </AuthButton>
       </Box>
       <Grid container sx={{ position: "relative" }} mt="12px" justifyContent="flex-start">
         <Typography color="text.primary" sx={{ "@media (max-width: 640px)": { fontSize: "12px" } }}>

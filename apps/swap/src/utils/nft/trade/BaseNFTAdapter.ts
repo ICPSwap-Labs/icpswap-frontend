@@ -1,19 +1,15 @@
 import type { NFTBuyArgs, NFTSaleArgs, NFTRevokeArgs } from "@icpswap/types";
 import { StatusResult } from "@icpswap/types";
-import { Identity } from "types/global";
 
 export interface BuyParameters {
-  identity: Identity;
   params: NFTBuyArgs;
 }
 
 export interface SaleParameters {
-  identity: Identity;
   params: NFTSaleArgs;
 }
 
 export interface RevokeParameters {
-  identity: Identity;
   params: NFTRevokeArgs;
 }
 

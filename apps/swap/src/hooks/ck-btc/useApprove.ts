@@ -1,10 +1,11 @@
 import { resultFormat, availableArgsNull } from "@icpswap/utils";
 import { StatusResult } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
-import { ckBTCActor } from "actor/ckBTC";
+import { ckBtcActor } from "@icpswap/actor";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useCallback } from "react";
-import { ckBTC_MINTER_ID } from "constants/ckBTC";
+import { ckBTC_MINTER_ID } from "@icpswap/constants";
+
 import { useAllowance } from "./useAllowance";
 
 export interface ApproveArgs {
@@ -17,7 +18,7 @@ export interface ApproveArgs {
 export async function approve({ spender, amount, expected_allowance, spenderSub }: ApproveArgs) {
   return resultFormat<bigint>(
     await (
-      await ckBTCActor(true)
+      await ckBtcActor(true)
     ).icrc2_approve({
       fee: [],
       memo: [],

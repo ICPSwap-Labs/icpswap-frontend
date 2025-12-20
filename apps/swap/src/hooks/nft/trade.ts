@@ -3,7 +3,7 @@ import { resultFormat, availableArgsNull, isAvailablePageArgs } from "@icpswap/u
 import { useCallsData } from "@icpswap/hooks";
 import { StatusResult1, PaginationResult, getCanisterId, CANISTER_NAMES } from "constants/index";
 import { Principal } from "@dfinity/principal";
-import { TradeOrder, TxRecord, Identity } from "types";
+import { TradeOrder, TxRecord } from "types";
 import type { NFTSaleArgs, Null } from "@icpswap/types";
 import { NFTs, AdapterName, NFTsTrade, TradeAdapterName } from "utils/nft/index";
 import { NFTTradeCanister } from "@icpswap/actor";
@@ -30,13 +30,12 @@ export async function allowance({ canisterId, account, spenderCanisterId, tokenI
 }
 
 export interface ApproveArgs {
-  identity: Identity;
   canisterId: string;
   tokenIdentifier: string;
   account: string;
 }
 
-export async function approve({ identity, canisterId, tokenIdentifier, account }: ApproveArgs) {
+export async function approve({ canisterId, tokenIdentifier, account }: ApproveArgs) {
   const spenderCanisterId = getCanisterId(CANISTER_NAMES.NFTTrade);
 
   const allowanceBalance = await allowance({ canisterId, tokenIdentifier, spenderCanisterId, account });
@@ -44,7 +43,6 @@ export async function approve({ identity, canisterId, tokenIdentifier, account }
   if (allowanceBalance !== BigInt(1)) {
     await NFTs.approve({
       canisterId,
-      identity,
       adapterName: AdapterName.ICPSwap,
       params: {
         spender: Principal.fromText(spenderCanisterId),
@@ -58,10 +56,9 @@ export async function approve({ identity, canisterId, tokenIdentifier, account }
   return true;
 }
 
-export async function sell(identity: Identity, params: NFTSaleArgs): Promise<StatusResult1<boolean>> {
+export async function sell(params: NFTSaleArgs): Promise<StatusResult1<boolean>> {
   return await NFTsTrade.sale({
     adapterName: TradeAdapterName.ICPSwap,
-    identity,
     params,
   });
 }
@@ -111,18 +108,16 @@ export function useNFTTradeOrder(
 }
 
 export function useNFTBuyCallback() {
-  return useCallback(async (identity: Identity, canisterId: string, tokenIndex: bigint | string | number) => {
+  return useCallback(async (canisterId: string, tokenIndex: bigint | string | number) => {
     return await NFTsTrade.buy({
-      identity,
       params: { nftCid: canisterId, tokenIndex: Number(tokenIndex) },
       adapterName: TradeAdapterName.ICPSwap,
     });
   }, []);
 }
 
-export async function cancel(identity: Identity, canisterId: string, tokenIndex: number | bigint) {
+export async function cancel(canisterId: string, tokenIndex: number | bigint) {
   return await NFTsTrade.revoke({
-    identity,
     params: { nftCid: canisterId, tokenIndex: Number(tokenIndex) },
     adapterName: TradeAdapterName.ICPSwap,
   });

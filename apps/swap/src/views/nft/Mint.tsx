@@ -22,11 +22,11 @@ import RadioButtonCheckedOutlined from "@mui/icons-material/RadioButtonCheckedOu
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { stringToArrayBuffer } from "utils/index";
-import BigNumber from "bignumber.js";
 import { getLocaleMessage } from "i18n/service";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { CardContent1120 } from "components/Layout/CardContent1120";
 import { useTranslation } from "react-i18next";
+import { BigNumber } from "@icpswap/utils";
 
 export type Metadata = { label: string; value: string; key: number };
 

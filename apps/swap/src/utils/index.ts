@@ -1,9 +1,8 @@
 /* eslint-disable no-extend-native */
 
 import JSBI from "jsbi";
-import BigNumber from "bignumber.js";
 import { Null } from "@icpswap/types";
-import { isUndefinedOrNull } from "@icpswap/utils";
+import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 
 // @ts-ignore  hijack bigint
 BigInt.prototype.toJSON = function toJSON() {

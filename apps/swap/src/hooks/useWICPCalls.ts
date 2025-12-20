@@ -1,16 +1,16 @@
 import { useCallback } from "react";
-import { WICP } from "actor/index";
 import { isAvailablePageArgs, resultFormat } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
-import { Identity, PaginationResult } from "types/index";
+import { PaginationResult } from "types/index";
 import type { Null, WrapMintArgs, WrapTransaction, WrapWithdrawArgs } from "@icpswap/types";
+import { wrapICP as wrapIcpActor } from "@icpswap/actor";
 
-export async function wrapICP(identity: Identity, params: WrapMintArgs) {
-  return resultFormat<boolean>(await (await WICP(identity)).mint(params));
+export async function wrapICP(params: WrapMintArgs) {
+  return resultFormat<boolean>(await (await wrapIcpActor(true)).mint(params));
 }
 
-export async function unwrapICP(identity: Identity, params: WrapWithdrawArgs) {
-  return resultFormat<boolean>(await (await WICP(identity)).withdraw(params));
+export async function unwrapICP(params: WrapWithdrawArgs) {
+  return resultFormat<boolean>(await (await wrapIcpActor(true)).withdraw(params));
 }
 
 export function useUserExchangeRecord(account: string | Null, offset: number, limit: number, reload?: boolean) {
@@ -20,7 +20,7 @@ export function useUserExchangeRecord(account: string | Null, offset: number, li
 
       return resultFormat<PaginationResult<WrapTransaction>>(
         await (
-          await WICP()
+          await wrapIcpActor()
         ).wrappedTx({
           user: [{ address: account }],
           offset: [BigInt(offset)],

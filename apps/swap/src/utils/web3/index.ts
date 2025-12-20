@@ -3,7 +3,7 @@ import { BigNumber as Big } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 import { Contract } from "@ethersproject/contracts";
 import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "@icpswap/utils";
 
 // returns the checksummed address if the address is valid, otherwise returns false
 export function isAddress(value: any): string | false {

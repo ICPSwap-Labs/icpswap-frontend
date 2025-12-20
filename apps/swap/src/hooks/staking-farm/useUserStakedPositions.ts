@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import BigNumber from "bignumber.js";
 import { useUserFarms, getFarmUserTVL, useInfoAllTokens } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FarmUserTvl } from "@icpswap/types";
-import { nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { nonUndefinedOrNull, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { useTokens } from "hooks/useCurrency";
 
 export function useUserStakedPositions() {

@@ -14,13 +14,13 @@ import {
 import { isValidAccount, isValidPrincipal, resultFormat } from "@icpswap/utils";
 import Modal from "components/modal/index";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
-import Identity, { CallbackProps } from "components/Identity";
 import type { EXTCollection, ExtNft } from "@icpswap/types";
 import { getLocaleMessage } from "i18n/service";
 import { ext_nft } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
 import { useAccountPrincipal, useAccount } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
+import { useLoadingCallData } from "@icpswap/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -70,9 +70,9 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
   const [to, setTo] = useState<string>("");
   const principal = useAccountPrincipal();
 
-  const transferSubmitCallback = useCallback(
-    async (identity, { loading, closeLoading }) => {
-      if (loading || !principal || !to) return;
+  const { loading, callback: handleTransfer } = useLoadingCallData(
+    useCallback(async () => {
+      if (!principal || !to) return;
 
       const result = resultFormat<bigint>(
         await (
@@ -88,16 +88,13 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
         }),
       );
 
-      closeLoading();
-
       if (result.status === "ok") {
         openSuccessTip(t`Transferred successfully`);
         if (onTransferSuccess) onTransferSuccess(result);
       } else {
         openErrorTip(getLocaleMessage(result.message));
       }
-    },
-    [nft, to],
+    }, [nft, to]),
   );
 
   const addressHelpText = useMemo(() => {
@@ -190,21 +187,17 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
           <Typography color="text.danger">{t("common.warning.transfer.address.supports")}</Typography>
         </Grid>
         <Grid item xs={12} mt={3}>
-          <Identity onSubmit={transferSubmitCallback}>
-            {({ submit, loading }: CallbackProps) => (
-              <Button
-                variant="contained"
-                fullWidth
-                color="primary"
-                size="large"
-                disabled={loading || !!errorMsg}
-                onClick={submit}
-                startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
-              >
-                {errorMsg || (loading ? "" : t`Confirm`)}
-              </Button>
-            )}
-          </Identity>
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            size="large"
+            disabled={loading || !!errorMsg}
+            onClick={handleTransfer}
+            startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
+          >
+            {errorMsg || (loading ? "" : t`Confirm`)}
+          </Button>
         </Grid>
       </Grid>
     </Modal>

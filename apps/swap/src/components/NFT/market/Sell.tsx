@@ -13,10 +13,9 @@ import {
 import { formatTokenAmount, BigNumber } from "@icpswap/utils";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { sell, approve } from "hooks/nft/trade";
-import Identity, { CallbackProps, SubmitLoadingProps } from "components/Identity";
 import { Modal, NumberTextField } from "components/index";
 import { WRAPPED_ICP_TOKEN_INFO, ResultStatus } from "constants/index";
-import type { NFTTokenMetadata, ActorIdentity } from "@icpswap/types";
+import type { NFTTokenMetadata } from "@icpswap/types";
 import { NFTTradeFee } from "constants/nft";
 import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import LazyImage from "components/LazyImage";
@@ -26,6 +25,7 @@ import { useAccount } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
 
 import FileImage from "../FileImage";
+import { useLoadingCallData } from "@icpswap/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -80,26 +80,23 @@ export default function NFTSell({
 
   const account = useAccount();
 
-  const handleSell = useCallback(
-    async (identity: ActorIdentity, { loading, closeLoading }: SubmitLoadingProps) => {
-      if (loading || !account || new BigNumber(price ?? 0).isEqualTo(0)) return;
+  const { loading, callback: handleSell } = useLoadingCallData(
+    useCallback(async () => {
+      if (!account || new BigNumber(price ?? 0).isEqualTo(0)) return;
 
       const tokenIdentifier = encodeTokenIdentifier(canisterId, Number(nft.tokenId));
 
       await approve({
-        identity,
         canisterId,
         tokenIdentifier,
         account,
       });
 
-      const result = await sell(identity, {
+      const result = await sell({
         nftCid: canisterId,
         price: BigInt(price ? formatTokenAmount(price, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber() : 0),
         tokenIndex: Number(nft.tokenId),
       });
-
-      closeLoading();
 
       if (result.status === ResultStatus.OK) {
         openSuccessTip(`Listed Successfully`);
@@ -108,8 +105,7 @@ export default function NFTSell({
       }
 
       if (onSellSuccess) onSellSuccess(result);
-    },
-    [nft, account, price],
+    }, [nft, account, price]),
   );
 
   const handleClose = useCallback(() => {
@@ -249,21 +245,17 @@ export default function NFTSell({
           <img width="16px" src={WICPCurrencyImage} alt="" />
         </Grid>
         <Grid item xs={12} mt={3}>
-          <Identity onSubmit={handleSell}>
-            {({ submit, loading }: CallbackProps) => (
-              <Button
-                variant="contained"
-                fullWidth
-                color="primary"
-                size="large"
-                disabled={loading || !!errorMsg}
-                onClick={submit}
-                startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
-              >
-                {errorMsg || (loading ? "" : `Confirm`)}
-              </Button>
-            )}
-          </Identity>
+          <Button
+            variant="contained"
+            fullWidth
+            color="primary"
+            size="large"
+            disabled={loading || !!errorMsg}
+            onClick={handleSell}
+            startIcon={loading ? <CircularProgress color="inherit" size={30} /> : null}
+          >
+            {errorMsg || (loading ? "" : `Confirm`)}
+          </Button>
         </Grid>
       </Grid>
     </Modal>
