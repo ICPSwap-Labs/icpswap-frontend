@@ -61,7 +61,12 @@ export function InfoTokenPrices({ tokenInfo }: { tokenInfo: Token | undefined })
         ? 0
         : new BigNumber(icpPrice).dividedBy(tokenPrice).toNumber()
       : undefined;
-  const tokenRatio = tokenPrice && icpPrice ? new BigNumber(tokenPrice).dividedBy(icpPrice).toNumber() : undefined;
+  const tokenRatio =
+    tokenPrice && icpPrice
+      ? new BigNumber(icpPrice).isEqualTo(0)
+        ? 0
+        : new BigNumber(tokenPrice).dividedBy(icpPrice).toNumber()
+      : undefined;
 
   return tokenPrice && icpPrice && tokenInfo ? (
     <Box
