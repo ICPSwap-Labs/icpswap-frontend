@@ -1,8 +1,7 @@
 import { useState, useMemo } from "react";
 import { makeStyles, Typography, Box } from "components/Mui";
 import { NoData, ImageLoading } from "components/index";
-import { Header, HeaderCell, SortDirection, OnlyTokenList } from "@icpswap/ui";
-import Pagination from "components/pagination/cus";
+import { Header, HeaderCell, SortDirection, OnlyTokenList, Pagination } from "@icpswap/ui";
 import { useTokensFromList, getPoolAPR, useInfoTokenPools } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { HIDDEN_POOLS } from "constants/info";
@@ -173,11 +172,9 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
           <NoData />
         )}
 
-        <Box mt="20px">
-          {!loading && allPoolsOfToken && allPoolsOfToken.length > 0 ? (
-            <Pagination maxItems={PAGE_SIZE} length={allPoolsOfToken?.length ?? 0} onPageChange={setPage} page={page} />
-          ) : null}
-        </Box>
+        {!loading && allPoolsOfToken && allPoolsOfToken.length > 0 ? (
+          <Pagination maxItems={PAGE_SIZE} length={allPoolsOfToken?.length ?? 0} onPageChange={setPage} page={page} />
+        ) : null}
       </Box>
     </Box>
   );

@@ -4,17 +4,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useState, useCallback } from "react";
 import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
 import { BigNumber, isUndefinedOrNull, locationSearchReplace } from "@icpswap/utils";
-import {
-  Header,
-  HeaderCell,
-  Flex,
-  TransactionRow,
-  LoadingRow,
-  Pagination,
-  PaginationType,
-  NoData,
-  BreadcrumbsV1,
-} from "@icpswap/ui";
+import { Header, HeaderCell, Flex, TransactionRow, LoadingRow, Pagination, NoData, BreadcrumbsV1 } from "@icpswap/ui";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
@@ -88,8 +78,8 @@ export default function SwapTransactions() {
     history.push(`/info-tools/swap-transactions${search}`);
   };
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   const handleCopy = useCallback((address: string) => {
@@ -219,21 +209,12 @@ export default function SwapTransactions() {
                     />
                   ))}
 
-                  <Box
-                    sx={{
-                      padding: "24px",
-                      "@media screen and (max-width: 780px)": {
-                        padding: "16px",
-                      },
-                    }}
-                  >
-                    <Pagination
-                      num={pagination.pageNum}
-                      total={result?.totalElements ?? 0}
-                      onPageChange={handlePageChange}
-                      mt="0px"
-                    />
-                  </Box>
+                  <Pagination
+                    page={pagination.pageNum}
+                    length={result?.totalElements ?? 0}
+                    onPageChange={handlePageChange}
+                    padding={{ lg: "24px 0", sm: "16px 0" }}
+                  />
                 </>
               ) : (
                 <NoData tip={t("info.tools.swap.transactions.empty")} />

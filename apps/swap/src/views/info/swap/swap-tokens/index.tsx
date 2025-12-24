@@ -22,7 +22,7 @@ export default function Tokens() {
           <Box
             sx={{
               width: "100%",
-              overflow: "auto",
+              overflow: "auto hidden",
             }}
           >
             <Box

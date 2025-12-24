@@ -2,7 +2,7 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { useStakingPools, useStakingPoolState } from "@icpswap/hooks";
 import { pageArgsFormat, explorerLink } from "@icpswap/utils";
-import { TextButton, PaginationType } from "components/index";
+import { TextButton } from "components/index";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { HeaderCell, BodyCell, NoData, Pagination, Header, TableRow, Flex, ImageLoading } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
@@ -84,33 +84,36 @@ export function StakePools() {
   const { result, loading } = useStakingPools(undefined, offset, pagination.pageSize);
   const { content = [], totalElements = 0 } = result ?? { content: [], totalElements: 0 };
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   return (
-    <Box sx={{ width: "100%", overflow: "auto" }}>
-      <Box sx={{ width: "100%", minWidth: "1200px" }}>
-        <Header className={classes.wrapper}>
-          <HeaderCell>{t("common.canister.id")}</HeaderCell>
-          <HeaderCell>{t("common.start.time")}</HeaderCell>
-          <HeaderCell>{t("common.end.time")}</HeaderCell>
-          <HeaderCell>{t("info.staking.token")}</HeaderCell>
-          <HeaderCell>{t("common.reward.token")}</HeaderCell>
-          <HeaderCell>{t("common.status")}</HeaderCell>
-          <HeaderCell>&nbsp;</HeaderCell>
-        </Header>
+    <>
+      <Box sx={{ width: "100%", overflow: "auto hidden" }}>
+        <Box sx={{ width: "100%", minWidth: "1200px" }}>
+          <Header className={classes.wrapper}>
+            <HeaderCell>{t("common.canister.id")}</HeaderCell>
+            <HeaderCell>{t("common.start.time")}</HeaderCell>
+            <HeaderCell>{t("common.end.time")}</HeaderCell>
+            <HeaderCell>{t("info.staking.token")}</HeaderCell>
+            <HeaderCell>{t("common.reward.token")}</HeaderCell>
+            <HeaderCell>{t("common.status")}</HeaderCell>
+            <HeaderCell>&nbsp;</HeaderCell>
+          </Header>
 
-        {content.map((pool) => (
-          <PoolItem key={pool.canisterId.toString()} pool={pool} />
-        ))}
+          {content.map((pool) => (
+            <PoolItem key={pool.canisterId.toString()} pool={pool} />
+          ))}
+        </Box>
+
+        {content.length === 0 && !loading ? <NoData /> : null}
+        {loading ? <ImageLoading loading={loading} /> : null}
       </Box>
 
-      {content.length === 0 && !loading ? <NoData /> : null}
-      {loading ? <ImageLoading loading={loading} /> : null}
       {Number(totalElements) > 0 ? (
-        <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
+        <Pagination length={Number(totalElements)} page={pagination.pageNum} onPageChange={handlePageChange} />
       ) : null}
-    </Box>
+    </>
   );
 }

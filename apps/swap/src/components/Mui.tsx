@@ -31,7 +31,6 @@ export { default as Breadcrumbs } from "@mui/material/Breadcrumbs";
 export { default as Input } from "@mui/material/Input";
 export { default as Card } from "@mui/material/Card";
 export { default as Switch, type SwitchProps } from "@mui/material/Switch";
-export { default as Pagination } from "@mui/material/Pagination";
 export { default as CssBaseline } from "@mui/material/CssBaseline";
 export { default as StyledEngineProvider } from "@mui/material/StyledEngineProvider";
 export { default as Dialog } from "@mui/material/Dialog";

@@ -1,17 +1,7 @@
 import { useState } from "react";
 import { Grid, Typography, Box, Avatar, makeStyles } from "components/Mui";
 import { useNFTs } from "@icpswap/hooks";
-import {
-  Header,
-  HeaderCell,
-  TableRow,
-  BodyCell,
-  LoadingRow,
-  Pagination,
-  PaginationType,
-  NoData,
-  TextButton,
-} from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, Pagination, NoData, TextButton } from "@icpswap/ui";
 import { shorten, pageArgsFormat } from "@icpswap/utils";
 import { type NFTTokenMetadata } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
@@ -61,8 +51,8 @@ export function NFTs({ canisterId }: { canisterId: string }) {
   const { result, loading } = useNFTs({ canisterId, offset, limit: pagination.pageSize });
   const { content: NFTList, totalElements } = result ?? { totalElements: 0, content: [] as NFTTokenMetadata[] };
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   return (
@@ -110,12 +100,7 @@ export function NFTs({ canisterId }: { canisterId: string }) {
       </Box>
 
       {totalElements && Number(totalElements) !== 0 ? (
-        <Pagination
-          total={Number(totalElements)}
-          num={pagination.pageNum}
-          defaultPageSize={pagination.pageSize}
-          onPageChange={handlePageChange}
-        />
+        <Pagination length={Number(totalElements)} page={pagination.pageNum} onPageChange={handlePageChange} />
       ) : null}
     </>
   );

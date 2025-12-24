@@ -60,13 +60,15 @@ export function NFTItem({ canister }: NFTItemProps) {
   );
 }
 
+const PAGE_SIZE = 10;
+
 export default function NFTInfo() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
+  const [page, setPage] = useState(1);
+  const [offset] = pageArgsFormat(page, PAGE_SIZE);
 
-  const { result, loading } = useNFTCanisters(offset, pagination.pageSize);
+  const { result, loading } = useNFTCanisters(offset, PAGE_SIZE);
   const { content, totalElements } = result ?? { totalElements: 0, content: [] as NFTCanisterInfo[] };
 
   return (
@@ -112,11 +114,7 @@ export default function NFTInfo() {
         </Box>
 
         {totalElements && Number(totalElements) !== 0 ? (
-          <Pagination
-            total={Number(totalElements)}
-            num={pagination.pageNum}
-            onPageChange={(pagination) => setPagination(pagination)}
-          />
+          <Pagination length={Number(totalElements)} page={page} onPageChange={setPage} />
         ) : null}
       </MainCard>
     </InfoWrapper>

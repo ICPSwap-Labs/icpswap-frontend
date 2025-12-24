@@ -44,13 +44,7 @@ export default function AllTransactions() {
       </Box>
 
       <Box sx={{ width: "100%" }}>
-        <Transactions
-          transactions={transactions}
-          loading={loading}
-          hasFilter
-          showedTokens={showedTokens}
-          styleProps={{ padding: "24px" }}
-        />
+        <Transactions transactions={transactions} loading={loading} hasFilter showedTokens={showedTokens} />
       </Box>
     </MainCard>
   );

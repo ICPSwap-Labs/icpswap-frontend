@@ -109,7 +109,7 @@ export default function TopTokens() {
         </Box>
       </Box>
 
-      <Box mt="20px" sx={{ overflow: "auto" }}>
+      <Box mt="20px" sx={{ overflow: "auto hidden" }}>
         <Box sx={{ minWidth: "1140px" }}>
           <TokenTable tokens={filteredAllTokens} loading={loading} />
         </Box>

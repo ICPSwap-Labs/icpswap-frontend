@@ -1,7 +1,7 @@
 /* eslint-disable react/no-danger */
 
 import { Box, Typography, useTheme } from "components/Mui";
-import { LoadingRow, Flex, NoData, SimplePagination } from "@icpswap/ui";
+import { LoadingRow, Flex, NoData, Pagination } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useSwapProContext } from "components/swap/pro";
 import { SocialMediaResult } from "@icpswap/types";
@@ -90,9 +90,13 @@ export function SocialMedia() {
               <TokenNewsItem key={index} tokenNews={news} />
             ))}
 
-            <Box mb="20px" sx={{ width: "100%" }}>
-              <SimplePagination page={page} maxItems={MAX_ITEMS} length={tokenNews.length} onPageChange={setPage} />
-            </Box>
+            <Pagination
+              page={page}
+              maxItems={MAX_ITEMS}
+              length={tokenNews.length}
+              onPageChange={setPage}
+              padding={{ lg: "0 0 16px 0", sm: "0 0 16px 0" }}
+            />
           </>
         )}
       </Flex>

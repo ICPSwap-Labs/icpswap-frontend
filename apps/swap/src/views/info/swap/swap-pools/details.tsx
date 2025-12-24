@@ -330,13 +330,11 @@ export default function SwapPoolDetails() {
           </Flex>
 
           <Box>
-            {tab === TabValue.Transactions ? (
-              <PoolTransactions canisterId={canisterId} styleProps={{ padding: "24px" }} />
-            ) : null}
+            {tab === TabValue.Transactions ? <PoolTransactions canisterId={canisterId} /> : null}
             {tab === TabValue.Positions ? (
               <>
                 <PoolPositionHoldersCharts poolId={canisterId} poolName={poolName} />
-                <PositionTable poolId={canisterId} padding="24px" />
+                <PositionTable poolId={canisterId} padding="24px" paginationPadding={{ lg: "24px 0", sm: "16px 0" }} />
               </>
             ) : null}
           </Box>

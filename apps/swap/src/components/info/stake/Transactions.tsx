@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { PaginationType, ImageLoading, AddressFormat } from "components/index";
+import { ImageLoading, AddressFormat } from "components/index";
 import { Box, makeStyles } from "components/Mui";
 import dayjs from "dayjs";
 import { useStakingPoolTransactions } from "@icpswap/hooks";
@@ -65,8 +65,11 @@ export function StakeTransactions({ id }: TransactionsProps) {
   const { result, loading } = useStakingPoolTransactions(id, undefined, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({
+      pageNum: page,
+      pageSize: 10,
+    });
   };
 
   return (
@@ -89,7 +92,7 @@ export function StakeTransactions({ id }: TransactionsProps) {
       {list.length === 0 && !loading && !!id ? <NoData /> : null}
       {loading || !id ? <ImageLoading loading={loading || !id} /> : null}
       {Number(totalElements) > 0 ? (
-        <Pagination total={Number(totalElements)} onPageChange={handlePageChange} num={pagination.pageNum} />
+        <Pagination length={Number(totalElements)} onPageChange={handlePageChange} page={pagination.pageNum} />
       ) : null}
     </Box>
   );

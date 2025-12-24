@@ -8,7 +8,7 @@ import {
   BodyCell,
   LoadingRow,
   NoData,
-  SimplePagination,
+  Pagination,
   TextualAddress,
   Image,
 } from "@icpswap/ui";
@@ -145,7 +145,7 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
 
       <Box mt="20px">
         {!loading && !!result?.content.length ? (
-          <SimplePagination
+          <Pagination
             page={page}
             maxItems={maxItems}
             length={result?.totalElements ? Number(result.totalElements) : 0}

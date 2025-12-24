@@ -6,7 +6,7 @@ import { useNFTTradeTransactions } from "@icpswap/hooks";
 import upperFirst from "lodash/upperFirst";
 import { shorten, timestampFormat, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
-import { Pagination, PaginationType, NoData, Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
+import { Pagination, NoData, Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
 import { makeStyles, Box } from "components/Mui";
 
 const useStyles = makeStyles(() => {
@@ -45,8 +45,11 @@ export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
   });
   const { totalElements, content } = result ?? { totalElements: 0, content: [] as TradeTransaction[] };
 
-  const onPageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const onPageChange = (page: number) => {
+    setPagination({
+      pageNum: page,
+      pageSize: 10,
+    });
   };
 
   return (
@@ -85,7 +88,7 @@ export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
       </Box>
 
       {content.length ? (
-        <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={onPageChange} />
+        <Pagination length={Number(totalElements)} page={pagination.pageNum} onPageChange={onPageChange} />
       ) : null}
     </>
   );
