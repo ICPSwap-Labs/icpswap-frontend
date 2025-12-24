@@ -120,7 +120,7 @@ const headers: HeaderType[] = [
   { label: "#", key: "#", sort: false },
   { label: i18n.t("common.name"), key: "name", sort: true },
   { label: i18n.t("common.price"), key: "price", sort: true },
-  { label: i18n.t("common.price.range"), key: "priceChange24H", sort: true },
+  { label: i18n.t("common.price.change.24h"), key: "priceChange24H", sort: true },
   { label: i18n.t("common.volume24h"), key: "volumeUSD24H", sort: true },
   { label: i18n.t("common.tvl"), key: "tvlUSD", sort: true },
 ];
