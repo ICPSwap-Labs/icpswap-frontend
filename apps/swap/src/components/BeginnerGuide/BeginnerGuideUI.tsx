@@ -67,11 +67,11 @@ export function BeginnerGuideUI({ open, onClose, onGotIt, guides }: BeginnerGuid
 
   return (
     <Modal title="Quick Start" open={open} onClose={onClose}>
-      <Typography>{guides[step].title}</Typography>
+      <Typography sx={{ fontSize: "16px" }}>{guides[step].title}</Typography>
       <img src={guides[step].image} alt="" style={{ width: "100%", marginTop: 12 }} />
       <Box sx={{ margin: "12px 0 0 0" }}>
         <Flex fullWidth justify="space-between" align="center">
-          <Typography>
+          <Typography sx={{ fontSize: "16px" }}>
             {step + 1}/{guides.length}
           </Typography>
 
