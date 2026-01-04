@@ -2,6 +2,8 @@ import { useErrorTip } from "hooks/useTips";
 import { actor, ActorError } from "@icpswap/actor";
 import { useEffect } from "react";
 import { useLogout, useConnectManager } from "store/auth/hooks";
+import { Typography } from "components/Mui";
+import { TextButton } from "@icpswap/ui";
 
 const INTERVAL = 30; // 30 seconds
 
@@ -41,7 +43,7 @@ export function isIISignatureVerificationError(message: string) {
   return message.includes("Invalid signature") && message.includes("Invalid basic signature");
 }
 
-export function useHandleActorError() {
+export function GlobalActorError() {
   const [open] = useErrorTip();
   const logout = useLogout();
   const { showConnector } = useConnectManager();
@@ -56,11 +58,22 @@ export function useHandleActorError() {
 
       if (isIISignatureVerificationError(error.message)) {
         open(
-          `Code 400 – Signature Verification Failed. Your Internet Identity session has expired. Please reconnect your II and try again — it should work smoothly.`,
+          <Typography sx={{ lineHeight: "18px", color: "text.primary", fontWeight: 500 }}>
+            Code 400 – Signature Verification Failed. Your Internet Identity session has expired. Please reconnect your
+            II and try again — it should work smoothly.
+            <TextButton
+              sx={{ fontWeight: 500 }}
+              link="https://iloveics.gitbook.io/icpswap/products/wallet/400-code-invalid-signature-error-internet-identity-icp "
+            >
+              Click Here for Details&Solutions
+            </TextButton>
+          </Typography>,
         );
         await logout();
         showConnector(true);
       }
     });
   }, []);
+
+  return null;
 }
