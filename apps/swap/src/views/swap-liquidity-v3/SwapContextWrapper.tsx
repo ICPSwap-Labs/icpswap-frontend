@@ -14,7 +14,7 @@ import {
   SwapTransactions,
 } from "components/swap/index";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
-import { useConnectorStateConnected } from "store/auth/hooks";
+import { useWalletIsConnected } from "store/auth/hooks";
 import { SWAP_RECLAIM_REFRESH } from "constants/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
@@ -22,7 +22,7 @@ import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 export function SwapContextWrapper() {
   const { cachedPool, inputToken, outputToken, noLiquidity } = useContext(SwapContext);
 
-  const isConnected = useConnectorStateConnected();
+  const isConnected = useWalletIsConnected();
 
   const swapWrapperRef = useRef<SwapWrapperRef>(null);
 

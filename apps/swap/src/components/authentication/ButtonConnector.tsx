@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useConnectManager, useConnectorStateConnected } from "store/auth/hooks";
+import { useConnectManager, useWalletIsConnected } from "store/auth/hooks";
 import { Override } from "@icpswap/types";
 import { CircularProgress, Button, ButtonProps } from "components/Mui";
 import { useTranslation } from "react-i18next";
@@ -9,7 +9,7 @@ export type ButtonConnectorProps = Override<ButtonProps, { children?: ReactNode;
 export default function ButtonConnector(props: ButtonConnectorProps) {
   const { t } = useTranslation();
   const { showConnector } = useConnectManager();
-  const isConnected = useConnectorStateConnected();
+  const isConnected = useWalletIsConnected();
 
   const handleConnect = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     if (!isConnected) {

@@ -30,7 +30,7 @@ export function useConnector() {
   return useMemo(() => connector, [connector]);
 }
 
-export function useConnectorStateConnected() {
+export function useWalletIsConnected() {
   const isConnected = useAppSelector((state) => state.auth.isConnected);
   const isUnLocked = useAppSelector((state) => state.session.isUnLocked);
   const walletType = useAppSelector((state) => state.auth.walletType);
@@ -235,7 +235,7 @@ export function useIdentityKitInitialConnect() {
 
 export function useConnectManager() {
   const dispatch = useAppDispatch();
-  const connectorStateConnected = useConnectorStateConnected();
+  const connectorStateConnected = useWalletIsConnected();
   const authDisconnect = useDisconnect();
   const open = useAppSelector((state) => state.auth.walletConnectorOpen);
   const connector = useAppSelector((state) => state.auth.walletType);

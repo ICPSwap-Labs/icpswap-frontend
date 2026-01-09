@@ -4,7 +4,7 @@ import { MainCard, Flex } from "components/index";
 import { LimitContext } from "components/swap/limit-order/context";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
-import { useConnectorStateConnected } from "store/auth/hooks";
+import { useWalletIsConnected } from "store/auth/hooks";
 import { UserLimitPanel, PlaceOrder, GuidePanel } from "components/swap/limit-order";
 
 interface LimitWrapperProps {
@@ -28,7 +28,7 @@ export function LimitWrapper({
   const [showLimitOrders, setShowLimitOrders] = useState(false);
   const [inverted, setInverted] = useState(false);
 
-  const isConnected = useConnectorStateConnected();
+  const isConnected = useWalletIsConnected();
 
   const handleAddKeys = useCallback(
     (key: string) => {

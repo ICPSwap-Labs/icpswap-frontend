@@ -1,19 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
 import { BeginnerGuideUI } from "components/BeginnerGuide/BeginnerGuideUI";
-import storage from "redux-persist/lib/storage";
-import { useLocation } from "react-router-dom";
-
-export const LIQUIDITY_GUIDE_NAME = "liquidity_guide_name";
-
-export async function getLiquidityGuideStorage() {
-  const storageValue = await storage.getItem(LIQUIDITY_GUIDE_NAME);
-  const isRead = !storageValue ? "" : JSON.parse(storageValue);
-  return isRead;
-}
-
-export async function setLiquidityGuideStorage(isRead: boolean) {
-  await storage.setItem(LIQUIDITY_GUIDE_NAME, JSON.stringify(isRead));
-}
+import { useShowGuideModalManager, useGuideReadCallback, LiquidityGuideName } from "hooks/global/guide";
+import { useLiquidityGuideShow } from "hooks/global/guide/useLiquidityGuide";
 
 const Guides = [
   {
@@ -34,32 +21,10 @@ const Guides = [
 ];
 
 export function LiquidityGuide() {
-  const [open, setOpen] = useState(false);
-  const location = useLocation();
+  const liquidityGuideShow = useLiquidityGuideShow();
 
-  useEffect(() => {
-    async function call() {
-      const isRead = await getLiquidityGuideStorage();
-      if (isRead === "true" || isRead === true) {
-        setOpen(false);
-      } else {
-        setOpen(true);
-      }
-    }
+  const { show, onClose } = useShowGuideModalManager(LiquidityGuideName, liquidityGuideShow);
+  const read = useGuideReadCallback(LiquidityGuideName);
 
-    if (location.pathname.startsWith("/liquidity")) {
-      call();
-    }
-  }, [location]);
-
-  const handleClose = useCallback(() => {
-    setOpen(false);
-  }, [setOpen]);
-
-  const handleGotIt = useCallback(() => {
-    setLiquidityGuideStorage(true);
-    setOpen(false);
-  }, [setOpen]);
-
-  return open ? <BeginnerGuideUI open={open} onClose={handleClose} guides={Guides} onGotIt={handleGotIt} /> : null;
+  return show ? <BeginnerGuideUI open onClose={onClose} guides={Guides} onGotIt={read} /> : null;
 }

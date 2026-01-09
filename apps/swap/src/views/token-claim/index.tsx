@@ -3,7 +3,7 @@ import { Box, Typography, Avatar, CircularProgress, Button, useTheme } from "com
 import { TextButton, Wrapper, LoadingRow, ViewMore, NoData, Flex } from "components/index";
 import { useUserClaimEvents, getUserClaimEvents, claimToken, useUserClaimEventTransactions } from "@icpswap/hooks";
 import { ResultStatus, type ClaimEventInfo } from "@icpswap/types";
-import { useAccountPrincipalString, useConnectorStateConnected } from "store/auth/hooks";
+import { useAccountPrincipalString, useWalletIsConnected } from "store/auth/hooks";
 import { pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 import { useToken } from "hooks/index";
 import { useTips, MessageTypes } from "hooks/useTips";
@@ -129,7 +129,7 @@ export default function TokenClaim() {
     setLoadingMore(false);
   };
 
-  const isConnected = useConnectorStateConnected();
+  const isConnected = useWalletIsConnected();
 
   return isConnected ? (
     <Wrapper>

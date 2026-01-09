@@ -9,7 +9,7 @@ import { useParsedQueryString } from "@icpswap/hooks";
 import { Null } from "@icpswap/types";
 import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
-import { useConnectorStateConnected } from "store/auth/hooks";
+import { useWalletIsConnected } from "store/auth/hooks";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 import { useHistory } from "react-router-dom";
 
@@ -48,7 +48,7 @@ export default function Swap() {
     [history],
   );
 
-  const isConnected = useConnectorStateConnected();
+  const isConnected = useWalletIsConnected();
 
   return (
     <>
