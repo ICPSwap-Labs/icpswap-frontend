@@ -6,19 +6,16 @@ const Guides = [
   {
     step: 0,
     title: "Add liquidity - earn trading fees from swaps",
-    image: "/images/beginner-guide/liquidity-step-0.png",
   },
   {
     step: 1,
     title: "Manage your liquidity anytime",
-    image: "/images/beginner-guide/liquidity-step-1.png",
   },
   {
     step: 2,
     title: "Explore top pools - find high-yield opportunities",
-    image: "/images/beginner-guide/liquidity-step-2.png",
   },
-];
+].map((element) => ({ ...element, image: `/images/beginner-guide/liquidity/${element.step + 1}.png` }));
 
 export function LiquidityGuide() {
   const liquidityGuideShow = useLiquidityGuideShow();
