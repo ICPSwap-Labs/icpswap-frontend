@@ -8,6 +8,8 @@ import { Flex, LoadingRow, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/Image";
 import { useTokens } from "hooks/info/tokens/index";
 import { useMediaQuery640 } from "hooks/theme";
+import { HideStableCoins, useHideStableCoins } from "components/info/tokens/HideStableCoins";
+import { StableCoins } from "components/info/tokens/stableCoins";
 
 const COLORS = [
   { value: -20, color: "#971E27" },
@@ -55,16 +57,14 @@ export function TreeMapColorsLabel() {
   );
 }
 
-export function TokensTreeMap() {
-  const tokens = useTokens();
-
+const CustomizedContent = (props: TreemapNode) => {
   const down640 = useMediaQuery640();
 
   const fontSizes = useMemo(() => {
     if (down640) {
       return {
-        primary: 68,
-        secondary: 26,
+        primary: 48,
+        secondary: 20,
       };
     }
 
@@ -73,6 +73,55 @@ export function TokensTreeMap() {
       secondary: 28,
     };
   }, [down640]);
+
+  const { x, y, width, height, index, name } = props;
+
+  const nameFontSize = fontSizes.primary / (index + 1);
+  const secondFontSize = fontSizes.secondary / (index + 1);
+  const margin1 = 4 / (index + 1);
+  const margin2 = 8 / (index + 1);
+
+  return (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        style={{
+          fill: props.color,
+          stroke: "#1A223F",
+          strokeWidth: 1,
+          cursor: "pointer",
+        }}
+      />
+
+      <foreignObject x={x} y={y} width={width} height={height} style={{ cursor: "pointer" }}>
+        <Flex sx={{ width: "100%", height: "100%", cursor: "pointer" }} justify="center" vertical>
+          <Typography sx={{ fontSize: `${nameFontSize}px`, fontWeight: 400, color: "#ffffff" }}>
+            {name.length > 6 ? `${name.slice(0, 4)}...` : name}
+          </Typography>
+          <Typography
+            sx={{ fontSize: `${secondFontSize}px`, fontWeight: 400, color: "#ffffff" }}
+            marginTop={`${margin1}px`}
+          >
+            {formatDollarTokenPrice(props.price)}
+          </Typography>
+          <Typography
+            sx={{ fontSize: `${secondFontSize}px`, fontWeight: 400, color: "#ffffff" }}
+            marginTop={`${margin2}px`}
+          >
+            {formatDollarAmount(props.marketCap)}
+          </Typography>
+        </Flex>
+      </foreignObject>
+    </g>
+  );
+};
+
+export function TokensTreeMap() {
+  const tokens = useTokens();
+  const [hideStableCoins] = useHideStableCoins();
 
   const data: Array<TreeMapData> | undefined = useMemo(() => {
     return tokens
@@ -117,65 +166,32 @@ export function TokensTreeMap() {
           priceChange24H: element.priceChange24H,
         };
       })
-      .filter((element) => new BigNumber(element.value).isGreaterThan(0) && element.name !== "ICP")
+      .filter(
+        (element) =>
+          new BigNumber(element.value).isGreaterThan(0) &&
+          element.name !== "ICP" &&
+          (hideStableCoins ? !StableCoins.some((stableCoin) => stableCoin.tokenId === element.tokenId) : true),
+      )
       .sort((a, b) => {
         if (new BigNumber(a.value).isGreaterThan(b.value)) return -1;
         if (new BigNumber(a.value).isLessThan(b.value)) return 1;
         return 0;
       });
-  }, [tokens]);
-
-  const CustomizedContent = (props: TreemapNode) => {
-    const { x, y, width, height, index, name } = props;
-
-    const nameFontSize = fontSizes.primary / (index + 1);
-    const secondFontSize = fontSizes.secondary / (index + 1);
-    const margin1 = 4 / (index + 1);
-    const margin2 = 8 / (index + 1);
-
-    return (
-      <g>
-        <rect
-          x={x}
-          y={y}
-          width={width}
-          height={height}
-          style={{
-            fill: props.color,
-            stroke: "#1A223F",
-            strokeWidth: 1,
-            cursor: "pointer",
-          }}
-        />
-
-        <foreignObject x={x} y={y} width={width} height={height} style={{ cursor: "pointer" }}>
-          <Flex sx={{ width: "100%", height: "100%", cursor: "pointer" }} justify="center" vertical>
-            <Typography sx={{ fontSize: `${nameFontSize}px`, fontWeight: 400, color: "#ffffff" }}>
-              {name.length > 6 ? `${name.slice(0, 4)}...` : name}
-            </Typography>
-            <Typography
-              sx={{ fontSize: `${secondFontSize}px`, fontWeight: 400, color: "#ffffff" }}
-              marginTop={`${margin1}px`}
-            >
-              {formatDollarTokenPrice(props.price)}
-            </Typography>
-            <Typography
-              sx={{ fontSize: `${secondFontSize}px`, fontWeight: 400, color: "#ffffff" }}
-              marginTop={`${margin2}px`}
-            >
-              {formatDollarAmount(props.marketCap)}
-            </Typography>
-          </Flex>
-        </foreignObject>
-      </g>
-    );
-  };
+  }, [tokens, hideStableCoins]);
 
   return (
     <Box sx={{ margin: "40px 0 0 0" }}>
-      <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
-        24h Token Volume Heatmap
-      </Typography>
+      <Flex
+        justify="space-between"
+        align="center"
+        sx={{ "@media(max-width: 640px)": { flexDirection: "column", alignItems: "flex-start", gap: "8px 0" } }}
+      >
+        <Typography sx={{ fontSize: "20px", fontWeight: 500, color: "text.primary" }}>
+          24h Token Volume Heatmap
+        </Typography>
+
+        <HideStableCoins />
+      </Flex>
 
       <Box sx={{ margin: "24px 0 0 0", width: "100%", height: "300px" }}>
         {isUndefinedOrNull(tokens) || tokens.length === 0 ? (
