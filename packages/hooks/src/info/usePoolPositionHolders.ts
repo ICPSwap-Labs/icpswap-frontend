@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { isUndefinedOrNull, resultFormat , icpswap_fetch_post } from "@icpswap/utils";
+import { isUndefinedOrNull, icpswap_fetch_post } from "@icpswap/utils";
 import type { Null, PoolPositionHolderResult } from "@icpswap/types";
 
 import { useCallsData } from "../useCallData";

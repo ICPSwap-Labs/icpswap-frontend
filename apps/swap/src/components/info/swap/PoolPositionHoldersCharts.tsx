@@ -23,7 +23,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
   const { result } = usePoolPositionHolders(poolId, POSITION_SIZE);
 
   const { topHoldValue, topHoldPercent, totalPositionsValue, totalPositions } = useMemo(() => {
-    if (isUndefinedOrNull(result)) return {};
+    if (isUndefinedOrNull(result) || isUndefinedOrNull(result.positionList)) return {};
 
     const topHoldValue = result.positionList.reduce((prev, curr, index) => {
       return index > TOP_NUMBER - 1 ? prev : prev.plus(curr.value);
@@ -40,7 +40,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
   }, [result]);
 
   const charts = useMemo(() => {
-    if (isUndefinedOrNull(result)) return [];
+    if (isUndefinedOrNull(result) || isUndefinedOrNull(result.positionList)) return undefined;
 
     const totalUSDValue = result.poolTvlUSD;
 
@@ -67,7 +67,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
   }, [result]);
 
   useEffect(() => {
-    if (charts.length) {
+    if (charts && charts.length) {
       // @ts-ignore
       // The TypeScript compilation shows errors, but the code functions correctly.
       // These errors can be safely ignored, as the official Highcharts documentation uses the same approach.
@@ -160,7 +160,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
 
           <Box sx={{ margin: "40px 0 0 0" }}>
             <Flex justify="center" sx={{ height: "400px" }}>
-              {charts.length === 0 ? (
+              {isUndefinedOrNull(charts) ? (
                 <LoadingRow>
                   <div />
                   <div />
