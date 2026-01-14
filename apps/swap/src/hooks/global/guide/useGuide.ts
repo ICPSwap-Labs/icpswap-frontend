@@ -14,23 +14,17 @@ export function useGuideIsRead(guideName: string) {
   return useAtomValue(atom);
 }
 
-export function useGuideReadCallback(guideName: string) {
-  const [, setIsRead] = useGuideManager(guideName);
-
-  return useCallback(() => {
-    setIsRead(true);
-  }, [setIsRead, guideName]);
-}
-
 export function useShowGuideModalManager(guideName: string, selfGuideShow = true) {
   const [open, setOpen] = useState(true);
   const isRead = useGuideIsRead(guideName);
   const isConnected = useWalletIsConnected();
   const location = useLocation();
+  const [, setIsRead] = useGuideManager(guideName);
 
   const onClose = useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
+    setIsRead(true);
+  }, [setOpen, setIsRead]);
 
   const show = useMemo(() => {
     return !isRead && open && isConnected && selfGuideShow;
@@ -41,5 +35,9 @@ export function useShowGuideModalManager(guideName: string, selfGuideShow = true
     setOpen(true);
   }, [location.pathname]);
 
-  return useMemo(() => ({ show, onClose }), [show, onClose]);
+  const read = useCallback(() => {
+    setIsRead(true);
+  }, [setIsRead, guideName]);
+
+  return useMemo(() => ({ show, onClose, read }), [show, onClose, read]);
 }

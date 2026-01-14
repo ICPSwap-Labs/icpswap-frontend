@@ -1,5 +1,5 @@
 import { BeginnerGuideUI } from "components/BeginnerGuide/BeginnerGuideUI";
-import { useShowGuideModalManager, useGuideReadCallback, LiquidityGuideName } from "hooks/global/guide";
+import { useShowGuideModalManager, LiquidityGuideName } from "hooks/global/guide";
 import { useLiquidityGuideShow } from "hooks/global/guide/useLiquidityGuide";
 
 const Guides = [
@@ -20,8 +20,7 @@ const Guides = [
 export function LiquidityGuide() {
   const liquidityGuideShow = useLiquidityGuideShow();
 
-  const { show, onClose } = useShowGuideModalManager(LiquidityGuideName, liquidityGuideShow);
-  const read = useGuideReadCallback(LiquidityGuideName);
+  const { show, onClose, read } = useShowGuideModalManager(LiquidityGuideName, liquidityGuideShow);
 
   return show ? <BeginnerGuideUI open onClose={onClose} guides={Guides} onGotIt={read} /> : null;
 }

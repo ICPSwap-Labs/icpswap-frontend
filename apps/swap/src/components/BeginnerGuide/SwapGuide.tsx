@@ -1,5 +1,5 @@
 import { BeginnerGuideUI } from "components/BeginnerGuide/BeginnerGuideUI";
-import { useGuideReadCallback, useShowGuideModalManager, SwapGuideName } from "hooks/global/guide";
+import { useShowGuideModalManager, SwapGuideName } from "hooks/global/guide";
 
 const Guides = [
   {
@@ -29,8 +29,7 @@ const Guides = [
 ].map((element) => ({ ...element, image: `/images/beginner-guide/swap/${element.step + 1}.png` }));
 
 export function SwapGuide() {
-  const { show, onClose } = useShowGuideModalManager(SwapGuideName);
-  const read = useGuideReadCallback(SwapGuideName);
+  const { show, onClose, read } = useShowGuideModalManager(SwapGuideName);
 
   return show ? <BeginnerGuideUI open onClose={onClose} guides={Guides} onGotIt={read} /> : null;
 }
