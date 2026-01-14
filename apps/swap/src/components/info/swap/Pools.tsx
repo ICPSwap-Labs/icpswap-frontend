@@ -14,8 +14,8 @@ import {
   APRPanel,
   NoData,
   Flex,
+  Pagination,
 } from "@icpswap/ui";
-import Pagination from "components/pagination/cus";
 import { usePoolAPR } from "@icpswap/hooks";
 import { BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { HIDDEN_POOLS } from "constants/info";
@@ -192,11 +192,9 @@ export function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
 
       {loading ? <ImageLoading loading={loading} /> : null}
 
-      <Box mt="20px">
-        {!loading && (pools?.length ?? 0) > 0 ? (
-          <Pagination maxItems={maxItems} length={pools?.length ?? 0} onPageChange={setPage} page={page} />
-        ) : null}
-      </Box>
+      {!loading && (pools?.length ?? 0) > 0 ? (
+        <Pagination maxItems={maxItems} length={pools?.length ?? 0} onPageChange={setPage} page={page} />
+      ) : null}
     </>
   );
 }

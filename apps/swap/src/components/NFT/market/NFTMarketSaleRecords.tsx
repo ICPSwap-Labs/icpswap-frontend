@@ -12,8 +12,8 @@ export default function NFTMarketSaleRecords({ canisterId }: { canisterId?: stri
   const { totalElements, content } = result ?? { totalElements: 0, content: [] as TxRecord[] };
 
   const handlePageChange = useCallback(
-    (pagination) => {
-      setPagination(pagination);
+    (page: number) => {
+      setPagination({ pageNum: page, pageSize: 10 });
     },
     [setPagination],
   );

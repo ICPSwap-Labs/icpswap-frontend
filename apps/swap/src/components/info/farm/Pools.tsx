@@ -4,7 +4,6 @@ import { parseTokenAmount, pageArgsFormat, explorerLink, shorten } from "@icpswa
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
 import { feeAmountToPercentage } from "utils/swap/index";
-import { PaginationType } from "components/index";
 import { useFarmInfo, useSwapPoolMetadata, useAllFarms, useFarmState } from "@icpswap/hooks";
 import { useFarmTvl, useStateColors } from "hooks/staking-farm";
 import { Header, HeaderCell, TableRow, BodyCell, NoData, Pagination, LoadingRow, TextButton, Flex } from "@icpswap/ui";
@@ -130,8 +129,8 @@ export function FarmPools() {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const { result: allFarms, loading } = useAllFarms();
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   const farms = useMemo(() => {
@@ -149,7 +148,7 @@ export function FarmPools() {
   }, [allFarms]);
 
   return (
-    <Box sx={{ overflow: "auto" }}>
+    <Box sx={{ overflow: "auto hidden" }}>
       <Header className={classes.wrapper}>
         <HeaderCell>{t("common.canister.id")}</HeaderCell>
         <HeaderCell>{t("common.pool")}</HeaderCell>
@@ -184,7 +183,7 @@ export function FarmPools() {
       ) : null}
 
       {Number(totalElements) > 0 ? (
-        <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={handlePageChange} />
+        <Pagination length={Number(totalElements)} page={pagination.pageNum} onPageChange={handlePageChange} />
       ) : null}
     </Box>
   );

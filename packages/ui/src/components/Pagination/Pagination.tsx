@@ -1,15 +1,28 @@
-import { useState, useEffect } from "react";
-import { Box, Typography } from "components/Mui";
-import { LeftArrow, RightArrow } from "@icpswap/ui";
+import { useState, useEffect, useCallback } from "react";
+import { isUndefinedOrNull } from "@icpswap/utils";
+
+import { LeftArrow, RightArrow } from "../Arrow";
+import { Box, Typography } from "../Mui";
+
+export type PaginationPadding = { lg?: string; sm?: string };
 
 export interface PaginationProps {
-  onPageChange: (page: number) => void;
-  maxItems: number;
+  onPageChange?: (page: number) => void;
+  maxItems?: number;
   length: number;
   page?: number;
+  justify?: "center" | "flex-start" | "flex-end";
+  padding?: PaginationPadding;
 }
 
-export default function Pagination({ maxItems = 10, length, page: _page, onPageChange }: PaginationProps) {
+export function Pagination({
+  maxItems = 10,
+  length,
+  page: _page,
+  justify,
+  onPageChange,
+  padding = { lg: "24px 0 0 0", sm: "16px 0 0 0" },
+}: PaginationProps) {
   const [page, setPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
 
@@ -29,15 +42,20 @@ export default function Pagination({ maxItems = 10, length, page: _page, onPageC
     }
   }, [_page]);
 
-  const handlePageChange = (type: "prev" | "next") => {
-    if (type === "prev") {
-      setPage(page === 1 ? page : page - 1);
-      onPageChange(page === 1 ? page : page - 1);
-    } else {
-      setPage(page === maxPage ? page : page + 1);
-      onPageChange(page === maxPage ? page : page + 1);
-    }
-  };
+  const handlePageChange = useCallback(
+    (type: "prev" | "next") => {
+      if (isUndefinedOrNull(onPageChange)) return;
+
+      if (type === "prev") {
+        setPage(page === 1 ? page : page - 1);
+        onPageChange(page === 1 ? page : page - 1);
+      } else {
+        setPage(page === maxPage ? page : page + 1);
+        onPageChange(page === maxPage ? page : page + 1);
+      }
+    },
+    [page, onPageChange, maxPage],
+  );
 
   return (
     <Box
@@ -45,11 +63,11 @@ export default function Pagination({ maxItems = 10, length, page: _page, onPageC
         width: "100%",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center",
-        marginTop: "0.2em",
-        marginBottom: "0.5em",
+        justifyContent: justify ?? "center",
+        padding: padding.lg,
         "@media (max-width: 640px)": {
           justifyContent: "flex-start",
+          padding: padding.sm,
         },
       }}
     >

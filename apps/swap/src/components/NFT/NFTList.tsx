@@ -5,13 +5,14 @@ import NFTCard from "components/NFT/NFTCard";
 import { useCanisterNFTList } from "hooks/nft/useNFTCalls";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { pageArgsFormat } from "@icpswap/utils";
-import { NoData, ImageLoading } from "@icpswap/ui";
-import Pagination from "components/pagination";
+import { NoData, ImageLoading, Pagination } from "@icpswap/ui";
 import type { NFTTokenMetadata } from "@icpswap/types";
+
+const PAGE_SIZE = 24;
 
 export default function NFTList({ canisterId }: { canisterId: string }) {
   const history = useHistory();
-  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 24 });
+  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PAGE_SIZE });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
   const principal = useAccountPrincipalString();
@@ -20,8 +21,8 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
   const { content: NFTList, totalElements } = result ?? { content: [] as NFTTokenMetadata[], totalElements: 0 };
 
   const handlePageChange = useCallback(
-    (pagination) => {
-      setPagination(pagination);
+    (page: number) => {
+      setPagination({ pageNum: page, pageSize: PAGE_SIZE });
     },
     [setPagination],
   );
@@ -94,11 +95,7 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
 
       {totalElements && Number(totalElements) !== 0 ? (
         <Box mt="12px">
-          <Pagination
-            count={Number(totalElements)}
-            defaultPageSize={pagination.pageSize}
-            onPageChange={handlePageChange}
-          />
+          <Pagination length={Number(totalElements)} onPageChange={handlePageChange} />
         </Box>
       ) : null}
 

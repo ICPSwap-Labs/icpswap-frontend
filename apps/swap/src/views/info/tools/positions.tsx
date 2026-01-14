@@ -75,7 +75,12 @@ export default function Positions() {
           </Box>
         }
       >
-        <PositionTable poolId={pair} principal={principal} empty={t("info.tools.positions.empty")} />
+        <PositionTable
+          poolId={pair}
+          principal={principal}
+          empty={t("info.tools.positions.empty")}
+          paginationPadding={{ sm: "16px 0", lg: "24px 0" }}
+        />
       </ToolsWrapper>
     </InfoWrapper>
   );

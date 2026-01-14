@@ -50,7 +50,7 @@ export function BlackHolePositions({ poolId }: BlackHolePositionsProps) {
       positions={positions}
       poolId={poolId}
       totalElements={0}
-      pagination={{ pageNum: 1, pageSize: 10 }}
+      page={1}
       empty={t("info.tools.black.hole.empty")}
     />
   );

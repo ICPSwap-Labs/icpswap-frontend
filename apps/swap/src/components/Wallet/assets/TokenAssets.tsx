@@ -59,17 +59,17 @@ function TokenRow({ tokenId }: TokenRowProps) {
     setOpen(true);
   }, []);
 
-  const handleMouseEnter = () => {
+  const handleClick = useCallback(() => {
     setOpen(true);
-  };
+  }, [setOpen]);
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = useCallback(() => {
     setOpen(false);
-  };
+  }, [setOpen]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setOpen(false);
-  };
+  }, [setOpen]);
 
   const { usdValue } = useTokenDataManager({ tokenId, tokenBalance, balanceLoading: loading });
 
@@ -77,7 +77,7 @@ function TokenRow({ tokenId }: TokenRowProps) {
     <>
       <Box
         ref={ref}
-        onMouseEnter={handleMouseEnter}
+        onClick={handleClick}
         onMouseLeave={handleMouseLeave}
         sx={{
           display: hideSmallBalance && usdValue && usdValue.isLessThan(1) ? "none" : "block",

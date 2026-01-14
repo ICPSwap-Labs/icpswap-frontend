@@ -15,7 +15,6 @@ import {
   TableRow,
   BodyCell,
   Pagination,
-  PaginationType,
 } from "@icpswap/ui";
 import { useTranslation } from "react-i18next";
 
@@ -68,8 +67,8 @@ export default function TokenClaim() {
 
   const { result, loading } = useClaimEvents(offset, pagination.pageSize);
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   const totalElements = Number(result?.totalElements ?? 0);
@@ -84,7 +83,7 @@ export default function TokenClaim() {
         </Box>
 
         <Box mt="20px" sx={{ overflow: "auto", width: "100%" }}>
-          <Box sx={{ padding: "0 0 20px 0" }}>
+          <Box>
             <Header className={classes.wrapper}>
               <HeaderCell>{t("claim.event")}</HeaderCell>
               <HeaderCell>{t("common.canister.id")}</HeaderCell>
@@ -123,7 +122,7 @@ export default function TokenClaim() {
         </Box>
 
         {totalElements > 0 ? (
-          <Pagination total={totalElements} num={pagination.pageNum} onPageChange={handlePageChange} />
+          <Pagination length={totalElements} page={pagination.pageNum} onPageChange={handlePageChange} />
         ) : null}
       </MainCard>
     </InfoWrapper>

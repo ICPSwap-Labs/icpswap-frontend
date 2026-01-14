@@ -1,5 +1,3 @@
-export { default as Pagination } from "./pagination";
-export type { PaginationType, PaginationProps } from "./pagination";
 export { default as FullscreenLoading } from "./Loading/Fullscreen";
 export {
   TextButton,

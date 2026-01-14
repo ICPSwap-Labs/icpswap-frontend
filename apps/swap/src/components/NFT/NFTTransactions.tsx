@@ -4,12 +4,11 @@ import Copy from "components/Copy";
 import { useNFTTransaction } from "hooks/nft/useNFTCalls";
 import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
 import { encodeTokenIdentifier } from "utils/index";
-import Pagination from "components/pagination";
 import type { NFTTransaction as NFTTransactionType, PaginationResult } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
 import { NoData } from "components/index";
 import { useTranslation } from "react-i18next";
-import { Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
+import { Header, HeaderCell, BodyCell, TableRow, ImageLoading, Pagination } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -52,8 +51,8 @@ export default function NFTTransaction({
   );
 
   const onPageChange = useCallback(
-    ({ pageNum }) => {
-      setPageNum(pageNum);
+    (page: number) => {
+      setPageNum(page);
     },
     [setPageNum],
   );
@@ -94,7 +93,7 @@ export default function NFTTransaction({
         <ImageLoading loading={loading} />
       </Box>
 
-      {list.length ? <Pagination count={Number(totalElements)} onPageChange={onPageChange} /> : null}
+      {list.length ? <Pagination length={Number(totalElements)} onPageChange={onPageChange} /> : null}
     </>
   );
 }

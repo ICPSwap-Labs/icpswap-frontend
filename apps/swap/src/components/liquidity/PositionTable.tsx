@@ -1,9 +1,9 @@
 import { usePositions } from "hooks/liquidity/usePositions";
 import { isUndefinedOrNull, pageArgsFormat } from "@icpswap/utils";
 import { useEffect, useMemo, useState } from "react";
-import { PaginationType } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { useLimitOrders } from "@icpswap/hooks";
+import { type PaginationPadding } from "@icpswap/ui";
 
 import { PositionTableUI } from "./PositionTableUI";
 
@@ -13,9 +13,17 @@ export interface PositionTableProps {
   poolId: string | Null;
   padding?: string;
   empty?: string;
+  paginationPadding?: PaginationPadding;
 }
 
-export function PositionTable({ poolId, principal, wrapperClassName, padding, empty }: PositionTableProps) {
+export function PositionTable({
+  poolId,
+  principal,
+  wrapperClassName,
+  padding,
+  paginationPadding,
+  empty,
+}: PositionTableProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -24,8 +32,8 @@ export function PositionTable({ poolId, principal, wrapperClassName, padding, em
   const positions = result?.content;
   const totalElements = result?.totalElements;
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   // Reset pagination when pool or principal change
@@ -49,11 +57,12 @@ export function PositionTable({ poolId, principal, wrapperClassName, padding, em
       loading={loading}
       positions={positions}
       onPaginationChange={handlePageChange}
-      pagination={pagination}
+      page={pagination.pageNum}
       totalElements={totalElements}
       allLimitOrders={allLimitOrders}
       padding={padding}
       empty={empty}
+      paginationPadding={paginationPadding}
     />
   );
 }

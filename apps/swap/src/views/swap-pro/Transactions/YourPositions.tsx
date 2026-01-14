@@ -3,7 +3,7 @@ import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { useUserLimitOrders } from "@icpswap/hooks";
 import { CurrencyAmount, FeeAmount, Pool } from "@icpswap/swap-sdk";
 import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
-import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, SimplePagination, TextButton } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, Pagination, TextButton } from "@icpswap/ui";
 import { UserPositionByList } from "types/swap";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { usePositionWithPool } from "hooks/swap/usePosition";
@@ -240,16 +240,15 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
           </Box>
         ) : null}
 
-        <Box sx={{ padding: "20px 0" }}>
-          {!loading && !!filteredPositions?.length ? (
-            <SimplePagination
-              page={page}
-              maxItems={maxItems}
-              length={filteredPositions?.length ?? 0}
-              onPageChange={setPage}
-            />
-          ) : null}
-        </Box>
+        {!loading && !!filteredPositions?.length ? (
+          <Pagination
+            page={page}
+            maxItems={maxItems}
+            length={filteredPositions?.length ?? 0}
+            onPageChange={setPage}
+            padding={{ lg: "24px 0", sm: "16px 0" }}
+          />
+        ) : null}
       </Box>
     </Box>
   );

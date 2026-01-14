@@ -1,6 +1,5 @@
 import { pageArgsFormat } from "@icpswap/utils";
 import { useEffect, useMemo, useState } from "react";
-import { PaginationType } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
 import { usePositionTransactions } from "@icpswap/hooks";
 
@@ -29,8 +28,8 @@ export function PositionTransactionsTable({
   const transactions = result?.content;
   const totalElements = result?.totalElements;
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   // Reset pagination when pool or principal change
@@ -44,7 +43,7 @@ export function PositionTransactionsTable({
       loading={loading}
       transactions={transactions}
       onPaginationChange={handlePageChange}
-      pagination={pagination}
+      page={pagination.pageNum}
       totalElements={totalElements}
       empty={empty}
     />

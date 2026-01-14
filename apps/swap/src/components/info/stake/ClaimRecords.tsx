@@ -2,7 +2,7 @@ import { useState } from "react";
 import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { useStakingPoolClaimTransactions } from "@icpswap/hooks";
-import { PaginationType, AddressFormat } from "components/index";
+import { AddressFormat } from "components/index";
 import { type StakingPoolTransaction } from "@icpswap/types";
 import { HeaderCell, BodyCell, Pagination, NoData, Header, TableRow, ImageLoading } from "@icpswap/ui";
 import { Box, makeStyles } from "components/Mui";
@@ -40,8 +40,8 @@ export function StakeClaimTransactions({ id }: { id: string | undefined }) {
   const { result, loading } = useStakingPoolClaimTransactions(id, undefined, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
-  const handlePageChange = (value: PaginationType) => {
-    setPagination(value);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   return (
@@ -63,12 +63,7 @@ export function StakeClaimTransactions({ id }: { id: string | undefined }) {
         {list.length === 0 && !loading && !!id ? <NoData /> : null}
         {loading || !id ? <ImageLoading loading={loading || !id} /> : null}
         {Number(totalElements) > 0 ? (
-          <Pagination
-            total={Number(totalElements)}
-            onPageChange={handlePageChange}
-            num={pagination.pageNum}
-            defaultPageSize={pagination.pageSize}
-          />
+          <Pagination length={Number(totalElements)} onPageChange={handlePageChange} page={pagination.pageNum} />
         ) : null}
       </Box>
     </Box>

@@ -1,7 +1,7 @@
 import { Box, Theme, makeStyles } from "components/Mui";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useMemo } from "react";
-import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationType, PaginationProps } from "@icpswap/ui";
+import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationProps, PaginationPadding } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { PositionRow } from "components/liquidity/PositionRow";
 import { Null } from "@icpswap/types";
@@ -29,10 +29,11 @@ export interface PositionTableUIProps {
   positions: PositionDetails[] | Null;
   totalElements: number | Null;
   onPaginationChange?: PaginationProps["onPageChange"];
-  pagination: PaginationType;
+  page: number;
   allLimitOrders?: bigint[] | Null;
   padding?: string;
   empty?: string;
+  paginationPadding?: PaginationPadding;
 }
 
 export function PositionTableUI({
@@ -42,10 +43,11 @@ export function PositionTableUI({
   totalElements,
   wrapperClassName,
   onPaginationChange,
-  pagination,
+  page,
   allLimitOrders,
   padding,
   empty,
+  paginationPadding,
 }: PositionTableUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
@@ -112,16 +114,14 @@ export function PositionTableUI({
         </Box>
       </Box>
 
-      <Box sx={{ padding: "24px" }}>
-        {totalElements && Number(totalElements) !== 0 ? (
-          <Pagination
-            total={Number(totalElements)}
-            num={pagination.pageNum}
-            onPageChange={onPaginationChange}
-            mt="0px"
-          />
-        ) : null}
-      </Box>
+      {totalElements && Number(totalElements) !== 0 ? (
+        <Pagination
+          length={Number(totalElements)}
+          page={page}
+          onPageChange={onPaginationChange}
+          padding={paginationPadding}
+        />
+      ) : null}
     </>
   );
 }

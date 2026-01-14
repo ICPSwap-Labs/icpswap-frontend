@@ -2,14 +2,12 @@ import { useState, useCallback, useEffect } from "react";
 import Copy from "components/Copy";
 import { useTradeTxList } from "hooks/nft/trade";
 import { pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
-import { NoData } from "components/index";
-import Pagination from "components/pagination";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import { TxRecord } from "types/index";
 import upperFirst from "lodash/upperFirst";
 import { useTranslation } from "react-i18next";
 import { Box, makeStyles } from "components/Mui";
-import { Header, HeaderCell, TableRow, BodyCell, ImageLoading } from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, ImageLoading, NoData, Pagination } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -42,8 +40,8 @@ export default function NFTActivity({
   const { totalElements, content } = result ?? { totalElements: 0, content: [] as TxRecord[] };
 
   const onPageChange = useCallback(
-    (pagination) => {
-      setPagination(pagination);
+    (page: number) => {
+      setPagination({ pageNum: page, pageSize: 10 });
     },
     [setPagination],
   );
@@ -84,7 +82,7 @@ export default function NFTActivity({
         {content.length === 0 && !loading ? <NoData /> : null}
         <ImageLoading loading={loading} />
       </Box>
-      {content.length ? <Pagination count={Number(totalElements)} onPageChange={onPageChange} /> : null}
+      {content.length ? <Pagination length={Number(totalElements)} onPageChange={onPageChange} /> : null}
     </>
   );
 }

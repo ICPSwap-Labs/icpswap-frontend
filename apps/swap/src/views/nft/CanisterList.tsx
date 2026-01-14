@@ -1,4 +1,4 @@
-import { Pagination, NoData, MainCard, TextButton, Wrapper } from "components/index";
+import { NoData, MainCard, TextButton, Wrapper } from "components/index";
 import { useUserCanisterList, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
 import { pageArgsFormat, cycleValueFormat, timestampFormat } from "@icpswap/utils";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import type { NFTControllerInfo } from "@icpswap/types";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import CanSVG from "assets/images/nft/CanSVG";
 import { useTranslation } from "react-i18next";
-import { TableRow, Header, HeaderCell, BodyCell, ImageLoading } from "@icpswap/ui";
+import { TableRow, Header, HeaderCell, BodyCell, ImageLoading, Pagination } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -103,16 +103,18 @@ export function NFTCanisterListItem({
   );
 }
 
+const PAGE_SIZE = 10;
+
 export default function NFTCanisterList() {
   const { t } = useTranslation();
   const account = useAccount();
   const history = useHistory();
   const classes = useStyles();
 
-  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
+  const [page, setPage] = useState(1);
 
-  const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
-  const { result, loading } = useUserCanisterList(account, offset, pagination.pageSize);
+  const [offset] = pageArgsFormat(page, PAGE_SIZE);
+  const { result, loading } = useUserCanisterList(account, offset, PAGE_SIZE);
   const { content, totalElements } = result ?? { content: [] as NFTControllerInfo[], totalElements: 0 };
 
   const handleLoadDetails = (canisterInfo: NFTControllerInfo) => {
@@ -159,11 +161,7 @@ export default function NFTCanisterList() {
             </Box>
 
             {totalElements && Number(totalElements) !== 0 ? (
-              <Pagination
-                count={Number(totalElements)}
-                defaultPageSize={pagination.pageSize}
-                onPageChange={setPagination}
-              />
+              <Pagination length={Number(totalElements)} onPageChange={setPage} />
             ) : null}
           </MainCard>
         </Grid>

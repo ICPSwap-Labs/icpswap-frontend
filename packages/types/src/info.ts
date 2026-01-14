@@ -64,7 +64,7 @@ export type PoolPositionHolderRow = {
 export type PoolPositionHolderResult = {
   poolTvlUSD: string;
   totalPositionSize: number;
-  positionList: Array<PoolPositionHolderRow>;
+  positionList: Array<PoolPositionHolderRow> | null;
 };
 
 export type TokensTreeMapRow = {

@@ -1,5 +1,5 @@
 import { Box, Theme, makeStyles } from "components/Mui";
-import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationType, PaginationProps } from "@icpswap/ui";
+import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationProps } from "@icpswap/ui";
 import { Null, PositionTransaction } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 
@@ -27,7 +27,7 @@ export interface PositionTransactionsTableUIProps {
   transactions: PositionTransaction[] | Null;
   totalElements: number | Null;
   onPaginationChange?: PaginationProps["onPageChange"];
-  pagination: PaginationType;
+  page: number;
   empty?: string;
 }
 
@@ -37,7 +37,7 @@ export function PositionTransactionsTableUI({
   totalElements,
   wrapperClassName,
   onPaginationChange,
-  pagination,
+  page,
   empty,
 }: PositionTransactionsTableUIProps) {
   const { t } = useTranslation();
@@ -87,16 +87,14 @@ export function PositionTransactionsTableUI({
         </Box>
       </Box>
 
-      <Box sx={{ padding: "24px" }}>
-        {totalElements && Number(totalElements) !== 0 ? (
-          <Pagination
-            total={Number(totalElements)}
-            num={pagination.pageNum}
-            onPageChange={onPaginationChange}
-            mt="0px"
-          />
-        ) : null}
-      </Box>
+      {totalElements && Number(totalElements) !== 0 ? (
+        <Pagination
+          length={Number(totalElements)}
+          page={page}
+          onPageChange={onPaginationChange}
+          padding={{ lg: "24px 0", sm: "16px 0" }}
+        />
+      ) : null}
     </>
   );
 }
