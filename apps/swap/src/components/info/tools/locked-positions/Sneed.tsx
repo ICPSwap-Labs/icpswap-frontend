@@ -37,7 +37,7 @@ export function SneedLockedPositions({ poolId }: SneedLockedPositionsProps) {
       positions={positions}
       poolId={poolId}
       totalElements={0}
-      pagination={{ pageNum: 1, pageSize: 10 }}
+      page={1}
       empty={t("info.tools.black.hole.empty")}
     />
   );

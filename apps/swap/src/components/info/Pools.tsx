@@ -1,8 +1,7 @@
 import { useState, useMemo } from "react";
-import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
+import { useMediaQuery, makeStyles, useTheme } from "components/Mui";
 import { InfoPoolRealTimeDataResponse, Null } from "@icpswap/types";
-import { Header, HeaderCell, SortDirection, NoData, ImageLoading } from "@icpswap/ui";
-import Pagination from "components/pagination/cus";
+import { Header, HeaderCell, SortDirection, NoData, ImageLoading, Pagination } from "@icpswap/ui";
 import { HIDDEN_POOLS } from "constants/info";
 import { useTranslation } from "react-i18next";
 import { PoolRow } from "components/info/swap/pool";
@@ -156,11 +155,9 @@ export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsPr
         <NoData tip={t("info.swap.pool.empty")} />
       )}
 
-      <Box mt="20px">
-        {!loading && (pools?.length ?? 0) > 0 ? (
-          <Pagination maxItems={maxItems} length={pools?.length ?? 0} onPageChange={setPage} page={page} />
-        ) : null}
-      </Box>
+      {!loading && (pools?.length ?? 0) > 0 ? (
+        <Pagination maxItems={maxItems} length={pools?.length ?? 0} onPageChange={setPage} page={page} />
+      ) : null}
     </>
   );
 }

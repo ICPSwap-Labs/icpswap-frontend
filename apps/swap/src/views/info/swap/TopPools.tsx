@@ -89,7 +89,7 @@ export default function TopPools() {
         </Box>
       </Box>
 
-      <Box mt="20px" sx={{ overflow: "auto" }}>
+      <Box mt="20px" sx={{ overflow: "auto hidden" }}>
         <Box sx={{ minWidth: "1140px" }}>
           <Pools pools={filteredAllPools} loading={loading} />
         </Box>

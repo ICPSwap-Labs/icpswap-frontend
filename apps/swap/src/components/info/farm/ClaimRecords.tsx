@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
 import dayjs from "dayjs";
-import { ImageLoading, PaginationType, AddressFormat } from "components/index";
+import { ImageLoading, AddressFormat } from "components/index";
 import { useV3FarmDistributeRecords } from "@icpswap/hooks";
 import type { StakingFarmDistributeTransaction } from "@icpswap/types";
 import { useToken } from "hooks/index";
@@ -51,8 +51,8 @@ export function FarmClaimTransactions({ id, rewardTokenId }: FarmClaimTransactio
   const { result, loading } = useV3FarmDistributeRecords(id, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   return (
@@ -74,12 +74,7 @@ export function FarmClaimTransactions({ id, rewardTokenId }: FarmClaimTransactio
       {list.length === 0 && !loading && !!id ? <NoData /> : null}
       {loading || !id ? <ImageLoading loading={loading} /> : null}
       {Number(totalElements) > 0 ? (
-        <Pagination
-          total={Number(totalElements)}
-          onPageChange={handlePageChange}
-          num={pagination.pageNum}
-          defaultPageSize={pagination.pageSize}
-        />
+        <Pagination length={Number(totalElements)} onPageChange={handlePageChange} page={pagination.pageNum} />
       ) : null}
     </Box>
   );

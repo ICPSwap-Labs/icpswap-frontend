@@ -1,8 +1,7 @@
 import { useState, useMemo, useCallback, ReactNode } from "react";
 import { BigNumber, enumToString, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, SortDirection, TransactionRow, NoData, LoadingRow, Flex } from "@icpswap/ui";
+import { Header, HeaderCell, SortDirection, TransactionRow, NoData, LoadingRow, Flex, Pagination } from "@icpswap/ui";
 import { InfoTransactionResponse, Null } from "@icpswap/types";
-import Pagination from "components/pagination/cus";
 import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { useTips, TIP_SUCCESS } from "hooks/index";
 import copyToClipboard from "copy-to-clipboard";
@@ -201,9 +200,13 @@ export function Transactions({
       </Box>
 
       {nonUndefinedOrNull(filteredTransactions) && filteredTransactions.length > 0 ? (
-        <Box sx={{ padding: styleProps?.padding ?? "16px" }}>
-          <Pagination page={page} maxItems={maxItems} length={filteredTransactions.length} onPageChange={setPage} />
-        </Box>
+        <Pagination
+          padding={{ lg: "24px 0", sm: "16px 0" }}
+          page={page}
+          maxItems={maxItems}
+          length={filteredTransactions.length}
+          onPageChange={setPage}
+        />
       ) : null}
     </>
   );

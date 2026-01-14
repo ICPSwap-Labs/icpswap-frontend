@@ -363,7 +363,7 @@ export default function TokenDetails() {
 
       <Box sx={{ marginTop: "20px" }}>
         <MainCard level={3}>
-          <Box sx={{ width: "100%", overflow: "auto" }}>
+          <Box sx={{ width: "100%", overflow: "auto hidden" }}>
             <TokenPools canisterId={canisterId} />
           </Box>
         </MainCard>

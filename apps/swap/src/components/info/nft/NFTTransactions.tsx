@@ -3,7 +3,7 @@ import { encodeTokenIdentifier } from "utils/index";
 import { Copy } from "components/index";
 import { NFTTransaction } from "@icpswap/types";
 import { useNFTTransactions } from "@icpswap/hooks";
-import { Pagination, PaginationType, NoData, Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
+import { Pagination, NoData, Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
 import { shorten, timestampFormat, enumToString, pageArgsFormat, arrayBufferToString } from "@icpswap/utils";
 import type { PaginationResult } from "@icpswap/types";
@@ -43,8 +43,8 @@ export function NFTTransactions({ canisterId, tokenId }: NFTTransactionProps) {
     [result],
   );
 
-  const onPageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const onPageChange = (page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
   };
 
   return (
@@ -79,7 +79,7 @@ export function NFTTransactions({ canisterId, tokenId }: NFTTransactionProps) {
         <ImageLoading loading={loading} />
       </Box>
       {list.length ? (
-        <Pagination total={Number(totalElements)} num={pagination.pageNum} onPageChange={onPageChange} />
+        <Pagination length={Number(totalElements)} page={pagination.pageNum} onPageChange={onPageChange} />
       ) : null}
     </>
   );

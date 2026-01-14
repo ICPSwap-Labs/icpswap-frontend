@@ -17,7 +17,6 @@ export * from "./components/LineChart/index";
 export * from "./components/BarChart/alt";
 export * from "./components/BarChart/index";
 export * from "./components/CandleChart/index";
-export * from "./components/SimplePagination";
 export * from "./components/Modal";
 export * from "./components/Input";
 export * from "./components/Tooltip";

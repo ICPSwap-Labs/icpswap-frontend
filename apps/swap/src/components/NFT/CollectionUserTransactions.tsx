@@ -2,13 +2,13 @@ import { useState, useCallback, useMemo } from "react";
 import { makeStyles } from "components/Mui";
 import Copy from "components/Copy";
 import { useUserNFTTransactions } from "hooks/nft/useNFTCalls";
-import { Pagination, TextButton, NoData } from "components/index";
+import { TextButton, NoData } from "components/index";
 import type { PaginationResult, NFTTransaction } from "@icpswap/types";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import upperFirst from "lodash/upperFirst";
 import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
-import { TableRow, Header, HeaderCell, BodyCell, LoadingRow } from "@icpswap/ui";
+import { TableRow, Header, HeaderCell, BodyCell, LoadingRow, Pagination } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -36,7 +36,7 @@ export default function CollectionUserTransactions({ canisterId }: { canisterId:
   );
 
   const onPageChange = useCallback(
-    ({ pageNum }) => {
+    (pageNum: number) => {
       setPageNum(pageNum);
     },
     [setPageNum],
@@ -91,7 +91,7 @@ export default function CollectionUserTransactions({ canisterId }: { canisterId:
 
           {list.length === 0 && !loading ? <NoData /> : null}
 
-          {list.length ? <Pagination count={Number(totalElements)} onPageChange={onPageChange} /> : null}
+          {list.length ? <Pagination length={Number(totalElements)} onPageChange={onPageChange} /> : null}
         </>
       )}
     </>

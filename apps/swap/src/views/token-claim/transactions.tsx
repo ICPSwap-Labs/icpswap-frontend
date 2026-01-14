@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, makeStyles } from "components/Mui";
-import { Wrapper, Breadcrumbs, MainCard, Pagination, PaginationType, ImageLoading, NoData } from "components/index";
+import { Wrapper, Breadcrumbs, MainCard, ImageLoading, NoData } from "components/index";
 import { useUserClaimEventTransactions } from "@icpswap/hooks";
 import { ClaimTransaction } from "@icpswap/types";
 import { useToken } from "hooks/index";
 import { timestampFormat, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
-import { HeaderCell, Header, BodyCell, TableRow } from "@icpswap/ui";
+import { HeaderCell, Header, BodyCell, TableRow, Pagination } from "@icpswap/ui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -36,13 +36,15 @@ export function TokenClaimTransaction({ transaction }: { transaction: ClaimTrans
   );
 }
 
+const PAGE_SIZE = 10;
+
 export default function TokenClaimTransactions() {
   const classes = useStyles();
   const { t } = useTranslation();
 
   const { id: user } = useParams<{ id: string }>();
 
-  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
+  const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PAGE_SIZE });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
   const { result: userClaimTransaction, loading } = useUserClaimEventTransactions(
@@ -53,8 +55,11 @@ export default function TokenClaimTransactions() {
     pagination.pageSize,
   );
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({
+      pageNum: page,
+      pageSize: PAGE_SIZE,
+    });
   };
 
   return (
@@ -97,7 +102,7 @@ export default function TokenClaimTransactions() {
 
             <Box mt="20px">
               {(userClaimTransaction?.content.length ?? 0) > 0 ? (
-                <Pagination count={Number(userClaimTransaction?.totalElements ?? 0)} onPageChange={handlePageChange} />
+                <Pagination length={Number(userClaimTransaction?.totalElements ?? 0)} onPageChange={handlePageChange} />
               ) : null}
             </Box>
           </Box>

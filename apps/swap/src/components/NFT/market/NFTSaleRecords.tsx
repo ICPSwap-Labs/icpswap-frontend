@@ -1,7 +1,6 @@
 import { Link as ReactLink } from "react-router-dom";
 import { parseTokenAmount, nanosecond2Millisecond, shorten } from "@icpswap/utils";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
-import Pagination from "components/pagination";
 import { TxRecord, ResultStatus } from "types/index";
 import dayjs from "dayjs";
 import Copy from "components/Copy";
@@ -10,7 +9,7 @@ import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips"
 import upperFirst from "lodash/upperFirst";
 import { NoData, TextButton } from "components/index";
 import { useTranslation } from "react-i18next";
-import { Header, HeaderCell, BodyCell, Flex, ImageLoading, TableRow } from "@icpswap/ui";
+import { Header, HeaderCell, BodyCell, Flex, ImageLoading, TableRow, Pagination } from "@icpswap/ui";
 import { makeStyles, Box, Typography } from "components/Mui";
 
 const useStyles = makeStyles(() => {
@@ -91,10 +90,9 @@ export default function NFTSaleRecords({
   loading,
   totalElements,
   content,
-  pagination,
   type,
 }: {
-  handlePageChange: (pagination: any) => void;
+  handlePageChange: (page: number) => void;
   loading: boolean;
   totalElements: number | bigint;
   content: TxRecord[];
@@ -131,13 +129,7 @@ export default function NFTSaleRecords({
         <ImageLoading loading={loading} />
       </Box>
 
-      {Number(totalElements) > 0 ? (
-        <Pagination
-          count={Number(totalElements)}
-          onPageChange={handlePageChange}
-          defaultPageSize={pagination.pageSize}
-        />
-      ) : null}
+      {Number(totalElements) > 0 ? <Pagination length={Number(totalElements)} onPageChange={handlePageChange} /> : null}
     </>
   );
 }

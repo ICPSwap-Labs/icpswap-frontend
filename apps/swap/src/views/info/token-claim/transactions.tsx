@@ -5,17 +5,7 @@ import { Breadcrumbs, Copy, InfoWrapper } from "components/index";
 import { useClaimEventTransactions } from "@icpswap/hooks";
 import { type ClaimTransaction } from "@icpswap/types";
 import { getClaimEventState } from "utils/info/token-claim";
-import {
-  Header,
-  HeaderCell,
-  TableRow,
-  BodyCell,
-  NoData,
-  MainCard,
-  Pagination,
-  LoadingRow,
-  PaginationType,
-} from "@icpswap/ui";
+import { Header, HeaderCell, TableRow, BodyCell, NoData, MainCard, Pagination, LoadingRow } from "@icpswap/ui";
 import { shorten, timestampFormat, pageArgsFormat, parseTokenAmount, isPrincipalUser } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 
@@ -62,8 +52,11 @@ export default function TokenClaimTransactions() {
 
   const { result, loading } = useClaimEventTransactions(id, undefined, offset, pagination.pageSize);
 
-  const handlePageChange = (pagination: PaginationType) => {
-    setPagination(pagination);
+  const handlePageChange = (page: number) => {
+    setPagination({
+      pageNum: page,
+      pageSize: 10,
+    });
   };
 
   const totalElements = Number(result?.totalElements ?? 0);
@@ -106,7 +99,7 @@ export default function TokenClaimTransactions() {
           </Box>
 
           {totalElements > 0 ? (
-            <Pagination total={totalElements} num={pagination.pageNum} onPageChange={handlePageChange} />
+            <Pagination length={totalElements} page={pagination.pageNum} onPageChange={handlePageChange} />
           ) : null}
         </MainCard>
       </Box>

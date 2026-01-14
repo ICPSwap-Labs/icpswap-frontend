@@ -6,5 +6,5 @@ export interface PositionsProps {
 }
 
 export function Positions({ poolId }: PositionsProps) {
-  return <PositionTable poolId={poolId} />;
+  return <PositionTable poolId={poolId} paginationPadding={{ lg: "24px 0", sm: "16px 0" }} />;
 }

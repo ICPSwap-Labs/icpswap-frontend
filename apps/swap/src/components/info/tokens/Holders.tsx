@@ -8,7 +8,7 @@ import {
   BodyCell,
   LoadingRow,
   NoData,
-  SimplePagination,
+  Pagination,
   TextualAddress,
   Image,
 } from "@icpswap/ui";
@@ -153,16 +153,15 @@ export function Holders({ tokenId, styleProps }: PoolTransactionsProps) {
         </Box>
       </Box>
 
-      <Box sx={{ padding: "20px 0" }}>
-        {!loading && !!result?.content.length ? (
-          <SimplePagination
-            page={page}
-            maxItems={maxItems}
-            length={result?.totalElements ? Number(result.totalElements) : 0}
-            onPageChange={setPage}
-          />
-        ) : null}
-      </Box>
+      {!loading && !!result?.content.length ? (
+        <Pagination
+          page={page}
+          maxItems={maxItems}
+          length={result?.totalElements ? Number(result.totalElements) : 0}
+          onPageChange={setPage}
+          padding={{ lg: "24px 0", sm: "16px 0" }}
+        />
+      ) : null}
     </Box>
   );
 }
