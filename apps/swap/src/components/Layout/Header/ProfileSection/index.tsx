@@ -1,6 +1,6 @@
 import { useTheme, Box, Typography, Button } from "components/Mui";
 import { shorten } from "@icpswap/utils";
-import { useAccountPrincipal, useConnectorStateConnected, useConnectManager } from "store/auth/hooks";
+import { useAccountPrincipal, useWalletIsConnected, useConnectManager } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
 import { ConnectorImage } from "components/Image/index";
 import { useWalletContext } from "components/Wallet/context";
@@ -10,7 +10,7 @@ export default function ProfileSection() {
   const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
-  const isConnected = useConnectorStateConnected();
+  const isConnected = useWalletIsConnected();
   const { openDrawer } = useWalletContext();
 
   const { showConnector, disconnect } = useConnectManager();

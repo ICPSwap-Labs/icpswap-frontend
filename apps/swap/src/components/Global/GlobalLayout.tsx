@@ -3,6 +3,7 @@ import RiskStatement from "components/RiskStatement";
 import WalletConnector from "components/authentication/ConnectorModal";
 import GlobalSteps from "components/Steps/index";
 import { FullscreenLoading } from "components/index";
+import { BeginnerGuide } from "components/BeginnerGuide";
 import { GlobalActorError } from "components/Global/GlobalActorError";
 
 export function GlobalLayout() {
@@ -14,6 +15,7 @@ export function GlobalLayout() {
       <GlobalSteps />
       {isConnected ? <RiskStatement /> : null}
       {connectorModalOpen ? <WalletConnector /> : null}
+      <BeginnerGuide />
       <GlobalActorError />
     </>
   );

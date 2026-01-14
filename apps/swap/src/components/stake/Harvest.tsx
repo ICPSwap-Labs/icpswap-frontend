@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { Button, CircularProgress, Box } from "components/Mui";
 import { Token } from "@icpswap/swap-sdk";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useAccountPrincipal, useConnectorStateConnected } from "store/auth/hooks";
+import { useAccountPrincipal, useWalletIsConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
 import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { StepViewButton } from "components/index";
@@ -18,7 +18,7 @@ export interface HarvestProps {
 
 export function Harvest({ rewardToken, rewardAmount, poolId, onHarvestSuccess }: HarvestProps) {
   const { t } = useTranslation();
-  const walletIsConnected = useConnectorStateConnected();
+  const walletIsConnected = useWalletIsConnected();
   const principal = useAccountPrincipal();
   const [openTip] = useTips();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();

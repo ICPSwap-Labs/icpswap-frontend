@@ -5,7 +5,7 @@ import { SwapTabPanels, TABS, SwapProEntry } from "components/swap/index";
 import { LimitContext } from "components/swap/limit-order/context";
 import { Pool, Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
-import { useConnectorStateConnected } from "store/auth/hooks";
+import { useWalletIsConnected } from "store/auth/hooks";
 import { PlaceOrder, TransactionForSimpleMode, LimitHelpTooltip } from "components/swap/limit-order";
 
 export default function Limit() {
@@ -16,7 +16,7 @@ export default function Limit() {
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
   const [inverted, setInverted] = useState(false);
 
-  const isConnected = useConnectorStateConnected();
+  const isConnected = useWalletIsConnected();
 
   const handleAddKeys = useCallback(
     (key: string) => {
