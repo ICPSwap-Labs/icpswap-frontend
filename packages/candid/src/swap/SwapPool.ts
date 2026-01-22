@@ -332,18 +332,13 @@ export type RemoveLimitOrderStatus =
   | { Completed: null };
 export type Result = { ok: bigint } | { err: Error };
 export type Result_1 = { ok: string } | { err: Error };
-export type Result_10 =
-  | {
-      ok: { balance0: bigint; balance1: bigint };
-    }
-  | { err: Error };
-export type Result_11 = { ok: Array<UserPositionInfoWithId> } | { err: Error };
-export type Result_12 = { ok: Page } | { err: Error };
-export type Result_13 = { ok: Page_1 } | { err: Error };
-export type Result_14 = { ok: Array<bigint> } | { err: Error };
-export type Result_15 = { ok: Array<[string, Array<bigint>]> } | { err: Error };
-export type Result_16 = { ok: UserPositionInfo } | { err: Error };
-export type Result_17 =
+export type Result_10 = { ok: Array<UserPositionInfoWithId> } | { err: Error };
+export type Result_11 = { ok: Page } | { err: Error };
+export type Result_12 = { ok: Page_1 } | { err: Error };
+export type Result_13 = { ok: Array<bigint> } | { err: Error };
+export type Result_14 = { ok: Array<[string, Array<bigint>]> } | { err: Error };
+export type Result_15 = { ok: UserPositionInfo } | { err: Error };
+export type Result_16 =
   | {
       ok: {
         upperLimitOrdersIds: Array<{ userPositionId: bigint; timestamp: bigint }>;
@@ -351,8 +346,8 @@ export type Result_17 =
       };
     }
   | { err: Error };
-export type Result_18 = { ok: Array<[bigint, Transaction]> } | { err: Error };
-export type Result_19 =
+export type Result_17 = { ok: Array<[bigint, Transaction]> } | { err: Error };
+export type Result_18 =
   | {
       ok: {
         swapFee0Repurchase: bigint;
@@ -363,11 +358,11 @@ export type Result_19 =
       };
     }
   | { err: Error };
+export type Result_19 = { ok: Page_2 } | { err: Error };
 export type Result_2 = { ok: boolean } | { err: Error };
-export type Result_20 = { ok: Page_2 } | { err: Error };
-export type Result_21 = { ok: Page_3 } | { err: Error };
-export type Result_22 = { ok: Array<[bigint, bigint]> } | { err: Error };
-export type Result_23 =
+export type Result_20 = { ok: Page_3 } | { err: Error };
+export type Result_21 = { ok: Array<[bigint, bigint]> } | { err: Error };
+export type Result_22 =
   | {
       ok: {
         infoCid: string;
@@ -377,7 +372,7 @@ export type Result_23 =
       };
     }
   | { err: Error };
-export type Result_24 =
+export type Result_23 =
   | {
       ok: Array<{
         userPositionId: bigint;
@@ -388,9 +383,9 @@ export type Result_24 =
       }>;
     }
   | { err: Error };
-export type Result_25 = { ok: Page_4 } | { err: Error };
-export type Result_26 = { ok: PositionInfo } | { err: Error };
-export type Result_27 =
+export type Result_24 = { ok: Page_4 } | { err: Error };
+export type Result_25 = { ok: PositionInfo } | { err: Error };
+export type Result_26 =
   | {
       ok: {
         lowerLimitOrders: Array<[LimitOrderKey, LimitOrderValue]>;
@@ -398,21 +393,21 @@ export type Result_27 =
       };
     }
   | { err: Error };
-export type Result_28 =
+export type Result_27 =
   | {
       ok: Array<[LimitOrderType, LimitOrderKey, LimitOrderValue]>;
     }
   | { err: Error };
-export type Result_29 = { ok: PoolInitArgs } | { err: Error };
-export type Result_3 = { ok: bigint } | { err: Error };
-export type Result_30 =
+export type Result_28 = { ok: PoolInitArgs } | { err: Error };
+export type Result_29 =
   | {
       ok: { feeGrowthGlobal1X128: bigint; feeGrowthGlobal0X128: bigint };
     }
   | { err: Error };
-export type Result_31 = { ok: CycleInfo } | { err: Error };
-export type Result_32 = { ok: { amount0: bigint; amount1: bigint } } | { err: Error };
-export type Result_33 =
+export type Result_3 = { ok: bigint } | { err: Error };
+export type Result_30 = { ok: CycleInfo } | { err: Error };
+export type Result_31 = { ok: { amount0: bigint; amount1: bigint } } | { err: Error };
+export type Result_32 =
   | {
       ok: {
         tokenIncome: Array<[bigint, { tokensOwed0: bigint; tokensOwed1: bigint }]>;
@@ -421,16 +416,15 @@ export type Result_33 =
       };
     }
   | { err: Error };
-export type Result_34 = { ok: Page_5 } | { err: Error };
-export type Result_4 = { ok: null } | { err: Error };
-export type Result_5 = { ok: boolean } | { err: null };
-export type Result_6 =
+export type Result_33 = { ok: Page_5 } | { err: Error };
+export type Result_4 = { ok: boolean } | { err: null };
+export type Result_5 =
   | {
       ok: { tokensOwed0: bigint; tokensOwed1: bigint };
     }
   | { err: Error };
-export type Result_7 = { ok: PoolMetadata } | { err: Error };
-export type Result_8 =
+export type Result_6 = { ok: PoolMetadata } | { err: Error };
+export type Result_7 =
   | {
       ok: {
         isProcessing: boolean;
@@ -439,7 +433,8 @@ export type Result_8 =
       };
     }
   | { err: Error };
-export type Result_9 = { ok: UserWithdrawQueueInfo } | { err: Error };
+export type Result_8 = { ok: UserWithdrawQueueInfo } | { err: Error };
+export type Result_9 = { ok: { balance0: bigint; balance1: bigint } } | { err: Error };
 export interface SwapArgs {
   amountIn: string;
   zeroForOne: boolean;
@@ -592,13 +587,13 @@ export interface WithdrawToSubaccountArgs {
 export interface _SERVICE {
   activeJobs: ActorMethod<[], undefined>;
   addLimitOrder: ActorMethod<[LimitOrderArgs], Result_2>;
-  allTokenBalance: ActorMethod<[bigint, bigint], Result_34>;
+  allTokenBalance: ActorMethod<[bigint, bigint], Result_33>;
   approvePosition: ActorMethod<[Principal, bigint], Result_2>;
-  batchRefreshIncome: ActorMethod<[Array<bigint>], Result_33>;
+  batchRefreshIncome: ActorMethod<[Array<bigint>], Result_32>;
   checkOwnerOfUserPosition: ActorMethod<[Principal, bigint], Result_2>;
-  claim: ActorMethod<[ClaimArgs], Result_32>;
-  claimToSubaccount: ActorMethod<[ClaimToSubaccountArgs], Result_32>;
-  decreaseLiquidity: ActorMethod<[DecreaseLiquidityArgs], Result_32>;
+  claim: ActorMethod<[ClaimArgs], Result_31>;
+  claimToSubaccount: ActorMethod<[ClaimToSubaccountArgs], Result_31>;
+  decreaseLiquidity: ActorMethod<[DecreaseLiquidityArgs], Result_31>;
   deleteFailedTransaction: ActorMethod<[bigint, boolean], Result_2>;
   deposit: ActorMethod<[DepositArgs], Result>;
   depositAllAndMint: ActorMethod<[DepositAndMintArgs], Result>;
@@ -609,56 +604,55 @@ export interface _SERVICE {
   getAvailabilityState: ActorMethod<[], { whiteList: Array<Principal>; available: boolean }>;
   getCachedTokenFee: ActorMethod<[], { token0Fee: bigint; token1Fee: bigint }>;
   getClaimLog: ActorMethod<[], Array<string>>;
-  getCycleInfo: ActorMethod<[], Result_31>;
-  getFailedTransactions: ActorMethod<[], Result_18>;
-  getFeeGrowthGlobal: ActorMethod<[], Result_30>;
-  getInitArgs: ActorMethod<[], Result_29>;
+  getCycleInfo: ActorMethod<[], Result_30>;
+  getFailedTransactions: ActorMethod<[], Result_17>;
+  getFeeGrowthGlobal: ActorMethod<[], Result_29>;
+  getInitArgs: ActorMethod<[], Result_28>;
   getJobs: ActorMethod<[], { jobs: Array<JobInfo>; level: Level }>;
   getLimitOrderAvailabilityState: ActorMethod<[], Result_2>;
-  getLimitOrderStack: ActorMethod<[], Result_28>;
-  getLimitOrders: ActorMethod<[], Result_27>;
+  getLimitOrderStack: ActorMethod<[], Result_27>;
+  getLimitOrders: ActorMethod<[], Result_26>;
   getMistransferBalance: ActorMethod<[Token], Result>;
-  getPosition: ActorMethod<[GetPositionArgs], Result_26>;
-  getPositions: ActorMethod<[bigint, bigint], Result_25>;
-  getSortedUserLimitOrders: ActorMethod<[Principal], Result_24>;
-  getSwapRecordState: ActorMethod<[], Result_23>;
-  getTickBitmaps: ActorMethod<[], Result_22>;
-  getTickInfos: ActorMethod<[bigint, bigint], Result_21>;
-  getTicks: ActorMethod<[bigint, bigint], Result_20>;
-  getTokenAmountState: ActorMethod<[], Result_19>;
+  getPosition: ActorMethod<[GetPositionArgs], Result_25>;
+  getPositions: ActorMethod<[bigint, bigint], Result_24>;
+  getSortedUserLimitOrders: ActorMethod<[Principal], Result_23>;
+  getSwapRecordState: ActorMethod<[], Result_22>;
+  getTickBitmaps: ActorMethod<[], Result_21>;
+  getTickInfos: ActorMethod<[bigint, bigint], Result_20>;
+  getTicks: ActorMethod<[bigint, bigint], Result_19>;
+  getTokenAmountState: ActorMethod<[], Result_18>;
   getTokenBalance: ActorMethod<[], { token0: bigint; token1: bigint }>;
-  getTransactions: ActorMethod<[], Result_18>;
-  getTransactionsByOwner: ActorMethod<[Principal], Result_18>;
+  getTransactions: ActorMethod<[], Result_17>;
+  getTransactionsByOwner: ActorMethod<[Principal], Result_17>;
   getUserByPositionId: ActorMethod<[bigint], Result_1>;
-  getUserLimitOrders: ActorMethod<[Principal], Result_17>;
-  getUserPosition: ActorMethod<[bigint], Result_16>;
-  getUserPositionIds: ActorMethod<[], Result_15>;
-  getUserPositionIdsByPrincipal: ActorMethod<[Principal], Result_14>;
-  getUserPositionWithTokenAmount: ActorMethod<[bigint, bigint], Result_13>;
-  getUserPositions: ActorMethod<[bigint, bigint], Result_12>;
-  getUserPositionsByPrincipal: ActorMethod<[Principal], Result_11>;
-  getUserUnusedBalance: ActorMethod<[Principal], Result_10>;
-  getUserWithdrawQueue: ActorMethod<[], Result_9>;
+  getUserLimitOrders: ActorMethod<[Principal], Result_16>;
+  getUserPosition: ActorMethod<[bigint], Result_15>;
+  getUserPositionIds: ActorMethod<[], Result_14>;
+  getUserPositionIdsByPrincipal: ActorMethod<[Principal], Result_13>;
+  getUserPositionWithTokenAmount: ActorMethod<[bigint, bigint], Result_12>;
+  getUserPositions: ActorMethod<[bigint, bigint], Result_11>;
+  getUserPositionsByPrincipal: ActorMethod<[Principal], Result_10>;
+  getUserUnusedBalance: ActorMethod<[Principal], Result_9>;
+  getUserWithdrawQueue: ActorMethod<[Principal], Result_8>;
   getVersion: ActorMethod<[], string>;
-  getWithdrawQueueInfo: ActorMethod<[], Result_8>;
+  getWithdrawQueueInfo: ActorMethod<[], Result_7>;
   icrc10_supported_standards: ActorMethod<[], Array<{ url: string; name: string }>>;
   icrc21_canister_call_consent_message: ActorMethod<[Icrc21ConsentMessageRequest], Icrc21ConsentMessageResponse>;
   icrc28_trusted_origins: ActorMethod<[], Icrc28TrustedOriginsResponse>;
   increaseLiquidity: ActorMethod<[IncreaseLiquidityArgs], Result>;
   init: ActorMethod<[bigint, bigint, bigint], undefined>;
-  metadata: ActorMethod<[], Result_7>;
+  metadata: ActorMethod<[], Result_6>;
   mint: ActorMethod<[MintArgs], Result>;
   quote: ActorMethod<[SwapArgs], Result>;
   quoteForAll: ActorMethod<[SwapArgs], Result>;
-  refreshIncome: ActorMethod<[bigint], Result_6>;
+  refreshIncome: ActorMethod<[bigint], Result_5>;
   removeLimitOrder: ActorMethod<[bigint], Result_2>;
   restartJobs: ActorMethod<[Array<string>], undefined>;
   restartWithdrawQueueProcessing: ActorMethod<[boolean], Result_1>;
   setAdmins: ActorMethod<[Array<Principal>], undefined>;
   setAvailable: ActorMethod<[boolean], undefined>;
-  setIcrc28TrustedOrigins: ActorMethod<[Array<string>], Result_5>;
+  setIcrc28TrustedOrigins: ActorMethod<[Array<string>], Result_4>;
   setLimitOrderAvailable: ActorMethod<[boolean], undefined>;
-  setTokenAmountState: ActorMethod<[bigint, bigint], Result_4>;
   setWhiteList: ActorMethod<[Array<Principal>], undefined>;
   stopJobs: ActorMethod<[Array<string>], undefined>;
   sumTick: ActorMethod<[], Result_3>;

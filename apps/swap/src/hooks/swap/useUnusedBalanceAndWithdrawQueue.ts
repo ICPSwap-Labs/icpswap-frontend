@@ -34,7 +34,7 @@ export function useUnusedBalanceAndWithdrawQueue(pool: Pool | Null, refresh?: nu
       } as SwapPoolData;
 
       const get_withdraw_queue = async () => {
-        return await getUserWithdrawQueue(pool.id);
+        return await getUserWithdrawQueue(pool.id, Principal.fromText(principal));
       };
 
       const get_un_deposit_balances = async () => {
