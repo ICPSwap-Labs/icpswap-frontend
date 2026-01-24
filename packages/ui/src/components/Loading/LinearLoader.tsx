@@ -1,7 +1,11 @@
-import { makeStyles, Theme, LinearProgress } from "../Mui";
+import { makeStyles, Theme, LinearProgress, Typography } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    width: "100%",
+    height: "100%",
+  },
+  loader: {
     position: "fixed",
     top: 0,
     left: 0,
@@ -11,6 +15,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(2),
     },
   },
+  image: {
+    padding: "120px 0 0 0",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
 }));
 
 export function LinearLoader() {
@@ -18,7 +29,13 @@ export function LinearLoader() {
 
   return (
     <div className={classes.root}>
-      <LinearProgress color="primary" />
+      <div className={classes.loader}>
+        <LinearProgress color="primary" />
+      </div>
+      <div className={classes.image}>
+        <img src="/images/loading-page.gif" alt="loading" width="200px" height="200px" />
+        <Typography sx={{ color: "text.primary", fontSize: "16px" }}>Loading please wait...</Typography>
+      </div>
     </div>
   );
 }
