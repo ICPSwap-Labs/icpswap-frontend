@@ -15,3 +15,4 @@ export * from "./useMultiPositionInfos";
 export * from "./useSwapInstallers";
 export * from "./useSwapTransactionsError";
 export * from "./useUserWithdrawQueue";
+export * from "./syncTokenInfo";
