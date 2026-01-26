@@ -15,7 +15,7 @@ import { AuthButton } from "components/index";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
 import { SwapInputWrapper } from "components/swap/limit-order/index";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
@@ -45,7 +45,7 @@ export const PlaceOrder = forwardRef(
     ref: Ref<PlaceOrderRef>,
   ) => {
     const { t } = useTranslation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const location = useLocation();
     const [openErrorTip] = useErrorTip();
     const [openLoadingTip, closeLoadingTip] = useLoadingTip();
@@ -146,7 +146,7 @@ export const PlaceOrder = forwardRef(
           ]);
         }
 
-        history.push(`${prePath}${search}`);
+        navigate(`${prePath}${search}`);
       },
       [outputTokenId],
     );
@@ -168,7 +168,7 @@ export const PlaceOrder = forwardRef(
           ]);
         }
 
-        history.push(`${prePath}${search}`);
+        navigate(`${prePath}${search}`);
       },
       [inputTokenId, location],
     );
@@ -294,7 +294,7 @@ export const PlaceOrder = forwardRef(
         { key: "output", value: inputTokenId },
       ]);
 
-      history.push(`${prePath}${search}`);
+      navigate(`${prePath}${search}`);
 
       onSwitchTokens();
 
@@ -304,7 +304,7 @@ export const PlaceOrder = forwardRef(
         limitPriceRef?.current?.resetInverted();
         limitPriceRef?.current?.setDefaultPrice();
       }
-    }, [ui, history, location, limitPriceRef, outputTokenId, inputTokenId]);
+    }, [ui, navigate, location, limitPriceRef, outputTokenId, inputTokenId]);
 
     useImperativeHandle(
       ref,

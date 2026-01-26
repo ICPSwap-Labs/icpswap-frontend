@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React, { useCallback, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Typography, Grid, Box, Input, makeStyles, Theme } from "components/Mui";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard, AuthButton } from "components/index";
@@ -84,7 +84,7 @@ type ExcelClaimItem = {
 export default function CreateTokenClaim() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const principal = useAccountPrincipal();
   const [values, setValues] = useState<Values>({ standard: TOKEN_STANDARD.EXT } as Values);
   const [openTip] = useTips();
@@ -236,7 +236,7 @@ export default function CreateTokenClaim() {
       }
 
       if (status === ResultStatus.OK) {
-        history.push("/token-claim");
+        navigate("/token-claim");
       }
     }, [token, principal, values, userClaims]),
   );

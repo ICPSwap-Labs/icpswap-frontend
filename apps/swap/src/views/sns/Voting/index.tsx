@@ -8,7 +8,7 @@ import { SelectSns } from "components/sns/SelectSNSTokens";
 import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { LoadingRow, Wrapper, Link } from "components/index";
 import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
 import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
@@ -119,7 +119,7 @@ function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps)
 const sns_proposals_limit = 50;
 
 export default function Votes() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { root_id: root_id_url } = useParsedQueryString() as { root_id: string };
   const [loading, setLoading] = useState(false);
   const [fetchDone, setFetchDone] = useState(false);
@@ -155,7 +155,7 @@ export default function Votes() {
 
   const handleSelectNeuronChange = (id: string) => {
     reset_state();
-    history.push(`/sns/voting?root_id=${id}`);
+    navigate(`/sns/voting?root_id=${id}`);
   };
 
   const proposals = useMemo(() => {

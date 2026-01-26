@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Grid, Box, Typography, Avatar, useTheme } from "components/Mui";
 import { ImageLoading } from "@icpswap/ui";
 import NFTListHeader from "components/Wallet/NFTListHeader";
@@ -92,13 +92,13 @@ export interface NFTCardProps {
 
 export function NFTCanisterCard({ canister }: NFTCardProps) {
   const account = useAccount();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { result: count } = useCanisterUserNFTCount(canister.cid, account);
   const { result: logo } = useCanisterLogo(canister.cid);
 
   const handleCardClick = () => {
-    history.push(`/wallet/nft/canister/details/${canister.cid}`);
+    navigate(`/wallet/nft/canister/details/${canister.cid}`);
   };
 
   return <NFTCardUI onClick={handleCardClick} src={logo} name={canister.name} number={count?.toString()} />;
@@ -110,7 +110,7 @@ export interface ExtNFTCardProps {
 }
 
 export function ExtNFTCard({ collection, userAllExtNfts }: ExtNFTCardProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const count = useMemo(() => {
     if (!userAllExtNfts || !collection) return undefined;
@@ -118,7 +118,7 @@ export function ExtNFTCard({ collection, userAllExtNfts }: ExtNFTCardProps) {
   }, [userAllExtNfts, collection]);
 
   const handleClick = () => {
-    history.push(`/wallet/nft/canister/details/${collection.id}`);
+    navigate(`/wallet/nft/canister/details/${collection.id}`);
   };
 
   return <NFTCardUI name={collection.name} src={collection.avatar} onClick={handleClick} number={count} />;

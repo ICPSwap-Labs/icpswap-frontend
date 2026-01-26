@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Grid, Typography, Button, Box, useTheme, makeStyles, Theme } from "components/Mui";
 import { TradeOrder } from "types";
 import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
@@ -51,21 +51,21 @@ const useStyles = makeStyles(() => {
 export default function NFTCard({ order }: { order: TradeOrder }) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const account = useAccount();
   const theme = useTheme() as Theme;
 
   const [reviewShow, setReviewShow] = useState(false);
 
   const handleCardClick = () => {
-    history.push(`/marketplace/NFT/view/${order.nftCid}/${String(order.tokenIndex)}`);
+    navigate(`/marketplace/NFT/view/${order.nftCid}/${String(order.tokenIndex)}`);
   };
 
   const isDark = theme.customization.mode === "dark";
 
   const handleTradeSuccess = () => {
     setReviewShow(false);
-    history.push(`/marketplace/NFT/view/${order.nftCid}/${String(order.tokenIndex)}`);
+    navigate(`/marketplace/NFT/view/${order.nftCid}/${String(order.tokenIndex)}`);
   };
 
   const isOwner = order?.seller === account;

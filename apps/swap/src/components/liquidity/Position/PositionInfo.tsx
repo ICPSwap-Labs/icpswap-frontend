@@ -19,7 +19,7 @@ import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger, useCopySucce
 import { useCallback, useMemo } from "react";
 import { Null } from "@icpswap/types";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAvailableFarmsForPool, useLiquidityIsStakedByOwner } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
 import { useTranslation } from "react-i18next";
@@ -36,7 +36,7 @@ interface PositionInfoProps {
 export function PositionInfo({ position, positionId, isOwner, owner }: PositionInfoProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const positionState = usePositionState(position);
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const principal = useAccountPrincipal();
@@ -82,8 +82,8 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
 
   const handleToFarm = useCallback(() => {
     if (!farmId) return;
-    history.push(`/farm/details/${farmId}`);
-  }, [history, farmId]);
+    navigate(`/farm/details/${farmId}`);
+  }, [navigate, farmId]);
 
   const showStakeFarmButton = useMemo(() => {
     return !!farmId && isStakedByOwner === false;

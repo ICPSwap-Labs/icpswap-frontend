@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { NoData, MainCard, Flex, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
 import { useParsedQueryString } from "@icpswap/hooks";
@@ -23,7 +23,7 @@ const Tabs = [
 function MainContent() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [headerInViewport, setHeaderInViewport] = useState(true);
 
@@ -47,7 +47,7 @@ function MainContent() {
   });
 
   const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
-    history.push(`/stake?state=${value.state}`);
+    navigate(`/stake?state=${value.state}`);
   }, []);
 
   const { showState, gridTemplateColumns } = useMemo(() => {

@@ -1,6 +1,6 @@
 import { Grid, Box, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function CloseIcon() {
   return (
@@ -22,10 +22,10 @@ function CloseIcon() {
 
 export default function V3Event({ onClick }: { onClick: () => void }) {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleToTwitter = () => {
-    history.push("/swap");
+    navigate("/swap");
   };
 
   return (

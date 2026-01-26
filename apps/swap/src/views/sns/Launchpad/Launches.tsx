@@ -5,7 +5,7 @@ import { Flex, LoadingRow, Wrapper } from "components/index";
 import type { NnsTokenInfo } from "@icpswap/types";
 import AvatarImage from "components/Image/Avatar";
 import dayjs from "dayjs";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Tabs } from "components/sns/Tab";
 import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { useTranslation } from "react-i18next";
@@ -18,7 +18,7 @@ interface LaunchpadProps {
 function Launchpad({ sns }: LaunchpadProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { swap_id, root_id } = useMemo(() => {
     return {
@@ -45,7 +45,7 @@ function Launchpad({ sns }: LaunchpadProps) {
           padding: "10px",
         },
       }}
-      onClick={() => history.push(`/sns/launch/${root_id}`)}
+      onClick={() => navigate(`/sns/launch/${root_id}`)}
     >
       <Flex gap="0 10px">
         <AvatarImage src={nnsTokenLogo(sns)} />

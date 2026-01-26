@@ -7,22 +7,22 @@ import { parseTokenAmount, toSignificantWithGroupSeparator, formatDollarAmount }
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export function Erc20Fee() {
   const { t } = useTranslation();
   const theme = useTheme();
   const principal = useAccountPrincipal();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { result: ckETHBalance } = useTokenBalance(ckETH.address, principal?.toString());
   const { result: transactionPrice } = useChainKeyTransactionPrice(MINTER_CANISTER_ID);
   const ckETHInfoToken = useInfoToken(ckETH.address);
 
   const handleBuy = useCallback(() => {
-    history.push(`/swap?input=${ICP.address}&output=${ckETH.address}`);
-  }, [ICP, ckETH, history]);
+    navigate(`/swap?input=${ICP.address}&output=${ckETH.address}`);
+  }, [ICP, ckETH, navigate]);
 
   return (
     <Box

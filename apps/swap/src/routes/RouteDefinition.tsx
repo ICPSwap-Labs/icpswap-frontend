@@ -4,11 +4,7 @@ import { routeConfigs } from "./config";
 
 export const findRouteByPath = (pathname: string) => {
   for (const route of routeConfigs) {
-    const match = matchPath(pathname, {
-      path: route.path,
-      exact: true,
-      strict: false,
-    });
+    const match = matchPath(route.path, pathname);
 
     if (match) return route;
 

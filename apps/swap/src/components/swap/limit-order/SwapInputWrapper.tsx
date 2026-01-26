@@ -109,6 +109,7 @@ export function SwapInputWrapper({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            zIndex: 10,
           }}
           onClick={onSwitchTokens}
         >

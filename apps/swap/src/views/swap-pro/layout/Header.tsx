@@ -2,7 +2,7 @@ import { Grid, Box, InputAdornment, useMediaQuery, useTheme } from "components/M
 import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ProfileSection from "components/Layout/Header/ProfileSection";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,12 +14,12 @@ import { TokenSearch } from "./TokenSearch";
 export default function Header() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
   const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleLoadPage = (path: string) => {
-    history.push(path);
+    navigate(path);
   };
 
   return (

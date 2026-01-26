@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MenuWrapper, MenuItem, Flex } from "@icpswap/ui";
 import { Link } from "components/index";
 import { makeStyles, useTheme, Box, Typography, useMediaQuery, Theme } from "components/Mui";
@@ -63,7 +63,7 @@ export function InfoNavBar() {
   const classes = useStyles();
   const location = useLocation();
   const theme = useTheme() as Theme;
-  const history = useHistory();
+  const navigate = useNavigate();
   const ref = useRef(null);
   const pathName = location.pathname;
 
@@ -87,13 +87,13 @@ export function InfoNavBar() {
   };
 
   const handlerOpenTo = (val: Route) => {
-    history.push(val.path);
+    navigate(val.path);
   };
 
   const handleMenuClick = (route: Route) => {
     if (!route.path) return;
     handleClose();
-    history.push(route.path);
+    navigate(route.path);
   };
 
   function isActive(route: Route) {

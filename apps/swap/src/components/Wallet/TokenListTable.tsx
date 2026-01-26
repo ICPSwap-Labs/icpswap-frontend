@@ -20,7 +20,7 @@ import { XTC, TOKEN_STANDARD } from "constants/tokens";
 import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
 import { ckBridgeChain } from "@icpswap/constants";
 import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 import { ChainKeyETHMinterInfo } from "@icpswap/types";
@@ -76,14 +76,14 @@ const ckTokens: ckTOKEN[] = [
 function ChainKeyTokenButtons({ ckToken }: { ckToken: ckTOKEN }) {
   const { t } = useTranslation();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleCKTokenMint = (path: string) => {
-    history.push(path);
+    navigate(path);
   };
 
   const handleCKTokenDissolve = (path: string) => {
-    history.push(path);
+    navigate(path);
   };
 
   return (
@@ -107,7 +107,7 @@ export interface TokenListItemProps {
 export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
@@ -235,11 +235,11 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
 
   const handleWrappedICP = (value: "wrap" | "unwrap") => {
     if (value === "wrap") {
-      history.push("/swap/v2/wrap?input=icp");
+      navigate("/swap/v2/wrap?input=icp");
       return;
     }
 
-    history.push("/swap/v2/wrap?input=wicp");
+    navigate("/swap/v2/wrap?input=wicp");
   };
 
   const isHidden = useMemo(() => {
@@ -269,7 +269,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   }, [sortBalance, tokenBalance, canisterId, token, tokenUSDPrice]);
 
   const handleToSwap = () => {
-    history.push(`/swap?input=${canisterId}&output=${ICP.address}`);
+    navigate(`/swap?input=${canisterId}&output=${ICP.address}`);
   };
 
   const handleReceive = () => {

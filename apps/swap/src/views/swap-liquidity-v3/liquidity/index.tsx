@@ -1,12 +1,13 @@
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Typography, useTheme, Button } from "components/Mui";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { Box, Typography, Button } from "components/Mui";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Flex, Wrapper } from "components/index";
 import { InfoPools, Positions } from "components/liquidity/index";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import { useTranslation } from "react-i18next";
 import i18n from "i18n/index";
+import { UnderLineTabList, type UnderLineTab } from "components/TabPanel";
 
 enum TabName {
   TopPools = "TopPools",
@@ -18,67 +19,27 @@ const tabs = [
   { label: i18n.t("swap.top.pools"), value: TabName.TopPools },
 ];
 
-interface TabProps {
-  label: ReactNode;
-  value: TabName;
-  active?: boolean;
-  onClick: (value: TabName) => void;
-}
-
-function Tab({ label, value, active, onClick }: TabProps) {
-  const theme = useTheme();
-
-  return (
-    <Typography
-      className={`${active ? "active" : ""}`}
-      sx={{
-        position: "relative",
-        color: active ? "text.primary" : "text.secondary",
-        cursor: "pointer",
-        fontSize: "18px",
-        fontWeight: 500,
-        lineHeight: "18px",
-        "&.active": {
-          "&:after": {
-            position: "absolute",
-            display: "block",
-            content: '""',
-            width: "100%",
-            height: "3px",
-            top: "25px",
-            background: theme.colors.secondaryMain,
-          },
-        },
-        "@media(max-width: 640px)": {
-          fontSize: "16px",
-          lineHeight: "16px",
-        },
-      }}
-      onClick={() => onClick(value)}
-    >
-      {label}
-    </Typography>
-  );
-}
-
-export default function Liquidity() {
+function Liquidity() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [loadedTabs, setLoadedTabs] = useState<Array<TabName>>([]);
-  const history = useHistory();
-  const { tab } = useParsedQueryString() as { tab: TabName | undefined };
+  const { tab: activeTabName } = useParsedQueryString() as { tab: TabName | undefined };
 
   const loadAddLiquidity = useLoadAddLiquidityCallback({ token0: undefined, token1: undefined });
 
-  const handleTab = useCallback(
-    (value: TabName) => {
-      history.push(`/liquidity?tab=${value}`);
+  const handleTabChange = useCallback(
+    (tab: UnderLineTab) => {
+      if (tab.value === activeTabName) return;
+      navigate(`/liquidity?tab=${tab.value}`);
     },
-    [history],
+    [navigate, activeTabName, location],
   );
 
   const activeTab = useMemo(() => {
-    return tab ?? TabName.Positions;
-  }, [tab]);
+    return activeTabName ?? TabName.Positions;
+  }, [activeTabName]);
 
   useEffect(() => {
     if (!loadedTabs.includes(activeTab)) {
@@ -109,17 +70,7 @@ export default function Liquidity() {
           }}
           justify="space-between"
         >
-          <Flex gap="0 33px">
-            {tabs.map((tab) => (
-              <Tab
-                key={tab.value}
-                value={tab.value}
-                label={tab.label}
-                onClick={() => handleTab(tab.value)}
-                active={activeTab === tab.value}
-              />
-            ))}
-          </Flex>
+          <UnderLineTabList tabs={tabs} onChange={handleTabChange} activeTabValue={activeTab} />
 
           <Button variant="contained" onClick={loadAddLiquidity}>
             {t("swap.add.liquidity")}
@@ -139,3 +90,5 @@ export default function Liquidity() {
     </Wrapper>
   );
 }
+
+export default memo(Liquidity);

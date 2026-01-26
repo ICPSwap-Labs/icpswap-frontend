@@ -1,12 +1,7 @@
-import { Switch } from "react-router-dom";
 import { memo } from "react";
 
-import AuthRoutes from "./Auth";
+import { routes } from "./routes";
 
 export default memo(() => {
-  return (
-    <Switch>
-      <AuthRoutes />
-    </Switch>
-  );
+  return routes();
 });

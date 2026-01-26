@@ -10,6 +10,7 @@ import i18n from "i18n/index";
 import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
 import { useScrollToTop } from "hooks/useScrollToTop";
 import { Tab } from "constants/index";
+import { OutlineCircleTabList } from "components/TabPanel";
 
 import { YourPositions } from "./YourPositions";
 import { Positions } from "./Positions";
@@ -160,30 +161,10 @@ export default function Transactions() {
 
       {subMenus ? (
         <Flex sx={{ padding: "16px", gap: "0 4px", borderBottom: `1px solid ${theme.palette.background.level1}` }}>
-          {subMenus?.map((subMenu) => (
-            <Box
-              key={subMenu.value}
-              className={subMenu.value === activeSubTab ? "active" : ""}
-              onClick={() => setActiveSubTab(subMenu.value)}
-            >
-              <Typography
-                className={subMenu.value === activeSubTab ? "active" : ""}
-                sx={{
-                  whiteSpace: "nowrap",
-                  cursor: "pointer",
-                  borderRadius: "40px",
-                  padding: "8px 16px",
-                  border: subMenu.value === activeSubTab ? `1px solid ${theme.palette.border["3"]}` : "none",
-                  "&.active": {
-                    color: "text.primary",
-                    fontWeight: 500,
-                  },
-                }}
-              >
-                {subMenu.label}
-              </Typography>
-            </Box>
-          ))}
+          <OutlineCircleTabList
+            tabs={subMenus as { label: string; value: string }[]}
+            onChange={(tab) => setActiveSubTab(tab.value as Tabs)}
+          />
         </Flex>
       ) : null}
 

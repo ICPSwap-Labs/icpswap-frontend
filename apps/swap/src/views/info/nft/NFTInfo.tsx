@@ -20,7 +20,7 @@ const TabList: Tab[] = [
 
 export default function NFTView() {
   const { t } = useTranslation();
-  const { canisterId, id: tokenId } = useParams<{ canisterId: string; id: string }>();
+  const { canisterId, id: tokenId } = useParams() as { canisterId: string; id: string };
 
   const [tab, setTab] = useState<Tab>(TabList[0]);
 

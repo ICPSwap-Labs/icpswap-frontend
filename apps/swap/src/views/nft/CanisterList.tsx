@@ -3,7 +3,7 @@ import { useUserCanisterList, useCanisterCycles, useCanisterUserNFTCount } from 
 import { pageArgsFormat, cycleValueFormat, timestampFormat } from "@icpswap/utils";
 import { useState } from "react";
 import { Grid, Typography, Button, Box, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAccount } from "store/auth/hooks";
 import type { NFTControllerInfo } from "@icpswap/types";
 import ExplorerLink from "components/ExternalLink/Explorer";
@@ -36,12 +36,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function Title() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
   const matchesMd = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleCreateCanister = () => {
-    history.push("/info-tools/nft/canister/create");
+    navigate("/info-tools/nft/canister/create");
   };
 
   return (
@@ -108,7 +108,7 @@ const PAGE_SIZE = 10;
 export default function NFTCanisterList() {
   const { t } = useTranslation();
   const account = useAccount();
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const [page, setPage] = useState(1);
@@ -118,11 +118,11 @@ export default function NFTCanisterList() {
   const { content, totalElements } = result ?? { content: [] as NFTControllerInfo[], totalElements: 0 };
 
   const handleLoadDetails = (canisterInfo: NFTControllerInfo) => {
-    history.push(`/wallet/nft/canister/details/${canisterInfo.cid}`);
+    navigate(`/wallet/nft/canister/details/${canisterInfo.cid}`);
   };
 
   const handleLoadMintNFT = (canisterInfo: NFTControllerInfo) => {
-    history.push(`/info-tools/nft/mint?canister=${canisterInfo.cid}`);
+    navigate(`/info-tools/nft/mint?canister=${canisterInfo.cid}`);
   };
 
   return (

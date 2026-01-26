@@ -61,7 +61,7 @@ export function timeFormatter(dateTime: bigint | undefined) {
 export default function FarmDetails() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const { id: farmId } = useParams<{ id: string }>();
+  const { id: farmId } = useParams() as { id: string };
   const { result: farmInfo } = useUserFarmInfo(farmId, AnonymousPrincipal);
   const { result: farmMetadata } = useV3FarmRewardMetadata(farmId);
   const { result: cycles } = useFarmCycles(farmId);

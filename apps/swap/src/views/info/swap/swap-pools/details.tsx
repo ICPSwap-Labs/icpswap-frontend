@@ -70,7 +70,7 @@ enum TabValue {
 
 export default function SwapPoolDetails() {
   const { t } = useTranslation();
-  const { id: canisterId } = useParams<{ id: string }>();
+  const { id: canisterId } = useParams() as { id: string };
   const theme = useTheme();
   const [openTips] = useTips();
 

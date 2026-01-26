@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Typography, Grid, Box, makeStyles, Theme } from "components/Mui";
 import { Flex, Select } from "@icpswap/ui";
 import { useAccountPrincipal } from "store/auth/hooks";
@@ -84,7 +84,7 @@ const DefaultValue = {
 export default function CreateProject() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const principal = useAccountPrincipal();
   const [values, setValues] = useState<Values>(DefaultValue);
   const [openTip] = useTips();
@@ -153,7 +153,7 @@ export default function CreateProject() {
     setLoading(false);
 
     if (status === ResultStatus.OK) {
-      history.push("/farm");
+      navigate("/farm");
     }
   };
 

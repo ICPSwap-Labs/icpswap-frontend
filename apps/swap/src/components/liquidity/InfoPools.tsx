@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme, BoxProps } from "components/Mui";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { NoData, TokenImage, TabPanel, type Tab, ScrollTop } from "components/index";
 import {
   Header,
@@ -149,7 +149,7 @@ export interface PoolItemProps {
 export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -180,9 +180,9 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
       event.preventDefault();
       event.stopPropagation();
       event.nativeEvent.stopImmediatePropagation();
-      history.push(`/swap?&input=${pool.token0LedgerId}&output=${pool.token1LedgerId}`);
+      navigate(`/swap?&input=${pool.token0LedgerId}&output=${pool.token1LedgerId}`);
     },
-    [history, pool],
+    [navigate, pool],
   );
 
   const handleChart: BoxProps["onClick"] = useCallback(

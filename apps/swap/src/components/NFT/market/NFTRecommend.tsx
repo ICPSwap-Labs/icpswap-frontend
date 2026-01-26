@@ -1,5 +1,5 @@
-import { useHistory } from "react-router-dom";
-import { Box, Typography, Grid, makeStyles, Theme } from "components/Mui";
+import { useNavigate } from "react-router-dom";
+import { Box, Typography, Grid, makeStyles } from "components/Mui";
 import NFTCard from "components/NFT/market/NFTCard";
 import { useNFTRecommend } from "hooks/nft/trade";
 import { pageArgsFormat } from "@icpswap/utils";
@@ -47,14 +47,14 @@ const useStyles = makeStyles(() => {
 export default function NFTRecommend() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [offset] = pageArgsFormat(1, 10);
 
   const { loading, result } = useNFTRecommend(offset, 10);
   const { content } = result ?? { totalElements: 0, content: [] as TradeOrder[] };
 
   const handleMoreClick = () => {
-    history.push("/marketplace/NFT");
+    navigate("/marketplace/NFT");
   };
 
   return (

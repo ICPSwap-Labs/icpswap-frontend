@@ -1,7 +1,7 @@
 import { Box, BoxProps, useTheme } from "components/Mui";
 import { useCallback } from "react";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FilterState } from "types/staking-token";
 
 import { EmptyCell } from "components/stake/row/cell";
@@ -16,11 +16,11 @@ interface EmptyRowProps {
 
 export function EmptyRow({ poolInfo, wrapperSx, filterState, your, showState }: EmptyRowProps) {
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handelToDetails = useCallback(() => {
-    history.push(`/stake/details/${poolInfo.canisterId.toString()}`);
-  }, [history, poolInfo]);
+    navigate(`/stake/details/${poolInfo.canisterId.toString()}`);
+  }, [navigate, poolInfo]);
 
   return (
     <Box

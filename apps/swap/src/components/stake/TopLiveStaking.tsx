@@ -1,7 +1,7 @@
 import { Typography, Box } from "components/Mui";
 import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
 import { useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { StakingTokenImages } from "components/stake/StakingTokenImage";
 import { useToken } from "hooks/useCurrency";
 import { useStakingPools } from "@icpswap/hooks";
@@ -21,7 +21,7 @@ interface TopLiveCardProps {
 
 function TopLiveCard({ pool }: TopLiveCardProps) {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const principal = useAccountPrincipal();
 
   const [, stakeToken] = useToken(pool.stakingToken.address);
@@ -46,7 +46,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
   });
 
   const handleClick = () => {
-    history.push(`/stake/details/${pool.canisterId.toString()}`);
+    navigate(`/stake/details/${pool.canisterId.toString()}`);
   };
 
   return (
