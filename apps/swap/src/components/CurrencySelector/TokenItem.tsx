@@ -12,7 +12,7 @@ import {
   formatAmount,
   nonUndefinedOrNull,
 } from "@icpswap/utils";
-import { Image } from "@icpswap/ui";
+import { Image, Tooltip } from "@icpswap/ui";
 import { PlusCircle } from "react-feather";
 import { useTaggedTokenManager, useSortedTokensManager } from "store/wallet/hooks";
 import { Token } from "@icpswap/swap-sdk";
@@ -152,30 +152,47 @@ export function TokenItem({
     >
       <Box>
         <Flex fullWidth gap="0 12px">
-          <TokenImage logo={token?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={token?.address} />
+          <Tooltip tips={token?.address || ""} placement="top-start">
+            <Box>
+              <TokenImage logo={token?.logo} size={matchDownSM ? "18px" : "40px"} tokenId={token?.address} />
+            </Box>
+          </Tooltip>
 
           <Box sx={{ width: "100%" }}>
-            <Typography
-              color="text.primary"
-              sx={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                fontSize: "16px",
-                fontWeight: 500,
-                "@media (max-width: 580px)": {
-                  fontSize: "14px",
-                },
-              }}
-            >
-              {token?.symbol}
-            </Typography>
-            <Typography
-              fontSize="12px"
-              sx={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", margin: "4px 0 0 0" }}
-            >
-              {token?.name}
-            </Typography>
+            <Tooltip tips={token?.address || ""} placement="top-start">
+              <Box sx={{ maxWidth: "100%", width: "fit-content" }}>
+                <Typography
+                  color="text.primary"
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    fontSize: "16px",
+                    fontWeight: 500,
+                    maxWidth: "100%",
+                    width: "fit-content",
+                    "@media (max-width: 580px)": {
+                      fontSize: "14px",
+                    },
+                  }}
+                >
+                  {token?.symbol}
+                </Typography>
+                <Typography
+                  fontSize="12px"
+                  sx={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    margin: "4px 0 0 0",
+                    maxWidth: "100%",
+                    width: "fit-content",
+                  }}
+                >
+                  {token?.name}
+                </Typography>
+              </Box>
+            </Tooltip>
           </Box>
         </Flex>
       </Box>
