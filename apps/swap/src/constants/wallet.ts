@@ -19,12 +19,7 @@ export const IIv2ProviderUrl = "https://id.ai";
 
 export const ConnectorConfigs: ConnectorConfig[] = [
   {
-    label: "Internet Identity 1.0",
-    value: Connector.IC,
-    logo: "/images/connect/InternetIdentity.svg",
-  },
-  {
-    label: "Internet Identity 2.0",
+    label: "Internet Identity",
     value: Connector.IIV2,
     logo: "/images/connect/iiv2.svg",
   },
