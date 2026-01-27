@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { icpswap_info_fetch_get } from "@icpswap/utils";
-import { PageResponse, InfoPoolDataResponse } from "@icpswap/types";
+import { icpswap_fetch_get } from "@icpswap/utils";
+import { PageResponse, InfoPoolDataResponse, Null, InfoPoolRealTimeDataResponse } from "@icpswap/types";
 
 import { useCallsData } from "../useCallData";
 
@@ -12,7 +12,7 @@ interface GetPoolChartsProps {
 }
 
 export async function getPoolCharts({ poolId, level, page, limit }: GetPoolChartsProps) {
-  const result = await icpswap_info_fetch_get<PageResponse<InfoPoolDataResponse>>(`/pool/${poolId}/chart/${level}`, {
+  const result = await icpswap_fetch_get<PageResponse<InfoPoolDataResponse>>(`/info/pool/${poolId}/chart/${level}`, {
     page,
     limit,
   });
@@ -32,5 +32,20 @@ export function usePoolCharts({ poolId, level, page, limit }: UsePoolChartsProps
       if (!poolId) return undefined;
       return await getPoolCharts({ page, poolId, level, limit });
     }, [poolId, level, page, limit]),
+  );
+}
+
+export async function getInfoPoolDetails({ poolId }: { poolId: string }) {
+  const result = await icpswap_fetch_get<InfoPoolRealTimeDataResponse>(`/info/pool/${poolId}`);
+
+  return result?.data;
+}
+
+export function useInfoPoolDetails({ poolId }: { poolId: string | Null }) {
+  return useCallsData(
+    useCallback(async () => {
+      if (!poolId) return undefined;
+      return await getInfoPoolDetails({ poolId });
+    }, [poolId]),
   );
 }
