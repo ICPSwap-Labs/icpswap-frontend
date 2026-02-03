@@ -144,7 +144,7 @@ export function TokenItem({
           background: theme.palette.background.level4,
         },
         "@media (max-width: 580px)": {
-          gridTemplateColumns: "115px 50px 1fr",
+          gridTemplateColumns: "150px 1fr",
         },
       }}
       onClick={handleItemClick}
