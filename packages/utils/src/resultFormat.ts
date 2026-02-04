@@ -1,16 +1,16 @@
 import { StatusResult, ResultStatus } from "@icpswap/types";
 import isObject from "lodash/isObject";
 
-export function isResultKey(key: string) {
-  return isResultErrKey(key) || isResultOkKey(key);
-}
-
 export function isResultErrKey(key: string) {
   return key === ResultStatus.ERROR || key === "Err";
 }
 
 export function isResultOkKey(key: string) {
   return key === ResultStatus.OK || key === "Ok";
+}
+
+export function isResultKey(key: string) {
+  return isResultErrKey(key) || isResultOkKey(key);
 }
 
 export function resultFormat<T>(result: any): StatusResult<T> {
@@ -24,13 +24,7 @@ export function resultFormat<T>(result: any): StatusResult<T> {
 
   const key = Object.keys(result);
 
-  if (
-    result &&
-    isObject(result as object) &&
-    key &&
-    key[0] &&
-    isResultKey(key[0])
-  ) {
+  if (result && isObject(result as object) && key && key[0] && isResultKey(key[0])) {
     let message = "";
 
     if (isResultErrKey(key[0]) && isObject(result[key[0]])) {
@@ -42,10 +36,7 @@ export function resultFormat<T>(result: any): StatusResult<T> {
         message = value;
       } else {
         if (typeof value === "object") {
-          message = `${messageKey}: ${JSON.stringify(value).replace(
-            /\"/g,
-            ""
-          )}`;
+          message = `${messageKey}: ${JSON.stringify(value).replace(/"/g, "")}`;
         } else {
           message = `${messageKey}: ${value}`;
         }
