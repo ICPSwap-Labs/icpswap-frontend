@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { Token } from "../core";
 import { FeeAmount } from "../constants";
 import { computePoolAddress } from "./computePoolAddress";
@@ -28,9 +30,7 @@ describe("#computePoolAddress", () => {
       tokenB,
     });
 
-    expect(result).toEqual(
-      "2ouva-viaaa-aaaaq-aaamq-cai_mxzaz-hqaaa-aaaar-qaada-cai_3000"
-    );
+    expect(result).toEqual("2ouva-viaaa-aaaaq-aaamq-cai_mxzaz-hqaaa-aaaar-qaada-cai_3000");
   });
 
   it("should correctly compute the pool address", () => {

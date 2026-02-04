@@ -21,7 +21,6 @@
     "@dfinity/principal": "2.1.2"
   },
   "devDependencies": {
-    "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.202",
     "@types/node": "^13.13.5",
     "@types/qs": "^6.9.4",
@@ -42,11 +41,11 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-unused-imports": "^4.3.0",
     "husky": "^6.0.0",
-    "jest": "26.6.0",
     "lint-staged": ">=10",
     "prettier": "3.0.3",
     "react-scripts": "5.0.1",
-    "turbo": "1.10.15"
+    "turbo": "1.10.15",
+    "vitest": "^4.0.18"
   },
   "dependencies": {
     "@dfinity/agent": "2.1.2",

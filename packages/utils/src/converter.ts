@@ -5,7 +5,7 @@ export const hexToBytes = (hex: string): number[] => {
     new_hex = hex.replace(/^0x/i, "");
   }
 
-  const bytes = [];
+  const bytes: number[] = [];
 
   for (let i = 0; i < hex.length; i += 2) {
     bytes.push(parseInt(hex.substr(i, 2), 16));
@@ -39,7 +39,7 @@ export const subaccountHexToBytes = (hex: string): number[] => {
     new_hex = hex.replace(/^0x/i, "");
   }
 
-  const bytes = [];
+  const bytes: number[] = [];
 
   let __hex = hex;
   const hexLength = hex.length;

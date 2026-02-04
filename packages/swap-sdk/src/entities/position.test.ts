@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { Percent, Token } from "../core";
 import JSBI from "jsbi";
 import { FeeAmount, TICK_SPACINGS } from "../constants";
@@ -27,16 +29,7 @@ describe("Position", () => {
   const POOL_SQRT_RATIO_START = encodeSqrtRatioX96(100e6, 100e18);
   const POOL_TICK_CURRENT = TickMath.getTickAtSqrtRatio(POOL_SQRT_RATIO_START);
   const TICK_SPACING = TICK_SPACINGS[FeeAmount.LOW];
-  const DAI_USDC_POOL = new Pool(
-    "xxxxxxxx",
-    DAI,
-    USDC,
-    FeeAmount.LOW,
-    POOL_SQRT_RATIO_START,
-    0,
-    POOL_TICK_CURRENT,
-    []
-  );
+  const DAI_USDC_POOL = new Pool("xxxxxxxx", DAI, USDC, FeeAmount.LOW, POOL_SQRT_RATIO_START, 0, POOL_TICK_CURRENT, []);
 
   it("can be constructed around 0 tick", () => {
     const position = new Position({
@@ -66,7 +59,7 @@ describe("Position", () => {
           liquidity: 1,
           tickLower: 10,
           tickUpper: -10,
-        })
+        }),
     ).toThrow("TICK_ORDER");
   });
 
@@ -78,7 +71,7 @@ describe("Position", () => {
           liquidity: 1,
           tickLower: -10,
           tickUpper: -10,
-        })
+        }),
     ).toThrow("TICK_ORDER");
   });
 
@@ -90,7 +83,7 @@ describe("Position", () => {
           liquidity: 1,
           tickLower: -5,
           tickUpper: 10,
-        })
+        }),
     ).toThrow("TICK_LOWER");
   });
 
@@ -100,10 +93,9 @@ describe("Position", () => {
         new Position({
           pool: DAI_USDC_POOL,
           liquidity: 1,
-          tickLower:
-            nearestUsableTick(TickMath.MIN_TICK, TICK_SPACING) - TICK_SPACING,
+          tickLower: nearestUsableTick(TickMath.MIN_TICK, TICK_SPACING) - TICK_SPACING,
           tickUpper: 10,
-        })
+        }),
     ).toThrow("TICK_LOWER");
   });
 
@@ -115,7 +107,7 @@ describe("Position", () => {
           liquidity: 1,
           tickLower: -10,
           tickUpper: 15,
-        })
+        }),
     ).toThrow("TICK_UPPER");
   });
 
@@ -126,9 +118,8 @@ describe("Position", () => {
           pool: DAI_USDC_POOL,
           liquidity: 1,
           tickLower: -10,
-          tickUpper:
-            nearestUsableTick(TickMath.MAX_TICK, TICK_SPACING) + TICK_SPACING,
-        })
+          tickUpper: nearestUsableTick(TickMath.MAX_TICK, TICK_SPACING) + TICK_SPACING,
+        }),
     ).toThrow("TICK_UPPER");
   });
 
@@ -138,12 +129,9 @@ describe("Position", () => {
         new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e12,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
-        }).amount0.quotient.toString()
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
+        }).amount0.quotient.toString(),
       ).toEqual("49949961958869841");
     });
     it("is correct for price below", () => {
@@ -151,12 +139,9 @@ describe("Position", () => {
         new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
-        }).amount0.quotient.toString()
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
+        }).amount0.quotient.toString(),
       ).toEqual("0");
     });
     it("is correct for in-range position", () => {
@@ -164,13 +149,9 @@ describe("Position", () => {
         new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
-        }).amount0.quotient.toString()
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
+        }).amount0.quotient.toString(),
       ).toEqual("120054069145287995769396");
     });
   });
@@ -181,12 +162,9 @@ describe("Position", () => {
         new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
-        }).amount1.quotient.toString()
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
+        }).amount1.quotient.toString(),
       ).toEqual("0");
     });
     it("is correct for price below", () => {
@@ -194,12 +172,9 @@ describe("Position", () => {
         new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
-        }).amount1.quotient.toString()
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
+        }).amount1.quotient.toString(),
       ).toEqual("49970077052");
     });
     it("is correct for in-range position", () => {
@@ -207,13 +182,9 @@ describe("Position", () => {
         new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
-        }).amount1.quotient.toString()
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
+        }).amount1.quotient.toString(),
       ).toEqual("79831926242");
     });
   });
@@ -226,15 +197,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.mintAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.mintAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("49949961958869841738198");
         expect(amount1.toString()).toEqual("0");
       });
@@ -243,15 +210,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
         });
 
-        const { amount0, amount1 } =
-          position.mintAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.mintAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("0");
         expect(amount1.toString()).toEqual("49970077053");
       });
@@ -260,16 +223,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.mintAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.mintAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("120054069145287995740584");
         expect(amount1.toString()).toEqual("79831926243");
       });
@@ -282,15 +240,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.mintAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.mintAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("49949961958869841738198");
         expect(amount1.toString()).toEqual("0");
       });
@@ -299,15 +253,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
         });
 
-        const { amount0, amount1 } =
-          position.mintAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.mintAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("0");
         expect(amount1.toString()).toEqual("49970077053");
       });
@@ -316,16 +266,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.mintAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.mintAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("95063440240746211432007");
         expect(amount1.toString()).toEqual("54828800461");
       });
@@ -336,26 +281,13 @@ describe("Position", () => {
 
       it("is correct for pool at min price", () => {
         const position = new Position({
-          pool: new Pool(
-            "xxxxxxx",
-            DAI,
-            USDC,
-            FeeAmount.LOW,
-            TickMath.MIN_SQRT_RATIO,
-            0,
-            TickMath.MIN_TICK,
-            []
-          ),
+          pool: new Pool("xxxxxxx", DAI, USDC, FeeAmount.LOW, TickMath.MIN_SQRT_RATIO, 0, TickMath.MIN_TICK, []),
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.burnAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.burnAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("49949961958869841754181");
         expect(amount1.toString()).toEqual("0");
       });
@@ -370,18 +302,14 @@ describe("Position", () => {
             JSBI.subtract(TickMath.MAX_SQRT_RATIO, JSBI.BigInt(1)),
             0,
             TickMath.MAX_TICK - 1,
-            []
+            [],
           ),
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.burnAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.burnAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("0");
         expect(amount1.toString()).toEqual("50045084659");
       });
@@ -396,15 +324,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.burnAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.burnAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("49949961958869841754181");
         expect(amount1.toString()).toEqual("0");
       });
@@ -413,15 +337,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
         });
 
-        const { amount0, amount1 } =
-          position.burnAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.burnAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("0");
         expect(amount1.toString()).toEqual("49970077052");
       });
@@ -430,16 +350,11 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.burnAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.burnAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("120054069145287995769396");
         expect(amount1.toString()).toEqual("79831926242");
       });
@@ -452,14 +367,10 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
-        const { amount0, amount1 } =
-          position.burnAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.burnAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("49949961958869841754181");
         expect(amount1.toString()).toEqual("0");
       });
@@ -468,14 +379,10 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
         });
-        const { amount0, amount1 } =
-          position.burnAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.burnAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("0");
         expect(amount1.toString()).toEqual("49970077052");
       });
@@ -484,15 +391,10 @@ describe("Position", () => {
         const position = new Position({
           pool: DAI_USDC_POOL,
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) -
-            TICK_SPACING * 2,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
-        const { amount0, amount1 } =
-          position.burnAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.burnAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("95063440240746211454822");
         expect(amount1.toString()).toEqual("54828800460");
       });
@@ -503,26 +405,13 @@ describe("Position", () => {
 
       it("is correct for pool at min price", () => {
         const position = new Position({
-          pool: new Pool(
-            "xxxxxxxxxx",
-            DAI,
-            USDC,
-            FeeAmount.LOW,
-            TickMath.MIN_SQRT_RATIO,
-            0,
-            TickMath.MIN_TICK,
-            []
-          ),
+          pool: new Pool("xxxxxxxxxx", DAI, USDC, FeeAmount.LOW, TickMath.MIN_SQRT_RATIO, 0, TickMath.MIN_TICK, []),
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.mintAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.mintAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("49949961958869841738198");
         expect(amount1.toString()).toEqual("0");
       });
@@ -537,18 +426,14 @@ describe("Position", () => {
             JSBI.subtract(TickMath.MAX_SQRT_RATIO, JSBI.BigInt(1)),
             0,
             TickMath.MAX_TICK - 1,
-            []
+            [],
           ),
           liquidity: 100e18,
-          tickLower:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-          tickUpper:
-            nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) +
-            TICK_SPACING * 2,
+          tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+          tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
         });
 
-        const { amount0, amount1 } =
-          position.mintAmountsWithSlippage(slippageTolerance);
+        const { amount0, amount1 } = position.mintAmountsWithSlippage(slippageTolerance);
         expect(amount0.toString()).toEqual("0");
         expect(amount1.toString()).toEqual("50045084660");
       });
@@ -560,10 +445,8 @@ describe("Position", () => {
       const { amount0, amount1 } = new Position({
         pool: DAI_USDC_POOL,
         liquidity: 100e18,
-        tickLower:
-          nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
-        tickUpper:
-          nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
+        tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING,
+        tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
       }).mintAmounts;
       expect(amount0.toString()).toEqual("49949961958869841754182");
       expect(amount1.toString()).toEqual("0");
@@ -572,10 +455,8 @@ describe("Position", () => {
       const { amount0, amount1 } = new Position({
         pool: DAI_USDC_POOL,
         liquidity: 100e18,
-        tickLower:
-          nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
-        tickUpper:
-          nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
+        tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+        tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING,
       }).mintAmounts;
       expect(amount0.toString()).toEqual("0");
       expect(amount1.toString()).toEqual("49970077053");
@@ -584,10 +465,8 @@ describe("Position", () => {
       const { amount0, amount1 } = new Position({
         pool: DAI_USDC_POOL,
         liquidity: 100e18,
-        tickLower:
-          nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
-        tickUpper:
-          nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
+        tickLower: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) - TICK_SPACING * 2,
+        tickUpper: nearestUsableTick(POOL_TICK_CURRENT, TICK_SPACING) + TICK_SPACING * 2,
       }).mintAmounts;
       // note these are rounded up
       expect(amount0.toString()).toEqual("120054069145287995769397");

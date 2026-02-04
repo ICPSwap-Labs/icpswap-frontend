@@ -1,3 +1,5 @@
+import { describe, it, expect, beforeEach } from "vitest";
+
 import { Token, CurrencyAmount } from "../core";
 import { FeeAmount, TICK_SPACINGS } from "../constants";
 import { nearestUsableTick } from "../utils/nearestUsableTick";
@@ -29,16 +31,7 @@ describe("Pool", () => {
   describe("constructor", () => {
     it("cannot be given two of the same token", () => {
       expect(() => {
-        new Pool(
-          "xxxxxxxx",
-          USDC,
-          USDC,
-          FeeAmount.MEDIUM,
-          encodeSqrtRatioX96(1, 1),
-          0,
-          0,
-          []
-        );
+        new Pool("xxxxxxxx", USDC, USDC, FeeAmount.MEDIUM, encodeSqrtRatioX96(1, 1), 0, 0, []);
       }).toThrow("ADDRESSES");
     });
   });
@@ -46,61 +39,23 @@ describe("Pool", () => {
   describe("#getAddress", () => {
     it("matches an example", () => {
       const result = Pool.getAddress(USDC, DAI, FeeAmount.LOW);
-      expect(result).toEqual(
-        "mxzaz-hqaaa-aaaar-qaada-cai_zfcdd-tqaaa-aaaaq-aaaga-cai_500"
-      );
+      expect(result).toEqual("mxzaz-hqaaa-aaaar-qaada-cai_zfcdd-tqaaa-aaaaq-aaaga-cai_500");
     });
   });
 
   describe("#token0", () => {
     it("always is the token that sorts before", () => {
-      let pool = new Pool(
-        "xxxxxxxx",
-        USDC,
-        DAI,
-        FeeAmount.LOW,
-        encodeSqrtRatioX96(1, 1),
-        0,
-        0,
-        []
-      );
+      let pool = new Pool("xxxxxxxx", USDC, DAI, FeeAmount.LOW, encodeSqrtRatioX96(1, 1), 0, 0, []);
       expect(pool.token0).toEqual(DAI);
-      pool = new Pool(
-        "xxxxxxxx",
-        DAI,
-        USDC,
-        FeeAmount.LOW,
-        encodeSqrtRatioX96(1, 1),
-        0,
-        0,
-        []
-      );
+      pool = new Pool("xxxxxxxx", DAI, USDC, FeeAmount.LOW, encodeSqrtRatioX96(1, 1), 0, 0, []);
       expect(pool.token0).toEqual(DAI);
     });
   });
   describe("#token1", () => {
     it("always is the token that sorts after", () => {
-      let pool = new Pool(
-        "xxxxxxxx",
-        USDC,
-        DAI,
-        FeeAmount.LOW,
-        encodeSqrtRatioX96(1, 1),
-        0,
-        0,
-        []
-      );
+      let pool = new Pool("xxxxxxxx", USDC, DAI, FeeAmount.LOW, encodeSqrtRatioX96(1, 1), 0, 0, []);
       expect(pool.token1).toEqual(USDC);
-      pool = new Pool(
-        "xxxxxxxx",
-        DAI,
-        USDC,
-        FeeAmount.LOW,
-        encodeSqrtRatioX96(1, 1),
-        0,
-        0,
-        []
-      );
+      pool = new Pool("xxxxxxxx", DAI, USDC, FeeAmount.LOW, encodeSqrtRatioX96(1, 1), 0, 0, []);
       expect(pool.token1).toEqual(USDC);
     });
   });
@@ -116,8 +71,8 @@ describe("Pool", () => {
           encodeSqrtRatioX96(101e6, 100e18),
           0,
           TickMath.getTickAtSqrtRatio(encodeSqrtRatioX96(101e6, 100e18)),
-          []
-        ).token0Price.toSignificant(5)
+          [],
+        ).token0Price.toSignificant(5),
       ).toEqual("1.01");
       expect(
         new Pool(
@@ -128,8 +83,8 @@ describe("Pool", () => {
           encodeSqrtRatioX96(101e6, 100e18),
           0,
           TickMath.getTickAtSqrtRatio(encodeSqrtRatioX96(101e6, 100e18)),
-          []
-        ).token0Price.toSignificant(5)
+          [],
+        ).token0Price.toSignificant(5),
       ).toEqual("1.01");
     });
   });
@@ -145,8 +100,8 @@ describe("Pool", () => {
           encodeSqrtRatioX96(101e6, 100e18),
           0,
           TickMath.getTickAtSqrtRatio(encodeSqrtRatioX96(101e6, 100e18)),
-          []
-        ).token1Price.toSignificant(5)
+          [],
+        ).token1Price.toSignificant(5),
       ).toEqual("0.9901");
       expect(
         new Pool(
@@ -157,23 +112,14 @@ describe("Pool", () => {
           encodeSqrtRatioX96(101e6, 100e18),
           0,
           TickMath.getTickAtSqrtRatio(encodeSqrtRatioX96(101e6, 100e18)),
-          []
-        ).token1Price.toSignificant(5)
+          [],
+        ).token1Price.toSignificant(5),
       ).toEqual("0.9901");
     });
   });
 
   describe("#priceOf", () => {
-    const pool = new Pool(
-      "xxxxxxxx",
-      USDC,
-      DAI,
-      FeeAmount.LOW,
-      encodeSqrtRatioX96(1, 1),
-      0,
-      0,
-      []
-    );
+    const pool = new Pool("xxxxxxxx", USDC, DAI, FeeAmount.LOW, encodeSqrtRatioX96(1, 1), 0, 0, []);
     it("returns price of token in terms of other token", () => {
       expect(pool.priceOf(DAI)).toEqual(pool.token0Price);
       expect(pool.priceOf(USDC)).toEqual(pool.token1Price);
@@ -181,51 +127,30 @@ describe("Pool", () => {
   });
 
   describe("#involvesToken", () => {
-    const pool = new Pool(
-      "xxxxxxxx",
-      USDC,
-      DAI,
-      FeeAmount.LOW,
-      encodeSqrtRatioX96(1, 1),
-      0,
-      0,
-      []
-    );
-    expect(pool.involvesToken(USDC)).toEqual(true);
-    expect(pool.involvesToken(DAI)).toEqual(true);
+    const pool = new Pool("xxxxxxxx", USDC, DAI, FeeAmount.LOW, encodeSqrtRatioX96(1, 1), 0, 0, []);
+
+    it("involves both tokens", () => {
+      expect(pool.involvesToken(USDC)).toEqual(true);
+      expect(pool.involvesToken(DAI)).toEqual(true);
+    });
   });
 
   describe("swaps", () => {
     let pool: Pool;
 
     beforeEach(() => {
-      pool = new Pool(
-        "xxxxxxxx",
-        USDC,
-        DAI,
-        FeeAmount.LOW,
-        encodeSqrtRatioX96(1, 1),
-        ONE_ETHER,
-        0,
-        [
-          {
-            index: nearestUsableTick(
-              TickMath.MIN_TICK,
-              TICK_SPACINGS[FeeAmount.LOW]
-            ),
-            liquidityNet: ONE_ETHER,
-            liquidityGross: ONE_ETHER,
-          },
-          {
-            index: nearestUsableTick(
-              TickMath.MAX_TICK,
-              TICK_SPACINGS[FeeAmount.LOW]
-            ),
-            liquidityNet: JSBI.multiply(ONE_ETHER, NEGATIVE_ONE),
-            liquidityGross: ONE_ETHER,
-          },
-        ]
-      );
+      pool = new Pool("xxxxxxxx", USDC, DAI, FeeAmount.LOW, encodeSqrtRatioX96(1, 1), ONE_ETHER, 0, [
+        {
+          index: nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[FeeAmount.LOW]),
+          liquidityNet: ONE_ETHER,
+          liquidityGross: ONE_ETHER,
+        },
+        {
+          index: nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[FeeAmount.LOW]),
+          liquidityNet: JSBI.multiply(ONE_ETHER, NEGATIVE_ONE),
+          liquidityGross: ONE_ETHER,
+        },
+      ]);
     });
 
     describe("#getOutputAmount", () => {
@@ -263,42 +188,21 @@ describe("Pool", () => {
 
   describe("#bigNums", () => {
     let pool: Pool;
-    const bigNum1 = JSBI.add(
-      JSBI.BigInt(Number.MAX_SAFE_INTEGER),
-      JSBI.BigInt(1)
-    );
-    const bigNum2 = JSBI.add(
-      JSBI.BigInt(Number.MAX_SAFE_INTEGER),
-      JSBI.BigInt(1)
-    );
+    const bigNum1 = JSBI.add(JSBI.BigInt(Number.MAX_SAFE_INTEGER), JSBI.BigInt(1));
+    const bigNum2 = JSBI.add(JSBI.BigInt(Number.MAX_SAFE_INTEGER), JSBI.BigInt(1));
     beforeEach(() => {
-      pool = new Pool(
-        "xxxxxxxx",
-        USDC,
-        DAI,
-        FeeAmount.LOW,
-        encodeSqrtRatioX96(bigNum1, bigNum2),
-        ONE_ETHER,
-        0,
-        [
-          {
-            index: nearestUsableTick(
-              TickMath.MIN_TICK,
-              TICK_SPACINGS[FeeAmount.LOW]
-            ),
-            liquidityNet: ONE_ETHER,
-            liquidityGross: ONE_ETHER,
-          },
-          {
-            index: nearestUsableTick(
-              TickMath.MAX_TICK,
-              TICK_SPACINGS[FeeAmount.LOW]
-            ),
-            liquidityNet: JSBI.multiply(ONE_ETHER, NEGATIVE_ONE),
-            liquidityGross: ONE_ETHER,
-          },
-        ]
-      );
+      pool = new Pool("xxxxxxxx", USDC, DAI, FeeAmount.LOW, encodeSqrtRatioX96(bigNum1, bigNum2), ONE_ETHER, 0, [
+        {
+          index: nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[FeeAmount.LOW]),
+          liquidityNet: ONE_ETHER,
+          liquidityGross: ONE_ETHER,
+        },
+        {
+          index: nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[FeeAmount.LOW]),
+          liquidityNet: JSBI.multiply(ONE_ETHER, NEGATIVE_ONE),
+          liquidityGross: ONE_ETHER,
+        },
+      ]);
     });
 
     describe("#priceLimit", () => {

@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { NoTickDataProvider } from "./tickDataProvider";
 
 describe("TickDataProvider", () => {

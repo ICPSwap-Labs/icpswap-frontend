@@ -78,9 +78,10 @@ export class IdbKeyVal {
    * @param {DBCreateOptions['version']} options.version version of the database. Increment to safely upgrade
    * @constructs an {@link IdbKeyVal}
    */
-  public static async create(options?: DBCreateOptions): Promise<IdbKeyVal> {
-    const { dbName, storeName, version = 1 } = options ?? {};
+  public static async create(options: DBCreateOptions): Promise<IdbKeyVal> {
+    const { dbName, storeName, version = 1 } = options;
     const db = await _openDbStore(dbName, storeName, version);
+    if (!db) throw new Error("Failed to open IndexedDB");
     return new IdbKeyVal(db, storeName);
   }
 

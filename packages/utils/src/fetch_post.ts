@@ -1,9 +1,17 @@
 import { IcpSwapAPIResult, ResultStatus, StatusResult } from "@icpswap/types";
 import { ICPSWAP_API } from "@icpswap/constants";
 
-import { nonUndefinedOrNull } from "./isUndefinedOrNull";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "./isUndefinedOrNull";
 
 function resultFormat<T>(result: IcpSwapAPIResult<T> | undefined) {
+  if (isUndefinedOrNull(result)) {
+    return {
+      status: ResultStatus.ERROR,
+      data: undefined,
+      message: "Something went wrong",
+    };
+  }
+
   if (result.code === 200) {
     return {
       status: ResultStatus.OK,

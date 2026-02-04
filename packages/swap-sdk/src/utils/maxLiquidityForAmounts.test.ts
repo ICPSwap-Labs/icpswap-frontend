@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { MaxUint256 } from "../core/constants";
 import JSBI from "jsbi";
 import { encodeSqrtRatioX96 } from "./encodeSqrtRatioX96";
@@ -14,8 +16,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             "200",
-            false
-          )
+            false,
+          ),
         ).toEqual(JSBI.BigInt(2148));
       });
 
@@ -27,8 +29,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             MaxUint256,
-            false
-          )
+            false,
+          ),
         ).toEqual(JSBI.BigInt(2148));
       });
 
@@ -40,8 +42,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             MaxUint256,
             "200",
-            false
-          )
+            false,
+          ),
         ).toEqual(JSBI.BigInt(4297));
       });
     });
@@ -55,8 +57,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             "200",
-            false
-          )
+            false,
+          ),
         ).toEqual(JSBI.BigInt(1048));
       });
 
@@ -68,8 +70,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             MaxUint256,
-            false
-          )
+            false,
+          ),
         ).toEqual(JSBI.BigInt(1048));
       });
 
@@ -81,13 +83,9 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             MaxUint256,
             "200",
-            false
-          )
-        ).toEqual(
-          JSBI.BigInt(
-            "1214437677402050006470401421068302637228917309992228326090730924516431320489727"
-          )
-        );
+            false,
+          ),
+        ).toEqual(JSBI.BigInt("1214437677402050006470401421068302637228917309992228326090730924516431320489727"));
       });
     });
 
@@ -100,8 +98,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             "200",
-            false
-          )
+            false,
+          ),
         ).toEqual(JSBI.BigInt(2097));
       });
 
@@ -113,13 +111,9 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             MaxUint256,
-            false
-          )
-        ).toEqual(
-          JSBI.BigInt(
-            "1214437677402050006470401421098959354205873606971497132040612572422243086574654"
-          )
-        );
+            false,
+          ),
+        ).toEqual(JSBI.BigInt("1214437677402050006470401421098959354205873606971497132040612572422243086574654"));
       });
 
       it("max token0, 200 token1", () => {
@@ -130,8 +124,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             MaxUint256,
             "200",
-            false
-          )
+            false,
+          ),
         ).toEqual(JSBI.BigInt(2097));
       });
     });
@@ -147,8 +141,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             "200",
-            true
-          )
+            true,
+          ),
         ).toEqual(JSBI.BigInt(2148));
       });
 
@@ -160,8 +154,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             MaxUint256,
-            true
-          )
+            true,
+          ),
         ).toEqual(JSBI.BigInt(2148));
       });
 
@@ -173,8 +167,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             MaxUint256,
             "200",
-            true
-          )
+            true,
+          ),
         ).toEqual(JSBI.BigInt(4297));
       });
     });
@@ -188,8 +182,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             "200",
-            true
-          )
+            true,
+          ),
         ).toEqual(JSBI.BigInt(1048));
       });
 
@@ -201,8 +195,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             MaxUint256,
-            true
-          )
+            true,
+          ),
         ).toEqual(JSBI.BigInt(1048));
       });
 
@@ -214,13 +208,9 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             MaxUint256,
             "200",
-            true
-          )
-        ).toEqual(
-          JSBI.BigInt(
-            "1214437677402050006470401421082903520362793114274352355276488318240158678126184"
-          )
-        );
+            true,
+          ),
+        ).toEqual(JSBI.BigInt("1214437677402050006470401421082903520362793114274352355276488318240158678126184"));
       });
     });
 
@@ -233,8 +223,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             "200",
-            true
-          )
+            true,
+          ),
         ).toEqual(JSBI.BigInt(2097));
       });
 
@@ -246,13 +236,9 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             "100",
             MaxUint256,
-            true
-          )
-        ).toEqual(
-          JSBI.BigInt(
-            "1214437677402050006470401421098959354205873606971497132040612572422243086574654"
-          )
-        );
+            true,
+          ),
+        ).toEqual(JSBI.BigInt("1214437677402050006470401421098959354205873606971497132040612572422243086574654"));
       });
 
       it("max token0, 200 token1", () => {
@@ -263,8 +249,8 @@ describe("#maxLiquidityForAmounts", () => {
             encodeSqrtRatioX96(110, 100),
             MaxUint256,
             "200",
-            true
-          )
+            true,
+          ),
         ).toEqual(JSBI.BigInt(2097));
       });
     });
