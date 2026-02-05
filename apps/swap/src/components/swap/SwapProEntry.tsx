@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { Flex } from "@icpswap/ui";
 import { useTheme } from "components/Mui";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { nonUndefinedOrNull } from "@icpswap/utils";
@@ -15,17 +15,17 @@ export interface SwapProEntryProps {
 
 export function SwapProEntry({ inputToken, outputToken, limit }: SwapProEntryProps) {
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleToSwapPro = useCallback(() => {
     if (nonUndefinedOrNull(inputToken) && nonUndefinedOrNull(outputToken)) {
-      history.push(
+      navigate(
         `/swap/pro?input=${inputToken.address}&output=${outputToken.address}${limit ? `&tab=${Tab.Limit}` : ""}`,
       );
     } else {
-      history.push(`/swap/pro${limit ? `tab=${Tab.Limit}` : ""}`);
+      navigate(`/swap/pro${limit ? `tab=${Tab.Limit}` : ""}`);
     }
-  }, [history, inputToken, outputToken, limit]);
+  }, [navigate, inputToken, outputToken, limit]);
 
   return (
     <Flex

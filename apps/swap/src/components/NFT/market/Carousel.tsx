@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Grid, Typography, makeStyles, Theme } from "components/Mui";
 import { useMarketplaceRecommendCanisters } from "hooks/nft/tradeData";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
@@ -193,7 +193,7 @@ export function Collection({ collection }: { collection: NFTControllerInfo }) {
 export default function MarketCarousel() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { result } = useMarketplaceRecommendCanisters(0, 100);
 
@@ -248,11 +248,11 @@ export default function MarketCarousel() {
   }, [activeIndex]);
 
   const handleCollectionClick = (collection: NFTControllerInfo) => {
-    history.push(`/marketplace/NFT/${collection.cid}`);
+    navigate(`/marketplace/NFT/${collection.cid}`);
   };
 
   const handleLoadCollections = () => {
-    history.push(`/marketplace/collections`);
+    navigate(`/marketplace/collections`);
   };
 
   return (

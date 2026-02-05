@@ -2,7 +2,7 @@ import { Box, BoxProps, useTheme } from "components/Mui";
 import { useCallback } from "react";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
 import { FilterState } from "types/staking-token";
 import {
@@ -28,14 +28,14 @@ interface FinishedRowProps {
 export function FinishedRow({ poolInfo, wrapperSx, filterState, your, showState }: FinishedRowProps) {
   const principal = useAccountPrincipal();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [stakingPoolInfo] = useIntervalStakingPoolInfo(poolInfo.canisterId.toString());
   const userStakingInfo = useIntervalUserPoolInfo(poolInfo.canisterId.toString(), principal);
 
   const handelToDetails = useCallback(() => {
-    history.push(`/stake/details/${poolInfo.canisterId.toString()}`);
-  }, [history, poolInfo]);
+    navigate(`/stake/details/${poolInfo.canisterId.toString()}`);
+  }, [navigate, poolInfo]);
 
   return (
     <Box

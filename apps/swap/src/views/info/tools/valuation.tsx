@@ -1,4 +1,4 @@
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { InfoWrapper, FilledTextField, TokenImage } from "components/index";
 import { makeStyles, Box, Typography, Link, useTheme } from "components/Mui";
 import { useState, useMemo, useEffect, useCallback } from "react";
@@ -116,7 +116,7 @@ export default function SwapScanValuation() {
   const classes = useStyles();
   const theme = useTheme();
   const { principal } = useParsedQueryString() as { principal: string };
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const [checked, setChecked] = useState(false);
@@ -230,10 +230,10 @@ export default function SwapScanValuation() {
     (value: string) => {
       if (isValidPrincipal(value) || value === "") {
         const search = locationSearchReplace(location.search, "principal", value);
-        history.push(`${location.pathname}${search}`);
+        navigate(`${location.pathname}${search}`);
       }
     },
-    [history, location],
+    [navigate, location],
   );
 
   return (

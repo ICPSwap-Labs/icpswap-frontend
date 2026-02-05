@@ -1,5 +1,5 @@
 import { ReactNode, useCallback, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Grid, Typography, Box, makeStyles, Theme } from "components/Mui";
 import { MainCard, Wrapper, AuthButton } from "components/index";
 import HeaderTab from "components/swap/Header";
@@ -99,11 +99,11 @@ export function PriceRange({ label, value, currencyA, currencyB }: PriceRangePro
 export default function IncreaseLiquidity() {
   const { t } = useTranslation();
   const classes = useStyle();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const refreshTrigger = useRefreshTrigger(INCREASE_LIQUIDITY_REFRESH_KEY);
 
-  const { positionId, pool: poolId } = useParams<{ positionId: string; pool: string }>();
+  const { positionId, pool: poolId } = useParams() as { positionId: string; pool: string };
   const { path } = useParsedUrlPath();
 
   const { result: _position, loading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
@@ -164,11 +164,11 @@ export default function IncreaseLiquidity() {
     resetMintState();
 
     if (path) {
-      history.push(path);
+      navigate(path);
     } else {
-      history.goBack();
+      navigate(-1);
     }
-  }, [history, resetMintState, path]);
+  }, [navigate, resetMintState, path]);
 
   const increaseLiquidityCall = useIncreaseLiquidityCall();
 

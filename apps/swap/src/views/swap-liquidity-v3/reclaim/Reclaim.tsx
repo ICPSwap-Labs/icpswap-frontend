@@ -1,6 +1,6 @@
 import { Typography, Box } from "components/Mui";
 import { Wrapper, Breadcrumbs, TabPanel, Tooltip } from "components/index";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { isMobile } from "react-device-detect";
@@ -30,13 +30,13 @@ const Tabs = [
 export default function SwapReclaim() {
   const { t } = useTranslation();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (location.search === "") {
-      history.push("/swap/withdraw?type=pair");
+      navigate("/swap/withdraw?type=pair");
     }
-  }, [location, history]);
+  }, [location, navigate]);
 
   return (
     <Wrapper sx={{ padding: "16px 0" }}>

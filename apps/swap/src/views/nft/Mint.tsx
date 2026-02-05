@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Typography, Grid, Box, CircularProgress, InputAdornment, Checkbox } from "components/Mui";
 import { useAccount } from "store/auth/hooks";
 import {
@@ -36,7 +36,7 @@ let metadataKey = 0;
 
 export default function NFTMint() {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const account = useAccount();
   const [mintTokenInfo, setMintTokenInfo] = useState<MintTokenInfo>({} as MintTokenInfo);
   const [openTip] = useTips();
@@ -117,7 +117,7 @@ export default function NFTMint() {
     if (status === "err") {
       openTip(getLocaleMessage(message) ?? t`Failed to mint`, TIP_ERROR);
     } else {
-      history.push(`/wallet/nft/view/${mintTokenInfo.nftCanister}/${Number(data)}`);
+      navigate(`/wallet/nft/view/${mintTokenInfo.nftCanister}/${Number(data)}`);
     }
   };
 

@@ -7,7 +7,7 @@ import { useRefreshTriggerManager } from "hooks/index";
 import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
 import { useTranslation } from "react-i18next";
 import { useScrollToTop } from "hooks/useScrollToTop";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Tab } from "constants/index";
 
 import { PendingRowPro } from "./PendingRowPro";
@@ -43,7 +43,7 @@ export function PendingTableProUI({
 }: PendingTableProUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [, pool] = usePoolByPoolId(poolId);
   const [, setRefreshTrigger] = useRefreshTriggerManager(SWAP_LIMIT_REFRESH_KEY);
@@ -57,8 +57,8 @@ export function PendingTableProUI({
 
   const handleToLimit = useCallback(() => {
     scrollToTop();
-    history.push(`/swap/pro?tab=${Tab.Limit}`);
-  }, [scrollToTop, history]);
+    navigate(`/swap/pro?tab=${Tab.Limit}`);
+  }, [scrollToTop, navigate]);
 
   return (
     <>

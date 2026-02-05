@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Typography, Grid, Box, InputAdornment } from "components/Mui";
 import { MainCard, Breadcrumbs, AuthButton } from "components/index";
 import Upload, { UploadRef } from "components/NFT/Upload";
@@ -23,7 +23,7 @@ import { useLoadingCallData } from "@icpswap/hooks";
 
 export default function NFTCanisterCreate() {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const account = useAccount();
 
   const [values, setValues] = useState<CanisterCreateDetails>({} as CanisterCreateDetails);
@@ -115,7 +115,7 @@ export default function NFTCanisterCreate() {
           if (filePath) await setCanisterLogoInController(data, filePath);
         }
 
-        history.push("/info-tools/nft/canister/list");
+        navigate("/info-tools/nft/canister/list");
       } else {
         openErrorTip(getLocaleMessage(message) ?? t`Failed to create NFT collection`);
       }

@@ -5,6 +5,8 @@ import { isUndefinedOrNull } from "@icpswap/utils";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
 import { useTranslation } from "react-i18next";
+import { syncServerTokenInfo } from "@icpswap/hooks";
+import { TOKEN_STANDARD } from "@icpswap/types";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -40,6 +42,10 @@ export function ImportTokenTip({ canisterId, onOk }: ImportTokenTipProps) {
     if (loading) return;
     setLoading(true);
     const standard = await getTokenStandard({ canisterId });
+
+    if (standard === TOKEN_STANDARD.ICRC1 || standard === TOKEN_STANDARD.ICRC2) {
+      await syncServerTokenInfo(canisterId);
+    }
 
     if (isUndefinedOrNull(standard)) {
       setNoStandard(true);

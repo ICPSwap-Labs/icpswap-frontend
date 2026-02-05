@@ -8,7 +8,7 @@ import { useToken } from "hooks";
 import { useErc20TokenFromSymbol } from "hooks/ck-bridge/useErc20TokenFromSymbol";
 import { useCallback } from "react";
 import { ArrowRight } from "react-feather";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { BitcoinTransactionEvent, Erc20DissolveTransactionEvent, EthereumTransactionEvent } from "types/web3";
 
 const CHIAN_ICP_LOGO = "/images/ck-bridge/chain-icp.svg";
@@ -45,12 +45,12 @@ interface ETHTransactionEventProps {
 }
 
 export function ETHTransactionEvent({ event }: ETHTransactionEventProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleClick = useCallback(() => {
-    history.push(
+    navigate(
       `/ck-bridge?tokenId=${ckETH.address}&chain=${event.type === "mint" ? ckBridgeChain.eth : ckBridgeChain.icp}`,
     );
-  }, [history]);
+  }, [navigate]);
 
   return (
     <TransactionEventUI
@@ -69,12 +69,11 @@ interface Erc20DissolveTransactionEventUIProps {
 
 export function Erc20DissolveTransactionEventUI({ event }: Erc20DissolveTransactionEventUIProps) {
   const token = useErc20TokenFromSymbol({ token_symbol: event.token_symbol });
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleClick = useCallback(() => {
     if (!token) return;
-    history.push(`/ck-bridge?tokenId=${token.address}&chain=${ckBridgeChain.icp}`);
-  }, [history, token]);
-
+    navigate(`/ck-bridge?tokenId=${token.address}&chain=${ckBridgeChain.icp}`);
+  }, [navigate, token]);
   return (
     <TransactionEventUI
       logo0={event.type === "mint" ? CHIAN_ETH_LOGO : CHIAN_ICP_LOGO}
@@ -92,10 +91,10 @@ interface Erc20MintTransactionEventProps {
 
 export function Erc20MintTransactionEvent({ event }: Erc20MintTransactionEventProps) {
   const [, token] = useToken(event.token);
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleClick = useCallback(() => {
-    history.push(`/ck-bridge?tokenId=${event.token}&chain=${ckBridgeChain.eth}`);
-  }, [history, event]);
+    navigate(`/ck-bridge?tokenId=${event.token}&chain=${ckBridgeChain.eth}`);
+  }, [navigate, event]);
 
   return (
     <TransactionEventUI
@@ -113,12 +112,12 @@ interface BtcTransactionEventProps {
 }
 
 export function BtcTransactionEventUI({ event }: BtcTransactionEventProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const handleClick = useCallback(() => {
-    history.push(
+    navigate(
       `/ck-bridge?tokenId=${ckBTC.address}&chain=${event.type === "mint" ? ckBridgeChain.btc : ckBridgeChain.icp}`,
     );
-  }, [history, event]);
+  }, [navigate, event]);
 
   return (
     <TransactionEventUI

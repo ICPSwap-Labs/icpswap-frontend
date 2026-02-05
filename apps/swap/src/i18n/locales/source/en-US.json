@@ -1082,7 +1082,7 @@
   "common.min": "Min",
   "lY4Ycr": "ETH (Ethereum Mainnet) address:",
   "farm.apr.tips": "This is an estimated average APR, based on recent reward distributions. Your actual APR may be higher or lower, depending on the price range you selected for your liquidity.",
-  "info.swap.pool.balance": "Pool balance",
+  "info.swap.pool.balance": "Pool liquidity",
   "common.hide.$0.balance": "Hide $0 Balance",
   "lmX7XU": "Make Proposal",
   "lpbkdF": "Withdraw unused swap pool creation fee",

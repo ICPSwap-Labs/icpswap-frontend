@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "components/Mui";
 import { FilledTextField, TokenImage } from "components/index";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useInfoAllTokens } from "@icpswap/hooks";
 import { isValidPrincipal, formatDollarTokenPrice, nonUndefinedOrNull, shortenString, BigNumber } from "@icpswap/utils";
@@ -23,7 +23,7 @@ interface SearchItemProps {
 }
 
 function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: SearchItemProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [, token] = useToken(tokenInfo.ledgerId);
@@ -34,7 +34,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
 
   const handleTokenClick = () => {
     if (onTokenClick) onTokenClick(tokenInfo);
-    history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.ledgerId}`);
+    navigate(`/swap/pro?input=${ICP.address}&output=${tokenInfo.ledgerId}`);
   };
 
   return (
@@ -111,7 +111,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const history = useHistory();
+  const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");
   const infoAllTokens = useInfoAllTokens();
 
@@ -153,7 +153,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
 
   const handleHotTokenClick = (token: InfoTokenRealTimeDataResponse) => {
     handleClose();
-    history.push(`/swap/pro?input=${ICP.address}&output=${token.tokenLedgerId}`);
+    navigate(`/swap/pro?input=${ICP.address}&output=${token.tokenLedgerId}`);
   };
 
   const handleStopPropagation = (event: React.MouseEvent<HTMLDivElement>) => {

@@ -1,7 +1,7 @@
 import { Typography, Box, useTheme } from "components/Mui";
 import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
 import { useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FarmTokenImages } from "components/farm/FarmTokenImages";
 import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue } from "hooks/staking-farm";
 import { usePositionsTotalValue } from "hooks/swap/index";
@@ -27,7 +27,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
   const { result: farmInitArgs } = useFarmInitArgs(farmId);
@@ -74,7 +74,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   });
 
   const handleClick = () => {
-    history.push(`/farm/details/${farmId}`);
+    navigate(`/farm/details/${farmId}`);
   };
 
   return (

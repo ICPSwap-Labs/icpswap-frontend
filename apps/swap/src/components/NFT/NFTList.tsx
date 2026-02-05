@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box } from "components/Mui";
 import NFTCard from "components/NFT/NFTCard";
 import { useCanisterNFTList } from "hooks/nft/useNFTCalls";
@@ -11,7 +11,7 @@ import type { NFTTokenMetadata } from "@icpswap/types";
 const PAGE_SIZE = 24;
 
 export default function NFTList({ canisterId }: { canisterId: string }) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PAGE_SIZE });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
@@ -29,9 +29,9 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
 
   const handleCardClick = useCallback(
     (nft: NFTTokenMetadata) => {
-      history.push(`/wallet/nft/view/${canisterId}/${nft.tokenId}`);
+      navigate(`/wallet/nft/view/${canisterId}/${nft.tokenId}`);
     },
-    [history],
+    [navigate],
   );
 
   return (

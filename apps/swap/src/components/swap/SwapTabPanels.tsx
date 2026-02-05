@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Box, Typography } from "components/Mui";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Flex } from "@icpswap/ui";
 import i18n from "i18n/index";
 
@@ -19,14 +19,14 @@ export interface SwapTabPanelsProps {
 }
 
 export function SwapTabPanels({ currentTab }: SwapTabPanelsProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const handleTabChange = useCallback(
     (path: string) => {
-      history.push(`${path}${location.search}`);
+      navigate(`${path}${location.search}`);
     },
-    [history, location],
+    [navigate, location],
   );
 
   return (

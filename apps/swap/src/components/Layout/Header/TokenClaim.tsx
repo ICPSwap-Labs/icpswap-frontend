@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ButtonChip } from "components/ButtonChip";
 import { Flex } from "components/index";
@@ -13,7 +13,7 @@ function setReadClaim() {
 
 export default function TokenClaim() {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [isRead, setIsRead] = useState(true);
@@ -21,7 +21,7 @@ export default function TokenClaim() {
   const handleTokenClaim = () => {
     setReadClaim();
     setIsRead(true);
-    history.push("/token-claim");
+    navigate("/token-claim");
   };
 
   return (

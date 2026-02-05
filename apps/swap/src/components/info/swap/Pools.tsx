@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { InfoPoolRealTimeDataResponse } from "@icpswap/types";
 import { ImageLoading, TokenImage } from "components/index";
 import { useToken } from "hooks/index";
@@ -86,13 +86,13 @@ interface PoolItemProps {
 
 function PoolItem({ pool, index, align }: PoolItemProps) {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [, token0] = useToken(pool.token0LedgerId);
   const [, token1] = useToken(pool.token1LedgerId);
 
   const handlePoolClick = () => {
-    history.push(`/info-swap/pool/details/${pool.poolId}`);
+    navigate(`/info-swap/pool/details/${pool.poolId}`);
   };
 
   const apr24h = usePoolAPR({ volumeUSD: pool.volumeUSD24H, tvlUSD: pool.tvlUSD });

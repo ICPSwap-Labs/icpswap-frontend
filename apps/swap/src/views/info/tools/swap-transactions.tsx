@@ -1,6 +1,6 @@
 import { useParsedQueryString, useSwapTransactions } from "@icpswap/hooks";
 import { SelectPair, InfoWrapper } from "components/index";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useCallback } from "react";
 import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
 import { BigNumber, isUndefinedOrNull, locationSearchReplace } from "@icpswap/utils";
@@ -37,7 +37,7 @@ export default function SwapTransactions() {
   const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const [openTip] = useTips();
 
@@ -67,7 +67,7 @@ export default function SwapTransactions() {
 
     const search = locationSearchReplace(location.search, "pair", pairId);
 
-    history.push(`/info-tools/swap-transactions${search}`);
+    navigate(`/info-tools/swap-transactions${search}`);
   };
 
   const handleAddressChange = (address: string | Null) => {
@@ -75,7 +75,7 @@ export default function SwapTransactions() {
 
     const search = locationSearchReplace(location.search, "principal", address);
 
-    history.push(`/info-tools/swap-transactions${search}`);
+    navigate(`/info-tools/swap-transactions${search}`);
   };
 
   const handlePageChange = (page: number) => {

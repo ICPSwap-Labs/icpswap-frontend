@@ -234,6 +234,10 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
     [onPercentageChange, totalAmount, onAmountChange, handleOpenPopper],
   );
 
+  const handleWrapperStopPropagation = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  }, []);
+
   return (
     <Box
       ref={wrapperRef}
@@ -244,6 +248,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
         display: "flex",
         alignItems: "center",
       }}
+      onClick={handleWrapperStopPropagation}
     >
       <Box sx={{ height: "4px", width: "100%", position: "relative" }}>
         <Flex

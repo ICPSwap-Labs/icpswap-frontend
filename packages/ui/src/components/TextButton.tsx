@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { mockALinkAndOpen } from "@icpswap/utils";
 
 import { Typography, Box } from "./Mui";
@@ -99,7 +99,7 @@ export function TextButton({
   color = "secondary",
   textDecoration = "none",
 }: TextButtonProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = useCallback(() => {
     if (disabled) return;
@@ -115,7 +115,7 @@ export function TextButton({
     }
 
     if (to) {
-      history.push(to);
+      navigate(to);
     }
   }, [link, to, onClick, disabled]);
 

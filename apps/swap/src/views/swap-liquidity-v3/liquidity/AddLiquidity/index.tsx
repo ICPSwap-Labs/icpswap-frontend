@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Box, Typography, makeStyles, Theme } from "components/Mui";
 import {
   FeeSelector,
@@ -71,16 +71,10 @@ const useStyle = makeStyles((theme: Theme) => {
   };
 });
 
-interface URLParams {
-  currencyIdA: string;
-  currencyIdB: string;
-  feeAmount: string;
-}
-
 export default function AddLiquidity() {
   const { t } = useTranslation();
   const classes = useStyle();
-  const history = useHistory();
+  const navigate = useNavigate();
   const principal = useAccountPrincipal();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
@@ -88,7 +82,11 @@ export default function AddLiquidity() {
 
   const [confirmAddLoading, setConfirmAddLoading] = useState(false);
 
-  let { currencyIdA, currencyIdB, feeAmount: feeAmountFromUrl } = useParams<URLParams>();
+  let {
+    currencyIdA,
+    currencyIdB,
+    feeAmount: feeAmountFromUrl,
+  } = useParams() as { currencyIdA: string; currencyIdB: string; feeAmount: string };
   const { path: backPath } = useParsedQueryString() as { path: string };
 
   if (!currencyIdA) currencyIdA = DEFAULT_SWAP_INPUT_ID;
@@ -159,22 +157,22 @@ export default function AddLiquidity() {
     if (backPath) {
       try {
         const path = parseBackPath(backPath);
-        history.push(path);
+        navigate(path);
       } catch (error) {
         console.warn(error);
       }
     } else {
-      history.goBack();
+      navigate(-1);
     }
-  }, [history, resetMintState, backPath]);
+  }, [navigate, resetMintState, backPath]);
 
   const handleUrlChange = useCallback(
     (path: string) => {
       if (backPath) {
-        history.push(`${path}?path=${backPath}`);
+        navigate(`${path}?path=${backPath}`);
         return;
       }
-      history.push(path);
+      navigate(path);
     },
     [backPath],
   );
@@ -221,7 +219,7 @@ export default function AddLiquidity() {
     onLeftRangeInput("");
     onRightRangeInput("");
     handleUrlChange("/liquidity/add");
-  }, [history, onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput]);
+  }, [onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput]);
 
   const {
     getDecrementLower,
@@ -246,8 +244,6 @@ export default function AddLiquidity() {
   const getAddLiquidityCall = useAddLiquidityCall();
 
   const handleOnConfirm = useCallback(async () => {
-    await window.icConnector.signerAgent?.signer.openChannel();
-
     // token0SubAccountBalance, token1SubAccountBalance, unusedBalance is undefined when pool is not created
     // So set the value is 0 by default
     // TODO: Fix this?
@@ -262,9 +258,14 @@ export default function AddLiquidity() {
       isUndefinedOrNull(token0SubAccountBalance) ||
       isUndefinedOrNull(token1SubAccountBalance) ||
       isUndefinedOrNull(unusedBalance) ||
-      isUndefinedOrNull(installers)
+      isUndefinedOrNull(installers) ||
+      confirmAddLoading
     )
       return;
+
+    setConfirmAddLoading(true);
+
+    await window.icConnector.signerAgent?.signer.openChannel();
 
     const needPayForPCM = userPCMBalance < pcmMetadata.passcodePrice;
 
@@ -275,8 +276,6 @@ export default function AddLiquidity() {
         return 0;
       })
       .map((e) => e.subnet);
-
-    setConfirmAddLoading(true);
 
     const { call, key } = await getAddLiquidityCall({
       token0Balance,
@@ -316,7 +315,7 @@ export default function AddLiquidity() {
     closeLoadingTip(loadingTipKey);
 
     resetMintState();
-    history.push(`/liquidity?tab=Positions`);
+    navigate(`/liquidity?tab=Positions`);
   }, [
     position,
     principal,
@@ -330,6 +329,7 @@ export default function AddLiquidity() {
     unusedBalance,
     noLiquidity,
     installers,
+    confirmAddLoading,
   ]);
 
   const handleOnCancel = useCallback(() => {

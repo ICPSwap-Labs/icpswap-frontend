@@ -5,7 +5,7 @@ import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { SelectPair } from "components/Select/SelectPair";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { ReclaimItems } from "./components/ReclaimItem";
@@ -22,7 +22,7 @@ type Balance = {
 export function ReclaimWithPair() {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { poolId: poolIdFromUrl } = useParsedQueryString() as { poolId: string | undefined };
 
   const [poolId, setPoolId] = useState<string | undefined>();
@@ -94,9 +94,9 @@ export function ReclaimWithPair() {
 
   const handlePairChange = (poolId: string | undefined) => {
     if (poolId) {
-      history.push(`/swap/withdraw?type=pair&poolId=${poolId}`);
+      navigate(`/swap/withdraw?type=pair&poolId=${poolId}`);
     } else {
-      history.push(`/swap/withdraw?type=pair`);
+      navigate(`/swap/withdraw?type=pair`);
     }
   };
 

@@ -1,5 +1,5 @@
 import Modal from "components/modal/index";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Typography, Box, Grid, Button, makeStyles, Theme } from "components/Mui";
 import CheckCircleIcon from "@mui/icons-material/CheckCircleOutline";
 import ExplorerLink from "components/ExternalLink/Explorer";
@@ -23,16 +23,16 @@ interface CanisterCreateSuccessProps {
 export default function CanisterCreateSuccess({ open, onClose, details, canisterId }: CanisterCreateSuccessProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleMintNFT = () => {
     onClose();
-    history.push("/info-tools/nft/canister/list");
+    navigate("/info-tools/nft/canister/list");
   };
 
   const handleToList = () => {
     onClose();
-    history.push("/info-tools/nft/canister/list");
+    navigate("/info-tools/nft/canister/list");
   };
 
   return (

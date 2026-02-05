@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography, makeStyles } from "components/Mui";
 import CollectionBg from "assets/images/nft/collection_bg.jpg";
 
@@ -28,10 +28,10 @@ const useStyles = makeStyles(() => {
 export default function MarketCarousel() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleLoadCollections = () => {
-    history.push(`/marketplace/collections`);
+    navigate(`/marketplace/collections`);
   };
 
   return (
