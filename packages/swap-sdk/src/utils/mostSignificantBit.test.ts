@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import { MaxUint256 } from "../core/constants";
 import JSBI from "jsbi";
 import { ONE } from "../internalConstants";
@@ -15,10 +16,7 @@ describe("mostSignificantBit", () => {
   });
   it("correct value for every power of 2 - 1", () => {
     for (let i = 2; i < 256; i++) {
-      const x = JSBI.subtract(
-        JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(i)),
-        JSBI.BigInt(1)
-      );
+      const x = JSBI.subtract(JSBI.exponentiate(JSBI.BigInt(2), JSBI.BigInt(i)), JSBI.BigInt(1));
       expect(mostSignificantBit(x)).toEqual(i - 1);
     }
   });

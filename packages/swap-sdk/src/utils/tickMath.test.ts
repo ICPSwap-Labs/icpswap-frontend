@@ -1,4 +1,6 @@
 import JSBI from "jsbi";
+import { describe, it, expect } from "vitest";
+
 import { ONE } from "../internalConstants";
 import { TickMath } from "./tickMath";
 

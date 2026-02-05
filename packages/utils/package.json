@@ -1,11 +1,9 @@
 {
   "name": "@icpswap/utils",
   "version": "0.0.1",
-  "sideEffects": [
-    "*.css.ts"
-  ],
   "private": true,
   "main": "./dist/index.js",
+  "type": "module",
   "files": [
     "dist"
   ],
@@ -14,11 +12,12 @@
     "check": "tsc --pretty --noEmit",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsc --watch",
-    "test": "jest --passWithNoTests"
+    "test": "vitest"
   },
   "dependencies": {
     "@icpswap/types": "workspace:*",
     "@icpswap/constants": "workspace:*",
+    "@icpswap/vitest-config": "workspace:*",
     "big.js": "^6.1.1",
     "decimal.js-light": "^2.5.1",
     "idb": "8.0.0",

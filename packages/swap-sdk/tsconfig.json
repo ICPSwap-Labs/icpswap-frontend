@@ -2,9 +2,9 @@
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", ".turbo"],
   "compilerOptions": {
-    "jsx": "react-jsx",
     "lib": ["ES6", "DOM", "es2020"],
     "module": "esnext",
+    "moduleResolution": "bundler",
     "target": "es6",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -16,7 +16,6 @@
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
     "isolatedModules": true,
-    "moduleResolution": "node",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,

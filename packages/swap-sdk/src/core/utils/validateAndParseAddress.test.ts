@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { validateAndParseAddress } from "./validateAndParseAddress";
 
 describe("#validateAndParseAddress", () => {
@@ -7,7 +9,7 @@ describe("#validateAndParseAddress", () => {
 
   it("throws if not valid", () => {
     expect(() => validateAndParseAddress("zfcdd-tqaaa-aaaaq-aaaga")).toThrow(
-      "zfcdd-tqaaa-aaaaq-aaaga is not a valid address."
+      "zfcdd-tqaaa-aaaaq-aaaga is not a valid address.",
     );
   });
 });

@@ -1,9 +1,7 @@
 {
   "name": "@icpswap/swap-sdk",
+  "type": "module",
   "version": "0.0.1",
-  "sideEffects": [
-    "*.css.ts"
-  ],
   "private": true,
   "main": "./dist/index.js",
   "files": [
@@ -14,12 +12,14 @@
     "check": "tsc --pretty --noEmit",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsc --watch",
-    "test": "jest --passWithNoTests"
+    "test": "vitest"
   },
   "dependencies": {
     "@ethersproject/address": "^5.7.0",
     "@icpswap/utils": "workspace:*",
+    "@icpswap/vitest-config": "workspace:*",
     "big.js": "^6.1.1",
-    "decimal.js-light": "^2.5.1"
+    "decimal.js-light": "^2.5.1",
+    "toformat": "^2.0.0"
   }
 }

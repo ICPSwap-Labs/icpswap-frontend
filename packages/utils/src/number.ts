@@ -73,7 +73,8 @@ export const formatDollarTokenPrice = (num: number | string | Null, options?: Fo
 
   const __num = num;
 
-  if (isUndefinedOrNull(num)) return "-";
+  if (isUndefinedOrNull(__num)) return "-";
+
   if (new BigNumber(__num).isEqualTo(0)) return "$0.00";
 
   if (nonUndefinedOrNull(min) && new BigNumber(__num).isLessThan(min)) {

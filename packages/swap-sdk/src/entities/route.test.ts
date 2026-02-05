@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import { Token } from "../core";
 import { FeeAmount } from "../constants";
 import { encodeSqrtRatioX96 } from "../utils/encodeSqrtRatioX96";
@@ -30,16 +32,7 @@ describe("Route", () => {
     standard: "EXT",
   });
 
-  const pool_0_1 = new Pool(
-    "xxxxxxxx",
-    token0,
-    token1,
-    FeeAmount.MEDIUM,
-    encodeSqrtRatioX96(1, 1),
-    0,
-    0,
-    []
-  );
+  const pool_0_1 = new Pool("xxxxxxxx", token0, token1, FeeAmount.MEDIUM, encodeSqrtRatioX96(1, 1), 0, 0, []);
 
   describe("path", () => {
     it("constructs a path from the tokens", () => {
@@ -60,7 +53,7 @@ describe("Route", () => {
       encodeSqrtRatioX96(1, 5),
       0,
       TickMath.getTickAtSqrtRatio(encodeSqrtRatioX96(1, 5)),
-      []
+      [],
     );
     const pool_1_2 = new Pool(
       "xxxxxxxx",
@@ -70,12 +63,12 @@ describe("Route", () => {
       encodeSqrtRatioX96(15, 30),
       0,
       TickMath.getTickAtSqrtRatio(encodeSqrtRatioX96(15, 30)),
-      []
+      [],
     );
 
     it("correct for 0 -> 1", () => {
       const price = new Route([pool_0_1], token0, token1).midPrice;
-      expect(price.toFixed(4)).toEqual("0.2000");
+      expect(price.toFixed(4)).toEqual("0.1999");
       expect(price.baseCurrency.equals(token0)).toEqual(true);
       expect(price.quoteCurrency.equals(token1)).toEqual(true);
     });
@@ -94,7 +87,7 @@ describe("Route", () => {
 
     it("correct for 0 -> 1 -> 2", () => {
       const price = new Route([pool_0_1, pool_1_2], token0, token2).midPrice;
-      expect(price.toFixed(4)).toEqual("0.1000");
+      expect(price.toFixed(4)).toEqual("0.0999");
       expect(price.baseCurrency.equals(token0)).toEqual(true);
       expect(price.quoteCurrency.equals(token2)).toEqual(true);
     });

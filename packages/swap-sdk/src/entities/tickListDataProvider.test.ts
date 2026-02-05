@@ -1,3 +1,5 @@
+import { describe, it, expect } from "vitest";
+
 import JSBI from "jsbi";
 import { TickListDataProvider } from "./tickListDataProvider";
 
@@ -15,10 +17,10 @@ describe("TickListDataProvider", () => {
           new TickListDataProvider(
             [
               { index: -1, liquidityNet: -1, liquidityGross: 1 },
-              { index: 1, liquidityNet: 2, liquidityGross: 1 }
+              { index: 1, liquidityNet: 2, liquidityGross: 1 },
             ],
-            1
-          )
+            1,
+          ),
       ).toThrow("ZERO_NET");
     });
   });
@@ -28,9 +30,9 @@ describe("TickListDataProvider", () => {
       const provider = new TickListDataProvider(
         [
           { index: -1, liquidityNet: -1, liquidityGross: 1 },
-          { index: 1, liquidityNet: 1, liquidityGross: 1 }
+          { index: 1, liquidityNet: 1, liquidityGross: 1 },
         ],
-        1
+        1,
       );
       await expect(provider.getTick(0)).rejects.toThrow("NOT_CONTAINED");
     });
@@ -38,9 +40,9 @@ describe("TickListDataProvider", () => {
       const provider = new TickListDataProvider(
         [
           { index: -1, liquidityNet: -1, liquidityGross: 1 },
-          { index: 1, liquidityNet: 1, liquidityGross: 1 }
+          { index: 1, liquidityNet: 1, liquidityGross: 1 },
         ],
-        1
+        1,
       );
       const { liquidityNet, liquidityGross } = await provider.getTick(-1);
       expect(liquidityNet).toEqual(JSBI.BigInt(-1));
@@ -50,9 +52,9 @@ describe("TickListDataProvider", () => {
       const provider = new TickListDataProvider(
         [
           { index: -1, liquidityNet: -1, liquidityGross: 1 },
-          { index: 1, liquidityNet: 1, liquidityGross: 1 }
+          { index: 1, liquidityNet: 1, liquidityGross: 1 },
         ],
-        1
+        1,
       );
       const { liquidityNet, liquidityGross } = await provider.getTick(1);
       expect(liquidityNet).toEqual(JSBI.BigInt(1));
