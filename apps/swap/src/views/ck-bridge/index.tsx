@@ -6,14 +6,14 @@ import { ckBTC, ckUSDC, ckETH } from "@icpswap/tokens";
 import { Erc20BridgeWrapper, BtcBridgeWrapper, EthBridgeWrapper } from "components/ck-bridge";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useToken } from "hooks/useCurrency";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGlobalMinterInfoManager } from "store/global/hooks";
 
 export default function CkBridge() {
   const [token, setToken] = useState<Token>(ckUSDC);
   const [bridgeChain, setBridgeChain] = useState<ckBridgeChain>(ckBridgeChain.eth);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { chain, tokenId } = useParsedQueryString() as {
     chain: ckBridgeChain | undefined;
@@ -50,13 +50,13 @@ export default function CkBridge() {
 
   const handleTokenChange = useCallback(
     (token: Token, chain: ckBridgeChain) => {
-      history.push(`/ck-bridge?tokenId=${token.address}&chain=${chain}`);
+      navigate(`/ck-bridge?tokenId=${token.address}&chain=${chain}`);
     },
-    [history],
+    [navigate],
   );
 
   const handleBridgeChangeChange = useCallback(() => {
-    history.push(`/ck-bridge?tokenId=${tokenId ?? ckUSDC.address}&chain=${targetTokenBridgeChain}`);
+    navigate(`/ck-bridge?tokenId=${tokenId ?? ckUSDC.address}&chain=${targetTokenBridgeChain}`);
   }, [targetTokenBridgeChain, tokenId]);
 
   useEffect(() => {

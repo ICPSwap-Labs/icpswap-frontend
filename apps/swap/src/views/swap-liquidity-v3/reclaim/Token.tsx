@@ -6,7 +6,7 @@ import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { ICP } from "@icpswap/tokens";
 import { isMobile } from "react-device-detect";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { ReclaimItems } from "./components/ReclaimItem";
@@ -23,7 +23,7 @@ type Balance = {
 export function ReclaimWithToken() {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { tokenId: tokenIdFromUrl } = useParsedQueryString() as { tokenId: string };
 
   const [tokenId, setTokenId] = useState<string | undefined>(undefined);
@@ -95,9 +95,9 @@ export function ReclaimWithToken() {
 
   const handleTokenChange = (tokenId: string) => {
     if (tokenId) {
-      history.push(`/swap/withdraw?type=token&tokenId=${tokenId}`);
+      navigate(`/swap/withdraw?type=token&tokenId=${tokenId}`);
     } else {
-      history.push(`/swap/withdraw?type=token`);
+      navigate(`/swap/withdraw?type=token`);
     }
   };
 

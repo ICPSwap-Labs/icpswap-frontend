@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Avatar, makeStyles, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
 import { UserSwapPoolsBalance } from "hooks/info/tools";
@@ -86,7 +86,7 @@ export default function UserPoolBalance() {
   const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { principal, tokenId, pair } = useParsedQueryString() as {
     principal: string | undefined;
     tokenId: string | undefined;
@@ -101,17 +101,17 @@ export default function UserPoolBalance() {
 
   const handleTokenChange = (tokenId: string) => {
     const search = locationSearchReplace(location.search, "tokenId", tokenId);
-    history.push(`/info-tools/user-balances${search}`);
+    navigate(`/info-tools/user-balances${search}`);
   };
 
   const handleAddressChange = (address: string | Null) => {
     const search = locationSearchReplace(location.search, "principal", address);
-    history.push(`/info-tools/user-balances${search}`);
+    navigate(`/info-tools/user-balances${search}`);
   };
 
   const handlePairChange = (pair: string | Null) => {
     const search = locationSearchReplace(location.search, "pair", pair);
-    history.push(`/info-tools/user-balances${search}`);
+    navigate(`/info-tools/user-balances${search}`);
   };
 
   return (

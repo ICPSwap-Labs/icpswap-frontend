@@ -3,7 +3,7 @@ import { Box, Grid, Typography, makeStyles, Theme } from "components/Mui";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { useToken } from "hooks/useCurrency";
 import { feeAmountToPercentage } from "utils/swap/index";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { formatDollarAmount } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 
@@ -62,15 +62,15 @@ export default function PoolCard({
   token1Symbol,
 }: PoolCardProps) {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const classes = useStyles();
 
   const [, currency0] = useToken(token0);
   const [, currency1] = useToken(token1);
 
   const handlePoolClick = useCallback(() => {
-    history.push(`/liquidity/add/${token0}/${token1}/${Number(fee)}`);
-  }, [history]);
+    navigate(`/liquidity/add/${token0}/${token1}/${Number(fee)}`);
+  }, [navigate]);
 
   return (
     <Box className={`${classes.listItem} list-item`} onClick={handlePoolClick}>

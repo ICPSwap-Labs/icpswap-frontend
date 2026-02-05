@@ -11,7 +11,7 @@ import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
 import { useWalletIsConnected } from "store/auth/hooks";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const tabs = [
   { value: Tab.Swap, label: Tab.Swap },
@@ -20,7 +20,7 @@ const tabs = [
 
 export default function Swap() {
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const swapWrapperRef = useRef<SwapWrapperRef>(null);
   const { activeTab, setActiveTab } = useContext(SwapProContext);
@@ -43,9 +43,9 @@ export default function Swap() {
 
   const handleTab = useCallback(
     (tab: Tab) => {
-      history.push(`/swap/pro?tab=${tab}`);
+      navigate(`/swap/pro?tab=${tab}`);
     },
-    [history],
+    [navigate],
   );
 
   const isConnected = useWalletIsConnected();

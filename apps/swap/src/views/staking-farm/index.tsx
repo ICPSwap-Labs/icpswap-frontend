@@ -5,7 +5,7 @@ import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { LoadingRow } from "@icpswap/ui";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FarmListHeader, GlobalData, FarmRow } from "components/farm/index";
 import { useFarms } from "hooks/staking-farm/index";
 import { Null } from "@icpswap/types";
@@ -30,7 +30,7 @@ const START_PAGE = 1;
 function MainContent() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const principal = useAccountPrincipal();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -85,7 +85,7 @@ function MainContent() {
   }, [farms, page]);
 
   const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
-    history.push(`/farm?state=${value.state}`);
+    navigate(`/farm?state=${value.state}`);
   }, []);
 
   const [unStakedFarms, setUnStakedFarms] = useState<string[]>([]);

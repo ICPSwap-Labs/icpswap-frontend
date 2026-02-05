@@ -35,7 +35,7 @@ import { BuyTokenButton } from "components/swap";
 export function TokenDetail() {
   const { t } = useTranslation();
   const copyRef = useRef<CopyRef>(null);
-  const { id: canisterId } = useParams<{ id: string }>();
+  const { id: canisterId } = useParams() as { id: string };
 
   const infoToken = useInfoToken(canisterId);
 
@@ -405,7 +405,7 @@ export function TokenDetail() {
 
 export default function Details() {
   const updateTokenStandard = useUpdateTokenStandard();
-  const { id: canisterId } = useParams<{ id: string }>();
+  const { id: canisterId } = useParams() as { id: string };
 
   const { standard } = useParsedQueryString() as { standard: TOKEN_STANDARD };
 

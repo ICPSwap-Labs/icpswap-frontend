@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import CollectionInfo from "components/NFT/market/CollectionInfo";
 
 export default function NFTCollectionMarketplace() {
-  const { canisterId } = useParams<{ canisterId: string }>();
+  const { canisterId } = useParams() as { canisterId: string };
   const [searchValue, setSearchValue] = useState("");
   const [sortBy, setSortBy] = useState<null | string>("price");
   const [pageConfig, setPageConfig] = useState<MarketPageConfig>(Pages[0]);

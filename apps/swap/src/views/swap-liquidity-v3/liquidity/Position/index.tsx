@@ -21,7 +21,7 @@ import { TokenPairName } from "components/TokenPairName";
 export default function PositionDetails() {
   const { t } = useTranslation();
   const principal = useAccountPrincipal();
-  const { positionId, pool: poolId } = useParams<{ positionId: string; pool: string }>();
+  const { positionId, pool: poolId } = useParams() as { positionId: string; pool: string };
   const [refreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { result: positionDetails } = usePositionDetailsFromId(poolId, positionId);

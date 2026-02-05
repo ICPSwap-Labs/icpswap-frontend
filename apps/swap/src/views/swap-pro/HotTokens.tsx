@@ -4,7 +4,7 @@ import HotIcon from "assets/icons/swap-pro/hot.svg";
 import { useToken } from "hooks/index";
 import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { TokenImage } from "components/index";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ICP, ICS } from "@icpswap/tokens";
 import { useInfoAllTokens } from "@icpswap/hooks";
 import { Proportion } from "@icpswap/ui";
@@ -45,10 +45,10 @@ interface TokenItemProps {
 }
 
 function TokenItem({ tokenInfo, index }: TokenItemProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleTokenClick = () => {
-    history.push(`/swap/pro?input=${ICP.address}&output=${tokenInfo.tokenLedgerId}`);
+    navigate(`/swap/pro?input=${ICP.address}&output=${tokenInfo.tokenLedgerId}`);
   };
 
   const [, token] = useToken(tokenInfo.tokenLedgerId);

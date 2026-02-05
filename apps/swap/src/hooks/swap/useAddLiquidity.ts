@@ -20,7 +20,7 @@ import { isUseTransfer } from "utils/token/index";
 import { createPool, mint as __mint } from "hooks/swap/v3Calls";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { useUpdateUserPositionPools } from "store/hooks";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import type { Null, PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
@@ -340,13 +340,13 @@ interface InitialAddLiquidityStepsArgs {
 
 function useInitialAddLiquiditySteps() {
   const initialStepContent = useStepContentManager();
-  const history = useHistory();
+  const navigate = useNavigate();
   const closeAllSteps = useCloseAllSteps();
   const { t } = useTranslation();
   const stepsToReclaimCallback = useStepsToReclaimCallback();
 
   const handleReclaimPCMBalance = () => {
-    history.push("/swap/pcm/reclaim");
+    navigate("/swap/pcm/reclaim");
     closeAllSteps();
   };
 

@@ -4,7 +4,7 @@ import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { BreadcrumbsV1, Flex } from "@icpswap/ui";
 import { SelectPair, InfoWrapper } from "components/index";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
 import { Null } from "@icpswap/types";
 import { PositionTable } from "components/liquidity/index";
@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Positions() {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { pair: pairFromUrl, principal } = useParsedQueryString() as {
     pair: string | undefined;
@@ -21,12 +21,12 @@ export default function Positions() {
 
   const handlePairChange = (pairId: string | undefined) => {
     const search = locationSearchReplace(location.search, "pair", pairId);
-    history.push(`/info-tools/positions${search}`);
+    navigate(`/info-tools/positions${search}`);
   };
 
   const handleAddressChange = (principal: string | Null) => {
     const search = locationSearchReplace(location.search, "principal", principal);
-    history.push(`/info-tools/positions${search}`);
+    navigate(`/info-tools/positions${search}`);
   };
 
   // Default ICS/ICP

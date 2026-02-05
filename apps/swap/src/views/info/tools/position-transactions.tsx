@@ -8,7 +8,7 @@ import {
 import { useParsedQueryString } from "@icpswap/hooks";
 import { BreadcrumbsV1, Flex } from "@icpswap/ui";
 import { SelectPair, InfoWrapper } from "components/index";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ToolsWrapper } from "components/info/tools/index";
 import { PositionTransactionsTable } from "components/info/index";
 import { infoRoutesConfigs } from "routes/info.config";
@@ -30,7 +30,7 @@ const __panels = [
 
 export default function PositionTransactions() {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
   const accountPrincipal = useAccountPrincipalString();
@@ -52,7 +52,7 @@ export default function PositionTransactions() {
 
   const handlePairChange = (pairId: string | undefined) => {
     const search = locationSearchReplace(location.search, "pair", pairId);
-    history.push(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
+    navigate(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
   };
 
   const handlePanelClick = (panel: string) => {
@@ -61,10 +61,10 @@ export default function PositionTransactions() {
         { key: "panel", value: panel },
         { key: "principal", value: undefined },
       ]);
-      history.push(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
+      navigate(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
     } else {
       const search = locationSearchReplace(location.search, "panel", panel);
-      history.push(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
+      navigate(`${infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS}${search}`);
     }
   };
 

@@ -71,7 +71,7 @@ function TokenChartsViewSelector({ token, chartView, setChartView }: TokenCharts
 
 export default function TokenDetails() {
   const { t } = useTranslation();
-  const { id: canisterId } = useParams<{ id: string }>();
+  const { id: canisterId } = useParams() as { id: string };
   const [openTips] = useTips();
   const theme = useTheme();
   const tokenChartsRef = useRef<TokenChartsRef>(null);

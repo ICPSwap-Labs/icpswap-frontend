@@ -5,7 +5,7 @@ import { LoadingRow, TokenImage, MainCard, Wrapper, Flex } from "components/inde
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { nowInSeconds } from "@icpswap/utils";
 import { useToken } from "hooks/index";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { getNnsLedgerId, getNnsRootId, nnsEqualToGovernance } from "utils/sns/utils";
@@ -23,15 +23,15 @@ interface ProposalSwitchProps {
 }
 
 function ProposalSwitch({ proposal_id, latest_id, governance_id, prev }: ProposalSwitchProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleProposalSwitch = useCallback(() => {
     if (prev) {
-      history.push(`/sns/voting/${governance_id}/${Number(proposal_id) - 1}?latest_id=${latest_id}`);
+      navigate(`/sns/voting/${governance_id}/${Number(proposal_id) - 1}?latest_id=${latest_id}`);
     } else {
-      history.push(`/sns/voting/${governance_id}/${Number(proposal_id) + 1}?latest_id=${latest_id}`);
+      navigate(`/sns/voting/${governance_id}/${Number(proposal_id) + 1}?latest_id=${latest_id}`);
     }
-  }, [history, prev, proposal_id, governance_id]);
+  }, [navigate, prev, proposal_id, governance_id]);
 
   return (
     <Box
@@ -45,7 +45,7 @@ function ProposalSwitch({ proposal_id, latest_id, governance_id, prev }: Proposa
 
 export default function Voting() {
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const principal = useAccountPrincipalString();
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
@@ -102,9 +102,9 @@ export default function Voting() {
 
   const handleBack = useCallback(() => {
     if (root_id) {
-      history.push(`/sns/voting?root_id=${root_id}`);
+      navigate(`/sns/voting?root_id=${root_id}`);
     }
-  }, [history, root_id]);
+  }, [navigate, root_id]);
 
   return (
     <Wrapper>
@@ -114,11 +114,11 @@ export default function Voting() {
             <Flex justify="space-between">
               <ArrowLeft color="#ffffff" size="20px" cursor="pointer" onClick={handleBack} />
               <Flex gap="16px">
-                {latest_id && latest_id !== proposal_id ? (
+                {latest_id && latest_id !== proposal_id && proposal_id && governance_id ? (
                   <ProposalSwitch proposal_id={proposal_id} governance_id={governance_id} latest_id={latest_id} />
                 ) : null}
 
-                {proposal_id !== "1" ? (
+                {proposal_id !== "1" && governance_id && proposal_id ? (
                   <ProposalSwitch proposal_id={proposal_id} governance_id={governance_id} latest_id={latest_id} prev />
                 ) : null}
               </Flex>
@@ -170,14 +170,16 @@ export default function Voting() {
                     >
                       <ProposalDetails proposal_data={proposal_data} />
 
-                      <VotingResult
-                        proposal_id={proposal_id}
-                        governance_id={governance_id}
-                        proposal_data={proposal_data}
-                        neurons={listNeurons}
-                        neuronSystemParameters={neuronSystemParameters}
-                        onRefresh={() => setRefreshTrigger(refreshTrigger + 1)}
-                      />
+                      {proposal_id && governance_id ? (
+                        <VotingResult
+                          proposal_id={proposal_id}
+                          governance_id={governance_id}
+                          proposal_data={proposal_data}
+                          neurons={listNeurons}
+                          neuronSystemParameters={neuronSystemParameters}
+                          onRefresh={() => setRefreshTrigger(refreshTrigger + 1)}
+                        />
+                      ) : null}
                     </Box>
                   </MainCard>
 

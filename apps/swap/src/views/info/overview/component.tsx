@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Typography, Box, useTheme } from "components/Mui";
 import { mockALinkAndOpen } from "@icpswap/utils";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { ArrowRight } from "react-feather";
 
@@ -67,11 +67,11 @@ export interface LinkArrowProps {
 }
 
 export function LinkArrow({ link, to }: LinkArrowProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = () => {
     if (to) {
-      history.push(to);
+      navigate(to);
       return;
     }
 

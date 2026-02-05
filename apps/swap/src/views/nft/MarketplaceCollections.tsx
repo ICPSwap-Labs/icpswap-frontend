@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Box, Typography, makeStyles, Theme } from "components/Mui";
 import { MainCard, Wrapper } from "components/index";
 import { useNFTCanisterList, useCanisterMetadata } from "hooks/nft/useNFTCalls";
@@ -63,12 +63,12 @@ const useStyles = makeStyles((theme: Theme) => {
 
 export function CollectionCard({ collection }: { collection: NFTControllerInfo }) {
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { result: metadata } = useCanisterMetadata(collection.cid);
 
   const handleCollectionClick = () => {
-    history.push(`/marketplace/NFT/${collection.cid}`);
+    navigate(`/marketplace/NFT/${collection.cid}`);
   };
 
   return (

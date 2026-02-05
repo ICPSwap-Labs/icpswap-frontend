@@ -8,7 +8,7 @@ import { UseCurrencyState } from "hooks/useCurrency";
 import { SwapContext } from "components/swap/index";
 import { Image } from "@icpswap/ui";
 import { Null } from "@icpswap/types";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
 import { useParsedQueryString } from "@icpswap/hooks";
 
@@ -62,7 +62,7 @@ export function SwapInputWrapper({
   noLiquidity,
   poolId,
 }: SwapInputWrapperProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
   const {
     independentField,
@@ -109,7 +109,7 @@ export function SwapInputWrapper({
 
   const handleSwitchTokens = useCallback(() => {
     const prePath = ui === "pro" ? "/swap/pro" : "/swap";
-    history.push(
+    navigate(
       `${prePath}?input=${outputTokenId}&output=${inputTokenId}${
         ui === "pro" && !!swapProTab ? `&tab=${swapProTab}` : ""
       }`,
@@ -154,6 +154,7 @@ export function SwapInputWrapper({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            zIndex: 2,
           }}
           onClick={handleSwitchTokens}
         >

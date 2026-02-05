@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Box, Typography } from "components/Mui";
 import { CurrencyAmount } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
@@ -26,10 +26,10 @@ import { DecreaseLiquidityInput } from "components/liquidity/Decrease/Input";
 
 export default function DecreaseLiquidity() {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const principal = useAccountPrincipal();
-  const { positionId, pool: poolId } = useParams<{ positionId: string; pool: string }>();
+  const { positionId, pool: poolId } = useParams() as { positionId: string; pool: string };
 
   const { result: position, loading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
 
@@ -124,16 +124,16 @@ export default function DecreaseLiquidity() {
 
   const handleBack = useCallback(() => {
     resetBurnState();
-    history.goBack();
-  }, [history, resetBurnState]);
+    navigate(-1);
+  }, [navigate, resetBurnState]);
 
   const handleDecreaseSuccess = () => {
     resetBurnState();
 
     if (liquidityToRemove.equalTo(1)) {
-      history.push("/liquidity?tab=Positions");
+      navigate("/liquidity?tab=Positions");
     } else {
-      history.goBack();
+      navigate(-1);
     }
   };
 

@@ -1,13 +1,13 @@
-import { useHistory } from "react-router";
-import { Grid, Typography, Box, useTheme, makeStyles, Theme } from "components/Mui";
+import { Grid, Typography, Box, useTheme, makeStyles } from "components/Mui";
 import CollectionDemo from "assets/images/nft/collection_demo.svg";
 import CollectionLogo from "assets/images/nft/collection_logo.svg";
 import { TradeOrder } from "types/nft";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export const BorderColor = "#384572";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     imgBox: {
       height: "180px",
@@ -45,11 +45,11 @@ export default function MarketNFTCard({
 }) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const handleCardClick = () => {
-    history.push(`/marketplace/NFT/view/${Number(order.tokenIndex)}`);
+    navigate(`/marketplace/NFT/view/${Number(order.tokenIndex)}`);
     if (onCardClick) onCardClick(order);
   };
 

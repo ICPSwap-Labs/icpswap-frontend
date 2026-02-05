@@ -3,7 +3,7 @@ import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { BreadcrumbsV1, Flex } from "@icpswap/ui";
 import { SelectPair, InfoWrapper } from "components/index";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ToolsWrapper, SneedLockedPositions, BlackHolePositions } from "components/info/tools/index";
 import { useEffect, useState } from "react";
 import i18n from "i18n/index";
@@ -23,7 +23,7 @@ const panels = [
 export default function LockedPositions() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { pair, panel } = useParsedQueryString() as {
     panel: string | undefined;
@@ -40,12 +40,12 @@ export default function LockedPositions() {
 
   const handlePairChange = (pairId: string | undefined) => {
     const search = locationSearchReplace(location.search, "pair", pairId);
-    history.push(`/info-tools/locked-positions${search}`);
+    navigate(`/info-tools/locked-positions${search}`);
   };
 
   const handlePanelClick = (panel: string) => {
     const search = locationSearchReplace(location.search, "panel", panel);
-    history.push(`/info-tools/locked-positions${search}`);
+    navigate(`/info-tools/locked-positions${search}`);
   };
 
   return (

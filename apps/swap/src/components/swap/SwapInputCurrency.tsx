@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState } from "react";
 import { Box, Typography, useTheme } from "components/Mui";
 import { CurrencySelector } from "components/swap/index";
 import {
@@ -21,6 +21,9 @@ import { useTranslation } from "react-i18next";
 import { TokenBalanceSlider } from "components/Slider/index";
 import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
 import { WalletBalance } from "components/swap/WalletBalance";
+import { useSetTimeoutCall } from "@icpswap/hooks";
+
+const LOADING_TRANSFORM_DURATION = 100;
 
 export interface SwapInputCurrencyProps {
   onMax?: () => void;
@@ -65,6 +68,7 @@ export function SwapInputCurrency({
 }: SwapInputCurrencyProps) {
   const { t } = useTranslation();
   const theme = useTheme();
+  const [transformLoading, setTransformLoading] = useState(false);
 
   // const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmount?.equalTo(maxInputAmount));
 
@@ -110,6 +114,24 @@ export function SwapInputCurrency({
     handleWrappedInput(maxAmountFormat(maxPoolBalanceSpent.toExact(), token.decimals));
   }, [handleWrappedInput, maxPoolBalanceSpent, isInput, token]);
 
+  const clearTransformLoading = useSetTimeoutCall(
+    useCallback(() => {
+      setTransformLoading(false);
+    }, [setTransformLoading]),
+    LOADING_TRANSFORM_DURATION,
+  );
+
+  const handleWrapperClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      event.stopPropagation();
+
+      setTransformLoading(true);
+
+      clearTransformLoading();
+    },
+    [clearTransformLoading],
+  );
+
   return (
     <Box
       sx={{
@@ -117,10 +139,15 @@ export function SwapInputCurrency({
         border: `1px solid ${theme.palette.background.level4}`,
         borderRadius: "16px",
         padding: "16px",
+        cursor: "pointer",
         [theme.breakpoints.down("sm")]: {
           padding: "12px",
         },
+        transform: transformLoading ? "scale(0.9887)" : "scale(1)",
+        opacity: transformLoading ? 0.9 : 1,
+        transition: `all ${LOADING_TRANSFORM_DURATION}ms ease-in-out`,
       }}
+      onClick={handleWrapperClick}
     >
       <Box sx={{ display: "flex", gap: "0 8px" }}>
         <Flex align="center">

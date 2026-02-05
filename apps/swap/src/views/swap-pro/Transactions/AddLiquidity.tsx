@@ -2,7 +2,7 @@ import { Button } from "components/Mui";
 import { memo } from "react";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export interface AddLiquidityProps {
@@ -12,11 +12,11 @@ export interface AddLiquidityProps {
 
 export const AddLiquidity = memo(({ token0, token1 }: AddLiquidityProps) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleLoadPage = () => {
     if (!token0 || !token1) return;
-    history.push(
+    navigate(
       `/liquidity/add/${token0.address}/${token1.address}/3000?path=${window.btoa(
         `/swap/pro?input=${token0.address}&output=${token1.address}`,
       )}`,

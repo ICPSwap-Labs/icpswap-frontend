@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCallback, useMemo } from "react";
 import { Box, Typography, Button } from "components/Mui";
 import type { Null } from "@icpswap/types";
@@ -17,7 +17,7 @@ export interface CreatePoolProps {
 
 export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: CreatePoolProps) {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const __fontSize = useMemo(() => {
     if (ui === "pro") return "12px";
@@ -27,7 +27,7 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
   const handleCreatePool = useCallback(() => {
     if (!inputToken || !outputToken) return;
 
-    history.push(
+    navigate(
       `/liquidity/add/${inputToken.address}/${outputToken.address}?path=${window.btoa(
         `/swap?input=${inputToken.address}&output=${outputToken.address}`,
       )}`,

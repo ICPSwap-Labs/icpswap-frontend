@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { mockALinkAndOpen } from "@icpswap/utils";
 import { XCircle } from "react-feather";
 import { ReactComponent as Logo } from "assets/images/logo1.svg";
@@ -14,7 +14,7 @@ export interface MobileNavbarProps {
 }
 
 export default function MobileNavbar({ onClose }: MobileNavbarProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [collapseKey, setCollapseKey] = useState<string | undefined>(undefined);
   const [exceedOpen, setExceedOpen] = useState<boolean>(false);
 
@@ -34,7 +34,7 @@ export default function MobileNavbar({ onClose }: MobileNavbarProps) {
     if (route.link) {
       mockALinkAndOpen(route.link ?? "", "nav-bar-menu");
     } else {
-      history.push(route.path ?? "");
+      navigate(route.path ?? "");
     }
 
     if (onClose) onClose();

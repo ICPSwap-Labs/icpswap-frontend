@@ -27,7 +27,7 @@ const Pages: PageType[] = [
 
 function ICPSwapNFT() {
   const { t } = useTranslation();
-  const { id: canisterId } = useParams<{ id: string }>();
+  const { id: canisterId } = useParams() as { id: string };
   const account = useAccount();
   const { result: metadata, loading } = useCanisterMetadata(canisterId);
   const { result: cycles } = useCanisterCycles(canisterId);

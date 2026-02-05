@@ -17,7 +17,7 @@ import { Flex, MainCard } from "@icpswap/ui";
 import StepViewButton from "components/Steps/View";
 import { ReclaimTips } from "components/ReclaimTips";
 import { SwapInputWrapper, SwapConfirmModal, Impact, useSwapContext } from "components/swap/index";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ICP } from "@icpswap/tokens";
 import { Token } from "@icpswap/swap-sdk";
 import { useGlobalContext, useRefreshTrigger, useSwapNoLiquidityManager } from "hooks/index";
@@ -36,7 +36,7 @@ export interface SwapWrapperProps {
 
 export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref: Ref<SwapWrapperRef>) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [isExpertMode] = useExpertModeManager();
@@ -134,9 +134,9 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
       const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
       if (token.address === outputTokenId) {
-        history.push(`${prePath}?input=${token.address}&output=${ICP.address}`);
+        navigate(`${prePath}?input=${token.address}&output=${ICP.address}`);
       } else {
-        history.push(`${prePath}?input=${token.address}&output=${outputTokenId}`);
+        navigate(`${prePath}?input=${token.address}&output=${outputTokenId}`);
       }
     },
     [outputTokenId],
@@ -147,9 +147,9 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
       const prePath = ui === "pro" ? "/swap/pro" : "/swap";
 
       if (token.address === inputTokenId) {
-        history.push(`${prePath}?input=${ICP.address}&output=${token.address}`);
+        navigate(`${prePath}?input=${ICP.address}&output=${token.address}`);
       } else {
-        history.push(`${prePath}?input=${inputTokenId}&output=${token.address}`);
+        navigate(`${prePath}?input=${inputTokenId}&output=${token.address}`);
       }
     },
     [inputTokenId],

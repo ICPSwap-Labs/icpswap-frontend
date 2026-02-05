@@ -17,7 +17,7 @@ import {
 } from "@icpswap/hooks";
 import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface YourFarmListCardProps {
   farmTvl: FarmTvl;
@@ -29,7 +29,7 @@ interface YourFarmListCardProps {
 export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListCardProps) {
   const principal = useAccountPrincipal();
   const theme = useTheme() as Theme;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
   const { result: farmInitArgs } = useFarmInitArgs(farmId);
@@ -80,8 +80,8 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
   const stateColor = useStateColors(state);
 
   const handelToDetails = useCallback(() => {
-    history.push(`/farm/details/${farmId}`);
-  }, [history, farmId]);
+    navigate(`/farm/details/${farmId}`);
+  }, [navigate, farmId]);
 
   return (
     <Box

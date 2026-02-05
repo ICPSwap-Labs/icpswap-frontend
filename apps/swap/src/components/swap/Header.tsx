@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Grid, Typography } from "components/Mui";
 import { ArrowLeft } from "react-feather";
 
@@ -12,15 +12,15 @@ export interface HeaderTabProps {
 }
 
 export default function SwapHeader({ showArrow = false, title, onBack }: HeaderTabProps) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleBack = useCallback(() => {
     if (onBack) {
       onBack();
     } else {
-      history.goBack();
+      navigate(-1);
     }
-  }, [history, onBack]);
+  }, [navigate, onBack]);
 
   return (
     <Grid container>

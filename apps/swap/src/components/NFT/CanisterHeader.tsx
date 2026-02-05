@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Box, Grid, Typography, Button, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { cycleValueFormat } from "@icpswap/utils";
 import { ResultStatus } from "@icpswap/types";
 import type { NFTControllerInfo } from "@icpswap/types";
@@ -143,7 +143,7 @@ export interface NFTCanisterHeaderProps {
 export default function CanisterHeader({ details, cycles, count, loading }: NFTCanisterHeaderProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const matchDownMD = useMediaQuery(theme.breakpoints.down("sm"));
@@ -154,11 +154,11 @@ export default function CanisterHeader({ details, cycles, count, loading }: NFTC
   const [uploadModalOpen, setUploadModalOpen] = useState(false);
 
   const handleMintNFT = () => {
-    history.push(`/info-tools/nft/mint?canister=${details.cid}`);
+    navigate(`/info-tools/nft/mint?canister=${details.cid}`);
   };
 
   const handleToMarketplace = () => {
-    history.push(`/marketplace/NFT/${details.cid}`);
+    navigate(`/marketplace/NFT/${details.cid}`);
   };
 
   const handleAvatarClick = () => {

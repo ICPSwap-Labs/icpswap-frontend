@@ -3,7 +3,7 @@ import { useSwapSaleParameters, useSNSSwapInitArgs } from "@icpswap/hooks";
 import { useMemo, useState } from "react";
 import { LoadingRow, TextButton, Wrapper } from "components/index";
 import AvatarImage from "components/Image/Avatar";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "react-feather";
 import { useToken } from "hooks/index";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
@@ -14,7 +14,7 @@ import { LaunchStatus } from "./components/LaunchStatus";
 import { LaunchContext } from "./components/context";
 
 export default function Launch() {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { root_id } = useParams<{ root_id: string }>();
   const [reloadCounter, setReloadCounter] = useState(0);
 
@@ -44,7 +44,7 @@ export default function Launch() {
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Box sx={{ maxWidth: "1400px", width: "100%" }}>
             <Typography sx={{ fontSize: "22px", fontWeight: 500, margin: "0 0 20px 0" }} color="text.primary">
-              <ArrowLeft style={{ cursor: "pointer" }} onClick={() => history.push("/sns/launches")} />
+              <ArrowLeft style={{ cursor: "pointer" }} onClick={() => navigate("/sns/launches")} />
             </Typography>
 
             {sns ? (

@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
 import { useTaggedTokenManager } from "store/wallet/hooks";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ckBridgeChain } from "@icpswap/constants";
 import { useWalletContext } from "components/Wallet/context";
 
@@ -12,14 +12,14 @@ interface ConvertItemProps {
 
 export function ConvertItem({ tokenId }: ConvertItemProps) {
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { deleteTaggedTokens } = useTaggedTokenManager();
   const { closeDrawer } = useWalletContext();
 
   const handleConvert = useCallback(() => {
-    history.push(`/ck-bridge?tokenId=${tokenId}&chain=${ckBridgeChain.icp}`);
+    navigate(`/ck-bridge?tokenId=${tokenId}&chain=${ckBridgeChain.icp}`);
     closeDrawer();
-  }, [history, deleteTaggedTokens, tokenId, closeDrawer]);
+  }, [navigate, deleteTaggedTokens, tokenId, closeDrawer]);
 
   return (
     <MenuItem

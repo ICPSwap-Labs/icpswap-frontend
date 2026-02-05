@@ -10,7 +10,7 @@ import { useStakingPoolState } from "@icpswap/hooks";
 import { useUSDPrice } from "hooks/useUSDPrice";
 import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useApr } from "hooks/staking-token/useApr";
 import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
 import { useTokenBalance } from "hooks/token";
@@ -26,7 +26,7 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
   const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const theme = useTheme();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [, stakeToken] = useToken(poolInfo.stakingToken.address);
   const [, rewardToken] = useToken(poolInfo.rewardToken.address);
@@ -51,8 +51,8 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
   const stateColor = useStateColors(state);
 
   const handelToDetails = useCallback(() => {
-    history.push(`/stake/details/${poolInfo.canisterId.toString()}`);
-  }, [history, poolInfo]);
+    navigate(`/stake/details/${poolInfo.canisterId.toString()}`);
+  }, [navigate, poolInfo]);
 
   return (
     <Box

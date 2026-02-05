@@ -3,7 +3,7 @@ import { Header, HeaderCell, LoadingRow } from "@icpswap/ui";
 import { usePoolByPoolId } from "hooks/swap/usePools";
 import { LimitTransaction, Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useScrollToTop } from "hooks/useScrollToTop";
 import { useCallback } from "react";
 import { Tab } from "constants/index";
@@ -41,7 +41,7 @@ export function HistoryTableProUI({
 }: HistoryTableProUIProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [, pool] = usePoolByPoolId(poolId);
 
@@ -49,8 +49,8 @@ export function HistoryTableProUI({
 
   const handleToLimit = useCallback(() => {
     scrollToTop();
-    history.push(`/swap/pro?tab=${Tab.Limit}`);
-  }, [scrollToTop, history]);
+    navigate(`/swap/pro?tab=${Tab.Limit}`);
+  }, [scrollToTop, navigate]);
 
   return (
     <>

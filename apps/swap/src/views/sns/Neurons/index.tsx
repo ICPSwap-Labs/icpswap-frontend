@@ -22,7 +22,7 @@ import { secondsToDuration } from "@dfinity/utils";
 import { Tabs } from "components/sns/Tab";
 import { Token } from "@icpswap/swap-sdk";
 import { DEFAULT_ROOT_ID } from "constants/nns";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 
 import { SplitNeuron } from "./components/SplitNeuron";
@@ -215,7 +215,7 @@ function NeuronItem({ neuron, token, governance_id, neuronSystemParameters, refr
 
 export default function Neurons() {
   const principal = useAccountPrincipalString();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [refreshTrigger, setRefreshTrigger] = useState<number>(0);
 
   const { root_id: __root_id } = useParsedQueryString() as { root_id: string };
@@ -265,7 +265,7 @@ export default function Neurons() {
   const [, token] = useToken(ledger_id);
 
   const handleSelectNeuronChange = (id: string) => {
-    history.push(`/sns/neurons?root_id=${id}`);
+    navigate(`/sns/neurons?root_id=${id}`);
   };
 
   return (
