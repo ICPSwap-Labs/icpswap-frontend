@@ -14,6 +14,7 @@ import {
   updateHideSmallBalance,
   updateRemovedWalletDefaultTokens,
   updateHideZeroNFT,
+  updateSortedTokens,
 } from "store/wallet/actions";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -255,4 +256,29 @@ export function useHideZeroNFTManager(): [boolean, (hidden: boolean) => void] {
   );
 
   return useMemo(() => [hideZeroNFT, callback], [hideZeroNFT, callback]);
+}
+
+export function useSortedTokensManager(): [string[], (tokenIds: string[]) => void, (tokenIds: string[]) => void] {
+  const sortedTokens = useAppSelector((state) => state.wallet.sortedTokens);
+  const dispatch = useAppDispatch();
+
+  const __updateSortedTokens = useCallback(
+    (tokenIds: string[]) => {
+      dispatch(updateSortedTokens([...new Set([...sortedTokens, ...tokenIds])]));
+    },
+    [dispatch, sortedTokens],
+  );
+
+  const __deleteSortedTokens = useCallback(
+    (tokenIds: string[]) => {
+      const newSortedTokens = sortedTokens.filter((id) => !tokenIds.includes(id));
+      dispatch(updateSortedTokens(newSortedTokens));
+    },
+    [dispatch, sortedTokens],
+  );
+
+  return useMemo(
+    () => [sortedTokens, __updateSortedTokens, __deleteSortedTokens],
+    [sortedTokens, __updateSortedTokens, __deleteSortedTokens],
+  );
 }
