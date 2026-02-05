@@ -34,7 +34,7 @@ export function LinearLoader() {
       </div>
       <div className={classes.image}>
         <img src="/images/loading-page.gif" alt="loading" width="200px" height="200px" />
-        <Typography sx={{ color: "text.primary", fontSize: "16px" }}>Loading please wait...</Typography>
+        <Typography sx={{ color: "text.primary", fontSize: "16px" }}>Loading… Please wait.</Typography>
       </div>
     </div>
   );
