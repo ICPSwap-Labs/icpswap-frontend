@@ -244,8 +244,6 @@ export default function AddLiquidity() {
   const getAddLiquidityCall = useAddLiquidityCall();
 
   const handleOnConfirm = useCallback(async () => {
-    await window.icConnector.signerAgent?.signer.openChannel();
-
     // token0SubAccountBalance, token1SubAccountBalance, unusedBalance is undefined when pool is not created
     // So set the value is 0 by default
     // TODO: Fix this?
@@ -260,9 +258,14 @@ export default function AddLiquidity() {
       isUndefinedOrNull(token0SubAccountBalance) ||
       isUndefinedOrNull(token1SubAccountBalance) ||
       isUndefinedOrNull(unusedBalance) ||
-      isUndefinedOrNull(installers)
+      isUndefinedOrNull(installers) ||
+      confirmAddLoading
     )
       return;
+
+    setConfirmAddLoading(true);
+
+    await window.icConnector.signerAgent?.signer.openChannel();
 
     const needPayForPCM = userPCMBalance < pcmMetadata.passcodePrice;
 
@@ -273,8 +276,6 @@ export default function AddLiquidity() {
         return 0;
       })
       .map((e) => e.subnet);
-
-    setConfirmAddLoading(true);
 
     const { call, key } = await getAddLiquidityCall({
       token0Balance,
@@ -328,6 +329,7 @@ export default function AddLiquidity() {
     unusedBalance,
     noLiquidity,
     installers,
+    confirmAddLoading,
   ]);
 
   const handleOnCancel = useCallback(() => {
