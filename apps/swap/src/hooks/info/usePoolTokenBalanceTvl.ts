@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { parseTokenAmount } from "@icpswap/utils";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useToken } from "hooks/index";
 import { InfoPoolRealTimeDataResponse } from "@icpswap/types";
+import { useLiquidityTokenAmountsForInfoPoolTvl } from "hooks/info/useLiquidityTokenAmounts";
 
 export interface UsePoolTokenBalanceTvlProps {
   pool: InfoPoolRealTimeDataResponse | undefined;
@@ -13,24 +13,35 @@ export function usePoolTokenBalanceTvl({ pool }: UsePoolTokenBalanceTvlProps) {
   const [, token0] = useToken(pool?.token0LedgerId);
   const [, token1] = useToken(pool?.token1LedgerId);
 
-  const { result: poolTVLToken0 } = useTokenBalance(pool?.token0LedgerId, pool?.poolId);
-  const { result: poolTVLToken1 } = useTokenBalance(pool?.token1LedgerId, pool?.poolId);
-
   const token0Price = useUSDPriceById(pool?.token0LedgerId);
   const token1Price = useUSDPriceById(pool?.token1LedgerId);
 
-  return useMemo(() => {
-    if (!poolTVLToken0 || !poolTVLToken1 || !token0Price || !token1Price || !token0 || !token1) return {};
+  const { parsedToken0Amount, parsedToken1Amount } = useLiquidityTokenAmountsForInfoPoolTvl({
+    poolId: pool?.poolId,
+    token0,
+    token1,
+  });
 
-    const token0TvlUSD = parseTokenAmount(poolTVLToken0, token0.decimals).multipliedBy(token0Price);
-    const token1TvlUSD = parseTokenAmount(poolTVLToken1, token1.decimals).multipliedBy(token1Price);
+  return useMemo(() => {
+    if (
+      isUndefinedOrNull(parsedToken0Amount) ||
+      isUndefinedOrNull(parsedToken1Amount) ||
+      !token0Price ||
+      !token1Price ||
+      !token0 ||
+      !token1
+    )
+      return {};
+
+    const token0TvlUSD = new BigNumber(parsedToken0Amount).multipliedBy(token0Price);
+    const token1TvlUSD = new BigNumber(parsedToken1Amount).multipliedBy(token1Price);
 
     return {
       poolTvlUSD: token0TvlUSD.plus(token1TvlUSD).toString(),
       token0TvlUSD: token0TvlUSD.toString(),
       token1TvlUSD: token1TvlUSD.toString(),
-      token0Balance: poolTVLToken0,
-      token1Balance: poolTVLToken1,
+      token0Balance: parsedToken0Amount,
+      token1Balance: parsedToken1Amount,
     };
-  }, [poolTVLToken0, poolTVLToken1, token0Price, token1Price, token0, token1]);
+  }, [parsedToken0Amount, parsedToken1Amount, token0Price, token1Price, token0, token1]);
 }

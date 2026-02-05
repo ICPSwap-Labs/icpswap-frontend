@@ -1,14 +1,7 @@
 import { useMemo, useState } from "react";
 import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
-import {
-  formatDollarAmount,
-  formatAmount,
-  parseTokenAmount,
-  explorerLink,
-  BigNumber,
-  isUndefinedOrNull,
-} from "@icpswap/utils";
+import { formatDollarAmount, formatAmount, explorerLink, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
 import { usePoolAPR, useInfoPool } from "@icpswap/hooks";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
@@ -54,7 +47,7 @@ function PoolTokenTvl({ token, amount, tvl }: PoolTokenTvlProps) {
 
       <Flex vertical gap="4px 0" align="flex-end">
         <Typography color="text.primary" fontWeight={500}>
-          {amount ? formatAmount(parseTokenAmount(amount, token?.decimals).toNumber()) : ""}
+          {amount ? formatAmount(amount) : ""}
         </Typography>
 
         <Typography fontSize="12px">{tvl ? formatDollarAmount(tvl) : ""}</Typography>

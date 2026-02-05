@@ -306,35 +306,20 @@ export function usePositionNFTId(poolId: string | undefined, positionId: string 
 
 /*  swap records */
 
+// Get the token amounts of each liquidity position
+// Suggested limit is 40, if limit is beyond 40, maybe the backend will return error
 export async function getSwapUserPositionWithAmount(canisterId: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<UserPositionInfoWithTokenAmount>>(
     await (await swapPool(canisterId)).getUserPositionWithTokenAmount(BigInt(offset), BigInt(limit)),
   ).data;
 }
 
-export function useSwapUserPositionWithAmount(canisterId: string | undefined, offset: number, limit: number) {
+export function useSwapUserPositionWithAmount(canisterId: string | Null, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getSwapUserPositionWithAmount(canisterId, offset, limit);
     }, [canisterId, offset, limit]),
-  );
-}
-
-export async function _getSwapUserPositionsWithAmount(poolId: string, limit = 1000) {
-  const callback = async (offset: number, limit: number) => {
-    return await getSwapUserPositionWithAmount(poolId, offset, limit);
-  };
-
-  return await getPaginationAllData<UserPositionInfoWithTokenAmount>(callback, limit);
-}
-
-export function _useSwapUserPositionsWithAmount(canisterId: string | undefined, limit?: number) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return await _getSwapUserPositionsWithAmount(canisterId, limit);
-    }, [canisterId, limit]),
   );
 }
 
