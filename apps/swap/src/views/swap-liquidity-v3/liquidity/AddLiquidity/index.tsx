@@ -201,7 +201,7 @@ export default function AddLiquidity() {
 
       handleUrlChange(path);
     },
-    [handleUrlChange],
+    [handleUrlChange, currencyIdB, currencyIdA],
   );
 
   const handleFeeChange = useCallback(
