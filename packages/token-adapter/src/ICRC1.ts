@@ -1,4 +1,4 @@
-import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
+import { resultFormat, optionalArg, isBigIntMemo } from "@icpswap/utils";
 import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { icrc1, icrcArchive } from "@icpswap/actor";
 import { ICRC1_SERVICE, MetadataValue, GetTransactionsResponse, ArchivedTransaction } from "@icpswap/candid";
@@ -45,7 +45,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
           await this.actor(canisterId)
         ).icrc1_balance_of({
           owner: params.user.principal,
-          subaccount: availableArgsNull<Array<number>>(params.subaccount ? params.subaccount : undefined),
+          subaccount: optionalArg<Array<number>>(params.subaccount ? params.subaccount : undefined),
         }),
       );
     }
@@ -62,13 +62,13 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
     ).icrc1_transfer({
       to: {
         owner: params.to.principal,
-        subaccount: availableArgsNull<Array<number>>(params.subaccount ? params.subaccount : undefined),
+        subaccount: optionalArg<Array<number>>(params.subaccount ? params.subaccount : undefined),
       },
-      memo: availableArgsNull<number[]>(params.memo),
+      memo: optionalArg<number[]>(params.memo),
       amount: params.amount,
-      created_at_time: availableArgsNull<bigint>(params.create_at_time),
-      from_subaccount: availableArgsNull<Array<number>>(params.from_sub_account ? params.from_sub_account : undefined),
-      fee: availableArgsNull<bigint>(params.fee),
+      created_at_time: optionalArg<bigint>(params.create_at_time),
+      from_subaccount: optionalArg<Array<number>>(params.from_sub_account ? params.from_sub_account : undefined),
+      fee: optionalArg<bigint>(params.fee),
     });
 
     return resultFormat<bigint>(result);

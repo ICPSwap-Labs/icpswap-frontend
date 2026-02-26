@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, optionalArg } from "@icpswap/utils";
 import { stakingPoolController, stakingPool } from "@icpswap/actor";
 import type {
   CreateStakingPoolArgs,
@@ -24,7 +24,7 @@ export async function getStakingPools(state: bigint | undefined, offset: number,
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
     await (
       await stakingPoolController()
-    ).findStakingPoolPage(availableArgsNull<bigint>(state), BigInt(offset), BigInt(limit)),
+    ).findStakingPoolPage(optionalArg<bigint>(state), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -50,11 +50,11 @@ export async function getStakePools({ state, offset, limit, rewardTokenId, stake
     await (
       await stakingPoolController()
     ).findStakingPoolPageV2(
-      availableArgsNull<bigint>(state),
+      optionalArg<bigint>(state),
       BigInt(offset),
       BigInt(limit),
-      availableArgsNull<string>(stakeTokenId),
-      availableArgsNull<string>(rewardTokenId),
+      optionalArg<string>(stakeTokenId),
+      optionalArg<string>(rewardTokenId),
     ),
   ).data;
 }
@@ -223,7 +223,7 @@ export async function getStakingPoolTransactions(
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
     await (
       await stakingPool(canisterId)
-    ).findStakingRecordPage(availableArgsNull<Principal>(principal), BigInt(offset), BigInt(limit)),
+    ).findStakingRecordPage(optionalArg<Principal>(principal), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -252,7 +252,7 @@ export async function getStakingPoolClaimTransactions(
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
     await (
       await stakingPool(canisterId)
-    ).findRewardRecordPage(availableArgsNull<Principal>(principal), BigInt(offset), BigInt(limit)),
+    ).findRewardRecordPage(optionalArg<Principal>(principal), BigInt(offset), BigInt(limit)),
   ).data;
 }
 

@@ -1,5 +1,5 @@
 import { useCallsData } from "@icpswap/hooks";
-import { resultFormat, availableArgsNull, isUndefinedOrNull } from "@icpswap/utils";
+import { resultFormat, optionalArg, isUndefinedOrNull } from "@icpswap/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ckBtcMinter } from "@icpswap/actor";
 import { Principal } from "@dfinity/principal";
@@ -101,8 +101,8 @@ export function useBtcDepositAddress(subaccount?: Uint8Array) {
         await (
           await ckBtcMinter(true)
         ).get_btc_address({
-          owner: availableArgsNull(Principal.fromText(principal)),
-          subaccount: availableArgsNull<Uint8Array>(subaccount),
+          owner: optionalArg(Principal.fromText(principal)),
+          subaccount: optionalArg<Uint8Array>(subaccount),
         }),
       ).data;
 
@@ -125,8 +125,8 @@ export function useRefreshBtcBalanceCallback() {
     return await (
       await ckBtcMinter(true)
     ).update_balance({
-      owner: availableArgsNull<Principal>(Principal.fromText(principal)),
-      subaccount: availableArgsNull<Uint8Array>(subaccount),
+      owner: optionalArg<Principal>(Principal.fromText(principal)),
+      subaccount: optionalArg<Uint8Array>(subaccount),
     });
   }, []);
 }

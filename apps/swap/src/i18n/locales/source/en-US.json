@@ -1504,5 +1504,16 @@
   "price.alerts.create.alert": "Create Alert",
   "price.alerts.select.alert.type": "Select alert type",
   "price.alerts.alert.type.every.time": "Every time triggered",
-  "price.alerts.alert.type.once.only": "Once only"
+  "price.alerts.alert.type.once.only": "Once only",
+  "info.tools.new.tokens.pools": "New Tokens & Pools",
+  "common.time.past.days.short": "{{days}}d",
+  "common.time.past.hours.short": "{{hours}}h",
+  "common.time.past.minutes.short": "{{minutes}}m",
+  "common.time.past.months.short": "{{months}}mo",
+  "common.time.past.seconds.short": "{{seconds}}s",
+  "common.time.past.days.short.ago": "{{days}}d ago",
+  "common.time.past.hours.short.ago": "{{hours}}h ago",
+  "common.time.past.minutes.short.ago": "{{minutes}}m ago",
+  "common.time.past.months.short.ago": "{{months}}mo ago",
+  "common.time.past.seconds.short.ago": "{{seconds}}s ago"
 }

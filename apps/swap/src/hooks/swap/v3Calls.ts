@@ -10,7 +10,7 @@ import {
   createSwapPool,
   _getSwapPoolAllBalance,
 } from "@icpswap/hooks";
-import { resultFormat, isUndefinedOrNull, availableArgsNull, BigNumber } from "@icpswap/utils";
+import { resultFormat, isUndefinedOrNull, optionalArg, BigNumber } from "@icpswap/utils";
 import { FeeAmount } from "@icpswap/swap-sdk";
 import type { Null, SwapPoolData } from "@icpswap/types";
 import { swapFactory_update_call } from "actor/swap";
@@ -65,7 +65,7 @@ export async function createPool({ token0, token1, fee, sqrtPriceX96, subnet }: 
     token0: getSwapTokenArgs(_token0),
     token1: getSwapTokenArgs(_token1),
     sqrtPriceX96,
-    subnet: availableArgsNull(subnet),
+    subnet: optionalArg(subnet),
   });
 }
 

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { tokenClaimController, tokenClaimStorage } from "@icpswap/actor";
-import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, optionalArg } from "@icpswap/utils";
 import type { PaginationResult, ClaimEventInfo, ClaimQuota, ClaimTransaction } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { useCallsData } from "../useCallData";
@@ -94,7 +94,7 @@ export async function getClaimEventTransactions(id: string, state: number | unde
       await tokenClaimController()
     ).findEventRecords(
       id,
-      state === undefined ? [] : availableArgsNull<bigint>(BigInt(state)),
+      state === undefined ? [] : optionalArg<bigint>(BigInt(state)),
       BigInt(offset),
       BigInt(limit),
     ),
@@ -129,8 +129,8 @@ export async function getUserClaimEventTransactions(
       await tokenClaimController()
     ).findUserEventRecords(
       Principal.fromText(user),
-      id === undefined ? [] : availableArgsNull<string>(id),
-      state === undefined ? [] : availableArgsNull<bigint>(BigInt(state)),
+      id === undefined ? [] : optionalArg<string>(id),
+      state === undefined ? [] : optionalArg<bigint>(BigInt(state)),
       BigInt(offset),
       BigInt(limit),
     ),
