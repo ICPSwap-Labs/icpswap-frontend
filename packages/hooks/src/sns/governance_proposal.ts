@@ -1,6 +1,6 @@
 import { sns_governance } from "@icpswap/actor";
 import { useCallback } from "react";
-import { availableArgsNull, resultFormat } from "@icpswap/utils";
+import { optionalArg, resultFormat } from "@icpswap/utils";
 import type { GetProposalResponse, ListProposalsResponse, ProposalData, ProposalId } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
 
@@ -9,7 +9,7 @@ export async function getProposal(canisterId: string, proposal_id: bigint) {
     await (
       await sns_governance(canisterId)
     ).get_proposal({
-      proposal_id: availableArgsNull<{ id: bigint }>({ id: proposal_id }),
+      proposal_id: optionalArg<{ id: bigint }>({ id: proposal_id }),
     }),
   ).data?.result;
 

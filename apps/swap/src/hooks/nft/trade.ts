@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat, availableArgsNull, isAvailablePageArgs } from "@icpswap/utils";
+import { resultFormat, optionalArg, isAvailablePageArgs } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
 import { StatusResult1, PaginationResult, getCanisterId, CANISTER_NAMES } from "constants/index";
 import { Principal } from "@dfinity/principal";
@@ -77,10 +77,10 @@ export async function getTradeOrders(
     await (
       await NFTTradeCanister()
     ).findOrderPage(
-      availableArgsNull<string>(canisterId),
-      availableArgsNull<string>(name),
-      availableArgsNull<string>(user),
-      availableArgsNull<number>(token),
+      optionalArg<string>(canisterId),
+      optionalArg<string>(name),
+      optionalArg<string>(user),
+      optionalArg<number>(token),
       BigInt(offset),
       BigInt(limit),
       sort,
@@ -140,9 +140,9 @@ export function useTradeTxList(
         await (
           await NFTTradeCanister()
         ).findTxPage(
-          availableArgsNull<string>(canisterId),
-          availableArgsNull<string>(name),
-          availableArgsNull<number>(tokenIndex),
+          optionalArg<string>(canisterId),
+          optionalArg<string>(name),
+          optionalArg<number>(tokenIndex),
           BigInt(offset),
           BigInt(limit),
           sort,
@@ -171,8 +171,8 @@ export function useUserTradeTxList(
           await NFTTradeCanister()
         ).findUserTxPage(
           account,
-          availableArgsNull<string>(canisterId),
-          availableArgsNull<string>(name),
+          optionalArg<string>(canisterId),
+          optionalArg<string>(name),
           BigInt(offset),
           BigInt(limit),
           sort,

@@ -1,17 +1,6 @@
 import { useCallback } from "react";
-import {
-  NFTCanister,
-  NFTTradeCanister,
-  NFTCanisterController,
-  NFTTradeStat,
-  NFT_V1,
-} from "@icpswap/actor";
-import {
-  resultFormat,
-  isAvailablePageArgs,
-  isPrincipal,
-  availableArgsNull,
-} from "@icpswap/utils";
+import { NFTCanister, NFTTradeCanister, NFTCanisterController, NFTTradeStat, NFT_V1 } from "@icpswap/actor";
+import { resultFormat, isAvailablePageArgs, isPrincipal, optionalArg } from "@icpswap/utils";
 import { useCallsData } from "../useCallData";
 import { Principal } from "@dfinity/principal";
 import type {
@@ -28,9 +17,7 @@ import type {
 // ----------------> NFT Canisters
 export async function getNFTCanisters(offset: number, limit: number) {
   return resultFormat<PaginationResult<NFTCanisterInfo>>(
-    await (
-      await NFTCanisterController()
-    ).findCanister(BigInt(offset), BigInt(limit))
+    await (await NFTCanisterController()).findCanister(BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -39,39 +26,27 @@ export function useNFTCanisters(offset: number, limit: number) {
     useCallback(async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
       return await getNFTCanisters(offset, limit);
-    }, [offset, limit])
+    }, [offset, limit]),
   );
 }
 
-export async function getUserNFTCanisters(
-  account: string,
-  offset: number,
-  limit: number
-) {
+export async function getUserNFTCanisters(account: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<NFTCanisterInfo>>(
-    await (
-      await NFTCanisterController()
-    ).findUserCanister(account, BigInt(offset), BigInt(limit))
+    await (await NFTCanisterController()).findUserCanister(account, BigInt(offset), BigInt(limit)),
   ).data;
 }
 
-export function useUserNFTCanisters(
-  account: string | undefined,
-  offset: number,
-  limit: number
-) {
+export function useUserNFTCanisters(account: string | undefined, offset: number, limit: number) {
   return useCallsData(
     useCallback(async () => {
       if (!account || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getUserNFTCanisters(account!, offset, limit);
-    }, [offset, limit])
+    }, [offset, limit]),
   );
 }
 
 export async function getV1NFTCanisterMetadata(canisterId: string) {
-  return resultFormat<NFTCanisterInfo>(
-    await (await NFTCanisterController()).canisterInfo(canisterId)
-  ).data;
+  return resultFormat<NFTCanisterInfo>(await (await NFTCanisterController()).canisterInfo(canisterId)).data;
 }
 
 export function useV1NFTCanisterMetadata(canisterId: string | undefined) {
@@ -79,14 +54,12 @@ export function useV1NFTCanisterMetadata(canisterId: string | undefined) {
     useCallback(async () => {
       return await getV1NFTCanisterMetadata(canisterId!);
     }, [canisterId]),
-    !!canisterId
+    !!canisterId,
   );
 }
 
 export async function getNFTCanisterMetadata(canisterId: string) {
-  return resultFormat<NFTCanisterInfo>(
-    await (await NFTCanister(canisterId)).canisterInfo()
-  ).data;
+  return resultFormat<NFTCanisterInfo>(await (await NFTCanister(canisterId)).canisterInfo()).data;
 }
 
 export function useNFTCanisterMetadata(canisterId: string | undefined) {
@@ -94,7 +67,7 @@ export function useNFTCanisterMetadata(canisterId: string | undefined) {
     useCallback(async () => {
       if (!canisterId) return undefined;
       return await getNFTCanisterMetadata(canisterId!);
-    }, [canisterId])
+    }, [canisterId]),
   );
 }
 
@@ -109,16 +82,9 @@ export type NFTTransactionsArgs = {
   limit: number;
 };
 
-export async function getNFTTransactions({
-  canisterId,
-  tokenIdentifier,
-  offset,
-  limit,
-}: NFTTransactionsArgs) {
+export async function getNFTTransactions({ canisterId, tokenIdentifier, offset, limit }: NFTTransactionsArgs) {
   return resultFormat<PaginationResult<NFTTransaction>>(
-    await (
-      await NFTCanister(canisterId)
-    ).findTxRecord(tokenIdentifier, BigInt(offset), BigInt(limit))
+    await (await NFTCanister(canisterId)).findTxRecord(tokenIdentifier, BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -137,12 +103,7 @@ export function useNFTTransactions({
 }) {
   return useCallsData(
     useCallback(async () => {
-      if (
-        !canisterId ||
-        !tokenIdentifier ||
-        !isAvailablePageArgs(offset, limit)
-      )
-        return undefined;
+      if (!canisterId || !tokenIdentifier || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return await getNFTTransactions({
         canisterId: canisterId,
@@ -151,7 +112,7 @@ export function useNFTTransactions({
         limit,
       });
     }, [canisterId, offset, limit, tokenIdentifier]),
-    reload
+    reload,
   );
 }
 
@@ -172,8 +133,8 @@ export async function getUserNFTs({
     ).findTokenList(
       isPrincipal(account) ? { principal: account } : { address: account },
       BigInt(offset),
-      BigInt(limit)
-    )
+      BigInt(limit),
+    ),
   ).data;
 }
 
@@ -192,8 +153,7 @@ export function useUserNFTs({
 }) {
   return useCallsData(
     useCallback(async () => {
-      if (!account || (!canisterId && !isAvailablePageArgs(offset, limit)))
-        return undefined;
+      if (!account || (!canisterId && !isAvailablePageArgs(offset, limit))) return undefined;
 
       return await getUserNFTs({
         canisterId: canisterId,
@@ -202,23 +162,13 @@ export function useUserNFTs({
         account: account,
       });
     }, [canisterId, account, offset, limit]),
-    reload
+    reload,
   );
 }
 
-export async function getNFTs({
-  canisterId,
-  offset,
-  limit,
-}: {
-  canisterId: string;
-  offset: number;
-  limit: number;
-}) {
+export async function getNFTs({ canisterId, offset, limit }: { canisterId: string; offset: number; limit: number }) {
   return resultFormat<PaginationResult<NFTTokenMetadata>>(
-    await (
-      await NFTCanister(canisterId)
-    ).findTokenMarket(["all"], BigInt(offset), BigInt(limit))
+    await (await NFTCanister(canisterId)).findTokenMarket(["all"], BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -235,13 +185,13 @@ export function useNFTs({ canisterId, offset, limit, reload }: useNFTsArgs) {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getNFTs({ canisterId: canisterId, offset, limit });
     }, [canisterId, offset, limit]),
-    reload
+    reload,
   );
 }
 
 export async function getNFTsStat(offset: number, limit: number) {
   return resultFormat<PaginationResult<TradeStateResult>>(
-    await (await NFTTradeStat()).findCanisterStat(BigInt(offset), BigInt(limit))
+    await (await NFTTradeStat()).findCanisterStat(BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -251,14 +201,12 @@ export function useNFTsStat(offset: number, limit: number, reload?: boolean) {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
       return await getNFTsStat(offset, limit);
     }, [offset, limit]),
-    reload
+    reload,
   );
 }
 
 export async function getNFTStat(canisterId: string) {
-  return resultFormat<[bigint, bigint]>(
-    await (await NFTCanister(canisterId)).getNftStat()
-  ).data;
+  return resultFormat<[bigint, bigint]>(await (await NFTCanister(canisterId)).getNftStat()).data;
 }
 
 export function useNFTStat(canisterId: string | undefined, reload?: boolean) {
@@ -268,7 +216,7 @@ export function useNFTStat(canisterId: string | undefined, reload?: boolean) {
 
       return await getNFTStat(canisterId);
     }, [canisterId]),
-    reload
+    reload,
   );
 }
 
@@ -283,27 +231,21 @@ export function useV1NFTStat(canisterId: string | undefined) {
     useCallback(async () => {
       if (!canisterId) return undefined;
       return await getV1NFTStat(canisterId!);
-    }, [canisterId])
+    }, [canisterId]),
   );
 }
 
 export async function getNFTMetadata(canisterId: string, tokenId: number) {
-  return resultFormat<NFTTokenMetadata>(
-    await (await NFTCanister(canisterId)).icsMetadata(Number(tokenId))
-  ).data;
+  return resultFormat<NFTTokenMetadata>(await (await NFTCanister(canisterId)).icsMetadata(Number(tokenId))).data;
 }
 
-export function useNFTMetadata(
-  canisterId: string | undefined,
-  tokenId: number | undefined,
-  reload?: boolean
-) {
+export function useNFTMetadata(canisterId: string | undefined, tokenId: number | undefined, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || (tokenId !== 0 && !tokenId)) return undefined;
       return await getNFTMetadata(canisterId, tokenId!);
     }, [canisterId, tokenId]),
-    reload
+    reload,
   );
 }
 
@@ -334,14 +276,14 @@ export async function getNFTTradeTransactions({
     await (
       await NFTTradeCanister()
     ).findTxPage(
-      availableArgsNull<string>(canisterId),
-      availableArgsNull<string>(name),
-      availableArgsNull<number>(Number(tokenIndex)),
+      optionalArg<string>(canisterId),
+      optionalArg<string>(name),
+      optionalArg<number>(Number(tokenIndex)),
       BigInt(offset),
       BigInt(limit),
       sort,
-      desc
-    )
+      desc,
+    ),
   ).data;
 }
 
@@ -369,7 +311,7 @@ export function useNFTTradeTransactions({
         name,
       });
     }, [canisterId, name, tokenIndex, limit, offset, sort, desc]),
-    reload
+    reload,
   );
 }
 
@@ -398,13 +340,13 @@ export async function getUserNFTTradeTransactions({
       await NFTTradeCanister()
     ).findUserTxPage(
       account,
-      availableArgsNull<string>(canisterId),
-      availableArgsNull<string>(name),
+      optionalArg<string>(canisterId),
+      optionalArg<string>(name),
       BigInt(offset),
       BigInt(limit),
       sort,
-      desc
-    )
+      desc,
+    ),
   ).data;
 }
 
@@ -432,41 +374,33 @@ export function useUserNFTTradeTransactions({
         name,
       });
     }, [account, canisterId, name, limit, offset, sort, desc]),
-    reload
+    reload,
   );
 }
 
 export async function getTradeOrder(canisterId: string, tokenIndex: number) {
-  return resultFormat<OrderInfo>(
-    await (await NFTTradeCanister()).getOrder(canisterId!, tokenIndex)
-  ).data;
+  return resultFormat<OrderInfo>(await (await NFTTradeCanister()).getOrder(canisterId!, tokenIndex)).data;
 }
 
-export function useTradeOrder(
-  canisterId: string,
-  tokenIndex: number,
-  reload?: boolean
-) {
+export function useTradeOrder(canisterId: string, tokenIndex: number, reload?: boolean) {
   return useCallsData(
     useCallback(async () => {
       if (!canisterId || (!tokenIndex && tokenIndex !== 0)) return undefined;
       return await getTradeOrder(canisterId, tokenIndex);
     }, [canisterId, tokenIndex]),
-    reload
+    reload,
   );
 }
 
 export async function getNFTTradeData() {
-  return resultFormat<TotalTradeStat>(
-    await (await NFTTradeCanister()).getStat()
-  ).data;
+  return resultFormat<TotalTradeStat>(await (await NFTTradeCanister()).getStat()).data;
 }
 
 export function useNFTTradeData() {
   return useCallsData(
     useCallback(async () => {
       return await getNFTTradeData();
-    }, [])
+    }, []),
   );
 }
 // ----------------> NFT Trade

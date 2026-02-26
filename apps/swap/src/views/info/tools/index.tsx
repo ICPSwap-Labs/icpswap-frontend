@@ -35,6 +35,11 @@ const tools = [
     image: "/images/info/tools/LockedPositions.svg",
     path: "/info-tools/locked-positions",
   },
+  {
+    label: i18n.t("info.tools.new.tokens.pools"),
+    image: "/images/info/tools/new-tokens-pools.svg",
+    path: "/info-tools/new-tokens-pools",
+  },
 ];
 
 export default function Tools() {

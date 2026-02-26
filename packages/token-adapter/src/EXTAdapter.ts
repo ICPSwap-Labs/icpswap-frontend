@@ -1,4 +1,4 @@
-import { resultFormat, availableArgsNull, principalToAccount, isOkSubAccount, isBigIntMemo } from "@icpswap/utils";
+import { resultFormat, optionalArg, principalToAccount, isOkSubAccount, isBigIntMemo } from "@icpswap/utils";
 import { SubAccount } from "@dfinity/ledger-icp";
 import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { ext } from "@icpswap/actor";
@@ -89,8 +89,8 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
           ? { address: principalToAccount(params.from.principal.toString()) }
           : { address: params.from.address as string },
         memo: params.memo ? params.memo : [],
-        subaccount: availableArgsNull<number[]>(undefined),
-        nonce: availableArgsNull<bigint>(params.nonce),
+        subaccount: optionalArg<number[]>(undefined),
+        nonce: optionalArg<bigint>(params.nonce),
         amount: params.amount,
         notify: params.notify ?? true,
       }),
@@ -112,11 +112,11 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
       await (
         await this.actor(canisterId)
       ).transactions({
-        hash: availableArgsNull<string>(params.hash),
-        user: availableArgsNull<TokenUser>(params.user?.address ? { address: params.user.address } : undefined),
-        offset: availableArgsNull<bigint>(params.offset ? BigInt(params.offset) : null),
-        limit: availableArgsNull<bigint>(params.limit ? BigInt(params.limit) : null),
-        index: availableArgsNull<bigint>(params.index ? BigInt(params.index) : null),
+        hash: optionalArg<string>(params.hash),
+        user: optionalArg<TokenUser>(params.user?.address ? { address: params.user.address } : undefined),
+        offset: optionalArg<bigint>(params.offset ? BigInt(params.offset) : null),
+        limit: optionalArg<bigint>(params.limit ? BigInt(params.limit) : null),
+        index: optionalArg<bigint>(params.index ? BigInt(params.index) : null),
       }),
     );
   }
@@ -173,11 +173,7 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
     return await (await this.actor(canisterId)).extensions();
   }
 
-  public async getMintingAccount({
-    canisterId,
-  }: {
-    canisterId: string;
-  }): BaseTokenResult<{ owner: string; sub: number[] | undefined }> {
+  public async getMintingAccount(): BaseTokenResult<{ owner: string; sub: number[] | undefined }> {
     return {
       status: ResultStatus.OK,
       data: undefined,

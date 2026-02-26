@@ -1,4 +1,4 @@
-import { resultFormat, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, optionalArg } from "@icpswap/utils";
 import { StatusResult } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
 import { ckBtcActor } from "@icpswap/actor";
@@ -25,9 +25,9 @@ export async function approve({ spender, amount, expected_allowance, spenderSub 
       from_subaccount: [],
       created_at_time: [],
       amount: BigInt(amount),
-      spender: { owner: spender, subaccount: availableArgsNull<number[]>(spenderSub) },
-      expires_at: availableArgsNull<bigint>(expected_allowance),
-      expected_allowance: availableArgsNull<bigint>(expected_allowance),
+      spender: { owner: spender, subaccount: optionalArg<number[]>(spenderSub) },
+      expires_at: optionalArg<bigint>(expected_allowance),
+      expected_allowance: optionalArg<bigint>(expected_allowance),
     }),
   );
 }

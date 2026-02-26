@@ -25,6 +25,7 @@ const ToolsPositions = Loadable(lazy(() => import("../views/info/tools/positions
 const ToolsUserBalances = Loadable(lazy(() => import("../views/info/tools/user-balances")));
 const ToolsLockedPositions = Loadable(lazy(() => import("../views/info/tools/locked-positions")));
 const ToolsPositionTransactions = Loadable(lazy(() => import("../views/info/tools/position-transactions")));
+const ToolsNewTokensPools = Loadable(lazy(() => import("../views/info/tools/new-tokens-pools")));
 
 const StaticTitlesAndDescriptions = {
   Info: i18n.t("title.info"),
@@ -54,6 +55,7 @@ export const infoRoutesConfigs = {
   INFO_TOOLS_USER_BALANCES: "/info-tools/user-balances",
   INFO_TOOLS_LOCKED_POSITIONS: "/info-tools/locked-positions",
   INFO_TOOLS_POSITION_TRANSACTIONS: "/info-tools/position-transactions",
+  INFO_TOOLS_NEW_TOKENS_POOLS: "/info-tools/new-tokens-pools",
 };
 
 export const infoRoutes: RouteDefinition[] = [
@@ -149,6 +151,11 @@ export const infoRoutes: RouteDefinition[] = [
   {
     path: infoRoutesConfigs.INFO_TOOLS_POSITION_TRANSACTIONS,
     getElement: () => <ToolsPositionTransactions />,
+    getTitle: () => StaticTitlesAndDescriptions.Info,
+  },
+  {
+    path: infoRoutesConfigs.INFO_TOOLS_NEW_TOKENS_POOLS,
+    getElement: () => <ToolsNewTokensPools />,
     getTitle: () => StaticTitlesAndDescriptions.Info,
   },
 ];

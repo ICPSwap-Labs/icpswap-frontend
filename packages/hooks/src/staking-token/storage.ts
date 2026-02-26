@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs, isUndefinedOrNull, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, isUndefinedOrNull, optionalArg } from "@icpswap/utils";
 import { stakeIndex } from "@icpswap/actor";
 import type { PaginationResult, StakeIndexPoolInfo, StakeAprInfo, StakeUserStakeInfo } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
@@ -20,8 +20,8 @@ export async function getUserStakePools(
       Principal.fromText(principal),
       BigInt(offset),
       BigInt(limit),
-      availableArgsNull<string>(stakeTokenId),
-      availableArgsNull<string>(rewardTokenId),
+      optionalArg<string>(stakeTokenId),
+      optionalArg<string>(rewardTokenId),
     ),
   ).data;
 }

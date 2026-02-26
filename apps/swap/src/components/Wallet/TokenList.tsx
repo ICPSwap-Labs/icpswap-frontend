@@ -7,7 +7,7 @@ import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
 import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
 import { useGlobalTokenList } from "store/global/hooks";
-import BigNumber from "bignumber.js";
+import { BigNumber } from "@icpswap/utils";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
 import { useWalletTokenContext } from "components/Wallet/token/context";
