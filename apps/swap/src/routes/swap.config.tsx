@@ -4,7 +4,11 @@ import i18n from "i18n";
 
 import { RouteDefinition } from "./type";
 
-const Swap = Loadable(lazy(() => import("../views/swap-liquidity-v3/index")));
+// Preload first-screen (Swap) chunk as soon as route config loads, so it fetches in parallel with app shell
+const swapChunkPromise = import(
+  /* webpackChunkName: "swap" */ "../views/swap-liquidity-v3/index"
+);
+const Swap = Loadable(lazy(() => swapChunkPromise));
 const SwapLimit = Loadable(lazy(() => import("../views/swap-liquidity-v3/limit")));
 const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));
 const Liquidity = Loadable(lazy(() => import("../views/swap-liquidity-v3/liquidity/index")));

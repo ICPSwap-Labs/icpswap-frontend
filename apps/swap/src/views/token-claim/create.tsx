@@ -19,7 +19,7 @@ import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { read, utils } from "xlsx";
 import { useToken } from "hooks/index";
 import { Principal } from "@dfinity/principal";
-import { standardCheck } from "utils/token/standardCheck";
+import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { useTranslation } from "react-i18next";
 
@@ -98,7 +98,7 @@ export default function CreateTokenClaim() {
 
   useEffect(() => {
     async function call() {
-      const { valid } = await standardCheck(values.id, values.standard as TOKEN_STANDARD);
+      const { valid } = await verifyTokenStandard(values.id, values.standard as TOKEN_STANDARD);
 
       if (!valid) {
         openTip("Token standard is not correct", MessageTypes.error);
