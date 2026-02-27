@@ -18,7 +18,7 @@ import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { getSwapTokenArgs } from "hooks/token/index";
 import dayjs from "dayjs";
 import { FarmControllerId } from "constants/canister";
-import { standardCheck } from "utils/token/standardCheck";
+import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
 import { Principal } from "@dfinity/principal";
 import { useTranslation } from "react-i18next";
 
@@ -114,7 +114,7 @@ export default function CreateProject() {
         setTokenId(undefined);
         return;
       }
-      const { valid } = await standardCheck(values.rewardToken, values.rewardStandard as TOKEN_STANDARD);
+      const { valid } = await verifyTokenStandard(values.rewardToken, values.rewardStandard as TOKEN_STANDARD);
       if (!valid) {
         setTokenId(undefined);
       } else {

@@ -1,38 +1,52 @@
+import {
+  DIP20Adapter,
+  DIP20WICPAdapter,
+  DIP20XTCAdapter,
+  EXTAdapter,
+  icrc1Adapter,
+  icrc2Adapter,
+  icpAdapter,
+} from "@icpswap/token-adapter";
 import { icrc1, icrc2 } from "@icpswap/actor";
-import { DIP20Adapter } from "./DIP20Adapter";
-import { DIP20WICPAdapter } from "./DIP20WICPAdapter";
-import { DIP20XTCAdapter } from "./DIP20XTCAdapter";
-import { EXTAdapter } from "./EXTAdapter";
-import { icrc1Adapter } from "./ICRC1";
-import { icrc2Adapter } from "./ICRC2";
-import { TOKEN_STANDARD, Metadata } from "./types";
+import { TOKEN_STANDARD } from "constants/tokens";
+import { Metadata } from "types/token";
+import { ICP } from "@icpswap/tokens";
 
-type VerificationResult = {
+export type VerifyTokenStandardResult = {
   valid: boolean;
   metadata: Metadata | null | undefined;
-  support_icrc2: boolean;
 };
 
-async function runVerification(fn: () => Promise<VerificationResult>): Promise<VerificationResult> {
+async function runVerification(fn: () => Promise<VerifyTokenStandardResult>): Promise<VerifyTokenStandardResult> {
   try {
     return await fn();
   } catch (error) {
     console.error(error);
-    return { valid: false, metadata: null, support_icrc2: false };
+    return { valid: false, metadata: null };
   }
 }
 
-export async function tokenStandardVerification(
+export async function verifyTokenStandard(
   canisterId: string,
   standard: TOKEN_STANDARD,
-): Promise<VerificationResult> {
-  const defaultResult: VerificationResult = { valid: false, metadata: null, support_icrc2: false };
+): Promise<VerifyTokenStandardResult> {
+  const defaultResult: VerifyTokenStandardResult = { valid: false, metadata: null };
 
   if (standard === TOKEN_STANDARD.DIP20) {
     return runVerification(async () => {
       const metadata = (await DIP20Adapter.metadata({ canisterId })).data;
       const valid = Boolean(metadata?.symbol && metadata.symbol !== "WICP" && metadata.symbol !== "XTC");
-      return { metadata, valid, support_icrc2: false };
+      return { metadata, valid };
+    });
+  }
+
+  if (standard === TOKEN_STANDARD.ICP) {
+    if (canisterId !== ICP.address) {
+      return defaultResult;
+    }
+    return runVerification(async () => {
+      const metadata = (await icpAdapter.metadata({ canisterId })).data;
+      return { metadata, valid: true };
     });
   }
 
@@ -40,7 +54,7 @@ export async function tokenStandardVerification(
     return runVerification(async () => {
       const metadata = (await DIP20WICPAdapter.metadata({ canisterId })).data;
       const valid = metadata?.symbol === "WICP";
-      return { metadata, valid, support_icrc2: false };
+      return { metadata, valid };
     });
   }
 
@@ -48,7 +62,7 @@ export async function tokenStandardVerification(
     return runVerification(async () => {
       const metadata = (await DIP20XTCAdapter.metadata({ canisterId })).data;
       const valid = metadata?.symbol === "XTC";
-      return { metadata, valid, support_icrc2: false };
+      return { metadata, valid };
     });
   }
 
@@ -56,7 +70,7 @@ export async function tokenStandardVerification(
     return runVerification(async () => {
       const metadata = (await EXTAdapter.metadata({ canisterId })).data;
       const valid = Boolean(metadata?.symbol);
-      return { metadata, valid, support_icrc2: false };
+      return { metadata, valid };
     });
   }
 
@@ -65,7 +79,7 @@ export async function tokenStandardVerification(
       const metadata = (await icrc2Adapter.metadata({ canisterId })).data;
       const standards = await (await icrc2(canisterId)).icrc1_supported_standards();
       const valid = Boolean(metadata?.symbol && standards.some((s) => s.name.includes("ICRC-2")));
-      return { metadata, valid, support_icrc2: false };
+      return { metadata, valid };
     });
   }
 
@@ -74,8 +88,7 @@ export async function tokenStandardVerification(
       const metadata = (await icrc1Adapter.metadata({ canisterId })).data;
       const standards = await (await icrc1(canisterId)).icrc1_supported_standards();
       const valid = Boolean(metadata?.symbol && standards.some((s) => s.name.includes("ICRC-1")));
-      const support_icrc2 = standards.some((s) => s.name.includes("ICRC-2"));
-      return { metadata, valid, support_icrc2 };
+      return { metadata, valid };
     });
   }
 

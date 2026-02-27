@@ -7,7 +7,7 @@ import { numberToString, BigNumber } from "@icpswap/utils";
 import { createStakingPool } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { standardCheck } from "utils/token/standardCheck";
+import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
 import { getTokenInfo } from "hooks/token/calls";
 import { timeParser } from "utils/index";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -66,7 +66,7 @@ export default function CreateStakingTokenPool() {
   useEffect(() => {
     const call = async () => {
       if (values.rewardToken && values.rewardStandard) {
-        const { valid: rewardTokenValid } = await standardCheck(
+        const { valid: rewardTokenValid } = await verifyTokenStandard(
           values.rewardToken,
           values.rewardStandard as TOKEN_STANDARD,
         );
@@ -97,7 +97,7 @@ export default function CreateStakingTokenPool() {
     if (loading || !principal) return;
     setLoading(true);
 
-    const { valid: rewardTokenValid } = await standardCheck(
+    const { valid: rewardTokenValid } = await verifyTokenStandard(
       values.rewardToken,
       values.rewardStandard as TOKEN_STANDARD,
     );
@@ -123,7 +123,7 @@ export default function CreateStakingTokenPool() {
       return;
     }
 
-    const { valid: stakingTokenValid } = await standardCheck(
+    const { valid: stakingTokenValid } = await verifyTokenStandard(
       values.stakingToken,
       values.stakingStandard as TOKEN_STANDARD,
     );
