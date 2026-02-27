@@ -14,7 +14,6 @@ import {
   SetFeeRequest,
   SetFeeToRequest,
   GetFeeRequest,
-  TransactionRequest,
   ApproveRequest,
   AllowanceRequest,
   MetadataRequest,
@@ -127,7 +126,7 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
     return resultFormat<boolean>(await (await this.actor(canisterId, identity)).setFeeTo(params.principal));
   }
 
-  public async transactions({ canisterId, params }: TransactionRequest) {
+  public async transactions() {
     return resultFormat<PaginationResult<Transaction>>({
       Ok: {
         content: [],
@@ -175,11 +174,7 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
     return amount;
   }
 
-  public async getMintingAccount({
-    canisterId,
-  }: {
-    canisterId: string;
-  }): BaseTokenResult<{ owner: string; sub: number[] | undefined }> {
+  public async getMintingAccount(): BaseTokenResult<{ owner: string; sub: number[] | undefined }> {
     return {
       status: ResultStatus.OK,
       data: undefined,

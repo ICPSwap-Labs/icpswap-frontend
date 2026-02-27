@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { isPrincipal, isAvailablePageArgs } from "@icpswap/utils";
+import { isPrincipal } from "@icpswap/utils";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import { Principal } from "@dfinity/principal";
 import type { ActorIdentity, StatusResult } from "@icpswap/types";
