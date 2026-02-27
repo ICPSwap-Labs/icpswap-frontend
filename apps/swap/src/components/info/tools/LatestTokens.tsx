@@ -39,10 +39,10 @@ function TokenRow({ token, className }: TokenRowProps) {
           <BodyCell>{token.symbol}</BodyCell>
         </Flex>
       </BodyCell>
-      <BodyCell align="right">
+      <BodyCell sx={{ flexDirection: "column", gap: "6px" }} align="right">
         <BodyCell align="right">{formatDollarTokenPrice(token.price)}</BodyCell>
         <BodyCell sub align="right">
-          {token.priceICP}
+          {formatAmount(token.priceICP)} ICP
         </BodyCell>
       </BodyCell>
       <BodyCell align="right">
