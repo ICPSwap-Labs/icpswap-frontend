@@ -133,7 +133,7 @@ export function LatestPools() {
                 ))}
               </>
             ) : (
-              <NoData tip={t("info.tools.swap.transactions.empty")} />
+              <NoData tip={t("info.tools.latest.pools.empty")} />
             )}
           </Box>
         </Box>

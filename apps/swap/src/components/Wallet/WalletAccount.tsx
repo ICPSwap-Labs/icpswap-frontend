@@ -165,7 +165,7 @@ export default function WalletAccount() {
         >
           <AddressWrapper
             address={principal ? principalToAccount(principal?.toString()) : "--"}
-            label={t`Account ID`}
+            label={t("common.account.id")}
             tips={t("wallet.account.tips")}
           />
         </Box>
