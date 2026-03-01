@@ -11,7 +11,7 @@ export function AccountSection() {
   return (
     <AddressSection
       address={principal ? principalToAccount(principal) : ""}
-      label={t`Account ID`}
+      label={t("common.account.id")}
       link={principal ? explorerLink(principal) : ""}
     />
   );

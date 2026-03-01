@@ -15,20 +15,10 @@ export function useFetchSnsAllTokensInfo() {
   const { result: nnsTokens, loading } = useNnsTokensInfo();
 
   useEffect(() => {
-    async function call() {
-      if (nnsTokens) {
-        const __nnsTokens = nnsTokens.sort((a, b) => {
-          if (a.index < b.index) return -1;
-          if (a.index > b.index) return 1;
-          return 0;
-        });
-
-        dispatch(updateSnsAllTokensInfo(__nnsTokens));
-      }
-    }
-
-    call();
-  }, [nnsTokens]);
+    if (!nnsTokens) return;
+    const sorted = [...nnsTokens].sort((a, b) => a.index - b.index);
+    dispatch(updateSnsAllTokensInfo(sorted));
+  }, [nnsTokens, dispatch]);
 
   return useMemo(() => ({ loading, result: allTokensInfo }), [loading, allTokensInfo]);
 }

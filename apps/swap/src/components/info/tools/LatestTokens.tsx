@@ -132,7 +132,7 @@ export function LatestTokens() {
                   ))}
                 </>
               ) : (
-                <NoData tip={t("info.tools.swap.transactions.empty")} />
+                <NoData tip={t("info.tools.latest.tokens.empty")} />
               )}
             </Box>
           </Box>

@@ -13,43 +13,30 @@ export function useMultiPositionInfos(
   principals: (string | undefined)[] | Null,
 ): useMultiPositionInfosResults {
   const [loading, setLoading] = useState(true);
-  const [result, setResult] = useState<null | Array<UserPositionInfoWithId[]>>(null);
+  const [result, setResult] = useState<Array<UserPositionInfoWithId[] | undefined> | null>(null);
 
   useEffect(() => {
-    async function call() {
+    if (!poolId) {
+      setLoading(false);
+      return;
+    }
+    if (!principals || principals.length === 0) {
+      setLoading(false);
       setResult(null);
-
-      if (principals && poolId) {
-        const allResult: Array<UserPositionInfoWithId[] | undefined> = await Promise.all(
-          principals.map(async (principal) => {
-            if (!principal) return undefined;
-            return await getSwapUserPositions(poolId, principal.toString());
-          }),
-        );
-
-        setResult(allResult);
-        setLoading(false);
-      }
-
-      if (principals && principals.length === 0 && poolId) {
-        setLoading(false);
-      }
-
-      if (!poolId) {
-        setLoading(false);
-      }
+      return;
     }
 
-    call();
+    setLoading(true);
+    setResult(null);
+
+    Promise.all(
+      principals.map((principal) => (principal ? getSwapUserPositions(poolId, principal) : Promise.resolve(undefined))),
+    )
+      .then(setResult)
+      .finally(() => setLoading(false));
   }, [principals, poolId]);
 
-  return useMemo(
-    () => ({
-      loading,
-      result,
-    }),
-    [result, loading],
-  );
+  return useMemo(() => ({ loading, result }), [loading, result]);
 }
 
 export function useMultiPositionInfosByIds(
@@ -60,37 +47,30 @@ export function useMultiPositionInfosByIds(
   result: Array<UserPositionInfo | undefined> | null;
 } {
   const [loading, setLoading] = useState(true);
-  const [result, setResult] = useState<null | Array<UserPositionInfo>>(null);
+  const [result, setResult] = useState<Array<UserPositionInfo | undefined> | null>(null);
 
   useEffect(() => {
-    async function call() {
+    if (!poolId) {
+      setLoading(false);
+      return;
+    }
+    if (!positionIds || positionIds.length === 0) {
+      setLoading(false);
       setResult(null);
-
-      if (positionIds && poolId) {
-        const allResult: Array<UserPositionInfo | undefined> = await Promise.all(
-          positionIds.map(async (positionId) => {
-            if (!positionId) return undefined;
-            return await getSwapPosition(poolId, positionId);
-          }),
-        );
-
-        setResult(allResult);
-        setLoading(false);
-      }
-
-      if (positionIds && positionIds.length === 0 && poolId) {
-        setLoading(false);
-      }
+      return;
     }
 
-    call();
+    setLoading(true);
+    setResult(null);
+
+    Promise.all(
+      positionIds.map((positionId) =>
+        positionId != null ? getSwapPosition(poolId, positionId) : Promise.resolve(undefined),
+      ),
+    )
+      .then(setResult)
+      .finally(() => setLoading(false));
   }, [positionIds, poolId]);
 
-  return useMemo(
-    () => ({
-      loading,
-      result,
-    }),
-    [result, loading],
-  );
+  return useMemo(() => ({ loading, result }), [loading, result]);
 }
