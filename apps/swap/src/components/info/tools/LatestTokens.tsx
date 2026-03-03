@@ -1,12 +1,13 @@
 import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
 import { formatAmount, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, Flex, LoadingRow, NoData, BodyCell, TableRow, Proportion } from "@icpswap/ui";
+import { Header, HeaderCell, Flex, LoadingRow, NoData, BodyCell, TableRow, Proportion, Link } from "@icpswap/ui";
 import { ToolsWrapper } from "components/info/tools/index";
 import { useTranslation } from "react-i18next";
 import { useLatestTokens } from "@icpswap/hooks";
 import { LatestToken } from "@icpswap/types";
 import { TokenImage, TimestampCell } from "components/index";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
+import { useTokenIcpPrice } from "store/global/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -31,29 +32,33 @@ interface TokenRowProps {
 }
 
 function TokenRow({ token, className }: TokenRowProps) {
+  const tokenIcpPrice = useTokenIcpPrice(token.price);
+
   return (
-    <TableRow className={className}>
-      <BodyCell>
-        <Flex gap="0 8px">
-          <TokenImage tokenId={token.ledgerId} logo={generateLogoUrl(token.ledgerId ?? "")} />
-          <BodyCell>{token.symbol}</BodyCell>
-        </Flex>
-      </BodyCell>
-      <BodyCell sx={{ flexDirection: "column", gap: "6px" }} align="right">
-        <BodyCell align="right">{formatDollarTokenPrice(token.price)}</BodyCell>
-        <BodyCell sub align="right">
-          {formatAmount(token.priceICP)} ICP
+    <Link to={`/info-tokens/details/${token.ledgerId}`}>
+      <TableRow className={className}>
+        <BodyCell>
+          <Flex gap="0 8px">
+            <TokenImage tokenId={token.ledgerId} logo={generateLogoUrl(token.ledgerId ?? "")} />
+            <BodyCell>{token.symbol}</BodyCell>
+          </Flex>
         </BodyCell>
-      </BodyCell>
-      <BodyCell align="right">
-        <Proportion value={token.priceChange24} />
-      </BodyCell>
-      <BodyCell align="right">{formatDollarAmount(token.liquidity)}</BodyCell>
-      <BodyCell align="right">{formatAmount(token.holders)}</BodyCell>
-      <BodyCell align="right">
-        <TimestampCell timestamp={token.createTime} />
-      </BodyCell>
-    </TableRow>
+        <BodyCell sx={{ flexDirection: "column", gap: "6px" }} align="right">
+          <BodyCell align="right">{formatDollarTokenPrice(token.price)}</BodyCell>
+          <BodyCell sub align="right">
+            {tokenIcpPrice ? formatAmount(tokenIcpPrice) : "--"} ICP
+          </BodyCell>
+        </BodyCell>
+        <BodyCell align="right">
+          <Proportion value={token.priceChange24} />
+        </BodyCell>
+        <BodyCell align="right">{formatDollarAmount(token.liquidity)}</BodyCell>
+        <BodyCell align="right">{formatAmount(token.holders)}</BodyCell>
+        <BodyCell align="right">
+          <TimestampCell timestamp={token.createTime} />
+        </BodyCell>
+      </TableRow>
+    </Link>
   );
 }
 
