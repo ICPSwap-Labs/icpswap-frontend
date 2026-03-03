@@ -1,6 +1,6 @@
 import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
 import { formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, Flex, LoadingRow, NoData, BodyCell, TableRow, APRPanel } from "@icpswap/ui";
+import { Header, HeaderCell, Flex, LoadingRow, NoData, BodyCell, TableRow, APRPanel, Link } from "@icpswap/ui";
 import { ToolsWrapper } from "components/info/tools/index";
 import { useTranslation } from "react-i18next";
 import { useLatestPools } from "@icpswap/hooks";
@@ -35,27 +35,29 @@ function PoolRow({ pool, className }: PoolRowProps) {
   const apr24h = usePoolAPR({ volumeUSD: pool.volumeUSD24H, tvlUSD: pool.tvlUSD });
 
   return (
-    <TableRow className={className}>
-      <BodyCell>
-        <Flex gap="0 8px">
-          <Flex>
-            <TokenImage tokenId={pool.token0LedgerId} logo={generateLogoUrl(pool.token0LedgerId ?? "")} />
-            <TokenImage tokenId={pool.token1LedgerId} logo={generateLogoUrl(pool.token0LedgerId ?? "")} />
+    <Link to={`/info-swap/pool/details/${pool.poolId}`}>
+      <TableRow className={className}>
+        <BodyCell>
+          <Flex gap="0 8px">
+            <Flex>
+              <TokenImage tokenId={pool.token0LedgerId} logo={generateLogoUrl(pool.token0LedgerId ?? "")} />
+              <TokenImage tokenId={pool.token1LedgerId} logo={generateLogoUrl(pool.token1LedgerId ?? "")} />
+            </Flex>
+            <Flex>
+              <BodyCell>{pool.token0Symbol}</BodyCell>
+              <BodyCell>/</BodyCell>
+              <BodyCell>{pool.token1Symbol}</BodyCell>
+            </Flex>
           </Flex>
-          <Flex>
-            <BodyCell>{pool.token0Symbol}</BodyCell>
-            <BodyCell>/</BodyCell>
-            <BodyCell>{pool.token1Symbol}</BodyCell>
-          </Flex>
-        </Flex>
-      </BodyCell>
-      <BodyCell align="right">{formatDollarTokenPrice(pool.tvlUSD)}</BodyCell>
-      <BodyCell align="right">{formatDollarAmount(pool.volumeUSD24H)}</BodyCell>
-      <BodyCell align="right">{apr24h ? <APRPanel value={apr24h} /> : "--"}</BodyCell>
-      <BodyCell align="right">
-        <TimestampCell timestamp={pool.createTime} />
-      </BodyCell>
-    </TableRow>
+        </BodyCell>
+        <BodyCell align="right">{formatDollarTokenPrice(pool.tvlUSD)}</BodyCell>
+        <BodyCell align="right">{formatDollarAmount(pool.volumeUSD24H)}</BodyCell>
+        <BodyCell align="right">{apr24h ? <APRPanel value={apr24h} /> : "--"}</BodyCell>
+        <BodyCell align="right">
+          <TimestampCell timestamp={pool.createTime} />
+        </BodyCell>
+      </TableRow>
+    </Link>
   );
 }
 

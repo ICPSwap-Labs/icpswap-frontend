@@ -133,10 +133,14 @@ export function FarmPositionCard({
           <Flex vertical gap="8px 0" align="flex-start">
             <Typography>{positionUSDValue ? `~${formatDollarAmount(positionUSDValue)} USD` : "--"}</Typography>
             <Typography>
-              {token0Amount && token0 ? `${formatAmount(token0Amount, { fullNumber: true })} ${token0.symbol}` : "--"}
+              {token0Amount && token0
+                ? `${formatAmount(token0Amount, { isBigNumberFormat: true })} ${token0.symbol}`
+                : "--"}
             </Typography>
             <Typography>
-              {token1Amount && token1 ? `${formatAmount(token1Amount, { fullNumber: true })} ${token1.symbol}` : "--"}
+              {token1Amount && token1
+                ? `${formatAmount(token1Amount, { isBigNumberFormat: true })} ${token1.symbol}`
+                : "--"}
             </Typography>
           </Flex>
           <Button
