@@ -35,7 +35,7 @@ function TokenRow({ token, className }: TokenRowProps) {
   const tokenIcpPrice = useTokenIcpPrice(token.price);
 
   return (
-    <Link to={`/info-tokens/details/${token.ledgerId}`}>
+    <Link to={`/info-swap/token/details/${token.ledgerId}`}>
       <TableRow className={className}>
         <BodyCell>
           <Flex gap="0 8px">
@@ -53,7 +53,7 @@ function TokenRow({ token, className }: TokenRowProps) {
           <Proportion value={token.priceChange24} />
         </BodyCell>
         <BodyCell align="right">{formatDollarAmount(token.liquidity)}</BodyCell>
-        <BodyCell align="right">{formatAmount(token.holders)}</BodyCell>
+        <BodyCell align="right">{formatAmount(token.holders, { isInteger: true })}</BodyCell>
         <BodyCell align="right">
           <TimestampCell timestamp={token.createTime} />
         </BodyCell>

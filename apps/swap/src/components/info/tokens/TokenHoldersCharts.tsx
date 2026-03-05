@@ -26,13 +26,15 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
 
     const totalHolders = result.totalElements;
 
-    const totalSupply = result.content[0].totalSupply;
+    const totalSupply: string | undefined = result.content[0]?.totalSupply;
 
     const top100HoldAmount = result.content.reduce((prev, curr) => {
       return prev.plus(curr.amount);
     }, new BigNumber(0));
 
-    const top100HoldPercent = new BigNumber(top100HoldAmount).dividedBy(totalSupply).multipliedBy(100).toFixed(2);
+    const top100HoldPercent = isUndefinedOrNull(totalSupply)
+      ? "100"
+      : new BigNumber(top100HoldAmount).dividedBy(totalSupply).multipliedBy(100).toFixed(2);
 
     return { totalHolders, top100HoldAmount, totalSupply, top100HoldPercent };
   }, [result]);
