@@ -267,7 +267,7 @@ export function TokenDetail() {
                 <Typography>{t("common.holders")}</Typography>
                 <Flex gap="0 25px">
                   <Typography sx={{ color: "text.primary", fontSize: "16px" }}>
-                    {tokenAnalysis ? formatAmount(tokenAnalysis.holders) : "--"}
+                    {tokenAnalysis ? formatAmount(tokenAnalysis.holders, { isInteger: true }) : "--"}
                   </Typography>
 
                   <TextButton to={`/info-tokens/holders/${canisterId}`} sx={{ fontSize: "12px" }}>
