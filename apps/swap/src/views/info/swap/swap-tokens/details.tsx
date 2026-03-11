@@ -55,7 +55,6 @@ interface TokenChartsViewSelectorProps {
 
 function TokenChartsViewSelector({ token, chartView, setChartView }: TokenChartsViewSelectorProps) {
   const ChartsViewButtons = [
-    { label: `Dexscreener`, value: ChartView.DexScreener },
     { label: `DexTools`, value: ChartView.DexTools },
     {
       label: token?.symbol ?? "Price",

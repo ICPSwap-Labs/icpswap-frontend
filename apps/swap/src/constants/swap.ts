@@ -25,14 +25,12 @@ export const SWAP_CHART_RANGE_AREA_COLOR = "#0068FC";
 
 export const icrc_standards = [TOKEN_STANDARD.ICRC1, TOKEN_STANDARD.ICRC2];
 
-export const TRADING_VIEW_DESCRIPTIONS = [ChartView.PRICE, ChartView.DexTools, ChartView.DexScreener];
+export const TRADING_VIEW_DESCRIPTIONS = [ChartView.PRICE, ChartView.DexTools];
 
 export enum Tab {
   Swap = "Swap",
   Limit = "Limit",
 }
-
-
 
 export * from "./mint";
 export * from "./liquidity";

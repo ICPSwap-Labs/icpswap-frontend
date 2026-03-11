@@ -10,12 +10,10 @@ export function getChartView(chartType: string) {
       return ChartView.LIQUIDITY;
     case "DexTools":
       return ChartView.DexTools;
-    case "Dexscreener":
-      return ChartView.DexScreener;
     case "Token0":
     case "Token1":
       return ChartView.PRICE;
     default:
-      return ChartView.DexScreener;
+      return ChartView.DexTools;
   }
 }

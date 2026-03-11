@@ -5,7 +5,6 @@ export enum ChartView {
   FEES = "FEES",
   LIQUIDITY = "LIQUIDITY",
   TRANSACTIONS = "TRANSACTIONS",
-  DexScreener = "DexScreener",
   APR = "APR",
   DexTools = "DexTools",
 }

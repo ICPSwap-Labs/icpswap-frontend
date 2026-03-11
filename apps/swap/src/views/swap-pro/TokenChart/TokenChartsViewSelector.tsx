@@ -12,7 +12,6 @@ export function TokenChartsViewSelector() {
     if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return undefined;
 
     return [
-      { label: `Dexscreener`, value: ChartView.DexScreener },
       { label: `DexTools`, value: ChartView.DexTools },
       { label: inputToken.symbol, value: ChartView.PRICE, tokenId: inputToken.address },
       { label: outputToken.symbol, value: ChartView.PRICE, tokenId: outputToken.address },

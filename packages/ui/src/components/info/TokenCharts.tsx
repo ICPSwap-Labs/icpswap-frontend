@@ -13,7 +13,6 @@ import { ChartDateButtons } from "./ChartDateButton";
 import { ChartView } from "./types";
 import { Flex } from "../Grid/Flex";
 import { MainCard } from "../MainCard";
-import { DexScreener } from "../DexScreener";
 import { DexTools } from "../DexTools";
 import { Select } from "../Select";
 
@@ -76,13 +75,6 @@ function volumeDataFormatter(data: InfoTokenDataResponse[]) {
   return newData;
 }
 
-type PriceLine = {
-  open: number;
-  close: number;
-  high: number;
-  low: number;
-};
-
 export interface TokenChartsRef {
   setView: (chart: { tokenId?: string; label: string; value: ChartView }) => void;
 }
@@ -113,7 +105,6 @@ export const TokenCharts = forwardRef(
       background = 2,
       showTopIfDexScreen = true,
       dexScreenHeight,
-      dexScreenId,
       priceChart,
       onPriceTokenIdChange,
       wrapperSx,
@@ -222,7 +213,7 @@ export const TokenCharts = forwardRef(
             display:
               chartView === ChartView.PRICE && priceChart
                 ? "none"
-                : chartView === ChartView.DexScreener || chartView === ChartView.DexTools
+                : chartView === ChartView.DexTools
                 ? showTopIfDexScreen
                   ? "flex"
                   : "none"
@@ -315,13 +306,7 @@ export const TokenCharts = forwardRef(
 
         <Box
           sx={{
-            margin: priceChart
-              ? "0"
-              : chartView === ChartView.DexScreener
-              ? showTopIfDexScreen
-                ? "10px 0 0 0 "
-                : "0px"
-              : "10px 0 0 0",
+            margin: priceChart ? "0" : "10px 0 0 0",
           }}
         >
           {chartView === ChartView.TVL ? (
@@ -359,8 +344,6 @@ export const TokenCharts = forwardRef(
             )
           ) : chartView === ChartView.PRICE ? (
             priceChart
-          ) : chartView === ChartView.DexScreener ? (
-            <DexScreener id={dexScreenId ?? canisterId} height={dexScreenHeight ?? "420px"} />
           ) : chartView === ChartView.DexTools ? (
             <DexTools id={tokenPairWithIcp ?? canisterId} height={dexScreenHeight ?? "420px"} />
           ) : chartView === ChartView.LIQUIDITY ? (

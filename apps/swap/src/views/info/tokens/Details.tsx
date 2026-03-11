@@ -25,9 +25,8 @@ import {
   useTokenSupply,
 } from "@icpswap/hooks";
 import { useCanisterInfo } from "hooks/useInternetComputerCalls";
-import { Flex, Proportion, TextButton, BreadcrumbsV1, dexScreenerUrl } from "@icpswap/ui";
+import { Flex, Proportion, TextButton, BreadcrumbsV1 } from "@icpswap/ui";
 import { useUpdateTokenStandard, useTokenStandardIsRegistered } from "store/token/cache/hooks";
-import { useTokenDexScreener } from "hooks/info";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
 import { useTranslation } from "react-i18next";
 import { BuyTokenButton } from "components/swap";
@@ -72,8 +71,6 @@ export function TokenDetail() {
     );
   }, [tokenListInfo]);
 
-  const dexScreenerId = useTokenDexScreener(canisterId);
-
   const explorers = useMemo(() => {
     return [
       {
@@ -103,39 +100,15 @@ export function TokenDetail() {
   }, [canisterId]);
 
   const charts = useMemo(() => {
-    return dexScreenerId
-      ? [
-          {
-            k: "dexscreen",
-            l: "DEXScreener",
-            v: dexScreenerUrl(dexScreenerId),
-            i: "/images/info/chart-icon/dexscreen.svg",
-          },
-          {
-            k: "icpswap",
-            l: "ICPSwap Info",
-            v: `/info-swap/token/details/${canisterId}`,
-            i: "/images/info/chart-icon/icpswap.svg",
-          },
-        ]
-      : [
-          {
-            k: "icpswap",
-            l: "ICPSwap Info",
-            v: `/info-swap/token/details/${canisterId}`,
-            i: "/images/info/chart-icon/icpswap.svg",
-          },
-        ];
-  }, [canisterId, dexScreenerId]);
-
-  // const priceTrackers = useMemo(() => {
-  //   return dexScreenerId
-  //     ? [
-  //         { k: "dexscreen", l: "DEXScreener", v: dexScreenerUrl(dexScreenerId), i: "" },
-  //         { k: "icpswap", l: "ICPSwap Info", v: `/info-swap/token/details/${canisterId}`, i: "" },
-  //       ]
-  //     : [{ k: "icpswap", l: "ICPSwap Info", v: `/info-swap/token/details/${canisterId}`, i: "" }];
-  // }, [canisterId, dexScreenerId]);
+    return [
+      {
+        k: "icpswap",
+        l: "ICPSwap Info",
+        v: `/info-swap/token/details/${canisterId}`,
+        i: "/images/info/chart-icon/icpswap.svg",
+      },
+    ];
+  }, [canisterId]);
 
   const handleCopy = useCallback(() => {
     if (copyRef) copyRef.current?.copy();
