@@ -5,13 +5,7 @@ import { type NFTTokenMetadata, ResultStatus } from "@icpswap/types";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { useNFTBuyCallback } from "hooks/nft/trade";
 import { useApprove } from "hooks/token/useApprove";
-import {
-  getCanisterId,
-  CANISTER_NAMES,
-  NFTTradeTokenCanisterId,
-  WRAPPED_ICP_TOKEN_INFO,
-  NFTTradeFee,
-} from "constants/index";
+import { getCanisterId, CANISTER_NAMES, NFTTradeTokenCanisterId, WRAPPED_ICP, NFTTradeFee } from "constants/index";
 import { parseTokenAmount, numberToString, formatDollarAmount, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { useICPAmountUSDValue } from "store/global/hooks";
 import { useAccount } from "store/auth/hooks";
@@ -56,7 +50,7 @@ export default function NFTBuyReview({
   const nft = useNFTByMetadata(_metadata);
 
   const userPay = new BigNumber(order?.price ? String(order.price) : 0)
-    .plus(new BigNumber(String(WRAPPED_ICP_TOKEN_INFO.transFee)).multipliedBy(3))
+    .plus(new BigNumber(String(WRAPPED_ICP.transFee)).multipliedBy(3))
     .toNumber();
 
   const { loading, callback: handleBuyNFT } = useLoadingCallData(
@@ -69,7 +63,7 @@ export default function NFTBuyReview({
         canisterId: NFTTradeTokenCanisterId,
         spender: TradeCanisterId,
         account,
-        value: numberToString(parseTokenAmount(userPay, WRAPPED_ICP_TOKEN_INFO.decimals)),
+        value: numberToString(parseTokenAmount(userPay, WRAPPED_ICP.decimals)),
       });
 
       if (approveStatus === "err") {
@@ -90,11 +84,9 @@ export default function NFTBuyReview({
   const USDValue = useICPAmountUSDValue(order?.price);
 
   // 3 times transaction fee
-  const userTransFee = parseTokenAmount(WRAPPED_ICP_TOKEN_INFO.transFee, WRAPPED_ICP_TOKEN_INFO.decimals).multipliedBy(
-    3,
-  );
+  const userTransFee = parseTokenAmount(WRAPPED_ICP.transFee, WRAPPED_ICP.decimals).multipliedBy(3);
 
-  const { result: tradeTokenBalance } = useTokenBalance(NFTTradeTokenCanisterId, account);
+  const { result: tradeTokenBalance } = useTokenBalance({ tokenId: NFTTradeTokenCanisterId, account });
 
   return (
     <Modal open={open} onClose={onClose} title={t("nft.confirm.buying")} background={theme.palette.background.level2}>
@@ -242,9 +234,7 @@ export default function NFTBuyReview({
         <Typography color="text.primary" sx={{ "@media (max-width: 640px)": { fontSize: "12px" } }}>
           {t("common.balance.colon.amount", {
             amount: `${
-              tradeTokenBalance
-                ? parseTokenAmount(tradeTokenBalance.toString(), WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()
-                : 0
+              tradeTokenBalance ? parseTokenAmount(tradeTokenBalance.toString(), WRAPPED_ICP.decimals).toFormat() : 0
             } WICP`,
           })}
         </Typography>

@@ -1,3 +1,4 @@
+import { DogeDissolveTx } from "types/chain-key";
 import { BitcoinTx } from "types/ckBTC";
 import { WalletSortType, SortBalanceEnum } from "types/index";
 
@@ -11,6 +12,7 @@ export interface WalletState {
   removedWalletDefaultTokens: string[];
   hideZeroNFT: boolean;
   sortedTokens: string[];
+  dogeDissolveTxs: DogeDissolveTx[];
 }
 
 export const initialState: WalletState = {
@@ -23,4 +25,5 @@ export const initialState: WalletState = {
   removedWalletDefaultTokens: [],
   hideZeroNFT: false,
   sortedTokens: [],
+  dogeDissolveTxs: [],
 };

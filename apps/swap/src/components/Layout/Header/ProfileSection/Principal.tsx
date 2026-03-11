@@ -1,4 +1,4 @@
-import { explorerLink } from "@icpswap/utils";
+import { icDashboardExplorerLink } from "@icpswap/utils";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
 
@@ -12,7 +12,7 @@ export default function ProfileSection() {
     <AddressSection
       address={principal}
       label={t("common.principal.id")}
-      link={principal ? explorerLink(principal) : undefined}
+      link={principal ? icDashboardExplorerLink(principal) : undefined}
     />
   );
 }

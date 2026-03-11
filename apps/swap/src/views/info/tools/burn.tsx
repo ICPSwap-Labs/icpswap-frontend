@@ -35,7 +35,7 @@ export default function Burn() {
 
   const [, token] = useToken(tokenId);
   const { result: mintingAccount } = useTokenMintingAccount(tokenId);
-  const { result: balance } = useTokenBalance(tokenId, principal, refreshTrigger);
+  const { result: balance } = useTokenBalance({ tokenId, account: principal, refresh: refreshTrigger });
 
   const handleMax = () => {
     if (!balance || !token) return;

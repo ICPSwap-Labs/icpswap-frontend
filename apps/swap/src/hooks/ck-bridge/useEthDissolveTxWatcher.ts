@@ -1,19 +1,15 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
 import { chainKeyETHMinter } from "@icpswap/actor";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useEthDissolveTxs, useUpdateEthDissolveTx } from "store/web3/hooks";
 import { MINTER_ID } from "constants/ckETH";
-import { DissolveTx } from "types/ckETH";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { useSuccessTip } from "hooks/useTips";
-import { isTxFinalized } from "utils/web3/dissolve";
 import { useTranslation } from "react-i18next";
+import { useInterval } from "@icpswap/hooks";
+import { isEthereumDissolveTxEnd, isTxFinalizedByStatus } from "utils/chain-key/ethereum";
 
-const INTERVAL = 10000;
-
-function isEnded(tx: DissolveTx) {
-  return tx.state === "TxFinalized";
-}
+const INTERVAL = 10_000;
 
 export function useEthDissolveTxWatcher() {
   const principal = useAccountPrincipalString();
@@ -22,34 +18,24 @@ export function useEthDissolveTxWatcher() {
   const [openTip] = useSuccessTip();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    async function call() {
-      if (txs && txs.length && nonUndefinedOrNull(principal)) {
-        for (let i = 0; i < txs.length; i++) {
-          const tx = txs[i];
-          const block_index = BigInt(tx.block_index);
+  const callback = useCallback(async () => {
+    if (txs && txs.length && nonUndefinedOrNull(principal)) {
+      for (let i = 0; i < txs.length; i++) {
+        const tx = txs[i];
+        const block_index = BigInt(tx.block_index);
 
-          if (!isEnded(tx)) {
-            const res = await (await chainKeyETHMinter(MINTER_ID)).retrieve_eth_status(block_index);
+        if (!isEthereumDissolveTxEnd(tx)) {
+          const res = await (await chainKeyETHMinter(MINTER_ID)).retrieve_eth_status(block_index);
 
-            if (isTxFinalized(res)) {
-              openTip(t("ck.dissolve.completed", { symbol: "ETH" }));
-            }
-
-            updateEthDissolveTx(principal, block_index, res, undefined);
+          if (isTxFinalizedByStatus(res)) {
+            openTip(t("ck.dissolve.completed", { symbol: "ETH" }));
           }
+
+          updateEthDissolveTx(principal, block_index, res, undefined);
         }
       }
     }
-
-    const timer = setInterval(() => {
-      call();
-    }, INTERVAL);
-
-    call();
-
-    return () => {
-      clearInterval(timer);
-    };
   }, [JSON.stringify(txs), principal, openTip]);
+
+  useInterval(callback, INTERVAL);
 }

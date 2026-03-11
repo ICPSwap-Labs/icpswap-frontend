@@ -3,11 +3,9 @@ import { SubAccount } from "@dfinity/ledger-icp";
 import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { ext } from "@icpswap/actor";
 import { EXTToken, TokenUser } from "@icpswap/candid";
-import { TokenHolder, Transaction, Metadata } from "./types";
+import { Transaction, Metadata } from "./types";
 import {
   BaseTokenAdapter,
-  HoldersRequest,
-  TotalHoldersRequest,
   SupplyRequest,
   BalanceRequest,
   TransferRequest,
@@ -22,21 +20,6 @@ import {
 } from "./BaseTokenAdapter";
 
 export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
-  public async holders({ canisterId, params }: HoldersRequest) {
-    return resultFormat<PaginationResult<TokenHolder>>(
-      await (
-        await this.actor(canisterId)
-      ).holders({
-        offset: [params.offset],
-        limit: [params.limit],
-      }),
-    );
-  }
-
-  public async totalHolders({ canisterId }: TotalHoldersRequest) {
-    return resultFormat<bigint>(await (await this.actor(canisterId)).totalHolders());
-  }
-
   public async supply({ canisterId }: SupplyRequest) {
     return resultFormat<bigint>(await (await this.actor(canisterId)).supply());
   }
@@ -148,19 +131,15 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
   }
 
   public async metadata({ canisterId }: MetadataRequest) {
-    const metadata = resultFormat<{
-      fungible: Metadata;
-    }>(await (await this.actor(canisterId)).metadata()).data?.fungible;
-    const logo = resultFormat<string>(await (await this.actor(canisterId)).logo()).data;
-    const fee = resultFormat<bigint>(await (await this.actor(canisterId)).getFee()).data;
+    const extActor = await this.actor(canisterId);
+    const [metadataRes, logoRes, feeRes] = await Promise.all([extActor.metadata(), extActor.logo(), extActor.getFee()]);
+    const metadata = resultFormat<{ fungible: Metadata }>(metadataRes).data?.fungible;
+    const logo = resultFormat<string>(logoRes).data;
+    const fee = resultFormat<bigint>(feeRes).data;
 
     return {
       status: ResultStatus.OK,
-      data: {
-        ...metadata,
-        logo,
-        fee,
-      } as Metadata,
+      data: { ...metadata, logo, fee } as Metadata,
       message: "",
     };
   }

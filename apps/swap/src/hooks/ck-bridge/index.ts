@@ -3,3 +3,4 @@ export * from "./useTokenBridgeName";
 export * from "./useTokenBalance";
 export * from "./useTokenSymbol";
 export * from "./btc";
+export * from "./doge";

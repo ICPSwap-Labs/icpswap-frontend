@@ -79,7 +79,7 @@ export function TokenSend() {
   );
 
   const tokenUSDPrice = useUSDPrice(token);
-  const { result: balance } = useTokenBalance(token.address, principal, refreshTrigger);
+  const { result: balance } = useTokenBalance({ tokenId: token?.address, account: principal, refresh: refreshTrigger });
 
   const currencyBalance = useMemo(() => {
     if (isUndefinedOrNull(balance)) return undefined;

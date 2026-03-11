@@ -1,5 +1,5 @@
 import { Grid, Typography } from "components/Mui";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
+import { WRAPPED_ICP } from "constants/index";
 import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import { parseTokenAmount, formatAmount } from "@icpswap/utils";
 
@@ -36,7 +36,7 @@ export default function WICPPriceFormat({
           }}
           {...(typographyProps ?? {})}
         >
-          {formatAmount(parseTokenAmount(price, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber(), { digits })}
+          {formatAmount(parseTokenAmount(price, WRAPPED_ICP.decimals).toNumber(), { digits })}
         </Typography>
       </Grid>
     </Grid>

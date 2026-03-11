@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import {
   useErc20AllMintTxs,
@@ -13,6 +13,7 @@ import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "ho
 import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
 import { useTranslation } from "react-i18next";
 import { usePublicClient } from "wagmi";
+import { useInterval } from "@icpswap/hooks";
 
 const INTERVAL_TIME = 20000;
 
@@ -30,33 +31,23 @@ export function useEthereumTxWatcher() {
     return [...ethDissolveHashes, ...ethUnFinalizedMintHashes, ...erc20DissolveHashes, ...erc20MintHashes];
   }, [ethDissolveHashes, ethUnFinalizedMintHashes, erc20DissolveHashes, erc20MintHashes]);
 
-  useEffect(() => {
-    async function call() {
-      if (ethereumHashes.length === 0 || isUndefinedOrNull(principal) || isUndefinedOrNull(publicClient)) return;
+  const callback = useCallback(async () => {
+    if (ethereumHashes.length === 0 || isUndefinedOrNull(principal) || isUndefinedOrNull(publicClient)) return;
 
-      for (let i = 0; i < ethereumHashes.length; i++) {
-        const hash = ethereumHashes[i];
-        const transaction = await publicClient.getTransactionReceipt({ hash: hash as `0x${string}` }).catch((error) => {
-          console.error(error);
-          return undefined;
-        });
+    for (let i = 0; i < ethereumHashes.length; i++) {
+      const hash = ethereumHashes[i];
+      const transaction = await publicClient.getTransactionReceipt({ hash: hash as `0x${string}` }).catch((error) => {
+        console.error(error);
+        return undefined;
+      });
 
-        if (nonUndefinedOrNull(transaction)) {
-          updateEthereumTxResponse(hash, transaction);
-        }
+      if (nonUndefinedOrNull(transaction)) {
+        updateEthereumTxResponse(hash, transaction);
       }
     }
-
-    const timer = setInterval(() => {
-      call();
-    }, INTERVAL_TIME);
-
-    call();
-
-    return () => {
-      clearInterval(timer);
-    };
   }, [JSON.stringify(ethereumHashes), principal]);
+
+  useInterval(callback, INTERVAL_TIME);
 }
 
 export function useEthereumTxTips() {

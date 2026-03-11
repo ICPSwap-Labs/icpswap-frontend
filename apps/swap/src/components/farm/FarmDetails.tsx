@@ -8,7 +8,7 @@ import {
   cycleValueFormat,
   shorten,
   timestampFormat,
-  explorerLink,
+  icDashboardExplorerLink,
   formatDollarAmount,
 } from "@icpswap/utils";
 import { useFarmInitArgs, useFarmCycles, useFarmState } from "@icpswap/hooks";
@@ -188,7 +188,7 @@ export function FarmDetails({
               <Typography>{t("farm.trading.pair.id")}</Typography>
               <Typography color="text.primary" component="div">
                 {farmInfo ? (
-                  <Link link={explorerLink(farmInfo.pool.toString())}>
+                  <Link link={icDashboardExplorerLink(farmInfo.pool.toString())}>
                     <Typography color="text.theme-secondary">{shorten(farmInfo.pool.toString())}</Typography>
                   </Link>
                 ) : (
@@ -203,7 +203,7 @@ export function FarmDetails({
               </Typography>
               <Typography color="text.primary" component="div">
                 {rewardToken ? (
-                  <Link link={explorerLink(rewardToken.address)}>
+                  <Link link={icDashboardExplorerLink(rewardToken.address)}>
                     <Typography color="text.theme-secondary">{shorten(rewardToken.address)}</Typography>
                   </Link>
                 ) : (
@@ -247,7 +247,7 @@ export function FarmDetails({
               <Typography>{t("common.creator")}</Typography>
               <Typography color="text.primary.main">
                 {farmInfo ? (
-                  <Link link={explorerLink(farmInfo.creator.toString())}>
+                  <Link link={icDashboardExplorerLink(farmInfo.creator.toString())}>
                     <Typography color="text.theme-secondary">{shorten(farmInfo.creator.toString())}</Typography>
                   </Link>
                 ) : (
@@ -259,7 +259,7 @@ export function FarmDetails({
             <Flex fullWidth justify="space-between">
               <Typography>{t("common.canister.id")}</Typography>
               <Typography color="text.primary">
-                <Link link={explorerLink(farmId)}>
+                <Link link={icDashboardExplorerLink(farmId)}>
                   <Typography color="text.theme-secondary"> {shorten(farmId)}</Typography>
                 </Link>
               </Typography>

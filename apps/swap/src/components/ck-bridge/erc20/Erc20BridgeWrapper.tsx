@@ -1,27 +1,26 @@
 import { Flex, MainCard } from "@icpswap/ui";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType, BridgeType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Wrapper } from "components/index";
 import { Box } from "components/Mui";
 import { Erc20DissolveTransactions, Erc20MintTransactions } from "components/ck-bridge";
 import { useBlockNumber } from "hooks/web3/useBlockNumber";
-
-import { TopContent } from "../TopContent";
-import { BridgeTokens } from "../BridgeTokens";
-import { Erc20NetworkState } from "./NetworkState";
-import { Erc20Mint } from "./Mint";
-import { Erc20Dissolve } from "./Dissolve";
+import { TopContent } from "components/ck-bridge/TopContent";
+import { BridgeTokens } from "components/ck-bridge/BridgeTokens";
+import { Erc20NetworkState } from "components/ck-bridge/erc20/NetworkState";
+import { Erc20Mint } from "components/ck-bridge/erc20/Mint";
+import { Erc20Dissolve } from "components/ck-bridge/erc20/Dissolve";
 
 export interface Erc20BridgeWrapperProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
-  onTokenChange: (token: Token, chain: ckBridgeChain) => void;
+  bridgeChain: BridgeChainType;
+  onTokenChange: (token: Token, chain: BridgeChainType) => void;
   minterInfo?: ChainKeyETHMinterInfo | Null;
   error?: string | Null;
-  onBridgeChainChange: (chain: ckBridgeChain) => void;
-  targetTokenBridgeChain: ckBridgeChain;
-  bridgeType: "mint" | "dissolve";
+  onBridgeChainChange: (chain: BridgeChainType) => void;
+  targetTokenBridgeChain: BridgeChainType;
+  bridgeType: BridgeType;
 }
 
 export function Erc20BridgeWrapper({
@@ -52,15 +51,10 @@ export function Erc20BridgeWrapper({
                   targetTokenBridgeChain={targetTokenBridgeChain}
                 />
 
-                {bridgeType === "mint" ? (
-                  <Erc20Mint
-                    token={token}
-                    minterInfo={minterInfo}
-                    bridgeChain={bridgeChain}
-                    blockNumber={blockNumber}
-                  />
+                {bridgeType === BridgeType.mint ? (
+                  <Erc20Mint token={token} minterInfo={minterInfo} blockNumber={blockNumber} />
                 ) : (
-                  <Erc20Dissolve token={token} minterInfo={minterInfo} bridgeChain={bridgeChain} />
+                  <Erc20Dissolve token={token} minterInfo={minterInfo} />
                 )}
               </Flex>
 
@@ -68,7 +62,7 @@ export function Erc20BridgeWrapper({
             </MainCard>
 
             <Box sx={{ margin: "12px 0 0 0" }}>
-              {bridgeType === "mint" ? (
+              {bridgeType === BridgeType.mint ? (
                 <Erc20MintTransactions ledger={token.address} token={token} />
               ) : (
                 <Erc20DissolveTransactions token={token} />

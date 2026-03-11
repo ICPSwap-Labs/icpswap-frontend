@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Typography, Grid, Box, InputAdornment } from "components/Mui";
 import { MainCard, Breadcrumbs, AuthButton } from "components/index";
 import Upload, { UploadRef } from "components/NFT/Upload";
-import { WRAPPED_ICP_TOKEN_INFO, SOCIAL_LINKS, NFTCanisterController, NFTTradeTokenCanisterId } from "constants/index";
+import { WRAPPED_ICP, SOCIAL_LINKS, NFTCanisterController, NFTTradeTokenCanisterId } from "constants/index";
 import { createCanister, setCanisterLogo, useNFTMintInfo, setCanisterLogoInController } from "hooks/nft/useNFTCalls";
 import { useErrorTip } from "hooks/useTips";
 import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
@@ -78,7 +78,7 @@ export default function NFTCanisterCreate() {
         canisterId: NFTTradeTokenCanisterId,
         spender: NFTCanisterController,
         account,
-        value: numberToString(parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals)),
+        value: numberToString(parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP.decimals)),
       });
 
       if (approveStatus === "err") {
@@ -428,8 +428,8 @@ export default function NFTCanisterCreate() {
 
             <Box mt={4}>
               <Typography variant="h3" align="center" color="textPrimary">
-                Pay: {parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber()}{" "}
-                {WRAPPED_ICP_TOKEN_INFO.symbol}
+                Pay: {parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP.decimals).toNumber()}{" "}
+                {WRAPPED_ICP.symbol}
               </Typography>
               <AuthButton
                 fullWidth

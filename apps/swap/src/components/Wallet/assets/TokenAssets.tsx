@@ -53,7 +53,7 @@ function TokenRow({ tokenId }: TokenRowProps) {
   const allBridgeTokens = useBridgeTokens();
   const tokenPrice = useUSDPrice(token);
 
-  const { result: tokenBalance, loading } = useTokenBalance(tokenId, principal, refreshTrigger);
+  const { result: tokenBalance, loading } = useTokenBalance({ tokenId, account: principal, refresh: refreshTrigger });
 
   const handleTokenRowClick = useCallback(() => {
     setOpen(true);

@@ -224,8 +224,18 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
-  const { result: __inputTokenSubBalance } = useTokenBalance(inputToken?.address, poolId, refresh, sub);
-  const { result: __outputTokenSubBalance } = useTokenBalance(outputToken?.address, poolId, refresh, sub);
+  const { result: __inputTokenSubBalance } = useTokenBalance({
+    tokenId: inputToken?.address,
+    account: poolId,
+    refresh,
+    sub,
+  });
+  const { result: __outputTokenSubBalance } = useTokenBalance({
+    tokenId: outputToken?.address,
+    account: poolId,
+    refresh,
+    sub,
+  });
 
   // Make balance is undefined if user logout
   const inputTokenSubBalance = useMemo(() => {

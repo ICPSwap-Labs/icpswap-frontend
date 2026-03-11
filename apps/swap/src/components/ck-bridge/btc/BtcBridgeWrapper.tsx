@@ -1,43 +1,44 @@
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType, BridgeType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { Box } from "components/Mui";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
 import { Wrapper } from "components/index";
-import { useBridgeTokenBalance, useBtcDepositAddress, useBitcoinBlockNumber } from "hooks/ck-bridge/index";
-import { useRefreshTriggerManager } from "hooks/index";
-
-import { TopContent } from "../TopContent";
-import { BridgeTokens } from "../BridgeTokens";
-import { BtcBridgeMint } from "./Mint";
-import { BtcBridgeDissolve } from "./Dissolve";
-import { BtcBridgeNetworkState } from "./NetworkState";
-import { DissolveTransactions } from "./DissolveTransactions";
-import { MintTransactions } from "./MintTransactions";
+import { useBtcDepositAddress, useBitcoinBlockNumber } from "hooks/ck-bridge/index";
+import { TopContent } from "components/ck-bridge/TopContent";
+import { BridgeTokens } from "components/ck-bridge/BridgeTokens";
+import { BtcBridgeMint } from "components/ck-bridge/btc/Mint";
+import { BtcBridgeDissolve } from "components/ck-bridge/btc/Dissolve";
+import { BtcBridgeNetworkState } from "components/ck-bridge/btc/NetworkState";
+import { DissolveTransactions } from "components/ck-bridge/btc/DissolveTransactions";
+import { MintTransactions } from "components/ck-bridge/btc/MintTransactions";
+import { useActiveUserTokenBalance } from "hooks/token";
+import { BALANCE_REFRESH_INTERVAL } from "constants/chain-key";
 
 interface BtcBridgeWrapperProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
-  onTokenChange: (token: Token, chain: ckBridgeChain) => void;
+  bridgeChain: BridgeChainType;
+  onTokenChange: (token: Token, chain: BridgeChainType) => void;
   minterInfo?: ChainKeyETHMinterInfo | Null;
-  bridgeType: "dissolve" | "mint";
-  onBridgeChainChange: (chain: ckBridgeChain) => void;
-  targetTokenBridgeChain: ckBridgeChain;
+  bridgeType: BridgeType;
+  onBridgeChainChange: (chain: BridgeChainType) => void;
+  targetTokenBridgeChain: BridgeChainType;
 }
 
 export function BtcBridgeWrapper({
   token,
-  minterInfo,
   bridgeChain,
   onTokenChange,
   bridgeType,
   onBridgeChainChange,
   targetTokenBridgeChain,
 }: BtcBridgeWrapperProps) {
-  const [refreshTrigger] = useRefreshTriggerManager("BtcBalance");
+  const { result: bitcoinAddress } = useBtcDepositAddress();
 
-  const { result: btc_address } = useBtcDepositAddress();
-  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
+  const { result: balance, refetch } = useActiveUserTokenBalance({
+    tokenId: token?.address,
+    refetchInterval: BALANCE_REFRESH_INTERVAL,
+  });
   const block = useBitcoinBlockNumber();
 
   return (
@@ -57,8 +58,8 @@ export function BtcBridgeWrapper({
                   onBridgeChainChange={onBridgeChainChange}
                 />
 
-                {bridgeType === "mint" ? (
-                  <BtcBridgeMint btc_address={btc_address} token={token} balance={tokenBalance} />
+                {bridgeType === BridgeType.mint ? (
+                  <BtcBridgeMint bitcoinAddress={bitcoinAddress} token={token} balance={balance} refetch={refetch} />
                 ) : (
                   <BtcBridgeDissolve token={token} bridgeChain={bridgeChain} />
                 )}
@@ -68,7 +69,11 @@ export function BtcBridgeWrapper({
             </MainCard>
 
             <Box sx={{ margin: "12px 0 0 0" }}>
-              {bridgeType === "mint" ? <MintTransactions btc_address={btc_address} /> : <DissolveTransactions />}
+              {bridgeType === BridgeType.mint ? (
+                <MintTransactions bitcoinAddress={bitcoinAddress} />
+              ) : (
+                <DissolveTransactions />
+              )}
             </Box>
           </Box>
         </Box>

@@ -32,7 +32,7 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
   const tokenUSDPrice = useUSDPriceById(token?.address);
-  const { result: balance } = useTokenBalance(token?.address, principal);
+  const { result: balance } = useTokenBalance({ tokenId: token?.address, account: principal });
 
   const { neuron_minimum_stake_e8s } = useMemo(() => {
     if (!neuronSystemParameters) return {};

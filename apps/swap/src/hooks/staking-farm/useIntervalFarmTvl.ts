@@ -7,5 +7,5 @@ export function useIntervalFarmTVL(canisterId: string | undefined, force?: boole
     return await getFarmTVL(canisterId);
   }, [canisterId]);
 
-  return useInterval(call, force);
+  return useInterval(call, 5000, force);
 }

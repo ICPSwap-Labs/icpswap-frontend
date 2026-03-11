@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo } from "react";
 
 export function useInterval<T>(
   callback: (() => Promise<T | undefined>) | (() => void) | undefined,
-  force: boolean | number = false,
   interval = 5000,
+  force: boolean | number = false,
 ): T | undefined {
   const [data, setData] = useState<T | undefined>(undefined);
   const [tick, setTick] = useState<number>(0);

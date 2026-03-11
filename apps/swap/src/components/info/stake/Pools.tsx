@@ -1,7 +1,7 @@
 import { useState } from "react";
 import dayjs from "dayjs";
 import { useStakingPools, useStakingPoolState } from "@icpswap/hooks";
-import { pageArgsFormat, explorerLink } from "@icpswap/utils";
+import { pageArgsFormat, icDashboardExplorerLink } from "@icpswap/utils";
 import { TextButton } from "components/index";
 import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { HeaderCell, BodyCell, NoData, Pagination, Header, TableRow, Flex, ImageLoading } from "@icpswap/ui";
@@ -28,7 +28,7 @@ function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
   return (
     <TableRow className={classes.wrapper}>
       <BodyCell sx={{ alignItems: "center" }}>
-        <Link href={explorerLink(pool.canisterId.toString())} target="_blank" sx={{ fontSize: "16px" }}>
+        <Link href={icDashboardExplorerLink(pool.canisterId.toString())} target="_blank" sx={{ fontSize: "16px" }}>
           {pool.canisterId.toString()}
         </Link>
       </BodyCell>
@@ -39,12 +39,12 @@ function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
         {dayjs(Number(pool.bonusEndTime) * 1000).format("YYYY-MM-DD HH:mm")}
       </BodyCell>
       <BodyCell sx={{ alignItems: "center" }}>
-        <Link href={explorerLink(pool.stakingToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
+        <Link href={icDashboardExplorerLink(pool.stakingToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
           {pool.stakingTokenSymbol}
         </Link>
       </BodyCell>
       <BodyCell sx={{ alignItems: "center" }}>
-        <Link href={explorerLink(pool.rewardToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
+        <Link href={icDashboardExplorerLink(pool.rewardToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
           {pool.rewardTokenSymbol}
         </Link>
       </BodyCell>

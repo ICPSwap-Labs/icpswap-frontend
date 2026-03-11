@@ -6,17 +6,16 @@ import { Search as SearchIcon } from "react-feather";
 import { useDebouncedChangeHandler, useChainKeyMinterInfo } from "@icpswap/hooks";
 import { MINTER_CANISTER_ID } from "constants/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
-import { ckBTC } from "@icpswap/tokens";
 import { useTranslation } from "react-i18next";
 import { Modal } from "@icpswap/ui";
-
-import { SelectorToken } from "./SelectorToken";
+import { SelectorToken } from "components/ck-bridge/SelectorToken";
+import { getBridgeChainByTokenId } from "components/ck-bridge/utils";
 
 export interface SelectorProps {
   open: boolean;
-  onChange: (token: Token, chain: ckBridgeChain) => void;
+  onChange: (token: Token, chain: BridgeChainType) => void;
   onClose: () => void;
 }
 
@@ -33,7 +32,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
 
   const allBridgeTokens = useAllBridgeTokens(minterInfo);
 
-  const handleTokenClick = useCallback((token: Token, chain: ckBridgeChain) => {
+  const handleTokenClick = useCallback((token: Token, chain: BridgeChainType) => {
     if (onChange) onChange(token, chain);
   }, []);
 
@@ -129,7 +128,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
                     tokenId={tokenId}
                     onClick={handleTokenClick}
                     searchWord={searchKeyword}
-                    chain={tokenId === ckBTC.address ? ckBridgeChain.btc : ckBridgeChain.eth}
+                    chain={getBridgeChainByTokenId(tokenId)}
                     minterInfo={minterInfo}
                     updateTokenHide={handleUpdateTokenIsHidden}
                   />
@@ -138,7 +137,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
                     tokenId={tokenId}
                     onClick={handleTokenClick}
                     searchWord={searchKeyword}
-                    chain={ckBridgeChain.icp}
+                    chain={BridgeChainType.icp}
                     minterInfo={minterInfo}
                     updateTokenHide={handleUpdateTokenIsHidden}
                   />

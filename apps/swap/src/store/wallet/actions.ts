@@ -1,4 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
+import { DogeDissolveTx } from "types/chain-key";
 import { BitcoinTx, BTCAddressType } from "types/ckBTC";
 import { WalletSortType, SortBalanceEnum } from "types/index";
 
@@ -23,6 +24,10 @@ export const updateRemovedWalletDefaultTokens = createAction<{ tokenId: string; 
 );
 
 export const updateBitcoinDissolveTxs = createAction<BitcoinTx>("wallet/updateBitcoinDissolveTxs");
+
+export const updateDogeDissolveTxs = createAction<DogeDissolveTx>("wallet/updateDogeDissolveTxs");
+
+export const cleanDogeDissolveTxs = createAction("wallet/cleanDogeDissolveTxs");
 
 export const updateHideZeroNFT = createAction<boolean>("wallet/updateHideZeroNFT");
 

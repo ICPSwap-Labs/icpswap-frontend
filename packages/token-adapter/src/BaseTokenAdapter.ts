@@ -83,10 +83,6 @@ export abstract class BaseTokenAdapter<T> {
     this.actor = actor;
   }
 
-  public abstract totalHolders({ canisterId }: TotalHoldersRequest): TotalHoldersResult;
-
-  public abstract holders({ canisterId, params }: HoldersRequest): HoldersResult;
-
   public abstract supply({ canisterId }: SupplyRequest): SupplyResult;
 
   public abstract balance({ canisterId, params }: BalanceRequest): BalanceResult;

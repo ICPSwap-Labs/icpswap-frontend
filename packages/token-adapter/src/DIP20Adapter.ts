@@ -1,13 +1,10 @@
 import { resultFormat } from "@icpswap/utils";
 import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { dip20, dip20BalanceActor, dip20SupplyActor } from "@icpswap/actor";
-import { Principal } from "@dfinity/principal";
-import { DIP20, type DIP20TokenInfo } from "@icpswap/candid";
-import { TokenHolder, Transaction, DIP20Metadata, Metadata } from "./types";
+import { DIP20 } from "@icpswap/candid";
+import { Transaction, DIP20Metadata, Metadata } from "./types";
 import {
   BaseTokenAdapter,
-  HoldersRequest,
-  TotalHoldersRequest,
   SupplyRequest,
   BalanceRequest,
   TransferRequest,
@@ -22,58 +19,6 @@ import {
 } from "./BaseTokenAdapter";
 
 export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
-  public async holders({ canisterId, params }: HoldersRequest) {
-    const totalHolder = (await this.totalHolders({ canisterId })).data;
-
-    if (totalHolder) {
-      const _holders = (await (await this.actor(canisterId)).getHolders(params.offset, params.limit)) as Array<
-        [Principal, bigint]
-      >;
-
-      const holders = _holders.map((holder) => {
-        return {
-          balance: holder[1],
-          account: holder[0].toString(),
-        };
-      }) as TokenHolder[];
-
-      return {
-        status: ResultStatus.OK,
-        message: "",
-        data: {
-          content: holders,
-          totalElements: Number(totalHolder),
-          limit: Number(params.limit),
-          offset: Number(params.offset),
-        } as PaginationResult<TokenHolder>,
-      };
-    }
-
-    return {
-      status: ResultStatus.OK,
-      data: {
-        content: [] as TokenHolder[],
-        totalElements: 0,
-        limit: 10,
-        offset: 0,
-      } as PaginationResult<TokenHolder>,
-      message: "",
-    };
-  }
-
-  public async totalHolders({ canisterId }: TotalHoldersRequest) {
-    let tokenInfo: null | DIP20TokenInfo = null;
-
-    try {
-      tokenInfo = (await (await this.actor(canisterId)).getTokenInfo()) as DIP20TokenInfo;
-      return resultFormat<bigint>(tokenInfo.holderNumber);
-    } catch (error) {
-      console.error(error);
-    }
-
-    return resultFormat<bigint>(undefined);
-  }
-
   public async supply({ canisterId }: SupplyRequest) {
     try {
       return resultFormat<bigint>(await (await this.actor(canisterId)).totalSupply());
@@ -84,25 +29,17 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
   }
 
   public async balance({ canisterId, params }: BalanceRequest) {
-    if (params.user.principal) {
-      // DIP20 not support subaccount balance
-      if (params.subaccount) {
-        return resultFormat<bigint>(BigInt(0));
-      }
-
-      let balance = BigInt(0);
-
-      try {
-        balance = (await (await this.actor(canisterId)).balanceOf(params.user.principal)) as bigint;
-      } catch (error) {
-        console.error(error);
-        balance = (await (await dip20BalanceActor(canisterId)).balanceOf(params.user.principal)) as bigint;
-      }
-
+    if (!params.user.principal || params.subaccount) {
+      return resultFormat<bigint>(BigInt(0));
+    }
+    try {
+      const balance = (await (await this.actor(canisterId)).balanceOf(params.user.principal)) as bigint;
+      return resultFormat<bigint>(balance);
+    } catch (error) {
+      console.error(error);
+      const balance = (await (await dip20BalanceActor(canisterId)).balanceOf(params.user.principal)) as bigint;
       return resultFormat<bigint>(balance);
     }
-
-    return resultFormat<bigint>(BigInt(0));
   }
 
   public async transfer({ canisterId, identity, params }: TransferRequest) {

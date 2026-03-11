@@ -41,6 +41,9 @@
     "jdenticon",
     "highcharts",
     "treemap",
-    "wagmi"
+    "wagmi",
+    "utxo",
+    "utxos",
+    "dogecoin"
   ]
 }

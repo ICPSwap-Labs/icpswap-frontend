@@ -3,7 +3,7 @@ import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { icrc1, icrcArchive } from "@icpswap/actor";
 import { ICRC1_SERVICE, MetadataValue, GetTransactionsResponse, ArchivedTransaction } from "@icpswap/candid";
 
-import { TokenHolder, Transaction, Metadata } from "./types";
+import { Transaction, Metadata } from "./types";
 import {
   BaseTokenAdapter,
   SupplyRequest,
@@ -16,24 +16,9 @@ import {
 } from "./BaseTokenAdapter";
 import { icrcTransactionFormat } from "./utils";
 
+const byTimestamp = (a: { timestamp: bigint }, b: { timestamp: bigint }) => Number(a.timestamp - b.timestamp);
+
 export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
-  public async holders() {
-    return {
-      status: ResultStatus.OK,
-      data: {
-        content: [] as TokenHolder[],
-        totalElements: 0,
-        limit: 10,
-        offset: 0,
-      } as PaginationResult<TokenHolder>,
-      message: "",
-    };
-  }
-
-  public async totalHolders() {
-    return resultFormat<bigint>(undefined);
-  }
-
   public async supply({ canisterId }: SupplyRequest) {
     return resultFormat<bigint>(await (await this.actor(canisterId)).icrc1_total_supply());
   }
@@ -119,33 +104,20 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
         if (archived_transactions.length > 0) {
           archivedTransactions = (
             await Promise.all(
-              archived_transactions.map(async (ele) => {
-                return (
-                  await (
-                    await icrcArchive(ele.callback[0].toString())
-                  ).get_transactions({
-                    start: ele.start,
-                    length: ele.length,
-                  })
-                ).transactions;
-              }),
+              archived_transactions.map((ele) =>
+                icrcArchive(ele.callback[0].toString()).then((archive) =>
+                  archive.get_transactions({ start: ele.start, length: ele.length }),
+                ),
+              ),
             )
           )
-            .flat()
-            .sort((a, b) => {
-              if (a.timestamp < b.timestamp) return -1;
-              if (a.timestamp > b.timestamp) return 1;
-              return 0;
-            });
+            .flatMap((r) => r.transactions)
+            .sort(byTimestamp);
         }
 
         const transactions = archivedTransactions
           .concat(token_canister_transactions)
-          .sort((a, b) => {
-            if (a.timestamp < b.timestamp) return -1;
-            if (a.timestamp > b.timestamp) return 1;
-            return 0;
-          })
+          .sort(byTimestamp)
           .map((ele, index) =>
             // @ts-ignore
             icrcTransactionFormat(ele, BigInt(start_index) + BigInt(index)),
@@ -177,47 +149,25 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
     ).data;
 
     if (!metadata) {
-      return {
-        status: ResultStatus.ERROR,
-        data: undefined,
-        message: "",
-      };
+      return { status: ResultStatus.ERROR, data: undefined, message: "" };
     }
 
-    let name = "";
-    let symbol = "";
-    let decimals = BigInt(0);
-    let fee = BigInt(0);
-    let logo = "";
-
-    for (let i = 0; i < metadata.length; i++) {
-      const ele = metadata[i];
-      if (ele[0] === "icrc1:name") {
-        const val = ele[1] as { Text: string };
-        name = val.Text;
-      } else if (ele[0] === "icrc1:symbol") {
-        const val = ele[1] as { Text: string };
-        symbol = val.Text;
-      } else if (ele[0] === "icrc1:decimals") {
-        const val = ele[1] as { Nat: bigint };
-        decimals = val.Nat;
-      } else if (ele[0] === "icrc1:fee") {
-        const val = ele[1] as { Nat: bigint };
-        fee = val.Nat;
-      } else if (ele[0] === "icrc1:logo") {
-        const val = ele[1] as { Text: string };
-        logo = val.Text;
+    const fields: Record<string, string | bigint> = {};
+    for (const [key, val] of metadata) {
+      if (key.startsWith("icrc1:")) {
+        const v = val as { Text?: string; Nat?: bigint };
+        fields[key] = v.Text ?? v.Nat ?? "";
       }
     }
 
     return {
       status: ResultStatus.OK,
       data: {
-        decimals: Number(decimals),
-        name,
-        symbol,
-        fee,
-        logo,
+        name: (fields["icrc1:name"] as string) ?? "",
+        symbol: (fields["icrc1:symbol"] as string) ?? "",
+        decimals: Number(fields["icrc1:decimals"] ?? 0),
+        fee: (fields["icrc1:fee"] as bigint) ?? BigInt(0),
+        logo: (fields["icrc1:logo"] as string) ?? "",
       } as Metadata,
       message: "",
     };

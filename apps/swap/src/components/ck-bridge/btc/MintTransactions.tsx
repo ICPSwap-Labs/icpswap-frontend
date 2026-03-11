@@ -8,14 +8,11 @@ import dayjs from "dayjs";
 import { RotateCcw } from "react-feather";
 import { useRefreshTriggerManager } from "hooks/index";
 import { useTranslation } from "react-i18next";
-import {
-  bitcoinAddressExplorer,
-  bitcoinBlockExplorer,
-  bitcoinTransactionExplorer,
-  BTC_MINT_REFRESH,
-} from "constants/ckBTC";
+import { BITCOIN_CONFIRMATIONS, BITCOIN_MINT_REFRESH } from "constants/chain-key";
+import { bitcoinAddressExplorer, bitcoinBlockExplorer, bitcoinTransactionExplorer } from "utils/chain-key/bitcoin";
 import { BitcoinTransaction } from "types/ckBTC";
 import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
+import { BridgeChainName } from "@icpswap/constants";
 
 const useStyles = makeStyles(() => ({
   txLink: {
@@ -141,12 +138,12 @@ function Transaction({ transaction, address }: TransactionProps) {
 
 export interface MintTransactionProps {
   refresh?: boolean | number;
-  btc_address: string | Null;
+  bitcoinAddress: string | Null;
 }
 
-export function MintTransactions({ btc_address }: MintTransactionProps) {
+export function MintTransactions({ bitcoinAddress }: MintTransactionProps) {
   const { t } = useTranslation();
-  const [, setRefreshTrigger] = useRefreshTriggerManager(BTC_MINT_REFRESH);
+  const [, setRefreshTrigger] = useRefreshTriggerManager(BITCOIN_MINT_REFRESH);
   const { result: transactions, loading } = useBtcMintTransactions();
 
   return (
@@ -158,7 +155,11 @@ export function MintTransactions({ btc_address }: MintTransactionProps) {
       </Flex>
 
       <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px", fontSize: "12px" }}>
-        {t("ck.bitcoin.sync.block")}
+        {t("ck.bridge.sync.block", {
+          chainName: BridgeChainName.bitcoin,
+          symbol: "ckBTC",
+          confirmationBlock: BITCOIN_CONFIRMATIONS,
+        })}
       </Typography>
 
       <Box sx={{ margin: "16px 0 0 0" }}>
@@ -186,7 +187,7 @@ export function MintTransactions({ btc_address }: MintTransactionProps) {
             ) : (
               transactions.map((transaction, index) => (
                 <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                  <Transaction transaction={transaction} address={btc_address} />
+                  <Transaction transaction={transaction} address={bitcoinAddress} />
                 </Box>
               ))
             )}

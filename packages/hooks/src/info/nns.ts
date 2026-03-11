@@ -5,7 +5,7 @@ import { NnsTokenInfo } from "@icpswap/types";
 import { useCallsData } from "../useCallData";
 
 export async function getNnsTokensInfo() {
-  return (await icpswap_info_fetch_get<Array<NnsTokenInfo>>(`/sns/list`)).data;
+  return (await icpswap_info_fetch_get<Array<NnsTokenInfo>>(`/sns/list`))?.data;
 }
 
 export function useNnsTokensInfo() {

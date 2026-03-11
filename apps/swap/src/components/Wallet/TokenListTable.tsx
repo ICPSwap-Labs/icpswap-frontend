@@ -18,7 +18,7 @@ import { useToken } from "hooks/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { XTC, TOKEN_STANDARD } from "constants/tokens";
 import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
 import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
 import { useNavigate } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
@@ -63,13 +63,13 @@ type ckTOKEN = {
 const ckTokens: ckTOKEN[] = [
   {
     id: ckBTC.address,
-    mintPath: `/ck-bridge?tokenId=${ckBTC.address}&chain=${ckBridgeChain.btc}`,
-    dissolvePath: `/ck-bridge?tokenId=${ckBTC.address}&chain=${ckBridgeChain.icp}`,
+    mintPath: `/ck-bridge?tokenId=${ckBTC.address}&chainType=${BridgeChainType.btc}`,
+    dissolvePath: `/ck-bridge?tokenId=${ckBTC.address}&chainType=${BridgeChainType.icp}`,
   },
   {
     id: ckETH.address,
-    mintPath: `/ck-bridge?tokenId=${ckETH.address}&chain=${ckBridgeChain.eth}`,
-    dissolvePath: `/ck-bridge?tokenId=${ckETH.address}&chain=${ckBridgeChain.icp}`,
+    mintPath: `/ck-bridge?tokenId=${ckETH.address}&chainType=${BridgeChainType.eth}`,
+    dissolvePath: `/ck-bridge?tokenId=${ckETH.address}&chainType=${BridgeChainType.icp}`,
   },
 ];
 
@@ -129,7 +129,11 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
 
   const infoToken = useInfoToken(infoTokenAddress);
   const [, token] = useToken(canisterId);
-  const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance(canisterId, principal, refreshNumber);
+  const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance({
+    tokenId: canisterId,
+    account: principal,
+    refresh: refreshNumber,
+  });
   const tokenUSDPrice = useMemo(() => {
     return infoToken?.price;
   }, [infoToken]);
@@ -192,8 +196,8 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
 
         return {
           id: ledger_id,
-          mintPath: `/ck-bridge?chain=${ckBridgeChain.eth}&tokenId=${ledger_id}`,
-          dissolvePath: `/ck-bridge?chain=${ckBridgeChain.icp}&tokenId=${ledger_id}`,
+          mintPath: `/ck-bridge?chainType=${BridgeChainType.erc20}&tokenId=${ledger_id}`,
+          dissolvePath: `/ck-bridge?chainType=${BridgeChainType.icp}&tokenId=${ledger_id}`,
         };
       }),
     );

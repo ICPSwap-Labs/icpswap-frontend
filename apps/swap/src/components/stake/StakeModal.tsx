@@ -32,7 +32,7 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
   const [loading, setLoading] = useState(false);
   const [amount, setAmount] = useState<string | number | undefined>(undefined);
 
-  const { result: _balance } = useTokenBalance(pool.stakingToken.address, principal);
+  const { result: _balance } = useTokenBalance({ tokenId: pool.stakingToken.address, account: principal });
   const [, token] = useToken(pool.stakingToken.address);
   const [, rewardToken] = useToken(pool.rewardToken.address);
 

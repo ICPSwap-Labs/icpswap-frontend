@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useCallback, useContext, useMemo } from "react";
 import type { SwapPoolData, PublicTokenOverview, Null } from "@icpswap/types";
 
 export type GlobalContextProps = {
@@ -27,9 +27,14 @@ export function useRefreshTrigger(key: string | undefined) {
 export function useRefreshTriggerManager(key: string | undefined): [undefined | number, () => void] {
   const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
 
-  return useMemo(() => {
-    if (!key) return [undefined, () => setRefreshTriggers("Global_key")];
+  const refresh = useCallback(() => {
+    if (!key) return setRefreshTriggers("Global_key");
+    setRefreshTriggers(key);
+  }, [key, setRefreshTriggers]);
 
-    return [refreshTriggers[key], () => setRefreshTriggers(key)];
-  }, [refreshTriggers, key, setRefreshTriggers]);
+  return useMemo(() => {
+    if (!key) return [undefined, refresh];
+
+    return [refreshTriggers[key], refresh];
+  }, [refreshTriggers, key, refresh]);
 }

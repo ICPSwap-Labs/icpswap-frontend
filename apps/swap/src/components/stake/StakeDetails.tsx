@@ -8,7 +8,7 @@ import {
   cycleValueFormat,
   shorten,
   timestampFormat,
-  explorerLink,
+  icDashboardExplorerLink,
   formatDollarAmount,
   nonUndefinedOrNull,
 } from "@icpswap/utils";
@@ -116,7 +116,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
               <Flex sx={{ width: "100%" }} justify="space-between">
                 <Typography>{t("stake.details.token", { symbol: stakeToken.symbol })}</Typography>
 
-                <Link href={explorerLink(stakeToken.address.toString())} target="_blank" color="text.theme-secondary">
+                <Link href={icDashboardExplorerLink(stakeToken.address.toString())} target="_blank" color="text.theme-secondary">
                   {shorten(stakeToken.address.toString())}
                 </Link>
               </Flex>
@@ -128,7 +128,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
                   {t("common.reward.token")}({rewardToken.symbol})
                 </Typography>
 
-                <Link href={explorerLink(rewardToken.address.toString())} target="_blank" color="text.theme-secondary">
+                <Link href={icDashboardExplorerLink(rewardToken.address.toString())} target="_blank" color="text.theme-secondary">
                   {shorten(rewardToken.address.toString())}
                 </Link>
               </Flex>
@@ -199,7 +199,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
               <Typography>{t("common.creator")}</Typography>
               <Typography color="text.primary.main">
                 {poolInfo ? (
-                  <Link href={explorerLink(poolInfo.creator.toString())} target="_blank" color="text.theme-secondary">
+                  <Link href={icDashboardExplorerLink(poolInfo.creator.toString())} target="_blank" color="text.theme-secondary">
                     {shorten(poolInfo.creator.toString())}
                   </Link>
                 ) : (
@@ -212,7 +212,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
               <Typography>{t("common.canister.id")}</Typography>
               <Typography color="text.primary">
                 {poolId ? (
-                  <Link href={explorerLink(poolId)} target="_blank" color="text.theme-secondary">
+                  <Link href={icDashboardExplorerLink(poolId)} target="_blank" color="text.theme-secondary">
                     {shorten(poolId)}
                   </Link>
                 ) : (

@@ -16,7 +16,10 @@ export function Erc20Fee() {
   const principal = useAccountPrincipal();
   const navigate = useNavigate();
 
-  const { result: ckETHBalance } = useTokenBalance(ckETH.address, principal?.toString());
+  const { result: ckETHBalance } = useTokenBalance({
+    tokenId: ckETH.address,
+    account: principal?.toString(),
+  });
   const { result: transactionPrice } = useChainKeyTransactionPrice(MINTER_CANISTER_ID);
   const ckETHInfoToken = useInfoToken(ckETH.address);
 

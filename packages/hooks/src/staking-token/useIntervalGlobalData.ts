@@ -11,7 +11,7 @@ export function useStakeIntervalGlobalData() {
     return await getStakingPoolGlobalData();
   }, []);
 
-  const globalData = useInterval<StakingPoolGlobalData>(callback, forceUpdate);
+  const globalData = useInterval<StakingPoolGlobalData>(callback, 5000, forceUpdate);
 
   const update = useCallback(() => {
     setForceUpdate((prevState) => prevState + 1);

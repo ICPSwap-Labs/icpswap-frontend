@@ -30,7 +30,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
   const stakeTokenPrice = useUSDPrice(stakeToken);
 
   const [poolInfo] = useIntervalStakingPoolInfo(pool?.canisterId.toString());
-  const { result: stakeTokenBalance } = useTokenBalance(pool.stakingToken.address, principal?.toString());
+  const { result: stakeTokenBalance } = useTokenBalance({ tokenId: stakeToken?.address, account: principal });
 
   const totalStakedValue = useMemo(() => {
     if (!stakeTokenPrice || !stakeToken || !poolInfo) return undefined;

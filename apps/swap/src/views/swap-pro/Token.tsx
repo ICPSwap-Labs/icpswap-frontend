@@ -22,7 +22,7 @@ interface TokenTvlProps {
 }
 
 function TokenTvl({ token, poolId, onUpdateTvl }: TokenTvlProps) {
-  const { result: tokenBalance } = useTokenBalance(token?.address, poolId);
+  const { result: tokenBalance } = useTokenBalance({ tokenId: token?.address, account: poolId });
   const infoToken = useInfoToken(token?.address);
 
   const tokenPrice = useMemo(() => infoToken?.price, [infoToken]);

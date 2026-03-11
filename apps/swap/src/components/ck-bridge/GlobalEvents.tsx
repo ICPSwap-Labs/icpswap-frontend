@@ -4,26 +4,22 @@ import { useAllEvents } from "hooks/ck-bridge/useAllEvents";
 import { useBridgeWatcher } from "hooks/ck-bridge/useBridgeWatcher";
 import { useCallback, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "react-feather";
-import {
-  Erc20DissolveTransactionEventUI,
-  ETHTransactionEvent,
-  Erc20MintTransactionEvent,
-  BtcTransactionEventUI,
-} from "components/ck-bridge/TxEvent";
-import {
-  Erc20DissolveConfirmations,
-  BitcoinDissolveConfirmations,
-  BitcoinMintConfirmations,
-  EthereumMintConfirmations,
-  EthereumDissolveConfirmations,
-} from "components/ck-bridge/TxConfirmation";
+import { BitcoinTransactionEvent } from "components/ck-bridge/ui/events/BitcoinTransactionEvent";
+import { DogeTransactionEvent } from "components/ck-bridge/ui/events/DogeTransactionEvent";
 import {
   isBtcTransactionEvent,
+  isDogeTransactionEvent,
   isErc20DissolveTransactionEvent,
   isErc20MintTransactionEvent,
   isEthTransactionEvent,
 } from "utils/web3/ck-bridge";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { ETHTransactionEvent } from "components/ck-bridge/ui/events/ETHTransactionEvent";
+import {
+  Erc20DissolveTransactionEventUI,
+  Erc20MintTransactionEvent,
+} from "components/ck-bridge/ui/events/Erc20TransactionEvent";
+import { Divider } from "components/ck-bridge/ui/events/Divider";
 
 interface PaginationProps {
   total: number;
@@ -62,12 +58,6 @@ function Pagination({ total, current, onNext, onPrev }: PaginationProps) {
   );
 }
 
-function Divider() {
-  const theme = useTheme();
-
-  return <Box sx={{ background: theme.palette.background.level4, width: "1px", height: "12px" }} />;
-}
-
 export function CkGlobalEvents() {
   const theme = useTheme();
 
@@ -104,7 +94,9 @@ export function CkGlobalEvents() {
       }}
     >
       <Pagination total={allEvents.length} current={current} onNext={setCurrent} onPrev={setCurrent} />
+
       <Divider />
+
       {isEthTransactionEvent(currentEvent) ? (
         <ETHTransactionEvent event={currentEvent} />
       ) : isErc20DissolveTransactionEvent(currentEvent) ? (
@@ -112,25 +104,9 @@ export function CkGlobalEvents() {
       ) : isErc20MintTransactionEvent(currentEvent) ? (
         <Erc20MintTransactionEvent event={currentEvent} />
       ) : isBtcTransactionEvent(currentEvent) ? (
-        <BtcTransactionEventUI event={currentEvent} />
-      ) : null}
-      <Divider />
-      {currentEvent.chain === "eth" || currentEvent.chain === "erc20" ? (
-        isErc20DissolveTransactionEvent(currentEvent) ? (
-          <Erc20DissolveConfirmations withdraw_id={currentEvent.withdrawal_id} />
-        ) : isEthTransactionEvent(currentEvent) && currentEvent.type === "dissolve" ? (
-          <EthereumDissolveConfirmations hash={currentEvent.hash} />
-        ) : currentEvent.hash ? (
-          <EthereumMintConfirmations hash={currentEvent.hash} erc20={currentEvent.chain === "erc20"} />
-        ) : null
-      ) : currentEvent.chain === "btc" ? (
-        currentEvent.type === "mint" ? (
-          currentEvent.hash ? (
-            <BitcoinMintConfirmations hash={currentEvent.hash} />
-          ) : null
-        ) : (
-          <BitcoinDissolveConfirmations hash={currentEvent.hash} />
-        )
+        <BitcoinTransactionEvent event={currentEvent} />
+      ) : isDogeTransactionEvent(currentEvent) ? (
+        <DogeTransactionEvent event={currentEvent} />
       ) : null}
     </Box>
   );

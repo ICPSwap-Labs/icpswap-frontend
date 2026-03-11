@@ -31,7 +31,7 @@ export function Stake({ onStakeSuccess, token, governance_id, neuron_id, disable
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
   const tokenUSDPrice = useUSDPriceById(token?.address);
-  const { result: balance } = useTokenBalance(token?.address, principal);
+  const { result: balance } = useTokenBalance({ tokenId: token?.address, account: principal });
 
   const handleSubmit = async () => {
     if (loading || !amount || !principal || !token || !governance_id || !neuron_id) return;

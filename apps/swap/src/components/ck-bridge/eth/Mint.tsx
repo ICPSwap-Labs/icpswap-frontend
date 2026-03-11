@@ -1,10 +1,10 @@
 import { useState, useCallback, useMemo } from "react";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { InputWrapper } from "components/ck-bridge";
-import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
+import { useIcpTokenBalance, useEthBalance } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useAccount } from "wagmi";
 import { useActiveChain } from "hooks/web3/index";
@@ -18,7 +18,7 @@ import { Web3WalletWrapper } from "components/ck-bridge/Web3WalletWrapper";
 
 export interface EthMintProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
+  bridgeChain: BridgeChainType;
   minterInfo?: ChainKeyETHMinterInfo | Null;
 }
 
@@ -31,8 +31,8 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
 
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
-  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
-  const ethBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.eth, minterInfo });
+  const tokenBalance = useIcpTokenBalance({ token });
+  const ethBalance = useEthBalance();
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
@@ -62,7 +62,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
     if (ethBalance) {
       setAmount(parseTokenAmount(ethBalance, token.decimals).toString());
     }
-  }, [token, tokenBalance, ethBalance, setAmount]);
+  }, [token, ethBalance, setAmount]);
 
   return (
     <>
@@ -71,7 +71,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
       <InputWrapper
         value={amount}
         token={token}
-        chain={bridgeChain}
+        bridgeCurrentChain={bridgeChain}
         balance={ethBalance}
         onInput={(value: string) => setAmount(value)}
         onMax={handleMax}

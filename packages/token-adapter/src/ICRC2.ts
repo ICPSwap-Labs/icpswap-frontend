@@ -1,5 +1,4 @@
 import { resultFormat, optionalArg, isBigIntMemo } from "@icpswap/utils";
-import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { icrc2 } from "@icpswap/actor";
 import { ICRC2 } from "@icpswap/candid";
 import {
@@ -14,27 +13,9 @@ import {
   MetadataRequest,
   ActualReceivedByTransferRequest,
 } from "./BaseTokenAdapter";
-import { TokenHolder } from "./types";
 import { icrc1Adapter } from "./ICRC1";
 
 export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
-  public async holders() {
-    return {
-      status: ResultStatus.OK,
-      data: {
-        content: [] as TokenHolder[],
-        totalElements: 0,
-        limit: 10,
-        offset: 0,
-      } as PaginationResult<TokenHolder>,
-      message: "",
-    };
-  }
-
-  public async totalHolders() {
-    return resultFormat<bigint>(undefined);
-  }
-
   public async supply({ canisterId }: SupplyRequest) {
     return resultFormat<bigint>(await (await this.actor(canisterId)).icrc1_total_supply());
   }

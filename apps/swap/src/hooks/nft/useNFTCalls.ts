@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PaginationResult } from "types/index";
+import { PaginationResult } from "@icpswap/types";
 import type {
   NFTTokenMetadata,
   NFTTransaction,

@@ -3,12 +3,12 @@ import { ChevronDown } from "react-feather";
 import { Token } from "@icpswap/swap-sdk";
 import { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
 
-import { TokenImageWithChain } from "./ChainImage";
+import { TokenImageWithChain } from "components/ck-bridge/ChainImage";
 
 export interface SelectButtonProps {
-  chain: ckBridgeChain | Null;
+  chain: BridgeChainType | Null;
   select?: boolean;
   token: Token | Null;
   onClick?: BoxProps["onClick"];
@@ -26,12 +26,16 @@ export function SelectButton({ token, chain, onClick, from, select = false }: Se
       onClick={onClick}
     >
       <Flex gap="0 12px">
-        <TokenImageWithChain chain={chain ?? ckBridgeChain.icp} token={token} />
+        <TokenImageWithChain chain={chain ?? BridgeChainType.icp} token={token} />
 
         <Box>
-          {from ? <Typography>From ({chain})</Typography> : <Typography>To ({chain})</Typography>}
+          {from ? (
+            <Typography>From ({chain === BridgeChainType.erc20 ? BridgeChainType.eth : chain})</Typography>
+          ) : (
+            <Typography>To ({chain === BridgeChainType.erc20 ? BridgeChainType.eth : chain})</Typography>
+          )}
           <Typography sx={{ margin: "12px 0 0 0", fontSize: "20px", color: "text.primary" }}>
-            {chain === ckBridgeChain.icp ? token?.symbol : token?.symbol.replace("ck", "")}
+            {chain === BridgeChainType.icp ? token?.symbol : token?.symbol.replace("ck", "")}
           </Typography>
         </Box>
       </Flex>

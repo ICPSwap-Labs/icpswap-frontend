@@ -1,11 +1,10 @@
 import { getPositionsFee } from "@icpswap/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { getPositionFeeKey } from "utils/swap";
-import { RefreshKey } from "types/index";
 
 export interface UseMultiplePositionsFeeProps {
   data: { poolId: string; positionIds: bigint[] }[] | undefined;
-  refresh?: RefreshKey;
+  refresh?: number | boolean;
 }
 
 export function useMultiplePositionsFee({ data, refresh }: UseMultiplePositionsFeeProps) {

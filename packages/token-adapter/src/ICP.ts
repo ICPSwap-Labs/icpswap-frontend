@@ -2,7 +2,7 @@ import { resultFormat, optionalArg, isBigIntMemo } from "@icpswap/utils";
 import { ledgerService } from "@icpswap/actor";
 import { Ledger } from "@icpswap/candid";
 import { ActorIdentity, PaginationResult, ResultStatus } from "@icpswap/types";
-import { TokenHolder, Transaction, Metadata } from "./types";
+import { Transaction, Metadata } from "./types";
 import {
   BaseTokenAdapter,
   BalanceRequest,
@@ -16,62 +16,38 @@ import { icrc1Adapter } from "./ICRC1";
 import { icrc2Adapter } from "./ICRC2";
 
 export class ICPAdapter extends BaseTokenAdapter<Ledger> {
-  public async holders() {
-    return {
-      status: ResultStatus.OK,
-      data: {
-        content: [] as TokenHolder[],
-        totalElements: 0,
-        limit: 10,
-        offset: 0,
-      } as PaginationResult<TokenHolder>,
-      message: "",
-    };
-  }
-
-  public async totalHolders() {
-    return resultFormat<bigint>(undefined);
-  }
-
   public async supply() {
-    return resultFormat<bigint>(await (await this.actor()).icrc1_total_supply());
+    const ledger = await this.actor();
+    return resultFormat<bigint>(await ledger.icrc1_total_supply());
   }
 
   public async balance({ params }: BalanceRequest) {
     if (params.user.address) {
-      return resultFormat<bigint>(
-        (
-          await (
-            await this.actor()
-          ).account_balance({
-            account: Array.from(Uint8Array.from(Buffer.from(params.user.address, "hex"))),
-          })
-        ).e8s,
-      );
+      const ledger = await this.actor();
+      const balance = await ledger.account_balance({
+        account: Array.from(Uint8Array.from(Buffer.from(params.user.address, "hex"))),
+      });
+      return resultFormat<bigint>(balance.e8s);
     }
     if (params.user.principal) {
-      return resultFormat<bigint>(
-        await (
-          await this.actor()
-        ).icrc1_balance_of({
-          owner: params.user.principal,
-          subaccount: optionalArg<Array<number>>(params.subaccount ? params.subaccount : undefined),
-        }),
-      );
+      const ledger = await this.actor();
+      const balance = await ledger.icrc1_balance_of({
+        owner: params.user.principal,
+        subaccount: optionalArg<Array<number>>(params.subaccount ?? undefined),
+      });
+      return resultFormat<bigint>(balance);
     }
-
     return resultFormat<bigint>(BigInt(0));
   }
 
   public async transfer({ canisterId, identity, params }: TransferRequest) {
     if (!params.to.address && !params.to.principal) throw Error("No transfer to");
 
+    const ledger = await this.actor(canisterId, identity);
+
     if (params.to.address) {
       if (params.memo && !isBigIntMemo(params.memo)) throw Error("Only bigint support (memo)");
-
-      const result = await (
-        await this.actor(canisterId, identity)
-      ).transfer({
+      const result = await ledger.transfer({
         to: Array.from(Uint8Array.from(Buffer.from(params.to.address, "hex"))),
         memo: (params.memo as bigint) ?? BigInt(0),
         amount: { e8s: params.amount },
@@ -81,32 +57,26 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
         from_subaccount: optionalArg<number[]>(params.from_sub_account),
         fee: { e8s: BigInt(10000) },
       });
-
       return resultFormat<bigint>(result);
     }
-    if (params.to.principal) {
-      const result = await (
-        await this.actor(canisterId, identity)
-      ).icrc1_transfer({
-        to: {
-          owner: params.to.principal,
-          subaccount: optionalArg<Array<number>>(params.subaccount ? params.subaccount : undefined),
-        },
-        memo: typeof params.memo === "bigint" ? [] : optionalArg<number[]>(params.memo),
-        amount: params.amount,
-        created_at_time: optionalArg<bigint>(params.create_at_time),
-        from_subaccount: optionalArg<Array<number>>(params.from_sub_account ? params.from_sub_account : undefined),
-        fee: optionalArg<bigint>(null),
-      });
-
-      return resultFormat<bigint>(result);
-    }
-
-    return resultFormat<bigint>(undefined);
+    const result = await ledger.icrc1_transfer({
+      to: {
+        owner: params.to.principal!,
+        subaccount: optionalArg<Array<number>>(params.subaccount ?? undefined),
+      },
+      memo: typeof params.memo === "bigint" ? [] : optionalArg<number[]>(params.memo),
+      amount: params.amount,
+      created_at_time: optionalArg<bigint>(params.create_at_time),
+      from_subaccount: optionalArg<Array<number>>(params.from_sub_account ?? undefined),
+      fee: optionalArg<bigint>(null),
+    });
+    return resultFormat<bigint>(result);
   }
 
   public async getFee() {
-    return resultFormat<bigint>(await (await (await this.actor()).transfer_fee({})).transfer_fee.e8s);
+    const ledger = await this.actor();
+    const { transfer_fee } = await ledger.transfer_fee({});
+    return resultFormat<bigint>(transfer_fee.e8s);
   }
 
   public async setFee() {
@@ -135,18 +105,21 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
   }
 
   public async metadata({ canisterId }: MetadataRequest) {
-    const symbol = (await (await this.actor(canisterId)).symbol()).symbol;
-    const decimals = (await (await this.actor()).decimals()).decimals;
-    const name = "Internet Computer";
-    const fee = resultFormat<bigint>(await (await (await this.actor()).transfer_fee({})).transfer_fee.e8s).data;
+    const ledger = await this.actor(canisterId);
+    const [symbolRes, decimalsRes, feeRes] = await Promise.all([
+      ledger.symbol(),
+      ledger.decimals(),
+      ledger.transfer_fee({}),
+    ]);
+    const fee = resultFormat<bigint>(feeRes.transfer_fee.e8s).data;
 
     return {
       status: ResultStatus.OK,
       data: {
-        decimals,
+        decimals: decimalsRes.decimals,
         metadata: [],
-        name,
-        symbol,
+        name: "Internet Computer",
+        symbol: symbolRes.symbol,
         fee: fee ?? BigInt(1000),
         logo: "",
       } as Metadata,

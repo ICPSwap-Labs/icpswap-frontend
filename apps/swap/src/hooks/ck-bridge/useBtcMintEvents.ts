@@ -4,6 +4,7 @@ import { BitcoinTransactionEvent } from "types/web3";
 import { ckBTC } from "@icpswap/tokens";
 import { useBtcDepositAddress, useBtcMintUnconfirmedTransactions } from "hooks/ck-bridge/btc";
 import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
+import { BridgeChainType, BridgeType } from "@icpswap/constants/dist/constants";
 
 export function useBtcMintEvents() {
   const bitcoinMintTransactions = useBtcMintUnconfirmedTransactions();
@@ -16,8 +17,8 @@ export function useBtcMintEvents() {
       return {
         hash: tx.txid,
         amount: getBitcoinAmountFromTrans(tx, address)?.toString() ?? "",
-        type: "mint",
-        chain: "btc",
+        type: BridgeType.mint,
+        chain: BridgeChainType.btc,
         token: ckBTC.address,
       };
     });

@@ -5,7 +5,7 @@ import { Flex } from "@icpswap/ui";
 import { useBitcoinDissolveTxs } from "store/wallet/hooks";
 import { BitcoinTx } from "types/ckBTC";
 import { useTranslation } from "react-i18next";
-import { bitcoinTransactionExplorer } from "constants/ckBTC";
+import { bitcoinTransactionExplorer } from "utils/chain-key/bitcoin";
 
 const useStyles = makeStyles(() => ({
   txLink: {

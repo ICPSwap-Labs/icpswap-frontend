@@ -24,7 +24,7 @@ export function AvailableCell({ poolInfo }: AvailableCellProps) {
 
   const state = useStakingPoolState(poolInfo);
 
-  const { result: userStakeTokenBalance } = useTokenBalance(poolInfo.stakingToken.address, principal);
+  const { result: userStakeTokenBalance } = useTokenBalance({ tokenId: stakeToken?.address, account: principal });
 
   return (
     <Flex vertical gap="5px 0" className="row-item" justify="center">

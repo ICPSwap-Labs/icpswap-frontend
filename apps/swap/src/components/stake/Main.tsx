@@ -34,7 +34,11 @@ export function MainContent({
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
-  const { result: userStakeTokenBalance } = useTokenBalance(stakeToken?.address, principal?.toString(), refreshTrigger);
+  const { result: userStakeTokenBalance } = useTokenBalance({
+    tokenId: stakeToken?.address,
+    account: principal,
+    refresh: refreshTrigger,
+  });
 
   const userPoolInfo = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
   const { result: stakeStatInfo } = useStakePoolStatInfo(poolId);

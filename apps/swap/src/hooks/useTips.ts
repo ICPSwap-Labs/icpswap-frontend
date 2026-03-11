@@ -2,7 +2,7 @@ import { useCallback, useMemo, ReactNode } from "react";
 import { openLoading, closeLoading } from "store/loadingReducer";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useSnackbar } from "components/notistack";
-import { ResultStatus } from "types/global";
+import { ResultStatus } from "@icpswap/types";
 
 export enum MessageTypes {
   success = "ok",

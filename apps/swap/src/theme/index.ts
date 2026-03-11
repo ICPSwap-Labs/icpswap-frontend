@@ -1,10 +1,8 @@
 import { createTheme } from "components/Mui";
-import { DynamicObject } from "types/index";
-
-import { componentStyleOverrides } from "./compStyleOverride";
-import { themePalette } from "./palette";
-import { themeTypography } from "./typography";
-import colors from "./colors";
+import { componentStyleOverrides } from "theme/compStyleOverride";
+import { themePalette } from "theme/palette";
+import { themeTypography } from "theme/typography";
+import colors from "theme/colors";
 
 const fontSize = {
   xs: "0.75rem",
@@ -19,7 +17,7 @@ export interface ThemeOption {
   [key: string]: any;
 }
 
-export function theme(customization: DynamicObject) {
+export function theme(customization: { [key: string]: any }) {
   const themeOption: ThemeOption = {
     colors,
     fontSize,

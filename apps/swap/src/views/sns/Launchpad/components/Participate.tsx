@@ -40,7 +40,7 @@ export function Participate({
   const [risk, setRisk] = useState<boolean>(false);
   const [participateLoading, setParticipateLoading] = useState(false);
 
-  const { result: balance } = useTokenBalance(ICP.address, principal);
+  const { result: balance } = useTokenBalance({ tokenId: ICP.address, account: principal });
 
   const [openTip] = useTips();
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();

@@ -14,8 +14,8 @@ import { formatTokenAmount, BigNumber } from "@icpswap/utils";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { sell, approve } from "hooks/nft/trade";
 import { Modal, NumberTextField } from "components/index";
-import { WRAPPED_ICP_TOKEN_INFO, ResultStatus } from "constants/index";
-import type { NFTTokenMetadata } from "@icpswap/types";
+import { WRAPPED_ICP } from "constants/index";
+import { NFTTokenMetadata, ResultStatus } from "@icpswap/types";
 import { NFTTradeFee } from "constants/nft";
 import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import LazyImage from "components/LazyImage";
@@ -94,7 +94,7 @@ export default function NFTSell({
 
       const result = await sell({
         nftCid: canisterId,
-        price: BigInt(price ? formatTokenAmount(price, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber() : 0),
+        price: BigInt(price ? formatTokenAmount(price, WRAPPED_ICP.decimals).toNumber() : 0),
         tokenIndex: Number(nft.tokenId),
       });
 
@@ -215,7 +215,7 @@ export default function NFTSell({
             onChange={({ target: { value } }) => setPrice(value)}
             numericProps={{
               thousandSeparator: true,
-              decimalScale: WRAPPED_ICP_TOKEN_INFO.decimals,
+              decimalScale: WRAPPED_ICP.decimals,
               allowNegative: false,
               maxLength: 20,
             }}

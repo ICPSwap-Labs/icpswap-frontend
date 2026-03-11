@@ -1,8 +1,7 @@
 import { useCallback } from "react";
 import { isAvailablePageArgs, resultFormat } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
-import { PaginationResult } from "types/index";
-import type { Null, WrapMintArgs, WrapTransaction, WrapWithdrawArgs } from "@icpswap/types";
+import type { Null, WrapMintArgs, WrapTransaction, WrapWithdrawArgs, PaginationResult } from "@icpswap/types";
 import { wrapICP as wrapIcpActor } from "@icpswap/actor";
 
 export async function wrapICP(params: WrapMintArgs) {

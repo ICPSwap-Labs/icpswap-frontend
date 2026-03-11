@@ -23,11 +23,21 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
     return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
   }, [principal]);
 
-  const { result: token0Balance } = useTokenBalance(token0?.address, principal, refresh);
-  const { result: token1Balance } = useTokenBalance(token1?.address, principal, refresh);
+  const { result: token0Balance } = useTokenBalance({ tokenId: token0?.address, account: principal, refresh });
+  const { result: token1Balance } = useTokenBalance({ tokenId: token1?.address, account: principal, refresh });
 
-  const { result: token0SubAccountBalance } = useTokenBalance(token0?.address, sub ? poolId : undefined, refresh, sub);
-  const { result: token1SubAccountBalance } = useTokenBalance(token1?.address, sub ? poolId : undefined, refresh, sub);
+  const { result: token0SubAccountBalance } = useTokenBalance({
+    tokenId: token0?.address,
+    account: sub ? poolId : undefined,
+    refresh,
+    sub,
+  });
+  const { result: token1SubAccountBalance } = useTokenBalance({
+    tokenId: token1?.address,
+    account: sub ? poolId : undefined,
+    refresh,
+    sub,
+  });
   const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
 
   return useMemo(() => {

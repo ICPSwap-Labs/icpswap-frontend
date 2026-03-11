@@ -3,8 +3,10 @@ import {
   ChainKeyMinterService,
   ckBTCMintFactory,
   ckBTCMintService,
+  DogeMinterFactory,
+  DogeMinterService,
 } from "@icpswap/candid";
-import { ckBTC_ID, ckBTC_MINTER_ID } from "@icpswap/constants";
+import { ckBTC_ID, ckBTC_MINTER_ID, DOGE_MINTER_ID } from "@icpswap/constants";
 
 import { icrc2 } from "../token/index";
 import { actor } from "../actor";
@@ -27,3 +29,10 @@ export const ckBtcMinter = (identity?: true) => {
 export const ckBtcActor = async (identity?: true) => {
   return await icrc2(ckBTC_ID, identity);
 };
+
+export const dogeMinter = (identity?: true) =>
+  actor.create<DogeMinterService>({
+    canisterId: DOGE_MINTER_ID,
+    idlFactory: DogeMinterFactory,
+    identity,
+  });

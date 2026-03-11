@@ -3,7 +3,7 @@ import { useTheme, Typography, Box, useMediaQuery } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useERC20Balance, useETHBalance } from "hooks/web3/index";
 import { DotLoading, Flex } from "components/index";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import {
@@ -17,14 +17,13 @@ import {
 import { useToken } from "hooks/index";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
-import { ckBTC, ckETH } from "@icpswap/tokens";
-
-import { TokenImageWithChain } from "./ChainImage";
+import { ckBTC } from "@icpswap/tokens";
+import { TokenImageWithChain } from "components/ck-bridge/ChainImage";
 
 interface SelectorTokenUIProps {
-  onClick?: (token: Token, chain: ckBridgeChain) => void;
+  onClick?: (token: Token, chain: BridgeChainType) => void;
   hidden?: boolean;
-  chain: ckBridgeChain;
+  chain: BridgeChainType;
   balance: BigNumber | string | Null;
   priceUSD: number | undefined;
   token: Token | Null;
@@ -90,7 +89,7 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
                   },
                 }}
               >
-                {chain !== ckBridgeChain.icp ? token?.symbol.replace("ck", "") : token?.symbol}
+                {chain !== BridgeChainType.icp ? token?.symbol.replace("ck", "") : token?.symbol}
               </Typography>
               <Typography
                 fontSize="12px"
@@ -147,15 +146,15 @@ export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, tok
 }
 
 interface SelectorTokenForTokenProps {
-  chain: ckBridgeChain;
+  chain: BridgeChainType;
   token: Token | Null;
   hidden?: boolean;
-  onClick?: (token: Token, chain: ckBridgeChain) => void;
+  onClick?: (token: Token, chain: BridgeChainType) => void;
 }
 
 function SelectorTokenForToken({ token, onClick, hidden, chain }: SelectorTokenForTokenProps) {
   const principal = useAccountPrincipal();
-  const { result: balance, loading } = useTokenBalance(token?.address, principal);
+  const { result: balance, loading } = useTokenBalance({ tokenId: token?.address, account: principal });
 
   const priceUSD = useUSDPriceById(token?.address);
 
@@ -173,9 +172,9 @@ function SelectorTokenForToken({ token, onClick, hidden, chain }: SelectorTokenF
 }
 
 interface SelectorTokenForErc20TokenProps {
-  onClick?: (token: Token, chain: ckBridgeChain) => void;
+  onClick?: (token: Token, chain: BridgeChainType) => void;
   hidden?: boolean;
-  chain: ckBridgeChain;
+  chain: BridgeChainType;
   token: Token | Null;
   minterInfo: ChainKeyETHMinterInfo | Null;
 }
@@ -209,9 +208,9 @@ function SelectorTokenForErc20Token({ token, onClick, hidden, chain, minterInfo 
 }
 
 interface SelectorTokenForEthProps {
-  onClick?: (token: Token, chain: ckBridgeChain) => void;
+  onClick?: (token: Token, chain: BridgeChainType) => void;
   hidden?: boolean;
-  chain: ckBridgeChain;
+  chain: BridgeChainType;
   token: Token | Null;
 }
 
@@ -234,9 +233,9 @@ function SelectorTokenForEth({ token, onClick, hidden, chain }: SelectorTokenFor
 }
 
 interface SelectorTokenForBtcProps {
-  onClick?: (token: Token, chain: ckBridgeChain) => void;
+  onClick?: (token: Token, chain: BridgeChainType) => void;
   hidden?: boolean;
-  chain: ckBridgeChain;
+  chain: BridgeChainType;
   token: Token | Null;
 }
 
@@ -259,10 +258,10 @@ function SelectorTokenForBtc({ token, onClick, hidden, chain }: SelectorTokenFor
 
 export interface SelectorTokenProps {
   tokenId: string;
-  onClick?: (token: Token, chain: ckBridgeChain) => void;
+  onClick?: (token: Token, chain: BridgeChainType) => void;
   searchWord?: string;
   hidden?: boolean;
-  chain: ckBridgeChain;
+  chain: BridgeChainType;
   minterInfo: ChainKeyETHMinterInfo | Null;
   updateTokenHide: (tokenId: string, hidden: boolean) => void;
 }
@@ -284,7 +283,7 @@ export function SelectorToken({
     if (!token) return true;
 
     if (isValidPrincipal(searchWord)) return token?.address.toString() !== searchWord;
-    const symbol = chain !== ckBridgeChain.icp ? token.symbol.replace("ck", "") : token.symbol;
+    const symbol = chain !== BridgeChainType.icp ? token.symbol.replace("ck", "") : token.symbol;
     return !symbol.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase());
   }, [searchWord, token, hidden]);
 
@@ -292,11 +291,11 @@ export function SelectorToken({
     updateTokenHide(tokenId, isHidden);
   }, [updateTokenHide, tokenId, isHidden]);
 
-  return tokenId === ckBTC.address && chain === ckBridgeChain.btc ? (
+  return tokenId === ckBTC.address && chain === BridgeChainType.btc ? (
     <SelectorTokenForBtc hidden={isHidden} onClick={onClick} chain={chain} token={token} />
-  ) : tokenId === ckETH.address && chain === ckBridgeChain.eth ? (
+  ) : chain === BridgeChainType.eth ? (
     <SelectorTokenForEth hidden={isHidden} onClick={onClick} chain={chain} token={token} />
-  ) : chain === ckBridgeChain.eth ? (
+  ) : chain === BridgeChainType.erc20 ? (
     <SelectorTokenForErc20Token
       hidden={isHidden}
       onClick={onClick}

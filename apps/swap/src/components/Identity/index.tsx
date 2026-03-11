@@ -1,17 +1,12 @@
 import React, { useState, useMemo, forwardRef, Ref, useImperativeHandle } from "react";
 import isFunction from "lodash/isFunction";
-import { Identity as AuthIdentity } from "types";
 import { useFullscreenLoading } from "hooks/useTips";
 
 export type SubmitLoadingProps = { loading: boolean; closeLoading: () => void };
 
 export type IdentityProps = {
   password?: string | null | undefined;
-  onSubmit: (
-    identity: AuthIdentity | true,
-    { loading, closeLoading }: SubmitLoadingProps,
-    params?: any,
-  ) => Promise<void>;
+  onSubmit: (identity: boolean, { loading, closeLoading }: SubmitLoadingProps, params?: any) => Promise<void>;
   children?: React.ReactNode | (({ submit }: CallbackProps) => JSX.Element);
   fullScreenLoading?: boolean;
 };
@@ -75,7 +70,7 @@ function Identity({ onSubmit, children, fullScreenLoading }: IdentityProps, ref:
   return <>{isFunction(children) ? children({ submit, loading }) : children}</>;
 }
 
-export async function getActorIdentity(): Promise<AuthIdentity | true> {
+export async function getActorIdentity(): Promise<boolean> {
   return true;
 }
 

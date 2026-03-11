@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { useCallback } from "react";
-import { PaginationResult } from "types/global";
+import { PaginationResult } from "@icpswap/types";
 import { pageArgsFormat, sleep } from "@icpswap/utils";
 
 export function usePaginationAllDataCallback<T>(

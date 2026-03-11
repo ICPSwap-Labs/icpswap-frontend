@@ -11,7 +11,7 @@ export interface UseFarmIsPendingProps {
 }
 
 export function useFarmIsPending({ farmId, state, rewardToken }: UseFarmIsPendingProps) {
-  const { result: farmTokenBalance } = useTokenBalance(rewardToken?.address, farmId);
+  const { result: farmTokenBalance } = useTokenBalance({ tokenId: rewardToken?.address, account: farmId });
 
   return useMemo(() => {
     if (isUndefinedOrNull(state) || isUndefinedOrNull(farmTokenBalance)) return false;

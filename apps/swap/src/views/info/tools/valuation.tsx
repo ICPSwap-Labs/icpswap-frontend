@@ -7,7 +7,7 @@ import {
   toSignificant,
   parseTokenAmount,
   BigNumber,
-  explorerLink,
+  icDashboardExplorerLink,
   locationSearchReplace,
 } from "@icpswap/utils";
 import { useTokensBalance, useTokensFromList, useParsedQueryString, TokenBalanceState } from "@icpswap/hooks";
@@ -103,7 +103,7 @@ function UserTokenBalance({
       <BodyCell>{tokenUSDPrice ? `$${toSignificant(tokenUSDPrice, 6, { groupSeparator: "," })}` : "--"}</BodyCell>
 
       <BodyCell>
-        <Link href={explorerLink(tokenInfo.canisterId)} target="_blank">
+        <Link href={icDashboardExplorerLink(tokenInfo.canisterId)} target="_blank">
           {tokenInfo.canisterId}
         </Link>
       </BodyCell>

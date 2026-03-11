@@ -10,6 +10,8 @@ import {
   updateRemovedWalletDefaultTokens,
   updateHideZeroNFT,
   updateSortedTokens,
+  updateDogeDissolveTxs,
+  cleanDogeDissolveTxs,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -82,5 +84,26 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateSortedTokens, (state, { payload }) => {
       state.sortedTokens = payload;
+    })
+    .addCase(updateDogeDissolveTxs, (state, { payload }) => {
+      const old_state = [...state.dogeDissolveTxs];
+      const index = old_state.findIndex((tx) => tx.id === payload.id);
+
+      if (index === -1) {
+        old_state.unshift(payload);
+      } else {
+        old_state.splice(index, 1, payload);
+      }
+
+      const dissolveTxs = old_state.sort((a, b) => {
+        if (Number(a.block_index) > Number(b.block_index)) return -1;
+        if (Number(a.block_index) < Number(b.block_index)) return 1;
+        return 0;
+      });
+
+      state.dogeDissolveTxs = dissolveTxs;
+    })
+    .addCase(cleanDogeDissolveTxs, (state) => {
+      state.dogeDissolveTxs = [];
     });
 });

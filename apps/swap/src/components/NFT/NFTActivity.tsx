@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import Copy from "components/Copy";
 import { useTradeTxList } from "hooks/nft/trade";
 import { pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
+import { WRAPPED_ICP } from "constants/index";
 import { TxRecord } from "types/index";
 import upperFirst from "lodash/upperFirst";
 import { useTranslation } from "react-i18next";
@@ -71,8 +71,7 @@ export default function NFTActivity({
                   <BodyCell>{shorten(record.buyer, 6)}</BodyCell>
                 </Copy>
                 <BodyCell>
-                  {parseTokenAmount(record.price, WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()}{" "}
-                  {WRAPPED_ICP_TOKEN_INFO.symbol}
+                  {parseTokenAmount(record.price, WRAPPED_ICP.decimals).toFormat()} {WRAPPED_ICP.symbol}
                 </BodyCell>
                 <BodyCell>{upperFirst(record.txStatus === "complete" ? "done" : record.txStatus)}</BodyCell>
               </TableRow>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Grid, Box, Link, makeStyles } from "components/Mui";
-import { parseTokenAmount, pageArgsFormat, explorerLink, shorten } from "@icpswap/utils";
+import { parseTokenAmount, pageArgsFormat, icDashboardExplorerLink, shorten } from "@icpswap/utils";
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
 import { feeAmountToPercentage } from "utils/swap/index";
@@ -54,7 +54,7 @@ function PoolItem({ farmId }: PoolItemProps) {
   ) : (
     <TableRow className={classes.wrapper}>
       <BodyCell title={farmId}>
-        <Link href={explorerLink(farmId)}>{shorten(farmId, 6)}</Link>
+        <Link href={icDashboardExplorerLink(farmId)}>{shorten(farmId, 6)}</Link>
       </BodyCell>
       <BodyCell
         sx={{
@@ -72,7 +72,7 @@ function PoolItem({ farmId }: PoolItemProps) {
         }
       >
         {token0 && token1 && farmInfo ? (
-          <Link href={explorerLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
+          <Link href={icDashboardExplorerLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
             token1.symbol
           }/${feeAmountToPercentage(Number(farmInfo?.poolFee))}`}</Link>
         ) : (

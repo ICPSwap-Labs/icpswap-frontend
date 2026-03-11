@@ -10,3 +10,4 @@ export * from "./ckLink";
 export * from "./bob";
 export * from "./ckUSDT";
 export * from "./alice";
+export * from "./ckDoge";

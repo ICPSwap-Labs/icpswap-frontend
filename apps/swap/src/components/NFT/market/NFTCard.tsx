@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Grid, Typography, Button, Box, useTheme, makeStyles, Theme } from "components/Mui";
 import { TradeOrder } from "types";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
+import { WRAPPED_ICP } from "constants/index";
 import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import { parseTokenAmount } from "@icpswap/utils";
 import { useAccount } from "store/auth/hooks";
@@ -121,7 +121,7 @@ export default function NFTCard({ order }: { order: TradeOrder }) {
                     <img width="14px" height="14px" src={WICPCurrencyImage} alt="" />
                     <Grid item ml="3px">
                       <Typography color="text.primary" fontWeight="700" fontSize="14px" component="span">
-                        {parseTokenAmount(order?.price, WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()}
+                        {parseTokenAmount(order?.price, WRAPPED_ICP.decimals).toFormat()}
                       </Typography>
                     </Grid>
                   </Grid>

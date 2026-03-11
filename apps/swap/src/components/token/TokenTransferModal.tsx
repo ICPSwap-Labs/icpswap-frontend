@@ -62,7 +62,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
 
   const { refreshTotalBalance, setRefreshTotalBalance } = useWalletTokenContext();
 
-  const { result: balance } = useTokenBalance(token.address, principal);
+  const { result: balance } = useTokenBalance({ tokenId: token.address, account: principal });
   const tokenUSDPrice = useUSDPriceById(token.address);
 
   const [loading, setLoading] = useState(false);

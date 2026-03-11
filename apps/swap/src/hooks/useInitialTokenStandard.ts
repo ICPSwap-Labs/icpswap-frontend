@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import { XTC, TOKEN_STANDARD, CAT, MOD, BoomDAO } from "constants/tokens";
-import { ckSepoliaUSDC, ckSepoliaETH, ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import { ckSepoliaUSDC, ckSepoliaETH, ICP, WRAPPED_ICP, ckDoge } from "@icpswap/tokens";
 import { getSwapPools } from "@icpswap/hooks";
 import type { SwapPoolData } from "@icpswap/types";
 import { registerTokens } from "@icpswap/token-adapter";
@@ -11,7 +11,7 @@ import { updateCanisters } from "store/allCanisters";
 import { updateTokens } from "store/allTokens";
 import { useGlobalTokenList } from "store/global/hooks";
 
-export const Tokens = [XTC, CAT, MOD, BoomDAO, ckSepoliaUSDC, ckSepoliaETH];
+export const Tokens = [XTC, CAT, MOD, BoomDAO, ckSepoliaUSDC, ckSepoliaETH, ckDoge];
 
 export function useInitialTokenStandard() {
   const [updated, setUpdated] = useState(false);
@@ -89,6 +89,7 @@ export function useInitialTokenStandard() {
   }, [tokensFromTokenList]);
 
   useEffect(() => {
+    // Tokens that not register in ICPSwap before new version release, so we need to register them manually
     if (network === NETWORK.IC) {
       Tokens.forEach((token) => {
         updateTokenStandard([

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import type { NFTControllerInfo, TradeStateResult } from "@icpswap/types";
-import { PaginationResult } from "types/global";
+import { PaginationResult } from "@icpswap/types";
 import { NFTTradeStat, NFTCanisterController } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
 

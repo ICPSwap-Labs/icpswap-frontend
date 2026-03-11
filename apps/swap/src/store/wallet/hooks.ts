@@ -168,7 +168,7 @@ export function useBitcoinDissolveTxs() {
   return useMemo(() => {
     if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(principal)) return undefined;
     return allDissolveTxs.filter((tx) => tx.principal === principal);
-  }, [principal, allDissolveTxs]);
+  }, [principal, JSON.stringify(allDissolveTxs)]);
 }
 
 export function useBitcoinDissolveTx(hash: string | undefined) {

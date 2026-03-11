@@ -51,7 +51,7 @@ export function TokenItem({
   }, [showBalance, canisterId]);
 
   const [, token] = useToken(canisterId);
-  const { result: balance, loading } = useTokenBalance(getBalanceId, principal);
+  const { result: balance, loading } = useTokenBalance({ tokenId: getBalanceId, account: principal });
   const interfacePrice = useUSDPriceById(getBalanceId);
 
   const { taggedTokens, updateTaggedTokens, deleteTaggedTokens } = useTaggedTokenManager();

@@ -4,6 +4,7 @@ import { erc20DissolveHash, isErc20Finalized } from "utils/web3/dissolve";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { Erc20DissolveTransactionEvent, EthereumTransactionEvent } from "types/web3";
 import { useErc20UnTxFinalizedTxs } from "store/web3/hooks";
+import { BridgeChainType, BridgeType } from "@icpswap/constants";
 
 export function useErc20DissolveEvents() {
   const { result: erc20DissolveTxs } = useErc20DissolveTxs();
@@ -18,8 +19,8 @@ export function useErc20DissolveEvents() {
           withdrawal_id: dissolveTx.withdrawal_id.toString(),
           hash: erc20DissolveHash(dissolveTx.status),
           amount: dissolveTx.withdrawal_amount.toString(),
-          type: "dissolve",
-          chain: "erc20",
+          type: BridgeType.dissolve,
+          chain: BridgeChainType.erc20,
           token_symbol: dissolveTx.token_symbol,
         };
       });
@@ -39,8 +40,8 @@ export function useErc20MintEvents() {
         return {
           hash: tx.hash,
           amount: tx.value,
-          type: "mint",
-          chain: "erc20",
+          type: BridgeType.mint,
+          chain: BridgeChainType.erc20,
           token: tx.ledger,
         };
       })

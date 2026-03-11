@@ -1,7 +1,8 @@
 import { Link as ReactLink } from "react-router-dom";
 import { parseTokenAmount, nanosecond2Millisecond, shorten } from "@icpswap/utils";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
-import { TxRecord, ResultStatus } from "types/index";
+import { WRAPPED_ICP } from "constants/index";
+import { TxRecord } from "types/index";
+import { ResultStatus } from "@icpswap/types";
 import dayjs from "dayjs";
 import Copy from "components/Copy";
 import { checkPayment } from "hooks/nft/trade";
@@ -69,7 +70,7 @@ export const NFTSaleRecord = ({ saleRecord, type }: { saleRecord: TxRecord; type
         <BodyCell>{shorten(saleRecord.buyer, 6)}</BodyCell>
       </Copy>
       <BodyCell>
-        {parseTokenAmount(saleRecord.price, WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()} {WRAPPED_ICP_TOKEN_INFO.symbol}
+        {parseTokenAmount(saleRecord.price, WRAPPED_ICP.decimals).toFormat()} {WRAPPED_ICP.symbol}
       </BodyCell>
       <BodyCell>{upperFirst(saleRecord.txStatus === "complete" ? "done" : saleRecord.txStatus)}</BodyCell>
       {type === "User" ? (

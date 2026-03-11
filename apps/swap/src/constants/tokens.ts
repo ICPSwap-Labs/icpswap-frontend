@@ -1,6 +1,5 @@
 import { Token } from "@icpswap/swap-sdk";
 import { WICPCanisterId } from "constants/canister";
-import { TokenInfo, TokenMetadata } from "types/token";
 import { Principal } from "@dfinity/principal";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 
@@ -8,31 +7,16 @@ export { TOKEN_STANDARD };
 
 export const XTCCanisterId = "aanaa-xaaaa-aaaah-aaeiq-cai";
 
-export const WRAPPED_ICP_METADATA: TokenMetadata = {
-  standardType: TOKEN_STANDARD.EXT,
-  metadata: [],
-  name: "Wrapped ICP",
-  decimals: 8,
-  symbol: "WICP",
-  canisterId: Principal.fromText(WICPCanisterId ?? "aaaaa-aa"),
-};
-
-export const WRAPPED_ICP_TOKEN_INFO: TokenInfo = {
-  ...WRAPPED_ICP_METADATA,
-  logo: `/images/tokens/${WRAPPED_ICP_METADATA.canisterId.toString()}.jpeg`,
-  transFee: BigInt(0),
-  canisterId: WRAPPED_ICP_METADATA.canisterId.toString(),
-  totalSupply: BigInt(0),
-};
+const WRAPPED_ICP_ID = Principal.fromText(WICPCanisterId ?? "aaaaa-aa").toString();
 
 export const WRAPPED_ICP = new Token({
-  address: WRAPPED_ICP_TOKEN_INFO.canisterId,
-  decimals: WRAPPED_ICP_TOKEN_INFO.decimals,
-  symbol: WRAPPED_ICP_TOKEN_INFO.symbol,
-  name: WRAPPED_ICP_TOKEN_INFO.name,
-  logo: WRAPPED_ICP_TOKEN_INFO.logo,
+  address: WRAPPED_ICP_ID,
+  decimals: 8,
+  symbol: "WICP",
+  name: "Wrapped ICP",
+  logo: `/images/tokens/${WRAPPED_ICP_ID}.jpeg`,
   standard: TOKEN_STANDARD.EXT,
-  transFee: Number(WRAPPED_ICP_TOKEN_INFO.transFee),
+  transFee: 0,
 });
 
 export const XTC = new Token({

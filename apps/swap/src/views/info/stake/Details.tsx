@@ -3,7 +3,7 @@ import { makeStyles, Grid, Box, Typography, Link, Theme } from "components/Mui";
 import { StakeClaimTransactions, StakeTransactions } from "components/info/stake";
 import { MainCard, InfoWrapper, Copy } from "components/index";
 import { useParams } from "react-router-dom";
-import { parseTokenAmount, shorten, explorerLink, cycleValueFormat } from "@icpswap/utils";
+import { parseTokenAmount, shorten, icDashboardExplorerLink, cycleValueFormat } from "@icpswap/utils";
 import { useStakingPoolCycles, useStakingPoolState, useStakingTokenPool } from "@icpswap/hooks";
 import { BreadcrumbsV1 } from "@icpswap/ui";
 import dayjs from "dayjs";
@@ -52,7 +52,7 @@ export default function PoolsDetails() {
   const [recordType, setRecordType] = useState("transactions");
 
   const { result: cycles } = useStakingPoolCycles(id);
-  const { result: poolTokenBalance } = useTokenBalance(pool?.stakingToken.address, id);
+  const { result: poolTokenBalance } = useTokenBalance({ tokenId: pool?.stakingToken.address, account: id });
   const [, rewardToken] = useToken(pool?.rewardToken.address);
 
   const state = useStakingPoolState(pool);
@@ -104,7 +104,7 @@ export default function PoolsDetails() {
                 poolTokenBalance && pool ? (
                   <Typography component="span" color="text.primary">
                     {parseTokenAmount(poolTokenBalance, pool.stakingTokenDecimals).toFormat()}
-                    <Link href={explorerLink(pool.stakingToken.address)} target="_blank">
+                    <Link href={icDashboardExplorerLink(pool.stakingToken.address)} target="_blank">
                       &nbsp;{`${pool.stakingTokenSymbol}`}
                     </Link>
                   </Typography>
@@ -118,7 +118,7 @@ export default function PoolsDetails() {
               value={
                 <Typography component="span" color="text.primary">
                   {parseTokenAmount(pool?.rewardDebt, pool?.rewardTokenDecimals).toFormat()}
-                  <Link href={explorerLink(pool?.rewardToken.address ?? "")} target="_blank">
+                  <Link href={icDashboardExplorerLink(pool?.rewardToken.address ?? "")} target="_blank">
                     &nbsp;{`${pool?.rewardTokenSymbol ?? "--"}`}
                   </Link>
                 </Typography>
@@ -131,7 +131,7 @@ export default function PoolsDetails() {
                   {pool && rewardToken
                     ? parseTokenAmount(pool.rewardPerTime.toString(), rewardToken.decimals).toFormat()
                     : "--"}
-                  <Link href={explorerLink(pool?.rewardToken.address ?? "")} target="_blank">
+                  <Link href={icDashboardExplorerLink(pool?.rewardToken.address ?? "")} target="_blank">
                     &nbsp;{`${pool?.rewardTokenSymbol ?? "--"}`}
                   </Link>
                 </>
@@ -144,7 +144,7 @@ export default function PoolsDetails() {
               label={t("common.creator.colon")}
               value={
                 pool ? (
-                  <Link href={explorerLink(pool.creator.toString())} target="_blank">
+                  <Link href={icDashboardExplorerLink(pool.creator.toString())} target="_blank">
                     {shorten(pool.creator.toString(), 8)}
                   </Link>
                 ) : (

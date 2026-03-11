@@ -78,17 +78,6 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     noLiquidity,
   } = useSwapInfo({ refresh: refreshTrigger });
 
-  // Auto refresh token balance 5 seconds
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setBalanceRefreshTrigger(balanceRefreshTrigger + 1);
-  //   }, 5000);
-
-  //   return () => {
-  //     clearInterval(timer);
-  //   };
-  // }, [setBalanceRefreshTrigger, balanceRefreshTrigger]);
-
   const isLoadingRoute = swapState === TradeState.LOADING;
   const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
   const isValid = !swapInputError && !isLoadingRoute && !isNoRouteFound;

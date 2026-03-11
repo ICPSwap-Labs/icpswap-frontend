@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import {
   parseTokenAmount,
   shorten,
-  explorerLink,
+  icDashboardExplorerLink,
   toSignificantWithGroupSeparator,
   cycleValueFormat,
 } from "@icpswap/utils";
@@ -123,7 +123,7 @@ export default function FarmDetails() {
                 value={
                   <Typography component="span" color="text.primary">
                     {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
-                    <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                    <Link href={icDashboardExplorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                       &nbsp;{`${rewardToken?.symbol ?? "--"}`}
                     </Link>
                   </Typography>
@@ -138,7 +138,7 @@ export default function FarmDetails() {
                         parseTokenAmount(farmMetadata.totalRewardHarvested.toString(), rewardToken.decimals).toString(),
                         8,
                       )}
-                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      <Link href={icDashboardExplorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                         &nbsp;{rewardToken.symbol}
                       </Link>
                     </>
@@ -159,7 +159,7 @@ export default function FarmDetails() {
                         ).toString(),
                         8,
                       )}
-                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      <Link href={icDashboardExplorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                         &nbsp;{rewardToken.symbol}
                       </Link>
                     </>
@@ -192,7 +192,7 @@ export default function FarmDetails() {
                         parseTokenAmount(farmMetadata.rewardPerCycle, rewardToken.decimals).toString(),
                         8,
                       )}
-                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      <Link href={icDashboardExplorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                         &nbsp;{rewardToken.symbol}
                       </Link>
                     </>

@@ -20,7 +20,7 @@ import {
   isBtcMintTransaction,
 } from "utils/web3/ck-bridge";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
-import { BTC_MINT_REFRESH } from "constants/ckBTC";
+import { BITCOIN_MINT_REFRESH } from "constants/chain-key";
 import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
 import { useBitcoinAllTxResponse } from "store/web3/hooks";
@@ -178,7 +178,7 @@ export function useBtcTransactions(address: string | undefined | null, refresh?:
 
 export function useBtcMintTransactions() {
   const { result: address } = useBtcDepositAddress();
-  const [refresh] = useRefreshTriggerManager(BTC_MINT_REFRESH);
+  const [refresh] = useRefreshTriggerManager(BITCOIN_MINT_REFRESH);
   const { result: allTransactions, loading } = useBtcTransactions(address, refresh);
 
   const mintTransactions = useMemo(() => {

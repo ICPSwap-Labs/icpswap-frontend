@@ -134,8 +134,18 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     return pool.alignToken(__inputToken);
   }, [pool, __inputToken]);
 
-  const { result: __inputTokenSubBalance } = useTokenBalance(inputToken?.address, poolId, refresh, sub);
-  const { result: __outputTokenSubBalance } = useTokenBalance(__outputToken?.address, poolId, refresh, sub);
+  const { result: __inputTokenSubBalance } = useTokenBalance({
+    tokenId: inputToken?.address,
+    account: poolId,
+    refresh,
+    sub,
+  });
+  const { result: __outputTokenSubBalance } = useTokenBalance({
+    tokenId: __outputToken?.address,
+    account: poolId,
+    refresh,
+    sub,
+  });
 
   const inputTokenUnusedBalance = BigInt(0);
   const outputTokenUnusedBalance = BigInt(0);

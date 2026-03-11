@@ -3,7 +3,7 @@ import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
 import { useTaggedTokenManager } from "store/wallet/hooks";
 import { useNavigate } from "react-router-dom";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
 import { useWalletContext } from "components/Wallet/context";
 
 interface ConvertItemProps {
@@ -17,7 +17,7 @@ export function ConvertItem({ tokenId }: ConvertItemProps) {
   const { closeDrawer } = useWalletContext();
 
   const handleConvert = useCallback(() => {
-    navigate(`/ck-bridge?tokenId=${tokenId}&chain=${ckBridgeChain.icp}`);
+    navigate(`/ck-bridge?tokenId=${tokenId}&chainType=${BridgeChainType.icp}`);
     closeDrawer();
   }, [navigate, deleteTaggedTokens, tokenId, closeDrawer]);
 

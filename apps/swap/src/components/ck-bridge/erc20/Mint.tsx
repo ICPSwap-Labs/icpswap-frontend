@@ -1,10 +1,10 @@
 import { useState, useCallback, useMemo } from "react";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { InputWrapper } from "components/ck-bridge";
-import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
+import { useErc20TokenBalance, useIcpTokenBalance } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useAccount } from "wagmi";
 import { useActiveChain } from "hooks/web3/index";
@@ -20,12 +20,11 @@ import { Web3WalletWrapper } from "components/ck-bridge/Web3WalletWrapper";
 
 export interface Erc20MintProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
   minterInfo?: ChainKeyETHMinterInfo | Null;
   blockNumber: number | string | Null;
 }
 
-export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20MintProps) {
+export function Erc20Mint({ token, minterInfo, blockNumber }: Erc20MintProps) {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const principal = useAccountPrincipal();
@@ -39,8 +38,8 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
     return minterInfo.deposit_with_subaccount_helper_contract_address[0];
   }, [minterInfo]);
 
-  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
-  const ercTokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.eth, minterInfo });
+  const tokenBalance = useIcpTokenBalance({ token });
+  const ercTokenBalance = useErc20TokenBalance({ token, minterInfo });
 
   const { loading, mint_call, approveState } = useMintCallback({ erc20Token, helperContractAddress, amount });
 
@@ -63,8 +62,6 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
     return undefined;
   }, [chainId, chain, amount, erc20Token, ercTokenBalance, approveState]);
 
-  const balance = useBridgeTokenBalance({ token, chain: bridgeChain, minterInfo });
-
   const handleMax = useCallback(() => {
     if (ercTokenBalance) {
       setAmount(parseTokenAmount(ercTokenBalance, token.decimals).toString());
@@ -80,8 +77,8 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
       <InputWrapper
         value={amount}
         token={token}
-        chain={bridgeChain}
-        balance={balance}
+        bridgeCurrentChain={BridgeChainType.erc20}
+        balance={ercTokenBalance}
         onInput={(value: string) => setAmount(value)}
         onMax={handleMax}
       />

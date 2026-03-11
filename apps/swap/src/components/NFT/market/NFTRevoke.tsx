@@ -1,9 +1,8 @@
 import { Button } from "components/Mui";
 import { cancel } from "hooks/nft/trade";
-import { ResultStatus } from "types/index";
 import { useSuccessTip, useErrorTip } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
-import type { NFTTokenMetadata, Null } from "@icpswap/types";
+import { NFTTokenMetadata, Null, ResultStatus } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useLoadingCallData } from "@icpswap/hooks";

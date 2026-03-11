@@ -1,7 +1,13 @@
 import { useMemo, useState } from "react";
 import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
 import { useParams } from "react-router-dom";
-import { formatDollarAmount, formatAmount, explorerLink, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import {
+  formatDollarAmount,
+  formatAmount,
+  icDashboardExplorerLink,
+  BigNumber,
+  isUndefinedOrNull,
+} from "@icpswap/utils";
 import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
 import { usePoolAPR, useInfoPool } from "@icpswap/hooks";
 import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
@@ -116,7 +122,7 @@ export default function SwapPoolDetails() {
 
           <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
             <Flex gap="0 4px">
-              <TextButton link={explorerLink(canisterId)}>{canisterId}</TextButton>
+              <TextButton link={icDashboardExplorerLink(canisterId)}>{canisterId}</TextButton>
               <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
             </Flex>
           </Box>

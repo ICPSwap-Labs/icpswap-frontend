@@ -9,3 +9,4 @@ export * from "./EthereumFinalizedBlock";
 export * from "./erc20/index";
 export * from "./btc/BtcBridgeWrapper";
 export * from "./eth/index";
+export * from "./doge/BridgeWrapper";

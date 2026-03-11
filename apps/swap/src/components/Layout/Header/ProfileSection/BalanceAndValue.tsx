@@ -8,9 +8,8 @@ import { useTokenBalance } from "hooks/token/useTokenBalance";
 
 export function BalanceAndValue() {
   const principal = useAccountPrincipal();
-
   const infoToken = useInfoToken(ICP.address);
-  const { result: tokenBalance } = useTokenBalance(ICP.address, principal);
+  const { result: tokenBalance } = useTokenBalance({ tokenId: ICP.address, account: principal });
 
   return (
     <Flex sx={{ padding: "20px 0 0 0" }} justify="center" vertical align="center">

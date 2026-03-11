@@ -4,7 +4,6 @@ import { Loading } from "@icpswap/ui";
 import { isMobile } from "react-device-detect";
 import useFileUpload from "hooks/useNFTUpload";
 import { getFileType } from "utils/type";
-import { Identity as CallIdentity } from "types/index";
 import Identity, { SubmitLoadingProps, IdentityRef } from "components/Identity";
 
 import CloudUploadIcon from "./UploadCloudIcon";
@@ -148,7 +147,7 @@ const Upload = forwardRef(
     );
 
     const handleIdentityFileUpload = async (
-      identity: CallIdentity,
+      identity: boolean,
       { loading }: SubmitLoadingProps,
       { file, canisterId }: any,
     ) => {

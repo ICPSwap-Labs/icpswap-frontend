@@ -1,9 +1,9 @@
 import { useParsedQueryString } from "@icpswap/hooks";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType, BridgeType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import { nonUndefinedOrNull } from "@icpswap/utils";
-import { ckBTC, ckUSDC, ckETH } from "@icpswap/tokens";
-import { Erc20BridgeWrapper, BtcBridgeWrapper, EthBridgeWrapper } from "components/ck-bridge";
+import { ckBTC, ckUSDC, ckETH, ckDoge } from "@icpswap/tokens";
+import { Erc20BridgeWrapper, BtcBridgeWrapper, EthBridgeWrapper, DogeBridgeWrapper } from "components/ck-bridge";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useToken } from "hooks/useCurrency";
 import { useNavigate } from "react-router-dom";
@@ -11,12 +11,12 @@ import { useGlobalMinterInfoManager } from "store/global/hooks";
 
 export default function CkBridge() {
   const [token, setToken] = useState<Token>(ckUSDC);
-  const [bridgeChain, setBridgeChain] = useState<ckBridgeChain>(ckBridgeChain.eth);
+  const [bridgeChain, setBridgeChain] = useState<BridgeChainType>(BridgeChainType.erc20);
 
   const navigate = useNavigate();
 
-  const { chain, tokenId } = useParsedQueryString() as {
-    chain: ckBridgeChain | undefined;
+  const { chainType, tokenId } = useParsedQueryString() as {
+    chainType: BridgeChainType | undefined;
     tokenId: string | undefined;
   };
 
@@ -31,32 +31,50 @@ export default function CkBridge() {
       (e) => e.ledger_canister_id.toString() === token.address,
     );
 
-    return nonUndefinedOrNull(erc20TokenMinterInfo) ? "erc20" : token.address === ckETH.address ? "eth" : "btc";
+    if (nonUndefinedOrNull(erc20TokenMinterInfo)) return BridgeChainType.erc20;
+
+    switch (token.address) {
+      case ckETH.address:
+        return BridgeChainType.eth;
+      case ckBTC.address:
+        return BridgeChainType.btc;
+      case ckDoge.address:
+        return BridgeChainType.doge;
+      default:
+        return nonUndefinedOrNull(erc20TokenMinterInfo) ? BridgeChainType.erc20 : BridgeChainType.btc;
+    }
   }, [token, minterInfo]);
 
   const bridgeType = useMemo(() => {
-    return bridgeChain === ckBridgeChain.icp ? "dissolve" : "mint";
+    return bridgeChain === BridgeChainType.icp ? BridgeType.dissolve : BridgeType.mint;
   }, [token, bridgeChain]);
 
   const targetTokenBridgeChain = useMemo(() => {
-    return bridgeChain === ckBridgeChain.icp
-      ? token.address === ckETH.address
-        ? ckBridgeChain.eth
-        : token.address === ckBTC.address
-        ? ckBridgeChain.btc
-        : ckBridgeChain.eth
-      : ckBridgeChain.icp;
+    if (bridgeChain === BridgeChainType.icp) {
+      switch (token.address) {
+        case ckETH.address:
+          return BridgeChainType.eth;
+        case ckBTC.address:
+          return BridgeChainType.btc;
+        case ckDoge.address:
+          return BridgeChainType.doge;
+        default:
+          return BridgeChainType.erc20;
+      }
+    }
+
+    return BridgeChainType.icp;
   }, [token, bridgeChain]);
 
   const handleTokenChange = useCallback(
-    (token: Token, chain: ckBridgeChain) => {
-      navigate(`/ck-bridge?tokenId=${token.address}&chain=${chain}`);
+    (token: Token, chain: BridgeChainType) => {
+      navigate(`/ck-bridge?tokenId=${token.address}&chainType=${chain}`);
     },
     [navigate],
   );
 
   const handleBridgeChangeChange = useCallback(() => {
-    navigate(`/ck-bridge?tokenId=${tokenId ?? ckUSDC.address}&chain=${targetTokenBridgeChain}`);
+    navigate(`/ck-bridge?tokenId=${tokenId ?? ckUSDC.address}&chainType=${targetTokenBridgeChain}`);
   }, [targetTokenBridgeChain, tokenId]);
 
   useEffect(() => {
@@ -64,40 +82,65 @@ export default function CkBridge() {
       setToken(tokenFromUrl);
     }
 
-    if (chain) {
-      setBridgeChain(chain);
+    if (chainType) {
+      setBridgeChain(chainType);
     }
-  }, [tokenFromUrl, chain]);
+  }, [tokenFromUrl, chainType]);
 
-  return bridgeTokenType === "erc20" ? (
-    <Erc20BridgeWrapper
-      token={token}
-      minterInfo={minterInfo}
-      bridgeChain={bridgeChain}
-      targetTokenBridgeChain={targetTokenBridgeChain}
-      onTokenChange={handleTokenChange}
-      onBridgeChainChange={handleBridgeChangeChange}
-      bridgeType={bridgeType}
-    />
-  ) : bridgeTokenType === "btc" ? (
-    <BtcBridgeWrapper
-      token={token}
-      minterInfo={minterInfo}
-      bridgeChain={bridgeChain}
-      targetTokenBridgeChain={targetTokenBridgeChain}
-      onTokenChange={handleTokenChange}
-      bridgeType={bridgeType}
-      onBridgeChainChange={handleBridgeChangeChange}
-    />
-  ) : bridgeTokenType === "eth" ? (
-    <EthBridgeWrapper
-      token={token}
-      minterInfo={minterInfo}
-      bridgeChain={bridgeChain}
-      targetTokenBridgeChain={targetTokenBridgeChain}
-      onTokenChange={handleTokenChange}
-      onBridgeChainChange={handleBridgeChangeChange}
-      bridgeType={bridgeType}
-    />
-  ) : null;
+  switch (bridgeTokenType) {
+    case BridgeChainType.erc20:
+      return (
+        <Erc20BridgeWrapper
+          token={token}
+          minterInfo={minterInfo}
+          bridgeChain={bridgeChain}
+          targetTokenBridgeChain={targetTokenBridgeChain}
+          onTokenChange={handleTokenChange}
+          onBridgeChainChange={handleBridgeChangeChange}
+          bridgeType={bridgeType}
+        />
+      );
+
+    case BridgeChainType.btc:
+      return (
+        <BtcBridgeWrapper
+          token={token}
+          minterInfo={minterInfo}
+          bridgeChain={bridgeChain}
+          targetTokenBridgeChain={targetTokenBridgeChain}
+          onTokenChange={handleTokenChange}
+          bridgeType={bridgeType}
+          onBridgeChainChange={handleBridgeChangeChange}
+        />
+      );
+
+    case BridgeChainType.eth:
+      return (
+        <EthBridgeWrapper
+          token={token}
+          minterInfo={minterInfo}
+          bridgeChain={bridgeChain}
+          targetTokenBridgeChain={targetTokenBridgeChain}
+          onTokenChange={handleTokenChange}
+          onBridgeChainChange={handleBridgeChangeChange}
+          bridgeType={bridgeType}
+        />
+      );
+
+    case BridgeChainType.doge:
+      return (
+        <DogeBridgeWrapper
+          token={token}
+          minterInfo={minterInfo}
+          bridgeChain={bridgeChain}
+          targetTokenBridgeChain={targetTokenBridgeChain}
+          onTokenChange={handleTokenChange}
+          bridgeType={bridgeType}
+          onBridgeChainChange={handleBridgeChangeChange}
+        />
+      );
+
+    default:
+      return null;
+  }
 }

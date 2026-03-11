@@ -1,6 +1,6 @@
 import Modal from "components/modal/index";
 import { Typography, Box, Grid, Button, CircularProgress } from "components/Mui";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
+import { WRAPPED_ICP } from "constants/index";
 import { CanisterCreateDetails } from "types/index";
 import { parseTokenAmount } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
@@ -37,8 +37,7 @@ export default ({
               marginTop: "12px",
             }}
           >
-            {parseTokenAmount((mintInfo ?? [])[0], WRAPPED_ICP_TOKEN_INFO.decimals).toNumber()}{" "}
-            {WRAPPED_ICP_TOKEN_INFO.symbol}
+            {parseTokenAmount((mintInfo ?? [])[0], WRAPPED_ICP.decimals).toNumber()} {WRAPPED_ICP.symbol}
           </Typography>
         </Box>
 

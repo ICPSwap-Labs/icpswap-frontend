@@ -1,10 +1,10 @@
 import { useCallback } from "react";
 import { resultFormat, optionalArg, isAvailablePageArgs } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
-import { StatusResult1, PaginationResult, getCanisterId, CANISTER_NAMES } from "constants/index";
+import { getCanisterId, CANISTER_NAMES } from "constants/index";
 import { Principal } from "@dfinity/principal";
 import { TradeOrder, TxRecord } from "types";
-import type { NFTSaleArgs, Null } from "@icpswap/types";
+import type { NFTSaleArgs, Null, StatusResult, PaginationResult } from "@icpswap/types";
 import { NFTs, AdapterName, NFTsTrade, TradeAdapterName } from "utils/nft/index";
 import { NFTTradeCanister } from "@icpswap/actor";
 
@@ -56,7 +56,7 @@ export async function approve({ canisterId, tokenIdentifier, account }: ApproveA
   return true;
 }
 
-export async function sell(params: NFTSaleArgs): Promise<StatusResult1<boolean>> {
+export async function sell(params: NFTSaleArgs): Promise<StatusResult<boolean | undefined>> {
   return await NFTsTrade.sale({
     adapterName: TradeAdapterName.ICPSwap,
     params,

@@ -38,7 +38,7 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
 
   const state = useStakingPoolState(poolInfo);
 
-  const { result: userTokenBalance } = useTokenBalance(poolInfo.stakingToken.address, principal);
+  const { result: userTokenBalance } = useTokenBalance({ tokenId: stakeToken?.address, account: principal });
 
   const apr = useApr({
     poolInfo: stakingPoolInfo,

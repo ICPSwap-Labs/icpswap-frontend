@@ -7,77 +7,69 @@ import { icrc1Adapter } from "./ICRC1";
 import { icrc2Adapter } from "./ICRC2";
 import { TOKEN_STANDARD, Metadata } from "./types";
 
-type VerificationResult = {
+export type VerificationResult = {
   valid: boolean;
   metadata: Metadata | null | undefined;
   support_icrc2: boolean;
 };
+
+const DEFAULT_RESULT: VerificationResult = { valid: false, metadata: null, support_icrc2: false };
 
 async function runVerification(fn: () => Promise<VerificationResult>): Promise<VerificationResult> {
   try {
     return await fn();
   } catch (error) {
     console.error(error);
-    return { valid: false, metadata: null, support_icrc2: false };
+    return DEFAULT_RESULT;
   }
 }
+
+type Verifier = (canisterId: string) => Promise<VerificationResult>;
+
+const VERIFIERS: Partial<Record<TOKEN_STANDARD, Verifier>> = {
+  [TOKEN_STANDARD.DIP20]: async (canisterId) => {
+    const metadata = (await DIP20Adapter.metadata({ canisterId })).data;
+    const valid = Boolean(metadata?.symbol && metadata.symbol !== "WICP" && metadata.symbol !== "XTC");
+    return { metadata, valid, support_icrc2: false };
+  },
+  [TOKEN_STANDARD.DIP20_WICP]: async (canisterId) => {
+    const metadata = (await DIP20WICPAdapter.metadata({ canisterId })).data;
+    return { metadata, valid: metadata?.symbol === "WICP", support_icrc2: false };
+  },
+  [TOKEN_STANDARD.DIP20_XTC]: async (canisterId) => {
+    const metadata = (await DIP20XTCAdapter.metadata({ canisterId })).data;
+    return { metadata, valid: metadata?.symbol === "XTC", support_icrc2: false };
+  },
+  [TOKEN_STANDARD.EXT]: async (canisterId) => {
+    const metadata = (await EXTAdapter.metadata({ canisterId })).data;
+    return { metadata, valid: Boolean(metadata?.symbol), support_icrc2: false };
+  },
+  [TOKEN_STANDARD.ICRC2]: async (canisterId) => {
+    const [metadataRes, standards] = await Promise.all([
+      icrc2Adapter.metadata({ canisterId }),
+      icrc2(canisterId).then((a) => a.icrc1_supported_standards()),
+    ]);
+    const metadata = metadataRes.data;
+    const valid = Boolean(metadata?.symbol && standards.some((s) => s.name.includes("ICRC-2")));
+    return { metadata, valid, support_icrc2: false };
+  },
+  [TOKEN_STANDARD.ICRC1]: async (canisterId) => {
+    const [metadataRes, standards] = await Promise.all([
+      icrc1Adapter.metadata({ canisterId }),
+      icrc1(canisterId).then((a) => a.icrc1_supported_standards()),
+    ]);
+    const metadata = metadataRes.data;
+    const valid = Boolean(metadata?.symbol && standards.some((s) => s.name.includes("ICRC-1")));
+    const support_icrc2 = standards.some((s) => s.name.includes("ICRC-2"));
+    return { metadata, valid, support_icrc2 };
+  },
+};
 
 export async function tokenStandardVerification(
   canisterId: string,
   standard: TOKEN_STANDARD,
 ): Promise<VerificationResult> {
-  const defaultResult: VerificationResult = { valid: false, metadata: null, support_icrc2: false };
-
-  if (standard === TOKEN_STANDARD.DIP20) {
-    return runVerification(async () => {
-      const metadata = (await DIP20Adapter.metadata({ canisterId })).data;
-      const valid = Boolean(metadata?.symbol && metadata.symbol !== "WICP" && metadata.symbol !== "XTC");
-      return { metadata, valid, support_icrc2: false };
-    });
-  }
-
-  if (standard === TOKEN_STANDARD.DIP20_WICP) {
-    return runVerification(async () => {
-      const metadata = (await DIP20WICPAdapter.metadata({ canisterId })).data;
-      const valid = metadata?.symbol === "WICP";
-      return { metadata, valid, support_icrc2: false };
-    });
-  }
-
-  if (standard === TOKEN_STANDARD.DIP20_XTC) {
-    return runVerification(async () => {
-      const metadata = (await DIP20XTCAdapter.metadata({ canisterId })).data;
-      const valid = metadata?.symbol === "XTC";
-      return { metadata, valid, support_icrc2: false };
-    });
-  }
-
-  if (standard === TOKEN_STANDARD.EXT) {
-    return runVerification(async () => {
-      const metadata = (await EXTAdapter.metadata({ canisterId })).data;
-      const valid = Boolean(metadata?.symbol);
-      return { metadata, valid, support_icrc2: false };
-    });
-  }
-
-  if (standard === TOKEN_STANDARD.ICRC2) {
-    return runVerification(async () => {
-      const metadata = (await icrc2Adapter.metadata({ canisterId })).data;
-      const standards = await (await icrc2(canisterId)).icrc1_supported_standards();
-      const valid = Boolean(metadata?.symbol && standards.some((s) => s.name.includes("ICRC-2")));
-      return { metadata, valid, support_icrc2: false };
-    });
-  }
-
-  if (standard === TOKEN_STANDARD.ICRC1) {
-    return runVerification(async () => {
-      const metadata = (await icrc1Adapter.metadata({ canisterId })).data;
-      const standards = await (await icrc1(canisterId)).icrc1_supported_standards();
-      const valid = Boolean(metadata?.symbol && standards.some((s) => s.name.includes("ICRC-1")));
-      const support_icrc2 = standards.some((s) => s.name.includes("ICRC-2"));
-      return { metadata, valid, support_icrc2 };
-    });
-  }
-
-  return defaultResult;
+  const verifier = VERIFIERS[standard];
+  if (!verifier) return DEFAULT_RESULT;
+  return runVerification(() => verifier(canisterId));
 }

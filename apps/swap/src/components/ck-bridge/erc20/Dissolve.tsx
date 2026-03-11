@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
 import { Token } from "@icpswap/swap-sdk";
 import {
   nonUndefinedOrNull,
@@ -10,7 +10,7 @@ import {
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
 import { InputWrapper, Erc20Fee } from "components/ck-bridge";
-import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
+import { useErc20TokenBalance, useIcpTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useAccount } from "wagmi";
 import { useDissolveCallback } from "hooks/ck-erc20/index";
@@ -25,11 +25,10 @@ import { Flex } from "@icpswap/ui";
 
 export interface Erc20DissolveProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
   minterInfo?: ChainKeyETHMinterInfo | Null;
 }
 
-export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveProps) {
+export function Erc20Dissolve({ token, minterInfo }: Erc20DissolveProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const { address: account } = useAccount();
@@ -38,16 +37,18 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
 
   const symbol = useTokenSymbol({
     token,
-    bridgeChain: bridgeChain === ckBridgeChain.icp ? ckBridgeChain.eth : ckBridgeChain.icp,
+    chain: BridgeChainType.icp,
   });
 
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
-  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
-  const ercTokenBalance = useBridgeTokenBalance({
+  const tokenBalance = useIcpTokenBalance({
     token,
-    chain: ckBridgeChain.eth,
+    refresh: refreshTrigger,
+  });
+  const ercTokenBalance = useErc20TokenBalance({
+    token,
     minterInfo,
     refresh: refreshTrigger,
   });
@@ -60,9 +61,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
     if (!address) return t("common.enter.address");
     if (!amount) return t("ck.enter.transfer.amount");
     if (isAddress(address) === false) return t`Invalid ethereum address`;
-
     if (!token || !tokenBalance) return t("common.waiting.fetching");
-
     if (!formatTokenAmount(amount, token.decimals).isGreaterThan(token.transFee))
       return `Min amount is ${toSignificantWithGroupSeparator(
         parseTokenAmount(token.transFee, token.decimals).toString(),
@@ -158,7 +157,7 @@ export function Erc20Dissolve({ token, bridgeChain, minterInfo }: Erc20DissolveP
       <InputWrapper
         value={amount}
         token={token}
-        chain={bridgeChain}
+        bridgeCurrentChain={BridgeChainType.icp}
         balance={tokenBalance}
         onInput={(value: string) => setAmount(value)}
         onMax={handleMax}

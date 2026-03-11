@@ -1,5 +1,4 @@
 import { useMemo, useEffect, useState, useCallback } from "react";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
 import type { TokenInfo, StorageTokenInfo, Null } from "@icpswap/types";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { DB_NAME, DB_VERSION } from "constants/db";
@@ -65,7 +64,6 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
     let tokeInfo: undefined | TokenInfo;
 
     if (tokenId === ICP_TOKEN_INFO.canisterId) tokeInfo = ICP_TOKEN_INFO;
-    if (tokenId === WRAPPED_ICP_TOKEN_INFO.canisterId) tokeInfo = WRAPPED_ICP_TOKEN_INFO;
 
     if (tokeInfo) {
       setTokenInfos((prevState) => ({

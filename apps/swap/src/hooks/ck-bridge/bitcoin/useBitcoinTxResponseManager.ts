@@ -3,7 +3,7 @@ import { useSuccessTip } from "hooks/useTips";
 import { getBtcTransactionResponse, useBitcoinBlockNumber } from "hooks/ck-bridge/btc";
 import { useBitcoinFinalizedTxsManager, useUpdateBitcoinTxResponse } from "store/web3/hooks";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
+import { BITCOIN_CONFIRMATIONS } from "constants/chain-key";
 import { useTranslation } from "react-i18next";
 
 export function useBitcoinTxResponseManager() {

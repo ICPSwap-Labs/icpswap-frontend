@@ -3,6 +3,7 @@ import { isUndefinedOrNull } from "@icpswap/utils";
 import { BitcoinTransactionEvent } from "types/web3";
 import { useBTCDissolveUnFinalizedTxs } from "store/wallet/hooks";
 import { ckBTC } from "@icpswap/tokens";
+import { BridgeChainType, BridgeType } from "@icpswap/constants/dist/constants";
 
 export function useBtcDissolveEvents() {
   const btcDissolveTxs = useBTCDissolveUnFinalizedTxs();
@@ -14,8 +15,8 @@ export function useBtcDissolveEvents() {
       return {
         hash: tx.txid,
         amount: tx.value,
-        type: "dissolve",
-        chain: "btc",
+        type: BridgeType.dissolve,
+        chain: BridgeChainType.btc,
         token: ckBTC.address,
       };
     });

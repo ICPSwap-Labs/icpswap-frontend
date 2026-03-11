@@ -73,7 +73,6 @@ export * from "./server";
 export * from "./tokens";
 export * from "./swap";
 export * from "./nft";
-export * from "./types";
 export * from "./icp";
 export * from "./wallet";
 export * from "./ckERC20";

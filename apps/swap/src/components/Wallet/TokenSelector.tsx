@@ -79,7 +79,11 @@ interface TokenRowProps {
 function TokenRow({ token }: TokenRowProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger] = useRefreshTriggerManager(WALLET_TOKEN_SELECTOR_REFRESH);
-  const { result: tokenBalance } = useTokenBalance(token.address, principal, refreshTrigger);
+  const { result: tokenBalance } = useTokenBalance({
+    tokenId: token.address,
+    account: principal,
+    refresh: refreshTrigger,
+  });
   const tokenUSDPrice = useUSDPrice(token);
 
   const parsedTokenBalance = useMemo(() => {

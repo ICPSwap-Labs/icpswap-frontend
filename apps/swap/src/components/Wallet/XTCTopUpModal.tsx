@@ -17,7 +17,7 @@ import {
 import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
 import { useXTCTopUp } from "hooks/token/dip20";
 import { getLocaleMessage } from "i18n/service";
-import { ResultStatus } from "constants/index";
+import { ResultStatus } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
 
 const XTC_TOP_UP_AMOUNT_DECIMALS = 4;
@@ -36,7 +36,7 @@ export interface Values {
 export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipal();
-  const { result: balance, loading } = useTokenBalance(XTC.address, principal);
+  const { result: balance, loading } = useTokenBalance({ tokenId: XTC.address, account: principal });
   const [canisterId, setCanisterId] = useState<undefined | string>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [topUpLoading, setTopUpLoading] = useState<boolean>(false);

@@ -14,7 +14,7 @@ import {
   formatAmount,
   nonUndefinedOrNull,
   formatDollarAmount,
-  explorerLink,
+  icDashboardExplorerLink,
   formatIcpAmount,
 } from "@icpswap/utils";
 import {
@@ -304,7 +304,7 @@ export function TokenDetail() {
                 <Typography>{t("common.canister.id")}</Typography>
 
                 <Flex gap="0 8px">
-                  <Link link={explorerLink(canisterId)}>
+                  <Link link={icDashboardExplorerLink(canisterId)}>
                     <Typography sx={{ color: "text.theme-primary", fontSize: "16px" }}>{canisterId}</Typography>
                   </Link>
                   <CopyIcon color="#ffffff" onClick={handleCopy} style={{ cursor: "pointer" }} />

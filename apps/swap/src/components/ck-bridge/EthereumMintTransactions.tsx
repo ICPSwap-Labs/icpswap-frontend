@@ -1,4 +1,4 @@
-import { Box, Typography , useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard, NoData, ALink } from "components/index";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { parseTokenAmount } from "@icpswap/utils";
@@ -145,7 +145,7 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
 }
 
 export interface DissolveRecordsProps {
-  refresh?: boolean | number;
+  refresh?: number;
   token: Token | undefined;
   blockNumber: number | undefined;
 }

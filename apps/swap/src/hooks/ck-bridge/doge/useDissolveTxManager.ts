@@ -1,0 +1,84 @@
+import { useCallback, useEffect, useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { updateDogeDissolveTxs, cleanDogeDissolveTxs } from "store/wallet/actions";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { isDogeDissolveEnded } from "utils/chain-key/doge";
+import { DogeDissolveTx, DogeDissolveTxState } from "types/chain-key";
+
+export function useUpdateDissolveTx() {
+  const dispatch = useAppDispatch();
+  const principal = useAccountPrincipalString();
+
+  return useCallback(
+    async ({ block, amount }: { block: string; amount: string }) => {
+      if (!principal) return;
+
+      const tx: DogeDissolveTx = {
+        principal,
+        txid: undefined,
+        value: amount,
+        id: crypto.randomUUID(),
+        block_index: block.toString(),
+        state: DogeDissolveTxState.Pending,
+      };
+
+      dispatch(updateDogeDissolveTxs(tx));
+    },
+    [principal],
+  );
+}
+
+export function useDissolveTxManager() {
+  const dispatch = useAppDispatch();
+  const principal = useAccountPrincipalString();
+
+  return useCallback(
+    async (tx: DogeDissolveTx) => {
+      if (!principal) return;
+      dispatch(updateDogeDissolveTxs(tx));
+    },
+    [principal],
+  );
+}
+
+export function useDogeDissolveTxs() {
+  const allDissolveTxs = useAppSelector((state) => state.wallet.dogeDissolveTxs);
+  const principal = useAccountPrincipalString();
+
+  return useMemo(() => {
+    if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(principal)) return undefined;
+
+    return allDissolveTxs.filter((tx) => tx.principal === principal);
+  }, [principal, JSON.stringify(allDissolveTxs)]);
+}
+
+export function useDogeDissolveTx(hash: string | undefined) {
+  const allDissolveTxs = useDogeDissolveTxs();
+
+  return useMemo(() => {
+    if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(hash)) return undefined;
+
+    return allDissolveTxs.find((tx) => tx.txid === hash);
+  }, [allDissolveTxs, hash]);
+}
+
+export function useDogeUnFinalizedDissolveTxs() {
+  const dissolveTxs = useDogeDissolveTxs();
+
+  return useMemo(() => {
+    if (isUndefinedOrNull(dissolveTxs)) return undefined;
+
+    return dissolveTxs.filter((tx) => {
+      return !isDogeDissolveEnded(tx.state);
+    });
+  }, [JSON.stringify(dissolveTxs)]);
+}
+
+export function useCleanDogeDissolveTxs() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(cleanDogeDissolveTxs());
+  }, [dispatch]);
+}

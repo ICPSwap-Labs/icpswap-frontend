@@ -1,5 +1,4 @@
 import { useEffect, useMemo } from "react";
-import { useSuccessTip } from "hooks/useTips";
 import { useBtcMintTransactions } from "hooks/ck-bridge/btc";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useBitcoinTxResponseManager } from "hooks/ck-bridge/bitcoin/useBitcoinTxResponseManager";
@@ -7,7 +6,6 @@ import { useBitcoinTxResponseManager } from "hooks/ck-bridge/bitcoin/useBitcoinT
 const INTERVAL_TIME = 10000;
 
 export function useBitcoinMintTxWatcher() {
-  const [openTip] = useSuccessTip();
   const { result: bitcoinMintTransactions } = useBtcMintTransactions();
   const bitcoinTxManager = useBitcoinTxResponseManager();
 
@@ -31,5 +29,5 @@ export function useBitcoinMintTxWatcher() {
     return () => {
       clearInterval(timer);
     };
-  }, [hashes, bitcoinTxManager, openTip]);
+  }, [hashes, bitcoinTxManager]);
 }

@@ -6,8 +6,7 @@ import { StepContents, StepDetailsProps } from "types/step";
 import { Flex } from "@icpswap/ui";
 import { isElement } from "react-is";
 import { useTranslation } from "react-i18next";
-
-import { Arrow, SuccessIcon, ErrorIcon } from "./icons";
+import { Arrow, SuccessIcon, ErrorIcon } from "components/Steps/icons";
 
 interface ActionIconProps {
   activeStep: number;

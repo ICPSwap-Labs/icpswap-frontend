@@ -34,7 +34,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
   const [percent, setPercent] = useState(0);
   const [amount, setAmount] = useState<string>("");
 
-  const { result: balance } = useTokenBalance(token.address, principal);
+  const { result: balance } = useTokenBalance({ tokenId: token.address, account: principal });
 
   const maxDepositAmount = useMemo(() => {
     if (!balance || !token) return undefined;

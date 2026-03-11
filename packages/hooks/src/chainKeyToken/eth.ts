@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat } from "@icpswap/utils";
+import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { chainKeyETHMinter } from "@icpswap/actor";
 import type {
   WithdrawalSearchParameter,
@@ -9,9 +9,9 @@ import type {
   Null,
 } from "@icpswap/types";
 import { Principal } from "@dfinity/principal";
+import { useQuery } from "@tanstack/react-query";
 
 import { useCallsData } from "../useCallData";
-import { useInterval } from "../useInterval";
 
 export interface WithdrawErc20TokenArgs {
   ledger_id: Principal;
@@ -49,17 +49,24 @@ export async function withdrawErc20TokenStatus({ minter_id, params }: WithdrawEr
 export interface UseWithdrawErc20TokenStatusArgs {
   params: WithdrawalSearchParameter | undefined;
   minter_id: string;
-  refresh?: boolean | number;
+  refresh?: number;
+  refetchInterval?: number;
 }
 
-export function useWithdrawErc20TokenStatus({ minter_id, params, refresh }: UseWithdrawErc20TokenStatusArgs) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!params) return undefined;
+export function useWithdrawErc20TokenStatus({
+  minter_id,
+  params,
+  refetchInterval,
+  refresh,
+}: UseWithdrawErc20TokenStatusArgs) {
+  return useQuery({
+    queryKey: ["withdrawErc20TokenStatus", minter_id, params, refresh],
+    queryFn: async () => {
       return await withdrawErc20TokenStatus({ minter_id, params });
-    }, [minter_id, params]),
-    refresh,
-  );
+    },
+    enabled: nonUndefinedOrNull(params),
+    refetchInterval,
+  });
 }
 
 export async function getChainKeyMinterInfo(minter_id: string) {
@@ -76,12 +83,15 @@ export function useChainKeyMinterInfo(minter_id: string | Null) {
 }
 
 export function useIntervalChainKeyMinterInfo(minter_id: string | Null) {
-  const callback = useCallback(async () => {
-    if (!minter_id) return undefined;
-    return await getChainKeyMinterInfo(minter_id);
-  }, [minter_id]);
-
-  return useInterval<ChainKeyETHMinterInfo | undefined>(callback);
+  return useQuery({
+    queryKey: ["chainKeyMinterInfo", minter_id],
+    queryFn: async () => {
+      if (!minter_id) return undefined;
+      return await getChainKeyMinterInfo(minter_id);
+    },
+    enabled: nonUndefinedOrNull(minter_id),
+    refetchInterval: 5_000,
+  });
 }
 
 export async function getChainKeyTransactionPrice(minter_id: string) {

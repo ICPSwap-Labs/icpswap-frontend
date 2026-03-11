@@ -120,8 +120,8 @@ interface usePoolTvlV2Props {
 }
 
 export function usePoolTvlV2({ token0, token1, poolId }: usePoolTvlV2Props) {
-  const { result: balance0 } = useTokenBalance(token0?.address, poolId);
-  const { result: balance1 } = useTokenBalance(token1?.address, poolId);
+  const { result: balance0 } = useTokenBalance({ tokenId: token0?.address, account: poolId });
+  const { result: balance1 } = useTokenBalance({ tokenId: token1?.address, account: poolId });
 
   const amount0 = token0 && balance0 ? CurrencyAmount.fromRawAmount(token0, balance0.toString()) : undefined;
   const amount1 = token1 && balance1 ? CurrencyAmount.fromRawAmount(token1, balance1.toString()) : undefined;

@@ -16,3 +16,11 @@ export { idlFactory as ChainKeyMinterInterfaceFactory } from "./Minter.did";
 
 export type { _SERVICE as ckBTCMintService, RetrieveBtcStatus } from "./ckBTCMint";
 export { idlFactory as ckBTCMintFactory } from "./ckBTCMint.did";
+
+export { idlFactory as DogeMinterFactory } from "./doge_minter.did";
+export type {
+  _SERVICE as DogeMinterService,
+  UtxoStatus as DogeUtxoStatus,
+  Utxo as DogeUtxo,
+  RetrieveDogeStatus,
+} from "./doge_minter";
