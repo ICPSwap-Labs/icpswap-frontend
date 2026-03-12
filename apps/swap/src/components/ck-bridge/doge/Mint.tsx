@@ -68,14 +68,14 @@ export function Mint({ token, balance, address, refetch }: MintProps) {
     setLoading(false);
   }, [setLoading, loading, principal, refetch]);
 
-  useInterval(
-    useCallback(() => {
+  useInterval({
+    callback: useCallback(() => {
       if (principal) {
         updateDogeBalance(principal.toString());
       }
     }, [principal]),
-    1000 * 5 * 60,
-  );
+    interval: 1000 * 5 * 60,
+  });
 
   useOisyDisabledTips({ page: "ck-bridge" });
 

@@ -9,5 +9,5 @@ export function useIntervalUserWithdrawQueue(poolId: string | Null) {
     return await getUserWithdrawQueue(poolId);
   }, [poolId]);
 
-  return useInterval(callback);
+  return useInterval({ callback });
 }

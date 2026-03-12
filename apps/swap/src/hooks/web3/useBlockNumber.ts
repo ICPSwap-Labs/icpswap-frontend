@@ -2,7 +2,7 @@ import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
 import Web3 from "web3";
 
-const INTERVAL = 5000;
+const INTERVAL = 10_000;
 
 export function useFetchBlockNumber(): number | undefined {
   const { data } = useSwr(

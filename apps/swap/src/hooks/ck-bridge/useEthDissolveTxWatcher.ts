@@ -37,5 +37,5 @@ export function useEthDissolveTxWatcher() {
     }
   }, [JSON.stringify(txs), principal, openTip]);
 
-  useInterval(callback, INTERVAL);
+  useInterval({ callback, interval: INTERVAL });
 }

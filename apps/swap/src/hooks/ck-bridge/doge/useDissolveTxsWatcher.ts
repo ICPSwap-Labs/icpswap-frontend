@@ -39,5 +39,5 @@ export function useDogeDissolveTxWatcher() {
     }
   }, [txs, dissolveTxManager]);
 
-  useInterval(callback, 10000);
+  useInterval({ callback, interval: 10_000 });
 }

@@ -1,38 +1,27 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-export function useInterval<T>(
-  callback: (() => Promise<T | undefined>) | (() => void) | undefined,
-  interval = 5000,
-  force: boolean | number = false,
-): T | undefined {
+interface UseIntervalProps<T> {
+  callback: (() => Promise<T | undefined>) | (() => void) | undefined;
+  interval?: number;
+  force?: boolean | number;
+}
+
+export function useInterval<T>({ callback, interval, force }: UseIntervalProps<T>): T | undefined {
   const [data, setData] = useState<T | undefined>(undefined);
-  const [tick, setTick] = useState<number>(0);
 
-  useEffect(() => {
-    async function __callback() {
-      if (callback) {
-        const result = await callback();
-
-        if (result) {
-          setData(result);
-        }
+  useQuery({
+    queryKey: ["useInterval", force],
+    queryFn: async () => {
+      const result = await callback();
+      if (result) {
+        setData(result);
       }
-    }
 
-    __callback();
-  }, [tick, callback, force]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (callback) {
-        setTick((prevState) => prevState + 1);
-      }
-    }, interval);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [interval, callback]);
+      return result;
+    },
+    refetchInterval: interval,
+  });
 
   return useMemo(() => data, [data]);
 }

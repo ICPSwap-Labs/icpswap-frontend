@@ -50,14 +50,8 @@ export type CountingTime = {
   sec: string | number;
 };
 
-export function toDoubleNumber(string: number | string) {
-  const newString = String(string);
-
-  if (newString.length < 2) {
-    return `0${newString}`;
-  }
-
-  return string;
+export function toDoubleNumber(value: number | string) {
+  return String(value).padStart(2, "0");
 }
 
 export function counter(time: string | number | Date): CountingTime {

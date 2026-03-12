@@ -42,5 +42,5 @@ export function useBitcoinDissolveTxWatcher() {
     }
   }, [txs, bitcoinDissolveTxManager]);
 
-  useInterval(callback, 10000);
+  useInterval({ callback, interval: 10_000 });
 }

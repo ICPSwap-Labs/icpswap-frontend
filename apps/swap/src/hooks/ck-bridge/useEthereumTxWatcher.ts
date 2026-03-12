@@ -47,7 +47,7 @@ export function useEthereumTxWatcher() {
     }
   }, [JSON.stringify(ethereumHashes), principal]);
 
-  useInterval(callback, INTERVAL_TIME);
+  useInterval({ callback, interval: INTERVAL_TIME });
 }
 
 export function useEthereumTxTips() {

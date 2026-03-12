@@ -133,9 +133,9 @@ export function useFarmGlobalData() {
 
   const update = useCallback(async () => {
     setRefreshTrigger((prevState) => prevState + 1);
-  }, []);
+  }, [setRefreshTrigger]);
 
-  useInterval<void>(update);
+  useInterval<void>({ callback: update });
 
   return useMemo(
     () => ({

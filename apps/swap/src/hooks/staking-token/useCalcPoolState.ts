@@ -12,5 +12,5 @@ export function useCalcPoolState({ pool }: UseCalcPoolStateArgs) {
     return getStakingTokenPoolState(pool);
   }, [pool]);
 
-  return useInterval(callback, 1000);
+  return useInterval({ callback, interval: 1_000 });
 }

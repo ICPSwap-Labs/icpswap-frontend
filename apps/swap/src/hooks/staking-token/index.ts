@@ -119,7 +119,11 @@ export function useIntervalStakingPoolInfo(poolId: string | undefined): [Staking
     return await getStakingTokenPool(poolId);
   }, [poolId]);
 
-  const poolInfo = useInterval<StakingPoolInfo | undefined>(callback, 5000, forceUpdate);
+  const poolInfo = useInterval<StakingPoolInfo | undefined>({
+    callback: callback,
+    interval: 5_000,
+    force: forceUpdate,
+  });
 
   return [poolInfo, update];
 }

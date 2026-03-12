@@ -1,9 +1,10 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useBtcMintTransactions } from "hooks/ck-bridge/btc";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useBitcoinTxResponseManager } from "hooks/ck-bridge/bitcoin/useBitcoinTxResponseManager";
+import { useInterval } from "@icpswap/hooks";
 
-const INTERVAL_TIME = 10000;
+const INTERVAL_TIME = 10_000;
 
 export function useBitcoinMintTxWatcher() {
   const { result: bitcoinMintTransactions } = useBtcMintTransactions();
@@ -14,20 +15,11 @@ export function useBitcoinMintTxWatcher() {
     return bitcoinMintTransactions.map((transaction) => transaction.txid);
   }, [bitcoinMintTransactions]);
 
-  useEffect(() => {
-    async function call() {
+  useInterval({
+    callback: useCallback(async () => {
       if (hashes.length === 0) return;
       bitcoinTxManager(hashes);
-    }
-
-    const timer = setInterval(() => {
-      call();
-    }, INTERVAL_TIME);
-
-    call();
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [hashes, bitcoinTxManager]);
+    }, [hashes, bitcoinTxManager]),
+    interval: INTERVAL_TIME,
+  });
 }
