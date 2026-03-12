@@ -17,7 +17,7 @@ import dayjs from "dayjs";
 import { useLimitDetails } from "hooks/swap/limit-order/index";
 import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { LimitOrder } from "@icpswap/types";
 import { useTranslation } from "react-i18next";

@@ -1,4 +1,4 @@
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { Override } from "@icpswap/types";
 import { TOKEN_STANDARD } from "constants/tokens";
 import type { TokenApproveArgs } from "@icpswap/types";

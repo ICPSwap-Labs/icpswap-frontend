@@ -1,4 +1,4 @@
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import type { Passcode as PassCode } from "./Factory";
 
 export { idlFactory as PositionIndexInterfaceFactory } from "./Position.did";

@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { BigNumber, isValidPrincipal, parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { TokenInfo } from "types/token";
 import { tokenAdapter, icpAdapter } from "@icpswap/token-adapter";
 import { getTokenStandard } from "store/token/cache/hooks";

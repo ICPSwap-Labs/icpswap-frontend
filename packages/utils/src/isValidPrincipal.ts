@@ -1,4 +1,4 @@
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 export function isValidPrincipal(principal: string): boolean {
   try {

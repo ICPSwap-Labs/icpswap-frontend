@@ -2,8 +2,7 @@ import { useMemo } from "react";
 import type { UserSwapPoolsBalance, SwapPoolData } from "@icpswap/types";
 import { Pool } from "@icpswap/swap-sdk";
 
-import { Principal } from "@dfinity/principal";
-import { _getSwapPoolAllBalance } from "./calls";
+import { Principal } from "@icp-sdk/core/principal";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
 

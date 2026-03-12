@@ -1,6 +1,6 @@
-import { HttpAgent, ActorSubclass } from "@dfinity/agent";
+import { HttpAgent, ActorSubclass } from "@icp-sdk/core/agent";
 import { ActorIdentity } from "@icpswap/types";
-import { IDL } from "@dfinity/candid";
+import { IDL } from "@icp-sdk/core/candid";
 import { ic_host } from "@icpswap/constants";
 import isObject from "lodash/isObject";
 

@@ -1,4 +1,4 @@
-import { ActorSubclass } from "@dfinity/agent";
+import { ActorSubclass } from "@icp-sdk/core/agent";
 import { getStoreWalletUnlocked } from "store/auth/hooks";
 import { type CreateActorArgs, ConnectorAbstract, Connector, WalletConnectorConfig } from "./connectors";
 

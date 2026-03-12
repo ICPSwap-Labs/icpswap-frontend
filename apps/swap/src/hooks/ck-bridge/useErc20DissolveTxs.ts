@@ -3,7 +3,7 @@ import { useWithdrawErc20TokenStatus, withdrawErc20TokenStatus } from "@icpswap/
 import type { WithdrawalDetail, WithdrawalSearchParameter } from "@icpswap/types";
 import { useEffect, useMemo, useState } from "react";
 import { MINTER_CANISTER_ID, ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
 import { useErc20DissolveCompletedTxsManager, useErc20DissolveDetailsManager } from "store/web3/hooks";

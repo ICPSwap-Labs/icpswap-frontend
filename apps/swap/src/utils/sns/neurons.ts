@@ -1,7 +1,7 @@
 import type { Neuron, DissolveState, NervousSystemParameters, ProposalData, SnsBallot } from "@icpswap/types";
 import { BigNumber, nowInSeconds, toHexString, asciiStringToByteArray } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { Principal } from "@icp-sdk/core/principal";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { arrayOfNumberToUint8Array } from "@dfinity/utils";
 import { sha256 } from "@noble/hashes/sha256";
 

@@ -4,7 +4,7 @@ import { Select } from "components/Select/ForToken";
 import { TokenPair } from "components/TokenPair";
 import type { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import { useTokenLogo } from "hooks/token/useTokenLogo";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useStateSwapAllTokens } from "store/global/hooks";
 import { useAllSwapPools } from "store/swap/hooks";
 import { useTranslation } from "react-i18next";

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const MockSubAccount = vi.fn();
 
-vi.mock("@dfinity/ledger-icp", () => ({
+vi.mock("@icp-sdk/canisters/ledger/icp", () => ({
   SubAccount: class SubAccount {
     static _isSubAccount = true;
     constructor(...args: any[]) {
@@ -18,7 +18,7 @@ describe("ic", () => {
 
   it("isSubAccount returns true for SubAccount instance", async () => {
     const { isSubAccount } = await import("./ic");
-    const { SubAccount } = await import("@dfinity/ledger-icp");
+    const { SubAccount } = await import("@icp-sdk/canisters/ledger/icp");
     const sub = new (SubAccount as any)();
     expect(isSubAccount(sub)).toBe(true);
   });

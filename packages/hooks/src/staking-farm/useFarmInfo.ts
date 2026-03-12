@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { resultFormat, optionalArg } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { farmIndex } from "@icpswap/actor";
 import type { FarmState, FarmStatusArgs, FarmRewardInfo } from "@icpswap/types";
 

@@ -1,5 +1,5 @@
 import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { LatestToken } from "@icpswap/types";
 
 export async function getLatestTokens() {
@@ -8,7 +8,7 @@ export async function getLatestTokens() {
   return result.data;
 }
 
-export function useLatestTokens() {
+export function useLatestTokens(): UseQueryResult<LatestToken[], Error> {
   return useQuery({
     queryKey: ["latestTokens"],
     queryFn: async () => {

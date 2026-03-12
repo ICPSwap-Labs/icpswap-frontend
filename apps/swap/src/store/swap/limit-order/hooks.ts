@@ -10,7 +10,7 @@ import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance
 import store from "store/index";
 import { useUserUnusedBalance, useDebounce } from "@icpswap/hooks";
 import { formatTokenAmount, isUndefinedOrNull, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { Null } from "@icpswap/types";

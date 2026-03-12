@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter";
 import { NumberType, StatusResult } from "@icpswap/types";
 import { allowance } from "hooks/token/useAllowance";

@@ -1,7 +1,7 @@
 import { sns_governance } from "@icpswap/actor";
 import { useCallback } from "react";
 import { optionalArg, resultFormat } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import type {
   ListNeuronsResponse,
   NervousSystemParameters,

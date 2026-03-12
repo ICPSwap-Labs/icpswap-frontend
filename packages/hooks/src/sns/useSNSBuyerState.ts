@@ -3,7 +3,7 @@ import { useCallsData } from "../useCallData";
 import { sns_swap } from "@icpswap/actor";
 import type { GetBuyerStateResponse, RefreshBuyerTokensResponse } from "@icpswap/types";
 import { useCallback } from "react";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 export async function getSNSBuyerState(swap_id: string, principal: string) {
   return resultFormat<GetBuyerStateResponse>(

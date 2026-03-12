@@ -1,6 +1,6 @@
 import { isValidPrincipal, resultFormat } from "@icpswap/utils";
 import { ext_nft } from "@icpswap/actor";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 export async function extNFTTransfer(canister: string, to: string, from: string, nftId: string) {
   return resultFormat<bigint>(

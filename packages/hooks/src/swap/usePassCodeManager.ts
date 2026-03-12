@@ -1,7 +1,8 @@
 import { useCallback } from "react";
 import { passCodeManager } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
+
 import { useCallsData } from "../useCallData";
 
 export function usePCMMetadata() {

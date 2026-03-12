@@ -8,8 +8,8 @@ import type {
   Eip1559TransactionPrice,
   Null,
 } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
-import { useQuery } from "@tanstack/react-query";
+import { Principal } from "@icp-sdk/core/principal";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 import { useCallsData } from "../useCallData";
 
@@ -58,7 +58,7 @@ export function useWithdrawErc20TokenStatus({
   params,
   refetchInterval,
   refresh,
-}: UseWithdrawErc20TokenStatusArgs) {
+}: UseWithdrawErc20TokenStatusArgs): UseQueryResult<WithdrawalDetail[], Error> {
   return useQuery({
     queryKey: ["withdrawErc20TokenStatus", minter_id, params, refresh],
     queryFn: async () => {
@@ -82,7 +82,7 @@ export function useChainKeyMinterInfo(minter_id: string | Null) {
   );
 }
 
-export function useIntervalChainKeyMinterInfo(minter_id: string | Null) {
+export function useIntervalChainKeyMinterInfo(minter_id: string | Null): UseQueryResult<ChainKeyETHMinterInfo, Error> {
   return useQuery({
     queryKey: ["chainKeyMinterInfo", minter_id],
     queryFn: async () => {

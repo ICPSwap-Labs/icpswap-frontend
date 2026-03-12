@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { principalToAccount, isPrincipal } from "@icpswap/utils";
 import { ic_host } from "@icpswap/constants";
 import { Connector, IdentityKitConnector, IdentityKitId } from "constants/index";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { connectManager, WalletConnector } from "utils/connector";
 import { isMeWebview } from "utils/connector/me";
 import { actor } from "@icpswap/actor";

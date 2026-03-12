@@ -1,6 +1,6 @@
 import { Token } from "@icpswap/swap-sdk";
 import { WICPCanisterId } from "constants/canister";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 
 export { TOKEN_STANDARD };

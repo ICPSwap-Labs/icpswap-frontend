@@ -2,7 +2,8 @@ import { useCallback } from "react";
 import { tokenClaimController, tokenClaimStorage } from "@icpswap/actor";
 import { resultFormat, isAvailablePageArgs, optionalArg } from "@icpswap/utils";
 import type { PaginationResult, ClaimEventInfo, ClaimQuota, ClaimTransaction } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
+
 import { useCallsData } from "../useCallData";
 
 export async function getEvent(eventId: string) {

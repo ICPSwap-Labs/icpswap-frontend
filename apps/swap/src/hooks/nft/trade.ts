@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { resultFormat, optionalArg, isAvailablePageArgs } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
 import { getCanisterId, CANISTER_NAMES } from "constants/index";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { TradeOrder, TxRecord } from "types";
 import type { NFTSaleArgs, Null, StatusResult, PaginationResult } from "@icpswap/types";
 import { NFTs, AdapterName, NFTsTrade, TradeAdapterName } from "utils/nft/index";

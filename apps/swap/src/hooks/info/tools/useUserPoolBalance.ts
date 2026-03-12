@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Override } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useSwapPools, getUserUnusedBalance, getTokenBalance } from "@icpswap/hooks";
 import type { SwapPoolData } from "@icpswap/types";
 import { principalToSubaccount } from "@icpswap/utils";

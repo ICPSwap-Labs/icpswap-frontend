@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { liquidityLocks } from "@icpswap/actor";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { isUndefinedOrNull, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { Pool, Position } from "@icpswap/swap-sdk";
 import { Null, type UserPositionInfoWithId } from "@icpswap/types";

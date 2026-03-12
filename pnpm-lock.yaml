@@ -16,33 +16,21 @@ importers:
 
   .:
     dependencies:
-      '@dfinity/agent':
-        specifier: 2.1.2
-        version: 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
-      '@dfinity/auth-client':
-        specifier: 2.1.2
-        version: 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
-      '@dfinity/candid':
-        specifier: 2.1.2
-        version: 2.1.2(@dfinity/principal@2.1.2)
-      '@dfinity/identity':
-        specifier: 2.1.2
-        version: 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/ledger-icp':
-        specifier: 2.2.0
-        version: 2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))
-      '@dfinity/ledger-icrc':
-        specifier: ^2.6.3
-        version: 2.6.3(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))
       '@dfinity/nns':
         specifier: 4.0.2
-        version: 4.0.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/ledger-icp@2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))
-      '@dfinity/principal':
-        specifier: 2.1.2
-        version: 2.1.2
+        version: 4.0.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/ledger-icp@2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0)))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0))
       '@dfinity/utils':
-        specifier: 2.1.1
-        version: 2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
+        specifier: 4.2.0
+        version: 4.2.0(@icp-sdk/core@5.0.0)
+      '@icp-sdk/auth':
+        specifier: ^5.0.0
+        version: 5.0.0(@icp-sdk/core@5.0.0)
+      '@icp-sdk/canisters':
+        specifier: ^3.5.1
+        version: 3.5.1(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0))(@icp-sdk/core@5.0.0)
+      '@icp-sdk/core':
+        specifier: ^5.0.0
+        version: 5.0.0
       '@mui/base':
         specifier: 5.0.0-beta.27
         version: 5.0.0-beta.27(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -188,9 +176,6 @@ importers:
       '@astrox/sdk-webview':
         specifier: ^0.1.41
         version: 0.1.41(@peculiar/webcrypto@1.5.0)(babel-plugin-macros@3.1.0)(node-notifier@8.0.2)(ts-node@10.9.2(@types/node@13.13.52)(typescript@5.3.3))
-      '@dfinity/cketh':
-        specifier: ^3.4.2
-        version: 3.4.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))
       '@emotion/react':
         specifier: ^11.13.5
         version: 11.14.0(@types/react@18.2.0)(react@18.2.0)
@@ -265,7 +250,7 @@ importers:
         version: 8.8.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@mui/material@6.1.7(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@mui/system@6.1.7(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@emotion/styled@11.14.0(@emotion/react@11.14.0(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(react@18.2.0))(@types/react@18.2.0)(date-fns@2.30.0)(dayjs@1.11.13)(moment@2.30.1)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@nfid/identitykit':
         specifier: 1.0.7
-        version: 1.0.7(ada438bf319fd6d9acb30db05e170ceb)
+        version: 1.0.7(0c1d2b93c085f6538671d2c6b6824943)
       '@noble/hashes':
         specifier: ^1.6.1
         version: 1.6.1
@@ -1961,13 +1946,8 @@ packages:
     peerDependencies:
       '@dfinity/principal': 2.1.2
 
-  '@dfinity/cketh@3.4.2':
-    resolution: {integrity: sha512-DcgsjRAeYAiAvfAiKSIQ/oaSRAJeTtC4FSa1q7GWTFohd6RAeCz9H6dZ1dUETGvWxHcIZrPDTmdwt94oqr++/g==}
-    peerDependencies:
-      '@dfinity/agent': 2.1.2
-      '@dfinity/candid': 2.1.2
-      '@dfinity/principal': 2.1.2
-      '@dfinity/utils': ^2.8.0
+  '@dfinity/cbor@0.2.2':
+    resolution: {integrity: sha512-GPJpH73kDEKbUBdUjY80lz7cq9l0vm1h/7ppejPV6O0ZTqCLrYspssYvqjRmK4aNnJ/SKXsP0rg9LYX7zpegaA==}
 
   '@dfinity/identity@2.1.2':
     resolution: {integrity: sha512-LgskXJzyqm1UVsobAkF8bL1/SdLKFYW2kTIsKw7UOhuBy/COpnf3HZYmKeFCnxvharyIyq23W3WBhIpu9FeAvw==}
@@ -1985,14 +1965,6 @@ packages:
       '@dfinity/principal': 2.1.2
       '@dfinity/utils': ^2.1.1
 
-  '@dfinity/ledger-icrc@2.6.3':
-    resolution: {integrity: sha512-nt379IojzyBiFiIhowr6sYbxVBF3HsJpM10sf4GlCUf1X++kk3DRbQExESD2XndiChVNCEOXxzmupDVSIbq7CQ==}
-    peerDependencies:
-      '@dfinity/agent': 2.1.2
-      '@dfinity/candid': 2.1.2
-      '@dfinity/principal': 2.1.2
-      '@dfinity/utils': ^2.7.0
-
   '@dfinity/nns-proto@1.0.2':
     resolution: {integrity: sha512-GszvkrGOFCFhMNGCjBLBOJJ7tqNIynqgB7ZCX5hKoK3Nd2VDI6sJ+B3kldnz59bHYeB2fTnXl+DogsL5iCRYFQ==}
 
@@ -2009,12 +1981,10 @@ packages:
   '@dfinity/principal@2.1.2':
     resolution: {integrity: sha512-L3Y0nDjquqNFseM2Gx5fI4GOUKjjezFr9/6ZjSwAFeDeb4Ubqld4ZKL3FEzv4QKNbfZgCx19b7UXi+OdmLhi4w==}
 
-  '@dfinity/utils@2.1.1':
-    resolution: {integrity: sha512-H4WEG4gEuQlAH/vKRbkvnUggoFkF4ffLSGQEh2aekThffm+iSaKwVQ9AnAvwFGaGBbSR3rLhHMIpPnZxchj+rA==}
+  '@dfinity/utils@4.2.0':
+    resolution: {integrity: sha512-MJkjOZPgXC8Ekhum06STZyqHnxBoZ+JdJOo6hBEyGhh+h0QEg2Oz9UsyDk6IZ7ucL2GDQpAS0i4avIAJOcBiCA==}
     peerDependencies:
-      '@dfinity/agent': 2.1.2
-      '@dfinity/candid': 2.1.2
-      '@dfinity/principal': 2.1.2
+      '@icp-sdk/core': ^5
 
   '@discoveryjs/json-ext@0.5.7':
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
@@ -2467,6 +2437,20 @@ packages:
   '@humanwhocodes/object-schema@2.0.3':
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     deprecated: Use @eslint/object-schema instead
+
+  '@icp-sdk/auth@5.0.0':
+    resolution: {integrity: sha512-TaPfdaELT7s0vTIFOmCnlCmhPdL7kABA7+2Q0YNAUWIa/FFiwq6ffGPLvr0U0+2zFLaLQ4l7UCB2zf7vo6PFPQ==}
+    peerDependencies:
+      '@icp-sdk/core': ^5
+
+  '@icp-sdk/canisters@3.5.1':
+    resolution: {integrity: sha512-mXWRp+VJUns3fDJNYLSBDD/XvmnS/ZHBX3BojcfYzaL7oWJixtoMiYdK74tK4Kn5x5XxGVlyZfwdcpb93J4+AQ==}
+    peerDependencies:
+      '@dfinity/utils': ^4.1
+      '@icp-sdk/core': ^5
+
+  '@icp-sdk/core@5.0.0':
+    resolution: {integrity: sha512-t6iRbdylHG57MicWRpR1uMTFXRW7GCzec6KAg55CBwDHbHLQDKikQ252lmlcEa80DrKa3LPvMKYZEUYjEq5XUQ==}
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -3092,6 +3076,10 @@ packages:
     resolution: {integrity: sha512-UTMhXK9SeDhFJVrHeUJ5uZlI6ajXg10O6Ddocf9S6GjbSBVZsJo88HzKwXznNfGpMTRDyJkqMjNDPYgf0qFWnw==}
     engines: {node: ^14.21.3 || >=16}
 
+  '@noble/curves@1.9.7':
+    resolution: {integrity: sha512-gbKGcRUYIjA3/zCCNaWDciTMFI0dCkvou3TL8Zmy5Nc7sJ47a0jtOeZoTaMxkuqRo9cRhjOdZJXegxYE5FN/xw==}
+    engines: {node: ^14.21.3 || >=16}
+
   '@noble/hashes@1.3.2':
     resolution: {integrity: sha512-MVC8EAQp7MvEcm30KWENFjgR+Mkmf+D189XJTkFIlwohU5hcBbn1ZkKq7KVTi2Hme3PMGF390DaL52beVrIihQ==}
     engines: {node: '>= 16'}
@@ -3106,6 +3094,10 @@ packages:
 
   '@noble/hashes@1.6.1':
     resolution: {integrity: sha512-pq5D8h10hHBjyqX+cfBm0i8JUXJ0UhczFc4r74zbuT9XgewFo2E3J1cOaGtdZynILNmQ685YWGzGE1Zv6io50w==}
+    engines: {node: ^14.21.3 || >=16}
+
+  '@noble/hashes@1.8.0':
+    resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
     engines: {node: ^14.21.3 || >=16}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -3816,6 +3808,9 @@ packages:
   '@scure/base@1.2.1':
     resolution: {integrity: sha512-DGmGtC8Tt63J5GfHgfl5CuAXh96VF/LD8K9Hr/Gv0J2lAoRGlPOMpqMpMbCTOoOJMZCk2Xt+DskdDyn6dEFdzQ==}
 
+  '@scure/base@1.2.6':
+    resolution: {integrity: sha512-g/nm5FgUa//MCj1gV09zTJTaM6KBAHqLN907YVQqf7zC49+DcO4B1so4ZX07Ef10Twr6nuqYEH9GEggFXA4Fmg==}
+
   '@scure/bip32@1.3.2':
     resolution: {integrity: sha512-N1ZhksgwD3OBlwTv3R6KFEcPojl/W4ElJOeCZdi+vuI5QmTFwLq3OFf2zd2ROpKvxFdgZ6hUpb0dx9bVNEwYCA==}
 
@@ -3825,6 +3820,9 @@ packages:
   '@scure/bip32@1.6.0':
     resolution: {integrity: sha512-82q1QfklrUUdXJzjuRU7iG7D7XiFx5PHYVS0+oeNKhyDLT7WPqs6pBcM2W5ZdwOwKCwoE1Vy1se+DHjcXwCYnA==}
 
+  '@scure/bip32@1.7.0':
+    resolution: {integrity: sha512-E4FFX/N3f4B80AKWp5dP6ow+flD1LQZo/w8UnLGYZO674jS6YnYeepycOOksv+vLPSpgN35wgKgy+ybfTb2SMw==}
+
   '@scure/bip39@1.2.1':
     resolution: {integrity: sha512-Z3/Fsz1yr904dduJD0NpiyRHhRYHdcnyh73FZWiV+/qhWi83wNJ3NWolYqCEN+ZWsUz2TWwajJggcRE9r1zUYg==}
 
@@ -3833,6 +3831,9 @@ packages:
 
   '@scure/bip39@1.5.0':
     resolution: {integrity: sha512-Dop+ASYhnrwm9+HA/HwXg7j2ZqM6yk2fyLWb5znexjctFY3+E+eU8cIWI0Pql0Qx4hPZCijlGq4OL71g+Uz30A==}
+
+  '@scure/bip39@1.6.0':
+    resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
 
   '@sentry-internal/tracing@7.80.0':
     resolution: {integrity: sha512-P1Ab9gamHLsbH9D82i1HY8xfq9dP8runvc4g50AAd6OXRKaJ45f2KGRZUmnMEVqBQ7YoPYp2LFMkrhNYbcZEoQ==}
@@ -5264,6 +5265,10 @@ packages:
   base58-js@1.0.5:
     resolution: {integrity: sha512-LkkAPP8Zu+c0SVNRTRVDyMfKVORThX+rCViget00xdgLRrKkClCTz1T7cIrpr69ShwV5XJuuoZvMvJ43yURwkA==}
     engines: {node: '>= 8'}
+
+  base58-js@3.0.3:
+    resolution: {integrity: sha512-3hf42BysHnUqmZO7mK6e5X/hs1AvyEJIhdVLbG/Mxn/fhFnhGxOO37mWbMHg1RT4TxqcPKXgqj9/bp1YG0GBXA==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
 
   base64-arraybuffer@0.2.0:
     resolution: {integrity: sha512-7emyCsu1/xiBXgQZrscw/8KPRT44I4Yq9Pe6EGs3aPRTsWuggML1/1DTuZUuIaJPIm1FTDUVXl4x/yW8s0kQDQ==}
@@ -13958,8 +13963,8 @@ snapshots:
     dependencies:
       '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
       '@dfinity/principal': 2.1.2
-      '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
+      '@noble/curves': 1.9.7
+      '@noble/hashes': 1.8.0
       base64-arraybuffer: 0.2.0
       borc: 2.1.2
       buffer: 6.0.3
@@ -13976,12 +13981,7 @@ snapshots:
     dependencies:
       '@dfinity/principal': 2.1.2
 
-  '@dfinity/cketh@3.4.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))':
-    dependencies:
-      '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
-      '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
-      '@dfinity/principal': 2.1.2
-      '@dfinity/utils': 2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
+  '@dfinity/cbor@0.2.2': {}
 
   '@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0)':
     dependencies:
@@ -13992,33 +13992,26 @@ snapshots:
       '@peculiar/webcrypto': 1.5.0
       borc: 2.1.2
 
-  '@dfinity/ledger-icp@2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))':
+  '@dfinity/ledger-icp@2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0))':
     dependencies:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
       '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
       '@dfinity/nns-proto': 1.0.2
       '@dfinity/principal': 2.1.2
-      '@dfinity/utils': 2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
-
-  '@dfinity/ledger-icrc@2.6.3(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))':
-    dependencies:
-      '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
-      '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
-      '@dfinity/principal': 2.1.2
-      '@dfinity/utils': 2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
+      '@dfinity/utils': 4.2.0(@icp-sdk/core@5.0.0)
 
   '@dfinity/nns-proto@1.0.2':
     dependencies:
       google-protobuf: 3.21.4
 
-  '@dfinity/nns@4.0.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/ledger-icp@2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))':
+  '@dfinity/nns@4.0.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/ledger-icp@2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0)))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0))':
     dependencies:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
       '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
-      '@dfinity/ledger-icp': 2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))
+      '@dfinity/ledger-icp': 2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0))
       '@dfinity/nns-proto': 1.0.2
       '@dfinity/principal': 2.1.2
-      '@dfinity/utils': 2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
+      '@dfinity/utils': 4.2.0(@icp-sdk/core@5.0.0)
       '@noble/hashes': 1.6.1
       randombytes: 2.1.0
 
@@ -14026,11 +14019,9 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.6.1
 
-  '@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)':
+  '@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0)':
     dependencies:
-      '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
-      '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
-      '@dfinity/principal': 2.1.2
+      '@icp-sdk/core': 5.0.0
 
   '@discoveryjs/json-ext@0.5.7': {}
 
@@ -14640,6 +14631,29 @@ snapshots:
   '@humanwhocodes/module-importer@1.0.1': {}
 
   '@humanwhocodes/object-schema@2.0.3': {}
+
+  '@icp-sdk/auth@5.0.0(@icp-sdk/core@5.0.0)':
+    dependencies:
+      '@icp-sdk/core': 5.0.0
+      idb: 7.1.1
+
+  '@icp-sdk/canisters@3.5.1(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0))(@icp-sdk/core@5.0.0)':
+    dependencies:
+      '@dfinity/utils': 4.2.0(@icp-sdk/core@5.0.0)
+      '@icp-sdk/core': 5.0.0
+      '@noble/hashes': 1.8.0
+      base58-js: 3.0.3
+      bech32: 2.0.0
+      mime: 3.0.0
+
+  '@icp-sdk/core@5.0.0':
+    dependencies:
+      '@dfinity/cbor': 0.2.2
+      '@noble/curves': 1.9.7
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
+      asn1js: 3.0.5
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -15285,7 +15299,7 @@ snapshots:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.1.0
       '@noble/hashes': 1.6.1
-      '@scure/base': 1.1.9
+      '@scure/base': 1.2.1
       '@types/debug': 4.1.12
       debug: 4.3.7(supports-color@7.2.0)
       pony-cause: 2.1.11
@@ -15299,7 +15313,7 @@ snapshots:
       '@ethereumjs/tx': 4.2.0
       '@metamask/superstruct': 3.1.0
       '@noble/hashes': 1.6.1
-      '@scure/base': 1.1.9
+      '@scure/base': 1.2.1
       '@types/debug': 4.1.12
       debug: 4.3.7(supports-color@7.2.0)
       pony-cause: 2.1.11
@@ -15614,13 +15628,13 @@ snapshots:
     transitivePeerDependencies:
       - '@types/react'
 
-  '@nfid/identitykit@1.0.7(ada438bf319fd6d9acb30db05e170ceb)':
+  '@nfid/identitykit@1.0.7(0c1d2b93c085f6538671d2c6b6824943)':
     dependencies:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
       '@dfinity/auth-client': 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
       '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
       '@dfinity/identity': 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/ledger-icp': 2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@2.1.1(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))
+      '@dfinity/ledger-icp': 2.2.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/nns-proto@1.0.2)(@dfinity/principal@2.1.2)(@dfinity/utils@4.2.0(@icp-sdk/core@5.0.0))
       '@dfinity/principal': 2.1.2
       '@headlessui/react': 2.1.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       '@radix-ui/react-dialog': 1.1.4(@types/react-dom@18.2.0)(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -15663,6 +15677,10 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.6.0
 
+  '@noble/curves@1.9.7':
+    dependencies:
+      '@noble/hashes': 1.8.0
+
   '@noble/hashes@1.3.2': {}
 
   '@noble/hashes@1.4.0': {}
@@ -15670,6 +15688,8 @@ snapshots:
   '@noble/hashes@1.6.0': {}
 
   '@noble/hashes@1.6.1': {}
+
+  '@noble/hashes@1.8.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
@@ -16341,6 +16361,8 @@ snapshots:
 
   '@scure/base@1.2.1': {}
 
+  '@scure/base@1.2.6': {}
+
   '@scure/bip32@1.3.2':
     dependencies:
       '@noble/curves': 1.2.0
@@ -16359,6 +16381,12 @@ snapshots:
       '@noble/hashes': 1.6.1
       '@scure/base': 1.2.1
 
+  '@scure/bip32@1.7.0':
+    dependencies:
+      '@noble/curves': 1.9.7
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.6
+
   '@scure/bip39@1.2.1':
     dependencies:
       '@noble/hashes': 1.3.2
@@ -16373,6 +16401,11 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.6.1
       '@scure/base': 1.2.1
+
+  '@scure/bip39@1.6.0':
+    dependencies:
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.6
 
   '@sentry-internal/tracing@7.80.0':
     dependencies:
@@ -18318,6 +18351,8 @@ snapshots:
   balanced-match@1.0.2: {}
 
   base58-js@1.0.5: {}
+
+  base58-js@3.0.3: {}
 
   base64-arraybuffer@0.2.0: {}
 

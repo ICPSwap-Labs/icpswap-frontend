@@ -1,6 +1,6 @@
-import { Actor, ActorSubclass, HttpAgent, type Agent } from "@dfinity/agent";
+import { Actor, ActorSubclass, HttpAgent, type Agent } from "@icp-sdk/core/agent";
 import { ic_host } from "@icpswap/constants";
-import { IDL } from "@dfinity/candid";
+import { IDL } from "@icp-sdk/core/candid";
 
 export type CreateActorArgs = {
   canisterId: string;

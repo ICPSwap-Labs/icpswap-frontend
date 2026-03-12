@@ -1,5 +1,5 @@
-import { IDL } from "@dfinity/candid";
-import { ActorSubclass } from "@dfinity/agent";
+import { IDL } from "@icp-sdk/core/candid";
+import { ActorSubclass } from "@icp-sdk/core/agent";
 import { Connector, IIv2ProviderUrl } from "constants/wallet";
 import { host } from "constants/server";
 import { updateAuth } from "store/auth/hooks";

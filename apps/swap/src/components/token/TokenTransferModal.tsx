@@ -14,7 +14,7 @@ import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { getLocaleMessage } from "i18n/service";
 import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
 import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { MaxButton, Flex } from "@icpswap/ui";

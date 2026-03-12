@@ -1,4 +1,4 @@
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
 import { useCallback } from "react";
 import { useCallsData } from "@icpswap/hooks";

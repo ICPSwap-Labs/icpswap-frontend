@@ -12,7 +12,7 @@ import type {
   PaginationResult,
   StakeGlobalDataInfo,
 } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useCallsData } from "../useCallData";
 
 /* token controller */

@@ -21,7 +21,7 @@ import {
 } from "@icpswap/hooks";
 import { read, utils } from "xlsx";
 import { useToken } from "hooks/index";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useTranslation } from "react-i18next";
 
 import EventSelector from "./EventSelector";

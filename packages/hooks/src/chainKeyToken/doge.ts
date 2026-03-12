@@ -1,4 +1,4 @@
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { dogeMinter } from "@icpswap/actor";
 import { Null } from "@icpswap/types";
 import { isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";

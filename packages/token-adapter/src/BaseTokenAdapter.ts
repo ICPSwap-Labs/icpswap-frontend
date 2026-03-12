@@ -1,6 +1,6 @@
 import { BigNumber } from "bignumber.js";
 import { ActorIdentity, StatusResult, PaginationResult } from "@icpswap/types";
-import { ActorSubclass } from "@dfinity/agent";
+import { ActorSubclass } from "@icp-sdk/core/agent";
 import {
   TokenHolder,
   BalanceRequest as _BalanceRequest,

@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { NFTCanister, NFTTradeCanister, NFTCanisterController, NFTTradeStat, NFT_V1 } from "@icpswap/actor";
 import { resultFormat, isAvailablePageArgs, isPrincipal, optionalArg } from "@icpswap/utils";
 import { useCallsData } from "../useCallData";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import type {
   PaginationResult,
   NFTCanisterInfo,

@@ -19,7 +19,7 @@ import { getSwapTokenArgs } from "hooks/token/index";
 import dayjs from "dayjs";
 import { FarmControllerId } from "constants/canister";
 import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useTranslation } from "react-i18next";
 
 export const TokenStandards = [

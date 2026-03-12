@@ -7,7 +7,7 @@ import { useWithdrawErc20TokenStatus, useChainKeyMinterInfo } from "@icpswap/hoo
 import type { WithdrawalSearchParameter, WithdrawalDetail, ChainKeyETHMinterInfo } from "@icpswap/types";
 import { useMemo } from "react";
 import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "constants/ckERC20";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
 import { useToken } from "hooks/index";
 import { Token } from "@icpswap/swap-sdk";
@@ -166,7 +166,7 @@ export function Erc20DissolveTransactions({ refresh, token }: DissolveRecordsPro
     } as WithdrawalSearchParameter;
   }, [principal]);
 
-  const { result: withdrawalResult, loading } = useWithdrawErc20TokenStatus({
+  const { data: withdrawalResult, isLoading } = useWithdrawErc20TokenStatus({
     minter_id: MINTER_CANISTER_ID,
     params,
     refresh,
@@ -189,7 +189,7 @@ export function Erc20DissolveTransactions({ refresh, token }: DissolveRecordsPro
       <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{t("common.transactions")}</Typography>
 
       <Box>
-        {loading ? (
+        {isLoading ? (
           <Box sx={{ padding: "24px 0" }}>
             <LoadingRow>
               <div />

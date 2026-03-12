@@ -1,6 +1,6 @@
 import { resultFormat, optionalArg } from "@icpswap/utils";
 import { StatusResult } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { ckBtcActor } from "@icpswap/actor";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useCallback } from "react";

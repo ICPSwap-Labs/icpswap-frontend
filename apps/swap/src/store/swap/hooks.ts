@@ -11,7 +11,7 @@ import { getTokenInsufficient } from "hooks/swap/index";
 import store from "store/index";
 import { isValidPrincipal, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { useParsedQueryString, useDebouncedChangeHandler, useDebounce } from "@icpswap/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { useAllowance } from "hooks/token";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
 import { useTranslation } from "react-i18next";

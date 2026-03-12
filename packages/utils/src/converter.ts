@@ -54,3 +54,7 @@ export const subaccountHexToBytes = (hex: string): number[] => {
 
   return bytes;
 };
+
+export const subAccountToUint8Array = (hex: string): Uint8Array => {
+  return Uint8Array.from(subaccountHexToBytes(hex));
+};

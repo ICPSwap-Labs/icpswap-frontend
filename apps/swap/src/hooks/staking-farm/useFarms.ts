@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { FilterState } from "types/staking-farm";
 import { getFarmsByFilter } from "@icpswap/hooks";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { FarmState } from "@icpswap/types";
 
 export interface UseFarmsArgs {

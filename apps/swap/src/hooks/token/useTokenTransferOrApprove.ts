@@ -5,7 +5,7 @@ import { useApprove } from "hooks/token/useApprove";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isUseTransferByStandard } from "utils/token/index";
 import { tokenTransfer } from "hooks/token/calls";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 

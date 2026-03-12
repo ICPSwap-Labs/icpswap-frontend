@@ -1,6 +1,6 @@
 import { Null, type NumberType } from "@icpswap/types";
 import BigNumber from "bignumber.js";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 import { parseTokenAmount } from "./tokenAmount";
 import { isUndefinedOrNull } from "./isUndefinedOrNull";

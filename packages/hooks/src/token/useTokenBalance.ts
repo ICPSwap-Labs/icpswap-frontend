@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { isPrincipal, isValidPrincipal } from "@icpswap/utils";
 import { tokenAdapter } from "@icpswap/token-adapter";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 import { useCallsData } from "../useCallData";
 

@@ -1,5 +1,5 @@
 import { resultFormat, optionalArg, principalToAccount, isOkSubAccount, isBigIntMemo } from "@icpswap/utils";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { ext } from "@icpswap/actor";
 import { EXTToken, TokenUser } from "@icpswap/candid";

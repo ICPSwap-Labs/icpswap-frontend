@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { Token } from "@icpswap/swap-sdk";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { useUserUnusedBalance } from "@icpswap/hooks";
 import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 

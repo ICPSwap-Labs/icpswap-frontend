@@ -33,6 +33,7 @@
     "@types/remove-markdown": "^0.3.4",
     "@types/testing-library__cypress": "^5.0.13",
     "@types/webpack-env": "^1.18.5",
+    "cross-env": "^7.0.3",
     "customize-cra": "^1.0.0",
     "cypress": "^4.12.1",
     "os-browserify": "^0.3.0",
@@ -40,14 +41,12 @@
     "serve": "^11.3.2",
     "typechain": "8.3.2",
     "typescript": "5.3.3",
-    "webpack-retry-chunk-load-plugin": "^3.1.1",
     "webpack-bundle-analyzer": "^4.10.1",
-    "cross-env": "^7.0.3"
+    "webpack-retry-chunk-load-plugin": "^3.1.1"
   },
   "dependencies": {
     "@astrox/sdk-web": "^0.1.41",
     "@astrox/sdk-webview": "^0.1.41",
-    "@dfinity/cketh": "^3.4.2",
     "@emotion/react": "^11.13.5",
     "@emotion/style": "^0.8.0",
     "@emotion/styled": "^11.13.5",

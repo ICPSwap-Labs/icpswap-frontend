@@ -18,7 +18,7 @@ import {
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { read, utils } from "xlsx";
 import { useToken } from "hooks/index";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
 import { useTranslation } from "react-i18next";

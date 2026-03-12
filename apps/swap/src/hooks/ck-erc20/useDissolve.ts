@@ -9,7 +9,7 @@ import { ckETH } from "constants/ckETH";
 import { useApprove } from "hooks/token/index";
 import { ResultStatus } from "@icpswap/types";
 import { withdrawErc20Token } from "@icpswap/hooks";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useTranslation } from "react-i18next";
 
 export function useDissolveCallback() {

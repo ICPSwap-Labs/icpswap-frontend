@@ -1,8 +1,8 @@
 import { useMemo, useState, useEffect } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { getTokenBalance } from "hooks/token/useTokenBalance";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 
 export function useUserUnusedTokenByPool(
   poolId: string | undefined,

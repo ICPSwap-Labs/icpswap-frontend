@@ -1,4 +1,4 @@
-import { type ActorSubclass, Actor, HttpAgent } from "@dfinity/agent";
+import { type ActorSubclass, Actor, HttpAgent } from "@icp-sdk/core/agent";
 import { Connector } from "@icpswap/actor";
 import { MsqClient, MsqIdentity } from "@fort-major/msq-client";
 import type { ConnectorAbstract, CreateActorArgs, WalletConnectorConfig } from "./connectors";

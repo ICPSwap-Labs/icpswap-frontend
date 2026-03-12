@@ -1,5 +1,5 @@
 import type { SwapPoolData } from "@icpswap/candid";
-import type { Principal } from "@dfinity/principal";
+import type { Principal } from "@icp-sdk/core/principal";
 import { Override } from "./global";
 
 export type UserSwapPoolsBalance = Override<

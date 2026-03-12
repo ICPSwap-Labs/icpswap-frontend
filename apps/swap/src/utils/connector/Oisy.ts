@@ -1,5 +1,7 @@
-import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
-import { Principal } from "@dfinity/principal";
+// @ts-nocheck
+// @icp-js/core and @dfinity packages typescript errors
+import { Actor, ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
+import { Principal } from "@icp-sdk/core/principal";
 import { PostMessageTransport } from "@slide-computer/signer-web";
 import { SignerAgent } from "@slide-computer/signer-agent";
 import { Signer } from "@slide-computer/signer";

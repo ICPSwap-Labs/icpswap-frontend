@@ -10,10 +10,10 @@ import {
 import { ResultStatus, type StakingPoolUserInfo, StakingPoolInfo, Null } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { UnusedBalance } from "types/staking-token";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { getTokenBalance } from "hooks/token/useTokenBalance";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { useIntervalFetch } from "hooks/useIntervalFetch";
 
 export async function getAllTokenPools() {

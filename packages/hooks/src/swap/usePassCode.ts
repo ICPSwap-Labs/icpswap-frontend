@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { swapFactory } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import type { PassCode } from "@icpswap/candid";
 import { useCallsData } from "../useCallData";
 

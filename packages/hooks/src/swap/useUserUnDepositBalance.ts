@@ -1,10 +1,9 @@
 /* eslint-disable no-console */
 import { useEffect, useMemo, useState } from "react";
 import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
-import { SubAccount } from "@dfinity/ledger-icp";
-import { Principal } from "@dfinity/principal";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { Principal } from "@icp-sdk/core/principal";
 
-import { _getSwapPoolAllBalance } from "./calls";
 import { getTokenBalance } from "../token/index";
 
 const CALL_LIMITED = 20;

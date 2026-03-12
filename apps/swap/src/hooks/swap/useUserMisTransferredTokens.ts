@@ -3,7 +3,7 @@ import { getTokenBalance, useSwapPools } from "@icpswap/hooks";
 import { swapPool } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 
 export interface useUserMisTransferredTokensArgs {
   tokenId: string | undefined;

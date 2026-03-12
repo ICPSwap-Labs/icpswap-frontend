@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { resultFormat } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { farmIndex } from "@icpswap/actor";
 
 import { useCallsData } from "../useCallData";

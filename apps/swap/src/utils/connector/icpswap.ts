@@ -1,6 +1,5 @@
 import { AuthClient } from "@honopu/auth-client";
-import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
-import type { Identity } from "@dfinity/agent";
+import { Actor, ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
 import { type CreateActorArgs, ConnectorAbstract, Connector, WalletConnectorConfig } from "./connectors";
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds
@@ -13,7 +12,7 @@ export class ICPSwapConnector implements ConnectorAbstract {
     dev: boolean;
   };
 
-  private identity?: Identity;
+  private identity?: any;
 
   private principal?: string;
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { balanceAdapter, isNeedBalanceAdapter } from "utils/token/adapter";
@@ -13,7 +13,7 @@ import {
   isUndefinedOrNull,
   nonUndefinedOrNull,
 } from "@icpswap/utils";
-import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
+import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { Null } from "@icpswap/types";
 import { useQuery } from "@tanstack/react-query";

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getUserFarms } from "@icpswap/hooks";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 export function useYourFarms() {

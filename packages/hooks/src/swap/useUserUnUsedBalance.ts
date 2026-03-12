@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import { useEffect, useMemo, useState } from "react";
 import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { isValidPrincipal } from "@icpswap/utils";
 
-import { getUserUnusedBalance, _getSwapPoolAllBalance } from "./calls";
+import { getUserUnusedBalance } from "./calls";
 
 const CALL_LIMITED = 20;
 

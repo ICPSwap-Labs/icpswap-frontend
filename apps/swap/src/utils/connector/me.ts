@@ -1,4 +1,4 @@
-import type { ActorSubclass } from "@dfinity/agent";
+import type { ActorSubclass } from "@icp-sdk/core/agent";
 import { AstroXWebViewHandler } from "@astrox/sdk-webview";
 import { IC as AuthClient } from "@astrox/sdk-web";
 import { Connector } from "@icpswap/actor";

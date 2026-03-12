@@ -7,7 +7,7 @@ import { neuronAddPermissions, neuronRemovePermissions } from "@icpswap/hooks";
 import { HotKeysPermissions } from "@icpswap/constants";
 import type { Neuron, NeuronPermission } from "@icpswap/types";
 import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { X } from "react-feather";
 import { useTranslation } from "react-i18next";

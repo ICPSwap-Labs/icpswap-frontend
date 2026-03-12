@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { swapPool, limitTransaction } from "@icpswap/actor";
 import type { LimitOrderKey, LimitOrderValue, Null, LimitTransactionResult, LimitOrder } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs, nonUndefinedOrNull, isUndefinedOrNull } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 import { useCallsData } from "../useCallData";
 

@@ -1,6 +1,6 @@
 import { resultFormat, optionalArg } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { ckBtcActor } from "@icpswap/actor";
 import { useCallback } from "react";
 

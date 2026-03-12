@@ -1,5 +1,3 @@
-import { Principal } from "@dfinity/principal";
-
 export interface ChartDayVolumeData {
   timestamp: number;
   volumeUSD: number;

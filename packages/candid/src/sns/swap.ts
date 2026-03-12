@@ -1,5 +1,5 @@
-import type { Principal } from "@dfinity/principal";
-import type { ActorMethod } from "@dfinity/agent";
+import type { Principal } from "@icp-sdk/core/principal";
+import type { ActorMethod } from "@icp-sdk/core/agent";
 
 export interface BuyerState {
   icp: [] | [TransferableAmount];
@@ -17,10 +17,7 @@ export interface CanisterStatusResultV2 {
   idle_cycles_burned_per_day: bigint;
   module_hash: [] | [Uint8Array | number[]];
 }
-export type CanisterStatusType =
-  | { stopped: null }
-  | { stopping: null }
-  | { running: null };
+export type CanisterStatusType = { stopped: null } | { stopping: null } | { running: null };
 export interface CfInvestment {
   hotkey_principal: string;
   nns_neuron_id: bigint;
@@ -83,13 +80,9 @@ export interface FailedUpdate {
 export interface FinalizeSwapResponse {
   set_dapp_controllers_call_result: [] | [SetDappControllersCallResult];
   create_sns_neuron_recipes_result: [] | [SweepResult];
-  settle_community_fund_participation_result:
-    | []
-    | [SettleCommunityFundParticipationResult];
+  settle_community_fund_participation_result: [] | [SettleCommunityFundParticipationResult];
   error_message: [] | [string];
-  settle_neurons_fund_participation_result:
-    | []
-    | [SettleNeuronsFundParticipationResult];
+  settle_neurons_fund_participation_result: [] | [SettleNeuronsFundParticipationResult];
   set_mode_call_result: [] | [SetModeCallResult];
   sweep_icp_result: [] | [SweepResult];
   claim_neuron_result: [] | [SweepResult];
@@ -152,9 +145,7 @@ export interface Init {
   sns_root_canister_id: string;
   neurons_fund_participation: [] | [boolean];
   min_participant_icp_e8s: [] | [bigint];
-  neuron_basket_construction_parameters:
-    | []
-    | [NeuronBasketConstructionParameters];
+  neuron_basket_construction_parameters: [] | [NeuronBasketConstructionParameters];
   fallback_controller_principal_ids: Array<string>;
   max_icp_e8s: [] | [bigint];
   neuron_minimum_stake_e8s: [] | [bigint];
@@ -167,9 +158,7 @@ export interface Init {
   transaction_fee_e8s: [] | [bigint];
   icp_ledger_canister_id: string;
   sns_ledger_canister_id: string;
-  neurons_fund_participation_constraints:
-    | []
-    | [NeuronsFundParticipationConstraints];
+  neurons_fund_participation_constraints: [] | [NeuronsFundParticipationConstraints];
   neurons_fund_participants: [] | [NeuronsFundParticipants];
   should_auto_finalize: [] | [boolean];
   max_participant_icp_e8s: [] | [bigint];
@@ -183,9 +172,7 @@ export interface InvalidUserAmount {
   min_amount_icp_e8s_included: bigint;
   max_amount_icp_e8s_included: bigint;
 }
-export type Investor =
-  | { CommunityFund: CfInvestment }
-  | { Direct: DirectInvestment };
+export type Investor = { CommunityFund: CfInvestment } | { Direct: DirectInvestment };
 export interface LinearScalingCoefficient {
   slope_numerator: [] | [bigint];
   intercept_icp_e8s: [] | [bigint];
@@ -230,9 +217,7 @@ export interface NeuronsFundParticipationConstraints {
   coefficient_intervals: Array<LinearScalingCoefficient>;
   max_neurons_fund_participation_icp_e8s: [] | [bigint];
   min_direct_participation_threshold_icp_e8s: [] | [bigint];
-  ideal_matched_participation_function:
-    | []
-    | [IdealMatchedParticipationFunction];
+  ideal_matched_participation_function: [] | [IdealMatchedParticipationFunction];
 }
 export interface NewSaleTicketRequest {
   subaccount: [] | [Uint8Array | number[]];
@@ -258,9 +243,7 @@ export interface OpenRequest {
 }
 export interface Params {
   min_participant_icp_e8s: bigint;
-  neuron_basket_construction_parameters:
-    | []
-    | [NeuronBasketConstructionParameters];
+  neuron_basket_construction_parameters: [] | [NeuronBasketConstructionParameters];
   max_icp_e8s: bigint;
   swap_due_timestamp_seconds: bigint;
   min_participants: number;
@@ -275,9 +258,7 @@ export interface Participant {
   participation: [] | [BuyerState];
   participant_id: [] | [Principal];
 }
-export type Possibility =
-  | { Ok: SetDappControllersResponse }
-  | { Err: CanisterCallError };
+export type Possibility = { Ok: SetDappControllersResponse } | { Err: CanisterCallError };
 export type Possibility_1 = { Ok: Response } | { Err: CanisterCallError };
 export type Possibility_2 = { Ok: Ok_1 } | { Err: Error };
 export type Possibility_3 = { Ok: {} } | { Err: CanisterCallError };
@@ -356,15 +337,9 @@ export interface TransferableAmount {
   transfer_success_timestamp_seconds: bigint;
 }
 export interface _SERVICE {
-  error_refund_icp: ActorMethod<
-    [ErrorRefundIcpRequest],
-    ErrorRefundIcpResponse
-  >;
+  error_refund_icp: ActorMethod<[ErrorRefundIcpRequest], ErrorRefundIcpResponse>;
   finalize_swap: ActorMethod<[{}], FinalizeSwapResponse>;
-  get_auto_finalization_status: ActorMethod<
-    [{}],
-    GetAutoFinalizationStatusResponse
-  >;
+  get_auto_finalization_status: ActorMethod<[{}], GetAutoFinalizationStatusResponse>;
   get_buyer_state: ActorMethod<[GetBuyerStateRequest], GetBuyerStateResponse>;
   get_buyers_total: ActorMethod<[{}], GetBuyersTotalResponse>;
   get_canister_status: ActorMethod<[{}], CanisterStatusResultV2>;
@@ -374,24 +349,12 @@ export interface _SERVICE {
   get_open_ticket: ActorMethod<[{}], GetOpenTicketResponse>;
   get_sale_parameters: ActorMethod<[{}], GetSaleParametersResponse>;
   get_state: ActorMethod<[{}], GetStateResponse>;
-  list_community_fund_participants: ActorMethod<
-    [ListCommunityFundParticipantsRequest],
-    NeuronsFundParticipants
-  >;
-  list_direct_participants: ActorMethod<
-    [ListDirectParticipantsRequest],
-    ListDirectParticipantsResponse
-  >;
-  list_sns_neuron_recipes: ActorMethod<
-    [ListSnsNeuronRecipesRequest],
-    ListSnsNeuronRecipesResponse
-  >;
+  list_community_fund_participants: ActorMethod<[ListCommunityFundParticipantsRequest], NeuronsFundParticipants>;
+  list_direct_participants: ActorMethod<[ListDirectParticipantsRequest], ListDirectParticipantsResponse>;
+  list_sns_neuron_recipes: ActorMethod<[ListSnsNeuronRecipesRequest], ListSnsNeuronRecipesResponse>;
   new_sale_ticket: ActorMethod<[NewSaleTicketRequest], NewSaleTicketResponse>;
   notify_payment_failure: ActorMethod<[{}], Ok_2>;
   open: ActorMethod<[OpenRequest], {}>;
-  refresh_buyer_tokens: ActorMethod<
-    [RefreshBuyerTokensRequest],
-    RefreshBuyerTokensResponse
-  >;
+  refresh_buyer_tokens: ActorMethod<[RefreshBuyerTokensRequest], RefreshBuyerTokensResponse>;
   restore_dapp_controllers: ActorMethod<[{}], SetDappControllersCallResult>;
 }

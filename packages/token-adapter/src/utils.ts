@@ -1,6 +1,6 @@
 import { enumToString, isOkSubAccount } from "@icpswap/utils";
 import { ICRCTransaction } from "@icpswap/candid";
-import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
+import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { Transaction as TokenTransaction } from "./types";
 
 function getFirstMemo(tx: ICRCTransaction) {

@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { ExternalTipArgs, OpenExternalTip } from "types/index";
 import type { Null, PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
 import { PassCodeManagerId } from "constants/canister";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { BigNumber } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
 import { useStepsToReclaimCallback } from "./useStepsToReclaimCallback";

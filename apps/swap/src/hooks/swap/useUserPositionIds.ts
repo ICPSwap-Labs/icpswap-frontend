@@ -1,4 +1,4 @@
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { resultFormat } from "@icpswap/utils";
 import { swapPool } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";

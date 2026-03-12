@@ -1,6 +1,6 @@
 import { formatTokenPrice } from "@icpswap/utils";
 import { Position, tickToPrice, Token } from "@icpswap/swap-sdk";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { LimitOrder } from "@icpswap/types";
 import { Flex, TokenImage } from "components/index";
 import { StepContents } from "types/step";

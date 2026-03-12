@@ -8,7 +8,7 @@ import type { NervousSystemParameters } from "@icpswap/types";
 import { Modal, NumberFilledTextField, MaxButton } from "components/index";
 import { useTokenBalance } from "hooks/token";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import randomBytes from "randombytes";
 import { buildNeuronStakeSubAccount } from "utils/sns/neurons";
 import { useUSDPriceById } from "hooks/index";

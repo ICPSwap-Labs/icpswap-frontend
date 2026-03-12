@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs, isUndefinedOrNull, optionalArg } from "@icpswap/utils";
 import { stakeIndex } from "@icpswap/actor";
 import type { PaginationResult, StakeIndexPoolInfo, StakeAprInfo, StakeUserStakeInfo } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 import { useCallsData } from "../useCallData";
 

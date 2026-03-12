@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import type { PositionTransaction, PaginationResult, Null } from "@icpswap/types";
 import { baseIndex, positionTransactionsStorage } from "@icpswap/actor";
 import { isAvailablePageArgs, isUndefinedOrNull, resultFormat } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 import { useCallsData } from "../useCallData";
 

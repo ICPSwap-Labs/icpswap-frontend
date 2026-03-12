@@ -17,7 +17,7 @@ import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import type { EXTCollection, ExtNft } from "@icpswap/types";
 import { getLocaleMessage } from "i18n/service";
 import { ext_nft } from "@icpswap/actor";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useAccountPrincipal, useAccount } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
 import { useLoadingCallData } from "@icpswap/hooks";

@@ -22,7 +22,7 @@ import {
 } from "@icpswap/utils";
 import { swapNFT, NFTCanisterController, NFTCanister } from "@icpswap/actor";
 import { useCallsData } from "@icpswap/hooks";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 export async function approveForAll(spenderCanisterId: string) {
   const spender = principalToAccount(spenderCanisterId);

@@ -5,11 +5,11 @@ import { cycleValueFormat, formatTokenAmount, parseTokenAmount, BigNumber } from
 import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
 import { useICP2CyclesManager } from "store/global/hooks";
 import { CYCLES_MINTING_CANISTER_ID } from "constants/index";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { tokenTransfer } from "hooks/token/calls";
 import { ledgerService } from "actor/index";
-import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
+import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { useTokenBalance } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Flex, MaxButton } from "@icpswap/ui";

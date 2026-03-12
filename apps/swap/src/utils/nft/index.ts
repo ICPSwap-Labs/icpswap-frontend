@@ -1,4 +1,4 @@
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { type SwapNFTTokenMetadata } from "@icpswap/types";
 
 export function from32bits(data: number[]) {

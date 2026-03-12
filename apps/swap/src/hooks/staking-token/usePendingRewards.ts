@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useStakingPools, getStakingTokenUserInfo } from "@icpswap/hooks";
 import { STATE, UserPendingRewards } from "types/staking-token";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 
 let stake_pending_reward_fetch_index = 0;

@@ -23,7 +23,7 @@ import type {
   DepositAndSwapArgs,
 } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 
 import { useCallsData, getPaginationAllData, usePaginationAllData, getPaginationAllDataLimit } from "../useCallData";
 

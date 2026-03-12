@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { BitcoinTx } from "types/ckBTC";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { SortBalanceEnum, WalletSortType } from "types/index";
 import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import {

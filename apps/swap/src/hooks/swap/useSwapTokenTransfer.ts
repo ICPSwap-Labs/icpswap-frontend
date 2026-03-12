@@ -4,7 +4,7 @@ import { Token } from "@icpswap/swap-sdk";
 import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { tokenTransfer } from "hooks/token/calls";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 
 export function useSwapTransfer() {
   const [openErrorTip] = useErrorTip();

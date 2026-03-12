@@ -26,7 +26,7 @@ import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { FilledTextField, Loading } from "components/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { isElement } from "react-is";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { PositionRangeState } from "components/swap/index";
 import { usePositionState } from "hooks/liquidity";
 import { useTranslation } from "react-i18next";

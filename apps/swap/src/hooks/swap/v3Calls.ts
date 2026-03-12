@@ -15,7 +15,7 @@ import { FeeAmount } from "@icpswap/swap-sdk";
 import type { Null, SwapPoolData } from "@icpswap/types";
 import { swapFactory_update_call } from "actor/swap";
 import { UserPosition } from "types/swap";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { useStateCallsData } from "hooks/useCallsData";
 import { sortToken } from "utils/swap";
 

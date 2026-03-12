@@ -1,6 +1,6 @@
 import { Null, AlertInfo, AddAlertArgs } from "@icpswap/types";
 import { icpswap_fetch_post, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { priceAlerts } from "@icpswap/actor";
 
 export async function getPriceAlertEmail(principal: string) {
@@ -24,7 +24,7 @@ export async function verifyPriceAlertEmail({ email, principal, code }: VerifyPr
   return result;
 }
 
-export function usePriceAlertEmail(principal: string | Null) {
+export function usePriceAlertEmail(principal: string | Null): UseQueryResult<string, Error> {
   return useQuery({
     queryKey: ["priceAlertEmail"],
     queryFn: async () => {
@@ -38,7 +38,7 @@ export async function getPriceAlerts() {
   return resultFormat<Array<AlertInfo>>(await (await priceAlerts(true)).get_user_alerts()).data;
 }
 
-export function usePriceAlerts(principal: string | Null) {
+export function usePriceAlerts(principal: string | Null): UseQueryResult<AlertInfo[], Error> {
   return useQuery({
     queryKey: ["priceAlerts", principal],
     queryFn: async () => {
