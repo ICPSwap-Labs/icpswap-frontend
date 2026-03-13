@@ -35,7 +35,7 @@ export default function NFTCanisterCreate() {
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string>("");
 
-  const { result: NFTMintInfo } = useNFTMintInfo();
+  const { data: NFTMintInfo } = useNFTMintInfo();
 
   const onFieldChange = (value: string, field: string) => {
     setValues({

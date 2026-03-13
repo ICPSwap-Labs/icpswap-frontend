@@ -29,8 +29,8 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
   const [latestValue, setLatestValue] = useState<number | undefined>();
   const [time, setTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
 
-  const { result: poolChartData, loading } = usePoolAPRChartData(poolId);
-  const { result: averageAprResult } = usePoolAverageAPRs(poolId);
+  const { data: poolChartData, isLoading } = usePoolAPRChartData(poolId);
+  const { data: averageAprResult } = usePoolAverageAPRs(poolId);
 
   const formattedChartData = useMemo(() => {
     if (poolChartData) {
@@ -87,9 +87,9 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <Box sx={{ width: "100%", height }}>
-          <ImageLoading loading={loading} />
+          <ImageLoading loading={isLoading} />
         </Box>
       ) : (
         <>

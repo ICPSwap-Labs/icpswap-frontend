@@ -177,13 +177,13 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
   const theme = useTheme();
   const classes = useStyles();
 
-  const { result: canisterMetadata } = useNFTCanisterMetadata(canisterId);
+  const { data: canisterMetadata } = useNFTCanisterMetadata(canisterId);
 
   const { metadata } = useNFTMetadata(canisterId, tokenId);
 
   const NFTMetadata = metadataFormat(metadata);
 
-  const { result: orderInfo } = useTradeOrder(canisterId, Number(tokenId));
+  const { data: orderInfo } = useTradeOrder(canisterId, Number(tokenId));
 
   // const NFTUSDValue = useUSDValueFromICPAmount(orderInfo?.price);
 

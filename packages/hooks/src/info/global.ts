@@ -1,7 +1,6 @@
-import { useCallback } from "react";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { icpswap_info_fetch_get } from "@icpswap/utils";
-import { InfoGlobalDataResponse, PageResponse } from "@icpswap/types";
-import { useCallsData } from "../useCallData";
+import type { InfoGlobalDataResponse, PageResponse } from "@icpswap/types";
 
 export interface UseGlobalChartsProps {
   level: "m15" | "d1" | "h1";
@@ -9,12 +8,20 @@ export interface UseGlobalChartsProps {
   limit: number;
 }
 
-export function useGlobalCharts({ level, page, limit }: UseGlobalChartsProps) {
-  return useCallsData(
-    useCallback(async () => {
+export function useGlobalCharts({
+  level,
+  page,
+  limit,
+}: UseGlobalChartsProps): UseQueryResult<PageResponse<InfoGlobalDataResponse> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useGlobalCharts", level, page, limit],
+    queryFn: async () => {
       return (
-        await icpswap_info_fetch_get<PageResponse<InfoGlobalDataResponse>>(`/global/protocol/${level}`, { page, limit })
+        await icpswap_info_fetch_get<PageResponse<InfoGlobalDataResponse>>(`/global/protocol/${level}`, {
+          page,
+          limit,
+        })
       ).data;
-    }, [level, page, limit]),
-  );
+    },
+  });
 }

@@ -47,7 +47,7 @@ export default function TokenClaimTransactions() {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PAGE_SIZE });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result: userClaimTransaction, loading } = useUserClaimEventTransactions(
+  const { data: userClaimTransaction, isLoading } = useUserClaimEventTransactions(
     user,
     undefined,
     1,
@@ -79,11 +79,11 @@ export default function TokenClaimTransactions() {
               <TokenClaimTransaction key={`${String(transaction.claimEventId)}_${index}`} transaction={transaction} />
             ))}
 
-            {!loading && (userClaimTransaction?.content ?? []).length === 0 ? (
+            {!isLoading && (userClaimTransaction?.content ?? []).length === 0 ? (
               <NoData tip={t("claim.transactions.empty")} />
             ) : null}
 
-            {loading ? (
+            {isLoading ? (
               <Box
                 sx={{
                   position: "absolute",
@@ -96,7 +96,7 @@ export default function TokenClaimTransactions() {
                   height: "100%",
                 }}
               >
-                <ImageLoading mask loading={loading} />
+                <ImageLoading mask loading={isLoading} />
               </Box>
             ) : null}
 

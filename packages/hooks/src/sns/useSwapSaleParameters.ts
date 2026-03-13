@@ -1,26 +1,24 @@
 import { resultFormat } from "@icpswap/utils";
-import { useCallsData } from "../useCallData";
 import { sns_swap } from "@icpswap/actor";
 import type { GetSaleParametersResponse } from "@icpswap/types";
-import { useCallback } from "react";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function getSwapSaleParameters(swap_id: string) {
-  const result = resultFormat<GetSaleParametersResponse>(
-    await (await sns_swap(swap_id)).get_sale_parameters({})
-  ).data;
+  const result = resultFormat<GetSaleParametersResponse>(await (await sns_swap(swap_id)).get_sale_parameters({})).data;
 
   return result ? result.params[0] : undefined;
 }
 
 export function useSwapSaleParameters(
   swap_id: string | undefined,
-  reload?: number | boolean
-) {
-  return useCallsData(
-    useCallback(async () => {
+  reload?: number | boolean,
+): UseQueryResult<Awaited<ReturnType<typeof getSwapSaleParameters>> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapSaleParameters", swap_id, reload],
+    queryFn: async () => {
       if (!swap_id) return undefined;
       return await getSwapSaleParameters(swap_id);
-    }, [swap_id]),
-    reload
-  );
+    },
+    enabled: !!swap_id,
+  });
 }

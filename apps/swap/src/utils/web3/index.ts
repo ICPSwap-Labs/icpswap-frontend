@@ -54,7 +54,7 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
-export function toHexString(amount: string | number, decimals = 18): string {
+export function numberToHexNumber(amount: string | number, decimals = 18): string {
   return `0x0${new BigNumber(amount).multipliedBy(10 ** decimals).toString(16)}`;
 }
 

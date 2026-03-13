@@ -41,7 +41,7 @@ export function PositionTable({
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
   }, [poolId, principal]);
 
-  const { result: allLimitOrdersResult } = useLimitOrders(poolId);
+  const { data: allLimitOrdersResult } = useLimitOrders(poolId);
   const allLimitOrders = useMemo(() => {
     if (isUndefinedOrNull(allLimitOrdersResult)) return null;
 

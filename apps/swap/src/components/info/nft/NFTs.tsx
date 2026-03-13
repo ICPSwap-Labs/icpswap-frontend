@@ -48,7 +48,7 @@ export function NFTs({ canisterId }: { canisterId: string }) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useNFTs({ canisterId, offset, limit: pagination.pageSize });
+  const { data: result, isLoading: loading } = useNFTs({ canisterId, offset, limit: pagination.pageSize });
   const { content: NFTList, totalElements } = result ?? { totalElements: 0, content: [] as NFTTokenMetadata[] };
 
   const handlePageChange = (page: number) => {

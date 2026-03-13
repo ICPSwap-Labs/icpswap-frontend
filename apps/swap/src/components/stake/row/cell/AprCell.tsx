@@ -21,7 +21,7 @@ export function AprCell({ poolInfo, stakingPoolInfo }: AprCellProps) {
   const [, rewardToken] = useToken(poolInfo.rewardToken.address);
   const stakeTokenPrice = useUSDPrice(stakeToken);
   const rewardTokenPrice = useUSDPrice(rewardToken);
-  const { result: stakeStatInfo } = useStakePoolStatInfo(poolInfo.canisterId.toString());
+  const { data: stakeStatInfo } = useStakePoolStatInfo(poolInfo.canisterId.toString());
 
   const apr = useApr({
     poolInfo: stakingPoolInfo,

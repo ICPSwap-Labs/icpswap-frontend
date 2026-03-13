@@ -198,10 +198,10 @@ export function PositionCardForFarm({
     }
   }, [displayByFilter, setHiddenNumbers, positionKey]);
 
-  const { result: farmInitArgs } = useFarmInitArgs(farmInfo.id);
+  const { data: farmInitArgs } = useFarmInitArgs(farmInfo.id);
   const [, rewardToken] = useToken(farmInfo.rewardToken.address);
-  const { result: deposits } = useFarmUserPositions(farmInfo.id, principal?.toString(), refreshTrigger);
-  const { result: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
+  const { data: deposits } = useFarmUserPositions(farmInfo.id, principal?.toString(), refreshTrigger);
+  const { data: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
 
   const deposit = useMemo(() => {
     if (!deposits || isUndefinedOrNull(positionId)) return undefined;

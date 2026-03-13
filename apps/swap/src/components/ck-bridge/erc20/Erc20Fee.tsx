@@ -20,7 +20,7 @@ export function Erc20Fee() {
     tokenId: ckETH.address,
     account: principal?.toString(),
   });
-  const { result: transactionPrice } = useChainKeyTransactionPrice(MINTER_CANISTER_ID);
+  const { data: transactionPrice } = useChainKeyTransactionPrice(MINTER_CANISTER_ID);
   const ckETHInfoToken = useInfoToken(ckETH.address);
 
   const handleBuy = useCallback(() => {

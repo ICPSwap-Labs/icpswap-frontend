@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { OLD_CANISTER_IDS } from "constants/nft";
 import { resultFormat } from "@icpswap/utils";
 import {
@@ -6,42 +5,54 @@ import {
   getV1NFTCanisterMetadata,
   getNFTStat,
   getV1NFTStat,
-  useCallsData,
 } from "@icpswap/hooks";
 import { swapNFT, NFTCanister } from "@icpswap/actor";
 import { SwapNFTCanisterId } from "constants/canister";
 import type { NFTCanisterInfo } from "@icpswap/types";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
-export function useNFTCanisterCycles(canisterId: string) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTCanisterCycles(canisterId: string): UseQueryResult<bigint | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTCanisterCycles", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return resultFormat<bigint>(await (await NFTCanister(canisterId)).availableCycles()).data;
-    }, [canisterId]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
-export function useNFTCanisterCount(canisterId: string) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTCanisterCount(canisterId: string): UseQueryResult<bigint | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTCanisterCount", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return resultFormat<bigint>(await (await NFTCanister(canisterId)).supply("1")).data;
-    }, [canisterId]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
-export function useNFTUserCanisterCount(canisterId: string, account: string) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTUserCanisterCount(
+  canisterId: string,
+  account: string,
+): UseQueryResult<bigint | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTUserCanisterCount", canisterId, account],
+    queryFn: async () => {
       if (!canisterId || !account) return undefined;
       return resultFormat<bigint>(await (await NFTCanister(canisterId)).ownerNFTCount({ address: account })).data;
-    }, [canisterId, account]),
-  );
+    },
+    enabled: !!canisterId && !!account,
+  });
 }
 
-export function useNFTCanisterMetadata(canisterId: string) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTCanisterMetadata(
+  canisterId: string,
+): UseQueryResult<NFTCanisterInfo | Awaited<ReturnType<typeof getNFTCanisterMetadata>> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTCanisterMetadata", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
 
       if (OLD_CANISTER_IDS.includes(canisterId)) return await getV1NFTCanisterMetadata(canisterId);
@@ -50,13 +61,17 @@ export function useNFTCanisterMetadata(canisterId: string) {
         return resultFormat<NFTCanisterInfo>(await (await swapNFT()).getCanisterInfo()).data;
 
       return await getNFTCanisterMetadata(canisterId);
-    }, [canisterId]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
-export function useNFTOtherStat(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTOtherStat(
+  canisterId: string | undefined,
+): UseQueryResult<Awaited<ReturnType<typeof getNFTStat>> | Awaited<ReturnType<typeof getV1NFTStat>> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTOtherStat", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
 
       try {
@@ -65,6 +80,7 @@ export function useNFTOtherStat(canisterId: string | undefined) {
       } catch (error) {
         console.error(error);
       }
-    }, []),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }

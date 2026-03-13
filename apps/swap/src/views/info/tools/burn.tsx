@@ -34,7 +34,7 @@ export default function Burn() {
   };
 
   const [, token] = useToken(tokenId);
-  const { result: mintingAccount } = useTokenMintingAccount(tokenId);
+  const { data: mintingAccount } = useTokenMintingAccount(tokenId);
   const { result: balance } = useTokenBalance({ tokenId, account: principal, refresh: refreshTrigger });
 
   const handleMax = () => {

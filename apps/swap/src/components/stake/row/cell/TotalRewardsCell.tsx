@@ -14,7 +14,7 @@ interface TotalRewardsCellProps {
 export function TotalRewardsCell({ poolInfo }: TotalRewardsCellProps) {
   const [, rewardToken] = useToken(poolInfo.rewardToken.address);
   const rewardTokenPrice = useUSDPrice(rewardToken);
-  const { result: stakeStatInfo } = useStakePoolStatInfo(poolInfo.canisterId.toString());
+  const { data: stakeStatInfo } = useStakePoolStatInfo(poolInfo.canisterId.toString());
 
   const { rewardAmount, rewardsUSDValue } = useMemo(() => {
     if (nonUndefinedOrNull(rewardToken) && nonUndefinedOrNull(stakeStatInfo)) {

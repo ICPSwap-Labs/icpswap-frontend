@@ -27,7 +27,7 @@ function Launchpad({ sns }: LaunchpadProps) {
     };
   }, [sns]);
 
-  const { result: saleParameters } = useSwapSaleParameters(swap_id);
+  const { data: saleParameters } = useSwapSaleParameters(swap_id);
 
   const deadline = useMemo(() => {
     if (!saleParameters) return undefined;

@@ -106,7 +106,7 @@ export default function IncreaseLiquidity() {
   const { positionId, pool: poolId } = useParams() as { positionId: string; pool: string };
   const { path } = useParsedUrlPath();
 
-  const { result: _position, loading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
+  const { data: _position, isLoading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
   const { position: existingPosition, loading: usePositionLoading } = usePosition({
     poolId,
     tickLower: _position?.tickLower,

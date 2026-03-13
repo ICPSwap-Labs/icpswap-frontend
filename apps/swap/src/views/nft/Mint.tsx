@@ -49,7 +49,7 @@ export default function NFTMint() {
 
   const { canister: NFTCanisterId } = useParsedQueryString() as { canister: string };
 
-  const { result: canisterMetadata } = useCanisterMetadata(mintTokenInfo.nftCanister);
+  const { data: canisterMetadata } = useCanisterMetadata(mintTokenInfo.nftCanister);
 
   useEffect(() => {
     if (NFTCanisterId) {
@@ -121,7 +121,7 @@ export default function NFTMint() {
     }
   };
 
-  const { result: userNFTCanister } = useUserCanisterList(account, 0, 100);
+  const { data: userNFTCanister } = useUserCanisterList(account, 0, 100);
   const { content: nftCanisterList } = userNFTCanister ?? { content: [] as NFTControllerInfo[] };
 
   const handleFileChange = (file: File) => {

@@ -8,7 +8,7 @@ interface TokenTransactionsProps {
 }
 
 export function TokenTransactions({ canisterId, styleProps }: TokenTransactionsProps) {
-  const { result, loading } = useTokenTransactions(canisterId, 0, 300);
+  const { data: result, isLoading: loading } = useTokenTransactions(canisterId, 0, 300);
 
   return <Transactions transactions={result?.content} loading={loading} hasFilter styleProps={styleProps} />;
 }

@@ -1,16 +1,14 @@
-import { useCallback } from "react";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { setting } from "@icpswap/actor";
-import { useCallsData } from "../useCallData";
 
 export async function getSettingMaintenance() {
   const result = await (await setting()).get_active_maintenance_pages();
   return result;
 }
 
-export function useSettingMaintenance() {
-  return useCallsData(
-    useCallback(async () => {
-      return await getSettingMaintenance();
-    }, []),
-  );
+export function useSettingMaintenance(): UseQueryResult<Awaited<ReturnType<typeof getSettingMaintenance>>, Error> {
+  return useQuery({
+    queryKey: ["useSettingMaintenance"],
+    queryFn: () => getSettingMaintenance(),
+  });
 }

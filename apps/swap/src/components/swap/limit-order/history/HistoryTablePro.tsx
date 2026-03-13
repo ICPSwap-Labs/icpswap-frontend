@@ -18,13 +18,13 @@ export function HistoryTablePro({ poolId, wrapperClassName }: HistoryTableProPro
     return now - 60 * 24 * 3600;
   }, []);
 
-  const { result: limitTransactionsResult, loading } = useUserLimitTransactions(
+  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions(
     principal?.toString(),
     start_time,
     0,
     100,
   );
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal);
+  const { data: unusedBalance } = useUserUnusedBalance(poolId, principal);
 
   const limitTransactions = useMemo(() => {
     return limitTransactionsResult?.records;

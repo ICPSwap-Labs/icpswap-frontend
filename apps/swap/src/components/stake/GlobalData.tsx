@@ -59,7 +59,7 @@ export function GlobalData() {
   const principal = useAccountPrincipal();
   const icpPrice = useICPPrice();
   const { data } = useStakeIntervalGlobalData();
-  const { result: userStakedTokens } = useUserStakedTokens(principal?.toString());
+  const { data: userStakedTokens } = useUserStakedTokens(principal?.toString());
   const infoAllTokens = useInfoAllTokens();
   const { value: userAvailableTokensValue, tokens: availableTokensNumber } = useUserAvailableTokensValue();
 

@@ -14,8 +14,8 @@ export default function SwapOverview() {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { result: globalProtocol } = useGlobalProtocol();
-  const { result: globalCharts } = useGlobalCharts({ level: "d1", page: 1, limit: 1000 });
+  const { data: globalProtocol } = useGlobalProtocol();
+  const { data: globalCharts } = useGlobalCharts({ level: "d1", page: 1, limit: 1000 });
 
   return (
     <InfoWrapper>

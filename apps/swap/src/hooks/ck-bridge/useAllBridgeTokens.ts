@@ -13,7 +13,7 @@ export function useAllBridgeTokens(__minterInfo?: ChainKeyETHMinterInfo) {
     return __minterInfo ? undefined : MINTER_CANISTER_ID;
   }, [__minterInfo]);
 
-  const { result: minterInfo } = useChainKeyMinterInfo(id);
+  const { data: minterInfo } = useChainKeyMinterInfo(id);
 
   const supportedERC20Tokens = useMemo(() => {
     return (__minterInfo ?? minterInfo)?.supported_ckerc20_tokens[0]?.map((e) => e.ledger_canister_id.toString());

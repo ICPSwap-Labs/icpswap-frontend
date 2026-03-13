@@ -46,7 +46,7 @@ export default function NFTCard({ nft, onCardClick, showDetails = true }: NFTCar
   const isDarkTheme = theme.customization.mode === "dark";
 
   const metadata = useNFTByMetadata(nft);
-  const { result: _order } = useNFTOrderInfo(nft.cId, nft.tokenId);
+  const { data: _order } = useNFTOrderInfo(nft.cId, nft.tokenId);
 
   const isOnSale = !!_order;
 

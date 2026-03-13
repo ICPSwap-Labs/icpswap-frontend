@@ -89,13 +89,13 @@ export function Holders({ tokenId }: PoolTransactionsProps) {
 
   const [page, setPage] = useState(1);
 
-  const { result, loading } = useTokenHolders(tokenId, page, 10);
+  const { data: result, isLoading: loading } = useTokenHolders(tokenId, page, 10);
 
   const tokenIds = useMemo(() => {
     return tokenId ? [tokenId] : undefined;
   }, [tokenId]);
 
-  const { result: locksIds } = useLiquidityLockIds(tokenIds);
+  const { data: locksIds } = useLiquidityLockIds(tokenIds);
 
   const sneedLedger = useMemo(() => {
     if (!locksIds) return undefined;

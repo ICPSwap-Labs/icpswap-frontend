@@ -21,7 +21,7 @@ export function InfoPool({ pool, wrapperSx, noPoolDetails = false }: InfoPoolPro
   const theme = useTheme();
   const down640 = useMediaQuery640();
 
-  const { result: infoPool } = useInfoPool(pool?.id);
+  const { data: infoPool } = useInfoPool(pool?.id);
 
   const { token0, token1, fee } = useMemo(() => {
     if (!pool) return {};

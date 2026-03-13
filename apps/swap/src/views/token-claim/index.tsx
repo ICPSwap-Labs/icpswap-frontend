@@ -38,7 +38,7 @@ export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
 
   const principalString = useAccountPrincipalString();
 
-  const { result: userClaimTransactions, loading: claimTransactionLoading } = useUserClaimEventTransactions(
+  const { data: userClaimTransactions, isLoading: claimTransactionLoading } = useUserClaimEventTransactions(
     principalString,
     ele.claimEventId,
     undefined,
@@ -102,7 +102,7 @@ export default function TokenClaim() {
 
   const [page, setPage] = useState(1);
   const [offset] = pageArgsFormat(1, pageSize);
-  const { result: _userClaimEvents, loading } = useUserClaimEvents(principalString, offset, pageSize);
+  const { data: _userClaimEvents, isLoading } = useUserClaimEvents(principalString, offset, pageSize);
 
   const [userClaimEvents, setUserClaimEvents] = useState<ClaimEventInfo[]>([]);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -145,7 +145,7 @@ export default function TokenClaim() {
         </Flex>
 
         <Box mt="16px" sx={{ display: "grid", gridTemplateRows: "1fr", gap: "16px 0" }}>
-          {loading ? (
+          {isLoading ? (
             <LoadingRow>
               <div />
               <div />
@@ -162,9 +162,9 @@ export default function TokenClaim() {
             })
           )}
 
-          {!loading && userClaimEvents.length === 0 ? <NoData tip={t("claim.empty")} /> : null}
+          {!isLoading && userClaimEvents.length === 0 ? <NoData tip={t("claim.empty")} /> : null}
 
-          {!loading && Number(_userClaimEvents?.totalElements ?? 0) !== userClaimEvents.length ? (
+          {!isLoading && Number(_userClaimEvents?.totalElements ?? 0) !== userClaimEvents.length ? (
             <Box sx={{ display: "flex", justifyContent: "center" }}>
               <ViewMore loading={loadingMore} onClick={handleMore} />
             </Box>

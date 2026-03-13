@@ -11,7 +11,7 @@ export function useUserStakedPositions() {
   const [allFarmsUserTvl, setAllFarmsUserTvl] = useState<FarmUserTvl[] | null>(null);
 
   const infoAllTokens = useInfoAllTokens();
-  const { result: farms } = useUserFarms(principal?.toString());
+  const { data: farms } = useUserFarms(principal?.toString());
 
   useEffect(() => {
     async function call() {

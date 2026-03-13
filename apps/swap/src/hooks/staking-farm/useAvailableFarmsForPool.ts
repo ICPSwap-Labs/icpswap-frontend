@@ -7,7 +7,7 @@ interface UseAvailableFarmsForPool {
 }
 
 export function useAvailableFarmsForPool({ poolId }: UseAvailableFarmsForPool) {
-  const { result: farms } = useFarmsByFilter({
+  const { data: farms } = useFarmsByFilter({
     pair: poolId,
     state: "LIVE",
     token: undefined,

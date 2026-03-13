@@ -67,7 +67,7 @@ type TickChartData = {
 export function DensityChart({ address }: DensityChartProps) {
   const theme = useTheme();
 
-  const { result: __pool } = useSwapPoolMetadata(address);
+  const { data: __pool } = useSwapPoolMetadata(address);
   const [, token0] = useToken(__pool?.token0.address);
   const [, token1] = useToken(__pool?.token1.address);
 

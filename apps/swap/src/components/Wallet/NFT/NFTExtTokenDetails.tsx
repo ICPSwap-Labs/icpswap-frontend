@@ -13,8 +13,8 @@ export function NFTExtTokenDetails() {
   const { displayedNFTTokenInfo, setExtNFTSendingInfo } = useWalletNFTContext();
   const principal = useAccountPrincipalString();
 
-  const { result: userExtNFTs, loading } = useExtUserNFTs(principal);
-  const { result: extNFTs } = useEXTAllCollections();
+  const { data: userExtNFTs, isLoading: loading } = useExtUserNFTs(principal);
+  const { data: extNFTs } = useEXTAllCollections();
 
   const { metadata, extNFT, index } = useMemo(() => {
     if (isUndefinedOrNull(userExtNFTs) || isUndefinedOrNull(extNFTs) || isUndefinedOrNull(displayedNFTTokenInfo))

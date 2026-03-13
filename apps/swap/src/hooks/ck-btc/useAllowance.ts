@@ -1,8 +1,7 @@
 import { resultFormat, optionalArg } from "@icpswap/utils";
-import { useCallsData } from "@icpswap/hooks";
 import { Principal } from "@icp-sdk/core/principal";
 import { ckBtcActor } from "@icpswap/actor";
-import { useCallback } from "react";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export interface AllowanceArgs {
   spender: Principal;
@@ -29,9 +28,13 @@ export interface useAllowanceArgs {
   ownerSub?: number[];
 }
 
-export function useAllowance({ spender, spenderSub, owner, ownerSub }: useAllowanceArgs) {
-  return useCallsData(
-    useCallback(async () => {
+export function useAllowance({ spender, spenderSub, owner, ownerSub }: useAllowanceArgs): UseQueryResult<
+  bigint | undefined,
+  Error
+> {
+  return useQuery({
+    queryKey: ["ckBtcUseAllowance", spender, spenderSub, owner, ownerSub],
+    queryFn: async () => {
       if (!spender || !owner) return undefined;
       return await allowance({
         spender: Principal.fromText(spender),
@@ -39,6 +42,7 @@ export function useAllowance({ spender, spenderSub, owner, ownerSub }: useAllowa
         owner: Principal.fromText(owner),
         ownerSub,
       });
-    }, [spender, spenderSub, owner, ownerSub]),
-  );
+    },
+    enabled: !!spender && !!owner,
+  });
 }

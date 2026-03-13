@@ -11,7 +11,7 @@ export function Ads() {
   const [globalAdsLink, setGlobalAdsLink] = useState<string | undefined>(undefined);
   const [globalAdsButtonText, setGlobalAdsButtonText] = useState<string | undefined>(undefined);
 
-  const { result: globalAds } = useSettingGlobalAds();
+  const { data: globalAds } = useSettingGlobalAds();
 
   useEffect(() => {
     if (globalAds) {

@@ -13,9 +13,9 @@ export default function TopPools() {
   const [onlyTokenList, setOnlyTokenList] = useState(true);
   const [selectedPair, setSelectedPair] = useState<undefined | string>(undefined);
 
-  const { result: pools, loading } = useNodeInfoAllPools();
+  const { data: pools, isLoading: loading } = useNodeInfoAllPools();
 
-  const { result: tokenList } = useTokensFromList();
+  const { data: tokenList } = useTokensFromList();
 
   const handleCheckChange = (checked: boolean) => {
     setOnlyTokenList(checked);

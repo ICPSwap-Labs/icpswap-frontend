@@ -245,7 +245,7 @@ export function usePool(
 }
 
 export function useTokenSwapPools(tokens: string[] | undefined) {
-  const { result: allPools } = useSwapPools();
+  const { data: allPools } = useSwapPools();
 
   return useMemo(() => {
     if (!tokens || !allPools) return undefined;

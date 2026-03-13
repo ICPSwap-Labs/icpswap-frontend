@@ -1,8 +1,6 @@
-import { useCallback } from "react";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 interface SubnetRateResult {
   block_rate: Array<[number, string]>;
@@ -12,9 +10,12 @@ interface UseSubtetBlockRateProps {
   subnet: string | Null;
 }
 
-export function useSubnetBlockRate({ subnet }: UseSubtetBlockRateProps) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSubnetBlockRate({
+  subnet,
+}: UseSubtetBlockRateProps): UseQueryResult<SubnetRateResult | null | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSubnetBlockRate", subnet],
+    queryFn: async () => {
       if (isUndefinedOrNull(subnet)) return null;
 
       const fetch_result = await fetch(
@@ -24,6 +25,7 @@ export function useSubnetBlockRate({ subnet }: UseSubtetBlockRateProps) {
       if (!fetch_result) return undefined;
 
       return (await fetch_result.json()) as SubnetRateResult;
-    }, [subnet]),
-  );
+    },
+    enabled: !isUndefinedOrNull(subnet),
+  });
 }

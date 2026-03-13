@@ -1,9 +1,7 @@
-import { useCallback } from "react";
-import { isPrincipal, isValidPrincipal } from "@icpswap/utils";
+import { isPrincipal, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import { Principal } from "@icp-sdk/core/principal";
-
-import { useCallsData } from "../useCallData";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 export interface GetTokenBalanceArgs {
   canisterId: string;
@@ -34,19 +32,20 @@ export interface UserTokenBalanceArgs {
   canisterId: string | undefined;
   address: string | Principal | undefined;
   sub?: Uint8Array;
-  refresh?: boolean | number;
 }
 
-export function useTokenBalance({ canisterId, address, sub, refresh }: UserTokenBalanceArgs): {
-  result: string | undefined;
-  loading: boolean;
-} {
-  return useCallsData<string | undefined>(
-    useCallback(async () => {
+export function useTokenBalance({
+  canisterId,
+  address,
+  sub,
+}: UserTokenBalanceArgs): UseQueryResult<string | undefined, Error> {
+  return useQuery({
+    queryKey: ["tokenBalance", canisterId, sub],
+    queryFn: async () => {
       if (!address || !canisterId) return undefined;
       const balance = await getTokenBalance({ canisterId, sub, address });
       return balance === undefined ? undefined : balance.toString();
-    }, [address, canisterId, sub]),
-    refresh,
-  );
+    },
+    enabled: nonUndefinedOrNull(address) && nonUndefinedOrNull(canisterId),
+  });
 }

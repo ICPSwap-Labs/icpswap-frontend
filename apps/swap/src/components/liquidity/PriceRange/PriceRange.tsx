@@ -119,7 +119,7 @@ export const PriceRange = memo(
     const { t } = useTranslation();
     const theme = useTheme();
     const classes = useSetPriceStyle();
-    const { result: periodPriceRange } = usePoolPricePeriodRange(pool?.id);
+    const { data: periodPriceRange } = usePoolPricePeriodRange(pool?.id);
 
     const [chartTime, setChartTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
     const [fullRangeWaring, setFullRangeWarning] = useState(false);

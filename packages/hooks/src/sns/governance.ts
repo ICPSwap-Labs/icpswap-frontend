@@ -1,5 +1,4 @@
 import { sns_governance } from "@icpswap/actor";
-import { useCallback } from "react";
 import { optionalArg, resultFormat } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
 import type {
@@ -11,7 +10,7 @@ import type {
   ManageNeuronResponse,
   ListNervousSystemFunctionsResponse,
 } from "@icpswap/types";
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { neuronOperationCommand } from "./neuronCommand";
 
 export async function getNeuron(canisterId: string, neuron_id: Uint8Array | number[]) {
@@ -32,14 +31,15 @@ export function useNeuron(
   governance_id: string | undefined,
   neuron_id: Uint8Array | number[] | undefined,
   refresh?: number,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<Neuron | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNeuron", governance_id, neuron_id, refresh],
+    queryFn: async () => {
       if (!governance_id || !neuron_id) return undefined;
       return await getNeuron(governance_id, neuron_id);
-    }, [governance_id, neuron_id]),
-    refresh,
-  );
+    },
+    enabled: !!governance_id && !!neuron_id,
+  });
 }
 
 export interface GetListNeuronsArgs {
@@ -69,14 +69,21 @@ export interface UseListNeuronsArgs {
   refresh?: boolean | number;
 }
 
-export function useListNeurons({ canisterId, of_principal, limit, start_page_at, refresh }: UseListNeuronsArgs) {
-  return useCallsData(
-    useCallback(async () => {
+export function useListNeurons({
+  canisterId,
+  of_principal,
+  limit,
+  start_page_at,
+  refresh,
+}: UseListNeuronsArgs): UseQueryResult<ListNeuronsResponse["neurons"] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useListNeurons", canisterId, of_principal, limit, start_page_at, refresh],
+    queryFn: async () => {
       if (!canisterId || !of_principal) return undefined;
       return await getListNeurons({ canisterId, of_principal, limit, start_page_at });
-    }, [canisterId, of_principal, limit, start_page_at]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId && !!of_principal,
+  });
 }
 
 export async function getNervousSystemParameters(governance_id: string) {
@@ -85,13 +92,17 @@ export async function getNervousSystemParameters(governance_id: string) {
   ).data;
 }
 
-export function useNervousSystemParameters(governance_id: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNervousSystemParameters(
+  governance_id: string | undefined,
+): UseQueryResult<NervousSystemParameters | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNervousSystemParameters", governance_id],
+    queryFn: async () => {
       if (!governance_id) return undefined;
       return await getNervousSystemParameters(governance_id);
-    }, [governance_id]),
-  );
+    },
+    enabled: !!governance_id,
+  });
 }
 
 export async function getNeuronSystemFunctions(governance_id: string) {
@@ -100,13 +111,17 @@ export async function getNeuronSystemFunctions(governance_id: string) {
   ).data;
 }
 
-export function useNeuronSystemFunctions(governance_id: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNeuronSystemFunctions(
+  governance_id: string | undefined,
+): UseQueryResult<ListNervousSystemFunctionsResponse | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNeuronSystemFunctions", governance_id],
+    queryFn: async () => {
       if (!governance_id) return undefined;
       return await getNeuronSystemFunctions(governance_id);
-    }, [governance_id]),
-  );
+    },
+    enabled: !!governance_id,
+  });
 }
 
 export async function splitNeuron(

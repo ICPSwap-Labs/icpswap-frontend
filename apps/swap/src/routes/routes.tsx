@@ -11,7 +11,7 @@ import { routeConfigs } from "./config";
 export function routes() {
   const location = useLocation();
 
-  const { result: __maintenancePages } = useSettingMaintenance();
+  const { data: __maintenancePages } = useSettingMaintenance();
 
   const maintenancePages = useMemo(() => {
     if (isUndefinedOrNull(__maintenancePages)) return [];

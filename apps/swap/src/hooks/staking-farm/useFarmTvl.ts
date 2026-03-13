@@ -7,7 +7,7 @@ import { useToken, useUSDPrice } from "hooks/index";
 export function useFarmTvl(farmId: string) {
   const icpPrice = useICPPrice();
 
-  const { result: farmTvl } = useFarmTVL(farmId);
+  const { data: farmTvl } = useFarmTVL(farmId);
 
   const [, token0] = useToken(farmTvl?.poolToken0.address);
   const [, token1] = useToken(farmTvl?.poolToken1.address);

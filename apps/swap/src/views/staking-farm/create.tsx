@@ -126,7 +126,7 @@ export default function CreateProject() {
   }, [values.rewardToken, values.rewardStandard]);
 
   const [, rewardToken] = useToken(tokenId);
-  const { result: poolMetadata } = useSwapPoolMetadata(values.pool);
+  const { data: poolMetadata } = useSwapPoolMetadata(values.pool);
   const [, poolToken0] = useToken(poolMetadata?.token0.address);
   const [, poolToken1] = useToken(poolMetadata?.token1.address);
 

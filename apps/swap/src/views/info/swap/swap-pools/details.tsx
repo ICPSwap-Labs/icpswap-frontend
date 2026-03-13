@@ -75,7 +75,7 @@ export default function SwapPoolDetails() {
 
   const [tab, setTab] = useState<TabValue>(TabValue.Transactions);
 
-  const { result: pool } = useInfoPool(canisterId);
+  const { data: pool } = useInfoPool(canisterId);
   const [, token0] = useToken(pool?.token0LedgerId);
   const [, token1] = useToken(pool?.token1LedgerId);
 

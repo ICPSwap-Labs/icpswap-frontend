@@ -71,14 +71,14 @@ export function useBestTrade(
 
   const available = useSwapPoolAvailable(pool?.id);
 
-  const { loading: exactInputLoading, result: _quotesResults } = useQuoteExactInput(params);
+  const { isLoading: exactInputLoading, data: _quotesResults } = useQuoteExactInput(params);
 
   const quotesResults = useMemo(() => {
     if (_quotesResults) {
       return [{ amountOut: `0x${new BigNumber(String(_quotesResults)).toString(16)}` }];
     }
     return [];
-  }, [_quotesResults, exactInputLoading]);
+  }, [_quotesResults]);
 
   return useMemo(() => {
     if (

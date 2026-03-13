@@ -236,9 +236,9 @@ export default function AddLiquidity() {
     setConfirmModalShow(true);
   }, []);
 
-  const { result: pcmMetadata } = usePCMMetadata();
-  const { result: userPCMBalance } = useUserPCMBalance(principal);
-  const { result: installers } = useSwapInstallers();
+  const { data: pcmMetadata } = usePCMMetadata();
+  const { data: userPCMBalance } = useUserPCMBalance(principal);
+  const { data: installers } = useSwapInstallers();
 
   const [, pcmToken] = useToken(pcmMetadata?.tokenCid.toString());
   const getAddLiquidityCall = useAddLiquidityCall();

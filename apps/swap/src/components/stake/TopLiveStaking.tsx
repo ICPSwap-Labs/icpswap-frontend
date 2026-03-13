@@ -164,7 +164,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
 
 export function TopLiveStaking() {
   const { t } = useTranslation();
-  const { result: allLivePools, loading } = useStakingPools(getStateValue(StakingState.LIVE), 0, 100);
+  const { data: allLivePools, isLoading: loading } = useStakingPools(getStateValue(StakingState.LIVE), 0, 100);
 
   const topLivePools = useMemo(() => {
     if (!allLivePools) return undefined;

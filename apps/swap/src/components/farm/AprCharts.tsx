@@ -22,7 +22,7 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
   const [value, setValue] = useState<null | number>(null);
   const [label, setLabel] = useState<null | string>(null);
 
-  const { result: aprCharts } = useFarmAprCharts(farmId);
+  const { data: aprCharts } = useFarmAprCharts(farmId);
 
   const chartData = useMemo(() => {
     if (!aprCharts) return undefined;

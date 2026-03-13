@@ -1,20 +1,27 @@
-import { useCallback } from "react";
 import { passCodeManager } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
-import { useCallsData } from "../useCallData";
-
-export function usePCMMetadata() {
-  return useCallsData(
-    useCallback(async () => {
+export function usePCMMetadata(): UseQueryResult<
+  | {
+      passcodePrice: bigint;
+      tokenCid: Principal;
+      factoryCid: Principal;
+    }
+  | undefined,
+  Error
+> {
+  return useQuery({
+    queryKey: ["usePCMMetadata"],
+    queryFn: async () => {
       return resultFormat<{
         passcodePrice: bigint;
         tokenCid: Principal;
         factoryCid: Principal;
       }>(await (await passCodeManager()).metadata()).data;
-    }, []),
-  );
+    },
+  });
 }
 
 export async function requestPassCode(token0: Principal, token1: Principal, fee: bigint) {
@@ -36,12 +43,16 @@ export async function destroyPassCode(token0: string, token1: string, fee: bigin
   return resultFormat<string>(result);
 }
 
-export function useUserPCMBalance(principal: Principal | undefined, reload?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserPCMBalance(
+  principal: Principal | undefined,
+  reload?: number,
+): UseQueryResult<bigint | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserPCMBalance", principal?.toString(), reload],
+    queryFn: async () => {
       if (!principal) return undefined;
       return resultFormat<bigint>(await (await passCodeManager()).balanceOf(principal)).data;
-    }, [principal]),
-    reload,
-  );
+    },
+    enabled: !!principal,
+  });
 }

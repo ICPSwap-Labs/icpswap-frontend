@@ -58,7 +58,7 @@ export function useBalanceMaxSpend({ token, balance, poolId, allowance: __allowa
     return isUseTransfer(token) ? undefined : token.address;
   }, [token, __allowance]);
 
-  const { result: allowance } = useAllowance({ canisterId: allowanceCanisterId, owner: principal, spender: poolId });
+  const { data: allowance } = useAllowance({ canisterId: allowanceCanisterId, owner: principal, spender: poolId });
 
   return useMemo(() => {
     if (isUndefinedOrNull(balance) || isUndefinedOrNull(token)) return undefined;

@@ -23,7 +23,7 @@ export function PositionTransactionsTable({
 
   const poolIds = useMemo(() => (poolId ? [poolId] : []), [poolId]);
 
-  const { loading, result } = usePositionTransactions(poolIds, principal, offset, pagination.pageSize);
+  const { isLoading: loading, data: result } = usePositionTransactions(poolIds, principal, offset, pagination.pageSize);
 
   const transactions = result?.content;
   const totalElements = result?.totalElements;

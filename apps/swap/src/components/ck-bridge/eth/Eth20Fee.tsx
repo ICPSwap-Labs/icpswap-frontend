@@ -17,7 +17,7 @@ export function EthFee() {
   const navigate = useNavigate();
 
   const { result: ckETHBalance } = useTokenBalance({ tokenId: ckETH.address, account: principal?.toString() });
-  const { result: transactionPrice } = useChainKeyTransactionPrice(MINTER_CANISTER_ID);
+  const { data: transactionPrice } = useChainKeyTransactionPrice(MINTER_CANISTER_ID);
   const ckETHInfoToken = useInfoToken(ckETH.address);
 
   const handleBuy = useCallback(() => {

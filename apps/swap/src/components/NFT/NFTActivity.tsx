@@ -36,7 +36,7 @@ export default function NFTActivity({
     setPagination({ pageNum: 1, pageSize: 10 });
   }, [reload, setPagination]);
 
-  const { loading, result } = useTradeTxList(canisterId, null, tokenId, offset, pagination.pageSize, "time", true);
+  const { isLoading: loading, data: result } = useTradeTxList(canisterId, null, tokenId, offset, pagination.pageSize, "time", true);
   const { totalElements, content } = result ?? { totalElements: 0, content: [] as TxRecord[] };
 
   const onPageChange = useCallback(

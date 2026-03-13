@@ -11,7 +11,7 @@ export interface UseFarmTvlValueArgs {
 
 export function useFarmTvlValue({ farmId, token0, token1 }: UseFarmTvlValueArgs) {
   const infoAllTokens = useInfoAllTokens();
-  const { result: farmTvl } = useFarmTVL(farmId);
+  const { data: farmTvl } = useFarmTVL(farmId);
 
   return useMemo(() => {
     if (!farmTvl || !infoAllTokens || !token0 || !token1) return undefined;

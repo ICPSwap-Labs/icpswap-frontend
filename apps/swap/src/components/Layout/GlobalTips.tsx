@@ -8,7 +8,7 @@ export function GlobalTips() {
   const [globalTipsContent, setGlobalTipsContent] = useState<string | undefined>(undefined);
   const [globalTipsLink, setGlobalTipsLink] = useState<string | undefined>(undefined);
 
-  const { result: globalTips } = useSettingGlobalTips();
+  const { data: globalTips } = useSettingGlobalTips();
 
   useEffect(() => {
     if (globalTips) {

@@ -62,7 +62,7 @@ export function BalanceConvert() {
     setPages(WalletManagerPage.Index);
   }, [setPages]);
 
-  const { result, loading } = useSmallBalanceTokens();
+  const { result: result, loading } = useSmallBalanceTokens();
 
   const smallBalances = useMemo(() => {
     if (isUndefinedOrNull(result)) return undefined;

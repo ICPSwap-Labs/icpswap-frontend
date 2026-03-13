@@ -3,7 +3,7 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { ICP } from "@icpswap/tokens";
 import { parseTokenAmount, formatDollarAmount, BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Flex, MainCard, TokenImage, Proportion } from "@icpswap/ui";
-import { useICPBlocksManager } from "hooks/useICBlocks";
+import { useIcpBlocks } from "hooks/useICBlocks";
 import { useTokenSupply } from "hooks/token/calls";
 import { useICP2CyclesManager } from "store/global/hooks";
 import { useTokenAnalysis, useInfoToken } from "@icpswap/hooks";
@@ -14,12 +14,14 @@ export function Icp() {
   const theme = useTheme();
 
   const icpTokenInfo = useInfoToken(ICP.address);
-  const { result: icpTotalSupply } = useTokenSupply(ICP.address);
-  const { result: tokenAnalysis } = useTokenAnalysis(ICP.address);
+  const { data: icpTotalSupply } = useTokenSupply(ICP.address);
+  const { data: tokenAnalysis } = useTokenAnalysis(ICP.address);
 
   const icpToCycles = useICP2CyclesManager();
 
-  const { blocks, secondBlocks } = useICPBlocksManager();
+  const { data: blocksData } = useIcpBlocks();
+  const blocks = blocksData?.blocks;
+  const secondBlocks = blocksData?.secondBlocks;
 
   const fdv = useMemo(() => {
     if (isUndefinedOrNull(icpTotalSupply) || isUndefinedOrNull(icpTokenInfo)) return null;

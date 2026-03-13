@@ -1,21 +1,19 @@
-import { useCallback } from "react";
 import { addressBook } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
-import { AddressBook, ResultStatus } from "@icpswap/types";
-
-import { useCallsData } from "./useCallData";
+import { type AddressBook, ResultStatus } from "@icpswap/types";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function getAddressBook() {
   return resultFormat<Array<AddressBook>>(await (await addressBook(true)).get()).data;
 }
 
-export function useAddressBook(refresh?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useAddressBook(refresh?: number): UseQueryResult<AddressBook[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useAddressBook", refresh],
+    queryFn: async () => {
       return await getAddressBook();
-    }, []),
-    refresh,
-  );
+    },
+  });
 }
 
 export async function addAddressBook(name: string, address: string) {

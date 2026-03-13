@@ -52,8 +52,8 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
     setExpanded(!expanded);
   };
 
-  const { result: cycles } = useStakingPoolCycles(poolId);
-  const { result: stakingPoolUserInfo } = useStakingPoolUserInfo(poolId, 0, 1);
+  const { data: cycles } = useStakingPoolCycles(poolId);
+  const { data: stakingPoolUserInfo } = useStakingPoolUserInfo(poolId, 0, 1);
 
   const totalStaker = useMemo(() => {
     return stakingPoolUserInfo?.totalElements;

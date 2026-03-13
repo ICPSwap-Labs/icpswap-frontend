@@ -31,9 +31,9 @@ function PoolItem({ farmId }: PoolItemProps) {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  const { result: farmInfo, loading } = useFarmInfo(farmId);
+  const { data: farmInfo, isLoading: loading } = useFarmInfo(farmId);
 
-  const { result: swapPool } = useSwapPoolMetadata(farmInfo?.pool.toString());
+  const { data: swapPool } = useSwapPoolMetadata(farmInfo?.pool.toString());
   const [, token0] = useToken(swapPool?.token0.address);
   const [, token1] = useToken(swapPool?.token1.address);
   const [, rewardToken] = useToken(farmInfo?.rewardToken.address);
@@ -127,7 +127,7 @@ export function FarmPools() {
   const { t } = useTranslation();
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const { result: allFarms, loading } = useAllFarms();
+  const { data: allFarms, isLoading: loading } = useAllFarms();
 
   const handlePageChange = (page: number) => {
     setPagination({ pageNum: page, pageSize: 10 });

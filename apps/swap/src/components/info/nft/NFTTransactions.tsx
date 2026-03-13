@@ -31,7 +31,7 @@ export function NFTTransactions({ canisterId, tokenId }: NFTTransactionProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset, limit] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useNFTTransactions({
+  const { data: result, isLoading: loading } = useNFTTransactions({
     canisterId,
     tokenIdentifier: encodeTokenIdentifier(canisterId, tokenId),
     offset,

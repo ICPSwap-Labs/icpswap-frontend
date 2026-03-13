@@ -18,13 +18,13 @@ export function UserRewardsCell({ farmId, initArgs, farmInfo }: UserRewardsCellP
   const principal = useAccountPrincipal();
 
   const [, rewardToken] = useToken(farmInfo?.rewardToken.address);
-  const { result: deposits } = useFarmUserPositions(farmId, principal?.toString());
+  const { data: deposits } = useFarmUserPositions(farmId, principal?.toString());
 
   const positionIds = useMemo(() => {
     return deposits?.map((position) => position.positionId) ?? [];
   }, [deposits]);
 
-  const { result: userFarmRewardAmount } = useV3UserFarmRewardInfo(farmId, positionIds);
+  const { data: userFarmRewardAmount } = useV3UserFarmRewardInfo(farmId, positionIds);
 
   const userRewardAmount = useMemo(() => {
     if (!initArgs || userFarmRewardAmount === undefined || !rewardToken) return undefined;

@@ -26,7 +26,7 @@ export function usePendingRewards(refresh?: number | boolean) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<UserPendingRewards[]>([]);
 
-  const { result } = useStakingPools(getStateValue(STATE.LIVE), 0, 100);
+  const { data: result } = useStakingPools(getStateValue(STATE.LIVE), 0, 100);
 
   useEffect(() => {
     stake_pending_reward_fetch_index++;

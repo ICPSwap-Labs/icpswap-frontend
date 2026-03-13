@@ -87,7 +87,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
   const [loading, setLoading] = useState(false);
   const [balances, setBalances] = useState<(UserSwapPoolsBalance | null)[]>([]);
 
-  const { result: pools, loading: poolsLoading } = useSwapPools();
+  const { data: pools, isLoading: poolsLoading } = useSwapPools();
 
   useEffect(() => {
     if (balances.length === pools?.length && pools?.length !== 0) {

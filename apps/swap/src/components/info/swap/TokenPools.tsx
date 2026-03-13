@@ -78,8 +78,8 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
 
   const [page, setPage] = useState(1);
 
-  const { result: tokenList } = useTokensFromList();
-  const { result: tokenPools, loading } = useInfoTokenPools(canisterId);
+  const { data: tokenList } = useTokensFromList();
+  const { data: tokenPools, isLoading: loading } = useInfoTokenPools(canisterId);
 
   const allPoolsOfToken = useMemo(() => {
     if (!tokenPools || !tokenList) return undefined;

@@ -79,7 +79,7 @@ export function PositionRow({
     return CurrencyAmount.fromRawAmount(token1, numberToString(new BigNumber(feeAmount1.toString())));
   }, [feeAmount1, token1]);
 
-  const { result: owner } = useSwapPositionOwner(positionInfo.poolId, positionInfo.id);
+  const { data: owner } = useSwapPositionOwner(positionInfo.poolId, positionInfo.id);
 
   const isSneed = useIsSneedOwner({ owner, sneedLedger });
 
@@ -88,7 +88,7 @@ export function PositionRow({
     return allLimitOrders.includes(BigInt(positionInfo.id));
   }, [allLimitOrders, positionInfo]);
 
-  const { result: addressAlias } = useAddressAlias({ account: owner });
+  const { data: addressAlias } = useAddressAlias({ account: owner });
 
   return (
     <>

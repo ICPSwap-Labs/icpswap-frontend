@@ -28,7 +28,7 @@ export function HistoryList() {
     return now - 60 * 24 * 3600;
   }, []);
 
-  const { result: limitTransactionsResult, loading } = useUserLimitTransactions(
+  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions(
     principal?.toString(),
     start_time,
     0,

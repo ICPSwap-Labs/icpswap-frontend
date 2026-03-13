@@ -163,7 +163,7 @@ export function ViewAllArrow() {
 
 export function Collection({ collection }: { collection: NFTControllerInfo }) {
   const classes = useStyles();
-  const { result: metadata } = useCanisterMetadata(collection.cid);
+  const { data: metadata } = useCanisterMetadata(collection.cid);
 
   return (
     <Box className={`${classes.collection} collection`}>
@@ -195,7 +195,7 @@ export default function MarketCarousel() {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { result } = useMarketplaceRecommendCanisters(0, 100);
+  const { data: result } = useMarketplaceRecommendCanisters(0, 100);
 
   const collections = useMemo(() => {
     if (result && result.content) return result.content;

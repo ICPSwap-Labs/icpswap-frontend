@@ -41,10 +41,10 @@ export function TokenDetail() {
   const [, token] = useToken(canisterId);
 
   const icpPrice = useICPPrice();
-  const { result: tokenSupply } = useTokenSupply(canisterId);
-  const { result: tokenAnalysis } = useTokenAnalysis(canisterId);
-  const { result: canisterInfo } = useCanisterInfo(canisterId);
-  const { result: tokenListInfo } = useTokenListTokenInfo(canisterId);
+  const { data: tokenSupply } = useTokenSupply(canisterId);
+  const { data: tokenAnalysis } = useTokenAnalysis(canisterId);
+  const { data: canisterInfo } = useCanisterInfo(canisterId);
+  const { data: tokenListInfo } = useTokenListTokenInfo(canisterId);
 
   const marketCap = useMemo(() => {
     if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(infoToken)) {

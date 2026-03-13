@@ -385,12 +385,12 @@ export function useMintInfo(
     tickUpper,
   ]);
 
-  const { result: tokenAAllowance } = useAllowance({
+  const { data: tokenAAllowance } = useAllowance({
     canisterId: tokenA?.address,
     spender: poolId,
     owner: principal?.toString(),
   });
-  const { result: tokenBAllowance } = useAllowance({
+  const { data: tokenBAllowance } = useAllowance({
     canisterId: tokenB?.address,
     spender: poolId,
     owner: principal?.toString(),

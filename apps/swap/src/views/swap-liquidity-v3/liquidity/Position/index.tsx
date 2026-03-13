@@ -24,7 +24,7 @@ export default function PositionDetails() {
   const { positionId, pool: poolId } = useParams() as { positionId: string; pool: string };
   const [refreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
-  const { result: positionDetails } = usePositionDetailsFromId(poolId, positionId);
+  const { data: positionDetails } = usePositionDetailsFromId(poolId, positionId);
   const { position } = usePosition({
     poolId,
     tickLower: positionDetails?.tickLower,
@@ -38,7 +38,7 @@ export default function PositionDetails() {
 
   const loadAddLiquidity = useLoadAddLiquidityCallback({ token0, token1 });
 
-  const { result: owner } = useSwapPositionOwner(position?.pool.id, BigInt(positionId), refreshTrigger);
+  const { data: owner } = useSwapPositionOwner(position?.pool.id, BigInt(positionId), refreshTrigger);
 
   const isOwner = useMemo(() => {
     if (!owner || !principal) return false;

@@ -36,7 +36,7 @@ export default function TopUpCanister({
   const [amount, setAmount] = useState<number | string>("");
   const principal = useAccountPrincipal();
   const ICP2Cycles = useICP2CyclesManager();
-  const { result: ICPBalance } = useTokenBalance({ canisterId: ICP_TOKEN_INFO.canisterId, address: principal });
+  const { data: ICPBalance } = useTokenBalance({ canisterId: ICP_TOKEN_INFO.canisterId, address: principal });
   const [openFullscreenLoading, closeFullscreenLoading] = useFullscreenLoading();
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();

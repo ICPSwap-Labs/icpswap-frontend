@@ -35,7 +35,7 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
     };
   }, [token0, token1, feeAmount]);
 
-  const { result: poolData } = useSwapPool(args);
+  const { data: poolData } = useSwapPool(args);
 
   const id = useMemo(() => {
     if (!poolData) return undefined;
@@ -77,7 +77,7 @@ export function useTicksSurroundingPrice(
   const [, token0] = useToken(_token0?.address);
   const [, token1] = useToken(_token1?.address);
 
-  const { result: initializedTicks, loading } = useAllTicks(token0, token1, Number(feeTier));
+  const { data: initializedTicks, isLoading: loading } = useAllTicks(token0, token1, Number(feeTier));
 
   if (!token0 || !token1 || !initializedTicks) return { loading: false, data: undefined };
 

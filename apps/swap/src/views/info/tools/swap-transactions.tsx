@@ -51,7 +51,7 @@ export default function SwapTransactions() {
   );
   const [endTime, setEndTime] = useState<undefined | number>(now);
 
-  const { result, loading } = useSwapTransactions({
+  const { data: result, isLoading: loading } = useSwapTransactions({
     principal,
     poolId: pair,
     page: pagination.pageNum,

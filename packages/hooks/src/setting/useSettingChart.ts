@@ -1,7 +1,5 @@
-import { useCallback } from "react";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { setting } from "@icpswap/actor";
-
-import { useCallsData } from "../useCallData";
 
 export async function getGlobalSettingChart() {
   const result = await (await setting()).get_default_chart_type();
@@ -9,10 +7,9 @@ export async function getGlobalSettingChart() {
   return undefined;
 }
 
-export function useGlobalSettingChart() {
-  return useCallsData(
-    useCallback(async () => {
-      return await getGlobalSettingChart();
-    }, []),
-  );
+export function useGlobalSettingChart(): UseQueryResult<string | undefined, Error> {
+  return useQuery({
+    queryKey: ["useGlobalSettingChart"],
+    queryFn: () => getGlobalSettingChart(),
+  });
 }

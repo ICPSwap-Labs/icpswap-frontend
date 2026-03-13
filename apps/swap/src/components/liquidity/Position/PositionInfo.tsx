@@ -48,7 +48,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     return [position.pool.token0.address, position.pool.token1.address];
   }, [position.pool]);
 
-  const { result: positionChartData } = usePositionAPRChartData(position.pool.id, BigInt(positionId));
+  const { data: positionChartData } = usePositionAPRChartData(position.pool.id, BigInt(positionId));
   const availableFarmsForPool = useAvailableFarmsForPool({ poolId: position.pool.id });
   // TODO Multiple farms for this pool
   const farmId = useMemo(() => {
@@ -89,7 +89,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     return !!farmId && isStakedByOwner === false;
   }, [farmId, isStakedByOwner]);
 
-  const { result: addressAlias } = useAddressAlias({
+  const { data: addressAlias } = useAddressAlias({
     account: owner ? (isValidAccount(owner) ? owner : null) : null,
     principal: owner ? (isValidPrincipal(owner) ? owner : null) : null,
   });

@@ -327,8 +327,8 @@ export function InfoPools() {
   const [timeBase, setTimeBase] = useState<"24H" | "7D">("24H");
   const [debounceSearchToken, debounceSetSearchToken] = useDebouncedChangeHandler(searchToken, setSearchToken, 300);
 
-  const { result: tokenList } = useTokensFromList();
-  const { result: allSwapPools } = useNodeInfoAllPools();
+  const { data: tokenList } = useTokensFromList();
+  const { data: allSwapPools } = useNodeInfoAllPools();
 
   const allPools = useMemo(() => {
     if (!allSwapPools || !tokenList) return undefined;

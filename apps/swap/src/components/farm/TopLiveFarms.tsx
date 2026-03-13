@@ -30,12 +30,12 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   const navigate = useNavigate();
 
   const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
-  const { result: farmInitArgs } = useFarmInitArgs(farmId);
-  const { result: userAllPositions } = useSwapUserPositions(userFarmInfo?.pool.toString(), principal?.toString());
+  const { data: farmInitArgs } = useFarmInitArgs(farmId);
+  const { data: userAllPositions } = useSwapUserPositions(userFarmInfo?.pool.toString(), principal?.toString());
   const [, token0] = useToken(userFarmInfo?.poolToken0.address);
   const [, token1] = useToken(userFarmInfo?.poolToken1.address);
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address);
-  const { result: poolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
+  const { data: poolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !farmInitArgs || !poolMetadata) return undefined;
@@ -63,7 +63,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
     farmId,
   });
 
-  const { result: rewardMetadata } = useV3FarmRewardMetadata(farmId);
+  const { data: rewardMetadata } = useV3FarmRewardMetadata(farmId);
 
   const apr = useFarmApr({
     farmTvlValue,
@@ -199,7 +199,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
 
 function MainContent() {
   const { t } = useTranslation();
-  const { result: allLiveFarms, loading } = useFarmsByState("LIVE");
+  const { data: allLiveFarms, isLoading: loading } = useFarmsByState("LIVE");
 
   const topLiveFarms = useMemo(() => {
     if (!allLiveFarms) return undefined;

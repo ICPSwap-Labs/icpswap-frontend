@@ -135,7 +135,7 @@ function useStakeCalls({ token, poolId }: UseStakeCallsProps) {
     return isUseTransfer(token) ? undefined : token.address;
   }, [token]);
 
-  const { result: allowance } = useAllowance({
+  const { data: allowance } = useAllowance({
     canisterId: allowanceTokenId,
     spender: poolId,
     owner: principal?.toString(),

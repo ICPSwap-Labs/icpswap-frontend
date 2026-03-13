@@ -24,8 +24,8 @@ export function useFarmUserAllPositions() {
       }[]
   >(null);
 
-  const { result: userPositionsPools } = useUserPositionPools(account);
-  const { result: farms } = useLiveFarmsByPoolIds(userPositionsPools);
+  const { data: userPositionsPools } = useUserPositionPools(account);
+  const { data: farms } = useLiveFarmsByPoolIds(userPositionsPools);
 
   useEffect(() => {
     async function call() {

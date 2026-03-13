@@ -42,9 +42,9 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
 
   const { reload, setReload } = useContext(LaunchContext);
 
-  const { result: swap_life_cycle_result } = useSwapLifeCycle(swap_id);
-  const { result: swap_derived_state } = useSNSSwapDerivedState(swap_id, reload);
-  const { result: buyer_state_result } = useSNSBuyerState(swap_id, principal?.toString(), reload);
+  const { data: swap_life_cycle_result } = useSwapLifeCycle(swap_id);
+  const { data: swap_derived_state } = useSNSSwapDerivedState(swap_id, reload);
+  const { data: buyer_state_result } = useSNSBuyerState(swap_id, principal?.toString(), reload);
 
   const bought_amount = useMemo(() => {
     if (!buyer_state_result) return undefined;
@@ -150,7 +150,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
     };
   }, [swap_derived_state, saleParameters]);
 
-  const { result: location_code } = useIpLocationCode();
+  const { data: location_code } = useIpLocationCode();
   const connector = useConnector();
 
   const handleParticipate = async () => {

@@ -1,14 +1,16 @@
-import { useCallback } from "react";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { icpswap_fetch_get } from "@icpswap/utils";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
-import { useCallsData } from "../useCallData";
-
-export function useLiquidityChartPriceRange(poolId: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useLiquidityChartPriceRange(
+  poolId: string | Null,
+): UseQueryResult<{ minPrice: string; maxPrice: string } | undefined, Error> {
+  return useQuery({
+    queryKey: ["useLiquidityChartPriceRange", poolId],
+    queryFn: async () => {
       if (!poolId) return undefined;
       return (await icpswap_fetch_get<{ minPrice: string; maxPrice: string }>(`/pool/price/recommend/${poolId}`))?.data;
-    }, [poolId]),
-  );
+    },
+    enabled: !!poolId,
+  });
 }

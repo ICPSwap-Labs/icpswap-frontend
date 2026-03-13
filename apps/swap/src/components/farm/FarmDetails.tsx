@@ -63,7 +63,7 @@ export function FarmDetails({
 
   const [expanded, setExpanded] = React.useState(false);
 
-  const { result: farmInitArgs } = useFarmInitArgs(farmId);
+  const { data: farmInitArgs } = useFarmInitArgs(farmId);
 
   const state = useFarmState(farmInfo);
 
@@ -71,7 +71,7 @@ export function FarmDetails({
     setExpanded(!expanded);
   };
 
-  const { result: cycles } = useFarmCycles(farmId);
+  const { data: cycles } = useFarmCycles(farmId);
 
   return (
     <Box mt="8px">

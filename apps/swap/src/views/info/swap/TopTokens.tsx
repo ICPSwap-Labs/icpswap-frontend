@@ -14,9 +14,9 @@ export default function TopTokens() {
   const [search, setSearch] = useState<null | string>(null);
   const [onlyTokenList, setOnlyTokenList] = useState(true);
 
-  const { result: allTokens, loading } = useNodeInfoAllTokens();
+  const { data: allTokens, isLoading: loading } = useNodeInfoAllTokens();
 
-  const { result: tokenList } = useTokensFromList();
+  const { data: tokenList } = useTokensFromList();
 
   const handleCheckChange = (checked: boolean) => {
     setOnlyTokenList(checked);

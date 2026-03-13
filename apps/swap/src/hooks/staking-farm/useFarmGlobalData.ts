@@ -15,11 +15,11 @@ export function useFarmGlobalData() {
   const [stakedTokenTVL, setStakedTokenTVL] = useState("0");
   const [rewardedTokenTVL, setRewardedTokenTVL] = useState("0");
 
-  const { result: farmTotalAmount } = useFarmTotalAmount();
+  const { data: farmTotalAmount } = useFarmTotalAmount();
 
-  const { result: allLiveFarmsInfos } = useFarmRewardInfos("LIVE", refreshTrigger);
-  const { result: allFinishedFarmsInfos } = useFarmRewardInfos("FINISHED", refreshTrigger);
-  const { result: allClosedFarmsInfos } = useFarmRewardInfos("CLOSED", refreshTrigger);
+  const { data: allLiveFarmsInfos } = useFarmRewardInfos("LIVE", refreshTrigger);
+  const { data: allFinishedFarmsInfos } = useFarmRewardInfos("FINISHED", refreshTrigger);
+  const { data: allClosedFarmsInfos } = useFarmRewardInfos("CLOSED", refreshTrigger);
 
   const { positionAmount, positionsValue } = useFarmUserAllPositions();
   const { tvl: stakedTvl, farms: stakedFarms } = useUserStakedPositions();

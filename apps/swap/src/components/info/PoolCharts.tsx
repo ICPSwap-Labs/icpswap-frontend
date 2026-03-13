@@ -34,7 +34,7 @@ export function PoolCharts({ canisterId, token0Price, volume24H }: PoolChartProp
   const [aprTime, setAPRTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
   const [chartView, setChartView] = useState<ChartView>(ChartView.APR);
 
-  const { result: poolChartsResult, loading } = usePoolCharts({
+  const { data: poolChartsResult, isLoading: loading } = usePoolCharts({
     poolId: canisterId,
     level: "d1",
     page: 1,

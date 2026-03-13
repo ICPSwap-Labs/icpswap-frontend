@@ -1,6 +1,4 @@
-import { useCallback } from "react";
-
-import { useCallsData } from "./useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export type ipLocationResult = {
   ip: string;
@@ -9,14 +7,15 @@ export type ipLocationResult = {
   response_message: string;
 };
 
-export function useIpLocation() {
-  return useCallsData(
-    useCallback(async () => {
+export function useIpLocation(): UseQueryResult<ipLocationResult | undefined, Error> {
+  return useQuery({
+    queryKey: ["useIpLocation"],
+    queryFn: async () => {
       const fetch_result = await fetch("https://api.iplocation.net/?cmd=get-ip").catch(() => undefined);
       if (!fetch_result) return undefined;
       return (await fetch_result.json()) as ipLocationResult;
-    }, []),
-  );
+    },
+  });
 }
 
 export type ipLocationCodeResult = {
@@ -30,11 +29,12 @@ export type ipLocationCodeResult = {
   response_message: string;
 };
 
-export function useIpLocationCode() {
-  const { result: ipLocation } = useIpLocation();
+export function useIpLocationCode(): UseQueryResult<string | undefined, Error> {
+  const { data: ipLocation } = useIpLocation();
 
-  return useCallsData(
-    useCallback(async () => {
+  return useQuery({
+    queryKey: ["useIpLocationCode", ipLocation],
+    queryFn: async () => {
       if (!ipLocation || !ipLocation.ip) return undefined;
 
       const fetch_result = await fetch(`https://api.iplocation.net/?cmd=ip-country&ip=${ipLocation.ip}`).catch(
@@ -50,6 +50,7 @@ export function useIpLocationCode() {
       }
 
       return undefined;
-    }, [ipLocation]),
-  );
+    },
+    enabled: !!ipLocation?.ip,
+  });
 }

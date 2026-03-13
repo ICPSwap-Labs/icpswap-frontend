@@ -197,7 +197,7 @@ export function useInitialUserPositionPools() {
 
   const [initialLoading, setInitialLoading] = useState(true);
 
-  const { result: positionPools, loading } = useUserPositionPools(account);
+  const { data: positionPools, isLoading: loading } = useUserPositionPools(account);
 
   useEffect(() => {
     if (positionPools) {

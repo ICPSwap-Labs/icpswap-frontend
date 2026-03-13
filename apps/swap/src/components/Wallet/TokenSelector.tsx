@@ -106,7 +106,7 @@ interface TokenListProps {
 function TokenList({ search }: TokenListProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger] = useRefreshTriggerManager(WALLET_TOKEN_SELECTOR_REFRESH);
-  const { result: addressOverview, loading } = useAddressOverview(principal, refreshTrigger);
+  const { data: addressOverview, isLoading } = useAddressOverview(principal, refreshTrigger);
 
   const tokenMaps = useMemo(() => {
     if (isUndefinedOrNull(addressOverview)) return undefined;
@@ -146,7 +146,7 @@ function TokenList({ search }: TokenListProps) {
 
   return (
     <>
-      {loading || isUndefinedOrNull(formattedData) ? (
+      {isLoading || isUndefinedOrNull(formattedData) ? (
         <LoadingRow>
           <div />
           <div />
@@ -175,7 +175,7 @@ interface TaggedTokensProps {
 function TaggedTokens({ search }: TaggedTokensProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger] = useRefreshTriggerManager(WALLET_TOKEN_SELECTOR_REFRESH);
-  const { result: addressOverview, loading } = useAddressOverview(principal, refreshTrigger);
+  const { data: addressOverview, isLoading } = useAddressOverview(principal, refreshTrigger);
   const { taggedTokens } = useTaggedTokenManager();
 
   const allTokens = useTokens(taggedTokens);
@@ -195,7 +195,7 @@ function TaggedTokens({ search }: TaggedTokensProps) {
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <LoadingRow>
           <div />
           <div />

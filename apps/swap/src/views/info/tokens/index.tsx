@@ -12,7 +12,7 @@ import { nonUndefinedOrNull } from "@icpswap/utils";
 function __Tokens() {
   const { t } = useTranslation();
   const [, setTokens] = useTokensManager();
-  const { result: tokens } = useTokensFromAPI();
+  const { data: tokens } = useTokensFromAPI();
 
   useEffect(() => {
     if (nonUndefinedOrNull(tokens)) {

@@ -10,7 +10,7 @@ export default function EventSelector({
   onChange?: (eventId: string) => void;
 }) {
   const { t } = useTranslation();
-  const { result: claimEvents } = useClaimEvents(0, 10000);
+  const { data: claimEvents } = useClaimEvents(0, 10000);
 
   const menus = claimEvents?.content.map((ele) => {
     return {

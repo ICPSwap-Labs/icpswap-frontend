@@ -141,8 +141,8 @@ export function ExtNftCollectionDetail() {
   const principal = useAccountPrincipalString();
 
   const [reload, setReload] = useState(false);
-  const { result: userExtAllNfts, loading } = useExtUserNFTs(principal, reload);
-  const { result: extAllCollections } = useEXTAllCollections();
+  const { data: userExtAllNfts, isLoading: loading } = useExtUserNFTs(principal, reload);
+  const { data: extAllCollections } = useEXTAllCollections();
 
   const collection = useMemo(() => {
     if (!extAllCollections) return undefined;

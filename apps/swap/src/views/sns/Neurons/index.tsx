@@ -244,9 +244,9 @@ export default function Neurons() {
     };
   }, [sns]);
 
-  const { result: neuronSystemParameters } = useNervousSystemParameters(governance_id);
+  const { data: neuronSystemParameters } = useNervousSystemParameters(governance_id);
 
-  const { result: listNeurons, loading } = useListNeurons({
+  const { data: listNeurons, isLoading: loading } = useListNeurons({
     canisterId: governance_id,
     limit: 100,
     of_principal: principal,

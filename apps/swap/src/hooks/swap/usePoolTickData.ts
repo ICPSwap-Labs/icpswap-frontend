@@ -27,7 +27,7 @@ type Tick = {
 export function useAllTicks(token0: Token | undefined, token1: Token | undefined, feeAmount: FeeAmount) {
   const poolId = usePoolCanisterId(token0?.address, token1?.address, feeAmount);
 
-  const { result: allTicks, loading } = useSwapAllTicks(poolId, 5000);
+  const { data: allTicks, isLoading: loading } = useSwapAllTicks(poolId, 5000);
 
   const ticks = useMemo(() => {
     const ticks: Tick[] = [];
@@ -60,7 +60,7 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
 export function useLiquidityAllTicks(token0: Token | undefined, token1: Token | undefined, feeAmount: FeeAmount) {
   const poolId = usePoolCanisterId(token0?.address, token1?.address, feeAmount);
 
-  const { result: allTicks, loading } = useSwapAllTicks(poolId, 5000);
+  const { data: allTicks, isLoading: loading } = useSwapAllTicks(poolId, 5000);
 
   const ticks = useMemo(() => {
     if (allTicks) {

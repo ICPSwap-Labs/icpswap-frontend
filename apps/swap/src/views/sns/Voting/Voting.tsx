@@ -65,20 +65,20 @@ export default function Voting() {
   const root_id = getNnsRootId(sns);
 
   const [, token] = useToken(ledger_id);
-  const { result: proposal_data, loading } = useProposal(
+  const { data: proposal_data, isLoading: loading } = useProposal(
     governance_id,
     proposal_id ? BigInt(proposal_id) : undefined,
     refreshTrigger,
   );
 
-  const { result: listNeurons } = useListNeurons({
+  const { data: listNeurons } = useListNeurons({
     canisterId: governance_id,
     limit: 100,
     of_principal: principal,
     refresh: refreshTrigger,
   });
 
-  const { result: neuronSystemParameters } = useNervousSystemParameters(governance_id);
+  const { data: neuronSystemParameters } = useNervousSystemParameters(governance_id);
 
   const { title, isExecuted } = useMemo(() => {
     if (!proposal_data) return {};

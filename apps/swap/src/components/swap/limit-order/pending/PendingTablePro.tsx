@@ -16,7 +16,7 @@ export function PendingTablePro({ poolId, wrapperClassName }: LimitOrdersTablePr
 
   const [refreshTrigger, setLimitOrdersRefreshTrigger] = useRefreshTriggerManager(USER_LIMIT_ORDERS_KEY);
 
-  const { result: userLimitOrders, loading } = useUserLimitOrders(poolId, principal, refreshTrigger);
+  const { data: userLimitOrders, isLoading: loading } = useUserLimitOrders(poolId, principal, refreshTrigger);
 
   return (
     <PendingTableProUI

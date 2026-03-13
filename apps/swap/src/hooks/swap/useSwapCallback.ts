@@ -256,7 +256,7 @@ export function useSwapCallback({ inputToken, poolId, refresh }: UseConsolidated
   const initialSteps = useInitialSwapSteps();
   const principal = useAccountPrincipalString();
 
-  const { result: inputAllowance } = useAllowance({
+  const { data: inputAllowance } = useAllowance({
     canisterId: inputToken?.address,
     spender: poolId,
     owner: principal,

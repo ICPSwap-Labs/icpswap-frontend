@@ -19,7 +19,7 @@ export interface TokenHoldersChartsProps {
 export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
   const { t } = useTranslation();
   const [, token] = useToken(tokenId);
-  const { result } = useTokenHolders(tokenId, 1, 100);
+  const { data: result } = useTokenHolders(tokenId, 1, 100);
 
   const { top100HoldAmount, totalHolders, top100HoldPercent, totalSupply } = useMemo(() => {
     if (isUndefinedOrNull(result)) return {};

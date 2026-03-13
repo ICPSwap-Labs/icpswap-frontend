@@ -8,7 +8,7 @@ export default function NFTMarketSaleRecords({ canisterId }: { canisterId?: stri
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { loading, result } = useTradeTxList(canisterId, null, null, offset, pagination.pageSize, "time", true);
+  const { isLoading: loading, data: result } = useTradeTxList(canisterId, null, null, offset, pagination.pageSize, "time", true);
   const { totalElements, content } = result ?? { totalElements: 0, content: [] as TxRecord[] };
 
   const handlePageChange = useCallback(

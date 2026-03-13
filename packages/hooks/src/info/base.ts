@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import {
   resultFormat,
   icpswap_info_fetch_get,
@@ -7,8 +6,8 @@ import {
   isUndefinedOrNull,
 } from "@icpswap/utils";
 import { baseIndex, baseStorage } from "@icpswap/actor";
-import type { PaginationResult, BaseTransaction, InfoTransactionResponse, PageResponse, Null } from "@icpswap/types";
-import { useCallsData } from "../useCallData";
+import type { BaseTransaction, InfoTransactionResponse, Null, PageResponse, PaginationResult } from "@icpswap/types";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function getBaseStorages() {
   return resultFormat<string[]>(await (await baseIndex()).baseStorage()).data;
@@ -78,12 +77,13 @@ export function useSwapTransactions({
   tokenId,
   startTime,
   endTime,
-}: UseSwapTransactionsProps) {
-  return useCallsData(
-    useCallback(async () => {
+}: UseSwapTransactionsProps): UseQueryResult<PageResponse<InfoTransactionResponse> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapTransactions", page, poolId, principal, limit, tokenId, startTime, endTime],
+    queryFn: async () => {
       return await getSwapTransactions({ principal, poolId, page, limit, tokenId, startTime, endTime });
-    }, [page, poolId, principal, limit, tokenId, startTime, endTime]),
-  );
+    },
+  });
 }
 
 export function useUserSwapTransactions({
@@ -94,14 +94,16 @@ export function useUserSwapTransactions({
   tokenId,
   startTime,
   endTime,
-}: UseSwapTransactionsProps) {
-  return useCallsData(
-    useCallback(async () => {
+}: UseSwapTransactionsProps): UseQueryResult<PageResponse<InfoTransactionResponse> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserSwapTransactions", page, poolId, principal, limit, tokenId, startTime, endTime],
+    queryFn: async () => {
       if (isUndefinedOrNull(principal)) return undefined;
 
       return await getSwapTransactions({ principal, poolId, page, limit, tokenId, startTime, endTime });
-    }, [page, poolId, principal, limit, tokenId, startTime, endTime]),
-  );
+    },
+    enabled: !isUndefinedOrNull(principal),
+  });
 }
 
 export async function getTokenTransactions(tokenId: string, page: number, limit: number) {
@@ -113,12 +115,18 @@ export async function getTokenTransactions(tokenId: string, page: number, limit:
   ).data;
 }
 
-export function useTokenTransactions(tokenId: string | Null, page: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
-      return await getTokenTransactions(tokenId, page, limit);
-    }, [tokenId, page, limit]),
-  );
+export function useTokenTransactions(
+  tokenId: string | Null,
+  page: number,
+  limit: number,
+): UseQueryResult<PageResponse<InfoTransactionResponse> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useTokenTransactions", tokenId, page, limit],
+    queryFn: async () => {
+      return await getTokenTransactions(tokenId!, page, limit);
+    },
+    enabled: !!tokenId,
+  });
 }
 
 interface DownloadSwapTransactionsProps {

@@ -1,9 +1,7 @@
-import { useCallback } from "react";
 import { resultFormat } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
 import { farmIndex } from "@icpswap/actor";
-
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 /**
  *
@@ -15,15 +13,19 @@ export async function getLiveFarmsByPoolIds(poolIds: string[]) {
   return resultFormat<Array<[Principal, Principal]>>(result).data;
 }
 
-export function useLiveFarmsByPoolIds(poolIds: string[] | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useLiveFarmsByPoolIds(
+  poolIds: string[] | undefined,
+  reload?: boolean,
+): UseQueryResult<Array<[Principal, Principal]> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useLiveFarmsByPoolIds", poolIds, reload],
+    queryFn: async () => {
       if (!poolIds) return undefined;
 
       return await getLiveFarmsByPoolIds(poolIds);
-    }, [poolIds]),
-    reload,
-  );
+    },
+    enabled: !!poolIds,
+  });
 }
 
 export async function getFarmsByPool(poolId: string) {
@@ -31,13 +33,17 @@ export async function getFarmsByPool(poolId: string) {
   return resultFormat<Array<Principal>>(result).data;
 }
 
-export function useFarmsByPool(poolId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useFarmsByPool(
+  poolId: string | undefined,
+  reload?: boolean,
+): UseQueryResult<Principal[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useFarmsByPool", poolId, reload],
+    queryFn: async () => {
       if (!poolId) return undefined;
 
       return await getFarmsByPool(poolId);
-    }, [poolId]),
-    reload,
-  );
+    },
+    enabled: !!poolId,
+  });
 }

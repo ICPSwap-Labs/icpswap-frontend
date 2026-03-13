@@ -248,7 +248,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     return __outputTokenSubBalance;
   }, [__outputTokenSubBalance]);
 
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
+  const { data: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
   const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
     if (!pool || !unusedBalance || !inputToken) return {};
 
@@ -266,7 +266,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     return isUseTransfer(inputToken) ? undefined : inputToken.address;
   }, [inputToken]);
 
-  const { result: allowance } = useAllowance({
+  const { data: allowance } = useAllowance({
     canisterId: allowanceTokenId,
     owner: principal?.toString(),
     spender: poolId,

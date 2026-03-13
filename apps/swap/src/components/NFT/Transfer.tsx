@@ -76,7 +76,7 @@ export default function NFTTransfer({
   const [to, setTo] = useState<string>("");
 
   const metadata = useNFTByMetadata(nft);
-  const { result: canisterMetadata } = useCanisterMetadata(canisterId);
+  const { data: canisterMetadata } = useCanisterMetadata(canisterId);
 
   const nftTransfer = useNFTTransfer();
 

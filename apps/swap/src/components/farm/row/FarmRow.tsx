@@ -19,8 +19,8 @@ interface FarmRowProps {
 export function FarmRow({ farmId, wrapperSx, showState, your, filterState, isFirst }: FarmRowProps) {
   const principal = useAccountPrincipal();
 
-  const { result: farmInitArgs } = useFarmInitArgs(farmId);
-  const { result: farmInfo } = useUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
+  const { data: farmInitArgs } = useFarmInitArgs(farmId);
+  const { data: farmInfo } = useUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
   const state = useFarmState(farmInfo);
 
   return farmInfo && state ? (

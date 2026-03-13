@@ -30,7 +30,7 @@ export const AutoPriceRangeButton = memo(
 
     const isSorted = baseCurrency && quoteCurrency && baseCurrency.sortsBefore(quoteCurrency);
 
-    const { result: __chartPriceRange } = useLiquidityChartPriceRange(pool?.id);
+    const { data: __chartPriceRange } = useLiquidityChartPriceRange(pool?.id);
 
     const chartPriceRange = useMemo(() => {
       if (!__chartPriceRange) return undefined;

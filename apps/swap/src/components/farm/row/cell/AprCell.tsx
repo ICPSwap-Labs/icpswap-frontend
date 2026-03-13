@@ -47,7 +47,7 @@ export function AprCell({ farmId, state, initArgs, farmInfo }: AprCellProps) {
     farmId,
   });
 
-  const { result: rewardMetadata } = useV3FarmRewardMetadata(farmId);
+  const { data: rewardMetadata } = useV3FarmRewardMetadata(farmId);
 
   const apr = useFarmApr({
     farmTvlValue,

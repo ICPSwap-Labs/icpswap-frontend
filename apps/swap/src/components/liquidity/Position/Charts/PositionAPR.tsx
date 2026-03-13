@@ -20,8 +20,8 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
-  const { result: positionChartData, loading } = usePositionAPRChartData(poolId, positionId);
-  const { result: averageAprResult } = usePoolAverageAPRs(poolId);
+  const { data: positionChartData, isLoading: loading } = usePositionAPRChartData(poolId, positionId);
+  const { data: averageAprResult } = usePoolAverageAPRs(poolId);
 
   const formattedChartData = useMemo(() => {
     if (nonUndefinedOrNull(positionChartData) && nonUndefinedOrNull(averageAprResult)) {

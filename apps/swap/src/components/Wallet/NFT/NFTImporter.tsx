@@ -20,7 +20,7 @@ export function NFTImporter() {
 
   const [address, setAddress] = useState<string | undefined>(undefined);
 
-  const { result: extNFTs } = useEXTAllCollections();
+  const { data: extNFTs } = useEXTAllCollections();
   const { nfts: importedNFTs, importNFT } = useEXTManager();
 
   const handlePrev = useCallback(() => {

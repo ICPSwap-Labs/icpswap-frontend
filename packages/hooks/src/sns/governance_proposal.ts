@@ -1,8 +1,7 @@
 import { sns_governance } from "@icpswap/actor";
-import { useCallback } from "react";
 import { optionalArg, resultFormat } from "@icpswap/utils";
 import type { GetProposalResponse, ListProposalsResponse, ProposalData, ProposalId } from "@icpswap/types";
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function getProposal(canisterId: string, proposal_id: bigint) {
   const result = resultFormat<GetProposalResponse>(
@@ -24,14 +23,19 @@ export async function getProposal(canisterId: string, proposal_id: bigint) {
   return proposal;
 }
 
-export function useProposal(governance_id: string | undefined, proposal_id: bigint | undefined, refresh?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useProposal(
+  governance_id: string | undefined,
+  proposal_id: bigint | undefined,
+  refresh?: number,
+): UseQueryResult<ProposalData | undefined, Error> {
+  return useQuery({
+    queryKey: ["useProposal", governance_id, proposal_id, refresh],
+    queryFn: async () => {
       if (!governance_id || proposal_id === undefined) return undefined;
       return await getProposal(governance_id, proposal_id);
-    }, [governance_id, proposal_id]),
-    refresh,
-  );
+    },
+    enabled: !!governance_id && proposal_id !== undefined,
+  });
 }
 
 export interface GetListProposalsArgs {
@@ -84,9 +88,19 @@ export function useListProposals({
   include_status,
   exclude_type,
   before_proposal,
-}: UseListProposalsArgs) {
-  return useCallsData(
-    useCallback(async () => {
+}: UseListProposalsArgs): UseQueryResult<ListProposalsResponse["proposals"] | undefined, Error> {
+  return useQuery({
+    queryKey: [
+      "useListProposals",
+      canisterId,
+      limit,
+      refresh,
+      include_reward_status,
+      include_status,
+      exclude_type,
+      before_proposal,
+    ],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getListProposals({
         canisterId,
@@ -96,7 +110,7 @@ export function useListProposals({
         limit,
         before_proposal,
       });
-    }, [canisterId, include_reward_status, limit, exclude_type, include_status, before_proposal]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }

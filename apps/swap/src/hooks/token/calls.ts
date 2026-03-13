@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { BigNumber, isValidPrincipal, parseTokenAmount } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
 import { Principal } from "@icp-sdk/core/principal";
@@ -6,7 +5,7 @@ import { TokenInfo } from "types/token";
 import { tokenAdapter, icpAdapter } from "@icpswap/token-adapter";
 import { getTokenStandard } from "store/token/cache/hooks";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
-import { useCallsData } from "@icpswap/hooks";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { ResultStatus, StatusResult, TOKEN_STANDARD } from "@icpswap/types";
 
 export interface TokenTransferProps {
@@ -101,27 +100,22 @@ export async function getTokenSupply(canisterId: string | undefined) {
   return (await tokenAdapter.supply({ canisterId })).data;
 }
 
-export function useTokenSupply(canisterId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useTokenSupply(
+  canisterId: string | undefined,
+  reload?: boolean,
+): UseQueryResult<Awaited<ReturnType<typeof getTokenSupply>>, Error> {
+  return useQuery({
+    queryKey: ["useTokenSupply", canisterId, reload],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getTokenSupply(canisterId);
-    }, [canisterId]),
-    reload,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getTokenMetadata(canisterId: string) {
   return tokenAdapter.metadata({ canisterId });
-}
-
-export function useTokenMetadata(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return (await getTokenMetadata(canisterId)).data;
-    }, [canisterId]),
-  );
 }
 
 export async function getTokenInfo(canisterId: string | undefined) {
@@ -150,11 +144,13 @@ export async function getTokenInfo(canisterId: string | undefined) {
   });
 }
 
-export function useTokenInfo(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useTokenInfo(canisterId: string | undefined): UseQueryResult<TokenInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useTokenInfo", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getTokenInfo(canisterId);
-    }, [canisterId]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }

@@ -1,5 +1,5 @@
-import { useCallsData } from "@icpswap/hooks";
 import { resultFormat, optionalArg, isUndefinedOrNull } from "@icpswap/utils";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ckBtcMinter } from "@icpswap/actor";
 import { Principal } from "@icp-sdk/core/principal";
@@ -131,13 +131,17 @@ export function useRefreshBtcBalanceCallback() {
   }, []);
 }
 
-export function useBtcWithdrawAddress() {
+export function useBtcWithdrawAddress(): UseQueryResult<
+  { owner: Principal; subaccount: [] | Uint8Array[] } | undefined,
+  Error
+> {
   const principal = useAccountPrincipalString();
   const storeAddress = useUserBTCWithdrawAddress(principal);
   const updateUserWithdrawAddress = useUpdateUserBTCWithdrawAddress();
 
-  return useCallsData(
-    useCallback(async () => {
+  return useQuery({
+    queryKey: ["useBtcWithdrawAddress", storeAddress?.owner, principal],
+    queryFn: async () => {
       if (!principal) return undefined;
 
       const address = resultFormat<{ owner: Principal; subaccount: [] | Uint8Array[] }>(
@@ -149,8 +153,9 @@ export function useBtcWithdrawAddress() {
       }
 
       return address;
-    }, [storeAddress?.owner, principal]),
-  );
+    },
+    enabled: !!principal,
+  });
 }
 
 export async function getBitcoinTransactions(address: string) {
@@ -166,20 +171,24 @@ export async function getBitcoinTransactions(address: string) {
   }
 }
 
-export function useBtcTransactions(address: string | undefined | null, refresh?: number | boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useBtcTransactions(
+  address: string | undefined | null,
+  refresh?: number | boolean,
+): UseQueryResult<BitcoinTransaction[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useBtcTransactions", address, refresh],
+    queryFn: async () => {
       if (!address) return undefined;
       return await getBitcoinTransactions(address);
-    }, [address]),
-    refresh,
-  );
+    },
+    enabled: !!address,
+  });
 }
 
-export function useBtcMintTransactions() {
+export function useBtcMintTransactions(): { result: BitcoinTransaction[] | undefined; loading: boolean } {
   const { result: address } = useBtcDepositAddress();
   const [refresh] = useRefreshTriggerManager(BITCOIN_MINT_REFRESH);
-  const { result: allTransactions, loading } = useBtcTransactions(address, refresh);
+  const { data: allTransactions, isLoading: loading } = useBtcTransactions(address, refresh);
 
   const mintTransactions = useMemo(() => {
     if (isUndefinedOrNull(address) || isUndefinedOrNull(allTransactions)) return undefined;
@@ -209,14 +218,18 @@ export async function getBtcTransactionResponse(tx: string) {
   }
 }
 
-export function useBtcTransactionResponse(tx: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useBtcTransactionResponse(
+  tx: string | undefined,
+  reload?: boolean,
+): UseQueryResult<BitcoinTxResponse | undefined, Error> {
+  return useQuery({
+    queryKey: ["useBtcTransactionResponse", tx, reload],
+    queryFn: async () => {
       if (!tx) return undefined;
       return await getBtcTransactionResponse(tx);
-    }, [tx]),
-    reload,
-  );
+    },
+    enabled: !!tx,
+  });
 }
 
 export function useBitcoinUnFinalizedMintHashes() {

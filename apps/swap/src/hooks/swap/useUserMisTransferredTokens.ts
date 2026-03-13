@@ -21,7 +21,7 @@ export function useUserMisTransferredTokens({ tokenId }: useUserMisTransferredTo
   const [loading, setLoading] = useState(true);
   const [misTransferred, setMisTransferred] = useState<MisTransferredResult[]>([]);
 
-  const { result: allSwapPools } = useSwapPools();
+  const { data: allSwapPools } = useSwapPools();
   const principal = useAccountPrincipal();
 
   useEffect(() => {

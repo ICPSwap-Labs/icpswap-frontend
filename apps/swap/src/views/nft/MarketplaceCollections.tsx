@@ -65,7 +65,7 @@ export function CollectionCard({ collection }: { collection: NFTControllerInfo }
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { result: metadata } = useCanisterMetadata(collection.cid);
+  const { data: metadata } = useCanisterMetadata(collection.cid);
 
   const handleCollectionClick = () => {
     navigate(`/marketplace/NFT/${collection.cid}`);
@@ -113,7 +113,7 @@ const filteredNFTs = [
 export default function MarketplaceCollections() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const { result, loading } = useNFTCanisterList(0, 1000);
+  const { data: result, isLoading: loading } = useNFTCanisterList(0, 1000);
 
   const collections = useMemo(() => {
     return result?.content.filter((e) => !filteredNFTs.includes(e.cid)) ?? [];

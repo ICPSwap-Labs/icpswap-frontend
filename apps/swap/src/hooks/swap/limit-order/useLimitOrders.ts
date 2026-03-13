@@ -19,7 +19,7 @@ export function useLimitOrders({ val, refreshTrigger }: UseLimitOrdersProps): {
   const [allPairLoading, setAllPairLoading] = useState(false);
   const [allLimitOrders, setAllLimitOrders] = useState<Null | Array<[LimitOrder, string]>>(null);
 
-  const { result: userLimitOrders, loading } = useUserLimitOrders(
+  const { data: userLimitOrders, isLoading: loading } = useUserLimitOrders(
     val === "ALL PAIR" ? null : val,
     principal?.toString(),
     refreshTrigger,

@@ -35,8 +35,8 @@ export default function Launch() {
   }, [sns]);
 
   const [, token] = useToken(ledger_id);
-  const { result: saleParameters } = useSwapSaleParameters(swap_id, reloadCounter);
-  const { result: swapInitArgs } = useSNSSwapInitArgs(swap_id);
+  const { data: saleParameters } = useSwapSaleParameters(swap_id, reloadCounter);
+  const { data: swapInitArgs } = useSNSSwapInitArgs(swap_id);
 
   return (
     <Wrapper>

@@ -25,7 +25,7 @@ export function Reclaim({ farmId, farmInfo }: ReclaimProps) {
 
   const [, rewardToken] = useToken(farmInfo?.rewardToken.address);
 
-  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal, refreshRewardsTrigger);
+  const { data: unclaimedRewards } = useFarmUserRewards(farmId, principal, refreshRewardsTrigger);
 
   const handleReclaim = async () => {
     if (withdrawLoading) return;

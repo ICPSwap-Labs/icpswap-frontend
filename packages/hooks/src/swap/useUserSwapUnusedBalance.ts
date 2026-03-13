@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { Null, UserSwapPoolsBalance, SwapPoolData } from "@icpswap/types";
 
-import { useSwapPools, _getSwapPoolAllBalance } from "./calls";
+import { useSwapPools } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
 import { useNodeInfoAllPools } from "../info";
@@ -14,8 +14,8 @@ interface UseUserSwapPoolBalancesProps {
 }
 
 export function useUserSwapPoolBalances({ principal, tokenId, reload, poolId }: UseUserSwapPoolBalancesProps) {
-  const { result: allSwapPools } = useSwapPools();
-  const { result: infoPools } = useNodeInfoAllPools();
+  const { data: allSwapPools } = useSwapPools();
+  const { data: infoPools } = useNodeInfoAllPools();
 
   const targetSwapPools = useMemo(() => {
     if (!infoPools || !allSwapPools) return [];

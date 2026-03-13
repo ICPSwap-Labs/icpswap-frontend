@@ -15,7 +15,7 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
-  const { result: positionChartData, loading } = usePositionFeesChartData(poolId, positionId);
+  const { data: positionChartData, isLoading: loading } = usePositionFeesChartData(poolId, positionId);
 
   const formattedChartData = useMemo(() => {
     if (positionChartData) {

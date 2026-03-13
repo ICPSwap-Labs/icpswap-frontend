@@ -56,7 +56,7 @@ export function ICSPriceChart() {
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
   const [loading, setLoading] = useState(true);
 
-  const { result } = useTokenCharts({ tokenId: ICS.address, level: "d1", page: 1, limit: 30 });
+  const { data: result } = useTokenCharts({ tokenId: ICS.address, level: "d1", page: 1, limit: 30 });
 
   const chartData = useMemo(() => {
     return result?.content.reverse();

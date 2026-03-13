@@ -1,7 +1,8 @@
 import { getTokensNews } from "@icpswap/hooks";
-import { Null, SocialMediaResult } from "@icpswap/types";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { useEffect, useMemo, useState } from "react";
+import { Null } from "@icpswap/types";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { useGlobalTokenList } from "store/global/hooks";
 
 export function useTokenXHandle(tokenId: string | Null) {
@@ -27,27 +28,12 @@ export function useTokenXHandle(tokenId: string | Null) {
 export function useTokenSocialMedias(tokenId: string | Null) {
   const xHandle = useTokenXHandle(tokenId);
 
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<undefined | Array<SocialMediaResult>>(undefined);
-
-  useEffect(() => {
-    async function call() {
-      if (isUndefinedOrNull(xHandle)) return;
-
-      setLoading(true);
-      const socialMedias = await getTokensNews(xHandle, 0, 1000);
-      setResult(socialMedias);
-      setLoading(false);
-    }
-
-    call();
-  }, [xHandle]);
-
-  return useMemo(
-    () => ({
-      loading,
-      result,
-    }),
-    [loading, result],
-  );
+  return useQuery({
+    queryKey: ["tokenSocialMedia", tokenId, xHandle],
+    queryFn: async () => {
+      if (isUndefinedOrNull(xHandle)) return undefined;
+      return await getTokensNews(xHandle, 0, 1000);
+    },
+    enabled: nonUndefinedOrNull(xHandle),
+  });
 }

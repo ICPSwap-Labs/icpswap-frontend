@@ -162,8 +162,8 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [checkedFunc, setCheckedFunc] = useState<bigint[]>([]);
 
-  const { result: neuron_system_functions } = useNeuronSystemFunctions(governance_id);
-  const { result: neuron } = useNeuron(governance_id, neuron_id, refreshTrigger);
+  const { data: neuron_system_functions } = useNeuronSystemFunctions(governance_id);
+  const { data: neuron } = useNeuron(governance_id, neuron_id, refreshTrigger);
 
   const handleCheckAll = useCallback(() => {
     if (!neuron_system_functions) return;

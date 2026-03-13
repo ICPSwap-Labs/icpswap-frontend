@@ -39,7 +39,7 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
     };
   }, [inverted, position]);
 
-  const { result: periodPriceRange } = usePoolPricePeriodRange(pool.id);
+  const { data: periodPriceRange } = usePoolPricePeriodRange(pool.id);
 
   const tickSpaceLimits = useMemo(
     () => ({

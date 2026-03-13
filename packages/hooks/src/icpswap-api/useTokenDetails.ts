@@ -1,12 +1,11 @@
-import { useCallback } from "react";
-import { IcpSwapAPITokenDetail, Null } from "@icpswap/types";
+import type { IcpSwapAPITokenDetail, Null } from "@icpswap/types";
 import { icpswap_fetch_post } from "@icpswap/utils";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
-import { useCallsData } from "../useCallData";
-
-export function useTokenDetails(tokenId: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useTokenDetails(tokenId: string | Null): UseQueryResult<IcpSwapAPITokenDetail | undefined, Error> {
+  return useQuery({
+    queryKey: ["useTokenDetails", tokenId],
+    queryFn: async () => {
       if (!tokenId) return undefined;
 
       const result = await icpswap_fetch_post<IcpSwapAPITokenDetail>(`/info/tokens/detail`, {
@@ -14,6 +13,7 @@ export function useTokenDetails(tokenId: string | Null) {
       });
 
       return result?.data;
-    }, [tokenId]),
-  );
+    },
+    enabled: !!tokenId,
+  });
 }

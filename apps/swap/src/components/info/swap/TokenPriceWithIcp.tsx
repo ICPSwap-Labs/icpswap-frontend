@@ -41,7 +41,7 @@ export function InfoTokenPrices({ tokenInfo }: { tokenInfo: Token | undefined })
   const theme = useTheme();
 
   const poolId = uesTokenPairWithIcp({ tokenId: tokenInfo?.address });
-  const { result: pool } = useInfoPool(poolId);
+  const { data: pool } = useInfoPool(poolId);
 
   const icpPrice = useMemo(() => {
     if (!pool || !tokenInfo?.address) return undefined;

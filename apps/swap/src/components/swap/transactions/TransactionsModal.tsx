@@ -103,7 +103,7 @@ export function SwapTransactionsModal({ open, onClose }: SwapTransactionsModalPr
     return { startTime, endTime };
   }, []);
 
-  const { result, loading } = useUserSwapTransactions({
+  const { data: result, isLoading: loading } = useUserSwapTransactions({
     principal,
     poolId: undefined,
     page: 1,

@@ -48,7 +48,7 @@ export function SwapProContextWrapper() {
 
   const tokenId = useMemo(() => token?.address, [token]);
 
-  const { result: tokenListInfo } = useTokenListTokenInfo(tokenId);
+  const { data: tokenListInfo } = useTokenListTokenInfo(tokenId);
 
   const defaultChartType = useFetchGlobalDefaultChartType();
 

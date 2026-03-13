@@ -174,7 +174,7 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
 
   const [page, setPage] = useState(1);
   const { result: userPositions, loading } = useUserPoolPositions(poolId);
-  const { result: userLimitOrders } = useUserLimitOrders(poolId, principal?.toString());
+  const { data: userLimitOrders } = useUserLimitOrders(poolId, principal?.toString());
 
   const filteredPositions = useMemo(() => {
     if (isUndefinedOrNull(userPositions) || isUndefinedOrNull(userLimitOrders)) return null;

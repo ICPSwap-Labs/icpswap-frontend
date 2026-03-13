@@ -66,7 +66,7 @@ export function FarmTransactions({ id, rewardTokenId }: FarmTransactionsProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useV3FarmStakeRecords(id, offset, pagination.pageSize);
+  const { data: result, isLoading: loading } = useV3FarmStakeRecords(id, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (page: number) => {

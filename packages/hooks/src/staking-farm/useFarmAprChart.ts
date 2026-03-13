@@ -1,8 +1,6 @@
-import { useCallback } from "react";
 import { resultFormat } from "@icpswap/utils";
 import { farm } from "@icpswap/actor";
-
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function getFarmAvgApr(farmId: string) {
   let result = null;
@@ -16,14 +14,15 @@ export async function getFarmAvgApr(farmId: string) {
   return resultFormat<number>(result).data;
 }
 
-export function useFarmAvgApr(farmId: string | undefined, refresh?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useFarmAvgApr(farmId: string | undefined, refresh?: number): UseQueryResult<number | undefined, Error> {
+  return useQuery({
+    queryKey: ["useFarmAvgApr", farmId, refresh],
+    queryFn: async () => {
       if (!farmId) return undefined;
       return await getFarmAvgApr(farmId);
-    }, [farmId]),
-    refresh,
-  );
+    },
+    enabled: !!farmId,
+  });
 }
 
 export async function getFarmAprCharts(farmId: string) {
@@ -38,12 +37,16 @@ export async function getFarmAprCharts(farmId: string) {
   return resultFormat<Array<[bigint, number]>>(result).data;
 }
 
-export function useFarmAprCharts(farmId: string | undefined, refresh?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useFarmAprCharts(
+  farmId: string | undefined,
+  refresh?: number,
+): UseQueryResult<Array<[bigint, number]> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useFarmAprCharts", farmId, refresh],
+    queryFn: async () => {
       if (!farmId) return undefined;
       return await getFarmAprCharts(farmId);
-    }, [farmId]),
-    refresh,
-  );
+    },
+    enabled: !!farmId,
+  });
 }

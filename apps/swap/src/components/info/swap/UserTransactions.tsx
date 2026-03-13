@@ -15,7 +15,7 @@ export interface UserTransactionsProps {
 export function UserTransactions({ poolId, styleProps, CustomNoData }: UserTransactionsProps) {
   const principal = useAccountPrincipalString();
 
-  const { result: transactionsResult, loading } = useSwapTransactions({ principal, poolId, page: 1, limit: 300 });
+  const { data: transactionsResult, isLoading: loading } = useSwapTransactions({ principal, poolId, page: 1, limit: 300 });
 
   return (
     <Transactions

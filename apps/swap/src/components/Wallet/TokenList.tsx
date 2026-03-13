@@ -18,7 +18,7 @@ export default function WalletTokenList() {
   const { sort } = useWalletSortManager();
 
   const globalTokenList = useGlobalTokenList();
-  const { result: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
+  const { data: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   const tokens = useMemo(() => {
     const tokenIds = [

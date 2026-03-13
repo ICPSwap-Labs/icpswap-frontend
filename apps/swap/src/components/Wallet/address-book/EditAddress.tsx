@@ -74,7 +74,7 @@ export function EditAddress() {
     }
   }, [addressBook, removeAddressHandler]);
 
-  const { result: addresses } = useAddressBook();
+  const { data: addresses } = useAddressBook();
 
   const error = useMemo(() => {
     if (isUndefinedOrNull(addresses) || isUndefinedOrNull(addressBook)) return t("common.save");

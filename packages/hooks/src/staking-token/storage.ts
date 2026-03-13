@@ -1,10 +1,8 @@
-import { useCallback } from "react";
 import { resultFormat, isAvailablePageArgs, isUndefinedOrNull, optionalArg } from "@icpswap/utils";
 import { stakeIndex } from "@icpswap/actor";
 import type { PaginationResult, StakeIndexPoolInfo, StakeAprInfo, StakeUserStakeInfo } from "@icpswap/types";
 import { Principal } from "@icp-sdk/core/principal";
-
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function getUserStakePools(
   principal: string,
@@ -26,13 +24,19 @@ export async function getUserStakePools(
   ).data;
 }
 
-export function useUserStakePools(principal: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserStakePools(
+  principal: string | undefined,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<StakeIndexPoolInfo> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserStakePools", principal, offset, limit],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
-      return await getUserStakePools(principal, offset, limit);
-    }, [offset, limit, principal]),
-  );
+      return await getUserStakePools(principal!, offset, limit);
+    },
+    enabled: isAvailablePageArgs(offset, limit) && !!principal,
+  });
 }
 
 export async function getStakeAprChartData(principal: string, start_time: number, end_time: number) {
@@ -45,14 +49,16 @@ export function useStakeAprChartData(
   principal: string | undefined,
   start_time: number | undefined,
   end_time: number | undefined,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<StakeAprInfo[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakeAprChartData", principal, start_time, end_time],
+    queryFn: async () => {
       if (isUndefinedOrNull(start_time) || isUndefinedOrNull(principal) || isUndefinedOrNull(end_time))
         return undefined;
       return await getStakeAprChartData(principal, start_time, end_time);
-    }, [start_time, end_time, principal]),
-  );
+    },
+    enabled: !isUndefinedOrNull(start_time) && !isUndefinedOrNull(principal) && !isUndefinedOrNull(end_time),
+  });
 }
 
 export async function getUserStakedTokens(principal: string) {
@@ -61,12 +67,16 @@ export async function getUserStakedTokens(principal: string) {
   ).data;
 }
 
-export function useUserStakedTokens(principal: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserStakedTokens(
+  principal: string | undefined,
+): UseQueryResult<StakeUserStakeInfo[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserStakedTokens", principal],
+    queryFn: async () => {
       if (isUndefinedOrNull(principal)) return undefined;
 
       return await getUserStakedTokens(principal);
-    }, [principal]),
-  );
+    },
+    enabled: !isUndefinedOrNull(principal),
+  });
 }

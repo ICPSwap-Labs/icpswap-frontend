@@ -17,7 +17,7 @@ export default function NFTList({ canisterId }: { canisterId: string }) {
 
   const principal = useAccountPrincipalString();
 
-  const { result, loading } = useCanisterNFTList(canisterId, principal, offset, pagination.pageSize);
+  const { data: result, isLoading: loading } = useCanisterNFTList(canisterId, principal, offset, pagination.pageSize);
   const { content: NFTList, totalElements } = result ?? { content: [] as NFTTokenMetadata[], totalElements: 0 };
 
   const handlePageChange = useCallback(

@@ -120,7 +120,7 @@ export const TokenCharts = forwardRef(
     const [latestValue, setLatestValue] = useState<number | undefined>();
     const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
 
-    const { result: tokenChartsResult, loading } = useTokenCharts({
+    const { data: tokenChartsResult, isLoading } = useTokenCharts({
       tokenId: canisterId,
       level: "d1",
       page: 1,
@@ -201,7 +201,7 @@ export const TokenCharts = forwardRef(
         }}
         padding="0"
       >
-        <SwapAnalyticLoading loading={loading} />
+        <SwapAnalyticLoading loading={isLoading} />
 
         <Flex
           fullWidth

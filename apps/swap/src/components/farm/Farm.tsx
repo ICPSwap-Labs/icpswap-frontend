@@ -37,14 +37,14 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
   const [viewAll, setViewAll] = useState(false);
   const [refreshRewardsTrigger, setRefreshRewardsTrigger] = useState(0);
 
-  const { result: farmInitArgs } = useFarmInitArgs(farmId);
-  const { result: userAllPositions } = useSwapUserPositions(
+  const { data: farmInitArgs } = useFarmInitArgs(farmId);
+  const { data: userAllPositions } = useSwapUserPositions(
     farmInfo?.pool.toString(),
     principal?.toString(),
     refreshRewardsTrigger,
   );
-  const { result: deposits } = useFarmUserPositions(farmId, principal?.toString(), refreshRewardsTrigger);
-  const { result: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
+  const { data: deposits } = useFarmUserPositions(farmId, principal?.toString(), refreshRewardsTrigger);
+  const { data: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
 
   const state = useFarmState(farmInfo);
 

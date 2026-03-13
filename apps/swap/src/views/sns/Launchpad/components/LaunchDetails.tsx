@@ -22,7 +22,7 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { result: total_supply } = useTokenSupply(ledger_id);
+  const { data: total_supply } = useTokenSupply(ledger_id);
 
   const restricted_countries = useMemo(() => {
     if (!swapInitArgs) return undefined;

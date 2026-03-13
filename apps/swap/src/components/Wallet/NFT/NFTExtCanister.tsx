@@ -54,8 +54,8 @@ export function NFTExtCanister() {
   const { displayedNFTInfo } = useWalletNFTContext();
   const principal = useAccountPrincipalString();
 
-  const { result: userExtNFTs, loading } = useExtUserNFTs(principal);
-  const { result: extNFTs } = useEXTAllCollections();
+  const { data: userExtNFTs, isLoading: loading } = useExtUserNFTs(principal);
+  const { data: extNFTs } = useEXTAllCollections();
 
   const extNFT = useMemo(() => {
     if (isUndefinedOrNull(extNFTs) || isUndefinedOrNull(displayedNFTInfo)) return undefined;

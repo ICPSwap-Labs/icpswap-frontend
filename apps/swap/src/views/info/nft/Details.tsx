@@ -18,9 +18,9 @@ const Pages: PageType[] = [{ key: "NFTs", label: i18n.t("nfts"), component: NFTs
 export default function NFTCanisterDetails() {
   const { id: canisterId } = useParams() as { id: string };
 
-  const { result: metadata, loading } = useNFTCanisterMetadata(canisterId);
-  const { result: cycles } = useNFTCanisterCycles(canisterId);
-  const { result: count } = useNFTUserCanisterCount(canisterId, "");
+  const { data: metadata, isLoading: loading } = useNFTCanisterMetadata(canisterId);
+  const { data: cycles } = useNFTCanisterCycles(canisterId);
+  const { data: count } = useNFTUserCanisterCount(canisterId, "");
 
   const [pageKey, setPageKey] = useState(Pages[0].key);
 

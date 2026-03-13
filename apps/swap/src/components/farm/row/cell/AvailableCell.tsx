@@ -31,8 +31,8 @@ export function AvailableCell({ initArgs, state, farmInfo }: AvailableCellProps)
 
   const poolId = farmInfo?.pool.toString();
 
-  const { result: userAllPositions } = useSwapUserPositions(poolId, principal?.toString());
-  const { result: poolMetadata } = useSwapPoolMetadata(poolId);
+  const { data: userAllPositions } = useSwapUserPositions(poolId, principal?.toString());
+  const { data: poolMetadata } = useSwapPoolMetadata(poolId);
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !initArgs || !poolMetadata) return undefined;

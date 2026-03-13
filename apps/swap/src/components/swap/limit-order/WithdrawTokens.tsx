@@ -26,7 +26,7 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
 
   const [, inputToken] = useToken(transaction.token0Id);
   const [, outputToken] = useToken(transaction.token1Id);
-  const { result: unusedBalance } = useUserUnusedBalance(transaction.poolId, principal, refreshTrigger);
+  const { data: unusedBalance } = useUserUnusedBalance(transaction.poolId, principal, refreshTrigger);
   const [openTip] = useTips();
 
   const isSorted = inputToken && outputToken ? inputToken.sortsBefore(outputToken) : undefined;

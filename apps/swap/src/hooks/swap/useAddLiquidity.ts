@@ -423,7 +423,7 @@ export function useAddLiquidityCall() {
 
         const { token0, token1, fee } = position.pool;
         hasPassCode =
-          passCode.find(
+          passCode?.find(
             (ele) =>
               ele.token0.toString() === token0.address &&
               ele.token1.toString() === token1.address &&

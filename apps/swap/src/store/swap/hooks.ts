@@ -166,7 +166,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     return isUseTransfer(inputToken) ? undefined : inputToken.address;
   }, [inputToken]);
 
-  const { result: allowance } = useAllowance({
+  const { data: allowance } = useAllowance({
     canisterId: allowanceTokenId,
     owner: principal?.toString(),
     spender: poolId,

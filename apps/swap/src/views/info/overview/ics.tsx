@@ -22,9 +22,9 @@ export function Ics() {
 
   const infoToken = useInfoToken(ICS.address);
   const icpInfoToken = useInfoToken(ICP.address);
-  const { result: tokenSupply } = useTokenSupply(ICS.address);
-  const { result: tokenAnalysis } = useTokenAnalysis(ICS.address);
-  const { result: tokenBurned } = useTokenBurned(ICS.address);
+  const { data: tokenSupply } = useTokenSupply(ICS.address);
+  const { data: tokenAnalysis } = useTokenAnalysis(ICS.address);
+  const { data: tokenBurned } = useTokenBurned(ICS.address);
 
   const marketCap = useMemo(() => {
     if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(infoToken)) {

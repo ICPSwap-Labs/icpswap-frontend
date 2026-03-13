@@ -54,7 +54,7 @@ function TokenNewsItem({ tokenNews }: TokenNewsItemProps) {
 
 export function SocialMedia() {
   const { token } = useSwapProContext();
-  const { result: tokenNews, loading } = useTokenSocialMedias(token?.address);
+  const { data: tokenNews, isLoading } = useTokenSocialMedias(token?.address);
 
   const [page, setPage] = useState(1);
 
@@ -67,7 +67,7 @@ export function SocialMedia() {
   return (
     <Box sx={{ width: "100%", overflow: "auto" }}>
       <Flex fullWidth vertical align="flex-start" gap="16px 0">
-        {loading ? (
+        {isLoading ? (
           <Box sx={{ width: "100%", padding: "24px" }}>
             <LoadingRow>
               <div />

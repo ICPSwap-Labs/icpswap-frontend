@@ -12,7 +12,7 @@ interface UseIsLimitOrderProps {
 export function useIsLimitOrder({ poolId, positionId }: UseIsLimitOrderProps) {
   const principal = useAccountPrincipal();
 
-  const { result: userLimitOrders } = useUserLimitOrders(poolId, principal?.toString());
+  const { data: userLimitOrders } = useUserLimitOrders(poolId, principal?.toString());
 
   return useMemo(() => {
     if (isUndefinedOrNull(positionId) || isUndefinedOrNull(userLimitOrders)) return undefined;

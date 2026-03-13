@@ -36,7 +36,7 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
     };
   }, []);
 
-  const { result: aprCharts } = useStakeAprChartData(canisterId, start_time, end_time);
+  const { data: aprCharts } = useStakeAprChartData(canisterId, start_time, end_time);
 
   const chartData = useMemo(() => {
     if (!aprCharts || aprCharts.length === 0) return undefined;

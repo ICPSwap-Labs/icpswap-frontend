@@ -10,14 +10,14 @@ export default function AllTransactions() {
   const { t } = useTranslation();
   const [checked, setChecked] = useState(true);
 
-  const { result, loading } = useSwapTransactions({ page: 1, limit: 500 });
+  const { data: result, isLoading: loading } = useSwapTransactions({ page: 1, limit: 500 });
   const transactions = result?.content;
 
   const handleCheckChange = (checked: boolean) => {
     setChecked(checked);
   };
 
-  const { result: tokenList } = useTokensFromList();
+  const { data: tokenList } = useTokensFromList();
 
   const showedTokens = useMemo(() => {
     if (!tokenList || !checked) return undefined;

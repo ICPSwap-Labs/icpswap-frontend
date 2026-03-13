@@ -66,7 +66,7 @@ export function useTokenDecimals(tokenAddress: string | undefined) {
 }
 
 export function useTokenLogo(tokenAddress: string | undefined) {
-  return useWeb3CallsData<string>(
+  return useWeb3CallsData<string | undefined>(
     useCallback(async () => {
       if (!tokenAddress) return undefined;
       return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${tokenAddress}/logo.png`;
@@ -88,7 +88,7 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): ERC
   const { result: name } = useTokenName(tokenAddress);
   const { result: symbol } = useTokenSymbol(tokenAddress);
   const { result: decimals } = useTokenDecimals(tokenAddress);
-  const { result: logo } = useTokenLogo(tokenAddress);
+  const { data: logo } = useTokenLogo(tokenAddress);
 
   return useMemo(() => {
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.

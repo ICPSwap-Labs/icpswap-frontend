@@ -28,7 +28,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [hiddenCanisterIds, setHiddenCanisterIds] = useState<{ [canisterId: string]: boolean }>({});
 
-  const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
+  const { data: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   const allBridgeTokens = useAllBridgeTokens(minterInfo);
 

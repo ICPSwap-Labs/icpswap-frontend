@@ -20,7 +20,7 @@ export function BlackHolePositions({ poolId }: BlackHolePositionsProps) {
     return [pool.token0.address, pool.token1.address];
   }, [pool]);
 
-  const { result: liquidityLocks } = useLiquidityLockIds(tokenIds);
+  const { data: liquidityLocks } = useLiquidityLockIds(tokenIds);
 
   const blackHoleIds = useMemo(() => {
     if (!liquidityLocks) return null;

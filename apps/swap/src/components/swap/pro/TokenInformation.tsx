@@ -47,7 +47,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
   const theme = useTheme();
   const [moreInformation, setMoreInformation] = useState(false);
 
-  const { result: tokenListInfo } = useTokenListTokenInfo(token.address);
+  const { data: tokenListInfo } = useTokenListTokenInfo(token.address);
   const infoToken = useInfoToken(token.address);
 
   const tokenId = useMemo(() => token?.address, [token]);
@@ -56,8 +56,8 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
     return infoToken?.price;
   }, [infoToken]);
 
-  const { result: tokenSupply } = useTokenSupply(tokenId);
-  const { result: tokenAnalysis } = useTokenAnalysis(tokenId);
+  const { data: tokenSupply } = useTokenSupply(tokenId);
+  const { data: tokenAnalysis } = useTokenAnalysis(tokenId);
 
   const marketCap = useMemo(() => {
     if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(tokenPrice) && tokenAnalysis.marketAmount) {

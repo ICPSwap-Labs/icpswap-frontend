@@ -15,7 +15,7 @@ export function useUserAvailableTokensValue() {
 
   const infoAllTokens = useInfoAllTokens();
 
-  const { result: pools } = useStakePools({ state: getStateValue(StakingState.LIVE), offset: 0, limit: 10000 });
+  const { data: pools } = useStakePools({ state: getStateValue(StakingState.LIVE), offset: 0, limit: 10000 });
 
   const allAvailableStakeTokens = useMemo(() => {
     if (!pools) return [];

@@ -50,7 +50,7 @@ export default function NFTRecommend() {
   const navigate = useNavigate();
   const [offset] = pageArgsFormat(1, 10);
 
-  const { loading, result } = useNFTRecommend(offset, 10);
+  const { isLoading: loading, data: result } = useNFTRecommend(offset, 10);
   const { content } = result ?? { totalElements: 0, content: [] as TradeOrder[] };
 
   const handleMoreClick = () => {

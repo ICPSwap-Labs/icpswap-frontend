@@ -20,7 +20,7 @@ export interface PoolPositionHoldersChartsProps {
 
 export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHoldersChartsProps) {
   const { t } = useTranslation();
-  const { result } = usePoolPositionHolders(poolId, POSITION_SIZE);
+  const { data: result } = usePoolPositionHolders(poolId, POSITION_SIZE);
 
   const { topHoldValue, topHoldPercent, totalPositionsValue, totalPositions } = useMemo(() => {
     if (isUndefinedOrNull(result) || isUndefinedOrNull(result.positionList)) return {};

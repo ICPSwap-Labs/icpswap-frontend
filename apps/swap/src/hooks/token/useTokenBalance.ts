@@ -12,6 +12,7 @@ import {
   BigNumber,
   isUndefinedOrNull,
   nonUndefinedOrNull,
+  toHexString,
 } from "@icpswap/utils";
 import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
@@ -105,7 +106,7 @@ export function useTokenBalance({
   sub?: Uint8Array;
 }) {
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["getTokenBalance", tokenId, account, sub],
+    queryKey: ["getTokenBalance", tokenId, account, sub ? toHexString(sub) : ""],
     queryFn: async () => {
       if (!account || !tokenId) return null;
       const result = await getTokenBalance(tokenId, account, sub);

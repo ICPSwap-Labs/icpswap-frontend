@@ -28,7 +28,7 @@ export default function CollectionUserTransactions({ canisterId }: { canisterId:
 
   const principal = useAccountPrincipalString();
 
-  const { result, loading } = useUserNFTTransactions(canisterId, principal, offset, limit);
+  const { data: result, isLoading: loading } = useUserNFTTransactions(canisterId, principal, offset, limit);
 
   const { content: list, totalElements } = useMemo(
     () => result ?? ({ totalElements: 0, content: [], offset: 0, limit: 10 } as PaginationResult<NFTTransaction>),

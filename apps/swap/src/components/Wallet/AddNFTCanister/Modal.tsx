@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => {
 export function CollectionInfoItem({ data }: { data: NFTControllerInfo }) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const { result: logo } = useCanisterLogo(data.cid);
+  const { data: logo } = useCanisterLogo(data.cid);
 
   const [userSelectedCanisters, setUserSelectedCanisters, deleteUserSelectedCanister] = useSelectedCanistersManager();
 
@@ -99,7 +99,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const [searchValue, setSearchValue] = useState("");
 
-  const { result, loading } = useNFTCanisterList(0, 1000);
+  const { data: result, isLoading: loading } = useNFTCanisterList(0, 1000);
   const { content } = result ?? { content: [] as NFTControllerInfo[] };
 
   const list = useMemo(() => {

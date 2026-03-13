@@ -26,7 +26,7 @@ export const SwapFailedTransactionTips = memo(
       onCheckChange(check);
     }, []);
 
-    const { result: swapFailedTransactions } = useSwapFailedTransactions(poolId);
+    const { data: swapFailedTransactions } = useSwapFailedTransactions(poolId);
 
     useEffect(() => {
       async function call() {

@@ -37,7 +37,7 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
 
   const [, pool] = usePoolByPoolId(poolId);
 
-  const { result: positionDetails } = usePositionDetailsFromId(poolId, positionId.toString());
+  const { data: positionDetails } = usePositionDetailsFromId(poolId, positionId.toString());
 
   const position = usePositionWithPool({
     pool,

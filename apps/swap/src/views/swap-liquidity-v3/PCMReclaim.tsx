@@ -232,9 +232,9 @@ export default function PCMBalanceReclaim() {
 
   const principal = useAccountPrincipal();
 
-  const { result: unusedBalance, loading: unUsedLoading } = useUserPCMBalance(principal);
-  const { result: passCodes, loading: passLoading } = usePassCode(principal?.toString());
-  const { result: pcmMetadata, loading: metadataLoading } = usePCMMetadata();
+  const { data: unusedBalance, isLoading: unUsedLoading } = useUserPCMBalance(principal);
+  const { data: passCodes, isLoading: passLoading } = usePassCode(principal?.toString());
+  const { data: pcmMetadata, isLoading: metadataLoading } = usePCMMetadata();
 
   const totalClaimedNumbers = useMemo(() => {
     return (passCodes?.length ?? 0) + (unusedBalance ? 1 : 0);

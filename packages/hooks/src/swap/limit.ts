@@ -1,10 +1,8 @@
-import { useCallback } from "react";
 import { swapPool, limitTransaction } from "@icpswap/actor";
 import type { LimitOrderKey, LimitOrderValue, Null, LimitTransactionResult, LimitOrder } from "@icpswap/types";
 import { resultFormat, isAvailablePageArgs, nonUndefinedOrNull, isUndefinedOrNull } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
-
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function placeOrder(canisterId: string, positionId: bigint, tickLimit: bigint) {
   return resultFormat<boolean>(
@@ -26,14 +24,19 @@ export async function getUserLimitOrders(canisterId: string, principal: string) 
   return resultFormat<Array<LimitOrder>>(result).data;
 }
 
-export function useUserLimitOrders(canisterId: string | Null, principal: string | Null, refresh?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserLimitOrders(
+  canisterId: string | Null,
+  principal: string | Null,
+  refresh?: number,
+): UseQueryResult<LimitOrder[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserLimitOrders", canisterId, principal, refresh],
+    queryFn: async () => {
       if (!canisterId || !principal) return undefined;
       return await getUserLimitOrders(canisterId, principal);
-    }, [canisterId, principal]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId && !!principal,
+  });
 }
 
 export async function getLimitOrders(canisterId: string) {
@@ -43,13 +46,22 @@ export async function getLimitOrders(canisterId: string) {
   }>(await (await swapPool(canisterId)).getLimitOrders()).data;
 }
 
-export function useLimitOrders(canisterId: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useLimitOrders(canisterId: string | Null): UseQueryResult<
+  | {
+      lowerLimitOrders: Array<[LimitOrderKey, LimitOrderValue]>;
+      upperLimitOrders: Array<[LimitOrderKey, LimitOrderValue]>;
+    }
+  | undefined,
+  Error
+> {
+  return useQuery({
+    queryKey: ["useLimitOrders", canisterId],
+    queryFn: async () => {
       if (isUndefinedOrNull(canisterId)) return undefined;
       return await getLimitOrders(canisterId);
-    }, [canisterId]),
-  );
+    },
+    enabled: !isUndefinedOrNull(canisterId),
+  });
 }
 
 export async function getPoolLimitAvailableState(canisterId: string) {
@@ -57,14 +69,18 @@ export async function getPoolLimitAvailableState(canisterId: string) {
   return resultFormat<boolean>(result).data;
 }
 
-export function usePoolLimitAvailableState(canisterId: string | Null, refresh?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function usePoolLimitAvailableState(
+  canisterId: string | Null,
+  refresh?: number,
+): UseQueryResult<boolean | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePoolLimitAvailableState", canisterId, refresh],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getPoolLimitAvailableState(canisterId);
-    }, [canisterId]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getUserLimitTransactions(principal: string, start: number, offset: number, limit: number) {
@@ -79,15 +95,17 @@ export function useUserLimitTransactions(
   offset: number,
   limit: number,
   refresh?: number,
-) {
-  return useCallsData<LimitTransactionResult>(
-    useCallback(async () => {
+): UseQueryResult<LimitTransactionResult | undefined, Error> {
+  const enabled = nonUndefinedOrNull(start) && nonUndefinedOrNull(principal) && isAvailablePageArgs(offset, limit);
+  return useQuery({
+    queryKey: ["useUserLimitTransactions", start, principal, offset, limit, refresh],
+    queryFn: async () => {
       if (nonUndefinedOrNull(start) && nonUndefinedOrNull(principal) && isAvailablePageArgs(offset, limit)) {
         return await getUserLimitTransactions(principal, start, offset, limit);
       }
 
       return undefined;
-    }, [start, principal, offset, limit]),
-    refresh,
-  );
+    },
+    enabled,
+  });
 }

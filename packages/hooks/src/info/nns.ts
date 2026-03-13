@@ -1,17 +1,16 @@
-import { useCallback } from "react";
 import { icpswap_info_fetch_get } from "@icpswap/utils";
-import { NnsTokenInfo } from "@icpswap/types";
-
-import { useCallsData } from "../useCallData";
+import type { NnsTokenInfo } from "@icpswap/types";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function getNnsTokensInfo() {
   return (await icpswap_info_fetch_get<Array<NnsTokenInfo>>(`/sns/list`))?.data;
 }
 
-export function useNnsTokensInfo() {
-  return useCallsData(
-    useCallback(async () => {
+export function useNnsTokensInfo(): UseQueryResult<NnsTokenInfo[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNnsTokensInfo"],
+    queryFn: async () => {
       return await getNnsTokensInfo();
-    }, []),
-  );
+    },
+  });
 }

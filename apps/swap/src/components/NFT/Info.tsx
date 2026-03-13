@@ -203,7 +203,7 @@ export default function NFTInfo({
   const [buyReviewShow, setBuyReviewShow] = useState(false);
   const [reload, setReload] = useState(false);
 
-  const { result: canisterMetadata } = useCanisterMetadata(canisterId);
+  const { data: canisterMetadata } = useCanisterMetadata(canisterId);
 
   const { metadata } = useNFTMetadata(canisterId, tokenId, reload);
 
@@ -211,7 +211,7 @@ export default function NFTInfo({
 
   const isOwner = metadata?.owner === account;
 
-  const { result: orderInfo } = useNFTOrderInfo(canisterId, tokenId, reload);
+  const { data: orderInfo } = useNFTOrderInfo(canisterId, tokenId, reload);
 
   const isOnSale = Boolean(orderInfo);
 

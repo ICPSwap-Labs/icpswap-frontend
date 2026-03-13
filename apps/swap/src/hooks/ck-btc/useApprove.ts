@@ -47,7 +47,7 @@ export function useApprove() {
 
   const spender = ckBTC_MINTER_ID;
 
-  const { result: allowance } = useAllowance({ spender, owner: principal });
+  const { data: allowance } = useAllowance({ spender, owner: principal });
 
   return useCallback(
     async ({ amount, expected_allowance }: useApproveCallbackArgs) => {

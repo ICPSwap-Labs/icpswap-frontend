@@ -12,7 +12,7 @@ export function Swap() {
   const { t } = useTranslation();
   const { setSwapTVL } = useContext(IcpswapContext);
 
-  const { result: globalProtocol } = useGlobalProtocol();
+  const { data: globalProtocol } = useGlobalProtocol();
 
   useEffect(() => {
     if (globalProtocol) {

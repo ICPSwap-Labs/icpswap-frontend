@@ -5,7 +5,7 @@ import type { NFTTokenMetadata, Null } from "@icpswap/types";
 import { useNFTSvg } from "./useNFTSvg";
 
 export function useNFTMetadata(canisterId: string | Null, tokenId: number | bigint | Null, reload?: boolean) {
-  const { result: metadata, loading } = useNFTMetadataCall(canisterId, tokenId, reload);
+  const { data: metadata, isLoading: loading } = useNFTMetadataCall(canisterId, tokenId, reload);
 
   const { isPositionNFT, positionSVG } = useNFTSvg(metadata);
 

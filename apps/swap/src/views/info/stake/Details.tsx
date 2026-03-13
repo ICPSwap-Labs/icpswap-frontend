@@ -47,11 +47,11 @@ export default function PoolsDetails() {
   const { t } = useTranslation();
   const classes = useStyles();
   const { id } = useParams<{ id: string }>();
-  const { result: pool } = useStakingTokenPool(id);
+  const { data: pool } = useStakingTokenPool(id);
 
   const [recordType, setRecordType] = useState("transactions");
 
-  const { result: cycles } = useStakingPoolCycles(id);
+  const { data: cycles } = useStakingPoolCycles(id);
   const { result: poolTokenBalance } = useTokenBalance({ tokenId: pool?.stakingToken.address, account: id });
   const [, rewardToken] = useToken(pool?.rewardToken.address);
 

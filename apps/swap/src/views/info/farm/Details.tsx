@@ -62,9 +62,9 @@ export default function FarmDetails() {
   const { t } = useTranslation();
   const classes = useStyles();
   const { id: farmId } = useParams() as { id: string };
-  const { result: farmInfo } = useUserFarmInfo(farmId, AnonymousPrincipal);
-  const { result: farmMetadata } = useV3FarmRewardMetadata(farmId);
-  const { result: cycles } = useFarmCycles(farmId);
+  const { data: farmInfo } = useUserFarmInfo(farmId, AnonymousPrincipal);
+  const { data: farmMetadata } = useV3FarmRewardMetadata(farmId);
+  const { data: cycles } = useFarmCycles(farmId);
 
   const state = useFarmState(farmInfo);
 

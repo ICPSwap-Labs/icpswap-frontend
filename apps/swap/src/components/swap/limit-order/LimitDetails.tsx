@@ -55,14 +55,14 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
     return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
   }, [principal]);
 
-  const { result: inputTokenSubBalance } = useTokenBalance({
+  const { data: inputTokenSubBalance } = useTokenBalance({
     canisterId: inputToken?.address,
     address: poolId,
     sub,
   });
 
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal);
-  const { result: inputTokenBalance } = useTokenBalance({
+  const { data: unusedBalance } = useUserUnusedBalance(poolId, principal);
+  const { data: inputTokenBalance } = useTokenBalance({
     canisterId: inputToken?.address,
     address: principal,
   });

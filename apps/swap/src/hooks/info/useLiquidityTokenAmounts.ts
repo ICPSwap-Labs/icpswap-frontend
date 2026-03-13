@@ -17,8 +17,8 @@ export function useLiquidityTokenAmountsForInfoPoolTvl({
   token0: Token | Null;
   token1: Token | Null;
 }) {
-  const { result: positionsResult } = useSwapUserPositionWithAmount(poolId, 0, LIMIT_PER_REQUEST);
-  const { result: poolDetails } = useInfoPoolDetails({ poolId });
+  const { data: positionsResult } = useSwapUserPositionWithAmount(poolId, 0, LIMIT_PER_REQUEST);
+  const { data: poolDetails } = useInfoPoolDetails({ poolId });
 
   return useMemo(() => {
     if (

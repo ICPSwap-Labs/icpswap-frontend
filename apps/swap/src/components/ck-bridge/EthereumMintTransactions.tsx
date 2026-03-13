@@ -153,7 +153,7 @@ export interface DissolveRecordsProps {
 export function Erc20DissolveTransactions({ refresh, token }: DissolveRecordsProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
-  const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
+  const { data: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   const params = useMemo(() => {
     if (!principal) return undefined;

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { Null } from "@icpswap/types";
 
 export function useSneedLedger(tokenIds: string[] | Null) {
-  const { result: locksIds } = useLiquidityLockIds(tokenIds);
+  const { data: locksIds } = useLiquidityLockIds(tokenIds);
 
   return useMemo(() => {
     if (!locksIds) return undefined;

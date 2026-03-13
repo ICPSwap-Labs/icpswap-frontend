@@ -49,7 +49,7 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
   const [values, setValues] = useState<Value>({ standard: NFT_STANDARDS.EXT } as Value);
   const [riskWarning, setRiskWarning] = useState(false);
 
-  const { result: extAllCollections } = useEXTAllCollections();
+  const { data: extAllCollections } = useEXTAllCollections();
 
   const { nfts, importNFT } = useEXTManager();
 

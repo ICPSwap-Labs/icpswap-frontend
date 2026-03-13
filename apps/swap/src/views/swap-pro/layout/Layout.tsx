@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { CssBaseline, Box, makeStyles, useTheme, Theme } from "components/Mui";
 import Background from "components/Background";
 import { Flex } from "@icpswap/ui";
-import { useSettingGlobalTips } from "@icpswap/hooks";
+
 import { GlobalTips } from "components/Layout/GlobalTips";
 
 import Header from "./Header";
@@ -52,17 +52,6 @@ export interface SwapProLayoutProps {
 export function SwapProLayout({ children }: SwapProLayoutProps) {
   const theme = useTheme();
   const classes = useStyles();
-
-  const [globalTipsShow, setGlobalTipsShow] = useState<boolean>(true);
-  const [globalTipsContent, setGlobalTipsContent] = useState<string | undefined>(undefined);
-
-  const { result: globalTips } = useSettingGlobalTips();
-
-  useEffect(() => {
-    if (globalTips) {
-      setGlobalTipsContent(globalTips.content);
-    }
-  }, [globalTips]);
 
   return (
     <>

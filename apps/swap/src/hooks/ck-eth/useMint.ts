@@ -3,7 +3,7 @@ import { useMemo, useState, useCallback } from "react";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { principalToBytes32 } from "utils/ic/index";
 import { useEthMinterHelperContract, useBlockNumber } from "hooks/web3/index";
-import { toHexString } from "utils/web3/index";
+import { numberToHexNumber } from "utils/web3/index";
 import { useUpdateEthMintTx } from "store/web3/hooks";
 import { Null } from "@icpswap/types";
 import { bytesStringOfNullSubAccount } from "constants/ckETH";
@@ -46,7 +46,7 @@ export function useMintCallback({ minter_address }: MinterProps) {
       const tx = {
         to: ethHelpMinter.address,
         data: ethHelpMinter.interface.encodeFunctionData("depositEth", [bytes32, subaccount]),
-        value: toHexString(amount),
+        value: numberToHexNumber(amount),
       };
 
       const result = await provider

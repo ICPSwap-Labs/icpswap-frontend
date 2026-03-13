@@ -1,14 +1,14 @@
-import { useCallback } from "react";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { useSupportedActiveChain } from "hooks/web3/index";
-import { useCallsData, Call } from "@icpswap/hooks";
 
-export function useWeb3CallsData<T>(fn: Call<T>, reload?: number | string | boolean) {
+export function useWeb3CallsData<T>(
+  fn: () => Promise<T>,
+  reload?: number | string | boolean,
+): UseQueryResult<T, Error> {
   const supportedActiveChain = useSupportedActiveChain();
 
-  return useCallsData<T>(
-    useCallback(async () => {
-      return await fn();
-    }, [supportedActiveChain, fn]),
-    reload,
-  );
+  return useQuery({
+    queryKey: ["useWeb3CallsData", supportedActiveChain, fn, reload],
+    queryFn: () => fn(),
+  });
 }

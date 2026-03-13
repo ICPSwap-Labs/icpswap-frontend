@@ -36,7 +36,7 @@ export default function Farm() {
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
-  const { result: farmRewardMetadata } = useV3FarmRewardMetadata(farmId);
+  const { data: farmRewardMetadata } = useV3FarmRewardMetadata(farmId);
 
   const handleTabChange = (tab: Tab) => {
     setTabKey(tab.key);

@@ -30,8 +30,8 @@ function NFTRow({ info, updateHidedNFTs }: NFTRowProps) {
   const { setPages } = useWalletContext();
   const [hideZeroNFT] = useHideZeroNFTManager();
 
-  const { result: count } = useCanisterUserNFTCount(info.cid, account);
-  const { result: logo } = useCanisterLogo(info.cid);
+  const { data: count } = useCanisterUserNFTCount(info.cid, account);
+  const { data: logo } = useCanisterLogo(info.cid);
 
   const handleNFTClick = useCallback(() => {
     setDisplayedNFTInfo({
@@ -124,9 +124,9 @@ interface ExtNFTsProps {
 
 function ExtNFTs({ updateHidedNFTs, updateExtNFTsLength }: ExtNFTsProps) {
   const principal = useAccountPrincipalString();
-  const { result: userAllExtNfts } = useExtUserNFTs(principal);
+  const { data: userAllExtNfts } = useExtUserNFTs(principal);
   const { nfts: importedExtNFTIds } = useEXTManager();
-  const { result: extNFTs } = useEXTAllCollections();
+  const { data: extNFTs } = useEXTAllCollections();
 
   const importedExtNFTs = useMemo(() => {
     if (isUndefinedOrNull(extNFTs) || isUndefinedOrNull(importedExtNFTIds)) return undefined;
@@ -157,7 +157,7 @@ function ExtNFTs({ updateHidedNFTs, updateExtNFTsLength }: ExtNFTsProps) {
 }
 
 export function NFTAssets() {
-  const { result: nftResult, loading } = useNFTCanisterList(0, 1000);
+  const { data: nftResult, isLoading: loading } = useNFTCanisterList(0, 1000);
   const [hidedNFTs, setHidedNFTs] = useState<Array<string>>([]);
   const [extNFTsLength, setExtNFTsLength] = useState<number | undefined>(undefined);
   const [hideZeroNFT] = useHideZeroNFTManager();

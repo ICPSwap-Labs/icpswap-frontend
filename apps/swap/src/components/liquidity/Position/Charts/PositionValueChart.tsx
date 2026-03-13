@@ -15,7 +15,7 @@ export function PositionValueChart({ poolId, positionId }: TokenChartsProps) {
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
-  const { result: positionValueChartData, loading } = usePositionValueChartData(poolId, positionId);
+  const { data: positionValueChartData, isLoading: loading } = usePositionValueChartData(poolId, positionId);
 
   const formattedPositionValueChartData = useMemo(() => {
     if (positionValueChartData) {

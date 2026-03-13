@@ -54,7 +54,7 @@ export function AddAddress() {
     setLoading(false);
   }, [name, address, handlePrev]);
 
-  const { result: addresses } = useAddressBook();
+  const { data: addresses } = useAddressBook();
 
   const error = useMemo(() => {
     if (isUndefinedOrNull(addresses)) return t("common.save");

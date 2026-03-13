@@ -84,7 +84,7 @@ export function SelectContact() {
     setAddAddressBookPrevPage(WalletManagerPage.SelectContact);
   }, [setPages]);
 
-  const { result: addresses, loading } = useAddressBook(refreshTrigger);
+  const { data: addresses, isLoading: loading } = useAddressBook(refreshTrigger);
 
   const filteredAddresses = useContactFilter({ search: searchKeyword, addresses });
 

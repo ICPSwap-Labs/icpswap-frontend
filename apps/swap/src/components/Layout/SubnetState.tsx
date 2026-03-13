@@ -17,8 +17,8 @@ export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { result: nodeMachines } = useNodeMachinesOfSubnet({ subnet: ICPSwapSubnet });
-  const { result: subnet } = useSubnetBlockRate({ subnet: ICPSwapSubnet });
+  const { data: nodeMachines } = useNodeMachinesOfSubnet({ subnet: ICPSwapSubnet });
+  const { data: subnet } = useSubnetBlockRate({ subnet: ICPSwapSubnet });
 
   const totalNodeMachines = useMemo(() => {
     if (isUndefinedOrNull(nodeMachines)) return null;

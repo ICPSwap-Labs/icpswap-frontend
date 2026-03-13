@@ -12,7 +12,7 @@ export function useStateSnsAllTokensInfo() {
 export function useFetchSnsAllTokensInfo() {
   const dispatch = useAppDispatch();
   const allTokensInfo = useStateSnsAllTokensInfo();
-  const { result: nnsTokens, loading } = useNnsTokensInfo();
+  const { data: nnsTokens, isLoading: loading } = useNnsTokensInfo();
 
   useEffect(() => {
     if (!nnsTokens) return;

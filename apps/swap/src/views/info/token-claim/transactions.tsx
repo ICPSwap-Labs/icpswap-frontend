@@ -50,7 +50,7 @@ export default function TokenClaimTransactions() {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useClaimEventTransactions(id, undefined, offset, pagination.pageSize);
+  const { data, isLoading } = useClaimEventTransactions(id, undefined, offset, pagination.pageSize);
 
   const handlePageChange = (page: number) => {
     setPagination({
@@ -59,7 +59,7 @@ export default function TokenClaimTransactions() {
     });
   };
 
-  const totalElements = Number(result?.totalElements ?? 0);
+  const totalElements = Number(data?.totalElements ?? 0);
 
   return (
     <InfoWrapper>
@@ -75,11 +75,11 @@ export default function TokenClaimTransactions() {
               <HeaderCell>{t("common.state")}</HeaderCell>
             </Header>
 
-            {result?.content?.map((ele, index) => <ClaimEventTransaction key={index} ele={ele} />)}
+            {data?.content?.map((ele, index) => <ClaimEventTransaction key={index} ele={ele} />)}
 
-            {result?.content?.length === 0 && !loading ? <NoData /> : null}
+            {data?.content?.length === 0 && !isLoading ? <NoData /> : null}
 
-            {loading ? (
+            {isLoading ? (
               <Box sx={{ padding: "16px" }}>
                 <LoadingRow>
                   <div />

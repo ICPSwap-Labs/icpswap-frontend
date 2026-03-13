@@ -38,8 +38,8 @@ export interface NFTItemProps {
 export function NFTItem({ canister }: NFTItemProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const { result: cycles } = useNFTCanisterCycles(canister.cid);
-  const { result: count } = useNFTCanisterCount(canister.cid);
+  const { data: cycles } = useNFTCanisterCycles(canister.cid);
+  const { data: count } = useNFTCanisterCount(canister.cid);
 
   return (
     <TableRow className={classes.wrapper}>
@@ -68,7 +68,7 @@ export default function NFTInfo() {
   const [page, setPage] = useState(1);
   const [offset] = pageArgsFormat(page, PAGE_SIZE);
 
-  const { result, loading } = useNFTCanisters(offset, PAGE_SIZE);
+  const { data: result, isLoading: loading } = useNFTCanisters(offset, PAGE_SIZE);
   const { content, totalElements } = result ?? { totalElements: 0, content: [] as NFTCanisterInfo[] };
 
   return (

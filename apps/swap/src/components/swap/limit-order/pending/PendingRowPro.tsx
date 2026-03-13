@@ -50,7 +50,7 @@ export function PendingRowPro({
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
 
-  const { result: positionDetails } = usePositionDetailsFromId(pool?.id, positionId.toString());
+  const { data: positionDetails } = usePositionDetailsFromId(pool?.id, positionId.toString());
 
   const position = usePositionWithPool({
     pool,

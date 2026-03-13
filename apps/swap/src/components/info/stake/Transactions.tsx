@@ -62,7 +62,7 @@ export function StakeTransactions({ id }: TransactionsProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useStakingPoolTransactions(id, undefined, offset, pagination.pageSize);
+  const { data: result, isLoading: loading } = useStakingPoolTransactions(id, undefined, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (page: number) => {

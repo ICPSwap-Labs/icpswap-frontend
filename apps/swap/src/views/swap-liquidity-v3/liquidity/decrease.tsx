@@ -31,7 +31,7 @@ export default function DecreaseLiquidity() {
   const principal = useAccountPrincipal();
   const { positionId, pool: poolId } = useParams() as { positionId: string; pool: string };
 
-  const { result: position, loading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
+  const { data: position, isLoading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
 
   const { independentField, typedValue } = useBurnState();
   const {

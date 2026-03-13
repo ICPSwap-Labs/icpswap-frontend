@@ -38,7 +38,7 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
     refresh,
     sub,
   });
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
+  const { data: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
 
   return useMemo(() => {
     return {

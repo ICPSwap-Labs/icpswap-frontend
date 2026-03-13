@@ -19,7 +19,7 @@ export function ICPSwap() {
   const [farmTVL, setFarmTVL] = useState<string | number | Null>(null);
   const [stakeTVL, setStakeTVL] = useState<string | number | Null>(null);
 
-  const { result: tokenList } = useTokensFromList();
+  const { data: tokenList } = useTokensFromList();
 
   const tvl = useMemo(() => {
     if (nonUndefinedOrNull(swapTVL) && nonUndefinedOrNull(farmTVL) && nonUndefinedOrNull(stakeTVL)) {

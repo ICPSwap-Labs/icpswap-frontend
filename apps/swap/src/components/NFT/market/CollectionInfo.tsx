@@ -67,8 +67,8 @@ export default function CollectionInfo({ canisterId }: { canisterId: string }) {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  const { result: canister, loading } = useCanisterMetadata(canisterId);
-  const { result: collectionResult } = useCollectionData(canisterId);
+  const { data: canister, isLoading: loading } = useCanisterMetadata(canisterId);
+  const { data: collectionResult } = useCollectionData(canisterId);
 
   const mintSupply = useNFTMintSupply(canister);
 

@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 export default function SwapPools() {
   const { t } = useTranslation();
-  const { result: pools, loading } = useNodeInfoAllPools();
+  const { data: pools, isLoading: loading } = useNodeInfoAllPools();
 
   const _pools = useMemo(() => {
     return pools?.filter((pool) => pool.poolFee === 3000);

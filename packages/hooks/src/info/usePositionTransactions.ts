@@ -1,21 +1,20 @@
-import { useCallback } from "react";
-import type { PositionTransaction, PaginationResult, Null } from "@icpswap/types";
+import type { Null, PaginationResult, PositionTransaction } from "@icpswap/types";
 import { baseIndex, positionTransactionsStorage } from "@icpswap/actor";
 import { isAvailablePageArgs, isUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
-
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export async function getPositionTransactionsStorage() {
   return resultFormat<string>(await (await baseIndex()).transferPositionLastStorage()).data;
 }
 
-export function usePositionTransactionsStorage() {
-  return useCallsData(
-    useCallback(async () => {
+export function usePositionTransactionsStorage(): UseQueryResult<string | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePositionTransactionsStorage"],
+    queryFn: async () => {
       return await getPositionTransactionsStorage();
-    }, []),
-  );
+    },
+  });
 }
 
 export async function getPositionStorageTransactions(
@@ -44,15 +43,18 @@ export function usePositionStorageTransactions(
   principal: string | Null,
   offset: number,
   limit: number,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<PaginationResult<PositionTransaction> | null | undefined, Error> {
+  const enabled = isAvailablePageArgs(offset, limit) && !isUndefinedOrNull(storageId) && !isUndefinedOrNull(poolIds);
+  return useQuery({
+    queryKey: ["usePositionStorageTransactions", storageId, principal, offset, limit, poolIds],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit) || isUndefinedOrNull(storageId) || isUndefinedOrNull(poolIds))
         return null;
 
       return await getPositionStorageTransactions(storageId, poolIds, principal, offset, limit);
-    }, [storageId, principal, offset, limit, poolIds]),
-  );
+    },
+    enabled,
+  });
 }
 
 export function usePositionTransactions(
@@ -60,8 +62,8 @@ export function usePositionTransactions(
   principal: string | Null,
   offset: number,
   limit: number,
-) {
-  const { result: storageId } = usePositionTransactionsStorage();
+): UseQueryResult<PaginationResult<PositionTransaction> | null | undefined, Error> {
+  const { data: storageId } = usePositionTransactionsStorage();
 
   return usePositionStorageTransactions(storageId, poolIds, principal, offset, limit);
 }

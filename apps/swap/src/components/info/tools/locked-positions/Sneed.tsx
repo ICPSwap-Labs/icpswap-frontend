@@ -23,7 +23,7 @@ export function SneedLockedPositions({ poolId }: SneedLockedPositionsProps) {
 
   const sneedLedger = useSneedLedger(tokenIds);
 
-  const { result: __positions, loading } = useSwapUserPositions(poolId, sneedLedger);
+  const { data: __positions, isLoading: loading } = useSwapUserPositions(poolId, sneedLedger);
 
   const positions = useMemo(() => {
     if (isUndefinedOrNull(__positions)) return null;

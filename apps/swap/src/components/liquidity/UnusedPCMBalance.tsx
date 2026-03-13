@@ -26,10 +26,10 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
   const { setRefreshTriggers } = useGlobalContext();
   const refreshTrigger = useRefreshTrigger(TRIGGER_KEY);
 
-  const { result: unusedPCMBalance } = useUserPCMBalance(principal, refreshTrigger);
-  const { result: pcmMetadata } = usePCMMetadata();
+  const { data: unusedPCMBalance } = useUserPCMBalance(principal, refreshTrigger);
+  const { data: pcmMetadata } = usePCMMetadata();
   const [, pcmToken] = useToken(pcmMetadata?.tokenCid.toString());
-  const { result: passCodes } = useUserPassCodes(refreshTrigger);
+  const { data: passCodes } = useUserPassCodes(refreshTrigger);
 
   const { callback: withdrawPCMBalance, loading: withdrawPCMBalanceLoading } = useWithdrawPCMBalanceCallback();
 

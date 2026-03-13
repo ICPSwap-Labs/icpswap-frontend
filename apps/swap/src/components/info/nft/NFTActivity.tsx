@@ -34,7 +34,7 @@ export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
     setPagination({ pageNum: 1, pageSize: 10 });
   }, [reload, setPagination]);
 
-  const { loading, result } = useNFTTradeTransactions({
+  const { isLoading: loading, data: result } = useNFTTradeTransactions({
     canisterId,
     name: undefined,
     tokenIndex: BigInt(tokenId),

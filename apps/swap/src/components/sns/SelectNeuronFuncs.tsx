@@ -16,11 +16,11 @@ export function SelectNeuronFuncs({ governance_id, onConfirm }: SelectNeuronFunc
   const [filterFuncIds, setFilterFuncIds] = useState<bigint[]>([]);
   const [selectedFuncIds, setSelectedFuncIds] = useState<bigint[]>([]);
 
-  const { result } = useNeuronSystemFunctions(governance_id);
+  const { data } = useNeuronSystemFunctions(governance_id);
 
   const functions = useMemo(() => {
-    return result?.functions.filter((e) => e.name !== "All non-critical topics");
-  }, [result]);
+    return data?.functions.filter((e) => e.name !== "All non-critical topics");
+  }, [data]);
 
   useEffect(() => {
     if (functions) {

@@ -66,7 +66,7 @@ export function useICPAmountUSDValue(amount: number | null | string | undefined 
 export function useICP2CyclesManager() {
   const icpPrice = useUSDPriceById(ICP.address);
 
-  const { result: xdr_usd } = useXDR2USD();
+  const { data: xdr_usd } = useXDR2USD();
 
   return useMemo(() => {
     if (nonUndefinedOrNull(icpPrice) && nonUndefinedOrNull(xdr_usd)) {
@@ -78,7 +78,7 @@ export function useICP2CyclesManager() {
 
 export function useFetchGlobalTokenList() {
   const dispatch = useAppDispatch();
-  const { result: tokens, loading } = useTokensFromList();
+  const { data: tokens, isLoading } = useTokensFromList();
 
   useEffect(() => {
     if (tokens && tokens.length > 0) {
@@ -97,7 +97,7 @@ export function useFetchGlobalTokenList() {
   }, [tokens, dispatch]);
 
   return {
-    loading,
+    loading: isLoading,
     result: tokens,
   };
 }

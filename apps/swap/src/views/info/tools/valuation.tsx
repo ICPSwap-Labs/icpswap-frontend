@@ -182,7 +182,7 @@ export default function SwapScanValuation() {
     setChecked(checked);
   };
 
-  const { result: allTokensInList } = useTokensFromList();
+  const { data: allTokensInList } = useTokensFromList();
   const tokenList = useMemo(() => {
     const tokenIds = allTokensInList?.map((e) => e.canisterId) ?? [];
     tokenIds.push(ICP.address);

@@ -14,7 +14,7 @@ interface AvgAprCellProps {
 
 export function AvgAprCell({ farmId, farmInfo }: AvgAprCellProps) {
   const { t } = useTranslation();
-  const { result: avgAPR } = useFarmAvgApr(farmId);
+  const { data: avgAPR } = useFarmAvgApr(farmId);
 
   const [, rewardToken] = useToken(farmInfo?.rewardToken.address);
   const rewardTokenPrice = useUSDPrice(rewardToken);

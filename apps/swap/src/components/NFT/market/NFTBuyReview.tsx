@@ -44,7 +44,7 @@ export default function NFTBuyReview({
   const approve = useApprove();
   const buy = useNFTBuyCallback();
 
-  const { result } = useNFTMetadataCall(order?.nftCid, order?.tokenIndex);
+  const { data: result } = useNFTMetadataCall(order?.nftCid, order?.tokenIndex);
   const _metadata = result ?? ({} as NFTTokenMetadata);
 
   const nft = useNFTByMetadata(_metadata);

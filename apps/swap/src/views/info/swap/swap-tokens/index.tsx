@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 
 export default function Tokens() {
   const { t } = useTranslation();
-  const { result: tokens, loading } = useNodeInfoAllTokens();
+  const { data: tokens, isLoading: loading } = useNodeInfoAllTokens();
 
   return (
     <InfoWrapper>

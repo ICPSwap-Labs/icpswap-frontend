@@ -33,7 +33,7 @@ export default function NFTTransaction({
   const [pageNum, setPageNum] = useState(1);
   const [offset, limit] = pageArgsFormat(pageNum, 10);
 
-  const { result, loading } = useNFTTransaction(
+  const { data: result, isLoading: loading } = useNFTTransaction(
     canisterId,
     encodeTokenIdentifier(canisterId, tokenId),
     offset,

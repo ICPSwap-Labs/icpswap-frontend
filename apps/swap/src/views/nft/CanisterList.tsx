@@ -84,9 +84,9 @@ export function NFTCanisterListItem({
 }) {
   const classes = useStyles();
   const { t } = useTranslation();
-  const { result: cycles } = useCanisterCycles(canister.cid);
+  const { data: cycles } = useCanisterCycles(canister.cid);
   const account = useAccount();
-  const { result: count } = useCanisterUserNFTCount(canister.cid, account);
+  const { data: count } = useCanisterUserNFTCount(canister.cid, account);
 
   return (
     <TableRow className={classes.wrapper}>
@@ -114,7 +114,7 @@ export default function NFTCanisterList() {
   const [page, setPage] = useState(1);
 
   const [offset] = pageArgsFormat(page, PAGE_SIZE);
-  const { result, loading } = useUserCanisterList(account, offset, PAGE_SIZE);
+  const { data: result, isLoading: loading } = useUserCanisterList(account, offset, PAGE_SIZE);
   const { content, totalElements } = result ?? { content: [] as NFTControllerInfo[], totalElements: 0 };
 
   const handleLoadDetails = (canisterInfo: NFTControllerInfo) => {

@@ -46,7 +46,7 @@ export default function EventConfig() {
   const [userClaims, setUserClaims] = useState<UserClaimItem[]>([]);
   const [inValidUserClaims, setInvalidUserClaims] = useState<ExcelClaimItem[]>([]);
 
-  const { result: event } = useEvent(eventId);
+  const { data: event } = useEvent(eventId);
 
   const [, token] = useToken(event?.tokenCid);
 

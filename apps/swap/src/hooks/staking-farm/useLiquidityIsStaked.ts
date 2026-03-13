@@ -12,7 +12,7 @@ interface UseLiquidityIsStakedByOwner {
 export function useLiquidityIsStakedByOwner({ positionId, farmId }: UseLiquidityIsStakedByOwner) {
   const principal = useAccountPrincipalString();
 
-  const { result: userFarmInfo } = useUserFarmInfo(farmId, principal);
+  const { data: userFarmInfo } = useUserFarmInfo(farmId, principal);
 
   return useMemo(() => {
     if (isUndefinedOrNull(userFarmInfo)) return null;
@@ -27,7 +27,7 @@ interface UseLiquidityIsStaked {
 }
 
 export function useLiquidityIsStaked({ positionId, farmId }: UseLiquidityIsStaked) {
-  const { result: farmInfo } = useFarmInfo(farmId);
+  const { data: farmInfo } = useFarmInfo(farmId);
 
   return useMemo(() => {
     if (isUndefinedOrNull(farmInfo)) return false;

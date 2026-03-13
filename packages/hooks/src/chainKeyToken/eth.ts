@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { chainKeyETHMinter } from "@icpswap/actor";
 import type {
@@ -9,9 +8,7 @@ import type {
   Null,
 } from "@icpswap/types";
 import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-
-import { useCallsData } from "../useCallData";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 export interface WithdrawErc20TokenArgs {
   ledger_id: Principal;
@@ -73,13 +70,17 @@ export async function getChainKeyMinterInfo(minter_id: string) {
   return resultFormat<ChainKeyETHMinterInfo>(await (await chainKeyETHMinter(minter_id)).get_minter_info()).data;
 }
 
-export function useChainKeyMinterInfo(minter_id: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useChainKeyMinterInfo(
+  minter_id: string | Null,
+): UseQueryResult<ChainKeyETHMinterInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useChainKeyMinterInfo", minter_id],
+    queryFn: async () => {
       if (!minter_id) return undefined;
       return await getChainKeyMinterInfo(minter_id);
-    }, [minter_id]),
-  );
+    },
+    enabled: !!minter_id,
+  });
 }
 
 export function useIntervalChainKeyMinterInfo(minter_id: string | Null): UseQueryResult<ChainKeyETHMinterInfo, Error> {
@@ -100,13 +101,17 @@ export async function getChainKeyTransactionPrice(minter_id: string) {
   ).data;
 }
 
-export function useChainKeyTransactionPrice(minter_id: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useChainKeyTransactionPrice(
+  minter_id: string | undefined,
+): UseQueryResult<Eip1559TransactionPrice | undefined, Error> {
+  return useQuery({
+    queryKey: ["useChainKeyTransactionPrice", minter_id],
+    queryFn: async () => {
       if (!minter_id) return undefined;
       return await getChainKeyTransactionPrice(minter_id);
-    }, [minter_id]),
-  );
+    },
+    enabled: !!minter_id,
+  });
 }
 
 export async function withdraw_eth(minter_id: string, recipient: string, amount: bigint) {

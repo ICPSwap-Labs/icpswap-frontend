@@ -27,7 +27,7 @@ export function useResetBurnState() {
 
 export function useBurnInfo(position: UserPosition | undefined | null) {
   const { t } = useTranslation();
-  const { result: poolMeta } = useSwapPoolMetadata(position?.id);
+  const { data: poolMeta } = useSwapPoolMetadata(position?.id);
 
   const token0Address = poolMeta?.token0.address;
   const token1Address = poolMeta?.token1.address;
