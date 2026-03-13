@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 import { useActiveUserTokenBalance } from "hooks/token";
 import { Null, NumberType } from "@icpswap/types";
+import { isBalanceGreaterThanFee } from "utils/token/balanceGreaterThanFee";
 
 interface BitcoinStyleDissolveUIProps {
   token: Token;
@@ -55,12 +56,7 @@ export function BitcoinStyleDissolveUI({
 
   const handleMax = useCallback(() => {
     if (!tokenBalance) return;
-    if (
-      !parseTokenAmount(tokenBalance, token.decimals)
-        .minus(parseTokenAmount(token.transFee, token.decimals))
-        .isGreaterThan(0)
-    )
-      return;
+    if (!isBalanceGreaterThanFee(tokenBalance, token)) return;
 
     setAmount(
       parseTokenAmount(tokenBalance, token.decimals)

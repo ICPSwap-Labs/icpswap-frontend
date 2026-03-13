@@ -17,14 +17,13 @@ import {
 import { useToken } from "hooks/index";
 import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Token } from "@icpswap/swap-sdk";
-import { ckBTC } from "@icpswap/tokens";
 import { TokenImageWithChain } from "components/ck-bridge/ChainImage";
 
 interface SelectorTokenUIProps {
   onClick?: (token: Token, chain: BridgeChainType) => void;
   hidden?: boolean;
   chain: BridgeChainType;
-  balance: BigNumber | string | Null;
+  balance?: BigNumber | string | Null;
   priceUSD: number | undefined;
   token: Token | Null;
   loading: boolean;
@@ -150,13 +149,12 @@ interface SelectorTokenForTokenProps {
   token: Token | Null;
   hidden?: boolean;
   onClick?: (token: Token, chain: BridgeChainType) => void;
+  priceUSD: number | undefined;
 }
 
-function SelectorTokenForToken({ token, onClick, hidden, chain }: SelectorTokenForTokenProps) {
+function SelectorTokenForToken({ token, onClick, hidden, chain, priceUSD }: SelectorTokenForTokenProps) {
   const principal = useAccountPrincipal();
   const { result: balance, loading } = useTokenBalance({ tokenId: token?.address, account: principal });
-
-  const priceUSD = useUSDPriceById(token?.address);
 
   return (
     <SelectorTokenUI
@@ -177,9 +175,17 @@ interface SelectorTokenForErc20TokenProps {
   chain: BridgeChainType;
   token: Token | Null;
   minterInfo: ChainKeyETHMinterInfo | Null;
+  priceUSD: number | undefined;
 }
 
-function SelectorTokenForErc20Token({ token, onClick, hidden, chain, minterInfo }: SelectorTokenForErc20TokenProps) {
+function SelectorTokenForErc20Token({
+  token,
+  onClick,
+  hidden,
+  chain,
+  minterInfo,
+  priceUSD,
+}: SelectorTokenForErc20TokenProps) {
   const ChainKeyETHMinterInfo = useMemo(() => {
     if (!token) return undefined;
 
@@ -191,8 +197,6 @@ function SelectorTokenForErc20Token({ token, onClick, hidden, chain, minterInfo 
   }, [minterInfo, token]);
 
   const { result: balance, loading } = useERC20Balance(ChainKeyETHMinterInfo?.erc20_contract_address);
-
-  const priceUSD = useUSDPriceById(token?.address);
 
   return (
     <SelectorTokenUI
@@ -212,12 +216,11 @@ interface SelectorTokenForEthProps {
   hidden?: boolean;
   chain: BridgeChainType;
   token: Token | Null;
+  priceUSD: number | undefined;
 }
 
-function SelectorTokenForEth({ token, onClick, hidden, chain }: SelectorTokenForEthProps) {
+function SelectorTokenForEth({ token, onClick, hidden, chain, priceUSD }: SelectorTokenForEthProps) {
   const { result: balance, loading } = useETHBalance();
-
-  const priceUSD = useUSDPriceById(token?.address);
 
   return (
     <SelectorTokenUI
@@ -232,17 +235,21 @@ function SelectorTokenForEth({ token, onClick, hidden, chain }: SelectorTokenFor
   );
 }
 
-interface SelectorTokenForBtcProps {
+interface TokenSelectorNoneBalanceProps {
   onClick?: (token: Token, chain: BridgeChainType) => void;
   hidden?: boolean;
   chain: BridgeChainType;
   token: Token | Null;
+  priceUSD: number | undefined;
 }
 
-function SelectorTokenForBtc({ token, onClick, hidden, chain }: SelectorTokenForBtcProps) {
-  const balance = undefined;
-  const priceUSD = useUSDPriceById(token?.address);
-
+export const TokenSelectorNoneBalance = ({
+  token,
+  onClick,
+  hidden,
+  chain,
+  priceUSD,
+}: TokenSelectorNoneBalanceProps) => {
   return (
     <SelectorTokenUI
       token={token}
@@ -251,10 +258,9 @@ function SelectorTokenForBtc({ token, onClick, hidden, chain }: SelectorTokenFor
       onClick={onClick}
       chain={chain}
       priceUSD={priceUSD}
-      balance={balance}
     />
   );
-}
+};
 
 export interface SelectorTokenProps {
   tokenId: string;
@@ -291,10 +297,12 @@ export function SelectorToken({
     updateTokenHide(tokenId, isHidden);
   }, [updateTokenHide, tokenId, isHidden]);
 
-  return tokenId === ckBTC.address && chain === BridgeChainType.btc ? (
-    <SelectorTokenForBtc hidden={isHidden} onClick={onClick} chain={chain} token={token} />
+  const priceUSD = useUSDPriceById(token?.address);
+
+  return chain === BridgeChainType.btc ? (
+    <TokenSelectorNoneBalance hidden={isHidden} onClick={onClick} chain={chain} token={token} priceUSD={priceUSD} />
   ) : chain === BridgeChainType.eth ? (
-    <SelectorTokenForEth hidden={isHidden} onClick={onClick} chain={chain} token={token} />
+    <SelectorTokenForEth hidden={isHidden} onClick={onClick} chain={chain} token={token} priceUSD={priceUSD} />
   ) : chain === BridgeChainType.erc20 ? (
     <SelectorTokenForErc20Token
       hidden={isHidden}
@@ -302,8 +310,11 @@ export function SelectorToken({
       chain={chain}
       token={token}
       minterInfo={minterInfo}
+      priceUSD={priceUSD}
     />
+  ) : chain === BridgeChainType.doge ? (
+    <TokenSelectorNoneBalance hidden={isHidden} onClick={onClick} chain={chain} token={token} priceUSD={priceUSD} />
   ) : (
-    <SelectorTokenForToken hidden={isHidden} onClick={onClick} chain={chain} token={token} />
+    <SelectorTokenForToken hidden={isHidden} onClick={onClick} chain={chain} token={token} priceUSD={priceUSD} />
   );
 }
