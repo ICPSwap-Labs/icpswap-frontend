@@ -6,7 +6,6 @@ import { Null } from "@icpswap/types";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useTips, MessageTypes } from "hooks/useTips";
 import { useTranslation } from "react-i18next";
-import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 import { useInterval, updateDogeBalance } from "@icpswap/hooks";
 import { BitcoinStyleMintUI } from "components/ck-bridge/ui/BitcoinStyleMintUI";
 import { dogeAddressExplorer } from "utils/chain-key";
@@ -76,8 +75,6 @@ export function Mint({ token, balance, address, refetch }: MintProps) {
     }, [principal]),
     interval: 1000 * 5 * 60,
   });
-
-  useOisyDisabledTips({ page: "ck-bridge" });
 
   return (
     <>
