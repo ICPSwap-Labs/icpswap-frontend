@@ -9,8 +9,8 @@ const DOGE_BLOCK_NUMBER_REFETCH_INTERVAL_MS = 20_000;
 export async function getDogeBlockNumber(): Promise<number | undefined> {
   try {
     const res = await fetch(DOGE_BLOCK_HEIGHT_API);
-    const data = (await res.json()) as { data?: { blocks?: number } };
-    return data?.data?.blocks;
+    const data = (await res.json()) as { data?: { best_block_height?: number } };
+    return data?.data?.best_block_height;
   } catch {
     return undefined;
   }
