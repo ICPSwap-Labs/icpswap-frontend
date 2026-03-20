@@ -7,8 +7,14 @@ import "@nfid/identitykit/react/styles.css";
 import * as serviceWorker from "./serviceWorker";
 import store, { persistor } from "./store/index";
 import { AppWithProvider } from "./Provider";
-import "./tracing";
 import "./assets/css/global.css";
+
+// Defer Sentry init to after first paint to avoid blocking initial load
+if (typeof requestIdleCallback !== "undefined") {
+  requestIdleCallback(() => import("./tracing").then(() => {}), { timeout: 2000 });
+} else {
+  setTimeout(() => import("./tracing"), 0);
+}
 
 window.onerror = (msg, url, row, col, error) => {
   const _error = error ? error.toString() : "";

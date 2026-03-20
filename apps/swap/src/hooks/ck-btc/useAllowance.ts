@@ -1,4 +1,4 @@
-import { resultFormat, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, optionalArg } from "@icpswap/utils";
 import { useCallsData } from "@icpswap/hooks";
 import { Principal } from "@dfinity/principal";
 import { ckBtcActor } from "@icpswap/actor";
@@ -15,8 +15,8 @@ export async function allowance({ spender, spenderSub, owner, ownerSub }: Allowa
   const result = await (
     await ckBtcActor(true)
   ).icrc2_allowance({
-    account: { owner, subaccount: availableArgsNull<number[]>(ownerSub) },
-    spender: { owner: spender, subaccount: availableArgsNull<number[]>(spenderSub) },
+    account: { owner, subaccount: optionalArg<number[]>(ownerSub) },
+    spender: { owner: spender, subaccount: optionalArg<number[]>(spenderSub) },
   });
 
   return resultFormat<bigint>(result.allowance).data;

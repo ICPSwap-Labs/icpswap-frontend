@@ -8,6 +8,7 @@ const path = require("path");
 // const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const { IgnorePlugin, ProvidePlugin } = require("webpack");
 const { RetryChunkLoadPlugin } = require("webpack-retry-chunk-load-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const commitHash = execSync("git rev-parse HEAD").toString().trim();
 const isProduction = process.env.NODE_ENV === "production";
@@ -190,6 +191,18 @@ module.exports = {
 
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true });
+
+      if (process.env.ANALYZE === "true") {
+        webpackConfig.plugins.push(
+          new BundleAnalyzerPlugin({
+            analyzerMode: "static",
+            reportFilename: path.join(__dirname, "build", "bundle-report.html"),
+            openAnalyzer: false,
+            generateStatsFile: true,
+            statsFilename: path.join(__dirname, "build", "bundle-stats.json"),
+          })
+        );
+      }
 
       return webpackConfig;
     },

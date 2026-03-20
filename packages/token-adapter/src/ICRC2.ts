@@ -1,4 +1,4 @@
-import { resultFormat, availableArgsNull, isBigIntMemo } from "@icpswap/utils";
+import { resultFormat, optionalArg, isBigIntMemo } from "@icpswap/utils";
 import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { icrc2 } from "@icpswap/actor";
 import { ICRC2 } from "@icpswap/candid";
@@ -81,15 +81,15 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
       ).icrc2_approve({
         spender: {
           owner: params.spender,
-          subaccount: availableArgsNull<number[]>(params.spenderSub ? params.spenderSub : undefined),
+          subaccount: optionalArg<number[]>(params.spenderSub ? params.spenderSub : undefined),
         },
-        fee: availableArgsNull<bigint>(params.fee),
+        fee: optionalArg<bigint>(params.fee),
         created_at_time: [],
         amount: params.allowance,
         memo: [],
-        expected_allowance: availableArgsNull<bigint>(params.expected_allowance),
-        expires_at: availableArgsNull<bigint>(params.expires_at),
-        from_subaccount: availableArgsNull<number[]>(params.subaccount ? params.subaccount : undefined),
+        expected_allowance: optionalArg<bigint>(params.expected_allowance),
+        expires_at: optionalArg<bigint>(params.expires_at),
+        from_subaccount: optionalArg<number[]>(params.subaccount ? params.subaccount : undefined),
       }),
     );
   }
@@ -102,11 +102,11 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
     ).icrc2_allowance({
       spender: {
         owner: params.spender,
-        subaccount: availableArgsNull<Array<number>>(params.spenderSub ? params.spenderSub : undefined),
+        subaccount: optionalArg<Array<number>>(params.spenderSub ? params.spenderSub : undefined),
       },
       account: {
         owner: params.owner.principal,
-        subaccount: availableArgsNull<Array<number>>(params.subaccount ? params.subaccount : undefined),
+        subaccount: optionalArg<Array<number>>(params.subaccount ? params.subaccount : undefined),
       },
     });
 

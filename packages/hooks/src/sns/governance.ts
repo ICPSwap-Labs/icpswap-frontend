@@ -1,6 +1,6 @@
 import { sns_governance } from "@icpswap/actor";
 import { useCallback } from "react";
-import { availableArgsNull, resultFormat } from "@icpswap/utils";
+import { optionalArg, resultFormat } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
 import type {
   ListNeuronsResponse,
@@ -19,7 +19,7 @@ export async function getNeuron(canisterId: string, neuron_id: Uint8Array | numb
     await (
       await sns_governance(canisterId)
     ).get_neuron({
-      neuron_id: availableArgsNull<{ id: Uint8Array | number[] }>({ id: neuron_id }),
+      neuron_id: optionalArg<{ id: Uint8Array | number[] }>({ id: neuron_id }),
     }),
   ).data?.result;
 
@@ -54,11 +54,9 @@ export async function getListNeurons({ canisterId, of_principal, limit, start_pa
     await (
       await sns_governance(canisterId)
     ).list_neurons({
-      of_principal: availableArgsNull<Principal>(of_principal ? Principal.fromText(of_principal) : undefined),
+      of_principal: optionalArg<Principal>(of_principal ? Principal.fromText(of_principal) : undefined),
       limit,
-      start_page_at: availableArgsNull<{ id: Uint8Array | number[] }>(
-        start_page_at ? { id: start_page_at } : undefined,
-      ),
+      start_page_at: optionalArg<{ id: Uint8Array | number[] }>(start_page_at ? { id: start_page_at } : undefined),
     }),
   ).data?.neurons;
 }

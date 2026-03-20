@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, isAvailablePageArgs, optionalArg } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
 import { farm, farmController, farmIndex } from "@icpswap/actor";
 import type {
@@ -171,7 +171,7 @@ export async function getFarmsByState(state: FarmState | undefined) {
   return resultFormat<Array<Principal>>(
     await (
       await farmIndex()
-    ).getFarms(availableArgsNull<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined)),
+    ).getFarms(optionalArg<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined)),
   ).data;
 }
 
@@ -341,15 +341,15 @@ export async function getFarmsByFilter({ state, pair, token, user }: GetFarmsByF
       await farmIndex()
     ).getFarmsByConditions({
       status: state
-        ? availableArgsNull<FarmStatusArgs[]>(
+        ? optionalArg<FarmStatusArgs[]>(
             state === "FINISHED"
               ? ([{ FINISHED: null }, { CLOSED: null }] as FarmStatusArgs[])
               : ([{ [state]: null }] as FarmStatusArgs[]),
           )
         : [],
-      rewardToken: token ? availableArgsNull<Principal>(Principal.fromText(token)) : [],
-      pool: pair ? availableArgsNull<Principal>(Principal.fromText(pair)) : [],
-      user: user ? availableArgsNull<Principal>(Principal.fromText(user)) : [],
+      rewardToken: token ? optionalArg<Principal>(Principal.fromText(token)) : [],
+      pool: pair ? optionalArg<Principal>(Principal.fromText(pair)) : [],
+      user: user ? optionalArg<Principal>(Principal.fromText(user)) : [],
     }),
   ).data;
 }

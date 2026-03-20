@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAppSelector } from "store/hooks";
 import { CssBaseline, StyledEngineProvider, ThemeProvider } from "components/Mui";
 import { SnackbarProvider } from "components/notistack";
@@ -17,7 +18,7 @@ import "utils/dayjs";
 
 export default function App() {
   const customization = useAppSelector((state) => state.customization);
-  const queryClient = new QueryClient();
+  const [queryClient] = useState(() => new QueryClient());
 
   useGlobalUpdater();
 

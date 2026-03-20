@@ -3,7 +3,7 @@ import { ICP } from "@icpswap/tokens";
 import { parseTokenAmount, BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { AppState } from "store/index";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { ChainKeyETHMinterInfo, IcpSwapAPITokenInfo } from "@icpswap/types";
+import { ChainKeyETHMinterInfo, IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import {
   useXDR2USD,
   useTokensFromList,
@@ -43,6 +43,15 @@ export function useICPPrice() {
   return useMemo(() => {
     return icpPrice;
   }, [icpPrice]);
+}
+
+export function useTokenIcpPrice(tokenPrice: number | string | Null) {
+  const icpPrice = useUSDPriceById(ICP.address);
+
+  return useMemo(() => {
+    if (isUndefinedOrNull(tokenPrice) || isUndefinedOrNull(icpPrice)) return undefined;
+    return new BigNumber(tokenPrice).dividedBy(icpPrice).toString();
+  }, [icpPrice, tokenPrice]);
 }
 
 export function useICPAmountUSDValue(amount: number | null | string | undefined | bigint) {

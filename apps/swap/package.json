@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "node ./scripts/env.js dev ic && PORT=3000 craco start",
     "dev:local": "node ./scripts/env.js dev local && PORT=3000 craco start",
+    "analyze": "CI=false node ./scripts/env.js pro ic && cross-env ANALYZE=true craco build",
     "build": "CI=false && node ./scripts/env.js pro ic && craco build",
     "test": "craco test",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
@@ -39,7 +40,9 @@
     "serve": "^11.3.2",
     "typechain": "8.3.2",
     "typescript": "5.3.3",
-    "webpack-retry-chunk-load-plugin": "^3.1.1"
+    "webpack-retry-chunk-load-plugin": "^3.1.1",
+    "webpack-bundle-analyzer": "^4.10.1",
+    "cross-env": "^7.0.3"
   },
   "dependencies": {
     "@astrox/sdk-web": "^0.1.41",

@@ -3,7 +3,7 @@ import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } fro
 import { Modal, TextButton, FilledTextField, TokenStandardLabel } from "components/index";
 import { TOKEN_STANDARD } from "constants/tokens";
 import { isValidPrincipal } from "@icpswap/utils";
-import { standardCheck } from "utils/token/standardCheck";
+import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
 import { useUpdateTokenStandard, getTokenStandard } from "store/token/cache/hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { Metadata } from "types/token";
@@ -83,7 +83,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
     setLoading(true);
     setCheckFailed(false);
 
-    const { valid, metadata } = await standardCheck(values.id, values.standard as TOKEN_STANDARD);
+    const { valid, metadata } = await verifyTokenStandard(values.id, values.standard as TOKEN_STANDARD);
 
     if (!valid || !metadata) {
       setCheckFailed(true);

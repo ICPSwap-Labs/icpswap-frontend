@@ -6,7 +6,7 @@ export type Locals = {
 
 export const TokenLocales: Locals = {
   insufficient_cycles_balance: i18n.t`Insufficient cycles balance`,
-  invalid_value: i18n.t`Invalid value`,
+  invalid_value: i18n.t("service.error.invalid.value"),
   has_been_initialized: i18n.t`Has been initialized`,
   no_sufficient_balance: i18n.t`Insufficient balance`,
   unsupported_operator: i18n.t("service.token.unsupported.operator"),

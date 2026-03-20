@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { resultFormat, availableArgsNull } from "@icpswap/utils";
+import { resultFormat, optionalArg } from "@icpswap/utils";
 import { Principal } from "@dfinity/principal";
 import { farmIndex } from "@icpswap/actor";
 import type { FarmState, FarmStatusArgs, FarmRewardInfo } from "@icpswap/types";
@@ -24,9 +24,7 @@ export function useFarmRewardInfo(farmId: string | undefined, refresh?: number) 
 export async function getFarmRewardInfos(state: FarmState | undefined) {
   const result = await (
     await farmIndex()
-  ).getFarmRewardTokenInfos(
-    availableArgsNull<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined),
-  );
+  ).getFarmRewardTokenInfos(optionalArg<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined));
 
   return resultFormat<Array<[Principal, FarmRewardInfo]>>(result).data;
 }
