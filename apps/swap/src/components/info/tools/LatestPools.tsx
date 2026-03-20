@@ -83,7 +83,7 @@ export function LatestPools() {
           }}
         >
           <Typography color="inherit" fontSize="inherit" fontWeight="inherit">
-            New Pools (Last 72h)
+            New Pools (72h)
           </Typography>
         </Flex>
       }
@@ -107,7 +107,7 @@ export function LatestPools() {
               </HeaderCell>
 
               <HeaderCell align="right" field="added">
-                Added
+                Created
               </HeaderCell>
             </Header>
 
@@ -125,15 +125,13 @@ export function LatestPools() {
                 </LoadingRow>
               </Box>
             ) : latestPools.length > 0 ? (
-              <>
-                {latestPools.map((pool, index) => (
-                  <PoolRow
-                    key={`${pool.token0Symbol}_${pool.token1Symbol}_${index}`}
-                    pool={pool}
-                    className={classes.wrapper}
-                  />
-                ))}
-              </>
+              latestPools.map((pool, index) => (
+                <PoolRow
+                  key={`${pool.token0Symbol}_${pool.token1Symbol}_${index}`}
+                  pool={pool}
+                  className={classes.wrapper}
+                />
+              ))
             ) : (
               <NoData tip={t("info.tools.latest.pools.empty")} />
             )}
