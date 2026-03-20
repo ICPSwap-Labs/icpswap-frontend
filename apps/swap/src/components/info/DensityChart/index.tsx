@@ -1,19 +1,18 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
-import { useEffect, useMemo, useState } from "react";
-import { BarChart, Bar, LabelList, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import { Box, useTheme } from "components/Mui";
-import { Pool, TickMath, TICK_SPACINGS, FeeAmount, Token, CurrencyAmount } from "@icpswap/swap-sdk";
-import { numberToString, BigNumber } from "@icpswap/utils";
-import { useToken } from "hooks/useCurrency";
-import LoadingImage from "assets/images/loading.png";
-import { useTicksSurroundingPrice, TickProcessed } from "hooks/swap/useTicksSurroundingPrice";
-import { useSwapPoolMetadata } from "@icpswap/hooks";
-import JSBI from "jsbi";
-import { Null } from "@icpswap/types";
 
-import { LiquidityChartToolTip } from "./LiquidityChartToolTip";
+import { useSwapPoolMetadata } from "@icpswap/hooks";
+import { CurrencyAmount, type FeeAmount, Pool, TICK_SPACINGS, TickMath, type Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { BigNumber, numberToString } from "@icpswap/utils";
+import { Box, useTheme } from "components/Mui";
+import { type TickProcessed, useTicksSurroundingPrice } from "hooks/swap/useTicksSurroundingPrice";
+import { useToken } from "hooks/useCurrency";
+import JSBI from "jsbi";
+import { useEffect, useMemo, useState } from "react";
+import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip } from "recharts";
 import { CurrentPriceLabel } from "./CurrentPriceLabel";
-import { ChartEntry } from "./type";
+import { LiquidityChartToolTip } from "./LiquidityChartToolTip";
+import type { ChartEntry } from "./type";
 
 const MAX_UINT128 = new BigNumber("340282366920938463463374607431768211455");
 
@@ -258,7 +257,7 @@ export function DensityChart({ address }: DensityChartProps) {
             zIndex: 100,
           }}
         >
-          <img width="80px" height="80px" src={LoadingImage} alt="" />
+          <img width="80px" height="80px" src="/images/loading.png" alt="" />
         </Box>
       )}
     </Box>

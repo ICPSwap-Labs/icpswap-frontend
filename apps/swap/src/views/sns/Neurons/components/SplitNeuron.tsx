@@ -1,20 +1,21 @@
-import React, { useMemo, useState } from "react";
-import { Button, Grid, Typography, Box, InputAdornment, CircularProgress } from "components/Mui";
-import {
-  parseTokenAmount,
-  formatTokenAmount,
-  uint8ArrayToBigInt,
-  toSignificantWithGroupSeparator,
-  formatDollarAmount,
-  BigNumber,
-} from "@icpswap/utils";
 import { splitNeuron } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import type { NervousSystemParameters } from "@icpswap/types";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Modal, NumberFilledTextField, MaxButton } from "components/index";
-import randomBytes from "randombytes";
+import {
+  BigNumber,
+  formatDollarAmount,
+  formatTokenAmount,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
+  uint8ArrayToBigInt,
+} from "@icpswap/utils";
+import { MaxButton, Modal, NumberFilledTextField } from "components/index";
+import { Box, Button, CircularProgress, Grid, InputAdornment, Typography } from "components/Mui";
 import { useUSDPriceById } from "hooks/index";
-import { Token } from "@icpswap/swap-sdk";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import randomBytes from "randombytes";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface SplitNeuronProps {

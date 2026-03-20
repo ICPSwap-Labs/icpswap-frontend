@@ -1,11 +1,11 @@
+import { useExtraBlackHolePositionInfos, useLiquidityLockIds, useMultiPositionInfos } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { PositionTableUI } from "components/liquidity/index";
 import { usePoolByPoolId } from "hooks/swap";
 import { useMemo } from "react";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { PositionTableUI } from "components/liquidity/index";
-import { useLiquidityLockIds, useMultiPositionInfos, useExtraBlackHolePositionInfos } from "@icpswap/hooks";
-import { PositionDetails } from "types/swap";
 import { useTranslation } from "react-i18next";
+import type { PositionDetails } from "types/swap";
 
 interface BlackHolePositionsProps {
   poolId: string | Null;

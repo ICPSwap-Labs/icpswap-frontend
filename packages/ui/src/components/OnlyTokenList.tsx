@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import { Tooltip } from "./Tooltip";
 import { Box, Checkbox, Typography } from "./Mui";
+import { Tooltip } from "./Tooltip";
 
 export interface OnlyTokenListProps {
   onChange?: (checked: boolean) => void;

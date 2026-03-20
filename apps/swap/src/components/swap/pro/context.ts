@@ -1,8 +1,8 @@
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import type { ChartButton } from "@icpswap/ui";
+import type { Tab } from "constants/index";
 import { createContext, useContext } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { ChartButton } from "@icpswap/ui";
-import { Tab } from "constants/index";
 
 export interface SwapProContextProps {
   inputTokenPrice: number | undefined;

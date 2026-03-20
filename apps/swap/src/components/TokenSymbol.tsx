@@ -1,6 +1,6 @@
-import { Null } from "@icpswap/types";
-import { Typography, TypographyProps } from "components/Mui";
-import { ReactNode } from "react";
+import type { Null } from "@icpswap/types";
+import { Typography, type TypographyProps } from "components/Mui";
+import type { ReactNode } from "react";
 
 interface TokenSymbolProps {
   color?: string;

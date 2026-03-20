@@ -1,22 +1,22 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUserPositionPools } from "@icpswap/hooks";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { slippageToPercent, getDefaultSlippageTolerance } from "constants/swap";
+import type { Percent } from "@icpswap/swap-sdk";
+import { getDefaultSlippageTolerance, slippageToPercent } from "constants/swap";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount } from "store/auth/hooks";
-import { Percent } from "@icpswap/swap-sdk";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
-  updateUserExpertMode,
-  updateUserSingleHop,
-  updateUserSelectedToken,
-  updateUserTransactionsDeadline,
-  updateUserSlippage,
-  updateTaggedTokens,
   removeTaggedTokens,
-  updateShowClosedPosition,
-  updateUserPositionPools,
-  updateUserMultipleApprove,
-  updateSwapProAutoRefresh,
   updateKeepTokenInPools,
+  updateShowClosedPosition,
+  updateSwapProAutoRefresh,
+  updateTaggedTokens,
+  updateUserExpertMode,
+  updateUserMultipleApprove,
+  updateUserPositionPools,
+  updateUserSelectedToken,
+  updateUserSingleHop,
+  updateUserSlippage,
+  updateUserTransactionsDeadline,
 } from "./actions";
 
 export function useIsExpertMode() {

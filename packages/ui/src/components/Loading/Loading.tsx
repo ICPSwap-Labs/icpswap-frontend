@@ -1,5 +1,5 @@
-import { CircularProgress, Box, makeStyles, Theme } from "../Mui";
 import { Flex } from "../Grid";
+import { Box, CircularProgress, makeStyles, type Theme } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

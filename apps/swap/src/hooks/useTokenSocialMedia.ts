@@ -1,5 +1,5 @@
 import { getTokensNews } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";

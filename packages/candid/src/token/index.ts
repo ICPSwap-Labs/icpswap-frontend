@@ -1,21 +1,20 @@
-export { idlFactory as EXTTokenInterfaceFactory } from "./token.did";
 export type {
   _SERVICE as EXTToken,
-  User as TokenUser,
-  Transaction as TokenTransaction,
   ApproveRequest as TokenApproveArgs,
-  HoldersRequest as TokenHolderArgs,
   Holder as TokenHolder,
+  HoldersRequest as TokenHolderArgs,
+  Transaction as TokenTransaction,
+  TransactionRequest as TokenTransactionArgs,
   TransferRequest as TokenTransferArgs,
   TransferResponse as TokenTransferResult,
-  TransactionRequest as TokenTransactionArgs,
+  User as TokenUser,
 } from "./token";
-
-export { idlFactory as WrapICPInterfaceFactory } from "./wicp.did";
+export { idlFactory as EXTTokenInterfaceFactory } from "./token.did";
 export type {
   _SERVICE as WrapICP,
-  User as WrapUser,
-  WrapRecord as WrapTransaction,
   MintRequest as WrapMintArgs,
+  User as WrapUser,
   WithdrawRequest as WrapWithdrawArgs,
+  WrapRecord as WrapTransaction,
 } from "./wicp";
+export { idlFactory as WrapICPInterfaceFactory } from "./wicp.did";

@@ -1,13 +1,12 @@
-import { useMemo } from "react";
-import { Box, makeStyles } from "components/Mui";
-import { Flex, LoadingRow } from "@icpswap/ui";
 import { useUserLimitTransactions } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { Flex, LoadingRow } from "@icpswap/ui";
+import { Box, makeStyles } from "components/Mui";
 import { useScrollToTop } from "hooks/useScrollToTop";
-
+import { useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { LimitTransactionsEmpty } from "../Empty";
 import { HistoryHeader } from "./HistoryHeader";
 import { HistoryRow } from "./HistoryRow";
-import { LimitTransactionsEmpty } from "../Empty";
 
 const useStyles = makeStyles(() => {
   return {

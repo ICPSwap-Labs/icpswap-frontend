@@ -1,6 +1,6 @@
+import type { DogeTransaction } from "@icpswap/types";
 import { fetch_get, isUndefinedOrNullOrEmpty } from "@icpswap/utils";
 import { useQuery } from "@tanstack/react-query";
-import type { DogeTransaction } from "@icpswap/types";
 
 export async function getDogeTransaction(tx: string) {
   const result = await fetch_get<DogeTransaction>(`https://api.blockchair.com/dogecoin/dashboards/transaction/${tx}`);

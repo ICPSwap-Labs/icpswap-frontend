@@ -1,4 +1,4 @@
-export type { RetrieveEthStatus, EthTransaction, TxFinalizedStatus } from "@icpswap/types";
+export type { EthTransaction, RetrieveEthStatus, TxFinalizedStatus } from "@icpswap/types";
 
 export type BTCAddressType = "deposit" | "withdraw";
 

@@ -1,12 +1,12 @@
-import { useMemo, useState } from "react";
-import { ImageLoading, AddressFormat } from "components/index";
+import { useStakingPoolTransactions } from "@icpswap/hooks";
+import type { StakingPoolTransaction } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { enumToString, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { AddressFormat, ImageLoading } from "components/index";
 import { Box, makeStyles } from "components/Mui";
 import dayjs from "dayjs";
-import { useStakingPoolTransactions } from "@icpswap/hooks";
-import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
-import { StakingPoolTransaction } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
-import { HeaderCell, BodyCell, Header, TableRow, NoData, Pagination } from "@icpswap/ui";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {

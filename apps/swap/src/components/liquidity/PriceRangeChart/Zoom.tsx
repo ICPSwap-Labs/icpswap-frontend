@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useRef, forwardRef } from "react";
-import { select, zoom, zoomIdentity, ZoomTransform, ScaleLinear, ZoomBehavior } from "d3";
-import { Box, Chip, makeStyles, useTheme, Theme } from "components/Mui";
+import { Flex } from "@icpswap/ui";
 import { Replay as ReplayIcon } from "@mui/icons-material";
 import ZoomInIcon from "assets/images/swap/zoomIn";
 import ZoomOutIcon from "assets/images/swap/zoomOut";
+import { Box, Chip, makeStyles, type Theme, useTheme } from "components/Mui";
+import { type ScaleLinear, select, type ZoomBehavior, type ZoomTransform, zoom, zoomIdentity } from "d3";
+import { forwardRef, useEffect, useMemo, useRef } from "react";
 import { isDarkTheme } from "utils";
-import { Flex } from "@icpswap/ui";
 
-import { ZoomLevels } from "./types";
+import type { ZoomLevels } from "./types";
 
 interface ZoomOverlayProps {
   width: string | number;

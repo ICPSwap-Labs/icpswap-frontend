@@ -1,6 +1,6 @@
-import { icpswap_info_fetch_get, isUndefinedOrNull } from "@icpswap/utils";
 import type { InfoTokenDataResponse, Null, PageResponse } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { icpswap_info_fetch_get, isUndefinedOrNull } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 type ChartLevel = "m15" | "h1" | "d1";
 

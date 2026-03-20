@@ -1,5 +1,5 @@
+import type { NFT_STANDARDS } from "@icpswap/constants";
 import { createAction } from "@reduxjs/toolkit";
-import { NFT_STANDARDS } from "@icpswap/constants";
 
 export const updateUserSelectedCanisters = createAction<string[]>("NFT/updateUserSelectedCanisters");
 

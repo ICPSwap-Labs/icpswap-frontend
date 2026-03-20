@@ -1,9 +1,9 @@
+import type { EXTCollection, ExtNft } from "@icpswap/types";
 import { MainCard } from "components/index";
-import { Grid, Typography, Box, Button, useTheme } from "components/Mui";
-import { type EXTCollection, type ExtNft } from "@icpswap/types";
-import { decodeTokenId } from "utils/nft/index";
-import { extNFTImage } from "utils/nft/ext";
+import { Box, Button, Grid, Typography, useTheme } from "components/Mui";
 import { useState } from "react";
+import { extNFTImage } from "utils/nft/ext";
+import { decodeTokenId } from "utils/nft/index";
 
 import { NFTAvatar } from "./NFTAvatar";
 import { NFTTransfer } from "./Transfer";

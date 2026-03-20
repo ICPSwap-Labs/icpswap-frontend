@@ -1,11 +1,11 @@
-import { useParsedQueryString } from "@icpswap/hooks";
 import { BridgeChainType, BridgeType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import { useParsedQueryString } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ckBTC, ckDoge, ckETH, ckUSDC } from "@icpswap/tokens";
 import { nonUndefinedOrNull } from "@icpswap/utils";
-import { ckBTC, ckUSDC, ckETH, ckDoge } from "@icpswap/tokens";
-import { Erc20BridgeWrapper, BtcBridgeWrapper, EthBridgeWrapper, DogeBridgeWrapper } from "components/ck-bridge";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { BtcBridgeWrapper, DogeBridgeWrapper, Erc20BridgeWrapper, EthBridgeWrapper } from "components/ck-bridge";
 import { useToken } from "hooks/useCurrency";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGlobalMinterInfoManager } from "store/global/hooks";
 

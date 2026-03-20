@@ -1,12 +1,12 @@
 import { Flex } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { Typography } from "components/Mui";
-import { useMemo } from "react";
-import { useBitcoinTxResponse } from "store/web3/hooks";
-import { useBitcoinConfirmations } from "hooks/ck-bridge";
-import { BITCOIN_CONFIRMATIONS } from "constants/chain-key";
-import { useBitcoinDissolveTx } from "store/wallet/hooks";
 import { Arrow } from "components/ck-bridge/ui/confirmations/Confirmations";
+import { Typography } from "components/Mui";
+import { BITCOIN_CONFIRMATIONS } from "constants/chain-key";
+import { useBitcoinConfirmations } from "hooks/ck-bridge";
+import { useMemo } from "react";
+import { useBitcoinDissolveTx } from "store/wallet/hooks";
+import { useBitcoinTxResponse } from "store/web3/hooks";
 
 interface BitcoinMintConfirmationsProps {
   hash: string;

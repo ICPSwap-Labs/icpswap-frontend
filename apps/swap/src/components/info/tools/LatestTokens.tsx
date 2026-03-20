@@ -1,12 +1,12 @@
-import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
-import { formatAmount, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, Flex, LoadingRow, NoData, BodyCell, TableRow, Proportion, Link } from "@icpswap/ui";
-import { ToolsWrapper } from "components/info/tools/index";
-import { useTranslation } from "react-i18next";
 import { useLatestTokens } from "@icpswap/hooks";
-import { LatestToken } from "@icpswap/types";
-import { TokenImage, TimestampCell } from "components/index";
+import type { LatestToken } from "@icpswap/types";
+import { BodyCell, Flex, Header, HeaderCell, Link, LoadingRow, NoData, Proportion, TableRow } from "@icpswap/ui";
+import { formatAmount, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import { TimestampCell, TokenImage } from "components/index";
+import { ToolsWrapper } from "components/info/tools/index";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
+import { useTranslation } from "react-i18next";
 import { useTokenIcpPrice } from "store/global/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {

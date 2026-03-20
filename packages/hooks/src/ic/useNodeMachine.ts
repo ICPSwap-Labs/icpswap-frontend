@@ -1,6 +1,6 @@
 import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 interface NodeMachineResult {
   total_nodes: Array<[number, string]>;

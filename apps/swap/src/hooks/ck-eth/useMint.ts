@@ -1,15 +1,15 @@
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useMemo, useState, useCallback } from "react";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { principalToBytes32 } from "utils/ic/index";
-import { useEthMinterHelperContract, useBlockNumber } from "hooks/web3/index";
-import { numberToHexNumber } from "utils/web3/index";
-import { useUpdateEthMintTx } from "store/web3/hooks";
-import { Null } from "@icpswap/types";
-import { bytesStringOfNullSubAccount } from "constants/ckETH";
-import { useTranslation } from "react-i18next";
 import { ckETH } from "@icpswap/tokens";
+import type { Null } from "@icpswap/types";
+import { bytesStringOfNullSubAccount } from "constants/ckETH";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useBlockNumber, useEthMinterHelperContract } from "hooks/web3/index";
 import { useEthersWeb3Provider } from "hooks/web3/useEthersProvider";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useUpdateEthMintTx } from "store/web3/hooks";
+import { principalToBytes32 } from "utils/ic/index";
+import { numberToHexNumber } from "utils/web3/index";
 
 export interface MinterProps {
   minter_address: string | Null;

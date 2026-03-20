@@ -1,8 +1,7 @@
-import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
-import type { NFTControllerInfo, TradeStateResult } from "@icpswap/types";
-import { PaginationResult } from "@icpswap/types";
-import { NFTTradeStat, NFTCanisterController } from "@icpswap/actor";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { NFTCanisterController, NFTTradeStat } from "@icpswap/actor";
+import type { NFTControllerInfo, PaginationResult, TradeStateResult } from "@icpswap/types";
+import { isAvailablePageArgs, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export function useMarketplaceRecommendCanisters(
   offset: number,
@@ -36,9 +35,7 @@ export function useNFTCanisters(
   });
 }
 
-export function useCollectionData(
-  canisterId: string | undefined,
-): UseQueryResult<TradeStateResult | undefined, Error> {
+export function useCollectionData(canisterId: string | undefined): UseQueryResult<TradeStateResult | undefined, Error> {
   return useQuery({
     queryKey: ["useCollectionData", canisterId],
     queryFn: async () => {

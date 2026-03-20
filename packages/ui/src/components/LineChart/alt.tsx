@@ -1,10 +1,10 @@
-import React, { Dispatch, SetStateAction, ReactNode } from "react";
-import { ResponsiveContainer, XAxis, YAxis, Tooltip, AreaChart, Area } from "recharts";
 import dayjs from "dayjs";
 import { darken } from "polished";
-
-import { Box, useTheme } from "../Mui";
+import type React from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { GridRowBetween } from "../Grid/Row";
+import { Box, useTheme } from "../Mui";
 
 export type LineChartAltProps = {
   data: any[];

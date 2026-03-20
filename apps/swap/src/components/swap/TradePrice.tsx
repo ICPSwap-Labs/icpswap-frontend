@@ -1,20 +1,20 @@
-import { useCallback, useState, useMemo } from "react";
-import { Price, Token } from "@icpswap/swap-sdk";
+import type { Price, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import {
+  BigNumber,
+  formatDollarAmount,
   formatDollarTokenPrice,
   formatTokenPrice,
-  toSignificantWithGroupSeparator,
-  BigNumber,
   isUndefinedOrNull,
-  formatDollarAmount,
+  toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { Typography, useTheme, useMediaQuery } from "components/Mui";
-import LinkIcon from "assets/images/LinkIcon";
-import { TextButton, Flex } from "components/index";
-import { INFO_URL } from "constants/index";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import LinkIcon from "assets/images/LinkIcon";
+import { Flex, TextButton } from "components/index";
+import { Typography, useMediaQuery, useTheme } from "components/Mui";
+import { INFO_URL } from "constants/index";
 import { useUSDPriceById } from "hooks";
-import { Null } from "@icpswap/types";
+import { useCallback, useMemo, useState } from "react";
 
 export interface TradePriceProps {
   price: Price<Token, Token> | undefined;
@@ -66,8 +66,8 @@ export function TradePrice({
         ? token0PriceUSDValue
         : token1PriceUSDValue
       : price.quoteCurrency.equals(token0)
-      ? token0PriceUSDValue
-      : token1PriceUSDValue;
+        ? token0PriceUSDValue
+        : token1PriceUSDValue;
   }, [price, showInverted, token0, token0PriceUSDValue, token1, token1PriceUSDValue]);
 
   const text = `${`1 ${labelInverted} = ${formattedPrice ? formatTokenPrice(formattedPrice) : "-"}`} ${label}`;

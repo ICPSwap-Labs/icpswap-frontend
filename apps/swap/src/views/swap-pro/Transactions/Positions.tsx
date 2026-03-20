@@ -1,4 +1,4 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { PositionTable } from "components/liquidity/index";
 
 export interface PositionsProps {

@@ -1,16 +1,17 @@
-import React, { useEffect, ReactNode, useContext, useMemo, useState, useCallback } from "react";
-import { SwapProCardWrapper } from "components/swap/pro";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { TokenPoolPrice } from "components/TokenPoolPrice";
-import { TokenImage } from "components/index";
-import { Box, BoxProps, Typography, useTheme } from "components/Mui";
-import { BigNumber, formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
-import { Flex, Tooltip } from "@icpswap/ui";
-import type { Null } from "@icpswap/types";
-import { ArrowUpRight } from "react-feather";
-import { Token } from "@icpswap/swap-sdk";
 import { useInfoToken } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, Tooltip } from "@icpswap/ui";
+import { BigNumber, formatAmount, formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
+import { TokenImage } from "components/index";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
 import { SwapContext } from "components/swap";
+import { SwapProCardWrapper } from "components/swap/pro";
+import { TokenPoolPrice } from "components/TokenPoolPrice";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import type React from "react";
+import { type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { ArrowUpRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 import { LiquidityLocks } from "./LiquidityLocks";

@@ -1,9 +1,9 @@
-import { Typography } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
-import { nonUndefinedOrNull, formatAmount, parseTokenAmount, BigNumber } from "@icpswap/utils";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex, Tooltip } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
+import { BigNumber, formatAmount, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
+import { Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export interface SwapPoolBalanceProps {

@@ -1,10 +1,10 @@
 /* eslint-disable no-extend-native */
 
+import type { Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import JSBI from "jsbi";
-import { Null } from "@icpswap/types";
-import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 
-// @ts-ignore  hijack bigint
+// @ts-expect-error  hijack bigint
 BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };
@@ -102,7 +102,7 @@ export function parseBackPath(path: string) {
   return window.atob(path);
 }
 
-export * from "./type";
 export * from "./nft";
 export * from "./swap";
 export * from "./token";
+export * from "./type";

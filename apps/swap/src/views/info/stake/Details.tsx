@@ -1,16 +1,16 @@
-import { useState, ReactNode } from "react";
-import { makeStyles, Grid, Box, Typography, Link, Theme } from "components/Mui";
-import { StakeClaimTransactions, StakeTransactions } from "components/info/stake";
-import { MainCard, InfoWrapper, Copy } from "components/index";
-import { useParams } from "react-router-dom";
-import { parseTokenAmount, shorten, icDashboardExplorerLink, cycleValueFormat } from "@icpswap/utils";
 import { useStakingPoolCycles, useStakingPoolState, useStakingTokenPool } from "@icpswap/hooks";
 import { BreadcrumbsV1 } from "@icpswap/ui";
+import { cycleValueFormat, icDashboardExplorerLink, parseTokenAmount, shorten } from "@icpswap/utils";
+import { Copy, InfoWrapper, MainCard } from "components/index";
+import { StakeClaimTransactions, StakeTransactions } from "components/info/stake";
+import { Box, Grid, Link, makeStyles, type Theme, Typography } from "components/Mui";
 import dayjs from "dayjs";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useToken } from "hooks/index";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
 import upperFirst from "lodash/upperFirst";
+import { type ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

@@ -1,8 +1,8 @@
+import type { Null } from "@icpswap/types";
 import { nonUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { useTokenImportToNns } from "hooks/token";
-import { ReactNode } from "react";
 import { Link } from "components/index";
+import { useTokenImportToNns } from "hooks/token";
+import type { ReactNode } from "react";
 import { importTokenToNnsUrl } from "utils/ic";
 
 interface ImportToNnsProps {

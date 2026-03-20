@@ -1,13 +1,12 @@
-import { useCallback } from "react";
 import { stakingPoolUnstake, stakingPoolWithdraw } from "@icpswap/hooks";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
+import type { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount, sleep } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback } from "react";
 import { useUpdateStepData } from "store/steps/hooks";
-
-import { useUnstakeSteps } from "./useUnstakeSteps";
 import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
+import { useUnstakeSteps } from "./useUnstakeSteps";
 
 export interface UseUnstakeCallbackArgs {
   poolId: string;

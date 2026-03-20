@@ -1,13 +1,12 @@
-import { actor } from "../actor";
-import { ActorIdentity } from "@icpswap/types";
-import { ActorName } from "../ActorName";
-
 import {
-  BaseIndex,
-  BaseStorage,
+  type BaseIndex,
   BaseIndexInterfaceFactory,
+  type BaseStorage,
   BaseStorageInterfaceFactory,
 } from "@icpswap/candid";
+import type { ActorIdentity } from "@icpswap/types";
+import { ActorName } from "../ActorName";
+import { actor } from "../actor";
 
 export const baseIndex = (identity?: ActorIdentity) =>
   actor.create<BaseIndex>({

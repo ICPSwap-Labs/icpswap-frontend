@@ -1,35 +1,36 @@
-import React, { useState, useMemo } from "react";
-import { Typography, Chip, Button, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
-import { Modal, Flex } from "@icpswap/ui";
-import { CurrenciesAvatar } from "components/CurrenciesAvatar";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/index";
-import { feeAmountToPercentage } from "utils/swap/index";
-import { usePositionFees } from "hooks/swap/usePositionFees";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { Principal } from "@icp-sdk/core/principal";
+import { swapPool } from "@icpswap/actor";
+import { CurrencyAmount, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
+import { ResultStatus } from "@icpswap/types";
+import { Flex, Modal } from "@icpswap/ui";
 import {
-  numberToString,
   BigNumber,
-  resultFormat,
   formatDollarAmount,
   isValidPrincipal,
+  numberToString,
+  resultFormat,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { swapPool } from "@icpswap/actor";
-import { ResultStatus } from "@icpswap/types";
-import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { isDarkTheme } from "utils/index";
-import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { FilledTextField, Loading } from "components/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { isElement } from "react-is";
-import { Principal } from "@icp-sdk/core/principal";
+import { Box, Button, Chip, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { PositionRangeState } from "components/swap/index";
+import { CurrencyAmountFormatDecimals, DEFAULT_PERCENT_SYMBOL } from "constants/index";
+import { Bound } from "constants/swap";
 import { usePositionState } from "hooks/liquidity";
+import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { usePositionFees } from "hooks/swap/usePositionFees";
+import { useErrorTip, useLoadingTip, useSuccessTip } from "hooks/useTips";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { isElement } from "react-is";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { isDarkTheme } from "utils/index";
+import { formatTickPrice } from "utils/swap/formatTickPrice";
+import { feeAmountToPercentage } from "utils/swap/index";
 
 const useStyle = makeStyles((theme: Theme) => ({
   positionContainer: {
@@ -174,12 +175,12 @@ export function PositionDetails({
             !position
               ? "--"
               : inverted
-              ? toSignificantWithGroupSeparator(
-                  position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
-                )
-              : toSignificantWithGroupSeparator(
-                  position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
-                )
+                ? toSignificantWithGroupSeparator(
+                    position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
+                  )
+                : toSignificantWithGroupSeparator(
+                    position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
+                  )
           }
         />
         <PositionDetailItem
@@ -188,12 +189,12 @@ export function PositionDetails({
             !position
               ? "--"
               : inverted
-              ? toSignificantWithGroupSeparator(
-                  position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
-                )
-              : toSignificantWithGroupSeparator(
-                  position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
-                )
+                ? toSignificantWithGroupSeparator(
+                    position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
+                  )
+                : toSignificantWithGroupSeparator(
+                    position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
+                  )
           }
         />
         <PositionDetailItem
@@ -401,9 +402,11 @@ export function TransferPositionModal({
     const loadingKey = openLoadingTip(t("liquidity.transferring.loading.tips", { id: positionId }));
 
     const { status, message } = resultFormat<boolean>(
-      await (
-        await swapPool(poolId, true)
-      ).transferPosition(userPrincipal, Principal.fromText(principal), BigInt(positionId)),
+      await (await swapPool(poolId, true)).transferPosition(
+        userPrincipal,
+        Principal.fromText(principal),
+        BigInt(positionId),
+      ),
     );
 
     if (status === ResultStatus.OK) {

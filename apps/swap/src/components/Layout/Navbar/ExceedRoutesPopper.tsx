@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { MenuItem, MenuWrapper } from "@icpswap/ui";
 import { Link } from "components/index";
-import { MenuWrapper, MenuItem } from "@icpswap/ui";
+import { useState } from "react";
 
-import { Route, routeKey } from "./config";
+import { type Route, routeKey } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
 
 export interface ExceedRoutesPopperProps {
@@ -18,7 +18,7 @@ export function ExceedRoutesPopper({ open, routes, anchor, onMenuClick, onClickA
   const [subMenuTarget, setSubMenuTarget] = useState<any>(undefined);
 
   const handleSubMenuMouseEnter = (route: Route, target: any) => {
-    if (route.subMenus && route.subMenus.length) {
+    if (route.subMenus?.length) {
       setSubMenuOpenKey(routeKey(route.key));
       setSubMenuTarget(target);
     }

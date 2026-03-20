@@ -1,32 +1,32 @@
-import { useCallback } from "react";
-import { swapFactory, swapPool, swapNFT, swapPosition } from "@icpswap/actor";
-import type {
-  SwapPoolData,
-  TickLiquidityInfo,
-  PoolMetadata,
-  GetPoolArgs,
-  CreatePoolArgs,
-  MintArgs,
-  UserPositionInfo,
-  DecreaseLiquidityArgs,
-  IncreaseLiquidityArgs,
-  SwapArgs,
-  ClaimArgs,
-  NFTTokenMetadata,
-  UserPositionInfoWithTokenAmount,
-  UserPositionInfoWithId,
-  PositionInfoWithId,
-  TickInfoWithId,
-  ActorIdentity,
-  PaginationResult,
-  Null,
-  DepositAndSwapArgs,
-} from "@icpswap/types";
-import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { swapFactory, swapNFT, swapPool, swapPosition } from "@icpswap/actor";
+import type {
+  ActorIdentity,
+  ClaimArgs,
+  CreatePoolArgs,
+  DecreaseLiquidityArgs,
+  DepositAndSwapArgs,
+  GetPoolArgs,
+  IncreaseLiquidityArgs,
+  MintArgs,
+  NFTTokenMetadata,
+  Null,
+  PaginationResult,
+  PoolMetadata,
+  PositionInfoWithId,
+  SwapArgs,
+  SwapPoolData,
+  TickInfoWithId,
+  TickLiquidityInfo,
+  UserPositionInfo,
+  UserPositionInfoWithId,
+  UserPositionInfoWithTokenAmount,
+} from "@icpswap/types";
+import { isAvailablePageArgs, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
 
-import { getPaginationAllData, usePaginationAllData, getPaginationAllDataLimit } from "../useCallData";
+import { getPaginationAllData, getPaginationAllDataLimit, usePaginationAllData } from "../useCallData";
 
 export async function createSwapPool(args: CreatePoolArgs) {
   return resultFormat<SwapPoolData>(await (await swapFactory(true)).createPool(args));

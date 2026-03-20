@@ -1,6 +1,6 @@
+import type { LatestToken } from "@icpswap/types";
 import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
-import { LatestToken } from "@icpswap/types";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getLatestTokens() {
   const result = await icpswap_fetch_post<Array<LatestToken>>(`/info/tokens/latest`);

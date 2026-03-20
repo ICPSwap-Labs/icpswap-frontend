@@ -1,6 +1,6 @@
-import { resultFormat } from "@icpswap/utils";
 import { tokenStorage } from "@icpswap/actor";
-import { PublicTokenPricesData } from "@icpswap/types";
+import type { PublicTokenPricesData } from "@icpswap/types";
+import { resultFormat } from "@icpswap/utils";
 
 export async function getInfoTokenPriceChart(
   storageId: string,

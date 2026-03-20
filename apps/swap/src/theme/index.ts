@@ -1,8 +1,8 @@
 import { createTheme } from "components/Mui";
+import colors from "theme/colors";
 import { componentStyleOverrides } from "theme/compStyleOverride";
 import { themePalette } from "theme/palette";
 import { themeTypography } from "theme/typography";
-import colors from "theme/colors";
 
 const fontSize = {
   xs: "0.75rem",
@@ -76,7 +76,7 @@ export function theme(customization: { [key: string]: any }) {
     direction: customization.rtlLayout ? "rtl" : "ltr",
     palette: themePalette(themeOption),
     typography: themeTypography(themeOption),
-    // @ts-ignore
+    // @ts-expect-error
     components: componentStyleOverrides(themeOption),
     themeOption,
     colors,

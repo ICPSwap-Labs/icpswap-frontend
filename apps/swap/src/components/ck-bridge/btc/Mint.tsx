@@ -1,16 +1,16 @@
-import { Token } from "@icpswap/swap-sdk";
-import { BigNumber } from "@icpswap/utils";
-import { useTheme, Typography } from "components/Mui";
-import { useState, useCallback, useEffect } from "react";
-import { Null } from "@icpswap/types";
-import { Flex } from "@icpswap/ui";
-import { useRefreshBtcBalanceCallback } from "hooks/ck-bridge/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { useTranslation } from "react-i18next";
-import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
-import { BitcoinStyleMintUI } from "components/ck-bridge/ui/BitcoinStyleMintUI";
 import { BridgeChainName } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
+import type { BigNumber } from "@icpswap/utils";
+import { BitcoinStyleMintUI } from "components/ck-bridge/ui/BitcoinStyleMintUI";
+import { Typography, useTheme } from "components/Mui";
+import { useRefreshBtcBalanceCallback } from "hooks/ck-bridge/index";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface BtcBridgeMintProps {
   token: Token;

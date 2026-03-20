@@ -1,17 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
-  updateTaggedTokens,
-  deleteTaggedTokens,
-  updateCK_BTCAddresses,
-  updateBitcoinDissolveTxs,
-  updateWalletSortType,
-  updateSortBalance,
-  updateHideSmallBalance,
-  updateRemovedWalletDefaultTokens,
-  updateHideZeroNFT,
-  updateSortedTokens,
-  updateDogeDissolveTxs,
   cleanDogeDissolveTxs,
+  deleteTaggedTokens,
+  updateBitcoinDissolveTxs,
+  updateCK_BTCAddresses,
+  updateDogeDissolveTxs,
+  updateHideSmallBalance,
+  updateHideZeroNFT,
+  updateRemovedWalletDefaultTokens,
+  updateSortBalance,
+  updateSortedTokens,
+  updateTaggedTokens,
+  updateWalletSortType,
 } from "./actions";
 import { initialState } from "./states";
 

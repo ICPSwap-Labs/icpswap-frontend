@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
-import GreenCircleLoading from "components/Loading/GreenCircle";
-import { StepContents, StepDetailsProps } from "types/step";
 import { Flex, Modal } from "@icpswap/ui";
+import GreenCircleLoading from "components/Loading/GreenCircle";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useEffect } from "react";
 import { isElement } from "react-is";
+import type { StepContents, StepDetailsProps } from "types/step";
 
 interface ActionIconProps {
   activeStep: number;

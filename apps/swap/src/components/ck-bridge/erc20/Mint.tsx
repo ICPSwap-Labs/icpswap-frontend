@@ -1,22 +1,22 @@
-import { useState, useCallback, useMemo } from "react";
 import { BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { InputWrapper } from "components/ck-bridge";
-import { useErc20TokenBalance, useIcpTokenBalance } from "hooks/ck-bridge/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useAccount } from "wagmi";
-import { useActiveChain } from "hooks/web3/index";
-import { useERC20TokenByChainKeyId } from "hooks/token/index";
-import { ApprovalState } from "hooks/web3/useApproveCallback";
-import { chainIdToNetwork, chain } from "constants/web3";
-import { useMintCallback } from "hooks/ck-erc20/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
-import { useTranslation } from "react-i18next";
-import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { InputWrapper } from "components/ck-bridge";
 import { MintExtraContent } from "components/ck-bridge/erc20/MintExtra";
 import { Web3WalletWrapper } from "components/ck-bridge/Web3WalletWrapper";
+import { chain, chainIdToNetwork } from "constants/web3";
+import { useErc20TokenBalance, useIcpTokenBalance } from "hooks/ck-bridge/index";
+import { useMintCallback } from "hooks/ck-erc20/index";
+import { useERC20TokenByChainKeyId } from "hooks/token/index";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { useActiveChain } from "hooks/web3/index";
+import { ApprovalState } from "hooks/web3/useApproveCallback";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useAccount } from "wagmi";
 
 export interface Erc20MintProps {
   token: Token;

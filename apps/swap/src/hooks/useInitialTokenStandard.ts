@@ -1,15 +1,15 @@
-import { useEffect, useState, useMemo } from "react";
-import { XTC, TOKEN_STANDARD, CAT, MOD, BoomDAO } from "constants/tokens";
-import { ckSepoliaUSDC, ckSepoliaETH, ICP, WRAPPED_ICP, ckDoge } from "@icpswap/tokens";
 import { getSwapPools } from "@icpswap/hooks";
-import type { SwapPoolData } from "@icpswap/types";
 import { registerTokens } from "@icpswap/token-adapter";
-import { network, NETWORK } from "constants/server";
-import { useUpdateTokenStandard, useTokenStandards } from "store/token/cache/hooks";
-import { usePoolCanisterIdManager, useUpdateAllSwapPools } from "store/swap/hooks";
+import { ckDoge, ckSepoliaETH, ckSepoliaUSDC, ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import type { SwapPoolData } from "@icpswap/types";
+import { NETWORK, network } from "constants/server";
+import { BoomDAO, CAT, MOD, TOKEN_STANDARD, XTC } from "constants/tokens";
+import { useEffect, useMemo, useState } from "react";
 import { updateCanisters } from "store/allCanisters";
 import { updateTokens } from "store/allTokens";
 import { useGlobalTokenList } from "store/global/hooks";
+import { usePoolCanisterIdManager, useUpdateAllSwapPools } from "store/swap/hooks";
+import { useTokenStandards, useUpdateTokenStandard } from "store/token/cache/hooks";
 
 export const Tokens = [XTC, CAT, MOD, BoomDAO, ckSepoliaUSDC, ckSepoliaETH, ckDoge];
 

@@ -1,21 +1,21 @@
-import { useState, useMemo, useContext } from "react";
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
 import { useUserLimitOrders } from "@icpswap/hooks";
-import { CurrencyAmount, FeeAmount, Pool } from "@icpswap/swap-sdk";
-import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
-import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, Pagination, TextButton } from "@icpswap/ui";
-import { UserPositionByList } from "types/swap";
-import { usePositionFees } from "hooks/swap/usePositionFees";
-import { usePositionWithPool } from "hooks/swap/usePosition";
-import { usePool } from "hooks/swap/usePools";
-import { BigNumber, formatDollarAmount, formatAmount, isUndefinedOrNull } from "@icpswap/utils";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { SwapProContext } from "components/swap/pro";
-import { Null } from "@icpswap/types";
-import { SwapContext } from "components/swap";
-import { useTranslation } from "react-i18next";
-import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
+import { CurrencyAmount, FeeAmount, type Pool } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, LoadingRow, Pagination, TableRow, TextButton } from "@icpswap/ui";
+import { BigNumber, formatAmount, formatDollarAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { PositionPriceRange } from "components/liquidity";
+import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { SwapContext } from "components/swap";
+import { SwapProContext } from "components/swap/pro";
+import { usePool } from "hooks/swap/usePools";
+import { usePositionWithPool } from "hooks/swap/usePosition";
+import { usePositionFees } from "hooks/swap/usePositionFees";
+import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
+import { useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import type { UserPositionByList } from "types/swap";
 
 const useStyles = makeStyles(() => {
   return {
@@ -72,7 +72,7 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
       currencyFeeAmount0: CurrencyAmount.fromRawAmount(token0, feeAmount0.toString()),
       currencyFeeAmount1: CurrencyAmount.fromRawAmount(token1, feeAmount1.toString()),
     };
-  }, [feeAmount0, token0]);
+  }, [feeAmount0, token0, feeAmount1, token1]);
 
   const { token0USDPrice, token1USDPrice } = useMemo(() => {
     if (!pool || !inputToken || !outputToken) return { token0USDPrice: undefined, token1USDPrice: undefined };
@@ -188,7 +188,7 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
         })
         .slice(maxItems * (page - 1), page * maxItems)
     );
-  }, [userPositions, userLimitOrders]);
+  }, [userPositions, userLimitOrders, page]);
 
   const [, pool] = usePool(inputToken, outputToken, FeeAmount.MEDIUM);
 

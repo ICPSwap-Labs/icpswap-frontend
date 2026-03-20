@@ -1,17 +1,17 @@
-import { NFTCanister, NFTTradeCanister, NFTCanisterController, NFTTradeStat, NFT_V1 } from "@icpswap/actor";
-import { resultFormat, isAvailablePageArgs, isPrincipal, optionalArg } from "@icpswap/utils";
-import { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icp-sdk/core/principal";
+import { NFT_V1, NFTCanister, NFTCanisterController, NFTTradeCanister, NFTTradeStat } from "@icpswap/actor";
 import type {
-  PaginationResult,
   NFTCanisterInfo,
   NFTTokenMetadata,
+  NFTTransaction,
+  OrderInfo,
+  PaginationResult,
+  TotalTradeStat,
   TradeStateResult,
   TradeTransaction,
-  OrderInfo,
-  TotalTradeStat,
-  NFTTransaction,
 } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { isAvailablePageArgs, isPrincipal, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 // ----------------> NFT Canisters
 export async function getNFTCanisters(offset: number, limit: number) {
@@ -146,9 +146,7 @@ export async function getUserNFTs({
   account: string | Principal;
 }) {
   return resultFormat<PaginationResult<NFTTokenMetadata>>(
-    await (
-      await NFTCanister(canisterId)
-    ).findTokenList(
+    await (await NFTCanister(canisterId)).findTokenList(
       isPrincipal(account) ? { principal: account } : { address: account },
       BigInt(offset),
       BigInt(limit),
@@ -314,9 +312,7 @@ export async function getNFTTradeTransactions({
   desc,
 }: NFTTradeTransactionsArgs) {
   return resultFormat<PaginationResult<TradeTransaction>>(
-    await (
-      await NFTTradeCanister()
-    ).findTxPage(
+    await (await NFTTradeCanister()).findTxPage(
       optionalArg<string>(canisterId),
       optionalArg<string>(name),
       optionalArg<number>(Number(tokenIndex)),
@@ -378,9 +374,7 @@ export async function getUserNFTTradeTransactions({
   desc,
 }: NFTUserTradeTransactionsArgs) {
   return resultFormat<PaginationResult<TradeTransaction>>(
-    await (
-      await NFTTradeCanister()
-    ).findUserTxPage(
+    await (await NFTTradeCanister()).findUserTxPage(
       account,
       optionalArg<string>(canisterId),
       optionalArg<string>(name),

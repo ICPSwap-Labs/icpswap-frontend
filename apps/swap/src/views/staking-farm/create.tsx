@@ -1,26 +1,26 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Typography, Grid, Box, makeStyles, Theme } from "components/Mui";
-import { Flex, Select } from "@icpswap/ui";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { FilledTextField, Wrapper, MainCard, NumberFilledTextField, AuthButton } from "components/index";
-import { useTips } from "hooks/useTips";
-import { formatTokenAmount } from "@icpswap/utils";
+import { Principal } from "@icp-sdk/core/principal";
 import { createV3Farm, useSwapPoolMetadata } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { ResultStatus } from "@icpswap/types";
+import { Flex, Select } from "@icpswap/ui";
+import { formatTokenAmount } from "@icpswap/utils";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { timeParser } from "utils/index";
-import { useToken } from "hooks/index";
-import { useUpdateTokenStandard } from "store/token/cache/hooks";
-import { getSwapTokenArgs } from "hooks/token/index";
-import dayjs from "dayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AuthButton, FilledTextField, MainCard, NumberFilledTextField, Wrapper } from "components/index";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
 import { FarmControllerId } from "constants/canister";
-import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
-import { Principal } from "@icp-sdk/core/principal";
+import dayjs from "dayjs";
+import { useToken } from "hooks/index";
+import { getSwapTokenArgs } from "hooks/token/index";
+import { useTips } from "hooks/useTips";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useUpdateTokenStandard } from "store/token/cache/hooks";
+import { timeParser } from "utils/index";
+import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },

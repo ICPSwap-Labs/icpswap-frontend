@@ -1,2 +1,2 @@
-export * from "./principalToBytes32";
 export * from "./importTokenToNns";
+export * from "./principalToBytes32";

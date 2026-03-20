@@ -1,7 +1,7 @@
-import { Override } from "@icpswap/types";
+import type { Override } from "@icpswap/types";
+import { TextField, type TextFieldProps } from "components/Mui";
 import { forwardRef } from "react";
-import { NumericFormat, NumericFormatProps } from "react-number-format";
-import { TextField, TextFieldProps } from "components/Mui";
+import { NumericFormat, type NumericFormatProps } from "react-number-format";
 
 export type NumericProps = {
   decimalScale?: number;

@@ -1,12 +1,13 @@
-import React, { memo } from "react";
 import clsx from "clsx";
 import { makeStyles } from "components/Mui";
 import createTransition from "components/notistack/transitions/createTransition";
-import { ComponentClasses } from "components/notistack/utils/styles";
+import type { ContainerClassKey, SnackbarProviderProps } from "components/notistack/types";
 import { breakpoints, originKeyExtractor } from "components/notistack/utils";
-import { ContainerClassKey, SnackbarProviderProps } from "components/notistack/types";
+import { ComponentClasses } from "components/notistack/utils/styles";
 import { useWalletContext } from "components/Wallet/context";
 import { WALLET_DRAWER_WIDTH } from "constants/wallet";
+import type React from "react";
+import { memo } from "react";
 
 const indents = {
   view: { default: 20, dense: 4 },

@@ -1,7 +1,7 @@
-import { enumToString, isOkSubAccount } from "@icpswap/utils";
-import { ICRCTransaction } from "@icpswap/candid";
 import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { Transaction as TokenTransaction } from "./types";
+import type { ICRCTransaction } from "@icpswap/candid";
+import { enumToString, isOkSubAccount } from "@icpswap/utils";
+import type { Transaction as TokenTransaction } from "./types";
 
 function getFirstMemo(tx: ICRCTransaction) {
   const m = tx.transfer[0]?.memo ?? tx.burn[0]?.memo ?? tx.mint[0]?.memo;
@@ -48,10 +48,10 @@ export function icrcTransactionFormat(transaction: ICRCTransaction, index: bigin
       transaction.transfer[0]
         ? { Transfer: null }
         : transaction.burn[0]
-        ? { Burn: null }
-        : transaction.mint[0]
-        ? { Mint: null }
-        : { Approve: null },
+          ? { Burn: null }
+          : transaction.mint[0]
+            ? { Mint: null }
+            : { Approve: null },
     ),
     amount: transaction.transfer[0]?.amount ?? transaction.burn[0]?.amount ?? transaction.mint[0]?.amount,
     index,

@@ -1,7 +1,7 @@
-import { Box, useTheme, Typography } from "components/Mui";
-import { useCallback, useRef, useState } from "react";
-import { Flex, MenuWrapper, MenuItem } from "@icpswap/ui";
+import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useCallback, useRef, useState } from "react";
 
 export function Setting() {
   const ref = useRef(null);

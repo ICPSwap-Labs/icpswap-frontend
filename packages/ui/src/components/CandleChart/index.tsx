@@ -1,12 +1,9 @@
-import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from "react";
-import { createChart, IChartApi } from "lightweight-charts";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import { Box, useTheme } from "../Mui";
-
+import { createChart, type IChartApi } from "lightweight-charts";
+import type React from "react";
+import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { GridRowBetween } from "../Grid/Row";
-
-dayjs.extend(utc);
+import { Box, useTheme } from "../Mui";
 
 const DEFAULT_HEIGHT = 300;
 

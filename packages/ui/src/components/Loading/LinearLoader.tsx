@@ -1,4 +1,4 @@
-import { makeStyles, Theme, LinearProgress, Typography } from "../Mui";
+import { LinearProgress, makeStyles, type Theme, Typography } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

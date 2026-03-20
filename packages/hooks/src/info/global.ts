@@ -1,6 +1,6 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { icpswap_info_fetch_get } from "@icpswap/utils";
 import type { InfoGlobalDataResponse, PageResponse } from "@icpswap/types";
+import { icpswap_info_fetch_get } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export interface UseGlobalChartsProps {
   level: "m15" | "d1" | "h1";

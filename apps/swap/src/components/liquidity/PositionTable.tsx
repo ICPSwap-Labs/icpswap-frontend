@@ -1,9 +1,9 @@
-import { usePositions } from "hooks/liquidity/usePositions";
-import { isUndefinedOrNull, pageArgsFormat } from "@icpswap/utils";
-import { useEffect, useMemo, useState } from "react";
-import { Null } from "@icpswap/types";
 import { useLimitOrders } from "@icpswap/hooks";
-import { type PaginationPadding } from "@icpswap/ui";
+import type { Null } from "@icpswap/types";
+import type { PaginationPadding } from "@icpswap/ui";
+import { isUndefinedOrNull, pageArgsFormat } from "@icpswap/utils";
+import { usePositions } from "hooks/liquidity/usePositions";
+import { useEffect, useMemo, useState } from "react";
 
 import { PositionTableUI } from "./PositionTableUI";
 

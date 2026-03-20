@@ -1,12 +1,12 @@
-import { BigNumber, isValidPrincipal, parseTokenAmount } from "@icpswap/utils";
-import { ICP } from "@icpswap/tokens";
 import { Principal } from "@icp-sdk/core/principal";
-import { TokenInfo } from "types/token";
-import { tokenAdapter, icpAdapter } from "@icpswap/token-adapter";
-import { getTokenStandard } from "store/token/cache/hooks";
+import { icpAdapter, tokenAdapter } from "@icpswap/token-adapter";
+import { ICP } from "@icpswap/tokens";
+import { ResultStatus, type StatusResult, TOKEN_STANDARD } from "@icpswap/types";
+import { type BigNumber, isValidPrincipal, parseTokenAmount } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import TokenDefaultLogo from "assets/images/Token_default_logo.png";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { ResultStatus, StatusResult, TOKEN_STANDARD } from "@icpswap/types";
+import { getTokenStandard } from "store/token/cache/hooks";
+import type { TokenInfo } from "types/token";
 
 export interface TokenTransferProps {
   canisterId: string;

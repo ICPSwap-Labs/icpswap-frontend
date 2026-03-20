@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
+import { Flex } from "@icpswap/ui";
 import { Modal } from "components/index";
 import GreenCircleLoading from "components/Loading/GreenCircle";
-import { StepContents, StepDetailsProps } from "types/step";
-import { Flex } from "@icpswap/ui";
-import { isElement } from "react-is";
+import { Box, Typography, useTheme } from "components/Mui";
+import { Arrow, ErrorIcon, SuccessIcon } from "components/Steps/icons";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Arrow, SuccessIcon, ErrorIcon } from "components/Steps/icons";
+import { isElement } from "react-is";
+import type { StepContents, StepDetailsProps } from "types/step";
 
 interface ActionIconProps {
   activeStep: number;

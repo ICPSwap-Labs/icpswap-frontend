@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
-import dayjs from "dayjs";
-import { VolumeWindow, Null, InfoPoolDataResponse } from "@icpswap/types";
 import { useTransformedVolumeData } from "@icpswap/hooks";
+import { type InfoPoolDataResponse, type Null, VolumeWindow } from "@icpswap/types";
 import { formatDollarAmount } from "@icpswap/utils";
+import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 
 import { BarChartAlt } from "../BarChart/alt";
 import { ImageLoading } from "../Loading";
@@ -81,7 +81,7 @@ export function PoolVolumeChart({
             >
               {latestValue
                 ? formatDollarAmount(latestValue)
-                : formatDollarAmount(defaultValue) ?? formatDollarAmount(latestData.value)}
+                : (formatDollarAmount(defaultValue) ?? formatDollarAmount(latestData.value))}
             </Typography>
 
             <Typography

@@ -1,5 +1,5 @@
-import Copy, { CopyRef } from "components/Copy";
 import { shorten } from "@icpswap/utils";
+import Copy, { type CopyRef } from "components/Copy";
 import { Typography, type TypographyProps } from "components/Mui";
 import { useRef } from "react";
 

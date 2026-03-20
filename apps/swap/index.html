@@ -3,7 +3,7 @@
 
 <head>
   <title>ICPSwap</title>
-  <link rel="icon" href="%PUBLIC_URL%/favicon.png?v=0" />
+  <link rel="icon" href="/favicon.png?v=0" />
   <!-- Meta Tags-->
   <meta charset="utf-8" />
   <meta name="theme-color" content="#0B132F" />
@@ -30,7 +30,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="#2296f3">
   <meta name="apple-mobile-web-app-title" content="ICPSwap">
-  <link rel="apple-touch-icon" href="%PUBLIC_URL%/favicon.png?v=0">
+  <link rel="apple-touch-icon" href="/favicon.png?v=0">
 
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
   <meta name="referrer" content="origin" />
@@ -43,19 +43,19 @@
     "
   >
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=%REACT_APP_GOOGLE_TAG_MANAGER_ID%"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GOOGLE_TAG_MANAGER_ID%"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-    gtag('config', '%REACT_APP_GOOGLE_TAG_MANAGER_ID%');
+    gtag('config', '%VITE_GOOGLE_TAG_MANAGER_ID%');
   </script>
   <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
+      Notice the use of / in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      Unlike "/favicon.ico" or "favicon.ico", "//favicon.ico" will
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
@@ -69,6 +69,7 @@
   <noscript><link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
     rel="stylesheet" /></noscript>
+  
 </head>
 
 <body>
@@ -84,6 +85,7 @@
           To begin the development, run `npm start` or `yarn start`.
           To create a production bundle, use `npm run build` or `yarn build`.
         -->
+  <script type="module" src="/src/index.jsx" ></script>
 </body>
 
 </html>

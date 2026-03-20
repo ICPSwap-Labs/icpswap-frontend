@@ -1,18 +1,17 @@
-import { useNeuronSystemFunctions, useNeuron } from "@icpswap/hooks";
+import { useNeuron, useNeuronSystemFunctions } from "@icpswap/hooks";
+import type { NervousSystemFunction, Neuron } from "@icpswap/types";
 import { Flex, Modal } from "@icpswap/ui";
-import { Copy } from "components/index";
-import { Button, Box, Typography, Collapse, Checkbox } from "components/Mui";
-import { Neuron, NervousSystemFunction } from "@icpswap/types";
-import { useCallback, useMemo, useState } from "react";
 import { BigNumber, shorten, toHexString } from "@icpswap/utils";
-import { ChevronDown } from "react-feather";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import { Copy } from "components/index";
+import { Box, Button, Checkbox, Collapse, Typography } from "components/Mui";
+import { useCallback, useMemo, useState } from "react";
+import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
-
-import { AddFolloweeModal } from "./AddFolloweeModal";
-import { DeleteFolloweeModal } from "./DeleteFolloweeModal";
 import { AddFollowee } from "./AddFollowee";
+import { AddFolloweeModal } from "./AddFolloweeModal";
 import { DeleteFollowee } from "./DeleteFollowee";
+import { DeleteFolloweeModal } from "./DeleteFolloweeModal";
 
 interface FollowNeuronProps {
   func: NervousSystemFunction;
@@ -41,10 +40,7 @@ function FollowNeuron({
   const following = useMemo(() => {
     if (!neuron) return undefined;
 
-    return neuron.followees
-      .filter(([id]) => id === func.id)
-      .map(([, followees]) => followees.followees)
-      .flat();
+    return neuron.followees.filter(([id]) => id === func.id).flatMap(([, followees]) => followees.followees);
   }, [neuron, func]);
 
   const handleRefreshNeuron = () => {

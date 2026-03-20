@@ -1,5 +1,5 @@
+import type { Null, PublicTokenOverview, SwapPoolData } from "@icpswap/types";
 import { createContext, useCallback, useContext, useMemo } from "react";
-import type { SwapPoolData, PublicTokenOverview, Null } from "@icpswap/types";
 
 export type GlobalContextProps = {
   AllPools: SwapPoolData[] | undefined;

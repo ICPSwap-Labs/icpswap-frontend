@@ -1,13 +1,13 @@
-import { useMemo } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
+import { useInfoToken, useTokenAnalysis } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { parseTokenAmount, formatDollarAmount, BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Flex, MainCard, TokenImage, Proportion } from "@icpswap/ui";
-import { useIcpBlocks } from "hooks/useICBlocks";
+import { Flex, MainCard, Proportion, TokenImage } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useTokenSupply } from "hooks/token/calls";
-import { useICP2CyclesManager } from "store/global/hooks";
-import { useTokenAnalysis, useInfoToken } from "@icpswap/hooks";
+import { useIcpBlocks } from "hooks/useICBlocks";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useICP2CyclesManager } from "store/global/hooks";
 
 export function Icp() {
   const { t } = useTranslation();

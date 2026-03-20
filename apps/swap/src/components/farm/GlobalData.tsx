@@ -1,8 +1,8 @@
-import { Typography, Box } from "components/Mui";
-import { useFarmGlobalData } from "hooks/staking-farm";
-import { Tooltip, Flex } from "components/index";
-import React from "react";
 import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
+import { Flex, Tooltip } from "components/index";
+import { Box, Typography } from "components/Mui";
+import { useFarmGlobalData } from "hooks/staking-farm";
+import type React from "react";
 import { useTranslation } from "react-i18next";
 
 interface ItemProps {

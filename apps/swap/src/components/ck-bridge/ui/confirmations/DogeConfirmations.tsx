@@ -1,10 +1,10 @@
 import { Flex } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { Typography } from "components/Mui";
-import { useMemo } from "react";
-import { useDogeDissolveTx, useDogeBlockConfirmations } from "hooks/ck-bridge";
-import { DOGE_MINT_CONFIRMATIONS } from "constants/chain-key";
 import { Arrow } from "components/ck-bridge/ui/confirmations/Confirmations";
+import { Typography } from "components/Mui";
+import { DOGE_MINT_CONFIRMATIONS } from "constants/chain-key";
+import { useDogeBlockConfirmations, useDogeDissolveTx } from "hooks/ck-bridge";
+import { useMemo } from "react";
 
 interface DogeMintConfirmationsProps {
   hash: string;

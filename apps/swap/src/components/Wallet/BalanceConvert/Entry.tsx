@@ -1,9 +1,9 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { AvatarImage, Flex } from "components/index";
-import { useTranslation } from "react-i18next";
 import { ICP } from "@icpswap/tokens";
+import { AvatarImage, Flex } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 export function BalanceConvertEntry() {
   const theme = useTheme();

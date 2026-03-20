@@ -1,12 +1,12 @@
-import { useState, useCallback, memo, useEffect, useMemo } from "react";
-import { Button, CircularProgress } from "components/Mui";
-import { Flex, Tooltip } from "@icpswap/ui";
-import { useDownloadSwapTransactions } from "hooks/info/swap/index";
-import { useTranslation } from "react-i18next";
-import { Null } from "@icpswap/types";
-import { isUndefinedOrNull, mockALinkAndOpen } from "@icpswap/utils";
 import { getDownloadSwapTransactionsLink } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { Flex, Tooltip } from "@icpswap/ui";
+import { isUndefinedOrNull, mockALinkAndOpen } from "@icpswap/utils";
+import { Button, CircularProgress } from "components/Mui";
+import { useDownloadSwapTransactions } from "hooks/info/swap/index";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Download } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 interface SwapTransactionsProps {
   pair: string;

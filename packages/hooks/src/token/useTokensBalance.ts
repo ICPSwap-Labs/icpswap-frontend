@@ -1,7 +1,7 @@
-import { useMemo, useEffect, useState } from "react";
-import { Principal } from "@icp-sdk/core/principal";
-import { getTokenBalance } from "./useTokenBalance";
+import type { Principal } from "@icp-sdk/core/principal";
+import { useEffect, useMemo, useState } from "react";
 import { getPromisesAwait } from "../usePromisesAwait";
+import { getTokenBalance } from "./useTokenBalance";
 
 let GET_TOKENS_BALANCE_INDEX = 0;
 

@@ -1,17 +1,17 @@
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { isUndefinedOrNull, toHexString } from "@icpswap/utils";
+import type { DogeUtxo } from "@icpswap/candid";
+import { BridgeChainName } from "@icpswap/constants";
+import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
+import { isUndefinedOrNull, toHexString } from "@icpswap/utils";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { DOGE_MINT_CONFIRMATIONS } from "constants/chain-key";
+import { useDogeBlockConfirmations, useUserDogeKnownUtxos } from "hooks/ck-bridge/doge";
+import { useCallback, useMemo } from "react";
 import { RotateCcw } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { dogeBlockExplorer, dogeTransactionExplorer } from "utils/chain-key/doge";
-import { useUserDogeKnownUtxos, useDogeBlockConfirmations } from "hooks/ck-bridge/doge";
-import { BridgeChainName } from "@icpswap/constants";
-import { DogeUtxo } from "@icpswap/candid";
 import { parseDogeAmount } from "utils/chain-key";
-import { useCallback, useMemo } from "react";
-import { DOGE_MINT_CONFIRMATIONS } from "constants/chain-key";
+import { dogeBlockExplorer, dogeTransactionExplorer } from "utils/chain-key/doge";
 
 const useStyles = makeStyles(() => ({
   txLink: {

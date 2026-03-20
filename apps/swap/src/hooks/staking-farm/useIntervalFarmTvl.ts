@@ -1,5 +1,5 @@
-import { useCallback } from "react";
 import { getFarmTVL, useInterval } from "@icpswap/hooks";
+import { useCallback } from "react";
 
 export function useIntervalFarmTVL(canisterId: string | undefined, force?: boolean) {
   const call = useCallback(async () => {

@@ -1,14 +1,14 @@
-import { Token } from "@icpswap/swap-sdk";
-import { parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
-import { useTheme, Box, Typography, Button, CircularProgress } from "components/Mui";
-import { useRef } from "react";
-import { Null } from "@icpswap/types";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex, TextButton } from "@icpswap/ui";
-import QRCode from "components/qrcode";
+import { type BigNumber, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import Copy, { CopyRef } from "components/Copy";
-import { useTranslation } from "react-i18next";
+import Copy, { type CopyRef } from "components/Copy";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
+import QRCode from "components/qrcode";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 interface BitcoinStyleMintUIProps {
   token: Token;

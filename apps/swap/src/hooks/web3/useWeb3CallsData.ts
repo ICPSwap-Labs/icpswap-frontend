@@ -1,4 +1,4 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useSupportedActiveChain } from "hooks/web3/index";
 
 export function useWeb3CallsData<T>(

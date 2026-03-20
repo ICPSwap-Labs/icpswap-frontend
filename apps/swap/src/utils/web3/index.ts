@@ -1,8 +1,8 @@
 import { getAddress } from "@ethersproject/address";
-import { BigNumber as Big } from "@ethersproject/bignumber";
+import type { BigNumber as Big } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 import { Contract } from "@ethersproject/contracts";
-import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
+import type { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import { BigNumber } from "@icpswap/utils";
 
 // returns the checksummed address if the address is valid, otherwise returns false

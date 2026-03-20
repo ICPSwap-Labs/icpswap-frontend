@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { Null } from "@icpswap/types";
 import { useUserLimitTransactions, useUserUnusedBalance } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { useMemo } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 import { HistoryTableProUI } from "./HistoryTableProUI";

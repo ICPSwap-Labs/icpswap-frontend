@@ -1,8 +1,8 @@
-import { useMemo } from "react";
 import { Position } from "@icpswap/swap-sdk";
-import { usePools, type PoolKey } from "hooks/swap/usePools";
-import { useTokens } from "hooks/useCurrency";
 import type { PoolMetadata } from "@icpswap/types";
+import { type PoolKey, usePools } from "hooks/swap/usePools";
+import { useTokens } from "hooks/useCurrency";
+import { useMemo } from "react";
 
 export interface PositionInfo {
   liquidity: bigint;

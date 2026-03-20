@@ -1,13 +1,21 @@
-import { Box, Theme, makeStyles } from "components/Mui";
+import type { Null } from "@icpswap/types";
+import {
+  Header,
+  HeaderCell,
+  LoadingRow,
+  NoData,
+  Pagination,
+  type PaginationPadding,
+  type PaginationProps,
+} from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useMemo } from "react";
-import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationProps, PaginationPadding } from "@icpswap/ui";
-import { usePoolByPoolId } from "hooks/swap/usePools";
 import { PositionRow } from "components/liquidity/PositionRow";
-import { Null } from "@icpswap/types";
+import { Box, makeStyles, type Theme } from "components/Mui";
 import { useSneedLedger } from "hooks/index";
-import { PositionDetails } from "types/index";
+import { usePoolByPoolId } from "hooks/swap/usePools";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import type { PositionDetails } from "types/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

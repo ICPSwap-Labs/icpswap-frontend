@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { Select } from "components/Select/ForToken";
-import { WalletSortType } from "types/index";
 import i18n from "i18n/index";
+import { useEffect, useState } from "react";
+import type { WalletSortType } from "types/index";
 
 const menus: { label: string; value: WalletSortType }[] = [
   { label: i18n.t("common.highest.value"), value: "High" },

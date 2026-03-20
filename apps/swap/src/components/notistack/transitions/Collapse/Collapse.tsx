@@ -1,19 +1,18 @@
 /* eslint-disable no-param-reassign */
 
+import clsx from "clsx";
+import { makeStyles } from "components/Mui";
 /**
  * Credit to MUI team @ https://mui.com
  */
 import * as React from "react";
-import clsx from "clsx";
-import { makeStyles } from "components/Mui";
-
-import TransitionComponent, { TransitionStatus } from "../Transition";
-import useForkRef from "../useForkRef";
-import { TransitionHandlerProps, TransitionProps } from "../../types";
+import type { TransitionHandlerProps, TransitionProps } from "../../types";
+import { ComponentClasses } from "../../utils/styles";
+import createTransition from "../createTransition";
 import getAutoHeightDuration from "../getAutoHeightDuration";
 import getTransitionProps from "../getTransitionProps";
-import createTransition from "../createTransition";
-import { ComponentClasses } from "../../utils/styles";
+import TransitionComponent, { type TransitionStatus } from "../Transition";
+import useForkRef from "../useForkRef";
 
 const useStyles = makeStyles({
   root: {
@@ -120,9 +119,8 @@ const Collapse = React.forwardRef<HTMLDivElement | null, TransitionProps>((props
   };
 
   return (
-    // @ts-ignore
+    // @ts-expect-error ignore the Transaction component typescript error
     <TransitionComponent
-      // @ts-ignore
       in={inProp}
       onEnter={handleEnter}
       onEntered={handleEntered}

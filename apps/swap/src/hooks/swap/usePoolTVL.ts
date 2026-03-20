@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { useUSDValue, useUSDPrice } from "hooks/useUSDPrice";
-import { CurrencyAmount, Token, FeeAmount } from "@icpswap/swap-sdk";
+import { CurrencyAmount, type FeeAmount, type Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { BigNumber, formatDollarAmount, numberToString } from "@icpswap/utils";
 import { usePoolTokenAmountsFromKey } from "hooks/swap/v3Calls";
-import { formatDollarAmount, numberToString, BigNumber } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
 import { useTokenBalance } from "hooks/token";
+import { useUSDPrice, useUSDValue } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 
 export function usePoolTVL(
   token0: Token | undefined,

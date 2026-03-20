@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { Select, AvatarImage } from "components/index";
+import { AvatarImage, Select } from "components/index";
 import { Box, Typography } from "components/Mui";
+import { useMemo } from "react";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { getNnsRootId, isNnsCommitted, nnsTokenLogo } from "utils/sns/utils";
 

@@ -1,4 +1,4 @@
-import { SNS_SWAP_SERVICE, SNS_SWAP_INTERFACE_FACTORY } from "@icpswap/candid";
+import { SNS_SWAP_INTERFACE_FACTORY, type SNS_SWAP_SERVICE } from "@icpswap/candid";
 import { actor } from "../actor";
 
 export const sns_swap = async (canisterId: string, identity?: true) =>

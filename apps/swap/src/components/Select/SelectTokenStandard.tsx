@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { Select } from "components/Select/ForToken";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { Select } from "components/Select/ForToken";
+import { useEffect, useState } from "react";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },

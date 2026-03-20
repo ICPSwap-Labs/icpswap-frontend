@@ -1,6 +1,6 @@
-import { Box } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex, TokenImage } from "components/index";
-import { Token } from "@icpswap/swap-sdk";
+import { Box } from "components/Mui";
 
 export interface FarmTokenImagesProps {
   rewardToken: Token | undefined;

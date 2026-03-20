@@ -1,7 +1,7 @@
-import { useState, ReactNode, useEffect } from "react";
 import { VolumeWindow } from "@icpswap/types";
+import { type ReactNode, useEffect, useState } from "react";
 
-import { Typography, Box, useTheme } from "../Mui";
+import { Box, Typography, useTheme } from "../Mui";
 
 export interface SmallOptionButtonProps {
   active: boolean;

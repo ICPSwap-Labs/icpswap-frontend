@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { Select } from "components/Select/ForToken";
-import { SortBalanceEnum } from "types/index";
 import i18n from "i18n/index";
+import { useEffect, useState } from "react";
+import { SortBalanceEnum } from "types/index";
 
 const menus: { label: string; value: SortBalanceEnum }[] = [
   { label: i18n.t("common.all.balance"), value: SortBalanceEnum.ALL },

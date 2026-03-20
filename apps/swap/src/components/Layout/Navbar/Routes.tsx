@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { useLocation } from "react-router-dom";
-import { ChevronDown } from "react-feather";
 import { Link } from "components/index";
+import { Box, Grid, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { useState } from "react";
+import { ChevronDown } from "react-feather";
+import { useLocation } from "react-router-dom";
 
-import { Route, MAX_NUMBER, routeKey } from "./config";
+import { MAX_NUMBER, type Route, routeKey } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
 
 export interface RoutesProps {
@@ -23,7 +23,7 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
   const [subMenuTarget, setSubMenuTarget] = useState<any>(undefined);
 
   const handleMenuMouseEnter = (route: Route, target: any) => {
-    if (route.subMenus && route.subMenus.length) {
+    if (route.subMenus?.length) {
       setSubMenuOpenKey(routeKey(route.key));
       setSubMenuTarget(target);
     }

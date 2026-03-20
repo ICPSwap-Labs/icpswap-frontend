@@ -1,30 +1,30 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
-import { ICP } from "@icpswap/tokens";
-import { parseTokenAmount, BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { AppState } from "store/index";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { ChainKeyETHMinterInfo, IcpSwapAPITokenInfo, Null } from "@icpswap/types";
 import {
-  useXDR2USD,
-  useTokensFromList,
-  getLimitedInfinityCallV1,
   getAllSwapTokens,
-  getGlobalSettingTokens,
   getGlobalSettingChart,
+  getGlobalSettingTokens,
+  getLimitedInfinityCallV1,
+  useTokensFromList,
+  useXDR2USD,
 } from "@icpswap/hooks";
-import { setStorageTokenInfo } from "hooks/token/index";
+import { ICP } from "@icpswap/tokens";
+import type { ChainKeyETHMinterInfo, IcpSwapAPITokenInfo, Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
-import { parseTokenStandards } from "utils/parseTokenStandards";
+import { setStorageTokenInfo } from "hooks/token/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  updateTokenList,
   updateAllSwapTokens,
-  updateWalletConnector,
   updateBridgeTokens,
-  updateGlobalMinterInfo,
-  updateDefaultTokens,
   updateDefaultChartType,
+  updateDefaultTokens,
+  updateGlobalMinterInfo,
+  updateTokenList,
+  updateWalletConnector,
 } from "store/global/actions";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import type { AppState } from "store/index";
+import { parseTokenStandards } from "utils/parseTokenStandards";
 
 export function useGlobalTokenList() {
   return useAppSelector((state: AppState) => state.global.tokenList);

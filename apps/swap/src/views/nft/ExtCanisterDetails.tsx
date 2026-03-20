@@ -1,14 +1,14 @@
-import { Box, Grid, Typography, Theme } from "components/Mui";
-import { useParams } from "react-router-dom";
-import NFTList from "components/NFT/ext/NFTList";
-import { MainCard, Breadcrumbs, Wrapper, LoadingRow } from "components/index";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
-import { useMemo, useState } from "react";
-import { makeStyles } from "@mui/styles";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import type { EXTCollection } from "@icpswap/types";
+import { makeStyles } from "@mui/styles";
 import Avatar from "components/Image/Avatar";
+import { Breadcrumbs, LoadingRow, MainCard, Wrapper } from "components/index";
+import { Box, Grid, type Theme, Typography } from "components/Mui";
+import NFTList from "components/NFT/ext/NFTList";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 const useStyles = makeStyles((theme: Theme) => ({
   infoCard: {

@@ -1,16 +1,16 @@
-import { Flex, Modal, FilledTextField, TextButton } from "@icpswap/ui";
-import { Box, Button, Typography, useTheme, CircularProgress, InputAdornment } from "components/Mui";
+import { addPriceAlert } from "@icpswap/hooks";
+import { type AlertType, type Null, ResultStatus } from "@icpswap/types";
+import { FilledTextField, Flex, Modal, TextButton } from "@icpswap/ui";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { NumberFilledTextField } from "components/Input/NumberFilledTextField";
+import { Box, Button, CircularProgress, InputAdornment, Typography, useTheme } from "components/Mui";
+import { AlertTypeSelector } from "components/PriceAlerts/AlertTypeSelector";
+import { useResetEmailManager, useShowEmailManager } from "components/PriceAlerts/state";
 import { SelectToken } from "components/Select/SelectToken";
 import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { AlertTypeSelector } from "components/PriceAlerts/AlertTypeSelector";
-import { NumberFilledTextField } from "components/Input/NumberFilledTextField";
 import { TIP_ERROR, TIP_SUCCESS, useTips, useToken } from "hooks/index";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { addPriceAlert } from "@icpswap/hooks";
-import { Null, ResultStatus, type AlertType } from "@icpswap/types";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useResetEmailManager, useShowEmailManager } from "components/PriceAlerts/state";
 
 interface SelectButtonProps {
   height?: string;
@@ -91,7 +91,7 @@ export function CreateAlertsModal({ open, onClose, email, defaultTokenId, onCrea
     }
 
     setLoading(false);
-  }, [tokenId, alertFrequency, alertType, targetPrice, email, onClose, onCreateSuccess]);
+  }, [tokenId, alertFrequency, alertType, targetPrice, email, onClose, onCreateSuccess, openTip]);
 
   const error = useMemo(() => {
     if (isUndefinedOrNull(tokenId)) return "Add";
@@ -117,12 +117,9 @@ export function CreateAlertsModal({ open, onClose, email, defaultTokenId, onCrea
     return alertType.includes("MarginOf");
   }, [alertType]);
 
-  const handleTargetPriceChange = useCallback(
-    (targetPrice: string) => {
-      setTargetPrice(targetPrice);
-    },
-    [setTargetPrice],
-  );
+  const handleTargetPriceChange = useCallback((targetPrice: string) => {
+    setTargetPrice(targetPrice);
+  }, []);
 
   return (
     <Modal open={open} title={t("price.alerts.create.alert")} dialogWidth={PRICE_ALERTS_MODAL_WIDTH} onClose={onClose}>

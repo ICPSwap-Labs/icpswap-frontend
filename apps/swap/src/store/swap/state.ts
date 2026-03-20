@@ -1,7 +1,7 @@
+import type { SwapPoolData } from "@icpswap/types";
 import { SWAP_FIELD } from "constants/index";
 import { DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID } from "constants/swap";
-import { type SwapPoolData } from "@icpswap/types";
-import { SwapFinalMetadata } from "types/swap";
+import type { SwapFinalMetadata } from "types/swap";
 
 export interface SwapState {
   [SWAP_FIELD.INPUT]: string;

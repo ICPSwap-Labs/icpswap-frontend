@@ -1,4 +1,4 @@
-import { type Position } from "@icpswap/swap-sdk";
+import type { Position } from "@icpswap/swap-sdk";
 
 export function encodePositionKey(position: Position | undefined, index: bigint | number) {
   if (!position) return undefined;

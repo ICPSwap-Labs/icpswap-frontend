@@ -1,17 +1,17 @@
 export type {
+  ChainKeyETHMinterInfo,
+  DogeUtxoStatus,
+  Eip1559TransactionPrice,
+  EthTransaction,
+  RetrieveBtcStatus,
+  RetrieveErc20Request,
+  RetrieveEthStatus,
+  TxFinalizedStatus,
+  WithdrawalDetail,
+  WithdrawalSearchParameter,
+  WithdrawalStatus,
   WithdrawErc20Arg,
   WithdrawErc20Error,
-  RetrieveErc20Request,
-  WithdrawalSearchParameter,
-  WithdrawalDetail,
-  WithdrawalStatus,
-  EthTransaction,
-  TxFinalizedStatus,
-  ChainKeyETHMinterInfo,
-  Eip1559TransactionPrice,
-  RetrieveEthStatus,
-  RetrieveBtcStatus,
-  DogeUtxoStatus,
 } from "@icpswap/candid";
 
 export type DogeTransaction = {

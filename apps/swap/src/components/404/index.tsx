@@ -1,7 +1,7 @@
-import { Box, Typography } from "components/Mui";
-import { ReactComponent as BoundaryErrorImage } from "assets/images/boundary-error.svg";
-import { useTranslation } from "react-i18next";
 import { Flex } from "@icpswap/ui";
+import { ReactComponent as BoundaryErrorImage } from "assets/images/boundary-error.svg";
+import { Box, Typography } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 export default function PageNotFound() {
   const { t } = useTranslation();

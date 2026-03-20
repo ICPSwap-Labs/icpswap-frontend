@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Typography, TextField, Chip, makeStyles, Theme, useTheme } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
 import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
-import { Token } from "@icpswap/swap-sdk";
-import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
-import { isDarkTheme } from "utils/index";
 import { Flex, NumberTextField } from "components/index";
+import { Chip, makeStyles, TextField, type Theme, Typography, useTheme } from "components/Mui";
+import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import i18n from "i18n/index";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
+import { isDarkTheme } from "utils/index";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const usePriceRangeInputStyle = makeStyles((theme: Theme) => {

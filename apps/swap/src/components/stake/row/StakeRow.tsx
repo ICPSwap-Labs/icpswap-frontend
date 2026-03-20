@@ -1,11 +1,10 @@
-import { BoxProps } from "components/Mui";
-import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useStakingPoolState } from "@icpswap/hooks";
-import { FilterState } from "types/staking-token";
-
+import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
+import type { BoxProps } from "components/Mui";
+import type { FilterState } from "types/staking-token";
+import { EmptyRow } from "./EmptyRow";
 import { FinishedRow } from "./FinishedRow";
 import { LiveRow } from "./LiveRow";
-import { EmptyRow } from "./EmptyRow";
 
 interface StakeRowProps {
   wrapperSx?: BoxProps["sx"];

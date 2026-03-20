@@ -1,24 +1,24 @@
-import { useCallback, useMemo, ReactNode } from "react";
-import { saturate } from "polished";
-import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
-import { batch } from "react-redux";
-import { useDensityChartData } from "hooks/swap/useDensityChartData";
-import { format } from "d3";
+import type { Price, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex } from "components/index";
+import { Chart } from "components/liquidity/PriceRangeChart/Chart";
+import type { ZoomLevels } from "components/liquidity/PriceRangeChart/types";
+import { Box, Typography, useTheme } from "components/Mui";
 import {
   Bound,
   FeeAmount,
-  ZOOM_LEVEL_INITIAL_MIN_MAX,
+  SWAP_CHART_RANGE_AREA_COLOR,
   SWAP_CHART_RANGE_LEFT_COLOR,
   SWAP_CHART_RANGE_RIGHT_COLOR,
-  SWAP_CHART_RANGE_AREA_COLOR,
+  ZOOM_LEVEL_INITIAL_MIN_MAX,
 } from "constants/swap";
-import { Price, Token } from "@icpswap/swap-sdk";
-import { Box, Typography, useTheme } from "components/Mui";
-import { Flex } from "components/index";
-import { Null } from "@icpswap/types";
+import { format } from "d3";
+import { useDensityChartData } from "hooks/swap/useDensityChartData";
+import { saturate } from "polished";
+import { type ReactNode, useCallback, useMemo } from "react";
+import { BarChart2, CloudOff, Inbox, Loader } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { ZoomLevels } from "components/liquidity/PriceRangeChart/types";
-import { Chart } from "components/liquidity/PriceRangeChart/Chart";
+import { batch } from "react-redux";
 
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
   [FeeAmount.LOW]: {

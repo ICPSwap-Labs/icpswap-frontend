@@ -1,8 +1,8 @@
-import { useState, useMemo, ReactNode } from "react";
-import { BigNumber } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
-import { WalletTokenContext, type TokenBalance, AssetsType } from "components/Wallet/token/context";
+import { BigNumber } from "@icpswap/utils";
+import { AssetsType, type TokenBalance, WalletTokenContext } from "components/Wallet/token/context";
+import { type ReactNode, useMemo, useState } from "react";
 
 interface WalletTokenContextProviderProps {
   children: ReactNode;

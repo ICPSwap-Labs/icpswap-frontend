@@ -1,27 +1,27 @@
-import { FC, useMemo, useRef, useState } from "react";
-import {
-  Grid,
-  Box,
-  MenuList,
-  MenuItem,
-  Popper,
-  useMediaQuery,
-  makeStyles,
-  useTheme,
-  Theme,
-  ClickAwayListener,
-} from "components/Mui";
 import { mockALinkAndOpen } from "@icpswap/utils";
+import {
+  Box,
+  ClickAwayListener,
+  Grid,
+  MenuItem,
+  MenuList,
+  makeStyles,
+  Popper,
+  type Theme,
+  useMediaQuery,
+  useTheme,
+} from "components/Mui";
+import { type FC, useMemo, useRef, useState } from "react";
 import DiscordIcon from "./Discord";
-import TwitterIcon from "./Twitter";
-import TelegramIcon from "./Telegram";
 import DistriktIcon from "./Distrikt";
 import DscvrIcon from "./Dscvr";
+import GithubIcon from "./Github";
 import InstagramIcon from "./Instagram";
 import MediumIcon from "./Medium";
-import WebsiteIcon from "./Website";
 import OtherIcon from "./Other";
-import GithubIcon from "./Github";
+import TelegramIcon from "./Telegram";
+import TwitterIcon from "./Twitter";
+import WebsiteIcon from "./Website";
 
 const LINKS_MAX_NUMBER = 5;
 

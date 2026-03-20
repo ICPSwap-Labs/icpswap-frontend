@@ -1,6 +1,6 @@
 import type { ExtNft } from "@icpswap/types";
 import { principalToAccount } from "@icpswap/utils";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export function useExtUserNFTs(
   principal: string | undefined,

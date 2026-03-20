@@ -1,16 +1,16 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
-  updateEthMintTx,
-  updateErc20TX,
-  updateEthDissolveTX,
-  updateEthereumTxResponse,
-  updateBitcoinTxResponse,
-  updateEthereumFinalizedHashes,
-  updateErc20DissolveStatus,
-  updateErc20DissolveCompletedTxs,
-  updateBitcoinFinalizedHashes,
   cleanBitcoinFinalizedHashes,
   cleanEthereumFinalizedHashes,
+  updateBitcoinFinalizedHashes,
+  updateBitcoinTxResponse,
+  updateErc20DissolveCompletedTxs,
+  updateErc20DissolveStatus,
+  updateErc20TX,
+  updateEthDissolveTX,
+  updateEthereumFinalizedHashes,
+  updateEthereumTxResponse,
+  updateEthMintTx,
 } from "./actions";
 import { initialState } from "./states";
 

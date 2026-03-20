@@ -1,32 +1,32 @@
-import { useCallback } from "react";
+import { Principal } from "@icp-sdk/core/principal";
 import { getPassCode, requestPassCode } from "@icpswap/hooks";
-import { Position, Token } from "@icpswap/swap-sdk";
-import { getLocaleMessage } from "i18n/service";
-import { useStepCalls, newStepKey, useCloseAllSteps } from "hooks/useStepCall";
+import type { Position, Token } from "@icpswap/swap-sdk";
+import type { Null, PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
+import { BigNumber } from "@icpswap/utils";
 import { getAddLiquidityStepDetails } from "components/swap/AddLiquiditySteps";
-import { useStepContentManager } from "store/steps/hooks";
+import { PassCodeManagerId } from "constants/canister";
 import {
+  getTokenActualDepositRawAmount,
+  getTokenActualTransferRawAmount,
+  getTokenInsufficient,
+  noApproveByTokenInsufficient,
+  noDepositByTokenInsufficient,
+  noTransferByTokenInsufficient,
   useSwapApprove,
   useSwapDeposit,
   useSwapTransfer,
-  getTokenInsufficient,
-  noApproveByTokenInsufficient,
-  getTokenActualTransferRawAmount,
-  getTokenActualDepositRawAmount,
-  noTransferByTokenInsufficient,
-  noDepositByTokenInsufficient,
 } from "hooks/swap/index";
-import { isUseTransfer } from "utils/token/index";
-import { createPool, mint as __mint } from "hooks/swap/v3Calls";
-import { useSuccessTip, useErrorTip } from "hooks/useTips";
-import { useUpdateUserPositionPools } from "store/hooks";
-import { useNavigate } from "react-router-dom";
-import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import type { Null, PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";
-import { PassCodeManagerId } from "constants/canister";
-import { Principal } from "@icp-sdk/core/principal";
-import { BigNumber } from "@icpswap/utils";
+import { mint as __mint, createPool } from "hooks/swap/v3Calls";
+import { newStepKey, useCloseAllSteps, useStepCalls } from "hooks/useStepCall";
+import { useErrorTip, useSuccessTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useUpdateUserPositionPools } from "store/hooks";
+import { useStepContentManager } from "store/steps/hooks";
+import type { ExternalTipArgs, OpenExternalTip } from "types/index";
+import { isUseTransfer } from "utils/token/index";
 import { useStepsToReclaimCallback } from "./useStepsToReclaimCallback";
 
 let SwapPoolId: undefined | string;
@@ -142,7 +142,7 @@ function useAddLiquidityCalls() {
       };
 
       const getPoolId = () => {
-        return !noLiquidity ? position.pool.id : SwapPoolId ?? position.pool.id;
+        return !noLiquidity ? position.pool.id : (SwapPoolId ?? position.pool.id);
       };
 
       const { token0, token1 } = position.pool;

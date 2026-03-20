@@ -1,4 +1,4 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import qs from "qs";
 
 export function locationSearchReplace(search: string, key: string, value: string | Null) {

@@ -1,13 +1,11 @@
-import { lazy } from "react";
 import Loadable from "components/Loading/Loadable";
 import i18n from "i18n";
+import { lazy } from "react";
 
-import { RouteDefinition } from "./type";
+import type { RouteDefinition } from "./type";
 
 // Preload first-screen (Swap) chunk as soon as route config loads, so it fetches in parallel with app shell
-const swapChunkPromise = import(
-  /* webpackChunkName: "swap" */ "../views/swap-liquidity-v3/index"
-);
+const swapChunkPromise = import(/* webpackChunkName: "swap" */ "../views/swap-liquidity-v3/index");
 const Swap = Loadable(lazy(() => swapChunkPromise));
 const SwapLimit = Loadable(lazy(() => import("../views/swap-liquidity-v3/limit")));
 const SwapPro = Loadable(lazy(() => import("../views/swap-pro")));

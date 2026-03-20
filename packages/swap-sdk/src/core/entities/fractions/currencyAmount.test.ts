@@ -1,5 +1,5 @@
 import JSBI from "jsbi";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { MaxUint256 } from "../../constants";
 import { Token } from "../token";

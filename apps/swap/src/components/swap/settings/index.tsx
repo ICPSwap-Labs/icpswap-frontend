@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Box, ClickAwayListener, Typography, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { useSlippageManager } from "store/swap/cache/hooks";
 import { BigNumber } from "@icpswap/utils";
+import { Box, ClickAwayListener, Typography, useTheme } from "components/Mui";
+import { useState } from "react";
+import { useSlippageManager } from "store/swap/cache/hooks";
 
 import { SwapSettingCard } from "./SwapSettings";
 

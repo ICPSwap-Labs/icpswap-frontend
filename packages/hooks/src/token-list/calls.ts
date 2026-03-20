@@ -1,7 +1,7 @@
 import { tokenList } from "@icpswap/actor";
-import type { TokenListMetadata, IcpSwapAPIPageResult, IcpSwapAPITokenInfo, TokensTreeMapRow } from "@icpswap/types";
+import type { IcpSwapAPIPageResult, IcpSwapAPITokenInfo, TokenListMetadata, TokensTreeMapRow } from "@icpswap/types";
 import { icpswap_fetch_get, icpswap_fetch_post, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 import { getLimitedInfinityCallV1 } from "../useLimitedInfinityCall";
 

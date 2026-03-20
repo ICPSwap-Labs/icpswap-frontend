@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Box, Typography, Collapse } from "components/Mui";
 import { ReactComponent as ArrowDownIcon } from "assets/images/arrow-down.svg";
+import { Box, Collapse, Typography } from "components/Mui";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { Route, routeKey } from "../config";
+import { type Route, routeKey } from "../config";
 
 export interface RoutesProps {
   routes: Route[];
@@ -57,7 +57,7 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
             </Box>
 
             <Collapse in={collapseKey === routeKey(route.key)}>
-              {route.subMenus && route.subMenus.length ? (
+              {route.subMenus?.length ? (
                 <Box sx={{ margin: "16px 0 0 0", display: "grid", gridTemplateColumns: "1fr", gap: "20px 0" }}>
                   {(route.subMenus ?? []).map((subRoute) => {
                     const Icon = subRoute.icon;

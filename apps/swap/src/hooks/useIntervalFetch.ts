@@ -1,5 +1,5 @@
-import { Null } from "@icpswap/types";
-import { useState, useEffect, useMemo } from "react";
+import type { Null } from "@icpswap/types";
+import { useEffect, useMemo, useState } from "react";
 
 export function useIntervalFetch<T>(
   call: (() => Promise<T | undefined>) | undefined,

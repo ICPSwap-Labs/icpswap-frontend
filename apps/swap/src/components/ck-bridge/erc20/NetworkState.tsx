@@ -1,8 +1,8 @@
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { Token } from "@icpswap/swap-sdk";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
+import { EthereumFinalizedBlock, LastSyncBlock, LinkButtons } from "components/ck-bridge";
 import { Box, Typography } from "components/Mui";
-import { LinkButtons, LastSyncBlock, EthereumFinalizedBlock } from "components/ck-bridge";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 

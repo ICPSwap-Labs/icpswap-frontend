@@ -1,14 +1,14 @@
-import { useMemo, useEffect, useState } from "react";
-import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
-import { ICP } from "@icpswap/tokens";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
-import { isUndefinedOrNull, nonUndefinedOrNull, numberToString } from "@icpswap/utils";
+import { type FeeAmount, Pool, Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
 import type { Null, PoolMetadata } from "@icpswap/types";
-import { getPool_update_call } from "hooks/swap/v3Calls";
+import { isUndefinedOrNull, nonUndefinedOrNull, numberToString } from "@icpswap/utils";
 import { NETWORK, network } from "constants/index";
-import { useToken, getTokensFromInfos } from "hooks/useCurrency";
+import { getPool_update_call } from "hooks/swap/v3Calls";
 import { getTokenInfo } from "hooks/token/calls";
-import { TokenInfo, PoolState } from "types/index";
+import { getTokensFromInfos, useToken } from "hooks/useCurrency";
+import { useEffect, useMemo, useState } from "react";
+import { PoolState, type TokenInfo } from "types/index";
 
 import { getMultiPoolsMetadata } from "./usePoolsMetadata";
 

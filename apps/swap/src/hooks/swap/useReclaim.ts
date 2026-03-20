@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import type { Token } from "@icpswap/swap-sdk";
 import { ResultStatus } from "@icpswap/types";
-import { TokenInfo } from "types/token";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { withdraw, deposit } from "hooks/swap/v3Calls";
-import { Token } from "@icpswap/swap-sdk";
 import { sleep } from "@icpswap/utils";
+import { deposit, withdraw } from "hooks/swap/v3Calls";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import type { TokenInfo } from "types/token";
 
 export interface ReclaimArgs {
   poolId: string;

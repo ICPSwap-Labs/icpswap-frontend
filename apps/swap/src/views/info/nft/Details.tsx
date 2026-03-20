@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Typography, Box } from "components/Mui";
-import { useParams } from "react-router-dom";
-import { NFTs, NFTLayoutHeader } from "components/info/nft";
-import { useNFTCanisterMetadata, useNFTUserCanisterCount, useNFTCanisterCycles } from "hooks/info/nft";
-import { InfoWrapper, LoadingRow, Breadcrumbs } from "components/index";
 import { MainCard } from "@icpswap/ui";
+import { Breadcrumbs, InfoWrapper, LoadingRow } from "components/index";
+import { NFTLayoutHeader, NFTs } from "components/info/nft";
+import { Box, Typography } from "components/Mui";
+import { useNFTCanisterCycles, useNFTCanisterMetadata, useNFTUserCanisterCount } from "hooks/info/nft";
 import i18n from "i18n/index";
+import type React from "react";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 type PageType = {
   component: React.FC<{ canisterId: string }>;

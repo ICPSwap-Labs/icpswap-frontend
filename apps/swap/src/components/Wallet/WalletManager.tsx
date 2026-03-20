@@ -1,7 +1,7 @@
-import { useCallback, useRef, useState } from "react";
+import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
 import { Box, Checkbox, Typography, useTheme } from "components/Mui";
-import { MenuWrapper, MenuItem, Flex } from "@icpswap/ui";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useCallback, useRef, useState } from "react";
 import { useHideSmallBalanceManager } from "store/wallet/hooks";
 
 export function WalletManager() {

@@ -1,4 +1,4 @@
-import { BigNumber, nonUndefinedOrNull, percentToNum, numToPercent } from "@icpswap/utils";
+import { BigNumber, nonUndefinedOrNull, numToPercent, percentToNum } from "@icpswap/utils";
 
 const PERCENT_CLOSE_THRESHOLD = 10;
 

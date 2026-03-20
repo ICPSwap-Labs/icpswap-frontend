@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
 import { useTokenHolders } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
 import { useInitialHighcharts } from "./Highcharts";

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { makeStyles, useTheme, Box, Theme, useMediaQuery } from "components/Mui";
-import ApexCharts from "apexcharts";
-import Chart from "react-apexcharts";
 import { useTokenCharts } from "@icpswap/hooks";
 import { ICS } from "@icpswap/tokens";
 import { toUnixTimestamp } from "@icpswap/utils";
+import ApexCharts from "apexcharts";
+import { Box, makeStyles, type Theme, useMediaQuery, useTheme } from "components/Mui";
+import { useEffect, useMemo, useState } from "react";
+import Chart from "react-apexcharts";
 
 import defaultChartConfig from "./chart.config";
 

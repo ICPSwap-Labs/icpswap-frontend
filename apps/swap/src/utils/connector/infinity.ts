@@ -1,6 +1,6 @@
-import { ActorSubclass } from "@icp-sdk/core/agent";
+import type { ActorSubclass } from "@icp-sdk/core/agent";
 import { getStoreWalletUnlocked } from "store/auth/hooks";
-import { type CreateActorArgs, ConnectorAbstract, Connector, WalletConnectorConfig } from "./connectors";
+import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 
 export class InfinityConnector implements ConnectorAbstract {
   private config: {

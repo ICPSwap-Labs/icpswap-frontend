@@ -1,6 +1,6 @@
-import { EstimatedBalance } from "components/Wallet/assets/EstimatedBalance";
-import { Assets } from "components/Wallet/assets/Assets";
 import { Box } from "components/Mui";
+import { Assets } from "components/Wallet/assets/Assets";
+import { EstimatedBalance } from "components/Wallet/assets/EstimatedBalance";
 import { BalanceConvertEntry } from "components/Wallet/BalanceConvert/index";
 
 export function AssetsWrapper() {

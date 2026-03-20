@@ -1,4 +1,4 @@
-import { Chip, ButtonBase, useTheme } from "components/Mui";
+import { ButtonBase, Chip, useTheme } from "components/Mui";
 
 export interface ButtonChipProps {
   label: string;

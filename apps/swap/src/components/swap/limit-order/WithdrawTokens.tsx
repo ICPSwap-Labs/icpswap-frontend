@@ -1,14 +1,14 @@
-import { useCallback, useMemo, useState } from "react";
-import { Box, Typography, useTheme, CircularProgress } from "components/Mui";
-import { Modal, TextButton, Flex } from "@icpswap/ui";
-import { LimitTransaction } from "@icpswap/types";
-import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
 import { useUserUnusedBalance } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useRefreshTriggerManager, useToken, useTips, MessageTypes } from "hooks/index";
+import type { LimitTransaction } from "@icpswap/types";
+import { Flex, Modal, TextButton } from "@icpswap/ui";
 import { BigNumber, formatAmount, isUndefinedOrNull, parseTokenAmount, sleep } from "@icpswap/utils";
+import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
+import { Box, CircularProgress, Typography, useTheme } from "components/Mui";
+import { MessageTypes, useRefreshTriggerManager, useTips, useToken } from "hooks/index";
 import { useSwapWithdraw } from "hooks/swap/index";
+import { useCallback, useMemo, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface WithdrawTokensProps {
   open: boolean;

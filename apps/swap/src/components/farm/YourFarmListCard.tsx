@@ -1,23 +1,23 @@
-import { Typography, Box, BoxProps, useTheme, Theme } from "components/Mui";
+import {
+  useFarmInitArgs,
+  useFarmState,
+  useSwapPoolMetadata,
+  useSwapUserPositions,
+  useV3FarmRewardMetadata,
+} from "@icpswap/hooks";
+import type { FarmTvl } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { useCallback, useMemo } from "react";
-import { type FarmTvl } from "@icpswap/types";
-import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue, useStateColors } from "hooks/staking-farm";
+import { formatDollarAmount } from "@icpswap/utils";
+import { TokenImage } from "components/Image";
+import { Box, type BoxProps, type Theme, Typography, useTheme } from "components/Mui";
+import { AnonymousPrincipal } from "constants/index";
+import { useFarmApr, useFarmTvlValue, useIntervalUserFarmInfo, useStateColors } from "hooks/staking-farm";
 import { usePositionsTotalValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
-import { AnonymousPrincipal } from "constants/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount } from "@icpswap/utils";
-import {
-  useV3FarmRewardMetadata,
-  useFarmInitArgs,
-  useSwapUserPositions,
-  useSwapPoolMetadata,
-  useFarmState,
-} from "@icpswap/hooks";
-import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface YourFarmListCardProps {
   farmTvl: FarmTvl;

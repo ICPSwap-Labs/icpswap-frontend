@@ -1,6 +1,6 @@
-import { resultFormat } from "@icpswap/utils";
 import { farmIndex } from "@icpswap/actor";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getFarmTotalAmount() {
   const farmResult = await (await farmIndex()).getTotalAmount();

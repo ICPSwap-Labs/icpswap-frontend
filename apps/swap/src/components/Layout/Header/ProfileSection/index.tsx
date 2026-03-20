@@ -1,10 +1,10 @@
-import { useTheme, Box, Typography, Button } from "components/Mui";
-import { shorten } from "@icpswap/utils";
-import { useAccountPrincipal, useWalletIsConnected, useConnectManager } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
+import { shorten } from "@icpswap/utils";
 import { ConnectorImage } from "components/Image/index";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import { useWalletContext } from "components/Wallet/context";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal, useConnectManager, useWalletIsConnected } from "store/auth/hooks";
 
 export default function ProfileSection() {
   const { t } = useTranslation();

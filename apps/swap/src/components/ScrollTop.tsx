@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from "react";
-import { Box, useTheme, useMediaQuery } from "components/Mui";
 import { Image } from "@icpswap/ui";
+import { Box, useMediaQuery, useTheme } from "components/Mui";
+import { useCallback, useEffect, useState } from "react";
 
 interface ScrollTopProps {
   left?: string;

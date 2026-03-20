@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useAtom, useAtomValue } from "jotai";
-import { useWalletIsConnected } from "store/auth/hooks";
 import { getGuideAtomValue } from "hooks/global/guide/config";
+import { useAtom, useAtomValue } from "jotai";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useWalletIsConnected } from "store/auth/hooks";
 
 export function useGuideManager(guideName: string) {
   const atom = getGuideAtomValue(guideName);

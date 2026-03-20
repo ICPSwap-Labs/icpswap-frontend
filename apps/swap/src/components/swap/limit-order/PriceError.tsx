@@ -1,10 +1,10 @@
-import { useContext, useMemo } from "react";
-import { Box, Typography } from "components/Mui";
+import { type Token, tickToPrice } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { tickToPrice, Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { WaringIcon } from "assets/icons/WaringIcon";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { WaringIcon } from "assets/icons/WaringIcon";
+import { Box, Typography } from "components/Mui";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LimitContext } from "./context";

@@ -1,5 +1,5 @@
-import { useCallback } from "react";
 import { Confirm } from "components/Wallet/Confirm";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useConnectManager } from "store/auth/hooks";
 import { useWalletContext } from "./context";

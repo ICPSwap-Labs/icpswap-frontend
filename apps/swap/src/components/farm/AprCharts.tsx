@@ -1,13 +1,13 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { Flex, MainCard } from "components/index";
 import { useFarmAprCharts } from "@icpswap/hooks";
 import { Tooltip as Tip } from "@icpswap/ui";
 import { BigNumber } from "@icpswap/utils";
-import { useMemo, useState } from "react";
-import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
+import { Flex, MainCard } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import dayjs from "dayjs";
 import { darken } from "polished";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 
 const DAYJS_FORMAT = "MMM D, YYYY HH:mm:ss";
 const color = "#5669dc";
@@ -67,8 +67,8 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
             {value
               ? `${new BigNumber(value).toFixed(2)}%`
               : aprCharts
-              ? `${new BigNumber(aprCharts[aprCharts.length - 1][1]).toFixed(2)}%`
-              : "--"}
+                ? `${new BigNumber(aprCharts[aprCharts.length - 1][1]).toFixed(2)}%`
+                : "--"}
           </Typography>
 
           <Typography
@@ -80,8 +80,8 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
             {label
               ? `${dayjs(Number(label) * 1000).format(DAYJS_FORMAT)}`
               : aprCharts
-              ? `${dayjs(Number(aprCharts[aprCharts.length - 1][0]) * 1000).format(DAYJS_FORMAT)}`
-              : "--"}
+                ? `${dayjs(Number(aprCharts[aprCharts.length - 1][0]) * 1000).format(DAYJS_FORMAT)}`
+                : "--"}
           </Typography>
         </Box>
 

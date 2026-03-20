@@ -1,10 +1,10 @@
-import { BridgeChainName, BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { useCallback } from "react";
-import { BITCOIN_MINTER_DISSOLVE_FEE, BITCOIN_MIN_DISSOLVE_AMOUNT } from "constants/chain-key";
-import { useDissolve } from "hooks/ck-btc/index";
+import { BridgeChainName, type BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
 import { validate } from "bitcoin-address-validation";
 import { BitcoinStyleDissolveUI } from "components/ck-bridge/ui/BitcoinStyleDissolveUI";
+import { BITCOIN_MIN_DISSOLVE_AMOUNT, BITCOIN_MINTER_DISSOLVE_FEE } from "constants/chain-key";
+import { useDissolve } from "hooks/ck-btc/index";
+import { useCallback } from "react";
 
 interface BtcBridgeDissolveProps {
   token: Token;

@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { useTheme } from "components/Mui";
-import { MenuItem } from "@icpswap/ui";
 import { ckUSDC, ICP } from "@icpswap/tokens";
-import { useNavigate } from "react-router-dom";
+import { MenuItem } from "@icpswap/ui";
+import { useTheme } from "components/Mui";
 import { useWalletContext } from "components/Wallet/context";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface SwapItemProps {
   tokenId: string;

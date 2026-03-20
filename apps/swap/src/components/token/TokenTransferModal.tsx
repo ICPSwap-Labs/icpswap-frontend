@@ -1,26 +1,27 @@
-import React, { useState, useMemo } from "react";
-import { Button, Typography, Box, InputAdornment, makeStyles, Theme, CircularProgress } from "components/Mui";
+import { Principal } from "@icp-sdk/core/principal";
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import { Flex, MaxButton } from "@icpswap/ui";
 import {
-  parseTokenAmount,
+  BigNumber,
   formatTokenAmount,
   isValidAccount,
   isValidPrincipal,
+  parseTokenAmount,
   toSignificantWithGroupSeparator,
-  BigNumber,
 } from "@icpswap/utils";
-import { MessageTypes, useFullscreenLoading, useTips } from "hooks/useTips";
+import { FilledTextField, Modal, NumberFilledTextField } from "components/index";
+import { Box, Button, CircularProgress, InputAdornment, makeStyles, type Theme, Typography } from "components/Mui";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { getLocaleMessage } from "i18n/service";
-import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
-import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
-import { Principal } from "@icp-sdk/core/principal";
+import { MessageTypes, useFullscreenLoading, useTips } from "hooks/useTips";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
-import { MaxButton, Flex } from "@icpswap/ui";
-import { Token } from "@icpswap/swap-sdk";
+import { getLocaleMessage } from "i18n/service";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useAccount, useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

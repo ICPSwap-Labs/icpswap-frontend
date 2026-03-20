@@ -1,7 +1,7 @@
-import { nonUndefinedOrNull } from "@icpswap/utils";
 import { icrc1 } from "@icpswap/actor";
-import { EXTAdapter, icrc1Adapter, DIP20Adapter } from "@icpswap/token-adapter";
+import { DIP20Adapter, EXTAdapter, icrc1Adapter } from "@icpswap/token-adapter";
 import { TOKEN_STANDARD } from "@icpswap/types";
+import { nonUndefinedOrNull } from "@icpswap/utils";
 
 export async function getIcrcStandard(canisterId: string) {
   try {

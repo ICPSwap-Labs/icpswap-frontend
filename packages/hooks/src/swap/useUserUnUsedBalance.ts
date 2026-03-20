@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
-import { useEffect, useMemo, useState } from "react";
-import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
+
 import { Principal } from "@icp-sdk/core/principal";
+import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
 import { isValidPrincipal } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 import { getUserUnusedBalance } from "./calls";
 

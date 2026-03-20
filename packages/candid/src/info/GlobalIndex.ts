@@ -1,5 +1,5 @@
-import type { Principal } from "@icp-sdk/core/principal";
 import type { ActorMethod } from "@icp-sdk/core/agent";
+import type { Principal } from "@icp-sdk/core/principal";
 
 export type NatResult = { ok: bigint } | { err: string };
 export interface PublicProtocolData {

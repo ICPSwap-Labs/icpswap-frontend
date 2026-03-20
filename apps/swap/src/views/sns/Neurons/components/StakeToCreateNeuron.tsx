@@ -1,19 +1,20 @@
-import React, { useMemo, useState } from "react";
-import { Button, Typography, Box, InputAdornment, CircularProgress } from "components/Mui";
-import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt, formatDollarAmount, BigNumber } from "@icpswap/utils";
-import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
-import { tokenTransfer } from "hooks/token/calls";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import type { NervousSystemParameters } from "@icpswap/types";
-import { Modal, NumberFilledTextField, MaxButton } from "components/index";
-import { useTokenBalance } from "hooks/token";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import randomBytes from "randombytes";
-import { buildNeuronStakeSubAccount } from "utils/sns/neurons";
+import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { NervousSystemParameters } from "@icpswap/types";
+import { BigNumber, formatDollarAmount, formatTokenAmount, parseTokenAmount, uint8ArrayToBigInt } from "@icpswap/utils";
+import { MaxButton, Modal, NumberFilledTextField } from "components/index";
+import { Box, Button, CircularProgress, InputAdornment, Typography } from "components/Mui";
 import { useUSDPriceById } from "hooks/index";
-import { Token } from "@icpswap/swap-sdk";
+import { useTokenBalance } from "hooks/token";
+import { tokenTransfer } from "hooks/token/calls";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import randomBytes from "randombytes";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { buildNeuronStakeSubAccount } from "utils/sns/neurons";
 
 export interface StakeProps {
   onStakeSuccess?: () => void;

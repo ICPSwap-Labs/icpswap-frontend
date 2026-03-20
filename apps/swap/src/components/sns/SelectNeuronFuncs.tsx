@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
 import { useNeuronSystemFunctions } from "@icpswap/hooks";
-import { Box, Checkbox, Typography } from "components/Mui";
 import { Modal } from "@icpswap/ui";
+import { Box, Checkbox, Typography } from "components/Mui";
+import { useEffect, useMemo, useState } from "react";
 import { Filter } from "react-feather";
 import { useTranslation } from "react-i18next";
 

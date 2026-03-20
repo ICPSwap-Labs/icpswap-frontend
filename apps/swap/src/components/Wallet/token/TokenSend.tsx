@@ -1,7 +1,5 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
-import { FilledTextField, Flex, MaxButton, NumberTextField, TokenImage } from "components/index";
+import { CurrencyAmount } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
 import {
   BigNumber,
   formatTokenAmount,
@@ -13,22 +11,24 @@ import {
   principalToAccount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import { ChevronDown } from "react-feather";
+import { FilledTextField, Flex, MaxButton, NumberTextField, TokenImage } from "components/index";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { WalletBalance } from "components/swap/WalletBalance";
-import { CurrencyAmount } from "@icpswap/swap-sdk";
-import { useTokenBalance } from "hooks/token";
-import { MessageTypes, useRefreshTriggerManager, useTips, useUSDPrice } from "hooks/index";
+import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 import { BalanceSlider } from "components/Wallet/BalanceSlider";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletTokenContext } from "components/Wallet/token/context";
+import { TOKEN_BALANCE_REFRESH } from "constants/wallet";
+import { MessageTypes, useRefreshTriggerManager, useTips, useUSDPrice } from "hooks/index";
+import { useTokenBalance } from "hooks/token";
 import { tokenTransfer } from "hooks/token/calls";
 import { getLocaleMessage } from "i18n/service";
-import { TOKEN_BALANCE_REFRESH } from "constants/wallet";
-import { ICP } from "@icpswap/tokens";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletTokenContext } from "components/Wallet/token/context";
-import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronDown } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 function usePrincipalStandard(tokenId: string, standard: string) {
   return (standard.includes("DIP20") || standard.includes("ICRC")) && tokenId !== ICP.address;

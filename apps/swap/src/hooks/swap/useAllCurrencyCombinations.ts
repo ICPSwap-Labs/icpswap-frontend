@@ -1,5 +1,5 @@
+import type { Token } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
-import { Token } from "@icpswap/swap-sdk";
 
 export function useAllCurrencyCombinations(tokenA: Token | undefined, tokenB: Token | undefined): Token[][] {
   return useMemo(() => {

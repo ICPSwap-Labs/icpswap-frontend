@@ -1,13 +1,12 @@
-import { formatDollarAmount, formatAmount, enumToString, shorten, BigNumber } from "@icpswap/utils";
-import { type InfoTransactionResponse, API_SWAP_TRANSACTIONS_TYPES } from "@icpswap/types";
+import { API_SWAP_TRANSACTIONS_TYPES, type InfoTransactionResponse } from "@icpswap/types";
+import { BigNumber, enumToString, formatAmount, formatDollarAmount, shorten } from "@icpswap/utils";
 import dayjs from "dayjs";
-import { Copy } from "react-feather";
-
 import { useMemo } from "react";
-import { BoxProps, useTheme } from "../Mui";
-import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
-import { TableRow, BodyCell } from "../Table";
+import { Copy } from "react-feather";
 import { Link } from "../Link";
+import { type BoxProps, useTheme } from "../Mui";
+import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
+import { BodyCell, TableRow } from "../Table";
 import { ValueLabel } from "./ValueLabel";
 
 const DOUBLE_TX_VALUE_TYPES: string[] = [

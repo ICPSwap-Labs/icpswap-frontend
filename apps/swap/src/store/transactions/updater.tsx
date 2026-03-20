@@ -1,13 +1,14 @@
 /* eslint-disable no-param-reassign */
-import { TransactionReceipt } from "viem";
-import { useChainId } from "wagmi";
+
 import LibUpdater from "hooks/transactions/updater";
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
+import type { TransactionReceipt } from "viem";
+import { useChainId } from "wagmi";
 
 import { isPendingTx } from "./hooks";
 import { checkedTransaction, finalizeTransaction } from "./reducer";
-import { SerializableTransactionReceipt, TransactionDetails } from "./types";
+import type { SerializableTransactionReceipt, TransactionDetails } from "./types";
 
 export function toSerializableReceipt(receipt: TransactionReceipt): SerializableTransactionReceipt {
   return {

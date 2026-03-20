@@ -1,8 +1,9 @@
 /* eslint-disable no-param-reassign */
-import { createSlice } from "@reduxjs/toolkit";
-import { ChainId } from "@icpswap/constants";
 
-import { SerializableTransactionReceipt, TransactionDetails, TransactionInfo } from "./types";
+import type { ChainId } from "@icpswap/constants";
+import { createSlice } from "@reduxjs/toolkit";
+
+import type { SerializableTransactionReceipt, TransactionDetails, TransactionInfo } from "./types";
 
 export interface TransactionsState {
   [chainId: number]: {

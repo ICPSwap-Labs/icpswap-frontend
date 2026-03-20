@@ -1,20 +1,20 @@
-import { useMemo, useState } from "react";
-import { Box } from "components/Mui";
+import { usePoolCharts } from "@icpswap/hooks";
+import { ChartTimeEnum, VolumeWindow } from "@icpswap/types";
 import {
+  APRChartTimeButtons,
   ChartDateButtons,
-  PoolVolumeChart,
-  PoolTvlChart,
-  SmallTabsButtonWrapper,
-  SmallTabButton,
   ChartView,
   PoolAPRChart,
-  APRChartTimeButtons,
+  PoolTvlChart,
+  PoolVolumeChart,
+  SmallTabButton,
+  SmallTabsButtonWrapper,
 } from "@icpswap/ui";
-import { DensityChart } from "components/info/DensityChart";
-import { VolumeWindow, ChartTimeEnum } from "@icpswap/types";
-import i18n from "i18n/index";
-import { usePoolCharts } from "@icpswap/hooks";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { DensityChart } from "components/info/DensityChart";
+import { Box } from "components/Mui";
+import i18n from "i18n/index";
+import { useMemo, useState } from "react";
 
 export const chartViews = [
   { label: i18n.t("common.apr"), value: ChartView.APR },

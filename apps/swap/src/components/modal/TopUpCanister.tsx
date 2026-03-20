@@ -1,19 +1,20 @@
-import React, { useState, useMemo } from "react";
-import { InputAdornment, Typography, Box } from "components/Mui";
-import { NumberTextField, AuthButton } from "components/index";
-import { cycleValueFormat, formatTokenAmount, parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
-import { useICP2CyclesManager } from "store/global/hooks";
-import { CYCLES_MINTING_CANISTER_ID } from "constants/index";
-import { Principal } from "@icp-sdk/core/principal";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { tokenTransfer } from "hooks/token/calls";
-import { ledgerService } from "actor/index";
 import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { Principal } from "@icp-sdk/core/principal";
 import { useTokenBalance } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Flex, MaxButton } from "@icpswap/ui";
+import { BigNumber, cycleValueFormat, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
+import { ledgerService } from "actor/index";
+import { AuthButton, NumberTextField } from "components/index";
+import { Box, InputAdornment, Typography } from "components/Mui";
+import { CYCLES_MINTING_CANISTER_ID } from "constants/index";
+import { tokenTransfer } from "hooks/token/calls";
+import { useErrorTip, useFullscreenLoading, useSuccessTip } from "hooks/useTips";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useICP2CyclesManager } from "store/global/hooks";
 
 import Modal from "./index";
 
@@ -71,9 +72,7 @@ export default function TopUpCanister({
         });
 
         if (blockHeight) {
-          await (
-            await ledgerService(true)
-          ).notify_dfx({
+          await (await ledgerService(true)).notify_dfx({
             to_canister: Principal.fromText(CYCLES_MINTING_CANISTER_ID),
             block_height: blockHeight,
             max_fee: { e8s: BigInt(0.0001 * 10 ** 8) },

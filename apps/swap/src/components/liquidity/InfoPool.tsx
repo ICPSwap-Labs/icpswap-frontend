@@ -1,14 +1,14 @@
-import { useMemo } from "react";
-import { Typography, Box, useTheme, BoxProps } from "components/Mui";
-import { TokenImage } from "components/index";
+import { useInfoPool, usePoolAPR } from "@icpswap/hooks";
+import type { Pool } from "@icpswap/swap-sdk";
 import { FeeTierPercentLabel, Flex, Proportion } from "@icpswap/ui";
-import { Pool } from "@icpswap/swap-sdk";
-import { usePoolAPR, useInfoPool } from "@icpswap/hooks";
-import { formatDollarAmount, nonUndefinedOrNull, calcPoolFees } from "@icpswap/utils";
+import { calcPoolFees, formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
+import { TokenImage } from "components/index";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
 import { PoolTvlTooltip } from "components/swap";
-import { useTranslation } from "react-i18next";
 import { TokenPairName } from "components/TokenPairName";
 import { useMediaQuery640 } from "hooks/theme";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface InfoPoolProps {
   pool: Pool | undefined | null;

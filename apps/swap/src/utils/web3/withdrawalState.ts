@@ -1,4 +1,4 @@
-import type { WithdrawalStatus, EthTransaction, TxFinalizedStatus } from "@icpswap/types";
+import type { EthTransaction, TxFinalizedStatus, WithdrawalStatus } from "@icpswap/types";
 import { WithdrawalState } from "constants/ckERC20";
 
 export function formatWithdrawalStatus(withdrawalStatus: WithdrawalStatus) {

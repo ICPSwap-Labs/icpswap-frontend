@@ -8,12 +8,7 @@
     },
     "dev": {
       "dependsOn": ["^build"],
-      "dotEnv": [
-        ".env.development.local",
-        ".env.local",
-        ".env.development",
-        ".env"
-      ],
+      "dotEnv": [".env.development.local", ".env.local", ".env.development", ".env"],
       "cache": false,
       "persistent": true
     },

@@ -1,4 +1,4 @@
-import { Override, StakingPoolControllerPoolInfo, StakingPoolUserInfo } from "@icpswap/types";
+import type { Override, StakingPoolControllerPoolInfo, StakingPoolUserInfo } from "@icpswap/types";
 
 export type UnusedBalance = Override<
   StakingPoolControllerPoolInfo,
@@ -12,12 +12,12 @@ export enum STATE {
 }
 
 export enum FilterState {
-  "ALL" = "ALL",
-  "NOT_STARTED" = "NOT_STARTED",
-  "LIVE" = "LIVE",
-  "FINISHED" = "FINISHED",
-  "CLOSED" = "CLOSED",
-  "YOUR" = "YOUR",
+  ALL = "ALL",
+  NOT_STARTED = "NOT_STARTED",
+  LIVE = "LIVE",
+  FINISHED = "FINISHED",
+  CLOSED = "CLOSED",
+  YOUR = "YOUR",
 }
 
 export type UserPendingRewards = Override<

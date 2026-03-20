@@ -1,17 +1,17 @@
-import { Box, Typography, CircularProgress, Checkbox, InputAdornment } from "components/Mui";
-import { getSwapLifeCycle, refreshSNSBuyerTokens } from "@icpswap/hooks";
-import { useState } from "react";
-import { NumberFilledTextField, Modal, AuthButton } from "components/index";
-import { type SNSSwapInitArgs, ResultStatus } from "@icpswap/types";
-import { parseTokenAmount, toSignificant, principalToAccount, formatTokenAmount, BigNumber } from "@icpswap/utils";
-import { ICP } from "@icpswap/tokens";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { useTokenBalance } from "hooks/token/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { tokenTransfer } from "hooks/token/calls";
 import { SnsSwapLifecycle } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import { getSwapLifeCycle, refreshSNSBuyerTokens } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
+import { ResultStatus, type SNSSwapInitArgs } from "@icpswap/types";
+import { BigNumber, formatTokenAmount, parseTokenAmount, principalToAccount, toSignificant } from "@icpswap/utils";
+import { AuthButton, Modal, NumberFilledTextField } from "components/index";
+import { Box, Checkbox, CircularProgress, InputAdornment, Typography } from "components/Mui";
+import { tokenTransfer } from "hooks/token/calls";
+import { useTokenBalance } from "hooks/token/index";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface ParticipateProps {
   swap_id: string | undefined;

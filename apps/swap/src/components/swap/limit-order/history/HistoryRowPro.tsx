@@ -1,13 +1,13 @@
-import { Pool } from "@icpswap/swap-sdk";
-import { TableRow, BodyCell, Flex } from "@icpswap/ui";
-import { LoadingRow, TokenImage } from "components/index";
-import { useState } from "react";
-import { useTheme } from "components/Mui";
+import type { Pool } from "@icpswap/swap-sdk";
+import type { LimitTransaction, Null } from "@icpswap/types";
+import { BodyCell, Flex, TableRow } from "@icpswap/ui";
 import { BigNumber, formatAmount, formatTokenPrice } from "@icpswap/utils";
-import dayjs from "dayjs";
-import { LimitTransaction, Null } from "@icpswap/types";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { LoadingRow, TokenImage } from "components/index";
+import { useTheme } from "components/Mui";
+import dayjs from "dayjs";
 import { useLimitHistory } from "hooks/swap/limit-order/useLimitHistory";
+import { useState } from "react";
 
 export interface HistoryRowProProps {
   limitTransaction: LimitTransaction;

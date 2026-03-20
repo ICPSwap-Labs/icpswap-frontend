@@ -1,6 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 
-import { updateSwapOutAmount, updatePlaceOrderPositionId } from "./actions";
+import { updatePlaceOrderPositionId, updateSwapOutAmount } from "./actions";
 import { initialState } from "./state";
 
 export default createReducer(initialState, (builder) => {

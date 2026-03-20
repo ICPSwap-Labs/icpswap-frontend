@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
-import { updateAllowance } from "./actions";
+import type { Allowance } from "../../types/nft";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { Allowance } from "../../types/nft";
+import { updateAllowance } from "./actions";
 
 export function useUserAllowance() {
   return useAppSelector((state) => state.NFTTrade.allowance);

@@ -1,10 +1,10 @@
 import { Box, useMediaQuery, useTheme } from "components/Mui";
+import { SyncUserTokens } from "components/SyncUserTokens";
 import AddToken from "components/Wallet/AddToken";
 import WalletPageToggle from "components/Wallet/PageToggle";
 import { SelectSortType } from "components/Wallet/SelectSortType";
-import { useWalletSortManager, useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalance } from "components/Wallet/SortBalance";
-import { SyncUserTokens } from "components/SyncUserTokens";
+import { useSortBalanceManager, useWalletSortManager } from "store/wallet/hooks";
 
 export interface TokenHeaderProps {
   onHideSmallBalances: (checked: boolean) => void;

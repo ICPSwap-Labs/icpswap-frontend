@@ -1,18 +1,18 @@
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { principalToAccount, isPrincipal } from "@icpswap/utils";
-import { ic_host } from "@icpswap/constants";
-import { Connector, IdentityKitConnector, IdentityKitId } from "constants/index";
 import { Principal } from "@icp-sdk/core/principal";
-import { connectManager, WalletConnector } from "utils/connector";
-import { isMeWebview } from "utils/connector/me";
 import { actor } from "@icpswap/actor";
-import { useIsInitializing, useAuth, useAgent } from "@nfid/identitykit/react";
+import { ic_host } from "@icpswap/constants";
+import { isPrincipal, principalToAccount } from "@icpswap/utils";
+import { useAgent, useAuth, useIsInitializing } from "@nfid/identitykit/react";
+import { Connector, IdentityKitConnector, IdentityKitId } from "constants/index";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { connectManager, type WalletConnector } from "utils/connector";
+import { isMeWebview } from "utils/connector/me";
 import { isSafari } from "utils/index";
 
 import store from "../index";
-import { login, logout, updateConnected, updateWalletConnector } from "./actions";
 import { updateLockStatus as _updateLockStatus } from "../session/actions";
+import { login, logout, updateConnected, updateWalletConnector } from "./actions";
 import { NF_IDConnector } from "./NF_IDConnector";
 
 export function useIsUnLocked() {
@@ -213,7 +213,7 @@ export function useIdentityKitInitialConnect() {
           actor.setConnector(connector);
 
           if (agent) {
-            // @ts-ignore
+            // @ts-expect-error
             window.icConnector = new NF_IDConnector(agent);
           }
         }

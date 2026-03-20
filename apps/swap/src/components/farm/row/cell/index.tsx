@@ -1,6 +1,7 @@
 export * from "./AprCell";
 export * from "./AvailableCell";
 export * from "./AvgAprCell";
+export * from "./EmptyCell";
 export * from "./PoolCell";
 export * from "./RewardTokenCell";
 export * from "./StateCell";
@@ -8,4 +9,3 @@ export * from "./TotalRewardsCell";
 export * from "./TotalStakedCell";
 export * from "./UserRewardsCell";
 export * from "./UserStakedCell";
-export * from "./EmptyCell";

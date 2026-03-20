@@ -1,21 +1,22 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import React, { useState, useCallback, useRef } from "react";
-import { Box, Typography, InputAdornment, useTheme, Button, CircularProgress } from "components/Mui";
-import { FilledTextField, Flex, LoadingRow, NoData, TextButton } from "components/index";
-import { Search as SearchIcon } from "react-feather";
 import { useAddressBook, useDebouncedChangeHandler } from "@icpswap/hooks";
-import { Trans, useTranslation } from "react-i18next";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import type { AddressBook as AddressBookType } from "@icpswap/types";
-import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import Copy, { CopyRef } from "components/Copy";
-import { AddressBookManager } from "components/Wallet/address-book/AddressBookManager";
-import { useRefreshTriggerManager } from "hooks";
-import { ADDRESS_BOOK_REFRESH } from "constants/index";
-import { JdenticonAvatar } from "components/JdenticonAvatar";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { useContactFilter } from "hooks/wallet/useContactFilter";
+import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import Copy, { type CopyRef } from "components/Copy";
+import { FilledTextField, Flex, LoadingRow, NoData, TextButton } from "components/index";
+import { JdenticonAvatar } from "components/JdenticonAvatar";
+import { Box, Button, CircularProgress, InputAdornment, Typography, useTheme } from "components/Mui";
+import { AddressBookManager } from "components/Wallet/address-book/AddressBookManager";
 import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { ADDRESS_BOOK_REFRESH } from "constants/index";
+import { useRefreshTriggerManager } from "hooks";
+import { useContactFilter } from "hooks/wallet/useContactFilter";
+import type React from "react";
+import { useCallback, useRef, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
+import { Trans, useTranslation } from "react-i18next";
 
 interface AddressBookRowProps {
   addressBook: AddressBookType;

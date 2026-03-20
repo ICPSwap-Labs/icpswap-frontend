@@ -1,14 +1,13 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { InfoWrapper } from "components/index";
 import { useGlobalCharts } from "@icpswap/hooks";
-import { GridAutoRows, Flex } from "@icpswap/ui";
+import { Flex, GridAutoRows } from "@icpswap/ui";
+import { InfoWrapper } from "components/index";
+import { TVLChartsWrapper, VolumeChartsWrapper } from "components/info";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useGlobalProtocol } from "hooks/info/useSwapChartData";
 import { useTranslation } from "react-i18next";
-import { TVLChartsWrapper, VolumeChartsWrapper } from "components/info";
-
-import Transactions from "./Transactions";
 import TopPools from "./TopPools";
 import TopTokens from "./TopTokens";
+import Transactions from "./Transactions";
 
 export default function SwapOverview() {
   const { t } = useTranslation();

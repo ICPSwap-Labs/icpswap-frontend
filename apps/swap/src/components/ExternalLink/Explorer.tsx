@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import { icDashboardExplorerLink } from "@icpswap/utils";
+import type { ReactNode } from "react";
 
 import ExternalLink from "./index";
 

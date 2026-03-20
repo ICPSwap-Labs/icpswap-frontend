@@ -1,24 +1,24 @@
-import { useState, useEffect, useMemo } from "react";
+import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { Principal } from "@icp-sdk/core/principal";
-import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
-import { getTokenStandard } from "store/token/cache/hooks";
-import { balanceAdapter, isNeedBalanceAdapter } from "utils/token/adapter";
+import { CurrencyAmount, type Token } from "@icpswap/swap-sdk";
+import { icpAdapter, TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter";
 import { ICP } from "@icpswap/tokens";
+import type { Null } from "@icpswap/types";
 import {
-  isPrincipal,
-  isValidPrincipal,
-  isOkSubAccount,
-  principalToAccount,
   BigNumber,
+  isOkSubAccount,
+  isPrincipal,
   isUndefinedOrNull,
+  isValidPrincipal,
   nonUndefinedOrNull,
+  principalToAccount,
   toHexString,
 } from "@icpswap/utils";
-import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { icpAdapter, tokenAdapter, TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { Null } from "@icpswap/types";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
+import { getTokenStandard } from "store/token/cache/hooks";
+import { balanceAdapter, isNeedBalanceAdapter } from "utils/token/adapter";
 
 export async function getTokenBalance(canisterId: string, account: string | Principal, subAccount?: Uint8Array) {
   if (isNeedBalanceAdapter(canisterId)) return await balanceAdapter(canisterId, account);
@@ -70,8 +70,8 @@ export async function getTokenBalance(canisterId: string, account: string | Prin
         user: isPrincipal(account)
           ? { principal: account }
           : isValidPrincipal(account)
-          ? { principal: Principal.fromText(account) }
-          : { address: account },
+            ? { principal: Principal.fromText(account) }
+            : { address: account },
         token: "",
         subaccount: subAccount ? [...subAccount] : undefined,
       },
@@ -84,8 +84,8 @@ export async function getTokenBalance(canisterId: string, account: string | Prin
       user: isPrincipal(account)
         ? { principal: account }
         : isValidPrincipal(account)
-        ? { principal: Principal.fromText(account) }
-        : { address: account },
+          ? { principal: Principal.fromText(account) }
+          : { address: account },
       token: "",
       subaccount: subAccount ? [...subAccount] : undefined,
     },

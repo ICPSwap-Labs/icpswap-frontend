@@ -1,24 +1,24 @@
-import { useCallback, useMemo, useState } from "react";
-import { Modal, MaxButton, Flex, FilledTextField, NumberFilledTextField } from "components/index";
-import { Box, Button, Typography } from "components/Mui";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { XTC } from "constants/tokens";
-import {
-  parseTokenAmount,
-  formatTokenAmount,
-  numberToString,
-  isValidPrincipal,
-  BigNumber,
-  isUndefinedOrNull,
-  nonUndefinedOrNull,
-  isUndefinedOrNullOrEmpty,
-} from "@icpswap/utils";
-import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
-import { useXTCTopUp } from "hooks/token/dip20";
-import { getLocaleMessage } from "i18n/service";
 import { ResultStatus } from "@icpswap/types";
+import {
+  BigNumber,
+  formatTokenAmount,
+  isUndefinedOrNull,
+  isUndefinedOrNullOrEmpty,
+  isValidPrincipal,
+  nonUndefinedOrNull,
+  numberToString,
+  parseTokenAmount,
+} from "@icpswap/utils";
+import { FilledTextField, Flex, MaxButton, Modal, NumberFilledTextField } from "components/index";
+import { Box, Button, Typography } from "components/Mui";
+import { XTC } from "constants/tokens";
+import { useXTCTopUp } from "hooks/token/dip20";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { TIP_ERROR, TIP_LOADING, TIP_SUCCESS, useTips } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 const XTC_TOP_UP_AMOUNT_DECIMALS = 4;
 

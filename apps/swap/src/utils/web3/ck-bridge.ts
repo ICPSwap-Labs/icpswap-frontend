@@ -1,15 +1,15 @@
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import type { RetrieveBtcStatus } from "@icpswap/types";
-import { BITCOIN_CONFIRMATIONS } from "constants/chain-key";
-import { BitcoinTransaction, BitcoinTxResponse, BitcoinTxState } from "types/ckBTC";
-import {
-  EthereumTransactionEvent,
-  Erc20DissolveTransactionEvent,
-  BridgeTransactionEvent,
-  BitcoinTransactionEvent,
-  DogeTransactionEvent,
-} from "types/web3";
 import { BridgeChainType, BridgeType } from "@icpswap/constants";
+import type { RetrieveBtcStatus } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { BITCOIN_CONFIRMATIONS } from "constants/chain-key";
+import type { BitcoinTransaction, BitcoinTxResponse, BitcoinTxState } from "types/ckBTC";
+import type {
+  BitcoinTransactionEvent,
+  BridgeTransactionEvent,
+  DogeTransactionEvent,
+  Erc20DissolveTransactionEvent,
+  EthereumTransactionEvent,
+} from "types/web3";
 
 export function isEthTransactionEvent(event: BridgeTransactionEvent): event is EthereumTransactionEvent {
   return event.chain === BridgeChainType.eth;

@@ -1,4 +1,4 @@
-import { BridgeChainType, BridgeType } from "@icpswap/constants";
+import type { BridgeChainType, BridgeType } from "@icpswap/constants";
 
 export type TX = {
   hash: string;

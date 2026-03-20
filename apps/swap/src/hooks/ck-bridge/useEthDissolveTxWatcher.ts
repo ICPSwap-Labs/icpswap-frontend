@@ -1,12 +1,12 @@
-import { useCallback } from "react";
 import { chainKeyETHMinter } from "@icpswap/actor";
+import { useInterval } from "@icpswap/hooks";
+import { nonUndefinedOrNull } from "@icpswap/utils";
+import { MINTER_ID } from "constants/ckETH";
+import { useSuccessTip } from "hooks/useTips";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useEthDissolveTxs, useUpdateEthDissolveTx } from "store/web3/hooks";
-import { MINTER_ID } from "constants/ckETH";
-import { nonUndefinedOrNull } from "@icpswap/utils";
-import { useSuccessTip } from "hooks/useTips";
-import { useTranslation } from "react-i18next";
-import { useInterval } from "@icpswap/hooks";
 import { isEthereumDissolveTxEnd, isTxFinalizedByStatus } from "utils/chain-key/ethereum";
 
 const INTERVAL = 10_000;

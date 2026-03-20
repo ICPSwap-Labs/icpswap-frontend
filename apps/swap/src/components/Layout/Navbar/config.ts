@@ -1,16 +1,15 @@
-import TwitterIcon from "./icons/Twitter";
-import TelegramIcon from "./icons/Telegram";
-import DiscordIcon from "./icons/Discord";
-import WebsiteIcon from "./icons/Website";
-import MediumIcon from "./icons/Medium";
-import GithubIcon from "./icons/Github";
-import GitbookIcon from "./icons/Gitbook";
-import DSCVRIcon from "./icons/DSCVR";
-import SimpleModeIcon from "./icons/SimpleMode";
-import ProModeIcon from "./icons/ProMode";
-import LimitIcon from "./icons/Limit";
-
 import { version } from "../../../.version";
+import DiscordIcon from "./icons/Discord";
+import DSCVRIcon from "./icons/DSCVR";
+import GitbookIcon from "./icons/Gitbook";
+import GithubIcon from "./icons/Github";
+import LimitIcon from "./icons/Limit";
+import MediumIcon from "./icons/Medium";
+import ProModeIcon from "./icons/ProMode";
+import SimpleModeIcon from "./icons/SimpleMode";
+import TelegramIcon from "./icons/Telegram";
+import TwitterIcon from "./icons/Twitter";
+import WebsiteIcon from "./icons/Website";
 
 export type Route = {
   name: string;

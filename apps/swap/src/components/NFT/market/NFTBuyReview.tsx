@@ -1,27 +1,26 @@
-import { Grid, Typography, CircularProgress, useTheme, Box, Theme } from "components/Mui";
-import Modal from "components/modal/index";
-import { TradeOrder } from "types/nft";
-import { type NFTTokenMetadata, ResultStatus } from "@icpswap/types";
-import { useSuccessTip, useErrorTip } from "hooks/useTips";
-import { useNFTBuyCallback } from "hooks/nft/trade";
-import { useApprove } from "hooks/token/useApprove";
-import { getCanisterId, CANISTER_NAMES, NFTTradeTokenCanisterId, WRAPPED_ICP, NFTTradeFee } from "constants/index";
-import { parseTokenAmount, numberToString, formatDollarAmount, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { useICPAmountUSDValue } from "store/global/hooks";
-import { useAccount } from "store/auth/hooks";
-import WICPPriceFormat from "components/NFT/WICPPriceFormat";
-import LazyImage from "components/LazyImage";
-import { getLocaleMessage } from "i18n/service";
-import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
-import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
-import VerifyNFT from "components/NFT/VerifyNFT";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { TextButton, AuthButton } from "components/index";
-import { useTranslation } from "react-i18next";
-
-import FileImage from "../FileImage";
 import { useLoadingCallData } from "@icpswap/hooks";
+import { type NFTTokenMetadata, ResultStatus } from "@icpswap/types";
+import { BigNumber, formatDollarAmount, isUndefinedOrNull, numberToString, parseTokenAmount } from "@icpswap/utils";
+import { AuthButton, TextButton } from "components/index";
+import LazyImage from "components/LazyImage";
+import { Box, CircularProgress, Grid, type Theme, Typography, useTheme } from "components/Mui";
+import Modal from "components/modal/index";
+import VerifyNFT from "components/NFT/VerifyNFT";
+import WICPPriceFormat from "components/NFT/WICPPriceFormat";
+import { CANISTER_NAMES, getCanisterId, NFTTradeFee, NFTTradeTokenCanisterId, WRAPPED_ICP } from "constants/index";
+import { useNFTBuyCallback } from "hooks/nft/trade";
+import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
+import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
+import { useApprove } from "hooks/token/useApprove";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useErrorTip, useSuccessTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccount } from "store/auth/hooks";
+import { useICPAmountUSDValue } from "store/global/hooks";
+import type { TradeOrder } from "types/nft";
+import FileImage from "../FileImage";
 
 export default function NFTBuyReview({
   order,
@@ -78,7 +77,7 @@ export default function NFTBuyReview({
           if (onTradeSuccess) onTradeSuccess();
         }
       }
-    }, [account, onTradeSuccess, userPay, order]),
+    }, [account, onTradeSuccess, userPay, order, approve, buy, openErrorTip, openSuccessTip, t]),
   );
 
   const USDValue = useICPAmountUSDValue(order?.price);

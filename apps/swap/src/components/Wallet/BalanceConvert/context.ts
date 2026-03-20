@@ -1,5 +1,5 @@
+import type { Token } from "@icpswap/swap-sdk";
 import { createContext, useContext } from "react";
-import { Token } from "@icpswap/swap-sdk";
 
 export type ConvertToIcp = {
   tokenId: string;

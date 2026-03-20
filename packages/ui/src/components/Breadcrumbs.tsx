@@ -1,12 +1,11 @@
-import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
-import { ChevronRight } from "react-feather";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { urlStringParse } from "@icpswap/utils";
-
-import { Link } from "./Link";
-import { Typography, Box } from "./Mui";
+import type { ReactNode } from "react";
+import { ChevronRight } from "react-feather";
+import { useNavigate } from "react-router-dom";
 import { Flex } from "./Grid";
+import { Link } from "./Link";
+import { Box, Typography } from "./Mui";
 
 export interface BreadcrumbsProps {
   prevLink: string;

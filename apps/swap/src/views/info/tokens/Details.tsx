@@ -1,35 +1,35 @@
-import { Typography, Box, Button } from "components/Mui";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useToken } from "hooks/index";
-import { InfoWrapper, MainCard, TokenImage, Link, ImportToNns } from "components/index";
-import Copy, { CopyRef } from "components/Copy";
-import { LinkButtons } from "components/info/tokens";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { useICPPrice } from "store/global/hooks";
 import {
-  parseTokenAmount,
-  BigNumber,
-  formatDollarTokenPrice,
-  formatAmount,
-  nonUndefinedOrNull,
-  formatDollarAmount,
-  icDashboardExplorerLink,
-  formatIcpAmount,
-} from "@icpswap/utils";
-import {
-  useTokenListTokenInfo,
-  useParsedQueryString,
   useInfoToken,
+  useParsedQueryString,
   useTokenAnalysis,
+  useTokenListTokenInfo,
   useTokenSupply,
 } from "@icpswap/hooks";
-import { useCanisterInfo } from "hooks/useInternetComputerCalls";
-import { Flex, Proportion, TextButton, BreadcrumbsV1 } from "@icpswap/ui";
-import { useUpdateTokenStandard, useTokenStandardIsRegistered } from "store/token/cache/hooks";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { BreadcrumbsV1, Flex, Proportion, TextButton } from "@icpswap/ui";
+import {
+  BigNumber,
+  formatAmount,
+  formatDollarAmount,
+  formatDollarTokenPrice,
+  formatIcpAmount,
+  icDashboardExplorerLink,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+} from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import { useTranslation } from "react-i18next";
+import Copy, { type CopyRef } from "components/Copy";
+import { ImportToNns, InfoWrapper, Link, MainCard, TokenImage } from "components/index";
+import { LinkButtons } from "components/info/tokens";
+import { Box, Button, Typography } from "components/Mui";
 import { BuyTokenButton } from "components/swap";
+import { useToken } from "hooks/index";
+import { useCanisterInfo } from "hooks/useInternetComputerCalls";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { useICPPrice } from "store/global/hooks";
+import { useTokenStandardIsRegistered, useUpdateTokenStandard } from "store/token/cache/hooks";
 
 export function TokenDetail() {
   const { t } = useTranslation();

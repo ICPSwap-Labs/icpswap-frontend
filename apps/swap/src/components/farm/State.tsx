@@ -1,10 +1,10 @@
-import { ReactNode } from "react";
-import { Typography, Box, useTheme } from "components/Mui";
-import { Flex } from "@icpswap/ui";
 import { useFarmState } from "@icpswap/hooks";
-import { FarmInfo, Null } from "@icpswap/types";
+import type { FarmInfo, Null } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useStateColors } from "hooks/staking-farm";
 import upperFirst from "lodash/upperFirst";
+import type { ReactNode } from "react";
 
 interface StateProps {
   farmInfo: FarmInfo | Null;

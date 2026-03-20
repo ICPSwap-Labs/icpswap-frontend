@@ -1,12 +1,12 @@
-import React, { useRef, useState, useEffect, useCallback, Dispatch, SetStateAction, ReactNode } from "react";
-import { createChart, IChartApi } from "lightweight-charts";
-import { darken } from "polished";
 import { usePrevious } from "@icpswap/hooks";
 import { formatDollarAmount } from "@icpswap/utils";
 import dayjs from "dayjs";
-
-import { Box, useTheme } from "../Mui";
+import { createChart, type IChartApi } from "lightweight-charts";
+import { darken } from "polished";
+import type React from "react";
+import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { GridRowBetween } from "../Grid/Row";
+import { Box, useTheme } from "../Mui";
 
 const DEFAULT_HEIGHT = 300;
 

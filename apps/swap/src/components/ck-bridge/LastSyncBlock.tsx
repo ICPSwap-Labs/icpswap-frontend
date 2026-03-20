@@ -1,8 +1,8 @@
-import { Typography } from "components/Mui";
 import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { Typography } from "components/Mui";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface LastSyncBlockProps {
   minterInfo: ChainKeyETHMinterInfo | Null;

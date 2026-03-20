@@ -1,7 +1,7 @@
+import { ICP_TOKEN_INFO } from "@icpswap/tokens";
+import type { TOKEN_STANDARD } from "@icpswap/types";
 import { WRAPPED_ICP } from "constants/index";
 import store from "store/index";
-import { ICP_TOKEN_INFO } from "@icpswap/tokens";
-import { TOKEN_STANDARD } from "@icpswap/types";
 
 export function getSwapTokenArgs(token: string) {
   const { standards } = store.getState().tokenCache;
@@ -14,9 +14,9 @@ export function getSwapTokenArgs(token: string) {
 
 export * from "./useAllowance";
 export * from "./useApprove";
-export * from "./useTokenInfo";
-export * from "./useTokenBalance";
-export * from "./useTokenInSNS";
 export * from "./useERC20Token";
-export * from "./useTokenStandard";
+export * from "./useTokenBalance";
 export * from "./useTokenImportToNns";
+export * from "./useTokenInfo";
+export * from "./useTokenInSNS";
+export * from "./useTokenStandard";

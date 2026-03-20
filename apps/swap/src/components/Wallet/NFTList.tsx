@@ -1,15 +1,15 @@
+import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
+import type { EXTCollection, ExtNft, NFTControllerInfo } from "@icpswap/types";
+import { ImageLoading } from "@icpswap/ui";
+import { NoData } from "components/index";
+import { Avatar, Box, Grid, Typography, useTheme } from "components/Mui";
+import NFTListHeader from "components/Wallet/NFTListHeader";
+import { useCanisterLogo, useCanisterUserNFTCount, useNFTCanisterList } from "hooks/nft/useNFTCalls";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Grid, Box, Typography, Avatar, useTheme } from "components/Mui";
-import { ImageLoading } from "@icpswap/ui";
-import NFTListHeader from "components/Wallet/NFTListHeader";
 import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
-import { NoData } from "components/index";
+import { useEXTManager, useSelectedCanistersManager } from "store/nft/hooks";
 import { isICPSwapOfficial } from "utils/index";
-import { useSelectedCanistersManager, useEXTManager } from "store/nft/hooks";
-import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
-import type { NFTControllerInfo, EXTCollection, ExtNft } from "@icpswap/types";
-import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 
 const ICPSwapPositionNFTs = [
   "jwh2l-aqaaa-aaaan-qatdq-cai",

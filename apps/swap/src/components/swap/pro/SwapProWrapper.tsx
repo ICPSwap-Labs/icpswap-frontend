@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, useTheme, BoxProps } from "components/Mui";
+import { Box, type BoxProps, useTheme } from "components/Mui";
+import type React from "react";
 
 export interface SwapProCardWrapperProps {
   children: React.ReactNode;

@@ -1,8 +1,5 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useRefreshTriggerManager, useTokens, useUSDPrice } from "hooks/index";
-import { useState, useMemo, useCallback } from "react";
-import { Box, Typography, InputAdornment, useTheme } from "components/Mui";
-import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
+import { useAddressOverview, useDebouncedChangeHandler } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import {
   BigNumber,
   formatAmount,
@@ -12,17 +9,20 @@ import {
   parseTokenAmount,
   sleep,
 } from "@icpswap/utils";
-import { Search as SearchIcon } from "react-feather";
-import { useDebouncedChangeHandler, useAddressOverview } from "@icpswap/hooks";
-import { useTranslation } from "react-i18next";
-import { Token } from "@icpswap/swap-sdk";
+import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
+import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
+import { ROTATE_ANIMATION_LOADING_CLASS, useRotateAnimationLoading } from "components/theme";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletTokenContext } from "components/Wallet/token/context";
+import { WALLET_TOKEN_SELECTOR_REFRESH } from "constants/wallet";
+import { useRefreshTriggerManager, useTokens, useUSDPrice } from "hooks/index";
 import { useTokenBalance } from "hooks/token";
+import { useCallback, useMemo, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
+import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useTaggedTokenManager } from "store/wallet/hooks";
-import { WALLET_TOKEN_SELECTOR_REFRESH } from "constants/wallet";
-import { useRotateAnimationLoading, ROTATE_ANIMATION_LOADING_CLASS } from "components/theme";
-import { useWalletTokenContext } from "components/Wallet/token/context";
 
 function isTokenFiltered(token: Token, search: string) {
   return !(

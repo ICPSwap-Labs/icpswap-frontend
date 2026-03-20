@@ -1,21 +1,13 @@
-import { useState, useMemo, useEffect } from "react";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { usePoolAPRChartData, usePoolAverageAPRs } from "@icpswap/hooks";
-import { type Null, ChartTimeEnum } from "@icpswap/types";
-import { ReferenceLine } from "recharts";
-
+import { ChartTimeEnum, type Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import weekOfYear from "dayjs/plugin/weekOfYear";
-
-import { ImageLoading } from "../Loading";
+import { useEffect, useMemo, useState } from "react";
+import { ReferenceLine } from "recharts";
 import { LineChartAlt } from "../LineChart/alt";
-import { Typography, Box, useTheme } from "../Mui";
+import { ImageLoading } from "../Loading";
+import { Box, Typography, useTheme } from "../Mui";
 import { ChartAPRLabel } from "./ChartAPRLabel";
-
-// format dayjs with the libraries that we need
-dayjs.extend(utc);
-dayjs.extend(weekOfYear);
 
 export interface PoolAPRChartProps {
   poolId: string | Null;
@@ -136,7 +128,7 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
                       stroke={theme.colors.apr}
                       y={averageAprSvgY}
                       label={
-                        // @ts-ignore
+                        // @ts-expect-error The props 'viewBox' is inject by recharts
                         <ChartAPRLabel apr={`${new BigNumber(averageApr).toFixed(2)}%`} />
                       }
                       strokeDasharray="5 4"

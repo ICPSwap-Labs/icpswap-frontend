@@ -1,11 +1,10 @@
-import { useState, useCallback, useMemo } from "react";
-import { Null } from "@icpswap/types";
-import { ChevronDown } from "react-feather";
-
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useCallback, useMemo, useState } from "react";
+import { ChevronDown } from "react-feather";
 import { Button } from "../Mui";
 import { DropDownMenu } from "../Select";
-import { ChartButton } from "./TokenCharts";
+import type { ChartButton } from "./TokenCharts";
 import { ChartView } from "./types";
 
 export interface ChartViewSelectorProps {

@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
-import { Button, Typography, Box, CircularProgress } from "components/Mui";
-import { toHexString, hexToBytes } from "@icpswap/utils";
 import { setNeuronFollows } from "@icpswap/hooks";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Modal, FilledTextField } from "components/index";
-import { Neuron } from "@icpswap/types";
+import type { Neuron } from "@icpswap/types";
+import { hexToBytes, toHexString } from "@icpswap/utils";
+import { FilledTextField, Modal } from "components/index";
+import { Box, Button, CircularProgress, Typography } from "components/Mui";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface AddFolloweeModalProps {

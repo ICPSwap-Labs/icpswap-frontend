@@ -1,6 +1,6 @@
-import { useMemo } from "react";
 import { Box } from "components/Mui";
-import { ScaleLinear } from "d3";
+import type { ScaleLinear } from "d3";
+import { useMemo } from "react";
 
 const ARROW_HEIGHT = 4;
 

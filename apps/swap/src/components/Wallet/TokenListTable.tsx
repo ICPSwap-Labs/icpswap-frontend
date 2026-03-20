@@ -1,39 +1,38 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
-import { Typography, Box, useTheme, makeStyles } from "components/Mui";
+import { BridgeChainType } from "@icpswap/constants";
+import { useInfoToken } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ckBTC, ckETH, ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import type { ChainKeyETHMinterInfo } from "@icpswap/types";
 import {
+  BigNumber,
+  formatAmount,
   formatDollarAmount,
   formatDollarTokenPrice,
-  parseTokenAmount,
-  mockALinkAndOpen,
-  BigNumber,
-  principalToAccount,
-  nonUndefinedOrNull,
   isUndefinedOrNull,
-  formatAmount,
+  mockALinkAndOpen,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+  principalToAccount,
 } from "@icpswap/utils";
-import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal, ImportToNns } from "components/index";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/index";
-import { useToken } from "hooks/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { XTC, TOKEN_STANDARD } from "constants/tokens";
-import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
-import { BridgeChainType } from "@icpswap/constants";
-import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
-import { useNavigate } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
+import { ImportToNns, LoadingRow, NoData, TokenStandardLabel, TokenTransferModal } from "components/index";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { useWalletTokenContext } from "components/Wallet/token/context";
+import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
+import { DISPLAY_IN_WALLET_BY_DEFAULT, INFO_URL, NO_HIDDEN_TOKENS } from "constants/index";
+import { TOKEN_STANDARD, XTC } from "constants/tokens";
+import { useToken } from "hooks/index";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
-import { ChainKeyETHMinterInfo } from "@icpswap/types";
-import { useInfoToken } from "@icpswap/hooks";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 import { useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalanceEnum } from "types/index";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
-import { useWalletTokenContext } from "components/Wallet/token/context";
-
+import { Button } from "./Button";
 import { ReceiveModal } from "./Receive";
 import { RemoveToken } from "./RemoveToken";
-import { Button } from "./Button";
 import { TransactionButton } from "./TransactionButton";
 
 const useStyles = makeStyles(() => ({
@@ -394,8 +393,8 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
             !principal
               ? ""
               : token?.standard === TOKEN_STANDARD.EXT || token?.address === ICP.address
-              ? principalToAccount(principal.toString())
-              : principal.toString()
+                ? principalToAccount(principal.toString())
+                : principal.toString()
           }
         />
       ) : null}

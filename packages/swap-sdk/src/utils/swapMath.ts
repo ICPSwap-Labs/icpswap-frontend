@@ -1,5 +1,5 @@
 import JSBI from "jsbi";
-import { FeeAmount } from "../constants";
+import type { FeeAmount } from "../constants";
 import { NEGATIVE_ONE, ZERO } from "../internalConstants";
 import { FullMath } from "./fullMath";
 import { SqrtPriceMath } from "./sqrtPriceMath";
@@ -17,7 +17,7 @@ export abstract class SwapMath {
     sqrtRatioTargetX96: JSBI,
     liquidity: JSBI,
     amountRemaining: JSBI,
-    feePips: FeeAmount
+    feePips: FeeAmount,
   ): [JSBI, JSBI, JSBI, JSBI] {
     const returnValues: Partial<{
       sqrtRatioNextX96: JSBI;
@@ -32,7 +32,7 @@ export abstract class SwapMath {
     if (exactIn) {
       const amountRemainingLessFee = JSBI.divide(
         JSBI.multiply(amountRemaining, JSBI.subtract(MAX_FEE, JSBI.BigInt(feePips))),
-        MAX_FEE
+        MAX_FEE,
       );
       returnValues.amountIn = zeroForOne
         ? SqrtPriceMath.getAmount0Delta(sqrtRatioTargetX96, sqrtRatioCurrentX96, liquidity, true)
@@ -44,7 +44,7 @@ export abstract class SwapMath {
           sqrtRatioCurrentX96,
           liquidity,
           amountRemainingLessFee,
-          zeroForOne
+          zeroForOne,
         );
       }
     } else {
@@ -58,7 +58,7 @@ export abstract class SwapMath {
           sqrtRatioCurrentX96,
           liquidity,
           JSBI.multiply(amountRemaining, NEGATIVE_ONE),
-          zeroForOne
+          zeroForOne,
         );
       }
     }
@@ -96,7 +96,7 @@ export abstract class SwapMath {
       returnValues.feeAmount = FullMath.mulDivRoundingUp(
         returnValues.amountIn!,
         JSBI.BigInt(feePips),
-        JSBI.subtract(MAX_FEE, JSBI.BigInt(feePips))
+        JSBI.subtract(MAX_FEE, JSBI.BigInt(feePips)),
       );
     }
 

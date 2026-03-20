@@ -1,6 +1,6 @@
 import { Box } from "components/Mui";
-import { useCallback } from "react";
 import { useWalletContext } from "components/Wallet/context";
+import { useCallback } from "react";
 
 export function LogoutIcon() {
   const { setLogoutConfirmOpen } = useWalletContext();

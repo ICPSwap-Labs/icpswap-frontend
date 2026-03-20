@@ -1,14 +1,14 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useCallback, useMemo } from "react";
-import { Box, Typography } from "components/Mui";
-import { LoadingRow, NoData } from "components/index";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
-import type { EXTCollection, ExtNft } from "@icpswap/types";
-import { NFTAvatar } from "components/NFT/ext/NFTAvatar";
-import { isUndefinedOrNull } from "@icpswap/utils";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
+import type { EXTCollection, ExtNft } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { LoadingRow, NoData } from "components/index";
+import { Box, Typography } from "components/Mui";
+import { NFTAvatar } from "components/NFT/ext/NFTAvatar";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
+import { useCallback, useMemo } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { decodeTokenId } from "utils";
 import { extNFTImage } from "utils/nft/ext";
 

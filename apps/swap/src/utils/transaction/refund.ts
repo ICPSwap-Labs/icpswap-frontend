@@ -1,7 +1,7 @@
-import { RefundInfo } from "@icpswap/types";
+import type { RefundInfo } from "@icpswap/types";
+import { parseTokenAmount, shorten } from "@icpswap/utils";
 import { __getTokenInfo } from "hooks/token";
-import { shorten, parseTokenAmount } from "@icpswap/utils";
-import { SWAP_TRANSACTIONS_FAILED_STATUS, SwapTransactionResult } from "utils/transaction/constant";
+import { SWAP_TRANSACTIONS_FAILED_STATUS, type SwapTransactionResult } from "utils/transaction/constant";
 
 export async function swapTransactionRefundtFormat(info: RefundInfo): Promise<SwapTransactionResult> {
   const __status = info.status;

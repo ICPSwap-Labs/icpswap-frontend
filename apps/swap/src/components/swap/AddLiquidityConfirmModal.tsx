@@ -1,12 +1,12 @@
-import { useState, useMemo } from "react";
-import { Typography, Button, CircularProgress } from "components/Mui";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import { Bound } from "constants/swap";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Position, Token } from "@icpswap/swap-sdk";
-import { useTicksAtLimitInvert } from "hooks/swap/usePriceInvert";
-import { useTranslation } from "react-i18next";
+import type { Position, Token } from "@icpswap/swap-sdk";
 import { Flex, Modal } from "@icpswap/ui";
+import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { Button, CircularProgress, Typography } from "components/Mui";
+import { Bound } from "constants/swap";
+import { useTicksAtLimitInvert } from "hooks/swap/usePriceInvert";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { formatTickPrice } from "utils/swap/formatTickPrice";
 
 export interface AddLiquidityConfirmModalProps {
   open: boolean;
@@ -36,8 +36,8 @@ export function AddLiquidityConfirmModal({
       ? baseCurrencyDefault === currency0
         ? currency0
         : baseCurrencyDefault === currency1
-        ? currency1
-        : currency0
+          ? currency1
+          : currency0
       : currency0;
 
     if (manuallyInverted) {

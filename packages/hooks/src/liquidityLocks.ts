@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { liquidityLocks } from "@icpswap/actor";
 import { Principal } from "@icp-sdk/core/principal";
-import { isUndefinedOrNull, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
-import { Pool, Position } from "@icpswap/swap-sdk";
+import { liquidityLocks } from "@icpswap/actor";
+import type { Pool, Position } from "@icpswap/swap-sdk";
 import type { Null, UserPositionInfoWithId } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { isUndefinedOrNull, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { useMultiPositionInfos, useMultiPositionInfosByIds } from "./swap/useMultiPositionInfos";
 import { getSinglePoolMultiPositions } from "./swap/useSinglePoolMultiPositions";
 
@@ -39,9 +39,9 @@ export function useLiquidityLockIds(tokenIds: string[] | Null): UseQueryResult<
           ledger_id: Principal;
         }>
       >(
-        await (
-          await liquidityLocks()
-        ).getPrincipalAliasByLedgers(tokenIds.map((tokenId) => Principal.fromText(tokenId))),
+        await (await liquidityLocks()).getPrincipalAliasByLedgers(
+          tokenIds.map((tokenId) => Principal.fromText(tokenId)),
+        ),
       ).data;
     },
     enabled: !!tokenIds,

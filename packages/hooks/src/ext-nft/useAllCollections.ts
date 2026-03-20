@@ -1,5 +1,5 @@
 import type { EXTCollection } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export function useEXTAllCollections(): UseQueryResult<EXTCollection[] | undefined, Error> {
   return useQuery({

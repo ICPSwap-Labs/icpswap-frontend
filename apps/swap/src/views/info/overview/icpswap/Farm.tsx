@@ -1,12 +1,11 @@
-import { useContext, useEffect } from "react";
-import { useFarmGlobalData } from "hooks/staking-farm/index";
 import { Flex, Image, Link } from "@icpswap/ui";
-import { Typography } from "components/Mui";
 import { formatDollarAmount } from "@icpswap/utils";
+import { Typography } from "components/Mui";
+import { useFarmGlobalData } from "hooks/staking-farm/index";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-
-import { IcpswapContext } from "./context";
 import { Card, Item } from "../component";
+import { IcpswapContext } from "./context";
 
 export function Farm() {
   const { t } = useTranslation();

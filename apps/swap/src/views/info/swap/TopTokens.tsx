@@ -1,11 +1,11 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { FilledTextField } from "components/index";
-import { useTokensFromList, useNodeInfoAllTokens } from "@icpswap/hooks";
-import { TokenTable } from "components/info/swap";
-import { useState, useMemo, useEffect } from "react";
-import { isValidPrincipal } from "@icpswap/utils";
+import { useNodeInfoAllTokens, useTokensFromList } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { MainCard, OnlyTokenList } from "@icpswap/ui";
+import { isValidPrincipal } from "@icpswap/utils";
+import { FilledTextField } from "components/index";
+import { TokenTable } from "components/info/swap";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function TopTokens() {

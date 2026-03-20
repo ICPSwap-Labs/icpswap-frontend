@@ -1,45 +1,46 @@
 /* eslint-disable prefer-const */
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Box, Typography, makeStyles, Theme } from "components/Mui";
+
+import { useParsedQueryString, usePCMMetadata, useSwapInstallers, useUserPCMBalance } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { Flex } from "@icpswap/ui";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { Wrapper } from "components/index";
+import { InfoPool, PriceRange } from "components/liquidity/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
+import { ReclaimTips } from "components/ReclaimTips";
+import StepViewButton from "components/Steps/View";
+import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
 import {
-  FeeSelector,
-  CurrencySelector,
-  SwapDepositAmount,
   AddLiquidityButton,
   BuyTokenButton,
+  CurrencySelector,
+  FeeSelector,
+  SwapDepositAmount,
 } from "components/swap/index";
+import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
+import { ToReclaim } from "components/swap/reclaim/ToReclaim";
+import { ADD_LIQUIDITY_REFRESH_KEY } from "constants/index";
+import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID, FIELD } from "constants/swap";
+import { useRefreshTrigger } from "hooks/index";
+import { useAddLiquidityCall } from "hooks/swap/useAddLiquidity";
+import { useMediaQuery640 } from "hooks/theme";
+import { UseCurrencyState, useToken } from "hooks/useCurrency";
+import { useErrorTip, useLoadingTip } from "hooks/useTips";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowLeft } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 import {
-  useMintState,
   useMintHandlers,
   useMintInfo,
+  useMintState,
   useRangeCallbacks,
   useResetMintState,
 } from "store/swap/liquidity/hooks";
-import { UseCurrencyState, useToken } from "hooks/useCurrency";
-import { Bound, DEFAULT_FEE, DEFAULT_SWAP_INPUT_ID, DEFAULT_SWAP_OUTPUT_ID, FIELD } from "constants/swap";
-import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
-import { useErrorTip, useLoadingTip } from "hooks/useTips";
+import type { ExternalTipArgs } from "types/index";
 import { isDarkTheme, parseBackPath } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
-import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useAddLiquidityCall } from "hooks/swap/useAddLiquidity";
-import StepViewButton from "components/Steps/View";
-import { ExternalTipArgs } from "types/index";
-import { ReclaimTips } from "components/ReclaimTips";
-import { usePCMMetadata, useParsedQueryString, useUserPCMBalance, useSwapInstallers } from "@icpswap/hooks";
-import { InfoPool, PriceRange } from "components/liquidity/index";
-import { Flex } from "@icpswap/ui";
-import { ADD_LIQUIDITY_REFRESH_KEY } from "constants/index";
-import { useRefreshTrigger } from "hooks/index";
-import { Wrapper } from "components/index";
-import { ArrowLeft } from "react-feather";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
-import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
-import { ToReclaim } from "components/swap/reclaim/ToReclaim";
-import { useMediaQuery640 } from "hooks/theme";
 
 const DISABLED_STYLE = {
   opacity: 0.2,

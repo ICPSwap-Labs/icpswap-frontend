@@ -1,6 +1,6 @@
-import { icpswap_info_fetch_get } from "@icpswap/utils";
 import type { NnsTokenInfo } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { icpswap_info_fetch_get } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getNnsTokensInfo() {
   return (await icpswap_info_fetch_get<Array<NnsTokenInfo>>(`/sns/list`))?.data;

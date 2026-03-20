@@ -1,10 +1,9 @@
-import { useState, memo, useCallback, useEffect } from "react";
 import { ClickAwayListener } from "@mui/base";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Search } from "react-feather";
-
-import { MenuProps } from "./types";
-import { useTheme, Box, Checkbox, Popper, TextField, InputAdornment, BoxProps } from "../Mui";
+import { Box, type BoxProps, Checkbox, InputAdornment, Popper, TextField, useTheme } from "../Mui";
 import { NoData } from "../NoData";
+import type { MenuProps } from "./types";
 
 type MenuFilter = (menu: MenuProps, search: string | undefined) => boolean;
 

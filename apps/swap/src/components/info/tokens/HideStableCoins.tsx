@@ -1,7 +1,7 @@
-import { Typography, Checkbox } from "components/Mui";
-import { useCallback } from "react";
 import { Flex } from "@icpswap/ui";
+import { Checkbox, Typography } from "components/Mui";
 import { atom, useAtom } from "jotai";
+import { useCallback } from "react";
 
 const hideStableCoinsAtom = atom<boolean>(false);
 

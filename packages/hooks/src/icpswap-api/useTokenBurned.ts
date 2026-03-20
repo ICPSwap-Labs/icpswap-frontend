@@ -1,6 +1,6 @@
 import type { Null } from "@icpswap/types";
 import { icpswap_fetch_post } from "@icpswap/utils";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export function useTokenBurned(tokenId: string | Null): UseQueryResult<string | undefined, Error> {
   return useQuery({

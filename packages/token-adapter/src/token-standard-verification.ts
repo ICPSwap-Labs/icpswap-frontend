@@ -5,7 +5,7 @@ import { DIP20XTCAdapter } from "./DIP20XTCAdapter";
 import { EXTAdapter } from "./EXTAdapter";
 import { icrc1Adapter } from "./ICRC1";
 import { icrc2Adapter } from "./ICRC2";
-import { TOKEN_STANDARD, Metadata } from "./types";
+import { type Metadata, TOKEN_STANDARD } from "./types";
 
 export type VerificationResult = {
   valid: boolean;

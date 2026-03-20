@@ -1,14 +1,14 @@
-import { useState } from "react";
-import dayjs from "dayjs";
-import { useStakingPools, useStakingPoolState } from "@icpswap/hooks";
-import { pageArgsFormat, icDashboardExplorerLink } from "@icpswap/utils";
+import { useStakingPoolState, useStakingPools } from "@icpswap/hooks";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { BodyCell, Flex, Header, HeaderCell, ImageLoading, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { icDashboardExplorerLink, pageArgsFormat } from "@icpswap/utils";
 import { TextButton } from "components/index";
-import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { HeaderCell, BodyCell, NoData, Pagination, Header, TableRow, Flex, ImageLoading } from "@icpswap/ui";
-import upperFirst from "lodash/upperFirst";
+import { Box, Link, makeStyles } from "components/Mui";
+import dayjs from "dayjs";
 import { useStateColors } from "hooks/staking-token";
+import upperFirst from "lodash/upperFirst";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { makeStyles, Box, Link } from "components/Mui";
 
 const useStyles = makeStyles(() => {
   return {

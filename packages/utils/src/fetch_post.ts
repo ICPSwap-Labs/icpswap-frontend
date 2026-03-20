@@ -1,5 +1,5 @@
-import { IcpSwapAPIResult, ResultStatus, StatusResult } from "@icpswap/types";
 import { ICPSWAP_API } from "@icpswap/constants";
+import { type IcpSwapAPIResult, ResultStatus, type StatusResult } from "@icpswap/types";
 
 import { isUndefinedOrNull, nonUndefinedOrNull } from "./isUndefinedOrNull";
 

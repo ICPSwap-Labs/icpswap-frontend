@@ -1,9 +1,8 @@
-import { Null, type NumberType } from "@icpswap/types";
+import type { Principal } from "@icp-sdk/core/principal";
+import type { Null, NumberType } from "@icpswap/types";
 import BigNumber from "bignumber.js";
-import { Principal } from "@icp-sdk/core/principal";
-
-import { parseTokenAmount } from "./tokenAmount";
 import { isUndefinedOrNull } from "./isUndefinedOrNull";
+import { parseTokenAmount } from "./tokenAmount";
 
 export function transactionsTypeFormat(type: any): string {
   if (typeof type === "string") return type;
@@ -50,9 +49,7 @@ export function arrayBufferToString(arrayBuffer: Uint8Array): string {
 }
 
 export function arrayBufferToHex(arrayBuffer: Uint8Array) {
-  return Array.from([...arrayBuffer], function (byte) {
-    return `0${(byte & 0xff).toString(16)}`.slice(-2);
-  }).join("");
+  return Array.from([...arrayBuffer], (byte) => `0${(byte & 0xff).toString(16)}`.slice(-2)).join("");
 }
 
 export function arrayBufferFromHex(hex: string) {

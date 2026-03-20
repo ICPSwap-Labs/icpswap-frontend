@@ -1,33 +1,32 @@
-import { useMemo, useState } from "react";
-import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
-import { useParams } from "react-router-dom";
+import { useInfoPool, usePoolAPR } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP_TOKEN_INFO } from "@icpswap/tokens";
+import { FeeTierPercentLabel, Flex, GridAutoRows, Link, Proportion } from "@icpswap/ui";
 import {
-  formatDollarAmount,
-  formatAmount,
-  icDashboardExplorerLink,
   BigNumber,
+  formatAmount,
+  formatDollarAmount,
+  icDashboardExplorerLink,
   isUndefinedOrNull,
 } from "@icpswap/utils";
-import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
-import { usePoolAPR, useInfoPool } from "@icpswap/hooks";
-import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
+import { Breadcrumbs, InfoWrapper, MainCard, TextButton, TokenImage, TokenPoolPrice } from "components/index";
 import { PoolTransactions } from "components/info/swap";
-import { swapLinkOfPool, addLiquidityLink } from "utils/info/link";
-import { ICP_TOKEN_INFO } from "@icpswap/tokens";
-import { Copy } from "react-feather";
-import copyToClipboard from "copy-to-clipboard";
-import { useTips, TIP_SUCCESS } from "hooks/useTips";
-import { PositionTable } from "components/liquidity/PositionTable";
-import { useToken } from "hooks/index";
-import { useTranslation } from "react-i18next";
-import { Token } from "@icpswap/swap-sdk";
-import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
-import { TokenSymbol } from "components/TokenSymbol";
-import { getFee24HFromVolume24H } from "hooks/info/useFee24h";
 import { PoolPositionHoldersCharts } from "components/info/swap/PoolPositionHoldersCharts";
-
-import { PoolChart } from "./components/PoolChart";
+import { PositionTable } from "components/liquidity/PositionTable";
+import { Box, Button, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { TokenSymbol } from "components/TokenSymbol";
+import copyToClipboard from "copy-to-clipboard";
+import { useToken } from "hooks/index";
+import { getFee24HFromVolume24H } from "hooks/info/useFee24h";
+import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
+import { TIP_SUCCESS, useTips } from "hooks/useTips";
+import { useMemo, useState } from "react";
+import { Copy } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { addLiquidityLink, swapLinkOfPool } from "utils/info/link";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
+import { PoolChart } from "./components/PoolChart";
 
 interface PoolTokenTvlProps {
   token: Token | undefined;

@@ -1,14 +1,14 @@
-import { useCallback, useEffect, useMemo, useState, useContext, forwardRef, useImperativeHandle } from "react";
-import { Box, Typography } from "components/Mui";
+import { CurrencyAmount, Price, priceToClosestTick, TICK_SPACINGS, type Token, tickToPrice } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
 import { BigNumber, formatTokenAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Price, tickToPrice, Token, TICK_SPACINGS, priceToClosestTick, CurrencyAmount } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
 import { TokenImage } from "components/index";
-import { PriceMutator } from "components/swap/limit-order/PriceMutator";
+import { Box, Typography } from "components/Mui";
 import { SwapInput } from "components/swap/index";
-import { priceToClosestUseableTick, inputValueFormat } from "utils/swap/limit-order";
+import { PriceMutator } from "components/swap/limit-order/PriceMutator";
+import { forwardRef, useCallback, useContext, useEffect, useImperativeHandle, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { inputValueFormat, priceToClosestUseableTick } from "utils/swap/limit-order";
 
 import { LimitContext } from "./context";
 
@@ -135,8 +135,8 @@ export const SwapLimitPrice = forwardRef(
               ? -TICK_SPACINGS[selectedPool.fee]
               : TICK_SPACINGS[selectedPool.fee]
             : inverted
-            ? TICK_SPACINGS[selectedPool.fee]
-            : -TICK_SPACINGS[selectedPool.fee]);
+              ? TICK_SPACINGS[selectedPool.fee]
+              : -TICK_SPACINGS[selectedPool.fee]);
         const newPrice = tickToPrice(inputToken, outputToken, newPriceTick);
 
         handleInputPrice(
@@ -162,8 +162,8 @@ export const SwapLimitPrice = forwardRef(
               ? TICK_SPACINGS[selectedPool.fee]
               : -TICK_SPACINGS[selectedPool.fee]
             : inverted
-            ? -TICK_SPACINGS[selectedPool.fee]
-            : +TICK_SPACINGS[selectedPool.fee]);
+              ? -TICK_SPACINGS[selectedPool.fee]
+              : +TICK_SPACINGS[selectedPool.fee]);
 
         const newPrice = tickToPrice(inputToken, outputToken, newPriceTick);
 

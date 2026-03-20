@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
-import { makeStyles, Box, Grid, Theme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
+import { Box, Grid, makeStyles, type Theme } from "components/Mui";
+import { useRef, useState } from "react";
 
-import { Route, MAX_NUMBER } from "./config";
+import { MAX_NUMBER, type Route } from "./config";
 import { ExceedRoutesPopper } from "./ExceedRoutesPopper";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -96,7 +96,7 @@ export function ExceedRoutes({ routes, onMenuClick }: ExceedRoutesProps) {
         anchor={ref?.current}
         onClickAway={handleClose}
         onMenuClick={handleMenuClick}
-        routes={routes.filter((route, index) => index > MAX_NUMBER || index === MAX_NUMBER)}
+        routes={routes.filter((_route, index) => index > MAX_NUMBER || index === MAX_NUMBER)}
       />
     </Grid>
   );

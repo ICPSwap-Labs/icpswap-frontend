@@ -1,6 +1,6 @@
-import { resultFormat } from "@icpswap/utils";
 import { farm } from "@icpswap/actor";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getFarmAvgApr(farmId: string) {
   let result = null;

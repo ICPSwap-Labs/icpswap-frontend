@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { Checkbox, Flex } from "@icpswap/ui";
 import { Box, Typography } from "components/Mui";
-import { Flex, Checkbox } from "@icpswap/ui";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface ImpactProps {

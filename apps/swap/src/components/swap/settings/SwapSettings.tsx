@@ -1,11 +1,11 @@
-import { useCallback, useState, useEffect } from "react";
-import { Box, Typography, Card, makeStyles, Theme, InputAdornment } from "components/Mui";
-import Toggle from "components/Toggle";
-import { useExpertModeManager, useSlippageManager, useMultipleApproveManager } from "store/swap/cache/hooks";
-import { getDefaultSlippageTolerance, MAX_SLIPPAGE_TOLERANCE, SLIPPAGE_TOLERANCE } from "constants/swap";
-import { Tooltip, NumberTextField, TextButton, Flex } from "components/index";
 import { BigNumber } from "@icpswap/utils";
+import { Flex, NumberTextField, TextButton, Tooltip } from "components/index";
+import { Box, Card, InputAdornment, makeStyles, type Theme, Typography } from "components/Mui";
+import Toggle from "components/Toggle";
+import { getDefaultSlippageTolerance, MAX_SLIPPAGE_TOLERANCE, SLIPPAGE_TOLERANCE } from "constants/swap";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useExpertModeManager, useMultipleApproveManager, useSlippageManager } from "store/swap/cache/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, useTheme } from "components/Mui";
-import { useAllLiquidityLocks, usePoolTVLValue, usePositionsValue } from "@icpswap/hooks";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Position, Pool } from "@icpswap/swap-sdk";
-import { useLiquidityLocksImage } from "hooks/swap/index";
-import { Null } from "@icpswap/types";
-import { LoadingRow, LiquidityLock, Flex } from "@icpswap/ui";
 import { FREE_LIQUIDITY_NAME } from "@icpswap/constants";
+import { useAllLiquidityLocks, usePoolTVLValue, usePositionsValue } from "@icpswap/hooks";
+import type { Pool, Position } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, LiquidityLock, LoadingRow } from "@icpswap/ui";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { Box, useTheme } from "components/Mui";
+import { useLiquidityLocksImage } from "hooks/swap/index";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 interface LiquidityLocksItemProps {
   name: string;
@@ -79,7 +79,7 @@ export function LiquidityLocks({ pool, poolId }: LiquidityLocksProps) {
       __locksValue[name] = value;
       setLocksValue(__locksValue);
     },
-    [locksValue, setLocksValue],
+    [locksValue],
   );
 
   const freeLiquidityValue = useMemo(() => {

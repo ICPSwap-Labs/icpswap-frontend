@@ -1,6 +1,6 @@
 import JSBI from "jsbi";
 
-import { Token } from "../core";
+import type { Token } from "../core";
 import { tickToPrice } from "./priceTickConversions";
 
 const PRICE_FIXED_DIGITS = 8;

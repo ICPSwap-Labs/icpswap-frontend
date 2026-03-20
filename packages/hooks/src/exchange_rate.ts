@@ -1,6 +1,6 @@
 import { exchangeRate } from "@icpswap/actor";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { parseTokenAmount } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getExchangeRates() {
   return await (await exchangeRate()).get_exchange_rates();

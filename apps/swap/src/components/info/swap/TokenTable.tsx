@@ -1,23 +1,23 @@
-import { useState, useMemo } from "react";
-import { useMediaQuery, makeStyles, useTheme } from "components/Mui";
-import { InfoTokenRealTimeDataResponse } from "@icpswap/types";
-import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { TokenImage } from "components/index";
-import { useToken } from "hooks/index";
+import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import {
+  BodyCell,
+  Flex,
   Header,
   HeaderCell,
-  BodyCell,
-  TableRow,
-  SortDirection,
-  Proportion,
-  NoData,
   ImageLoading,
-  Flex,
   Link,
+  NoData,
   Pagination,
+  Proportion,
+  SortDirection,
+  TableRow,
 } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import { TokenImage } from "components/index";
+import { makeStyles, useMediaQuery, useTheme } from "components/Mui";
+import { useToken } from "hooks/index";
 import i18n from "i18n/index";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {

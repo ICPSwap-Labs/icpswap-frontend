@@ -1,11 +1,11 @@
-import { ReactElement } from "react";
-import { Typography, useTheme } from "components/Mui";
-import { TokenImage } from "components/index";
-import { Tooltip, Flex } from "@icpswap/ui";
-import { formatDollarAmount, formatAmount, parseTokenAmount } from "@icpswap/utils";
 import type { Null } from "@icpswap/types";
-import { usePoolTvlV2 } from "hooks/swap/usePoolTVL";
+import { Flex, Tooltip } from "@icpswap/ui";
+import { formatAmount, formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
+import { TokenImage } from "components/index";
+import { Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks";
+import { usePoolTvlV2 } from "hooks/swap/usePoolTVL";
+import type { ReactElement } from "react";
 
 interface PoolTvlTooltipProps {
   token0Id: string | Null;

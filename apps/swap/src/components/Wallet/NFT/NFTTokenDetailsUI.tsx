@@ -1,14 +1,14 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useCallback } from "react";
-import { Box, Button, Typography, useTheme } from "components/Mui";
+import type { NFTTokenMetadata } from "@icpswap/types";
+import { nonUndefinedOrNull, shorten } from "@icpswap/utils";
 import { Flex, LoadingRow } from "components/index";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import { NFTAvatar as ExtNFTAvatar } from "components/NFT/ext/NFTAvatar";
 import NFTAvatar from "components/NFT/NFTAvatar";
-import { useTranslation } from "react-i18next";
-import { nonUndefinedOrNull, shorten } from "@icpswap/utils";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
 import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
-import { NFTTokenMetadata } from "@icpswap/types";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 interface NFTTokenDetailsUIProps {
   logo: string | undefined;

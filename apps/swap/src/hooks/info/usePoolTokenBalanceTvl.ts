@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import type { InfoPoolRealTimeDataResponse } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useToken } from "hooks/index";
-import { InfoPoolRealTimeDataResponse } from "@icpswap/types";
 import { useLiquidityTokenAmountsForInfoPoolTvl } from "hooks/info/useLiquidityTokenAmounts";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 
 export interface UsePoolTokenBalanceTvlProps {
   pool: InfoPoolRealTimeDataResponse | undefined;

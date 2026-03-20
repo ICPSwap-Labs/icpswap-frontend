@@ -1,5 +1,5 @@
-import { nowInSeconds } from "@icpswap/utils";
 import type { FarmInfo, FarmState, Null } from "@icpswap/types";
+import { nowInSeconds } from "@icpswap/utils";
 
 export function getFarmState(farmInfo: FarmInfo): FarmState {
   const now = nowInSeconds();

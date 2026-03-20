@@ -1,15 +1,15 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Box, Button, Typography, useTheme } from "components/Mui";
-import { FilledTextField } from "components/index";
-import { isUndefinedOrNull, isUndefinedOrNullOrEmpty, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useTranslation } from "react-i18next";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useEXTAllCollections } from "@icpswap/hooks";
-import { useEXTManager } from "store/nft/hooks";
 import { NFT_STANDARDS } from "@icpswap/constants";
-import { useTips, TIP_SUCCESS } from "hooks/useTips";
+import { useEXTAllCollections } from "@icpswap/hooks";
+import { isUndefinedOrNull, isUndefinedOrNullOrEmpty, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
+import { FilledTextField } from "components/index";
+import { Box, Button, Typography, useTheme } from "components/Mui";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { TIP_SUCCESS, useTips } from "hooks/useTips";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useEXTManager } from "store/nft/hooks";
 
 export function NFTImporter() {
   const theme = useTheme();

@@ -1,9 +1,9 @@
-import { useCallback, useMemo, useState } from "react";
-import { parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { useInfoAllTokens, useInterval, useFarmTotalAmount, useFarmRewardInfos } from "@icpswap/hooks";
-import { __getTokenInfo } from "hooks/token/index";
+import { useFarmRewardInfos, useFarmTotalAmount, useInfoAllTokens, useInterval } from "@icpswap/hooks";
+import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { useFarmUserAllPositions } from "hooks/staking-farm/useUserAllPositions";
 import { useUserStakedPositions } from "hooks/staking-farm/useUserStakedPositions";
+import { __getTokenInfo } from "hooks/token/index";
+import { useCallback, useMemo, useState } from "react";
 
 interface GlobalData {
   stakeTokenTVL: string;

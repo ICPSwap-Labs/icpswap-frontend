@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icp-sdk/core/principal";
 
 export interface AccountBalanceArgs {
   account: AccountIdentifier;

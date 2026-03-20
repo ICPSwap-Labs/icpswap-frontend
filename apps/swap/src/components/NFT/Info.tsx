@@ -1,37 +1,36 @@
-import { ReactElement, useState } from "react";
-import { Typography, Grid, Button, Box, Link, useMediaQuery, useTheme, makeStyles, Theme } from "components/Mui";
-import Copy from "components/Copy";
-import { useICPAmountUSDValue } from "store/global/hooks";
-import { useAccount } from "store/auth/hooks";
-import NFTVerifyLabel from "components/NFT/VerifyLabel";
-import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
+import type { NFTTokenMetadata, Null } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
 import {
+  BigNumber,
   formatDollarAmount,
+  isUndefinedOrNull,
   mockALinkAndOpen,
   shorten,
   timestampFormat,
-  BigNumber,
-  isUndefinedOrNull,
 } from "@icpswap/utils";
-import { useNFTOrderInfo } from "hooks/nft/trade";
-import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
-import NFTTransfer from "components/NFT/Transfer";
-import NFTSell from "components/NFT/market/Sell";
-import WICPPriceFormat from "components/NFT/WICPPriceFormat";
+import { TwitterIcon } from "assets/images/Twitter";
+import Copy from "components/Copy";
+import { TextButton } from "components/index";
+import NFTCanisterLink from "components/info/NFTCanisterLink";
+import { Box, Button, Grid, Link, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
 import NFTBuyReview from "components/NFT/market/NFTBuyReview";
 import NFTRevoke from "components/NFT/market/NFTRevoke";
-import { TextButton } from "components/index";
-import { Null, type NFTTokenMetadata } from "@icpswap/types";
-import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
-import NFTCanisterLink from "components/info/NFTCanisterLink";
-import { TwitterIcon } from "assets/images/Twitter";
+import NFTSell from "components/NFT/market/Sell";
+import NFTTransfer from "components/NFT/Transfer";
+import NFTVerifyLabel from "components/NFT/VerifyLabel";
+import WICPPriceFormat from "components/NFT/WICPPriceFormat";
 import { APP_URL } from "constants/index";
-import { Flex } from "@icpswap/ui";
+import { useNFTOrderInfo } from "hooks/nft/trade";
+import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
+import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
+import { type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import NFTAvatar from "./NFTAvatar";
+import { useAccount } from "store/auth/hooks";
+import { useICPAmountUSDValue } from "store/global/hooks";
+import { arrayBufferToString, encodeTokenIdentifier, isICPSwapOfficial } from "utils/index";
 import CollectionIcons from "./collectionsIcon";
 import DetailsToggle from "./DetailsToggle";
+import NFTAvatar from "./NFTAvatar";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

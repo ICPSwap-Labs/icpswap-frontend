@@ -1,6 +1,6 @@
-import React from "react";
-import { MainLayout } from "./MainLayout";
+import type React from "react";
 import { InfoLayout } from "../info/InfoLayout";
+import { MainLayout } from "./MainLayout";
 
 export interface LayoutProps {
   children: React.ReactNode;

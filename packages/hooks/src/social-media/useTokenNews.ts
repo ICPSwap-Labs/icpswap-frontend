@@ -1,7 +1,7 @@
 import { socialMedia } from "@icpswap/actor";
-import { isAvailablePageArgs, resultFormat } from "@icpswap/utils";
 import type { SocialMediaResult } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { isAvailablePageArgs, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getTokensNews(handle: string, offset: number, limit: number) {
   const result = resultFormat<Array<SocialMediaResult>>(

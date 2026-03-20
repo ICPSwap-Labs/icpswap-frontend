@@ -1,9 +1,8 @@
-import React from "react";
-import { CssBaseline, Box, makeStyles, useTheme, Theme } from "components/Mui";
-import Background from "components/Background";
 import { Flex } from "@icpswap/ui";
-
+import Background from "components/Background";
 import { GlobalTips } from "components/Layout/GlobalTips";
+import { Box, CssBaseline, makeStyles, type Theme, useTheme } from "components/Mui";
+import type React from "react";
 
 import Header from "./Header";
 

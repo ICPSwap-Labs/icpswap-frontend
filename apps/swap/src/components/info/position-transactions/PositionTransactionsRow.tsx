@@ -1,10 +1,10 @@
-import { useTheme } from "components/Mui";
-import { PositionTransaction } from "@icpswap/types";
-import { TableRow, BodyCell, Flex, TextButton } from "@icpswap/ui";
-import { Copy, TokenImage } from "components/index";
-import { useToken } from "hooks/index";
-import dayjs from "dayjs";
+import type { PositionTransaction } from "@icpswap/types";
+import { BodyCell, Flex, TableRow, TextButton } from "@icpswap/ui";
 import { shorten } from "@icpswap/utils";
+import { Copy, TokenImage } from "components/index";
+import { useTheme } from "components/Mui";
+import dayjs from "dayjs";
+import { useToken } from "hooks/index";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 

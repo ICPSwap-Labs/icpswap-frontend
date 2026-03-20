@@ -1,12 +1,12 @@
-import { useCallback } from "react";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Confirm } from "components/Wallet/Confirm";
-import { useTranslation } from "react-i18next";
 import { deleteAddressBook } from "@icpswap/hooks";
-import { useRefreshTriggerManager } from "hooks/index";
-import { ADDRESS_BOOK_REFRESH } from "constants/wallet";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { Confirm } from "components/Wallet/Confirm";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { ADDRESS_BOOK_REFRESH } from "constants/wallet";
+import { useRefreshTriggerManager } from "hooks/index";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 export function DeleteAddressConfirm() {
   const { t } = useTranslation();

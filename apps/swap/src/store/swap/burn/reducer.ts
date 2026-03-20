@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateTypedInput, resetBurnState } from "./actions";
+import { resetBurnState, updateTypedInput } from "./actions";
 import { initialState } from "./state";
 
 export default createReducer(initialState, (builder) => {

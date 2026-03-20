@@ -1,12 +1,12 @@
-import { useTheme, Typography, Box, makeStyles, Theme, CircularProgress } from "components/Mui";
-import { useCallback, useState } from "react";
-import { getTokenStandard } from "hooks/token/index";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { useUpdateTokenStandard } from "store/token/cache/hooks";
-import { registerTokens } from "@icpswap/token-adapter";
-import { useTranslation } from "react-i18next";
 import { syncServerTokenInfo } from "@icpswap/hooks";
+import { registerTokens } from "@icpswap/token-adapter";
 import { TOKEN_STANDARD } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { Box, CircularProgress, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { getTokenStandard } from "hooks/token/index";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useUpdateTokenStandard } from "store/token/cache/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -55,7 +55,7 @@ export function ImportTokenTip({ canisterId, onOk }: ImportTokenTipProps) {
       onOk();
     }
     setLoading(false);
-  }, [canisterId, updateTokenStandard, loading]);
+  }, [canisterId, updateTokenStandard, loading, onOk]);
 
   return (
     <Box

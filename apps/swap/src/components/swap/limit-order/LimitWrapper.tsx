@@ -1,11 +1,11 @@
-import { useState, useCallback } from "react";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, MainCard } from "components/index";
 import { Box } from "components/Mui";
-import { MainCard, Flex } from "components/index";
+import { GuidePanel, PlaceOrder, UserLimitPanel } from "components/swap/limit-order";
 import { LimitContext } from "components/swap/limit-order/context";
-import { Pool, Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { useCallback, useState } from "react";
 import { useWalletIsConnected } from "store/auth/hooks";
-import { UserLimitPanel, PlaceOrder, GuidePanel } from "components/swap/limit-order";
 
 interface LimitWrapperProps {
   ui?: "pro" | "normal";

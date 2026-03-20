@@ -1,16 +1,16 @@
 import { BridgeChainType, BridgeType } from "@icpswap/constants";
 import { ckETH } from "@icpswap/tokens";
 import { formatAmount, parseTokenAmount } from "@icpswap/utils";
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { EthereumTransactionEvent } from "types/web3";
 import {
-  EthereumMintConfirmations,
   EthereumDissolveConfirmations,
+  EthereumMintConfirmations,
 } from "components/ck-bridge/ui/confirmations/ETHConfirmations";
+import { CHIAN_ETH_LOGO, CHIAN_ICP_LOGO } from "components/ck-bridge/ui/events/config";
 import { Divider } from "components/ck-bridge/ui/events/Divider";
 import { TransactionEventUI } from "components/ck-bridge/ui/events/TransactionEvent";
-import { CHIAN_ICP_LOGO, CHIAN_ETH_LOGO } from "components/ck-bridge/ui/events/config";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import type { EthereumTransactionEvent } from "types/web3";
 
 interface ETHTransactionEventProps {
   event: EthereumTransactionEvent;

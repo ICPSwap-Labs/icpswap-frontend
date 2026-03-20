@@ -1,13 +1,14 @@
 {
   "name": "@icpswap/swap",
   "version": "3.9.5",
+  "type": "module",
   "scripts": {
-    "dev": "node ./scripts/env.js dev ic && PORT=3000 craco start",
-    "dev:local": "node ./scripts/env.js dev local && PORT=3000 craco start",
-    "analyze": "CI=false node ./scripts/env.js pro ic && cross-env ANALYZE=true craco build",
-    "build": "CI=false && node ./scripts/env.js pro ic && craco build",
-    "test": "craco test",
-    "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
+    "dev": "node ./scripts/env.cjs dev ic && vite",
+    "dev:local": "node ./scripts/env.cjs dev local && vite dev",
+    "build": "CI=false && node ./scripts/env.cjs pro ic && vite build",
+    "preview": "vite preview",
+    "analyze": "CI=false node ./scripts/env.cjs pro ic && cross-env ANALYZE=true vite build",
+    "test": "vite test",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "contracts:compile": "pnpm run contracts:compile:abi",
     "clean": "rm -rf build && rm -rf node_modules"

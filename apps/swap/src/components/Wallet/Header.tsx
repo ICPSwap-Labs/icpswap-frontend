@@ -1,11 +1,11 @@
-import { Box, useTheme, Typography } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { shorten } from "@icpswap/utils";
-import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 import { Copy } from "components/Copy/icon";
-import { Setting } from "components/Wallet/Setting";
 import { JdenticonAvatar } from "components/JdenticonAvatar";
+import { Box, Typography, useTheme } from "components/Mui";
 import { LogoutIcon } from "components/Wallet/LogoutIcon";
+import { Setting } from "components/Wallet/Setting";
+import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 
 export function Header() {
   const theme = useTheme();

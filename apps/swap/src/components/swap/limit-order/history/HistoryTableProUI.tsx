@@ -1,15 +1,14 @@
-import { Box, Theme, makeStyles } from "components/Mui";
+import type { LimitTransaction, Null } from "@icpswap/types";
 import { Header, HeaderCell, LoadingRow } from "@icpswap/ui";
+import { Box, makeStyles, type Theme } from "components/Mui";
+import { Tab } from "constants/index";
 import { usePoolByPoolId } from "hooks/swap/usePools";
-import { LimitTransaction, Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { useScrollToTop } from "hooks/useScrollToTop";
 import { useCallback } from "react";
-import { Tab } from "constants/index";
-
-import { HistoryRowPro } from "./HistoryRowPro";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { LimitTransactionsEmpty } from "../Empty";
+import { HistoryRowPro } from "./HistoryRowPro";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

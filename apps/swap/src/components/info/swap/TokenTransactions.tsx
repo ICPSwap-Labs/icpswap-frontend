@@ -1,6 +1,6 @@
 import { useTokenTransactions } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
-import { Transactions, StyleProps } from "components/info/swap/Transactions";
+import type { Null } from "@icpswap/types";
+import { type StyleProps, Transactions } from "components/info/swap/Transactions";
 
 interface TokenTransactionsProps {
   canisterId: string | Null;

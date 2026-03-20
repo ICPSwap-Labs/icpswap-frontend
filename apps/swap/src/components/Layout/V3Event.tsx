@@ -1,4 +1,4 @@
-import { Grid, Box, Typography } from "components/Mui";
+import { Box, Grid, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 

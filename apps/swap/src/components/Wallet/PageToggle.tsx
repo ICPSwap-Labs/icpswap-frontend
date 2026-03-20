@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { Typography, Box } from "components/Mui";
-import i18n from "i18n/index";
+import { Box, Typography } from "components/Mui";
 import { useWalletContext } from "components/Wallet/context";
+import i18n from "i18n/index";
+import { useMemo } from "react";
 
 type Item = {
   name: string;

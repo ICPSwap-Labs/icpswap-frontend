@@ -1,7 +1,5 @@
-import LoadingImage from "assets/images/loading.png";
-
-import { Box, makeStyles, Theme } from "../Mui";
 import { Flex } from "../Grid";
+import { Box, makeStyles, type Theme } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -37,7 +35,7 @@ export function ImageLoading({ loading = true, mask = false }: ImageLoadingProps
   return loading ? (
     <Flex fullWidth className={classes.loadingContainer} justify="center" align="center">
       <Box className={mask ? classes.mask : ""} />
-      <img style={{ zIndex: 2 }} width="80px" height="80px" src={LoadingImage} alt="" />
+      <img style={{ zIndex: 2 }} width="80px" height="80px" src="/images/loading.png" alt="" />
     </Flex>
   ) : null;
 }

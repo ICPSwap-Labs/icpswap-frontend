@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { Grid, Box, Typography, TextField, InputAdornment, useTheme, useMediaQuery, makeStyles } from "components/Mui";
-import { MainCard, FilledTextField, Wrapper } from "components/index";
-import { IconSearch } from "@tabler/icons";
-import debounce from "lodash/debounce";
 import { useParsedQueryString } from "@icpswap/hooks";
+import { IconSearch } from "@tabler/icons";
+import { FilledTextField, MainCard, Wrapper } from "components/index";
+import { Box, Grid, InputAdornment, makeStyles, TextField, Typography, useMediaQuery, useTheme } from "components/Mui";
 import i18n from "i18n/index";
+import debounce from "lodash/debounce";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import NFTMarketplace from "./NFTMarket";
@@ -102,7 +103,7 @@ export default function MarketWrapper({
 
   useEffect(() => {
     setSortBy(defaultSortBy);
-  }, [defaultSortBy, setSortBy]);
+  }, [defaultSortBy]);
 
   const { canisterId } = useParsedQueryString() as { canisterId: string };
 

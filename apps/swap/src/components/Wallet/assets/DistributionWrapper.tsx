@@ -1,8 +1,8 @@
-import { DistributionEstimatedBalance } from "components/Wallet/assets/DistributionEstimatedBalance";
-import { Distribution } from "components/Wallet/assets/Distribution";
-import { Box } from "components/Mui";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import { useAddressOverview } from "@icpswap/hooks";
+import { Box } from "components/Mui";
+import { Distribution } from "components/Wallet/assets/Distribution";
+import { DistributionEstimatedBalance } from "components/Wallet/assets/DistributionEstimatedBalance";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 export function DistributionWrapper() {
   const principal = useAccountPrincipalString();

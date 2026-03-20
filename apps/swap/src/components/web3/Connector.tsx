@@ -2,7 +2,7 @@ import { Button } from "components/Mui";
 import { DEFAULT_CHAIN_ID } from "constants/web3";
 import { useCallback } from "react";
 import { isMobile } from "react-device-detect";
-import { useConnect, useChainId } from "wagmi";
+import { useChainId, useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 
 export interface Web3ButtonConnectorProps {

@@ -1,11 +1,11 @@
-import { useState, useCallback, useMemo } from "react";
-import { Typography } from "components/Mui";
-import { BigNumber, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import type { Pool, Price, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
+import { BigNumber, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { Typography } from "components/Mui";
 import { PoolCurrentPrice } from "components/swap/PoolCurrentPrice";
-import { Pool, Price, Token } from "@icpswap/swap-sdk";
+import { useCallback, useMemo, useState } from "react";
 
 export interface LimitAndCurrentPriceProps {
   inputToken: Token | Null;

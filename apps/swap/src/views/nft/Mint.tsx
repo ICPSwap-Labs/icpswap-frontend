@@ -1,32 +1,32 @@
-import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Typography, Grid, Box, CircularProgress, InputAdornment, Checkbox } from "components/Mui";
-import { useAccount } from "store/auth/hooks";
-import {
-  FilledTextField,
-  TextFieldNumberComponent,
-  TextButton,
-  MainCard,
-  NoData,
-  Breadcrumbs,
-  AuthButton,
-} from "components/index";
-import Upload, { UploadRef } from "components/NFT/Upload";
-import { useMintNFTCallback, useCanisterMetadata, useUserCanisterList } from "hooks/nft/useNFTCalls";
-import { useTips, TIP_ERROR } from "hooks/useTips";
-import { NFT_UPLOAD_FILES, MAX_NFT_MINT_SUPPLY } from "constants/index";
-import { type NFTControllerInfo } from "@icpswap/types";
-import RequiredMark from "components/RequiredMark";
-import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
-import RadioButtonCheckedOutlined from "@mui/icons-material/RadioButtonCheckedOutlined";
+import { useParsedQueryString } from "@icpswap/hooks";
+import type { NFTControllerInfo } from "@icpswap/types";
+import { BigNumber } from "@icpswap/utils";
 import AddIcon from "@mui/icons-material/Add";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { stringToArrayBuffer } from "utils/index";
-import { getLocaleMessage } from "i18n/service";
-import { useParsedQueryString } from "@icpswap/hooks";
+import RadioButtonCheckedOutlined from "@mui/icons-material/RadioButtonCheckedOutlined";
+import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
+import {
+  AuthButton,
+  Breadcrumbs,
+  FilledTextField,
+  MainCard,
+  NoData,
+  TextButton,
+  TextFieldNumberComponent,
+} from "components/index";
 import { CardContent1120 } from "components/Layout/CardContent1120";
+import { Box, Checkbox, CircularProgress, Grid, InputAdornment, Typography } from "components/Mui";
+import Upload, { type UploadRef } from "components/NFT/Upload";
+import RequiredMark from "components/RequiredMark";
+import { MAX_NFT_MINT_SUPPLY, NFT_UPLOAD_FILES } from "constants/index";
+import { useCanisterMetadata, useMintNFTCallback, useUserCanisterList } from "hooks/nft/useNFTCalls";
+import { TIP_ERROR, useTips } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BigNumber } from "@icpswap/utils";
+import { useNavigate } from "react-router-dom";
+import { useAccount } from "store/auth/hooks";
+import { stringToArrayBuffer } from "utils/index";
 
 export type Metadata = { label: string; value: string; key: number };
 

@@ -1,17 +1,17 @@
-import { useCallback, useMemo } from "react";
-import { Typography, Button, useTheme } from "components/Mui";
-import { Flex, TokenImage, MainCard } from "components/index";
-import { Position } from "@icpswap/swap-sdk";
+import type { Position } from "@icpswap/swap-sdk";
 import {
+  BigNumber,
+  formatDollarAmount,
   isUndefinedOrNull,
   parseTokenAmount,
-  formatDollarAmount,
   toSignificantWithGroupSeparator,
-  BigNumber,
 } from "@icpswap/utils";
-import { usePositionFees } from "hooks/swap/usePositionFees";
-import { useUSDPriceById, useRefreshTriggerManager } from "hooks/index";
+import { Flex, MainCard, TokenImage } from "components/index";
 import { CollectFees } from "components/liquidity/CollectFees";
+import { Button, Typography, useTheme } from "components/Mui";
+import { useRefreshTriggerManager, useUSDPriceById } from "hooks/index";
+import { usePositionFees } from "hooks/swap/usePositionFees";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface UncollectedFeesProps {

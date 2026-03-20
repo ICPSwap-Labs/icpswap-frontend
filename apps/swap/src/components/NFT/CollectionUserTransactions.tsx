@@ -1,14 +1,14 @@
-import { useState, useCallback, useMemo } from "react";
-import { makeStyles } from "components/Mui";
+import type { NFTTransaction, PaginationResult } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, LoadingRow, Pagination, TableRow } from "@icpswap/ui";
+import { arrayBufferToString, enumToString, pageArgsFormat, shorten, timestampFormat } from "@icpswap/utils";
 import Copy from "components/Copy";
+import { NoData, TextButton } from "components/index";
+import { makeStyles } from "components/Mui";
 import { useUserNFTTransactions } from "hooks/nft/useNFTCalls";
-import { TextButton, NoData } from "components/index";
-import type { PaginationResult, NFTTransaction } from "@icpswap/types";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import upperFirst from "lodash/upperFirst";
-import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TableRow, Header, HeaderCell, BodyCell, LoadingRow, Pagination } from "@icpswap/ui";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 const useStyles = makeStyles(() => {
   return {
@@ -35,12 +35,9 @@ export default function CollectionUserTransactions({ canisterId }: { canisterId:
     [result],
   );
 
-  const onPageChange = useCallback(
-    (pageNum: number) => {
-      setPageNum(pageNum);
-    },
-    [setPageNum],
-  );
+  const onPageChange = useCallback((pageNum: number) => {
+    setPageNum(pageNum);
+  }, []);
 
   return (
     <>

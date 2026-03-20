@@ -1,5 +1,5 @@
-import { Null } from "@icpswap/types";
-import { Typography, TypographyProps } from "components/Mui";
+import type { Null } from "@icpswap/types";
+import { Typography, type TypographyProps } from "components/Mui";
 
 interface TokenPairNameProps {
   color?: string;

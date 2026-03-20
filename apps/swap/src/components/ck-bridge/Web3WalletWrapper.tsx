@@ -1,9 +1,9 @@
+import { Flex } from "@icpswap/ui";
+import { DisconnectButton } from "components/ck-bridge/Disconnect";
 import { Box, Typography, useTheme } from "components/Mui";
 import { Web3ButtonConnector } from "components/web3/index";
 import { useTranslation } from "react-i18next";
-import { Flex } from "@icpswap/ui";
 import { useAccount } from "wagmi";
-import { DisconnectButton } from "components/ck-bridge/Disconnect";
 
 export function Web3WalletWrapper() {
   const { t } = useTranslation();

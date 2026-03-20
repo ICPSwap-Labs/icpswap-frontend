@@ -1,19 +1,18 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { useProposal, useListNeurons, useNervousSystemParameters, useParsedQueryString } from "@icpswap/hooks";
-import { useCallback, useMemo, useState } from "react";
-import { LoadingRow, TokenImage, MainCard, Wrapper, Flex } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useListNeurons, useNervousSystemParameters, useParsedQueryString, useProposal } from "@icpswap/hooks";
 import { nowInSeconds } from "@icpswap/utils";
+import { Flex, LoadingRow, MainCard, TokenImage, Wrapper } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
-import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useMemo, useState } from "react";
 import { ArrowLeft } from "react-feather";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { getNnsLedgerId, getNnsRootId, nnsEqualToGovernance } from "utils/sns/utils";
-
-import { ProposalDetails } from "./components/ProposalDetails";
-import { VotingResult } from "./components/VotingResult";
-import { ProposalSummary } from "./components/Summary";
 import { ProposalPayload } from "./components/Payload";
+import { ProposalDetails } from "./components/ProposalDetails";
+import { ProposalSummary } from "./components/Summary";
+import { VotingResult } from "./components/VotingResult";
 
 interface ProposalSwitchProps {
   proposal_id: string;

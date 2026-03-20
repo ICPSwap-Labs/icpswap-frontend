@@ -1,16 +1,16 @@
+import { type BridgeChainType, BridgeType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
-import { BridgeChainType, BridgeType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { Wrapper } from "components/index";
-import { Box } from "components/Mui";
-import { TopContent } from "components/ck-bridge/TopContent";
 import { BridgeTokens } from "components/ck-bridge/BridgeTokens";
-import { EthNetworkState } from "components/ck-bridge/eth/NetworkState";
-import { EthMint } from "components/ck-bridge/eth/Mint";
 import { EthDissolve } from "components/ck-bridge/eth/Dissolve";
 import { EthDissolveTransactions } from "components/ck-bridge/eth/Eth20DissolveTransactions";
 import { EthMintTransactions } from "components/ck-bridge/eth/Eth20MintTransactions";
+import { EthMint } from "components/ck-bridge/eth/Mint";
+import { EthNetworkState } from "components/ck-bridge/eth/NetworkState";
+import { TopContent } from "components/ck-bridge/TopContent";
+import { Wrapper } from "components/index";
+import { Box } from "components/Mui";
 
 export interface EthBridgeWrapperProps {
   token: Token;

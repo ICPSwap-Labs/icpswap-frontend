@@ -1,12 +1,12 @@
-import { useTheme, makeStyles, Box, Typography } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { ckETH } from "@icpswap/tokens";
 import { Flex } from "@icpswap/ui";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
 import { EXPLORER_TX_LINK } from "constants/ckERC20";
-import { useEthDissolveTxs, useEthTxResponse } from "store/web3/hooks";
-import { DissolveTx } from "types/ckETH";
 import { useTranslation } from "react-i18next";
+import { useEthDissolveTxs, useEthTxResponse } from "store/web3/hooks";
+import type { DissolveTx } from "types/ckETH";
 
 const useStyles = makeStyles(() => ({
   txLink: {

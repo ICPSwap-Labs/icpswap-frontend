@@ -1,12 +1,12 @@
 import JSBI from "jsbi";
 import invariant from "tiny-invariant";
-import { BigintIsh, MaxUint256, Percent, Price, CurrencyAmount, Token } from "../core";
+import { type BigintIsh, CurrencyAmount, MaxUint256, Percent, type Price, type Token } from "../core";
 import { ZERO } from "../internalConstants";
+import { encodeSqrtRatioX96 } from "../utils/encodeSqrtRatioX96";
 import { maxLiquidityForAmounts } from "../utils/maxLiquidityForAmounts";
 import { tickToPrice } from "../utils/priceTickConversions";
 import { SqrtPriceMath } from "../utils/sqrtPriceMath";
 import { TickMath } from "../utils/tickMath";
-import { encodeSqrtRatioX96 } from "../utils/encodeSqrtRatioX96";
 import { Pool } from "./pool";
 
 interface PositionConstructorArgs {

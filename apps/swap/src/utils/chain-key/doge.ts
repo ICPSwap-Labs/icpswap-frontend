@@ -1,10 +1,10 @@
-import { parseTokenAmount } from "@icpswap/utils";
-import type { NumberType } from "@icpswap/types";
-import { sha256 } from "js-sha256";
-import { BridgeTransactionEvent, DogeTransactionEvent } from "types/web3";
+import type { RetrieveDogeStatus } from "@icpswap/candid";
 import { BridgeChainType } from "@icpswap/constants";
+import type { NumberType } from "@icpswap/types";
+import { parseTokenAmount } from "@icpswap/utils";
+import { sha256 } from "js-sha256";
 import { DogeDissolveTxState } from "types/chain-key";
-import { RetrieveDogeStatus } from "@icpswap/candid";
+import type { BridgeTransactionEvent, DogeTransactionEvent } from "types/web3";
 
 export const dogeBlockExplorer = (height: number) => `https://www.oklink.com/dogecoin/block/${height}`;
 

@@ -1,6 +1,6 @@
-import { Typography } from "components/Mui";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Flex } from "@icpswap/ui";
+import { Typography } from "components/Mui";
 import { useCallback, useEffect, useState } from "react";
 
 type Panel = { value: string; label: string };

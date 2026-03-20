@@ -1,9 +1,9 @@
-import { Box, Typography } from "components/Mui";
-import { useState, useMemo } from "react";
-import { Transactions } from "components/info/index";
-import { useTokensFromList, useSwapTransactions } from "@icpswap/hooks";
+import { useSwapTransactions, useTokensFromList } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { MainCard, OnlyTokenList } from "@icpswap/ui";
+import { Transactions } from "components/info/index";
+import { Box, Typography } from "components/Mui";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function AllTransactions() {

@@ -1,6 +1,6 @@
-import { ReactNode, useCallback, useMemo, useState } from "react";
-import { Typography, Box, Button, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
-import { TradePriceV2 as TradePrice } from "components/swap/TradePrice";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Modal } from "@icpswap/ui";
 import {
   BigNumber,
   formatDollarAmount,
@@ -9,14 +9,14 @@ import {
   parseTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { isElement } from "react-is";
-import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { Flex, TokenImage, Tooltip } from "components/index";
+import { Box, Button, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { TradePriceV2 as TradePrice } from "components/swap/TradePrice";
+import { useSwapTokenFeeCost } from "hooks/swap/index";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { Null } from "@icpswap/types";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal } from "@icpswap/ui";
+import { isElement } from "react-is";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {

@@ -2,13 +2,13 @@
 /* eslint-disable no-param-reassign */
 
 import * as React from "react";
-import TransitionComponent, { TransitionStatus } from "../Transition";
-import useForkRef from "../useForkRef";
-import getTransitionProps from "../getTransitionProps";
+import type { SlideTransitionDirection, TransitionHandlerProps, TransitionProps } from "../../types";
 import createTransition from "../createTransition";
-import { defaultEasing, reflow } from "../utils";
 import { ownerWindow } from "../document-window";
-import { SlideTransitionDirection, TransitionHandlerProps, TransitionProps } from "../../types";
+import getTransitionProps from "../getTransitionProps";
+import TransitionComponent, { type TransitionStatus } from "../Transition";
+import useForkRef from "../useForkRef";
+import { defaultEasing, reflow } from "../utils";
 
 /**
  * Corresponds to 10 frames at 60 Hz.

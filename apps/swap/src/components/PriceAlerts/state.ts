@@ -1,6 +1,6 @@
+import type { AlertInfo } from "@icpswap/candid";
+import type { UseQueryResult } from "@tanstack/react-query";
 import { atom, useAtom } from "jotai";
-import { UseQueryResult } from "@tanstack/react-query";
-import { AlertInfo } from "@icpswap/candid";
 
 const showEmailAtom = atom<boolean>(false);
 const resetEmailAtom = atom<boolean>(false);

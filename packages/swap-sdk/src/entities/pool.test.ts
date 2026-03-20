@@ -1,13 +1,12 @@
-import { describe, it, expect, beforeEach } from "vitest";
-
-import { Token, CurrencyAmount } from "../core";
+import JSBI from "jsbi";
+import { beforeEach, describe, expect, it } from "vitest";
 import { FeeAmount, TICK_SPACINGS } from "../constants";
+import { CurrencyAmount, Token } from "../core";
+import { NEGATIVE_ONE } from "../internalConstants";
+import { encodeSqrtRatioX96 } from "../utils/encodeSqrtRatioX96";
 import { nearestUsableTick } from "../utils/nearestUsableTick";
 import { TickMath } from "../utils/tickMath";
 import { Pool } from "./pool";
-import { encodeSqrtRatioX96 } from "../utils/encodeSqrtRatioX96";
-import JSBI from "jsbi";
-import { NEGATIVE_ONE } from "../internalConstants";
 
 const ONE_ETHER = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18));
 

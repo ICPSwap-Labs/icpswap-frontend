@@ -1,8 +1,8 @@
-import { useContext, useMemo } from "react";
-import { ChartViewSelector, ChartView } from "@icpswap/ui";
-import { SwapProContext } from "components/swap/pro";
-import { SwapContext } from "components/swap/index";
+import { ChartView, ChartViewSelector } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { SwapContext } from "components/swap/index";
+import { SwapProContext } from "components/swap/pro";
+import { useContext, useMemo } from "react";
 
 export function TokenChartsViewSelector() {
   const { inputToken, outputToken } = useContext(SwapContext);

@@ -1,7 +1,7 @@
-import { useRef, ReactNode, useState } from "react";
-import { MenuList, MenuItem, Popper, Box, Typography, makeStyles, Theme, ClickAwayListener } from "components/Mui";
-import { SUPPORTED_LOCALES, getLocalLabel, SupportedLocale } from "constants/locales";
+import { Box, ClickAwayListener, MenuItem, MenuList, makeStyles, Popper, type Theme, Typography } from "components/Mui";
+import { getLocalLabel, SUPPORTED_LOCALES, type SupportedLocale } from "constants/locales";
 import { useLocaleManager } from "hooks/useActiveLocale";
+import { type ReactNode, useRef, useState } from "react";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

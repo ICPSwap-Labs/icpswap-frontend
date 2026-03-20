@@ -1,11 +1,11 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
+  resetMintState,
   updateFiled,
   updateFullRange,
   updateLeftRange,
   updateRightRange,
   updateStartPrice,
-  resetMintState,
 } from "./actions";
 import { initialState } from "./state";
 
@@ -21,13 +21,12 @@ export default createReducer(initialState, (builder) => {
           independentField: field,
           typedValue,
         };
-      } 
-        return {
-          ...state,
-          independentField: field,
-          typedValue,
-        };
-      
+      }
+      return {
+        ...state,
+        independentField: field,
+        typedValue,
+      };
     })
     .addCase(updateFullRange, (state) => {
       state.leftRangeValue = true;

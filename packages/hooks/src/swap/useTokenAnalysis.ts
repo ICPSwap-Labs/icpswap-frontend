@@ -1,6 +1,6 @@
-import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
 import type { Null, TokenResponse } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getTokenAnalysis(canisterId: string) {
   const result = await icpswap_fetch_post<TokenResponse>("/token/data", { pid: canisterId });

@@ -1,7 +1,7 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { useTokenIsInTokenList } from "store/global/hooks";
 import { ReactComponent as TokenListDarkIcon } from "assets/icons/token-list-dark.svg";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
+import { useTokenIsInTokenList } from "store/global/hooks";
 
 export interface TokenListIdentifyingProps {
   tokenId: string | undefined;

@@ -1,5 +1,5 @@
-import { ERC20Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import type { ERC20Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { erc20Abi } from "abis/abis";
 import { useMemo } from "react";
 import { assume0xAddress } from "utils/wagmi";

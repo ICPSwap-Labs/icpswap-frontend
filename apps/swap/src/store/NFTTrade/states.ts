@@ -1,4 +1,4 @@
-import { Allowance } from "../../types/nft";
+import type { Allowance } from "../../types/nft";
 
 export interface NFTTradeState {
   readonly allowance: Allowance[];

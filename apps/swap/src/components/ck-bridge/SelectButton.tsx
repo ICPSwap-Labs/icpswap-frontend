@@ -1,11 +1,10 @@
-import { Box, BoxProps, Typography, useTheme } from "components/Mui";
-import { ChevronDown } from "react-feather";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { Flex } from "@icpswap/ui";
 import { BridgeChainType } from "@icpswap/constants";
-
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
 import { TokenImageWithChain } from "components/ck-bridge/ChainImage";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
+import { ChevronDown } from "react-feather";
 
 export interface SelectButtonProps {
   chain: BridgeChainType | Null;

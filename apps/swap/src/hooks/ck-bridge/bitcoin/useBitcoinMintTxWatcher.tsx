@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from "react";
-import { useBtcMintTransactions } from "hooks/ck-bridge/btc";
+import { useInterval } from "@icpswap/hooks";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useBitcoinTxResponseManager } from "hooks/ck-bridge/bitcoin/useBitcoinTxResponseManager";
-import { useInterval } from "@icpswap/hooks";
+import { useBtcMintTransactions } from "hooks/ck-bridge/btc";
+import { useCallback, useMemo } from "react";
 
 const INTERVAL_TIME = 10_000;
 

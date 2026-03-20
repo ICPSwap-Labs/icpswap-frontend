@@ -1,7 +1,7 @@
-import { Token } from "@icpswap/swap-sdk";
-import { WICPCanisterId } from "constants/canister";
 import { Principal } from "@icp-sdk/core/principal";
+import { Token } from "@icpswap/swap-sdk";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { WICPCanisterId } from "constants/canister";
 
 export { TOKEN_STANDARD };
 

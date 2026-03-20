@@ -1,7 +1,7 @@
-import { useEffect, useMemo } from "react";
-import { AppState } from "store/index";
-import { useAppDispatch, useAppSelector } from "store/hooks";
 import { useNnsTokensInfo } from "@icpswap/hooks";
+import { useEffect, useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import type { AppState } from "store/index";
 
 import { updateSnsAllTokensInfo } from "./actions";
 

@@ -1,8 +1,8 @@
+import { ckUSDC } from "@icpswap/tokens";
+import type { InfoTokenRealTimeDataResponse, Null } from "@icpswap/types";
 import { useMemo } from "react";
 import useSwr from "swr";
 import useSWRImmutable from "swr/immutable";
-import type { Null, InfoTokenRealTimeDataResponse } from "@icpswap/types";
-import { ckUSDC } from "@icpswap/tokens";
 
 import { getNodeInfoAllTokens } from "./node";
 

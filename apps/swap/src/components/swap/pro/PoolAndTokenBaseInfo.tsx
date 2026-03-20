@@ -1,10 +1,10 @@
-import { shorten } from "@icpswap/utils";
+import type { Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
-import { Box, Typography } from "components/Mui";
-import { Copy } from "components/Copy/icon";
-import { useTranslation } from "react-i18next";
 import { Link } from "@icpswap/ui";
+import { shorten } from "@icpswap/utils";
+import { Copy } from "components/Copy/icon";
+import { Box, Typography } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 interface PoolAndTokenBaseInfoProps {
   token: Token;

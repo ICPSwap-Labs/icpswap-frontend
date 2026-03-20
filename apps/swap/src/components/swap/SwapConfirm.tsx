@@ -1,19 +1,28 @@
-import { ReactNode, useMemo } from "react";
-import { Typography, Box, Button, CircularProgress, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
-import { computeRealizedLPFeePercent } from "utils/swap/prices";
-import { TradePrice } from "components/swap/TradePrice";
-import { formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
-import { Token, CurrencyAmount, Trade, Percent } from "@icpswap/swap-sdk";
-import { TradeType } from "@icpswap/constants";
-import { isElement } from "react-is";
-import { useSwapTokenFeeCost } from "hooks/swap/index";
-import { Flex, TokenImage, Tooltip } from "components/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { useTranslation } from "react-i18next";
-import FormattedPriceImpact from "components/swap/FormattedPriceImpact";
-import { feeAmountPercent } from "utils/swap/feeAmountPercent";
-import colors from "theme/colors";
+import type { TradeType } from "@icpswap/constants";
+import { CurrencyAmount, type Percent, type Token, type Trade } from "@icpswap/swap-sdk";
 import { Modal } from "@icpswap/ui";
+import { formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
+import { Flex, TokenImage, Tooltip } from "components/index";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  makeStyles,
+  type Theme,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "components/Mui";
+import FormattedPriceImpact from "components/swap/FormattedPriceImpact";
+import { TradePrice } from "components/swap/TradePrice";
+import { useSwapTokenFeeCost } from "hooks/swap/index";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { type ReactNode, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { isElement } from "react-is";
+import colors from "theme/colors";
+import { feeAmountPercent } from "utils/swap/feeAmountPercent";
+import { computeRealizedLPFeePercent } from "utils/swap/prices";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -231,8 +240,9 @@ export function SwapConfirmModal({
           />
           <DetailItem
             label={t("swap.minimum.received")}
-            value={`${slippageTolerance ? trade?.minimumAmountOut(slippageTolerance).toSignificant(6) : "--"} ${trade
-              ?.outputAmount.currency.symbol}`}
+            value={`${slippageTolerance ? trade?.minimumAmountOut(slippageTolerance).toSignificant(6) : "--"} ${
+              trade?.outputAmount.currency.symbol
+            }`}
             tooltip={
               <Tooltip
                 background="#ffffff"

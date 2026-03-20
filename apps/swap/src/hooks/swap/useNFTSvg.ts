@@ -1,5 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
 import { getSwapNFTTokenURI } from "@icpswap/hooks";
+import { useEffect, useMemo, useState } from "react";
 
 export type PositionSVG = {
   image: string;

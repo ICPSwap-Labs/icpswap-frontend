@@ -1,6 +1,6 @@
-import { Box, Typography } from "./Mui";
 import { Flex } from "./Grid/Flex";
 import { Link } from "./Link";
+import { Box, Typography } from "./Mui";
 
 function CloseIcon() {
   return (

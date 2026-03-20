@@ -1,7 +1,6 @@
 import { useState } from "react";
-
-import { ImportTokenTip } from "./steps/Tip";
 import { ConfirmImport } from "./steps/Confirm";
+import { ImportTokenTip } from "./steps/Tip";
 
 export interface ImportTokenProps {
   canisterId: string;

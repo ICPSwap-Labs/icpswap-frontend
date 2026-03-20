@@ -1,9 +1,9 @@
-import { Box, Typography, Button } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import { Flex, Modal, TokenImage } from "components/index";
+import { Box, Button, Typography } from "components/Mui";
 import { BURN_FIELD } from "constants/swap";
-import { Token } from "@icpswap/swap-sdk";
-import { toFormat } from "utils/index";
-import { Flex, TokenImage, Modal } from "components/index";
 import { useTranslation } from "react-i18next";
+import { toFormat } from "utils/index";
 
 interface DecreaseLiquidityConfirmProps {
   open: boolean;

@@ -1,5 +1,5 @@
-import { FilledTextField } from "components/index";
 import { useClaimEvents } from "@icpswap/hooks";
+import { FilledTextField } from "components/index";
 import { useTranslation } from "react-i18next";
 
 export default function EventSelector({

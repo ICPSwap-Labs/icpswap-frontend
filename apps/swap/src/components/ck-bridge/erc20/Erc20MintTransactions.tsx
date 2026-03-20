@@ -1,16 +1,16 @@
-import { useTheme, Box, Typography, makeStyles } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount, toSignificant } from "@icpswap/utils";
-import dayjs from "dayjs";
-import { TX } from "types/web3";
-import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { useErc20MintTxs, useEthTxResponse } from "store/web3/hooks";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
-import { useMemo } from "react";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK, EXPLORER_TX_LINK } from "constants/ckETH";
+import dayjs from "dayjs";
 import { useEthereumConfirmations } from "hooks/ck-bridge/useEthereumConfirmations";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useErc20MintTxs, useEthTxResponse } from "store/web3/hooks";
+import type { TX } from "types/web3";
 
 const useStyles = makeStyles(() => ({
   txLink: {

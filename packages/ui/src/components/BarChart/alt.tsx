@@ -1,9 +1,9 @@
-import React, { Dispatch, SetStateAction, ReactNode } from "react";
-import { BarChart, ResponsiveContainer, XAxis, Tooltip, Bar } from "recharts";
 import dayjs from "dayjs";
-
-import { Box, useTheme } from "../Mui";
+import type React from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { GridRowBetween } from "../Grid/Row";
+import { Box, useTheme } from "../Mui";
 
 const DEFAULT_HEIGHT = 300;
 
@@ -106,7 +106,7 @@ export function BarChartAlt({
           <Tooltip
             cursor={{ fill: "#29314F" }}
             contentStyle={{ display: "none" }}
-            // @ts-ignore
+            // @ts-expect-error
             formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
               if (setValue && parsedValue !== props.payload.value) {
                 setValue(props.payload.value);

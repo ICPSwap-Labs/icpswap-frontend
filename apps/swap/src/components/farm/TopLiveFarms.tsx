@@ -1,23 +1,23 @@
-import { Typography, Box, useTheme } from "components/Mui";
+import {
+  useFarmInitArgs,
+  useFarmsByState,
+  useSwapPoolMetadata,
+  useSwapUserPositions,
+  useV3FarmRewardMetadata,
+} from "@icpswap/hooks";
 import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
-import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { formatDollarAmount } from "@icpswap/utils";
 import { FarmTokenImages } from "components/farm/FarmTokenImages";
-import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue } from "hooks/staking-farm";
+import { Box, Typography, useTheme } from "components/Mui";
+import { AnonymousPrincipal } from "constants/index";
+import { useFarmApr, useFarmTvlValue, useIntervalUserFarmInfo } from "hooks/staking-farm";
 import { usePositionsTotalValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
-import { AnonymousPrincipal } from "constants/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount } from "@icpswap/utils";
-import {
-  useV3FarmRewardMetadata,
-  useFarmInitArgs,
-  useSwapUserPositions,
-  useSwapPoolMetadata,
-  useFarmsByState,
-} from "@icpswap/hooks";
-import { STATE } from "types/staking-farm";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { STATE } from "types/staking-farm";
 
 interface TopLiveFarmCardProps {
   farmId: string;
@@ -239,7 +239,9 @@ function MainContent() {
               },
             }}
           >
-            {topLiveFarms?.map((farmId) => <TopLiveFarmCard key={farmId.toString()} farmId={farmId.toString()} />)}
+            {topLiveFarms?.map((farmId) => (
+              <TopLiveFarmCard key={farmId.toString()} farmId={farmId.toString()} />
+            ))}
           </Box>
         )}
       </Box>

@@ -1,17 +1,17 @@
-import { Link as ReactLink } from "react-router-dom";
-import { parseTokenAmount, nanosecond2Millisecond, shorten } from "@icpswap/utils";
-import { WRAPPED_ICP } from "constants/index";
-import { TxRecord } from "types/index";
 import { ResultStatus } from "@icpswap/types";
-import dayjs from "dayjs";
+import { BodyCell, Flex, Header, HeaderCell, ImageLoading, Pagination, TableRow } from "@icpswap/ui";
+import { nanosecond2Millisecond, parseTokenAmount, shorten } from "@icpswap/utils";
 import Copy from "components/Copy";
-import { checkPayment } from "hooks/nft/trade";
-import { useFullscreenLoading, useErrorTip, useSuccessTip } from "hooks/useTips";
-import upperFirst from "lodash/upperFirst";
 import { NoData, TextButton } from "components/index";
+import { Box, makeStyles, Typography } from "components/Mui";
+import { WRAPPED_ICP } from "constants/index";
+import dayjs from "dayjs";
+import { checkPayment } from "hooks/nft/trade";
+import { useErrorTip, useFullscreenLoading, useSuccessTip } from "hooks/useTips";
+import upperFirst from "lodash/upperFirst";
 import { useTranslation } from "react-i18next";
-import { Header, HeaderCell, BodyCell, Flex, ImageLoading, TableRow, Pagination } from "@icpswap/ui";
-import { makeStyles, Box, Typography } from "components/Mui";
+import { Link as ReactLink } from "react-router-dom";
+import type { TxRecord } from "types/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -119,11 +119,9 @@ export default function NFTSaleRecords({
             {type === "User" ? <HeaderCell>{t("common.action")}</HeaderCell> : null}
           </Header>
 
-          <>
-            {content.map((saleRecord) => (
-              <NFTSaleRecord key={saleRecord.hash} saleRecord={saleRecord} type={type} />
-            ))}
-          </>
+          {content.map((saleRecord) => (
+            <NFTSaleRecord key={saleRecord.hash} saleRecord={saleRecord} type={type} />
+          ))}
         </Box>
 
         {content.length === 0 && !loading ? <NoData /> : null}

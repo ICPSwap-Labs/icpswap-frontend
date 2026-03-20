@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { NoData, MainCard, Flex, Wrapper, ObserverWrapper, ScrollTop } from "components/index";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { FilterState } from "types/staking-token";
-import { GlobalData, StakeRow, PoolListHeader } from "components/stake/index";
 import { LoadingRow } from "@icpswap/ui";
-import { getStateValueByFilterState } from "utils/stake/index";
+import { Flex, MainCard, NoData, ObserverWrapper, ScrollTop, Wrapper } from "components/index";
+import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { YourPoolsEmpty } from "components/stake/Empty";
+import { GlobalData, PoolListHeader, StakeRow } from "components/stake/index";
 import { usePools } from "hooks/staking-token/index";
 import i18n from "i18n/index";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { YourPoolsEmpty } from "components/stake/Empty";
+import { useNavigate } from "react-router-dom";
+import { FilterState } from "types/staking-token";
+import { getStateValueByFilterState } from "utils/stake/index";
 
 const Tabs = [
   { label: i18n.t("common.pools.all"), state: FilterState.ALL },
@@ -59,12 +59,12 @@ function MainContent() {
             ? "180px 180px 120px 240px 180px 180px 120px"
             : "180px 180px 120px 1fr 180px 180px 120px"
           : matchDownSM
-          ? state === undefined
-            ? "220px 220px 100px 240px 180px 180px"
-            : "220px 220px 100px 240px 180px"
-          : state === undefined
-          ? "220px 220px 120px 1fr 1fr 180px"
-          : "220px 220px 120px 1fr 1fr",
+            ? state === undefined
+              ? "220px 220px 100px 240px 180px 180px"
+              : "220px 220px 100px 240px 180px"
+            : state === undefined
+              ? "220px 220px 120px 1fr 1fr 180px"
+              : "220px 220px 120px 1fr 1fr",
     };
   }, [state, matchDownSM, __state]);
 

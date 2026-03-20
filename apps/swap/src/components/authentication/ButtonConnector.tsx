@@ -1,8 +1,9 @@
-import React, { ReactNode } from "react";
-import { useConnectManager, useWalletIsConnected } from "store/auth/hooks";
-import { Override } from "@icpswap/types";
-import { CircularProgress, Button, ButtonProps } from "components/Mui";
+import type { Override } from "@icpswap/types";
+import { Button, type ButtonProps, CircularProgress } from "components/Mui";
+import type React from "react";
+import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { useConnectManager, useWalletIsConnected } from "store/auth/hooks";
 
 export type ButtonConnectorProps = Override<ButtonProps, { children?: ReactNode; loading?: boolean }>;
 

@@ -1,7 +1,7 @@
-import { icpswap_info_fetch_get, resultFormat } from "@icpswap/utils";
 import { node_index } from "@icpswap/actor";
 import type { InfoPoolRealTimeDataResponse, InfoTokenRealTimeDataResponse, Null } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { icpswap_info_fetch_get, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getNodeInfoAllPools() {
   return (await icpswap_info_fetch_get<InfoPoolRealTimeDataResponse[]>("/pool/all")).data;

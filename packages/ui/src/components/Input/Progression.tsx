@@ -1,4 +1,4 @@
-import { Slider, Tooltip, Theme, makeStyles, styled, tooltipClasses } from "../Mui";
+import { makeStyles, Slider, styled, type Theme, Tooltip, tooltipClasses } from "../Mui";
 
 const marks = [{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { value: 100 }];
 

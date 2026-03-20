@@ -1,14 +1,14 @@
-import { useState, useMemo } from "react";
-import { Grid, Box, Link, makeStyles } from "components/Mui";
-import { parseTokenAmount, pageArgsFormat, icDashboardExplorerLink, shorten } from "@icpswap/utils";
+import { useAllFarms, useFarmInfo, useFarmState, useSwapPoolMetadata } from "@icpswap/hooks";
+import { BodyCell, Flex, Header, HeaderCell, LoadingRow, NoData, Pagination, TableRow, TextButton } from "@icpswap/ui";
+import { icDashboardExplorerLink, pageArgsFormat, parseTokenAmount, shorten } from "@icpswap/utils";
+import { Box, Grid, Link, makeStyles } from "components/Mui";
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
-import { feeAmountToPercentage } from "utils/swap/index";
-import { useFarmInfo, useSwapPoolMetadata, useAllFarms, useFarmState } from "@icpswap/hooks";
 import { useFarmTvl, useStateColors } from "hooks/staking-farm";
-import { Header, HeaderCell, TableRow, BodyCell, NoData, Pagination, LoadingRow, TextButton, Flex } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { feeAmountToPercentage } from "utils/swap/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -160,7 +160,9 @@ export function FarmPools() {
         <HeaderCell>&nbsp;</HeaderCell>
       </Header>
 
-      {farms?.map((farm) => <PoolItem key={farm.toString()} farmId={farm.toString()} />)}
+      {farms?.map((farm) => (
+        <PoolItem key={farm.toString()} farmId={farm.toString()} />
+      ))}
 
       {farms?.length === 0 && !loading ? <NoData /> : null}
 

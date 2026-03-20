@@ -1,7 +1,7 @@
+import type { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { useState } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { BridgeChainType } from "@icpswap/constants";
 
 import { SelectButton } from "./SelectButton";
 import { TokensModal } from "./TokensModal";

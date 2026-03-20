@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
+import { useTheme } from "components/Mui";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useToken } from "hooks/index";
 import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useToken } from "hooks/index";
+import { useCallback } from "react";
 
 interface TokenSendItemProps {
   tokenId: string;

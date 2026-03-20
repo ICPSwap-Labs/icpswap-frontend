@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
-import { Typography, Button, Box } from "components/Mui";
-import { MaxButton, NumberTextField } from "components/index";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import { Flex, Modal } from "@icpswap/ui";
 import {
   BigNumber,
   isUndefinedOrNull,
@@ -8,14 +7,15 @@ import {
   parseTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { Token, Pool } from "@icpswap/swap-sdk";
-import { Flex, Modal } from "@icpswap/ui";
+import { MaxButton, NumberTextField } from "components/index";
+import { Box, Button, Typography } from "components/Mui";
 import { MuiSlider } from "components/Slider/MuiSlider/ui";
-import { useTokenBalance } from "hooks/token";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapDepositTokenBalance } from "hooks/swap/useSwapDeposit";
+import { useTokenBalance } from "hooks/token";
 import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface DepositModalProps {
   open: boolean;

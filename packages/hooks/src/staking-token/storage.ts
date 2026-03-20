@@ -1,8 +1,8 @@
-import { resultFormat, isAvailablePageArgs, isUndefinedOrNull, optionalArg } from "@icpswap/utils";
-import { stakeIndex } from "@icpswap/actor";
-import type { PaginationResult, StakeIndexPoolInfo, StakeAprInfo, StakeUserStakeInfo } from "@icpswap/types";
 import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { stakeIndex } from "@icpswap/actor";
+import type { PaginationResult, StakeAprInfo, StakeIndexPoolInfo, StakeUserStakeInfo } from "@icpswap/types";
+import { isAvailablePageArgs, isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getUserStakePools(
   principal: string,
@@ -12,9 +12,7 @@ export async function getUserStakePools(
   rewardTokenId?: string | undefined | null,
 ) {
   return resultFormat<PaginationResult<StakeIndexPoolInfo>>(
-    await (
-      await stakeIndex()
-    ).queryPool(
+    await (await stakeIndex()).queryPool(
       Principal.fromText(principal),
       BigInt(offset),
       BigInt(limit),

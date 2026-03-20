@@ -1,6 +1,6 @@
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { createContext, useContext } from "react";
-import { Pool, Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
 
 export interface SwapContextProps {
   poolId: string | Null;

@@ -1,12 +1,12 @@
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import "@nfid/identitykit/react/styles.css";
 
+import { AppWithProvider } from "./Provider";
 import * as serviceWorker from "./serviceWorker";
 import store, { persistor } from "./store/index";
-import { AppWithProvider } from "./Provider";
 import "./assets/css/global.css";
 
 // Defer Sentry init to after first paint to avoid blocking initial load
@@ -25,14 +25,12 @@ window.onerror = (msg, url, row, col, error) => {
   }
 };
 
-// @ts-ignore
-// Fix astrox me wallet's bug
+// @ts-expect-error  Fix astrox me wallet's bug
 window.process = {};
 
 const root = document.getElementById("root") as HTMLElement;
 
 createRoot(root).render(
-  // @ts-ignore TODO:FIX
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>

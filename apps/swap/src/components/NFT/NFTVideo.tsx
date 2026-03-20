@@ -1,6 +1,6 @@
-import { Grid, Box } from "components/Mui";
-import { useEffect, useState } from "react";
 import { DefaultDarkImage } from "components/LazyImage/DefaultDarkImage";
+import { Box, Grid } from "components/Mui";
+import { useEffect, useState } from "react";
 
 export default function NFTVideo({
   src,
@@ -28,7 +28,7 @@ export default function NFTVideo({
         );
       }
     }
-  }, [src]);
+  }, [src, autoPlay]);
 
   return (
     <Grid container justifyContent="center" sx={{ position: "relative", overflow: "hidden" }}>

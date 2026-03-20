@@ -1,10 +1,10 @@
-import { Typography } from "components/Mui";
-import { formatDollarAmount, formatIcpAmount, parseTokenAmount } from "@icpswap/utils";
+import { useInfoToken } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { Flex } from "@icpswap/ui";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useInfoToken } from "@icpswap/hooks";
+import { formatDollarAmount, formatIcpAmount, parseTokenAmount } from "@icpswap/utils";
+import { Typography } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export function BalanceAndValue() {
   const principal = useAccountPrincipal();

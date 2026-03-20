@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
-import type { Neuron, ProposalData, NervousSystemParameters } from "@icpswap/types";
-import { nowInSeconds, formatPercentage, BigNumber, shorten, toHexString } from "@icpswap/utils";
-import { CollapseText } from "components/index";
-import { Collapse, Typography, Button, Box, useTheme, Theme } from "components/Mui";
 import { secondsToDuration } from "@dfinity/utils";
+import type { NervousSystemParameters, Neuron, ProposalData } from "@icpswap/types";
+import { BigNumber, formatPercentage, nowInSeconds, shorten, toHexString } from "@icpswap/utils";
+import { CollapseText } from "components/index";
+import { Box, Button, Collapse, type Theme, Typography, useTheme } from "components/Mui";
+import { useMemo, useState } from "react";
+import { ChevronDown } from "react-feather";
+import { useTranslation } from "react-i18next";
 import {
   filterIneligibleNeurons,
   filterVotableNeurons,
@@ -11,13 +13,10 @@ import {
   neuronFormat,
   secondsToDissolveDelayDuration,
 } from "utils/sns/index";
-import { ChevronDown } from "react-feather";
-import { useTranslation } from "react-i18next";
-import { snsRewardStatus, SnsProposalRewardStatus } from "utils/sns/proposal.utils";
-
+import { SnsProposalRewardStatus, snsRewardStatus } from "utils/sns/proposal.utils";
+import { Progressbar } from "./Progressbar";
 import { VotableNeurons } from "./VotableNeurons";
 import { VoteConfirm } from "./VoteConfirm";
-import { Progressbar } from "./Progressbar";
 import { VotedNeurons } from "./VotedNeurons";
 
 export interface ProposalDetailsProps {

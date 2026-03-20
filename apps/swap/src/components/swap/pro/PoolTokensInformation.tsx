@@ -1,9 +1,9 @@
-import { useContext, useMemo, useState } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
-import { LoadingRow } from "@icpswap/ui";
-import { SwapContext } from "components/swap/index";
 import { ICP } from "@icpswap/tokens";
+import { LoadingRow } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography, useTheme } from "components/Mui";
+import { SwapContext } from "components/swap/index";
+import { useContext, useMemo, useState } from "react";
 import { SwapProCardWrapper } from "./SwapProWrapper";
 import { TokenInformation } from "./TokenInformation";
 

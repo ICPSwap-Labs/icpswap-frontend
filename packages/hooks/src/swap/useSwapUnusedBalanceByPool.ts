@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-import { useMemo } from "react";
+
 import type { UserSwapPoolsBalance } from "@icpswap/types";
+import { useMemo } from "react";
 import { useSwapPools } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";

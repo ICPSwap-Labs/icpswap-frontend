@@ -1,15 +1,15 @@
-import { Box, Typography, CircularProgress, useTheme } from "components/Mui";
-import { TokenImage, Modal, Flex, AuthButton } from "components/index";
+import { CurrencyAmount, type Position } from "@icpswap/swap-sdk";
 import { isUndefinedOrNull, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
-import { useMemo, useState } from "react";
-import { useCollectFeeCallback } from "hooks/swap/useClaimFees";
-import { ExternalTipArgs } from "types/index";
+import { AuthButton, Flex, Modal, TokenImage } from "components/index";
+import { Box, CircularProgress, Typography, useTheme } from "components/Mui";
 import { ReclaimTips } from "components/ReclaimTips";
-import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
 import StepViewButton from "components/Steps/View";
+import { useCollectFeeCallback } from "hooks/swap/useClaimFees";
 import { usePositionFees } from "hooks/swap/usePositionFees";
+import { useErrorTip, useLoadingTip, useSuccessTip } from "hooks/useTips";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import type { ExternalTipArgs } from "types/index";
 
 export interface CollectFeeModalProps {
   open: boolean;

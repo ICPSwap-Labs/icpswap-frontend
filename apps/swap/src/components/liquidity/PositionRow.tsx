@@ -1,27 +1,27 @@
-import { useMemo } from "react";
-import { Typography, useTheme } from "components/Mui";
-import { PositionDetails } from "types/swap";
+import { useAddressAlias, useSwapPositionOwner } from "@icpswap/hooks";
+import { CurrencyAmount, type Pool } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { BodyCell, Link, TableRow } from "@icpswap/ui";
 import {
-  numberToString,
-  formatDollarAmount,
-  shorten,
   BigNumber,
   formatAmount,
+  formatDollarAmount,
   isUndefinedOrNull,
+  numberToString,
+  shorten,
 } from "@icpswap/utils";
-import { useAddressAlias, useSwapPositionOwner } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
-import { Pool, CurrencyAmount } from "@icpswap/swap-sdk";
-import { TableRow, BodyCell, Link } from "@icpswap/ui";
-import { LoadingRow, Copy, IsSneedOwner } from "components/index";
-import { LimitLabel } from "components/swap/limit-order";
-import { usePositionWithPool, usePositionFees } from "hooks/swap/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { useIsSneedOwner } from "hooks/index";
-import { useTranslation } from "react-i18next";
-import { TokenSymbol } from "components/TokenSymbol";
-import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
+import { Copy, IsSneedOwner, LoadingRow } from "components/index";
 import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
+import { Typography, useTheme } from "components/Mui";
+import { LimitLabel } from "components/swap/limit-order";
+import { TokenSymbol } from "components/TokenSymbol";
+import { useIsSneedOwner } from "hooks/index";
+import { usePositionFees, usePositionWithPool } from "hooks/swap/index";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import type { PositionDetails } from "types/swap";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PositionRowProps {
   positionInfo: PositionDetails;

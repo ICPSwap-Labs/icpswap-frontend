@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { locationSearchReplace, locationMultipleSearchReplace } from "./locationSearchReplace";
+import { describe, expect, it } from "vitest";
+import { locationMultipleSearchReplace, locationSearchReplace } from "./locationSearchReplace";
 
 describe("locationSearchReplace", () => {
   it("replaces single search param", () => {

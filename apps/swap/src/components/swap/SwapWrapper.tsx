@@ -1,30 +1,30 @@
-import { useState, useCallback, useMemo, useEffect, forwardRef, Ref, useImperativeHandle } from "react";
-import { Box, Typography, CircularProgress } from "components/Mui";
-import { useSwapState, useSwapHandlers, useSwapInfo, useCleanSwapState, useLoadDefaultParams } from "store/swap/hooks";
-import { isUndefinedOrNull, BigNumber, getNumberDecimals } from "@icpswap/utils";
-import { SWAP_FIELD, SWAP_REFRESH_KEY } from "constants/swap";
-import { SAFE_DECIMALS_LENGTH } from "constants/index";
-import { useExpertModeManager } from "store/swap/cache/hooks";
-import { TradeState } from "hooks/swap/useTrade";
-import { maxAmountFormat } from "utils/swap/index";
-import { ExternalTipArgs } from "types/index";
-import { useLoadingTip, useErrorTip } from "hooks/useTips";
-import { warningSeverity, getImpactConfirm } from "utils/swap/prices";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { TradePrice } from "components/swap/TradePrice";
-import { AuthButton } from "components/index";
-import { Flex, MainCard } from "@icpswap/ui";
-import StepViewButton from "components/Steps/View";
-import { ReclaimTips } from "components/ReclaimTips";
-import { SwapInputWrapper, SwapConfirmModal, Impact, useSwapContext } from "components/swap/index";
-import { useNavigate } from "react-router-dom";
+import type { Token } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
-import { Token } from "@icpswap/swap-sdk";
-import { useGlobalContext, useRefreshTrigger, useSwapNoLiquidityManager } from "hooks/index";
-import { useTranslation } from "react-i18next";
-import { useSwapCallback } from "hooks/swap/useSwapCallback";
-import { SwapSuccessModal } from "components/swap/SwapSuccessModal";
+import { Flex, MainCard } from "@icpswap/ui";
+import { BigNumber, getNumberDecimals, isUndefinedOrNull } from "@icpswap/utils";
+import { AuthButton } from "components/index";
+import { Box, CircularProgress, Typography } from "components/Mui";
+import { ReclaimTips } from "components/ReclaimTips";
+import StepViewButton from "components/Steps/View";
+import { Impact, SwapConfirmModal, SwapInputWrapper, useSwapContext } from "components/swap/index";
 import { SwapFailedTransactionTips } from "components/swap/SwapFailedTransactionTips";
+import { SwapSuccessModal } from "components/swap/SwapSuccessModal";
+import { TradePrice } from "components/swap/TradePrice";
+import { SAFE_DECIMALS_LENGTH } from "constants/index";
+import { SWAP_FIELD, SWAP_REFRESH_KEY } from "constants/swap";
+import { useGlobalContext, useRefreshTrigger, useSwapNoLiquidityManager } from "hooks/index";
+import { useSwapCallback } from "hooks/swap/useSwapCallback";
+import { TradeState } from "hooks/swap/useTrade";
+import { useErrorTip, useLoadingTip } from "hooks/useTips";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { forwardRef, type Ref, useCallback, useEffect, useImperativeHandle, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useExpertModeManager } from "store/swap/cache/hooks";
+import { useCleanSwapState, useLoadDefaultParams, useSwapHandlers, useSwapInfo, useSwapState } from "store/swap/hooks";
+import type { ExternalTipArgs } from "types/index";
+import { maxAmountFormat } from "utils/swap/index";
+import { getImpactConfirm, warningSeverity } from "utils/swap/prices";
 
 export interface SwapWrapperRef {
   setInputAmount: (amount: string) => void;
@@ -153,8 +153,8 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         value === ""
           ? ""
           : new BigNumber(value).isEqualTo(0)
-          ? "0"
-          : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
+            ? "0"
+            : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
       );
     } else {
       onUserInput(
@@ -162,8 +162,8 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         value === ""
           ? ""
           : new BigNumber(value).isEqualTo(0)
-          ? "0"
-          : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
+            ? "0"
+            : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
       );
     }
   }, []);
@@ -359,14 +359,14 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
           (isLoadingRoute
             ? t("common.swap")
             : isNoRouteFound
-            ? t("common.insufficient.liquidity")
-            : isPoolNotChecked
-            ? t("swap.waiting.verifying")
-            : priceImpactTooHigh
-            ? t("swap.high.impact")
-            : priceImpactSeverity > 2
-            ? t("swap.anyway")
-            : t("common.swap"))}
+              ? t("common.insufficient.liquidity")
+              : isPoolNotChecked
+                ? t("swap.waiting.verifying")
+                : priceImpactTooHigh
+                  ? t("swap.high.impact")
+                  : priceImpactSeverity > 2
+                    ? t("swap.anyway")
+                    : t("common.swap"))}
       </AuthButton>
 
       {confirmModalShow && trade && (

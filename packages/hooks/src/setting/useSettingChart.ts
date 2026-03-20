@@ -1,5 +1,5 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { setting } from "@icpswap/actor";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getGlobalSettingChart() {
   const result = await (await setting()).get_default_chart_type();

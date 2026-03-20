@@ -1,14 +1,14 @@
-import { useEffect, useContext, useRef, useState } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
-import { TokenCharts as TokenChartsUI, TokenChartsRef, TextButton } from "@icpswap/ui";
+import type { Null } from "@icpswap/types";
+import { TextButton, type TokenChartsRef, TokenCharts as TokenChartsUI } from "@icpswap/ui";
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
-import { useToken, uesTokenPairWithIcp } from "hooks/index";
-import { Null } from "@icpswap/types";
-import { SwapProContext } from "components/swap/pro";
-import { SwapContext } from "components/swap/index";
-import { Trans } from "react-i18next";
-import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 import { DensityChart } from "components/info/DensityChart";
+import { Box, Typography, useTheme } from "components/Mui";
+import { SwapContext } from "components/swap/index";
+import { SwapProContext } from "components/swap/pro";
+import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
+import { uesTokenPairWithIcp, useToken } from "hooks/index";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Trans } from "react-i18next";
 
 export function TokenCharts() {
   const theme = useTheme();

@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from "react";
+import { useInfoToken } from "@icpswap/hooks";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { BigNumber, isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
-import { useToken } from "hooks/index";
-import { useInfoToken } from "@icpswap/hooks";
 import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useToken } from "hooks/index";
+import { useEffect, useMemo } from "react";
 
 interface UseTokenDataManagerProps {
   tokenId: string;

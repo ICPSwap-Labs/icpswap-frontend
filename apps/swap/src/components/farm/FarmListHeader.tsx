@@ -1,6 +1,6 @@
-import { Box, BoxProps } from "components/Mui";
-import { Flex } from "components/index";
 import { HeaderCell } from "@icpswap/ui";
+import { Flex } from "components/index";
+import { Box, type BoxProps } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 interface FarmListHeaderProps {

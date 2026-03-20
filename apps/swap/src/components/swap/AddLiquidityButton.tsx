@@ -1,5 +1,5 @@
-import Button, { ButtonConnectorProps } from "components/authentication/ButtonConnector";
-import { Override } from "@icpswap/types";
+import type { Override } from "@icpswap/types";
+import Button, { type ButtonConnectorProps } from "components/authentication/ButtonConnector";
 import { useTranslation } from "react-i18next";
 
 export interface AddLiquidityButtonProps {

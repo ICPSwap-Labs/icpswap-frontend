@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import { Box, BoxProps } from "components/Mui";
 import { Flex } from "@icpswap/ui";
+import { Box, type BoxProps } from "components/Mui";
+import type { ReactNode } from "react";
 
 export interface InfoWrapperProps {
   children: ReactNode;

@@ -1,12 +1,12 @@
+import type { Principal } from "@icp-sdk/core/principal";
+import { type Position, type Token, tickToPrice } from "@icpswap/swap-sdk";
+import type { LimitOrder } from "@icpswap/types";
 import { formatTokenPrice } from "@icpswap/utils";
-import { Position, tickToPrice, Token } from "@icpswap/swap-sdk";
-import { Principal } from "@icp-sdk/core/principal";
-import { LimitOrder } from "@icpswap/types";
 import { Flex, TokenImage } from "components/index";
-import { StepContents } from "types/step";
 import { Typography } from "components/Mui";
 import { getLimitTokenAndAmount } from "hooks/swap/limit-order";
 import i18n from "i18n/index";
+import type { StepContents } from "types/step";
 
 export interface CancelLimitStepsProps {
   positionId: bigint;

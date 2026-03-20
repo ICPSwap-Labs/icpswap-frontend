@@ -1,6 +1,6 @@
-import { useCallback, useRef, useState } from "react";
+import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
 import { Box, Checkbox, Typography, useTheme } from "components/Mui";
-import { MenuWrapper, MenuItem, Flex } from "@icpswap/ui";
+import { useCallback, useRef, useState } from "react";
 import { useHideZeroNFTManager } from "store/wallet/hooks";
 
 export function NFTSettings() {

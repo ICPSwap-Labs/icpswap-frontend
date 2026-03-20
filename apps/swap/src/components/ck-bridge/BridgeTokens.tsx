@@ -1,10 +1,10 @@
-import { useCallback } from "react";
 import { BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
 import { ckBTC, ckDoge, ckETH } from "@icpswap/tokens";
 import { Flex, Image } from "@icpswap/ui";
+import { BridgeTokenSelector, SelectButton } from "components/ck-bridge";
 import { Box } from "components/Mui";
-import { SelectButton, BridgeTokenSelector } from "components/ck-bridge";
+import { useCallback } from "react";
 
 interface BridgeTokensProps {
   token: Token;

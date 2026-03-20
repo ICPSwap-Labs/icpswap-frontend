@@ -1,9 +1,9 @@
-import { Flex, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
-import { type StakingPoolControllerPoolInfo, StakingPoolInfo, Null } from "@icpswap/types";
-import { useToken } from "hooks/useCurrency";
+import type { Null, StakingPoolControllerPoolInfo, StakingPoolInfo } from "@icpswap/types";
+import { BodyCell, Flex } from "@icpswap/ui";
 import { formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
+import { useToken } from "hooks/useCurrency";
 import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 
 interface TotalStakedCellProps {
   poolInfo: StakingPoolControllerPoolInfo;

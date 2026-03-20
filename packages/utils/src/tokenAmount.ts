@@ -1,5 +1,5 @@
-import BigNumber from "bignumber.js";
 import type { NumberType } from "@icpswap/types";
+import BigNumber from "bignumber.js";
 
 export function formatTokenAmount(amount: NumberType | null | undefined, decimals: number | bigint = 8): BigNumber {
   let _amount = amount;

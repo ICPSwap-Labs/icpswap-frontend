@@ -1,9 +1,9 @@
-import { useState, useCallback, useEffect, ReactNode } from "react";
-import { WalletManagerPage, WalletContext, Page } from "components/Wallet/context";
-import { WalletNFTContextProvider } from "components/Wallet/NFT/NFTAssetsProvider";
-import { BalanceConvertProvider } from "components/Wallet/BalanceConvert/BalanceConvertProvider";
 import { WalletAddressBookProvider } from "components/Wallet/address-book/Provider";
+import { BalanceConvertProvider } from "components/Wallet/BalanceConvert/BalanceConvertProvider";
+import { type Page, WalletContext, WalletManagerPage } from "components/Wallet/context";
+import { WalletNFTContextProvider } from "components/Wallet/NFT/NFTAssetsProvider";
 import { WalletTokenContextProvider } from "components/Wallet/token/Provider";
+import { type ReactNode, useCallback, useEffect, useState } from "react";
 
 interface WalletContextProviderProps {
   children: ReactNode;

@@ -1,8 +1,8 @@
-import { Typography, Box } from "components/Mui";
-import { InfoWrapper } from "components/index";
-import { MainCard } from "@icpswap/ui";
 import { useNodeInfoAllTokens } from "@icpswap/hooks";
+import { MainCard } from "@icpswap/ui";
+import { InfoWrapper } from "components/index";
 import { TokenTable } from "components/info";
+import { Box, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export default function Tokens() {

@@ -1,7 +1,7 @@
 import { createAction } from "@reduxjs/toolkit";
-import { DogeDissolveTx } from "types/chain-key";
-import { BitcoinTx, BTCAddressType } from "types/ckBTC";
-import { WalletSortType, SortBalanceEnum } from "types/index";
+import type { DogeDissolveTx } from "types/chain-key";
+import type { BitcoinTx, BTCAddressType } from "types/ckBTC";
+import type { SortBalanceEnum, WalletSortType } from "types/index";
 
 export const updateTaggedTokens = createAction<string[]>("wallet/updateTaggedTokens");
 

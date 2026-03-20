@@ -1,4 +1,4 @@
-import { TransitionDuration } from "../types";
+import type { TransitionDuration } from "../types";
 
 interface ComponentProps {
   style: React.CSSProperties | undefined;

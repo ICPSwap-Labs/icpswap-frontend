@@ -1,16 +1,16 @@
-import { useMemo } from "react";
-import { Box } from "components/Mui";
-import TokenListTable from "components/Wallet/TokenListTable";
-import TokenListHeader from "components/Wallet/TokenListHeader";
-import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
-import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
-import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
-import { useGlobalTokenList } from "store/global/hooks";
-import { BigNumber } from "@icpswap/utils";
-import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
+import { ckSepoliaETHTokenInfo, ckSepoliaUSDCTokenInfo } from "@icpswap/tokens";
+import { BigNumber } from "@icpswap/utils";
+import { Box } from "components/Mui";
+import TokenListHeader from "components/Wallet/TokenListHeader";
+import TokenListTable from "components/Wallet/TokenListTable";
 import { useWalletTokenContext } from "components/Wallet/token/context";
+import { MINTER_CANISTER_ID } from "constants/ckERC20";
+import { chain } from "constants/web3";
+import { useMemo } from "react";
+import { useGlobalTokenList } from "store/global/hooks";
+import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
 
 export default function WalletTokenList() {
   const { taggedTokens } = useTaggedTokenManager();

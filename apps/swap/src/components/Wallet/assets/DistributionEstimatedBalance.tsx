@@ -1,9 +1,9 @@
-import { useMemo } from "react";
-import { useUSDPrice } from "hooks/index";
-import { EstimatedBalanceUI } from "components/Wallet/assets/EstimatedBalanceUI";
-import { AddressOverview, Null } from "@icpswap/types";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { ICP } from "@icpswap/tokens";
+import type { AddressOverview, Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { EstimatedBalanceUI } from "components/Wallet/assets/EstimatedBalanceUI";
+import { useUSDPrice } from "hooks/index";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface DistributionEstimatedBalanceProps {

@@ -1,5 +1,5 @@
-import { Token } from "@icpswap/swap-sdk";
 import { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
 import { ckBTC, ckDoge, ckETH } from "@icpswap/tokens";
 
 function getBridgeChainByAddress(address: string): BridgeChainType {

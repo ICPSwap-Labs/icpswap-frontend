@@ -1,20 +1,20 @@
-import { Typography, Box, BoxProps, useTheme } from "components/Mui";
-import { Flex, APRPanel } from "@icpswap/ui";
-import { useCallback } from "react";
-import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
-import { useStateColors } from "hooks/staking-token";
-import { useToken } from "hooks/useCurrency";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useStakingPoolState } from "@icpswap/hooks";
-import { useUSDPrice } from "hooks/useUSDPrice";
+import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
+import { APRPanel, Flex } from "@icpswap/ui";
+import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { TokenImage } from "components/Image";
-import upperFirst from "lodash/upperFirst";
-import { useNavigate } from "react-router-dom";
-import { useApr } from "hooks/staking-token/useApr";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
+import { useStateColors } from "hooks/staking-token";
 import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
+import { useApr } from "hooks/staking-token/useApr";
 import { useTokenBalance } from "hooks/token";
+import { useToken } from "hooks/useCurrency";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import upperFirst from "lodash/upperFirst";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface FarmListCardProps {
   wrapperSx?: BoxProps["sx"];

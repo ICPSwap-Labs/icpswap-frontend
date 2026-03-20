@@ -1,14 +1,14 @@
-import { useCallback } from "react";
-import { Pool, CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { getLocaleMessage } from "i18n/service";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
+import type { CurrencyAmount, Pool, Token } from "@icpswap/swap-sdk";
 import { getCollectFeeSteps } from "components/swap/CollectFeeSteps";
-import { useStepContentManager } from "store/steps/hooks";
-import { useErrorTip } from "hooks/useTips";
 import { collect } from "hooks/swap/v3Calls";
-import { OpenExternalTip } from "types/index";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { useErrorTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useStepContentManager } from "store/steps/hooks";
+import type { OpenExternalTip } from "types/index";
 
 export async function collectPositionFee(pool: string, positionId: bigint) {
   return await collect(pool, {

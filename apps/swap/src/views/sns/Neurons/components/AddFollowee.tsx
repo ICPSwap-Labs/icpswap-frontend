@@ -1,6 +1,6 @@
-import { useState } from "react";
+import type { Neuron } from "@icpswap/types";
 import { Button } from "components/Mui";
-import { Neuron } from "@icpswap/types";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { AddFolloweeModal } from "./AddFolloweeModal";

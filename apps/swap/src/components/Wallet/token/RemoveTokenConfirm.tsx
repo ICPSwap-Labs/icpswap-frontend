@@ -1,10 +1,10 @@
-import { useState, useCallback } from "react";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Confirm } from "components/Wallet/Confirm";
-import { useTranslation } from "react-i18next";
-import { useRemoveTokenHandler } from "hooks/wallet/useRemoveToken";
-import { useTips, TIP_SUCCESS } from "hooks/index";
 import { useWalletTokenContext } from "components/Wallet/token/context";
+import { TIP_SUCCESS, useTips } from "hooks/index";
+import { useRemoveTokenHandler } from "hooks/wallet/useRemoveToken";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function RemoveTokenConfirm() {
   const { t } = useTranslation();

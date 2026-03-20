@@ -1,14 +1,14 @@
 /* eslint-disable react/no-danger */
 
-import { Box, Typography, useTheme } from "components/Mui";
-import { LoadingRow, Flex, NoData, Pagination } from "@icpswap/ui";
+import type { SocialMediaResult } from "@icpswap/types";
+import { Flex, LoadingRow, NoData, Pagination } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useSwapProContext } from "components/swap/pro";
-import { SocialMediaResult } from "@icpswap/types";
 import dayjs from "dayjs";
-import { sanitize } from "utils/html";
 import { useTokenSocialMedias } from "hooks/useTokenSocialMedia";
 import { useMemo, useState } from "react";
+import { sanitize } from "utils/html";
 
 const MAX_ITEMS = 10;
 

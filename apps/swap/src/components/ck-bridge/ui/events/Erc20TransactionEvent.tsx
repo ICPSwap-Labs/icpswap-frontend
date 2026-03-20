@@ -1,15 +1,15 @@
-import { BridgeType, BridgeChainType } from "@icpswap/constants";
+import { BridgeChainType, BridgeType } from "@icpswap/constants";
 import { formatAmount, parseTokenAmount } from "@icpswap/utils";
+import { Erc20DissolveConfirmations } from "components/ck-bridge/ui/confirmations/Erc20Confirmations";
+import { EthereumMintConfirmations } from "components/ck-bridge/ui/confirmations/ETHConfirmations";
+import { CHIAN_ETH_LOGO, CHIAN_ICP_LOGO } from "components/ck-bridge/ui/events/config";
+import { Divider } from "components/ck-bridge/ui/events/Divider";
+import { TransactionEventUI } from "components/ck-bridge/ui/events/TransactionEvent";
 import { useToken } from "hooks";
 import { useErc20TokenFromSymbol } from "hooks/ck-bridge/useErc20TokenFromSymbol";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Erc20DissolveTransactionEvent, EthereumTransactionEvent } from "types/web3";
-import { EthereumMintConfirmations } from "components/ck-bridge/ui/confirmations/ETHConfirmations";
-import { Erc20DissolveConfirmations } from "components/ck-bridge/ui/confirmations/Erc20Confirmations";
-import { Divider } from "components/ck-bridge/ui/events/Divider";
-import { TransactionEventUI } from "components/ck-bridge/ui/events/TransactionEvent";
-import { CHIAN_ICP_LOGO, CHIAN_ETH_LOGO } from "components/ck-bridge/ui/events/config";
+import type { Erc20DissolveTransactionEvent, EthereumTransactionEvent } from "types/web3";
 
 interface Erc20DissolveTransactionEventUIProps {
   event: Erc20DissolveTransactionEvent;

@@ -1,7 +1,7 @@
+import type { Token } from "@icpswap/swap-sdk";
+import type { StakingPoolInfo } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useMemo } from "react";
-import { isUndefinedOrNull, parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { StakingPoolInfo } from "@icpswap/types";
 
 export interface UserStakingProps {
   poolInfo: StakingPoolInfo | undefined | null;

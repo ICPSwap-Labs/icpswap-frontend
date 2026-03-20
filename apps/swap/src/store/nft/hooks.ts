@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
-import { useAppSelector, useAppDispatch } from "store/hooks";
-import { ImportedNFT } from "types/nft";
-import { updateUserSelectedCanisters, deleteUserSelectedCanisters, importNFT, deleteNFT } from "./actions";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import type { ImportedNFT } from "types/nft";
+import { deleteNFT, deleteUserSelectedCanisters, importNFT, updateUserSelectedCanisters } from "./actions";
 
 export function useSelectedCanisters() {
   return useAppSelector((state) => state.nft.userSelectedCanisters);

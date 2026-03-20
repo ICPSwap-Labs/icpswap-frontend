@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, Avatar, CircularProgress, Button, useTheme } from "components/Mui";
-import { TextButton, Wrapper, LoadingRow, ViewMore, NoData, Flex } from "components/index";
-import { useUserClaimEvents, getUserClaimEvents, claimToken, useUserClaimEventTransactions } from "@icpswap/hooks";
-import { ResultStatus, type ClaimEventInfo } from "@icpswap/types";
-import { useAccountPrincipalString, useWalletIsConnected } from "store/auth/hooks";
+import { claimToken, getUserClaimEvents, useUserClaimEvents, useUserClaimEventTransactions } from "@icpswap/hooks";
+import { type ClaimEventInfo, ResultStatus } from "@icpswap/types";
 import { pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
-import { useToken } from "hooks/index";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { getLocaleMessage } from "i18n/service";
 import ConnectWallet from "components/ConnectWallet";
+import { Flex, LoadingRow, NoData, TextButton, ViewMore, Wrapper } from "components/index";
+import { Avatar, Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
+import { useToken } from "hooks/index";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString, useWalletIsConnected } from "store/auth/hooks";
 
 export function TokenClaimItem({ ele }: { ele: ClaimEventInfo }) {
   const { t } = useTranslation();

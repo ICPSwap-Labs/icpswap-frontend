@@ -1,12 +1,8 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { useListNeurons, useNervousSystemParameters, useParsedQueryString } from "@icpswap/hooks";
-import { useMemo, useState } from "react";
-import { LoadingRow, Copy, Wrapper, Flex } from "components/index";
-import type { Neuron, NervousSystemParameters } from "@icpswap/types";
+import { secondsToDuration } from "@dfinity/utils";
 import { SnsNeuronPermissionType } from "@icpswap/constants";
-import { SelectSns } from "components/sns/SelectSNSTokens";
-import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
-import { neuronFormat, NeuronState, getDissolvingTimeInSeconds } from "utils/sns/neurons";
+import { useListNeurons, useNervousSystemParameters, useParsedQueryString } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { NervousSystemParameters, Neuron } from "@icpswap/types";
 import {
   BigNumber,
   formatDollarAmount,
@@ -16,25 +12,28 @@ import {
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import { Lock, Clock } from "react-feather";
-import { useToken, useUSDPrice } from "hooks/index";
-import { secondsToDuration } from "@dfinity/utils";
+import { Copy, Flex, LoadingRow, Wrapper } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import { SelectSns } from "components/sns/SelectSNSTokens";
 import { Tabs } from "components/sns/Tab";
-import { Token } from "@icpswap/swap-sdk";
 import { DEFAULT_ROOT_ID } from "constants/nns";
+import { useToken, useUSDPrice } from "hooks/index";
+import { useMemo, useState } from "react";
+import { Clock, Lock } from "react-feather";
 import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
-
-import { SplitNeuron } from "./components/SplitNeuron";
-import { StopDissolving } from "./components/StopDissolving";
-import { Dissolve } from "./components/Dissolve";
-import { Stake } from "./components/Stake";
+import { getDissolvingTimeInSeconds, NeuronState, neuronFormat } from "utils/sns/neurons";
 import { SetDissolveDelay } from "./components/Delay";
 import { Disburse } from "./components/Disburse";
-import { Maturity } from "./components/Maturity";
+import { Dissolve } from "./components/Dissolve";
 import { Followings } from "./components/Following";
 import { HotKeys } from "./components/HotKeys";
+import { Maturity } from "./components/Maturity";
+import { SplitNeuron } from "./components/SplitNeuron";
+import { Stake } from "./components/Stake";
 import { StakeToCreateNeuron } from "./components/StakeToCreateNeuron";
+import { StopDissolving } from "./components/StopDissolving";
 
 interface NeuronProps {
   neuron: Neuron;

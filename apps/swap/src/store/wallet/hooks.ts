@@ -1,24 +1,24 @@
-import { useCallback, useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { BitcoinTx } from "types/ckBTC";
-import { Principal } from "@icp-sdk/core/principal";
-import { SortBalanceEnum, WalletSortType } from "types/index";
-import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
-import {
-  updateTaggedTokens,
-  deleteTaggedTokens,
-  updateCK_BTCAddresses,
-  updateBitcoinDissolveTxs,
-  updateWalletSortType,
-  updateSortBalance,
-  updateHideSmallBalance,
-  updateRemovedWalletDefaultTokens,
-  updateHideZeroNFT,
-  updateSortedTokens,
-} from "store/wallet/actions";
+import type { Principal } from "@icp-sdk/core/principal";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import { useBitcoinBlockNumber } from "hooks/ck-bridge";
+import { useCallback, useMemo } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import {
+  deleteTaggedTokens,
+  updateBitcoinDissolveTxs,
+  updateCK_BTCAddresses,
+  updateHideSmallBalance,
+  updateHideZeroNFT,
+  updateRemovedWalletDefaultTokens,
+  updateSortBalance,
+  updateSortedTokens,
+  updateTaggedTokens,
+  updateWalletSortType,
+} from "store/wallet/actions";
+import type { BitcoinTx } from "types/ckBTC";
+import type { SortBalanceEnum, WalletSortType } from "types/index";
 import { isBitcoinDissolveEnded } from "utils/web3/ck-bridge";
 
 export function toHexString(byteArray: number[]) {

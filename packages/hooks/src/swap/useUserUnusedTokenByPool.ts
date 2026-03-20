@@ -1,8 +1,7 @@
-import { useMemo } from "react";
-import type { UserSwapPoolsBalance, SwapPoolData } from "@icpswap/types";
-import { Pool } from "@icpswap/swap-sdk";
-
 import { Principal } from "@icp-sdk/core/principal";
+import type { Pool } from "@icpswap/swap-sdk";
+import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
+import { useMemo } from "react";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
 

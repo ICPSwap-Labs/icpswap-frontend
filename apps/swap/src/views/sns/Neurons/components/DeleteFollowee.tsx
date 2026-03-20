@@ -1,5 +1,5 @@
+import type { Neuron } from "@icpswap/types";
 import { useState } from "react";
-import { Neuron } from "@icpswap/types";
 import { X } from "react-feather";
 
 import { DeleteFolloweeModal } from "./DeleteFolloweeModal";

@@ -1,14 +1,12 @@
-import { swapPool, limitTransaction } from "@icpswap/actor";
-import type { LimitOrderKey, LimitOrderValue, Null, LimitTransactionResult, LimitOrder } from "@icpswap/types";
-import { resultFormat, isAvailablePageArgs, nonUndefinedOrNull, isUndefinedOrNull } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { limitTransaction, swapPool } from "@icpswap/actor";
+import type { LimitOrder, LimitOrderKey, LimitOrderValue, LimitTransactionResult, Null } from "@icpswap/types";
+import { isAvailablePageArgs, isUndefinedOrNull, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function placeOrder(canisterId: string, positionId: bigint, tickLimit: bigint) {
   return resultFormat<boolean>(
-    await (
-      await swapPool(canisterId, true)
-    ).addLimitOrder({
+    await (await swapPool(canisterId, true)).addLimitOrder({
       positionId,
       tickLimit,
     }),

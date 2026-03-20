@@ -1,11 +1,11 @@
-import { useNavigate } from "react-router-dom";
-import { Box, Typography, Grid, makeStyles } from "components/Mui";
+import { ImageLoading, MainCard, NoData } from "@icpswap/ui";
+import { pageArgsFormat } from "@icpswap/utils";
+import { Box, Grid, makeStyles, Typography } from "components/Mui";
 import NFTCard from "components/NFT/market/NFTCard";
 import { useNFTRecommend } from "hooks/nft/trade";
-import { pageArgsFormat } from "@icpswap/utils";
-import { ImageLoading, MainCard, NoData } from "@icpswap/ui";
-import { TradeOrder } from "types/nft";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import type { TradeOrder } from "types/nft";
 
 const useStyles = makeStyles(() => {
   return {

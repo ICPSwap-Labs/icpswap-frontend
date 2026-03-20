@@ -1,8 +1,8 @@
-import { TransactionReceipt } from "viem";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useBlockNumber } from "hooks/web3";
 import { useCallback, useMemo } from "react";
 import { useGlobalMinterInfoManager } from "store/global/hooks";
+import type { TransactionReceipt } from "viem";
 
 export function useEthereumConfirmations(transactionResponse: TransactionReceipt | undefined) {
   const blockNumber = useBlockNumber();

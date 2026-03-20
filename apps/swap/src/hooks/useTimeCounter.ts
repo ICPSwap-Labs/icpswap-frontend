@@ -1,6 +1,6 @@
-import { useMemo, useEffect, useState } from "react";
 import BigNumber from "bignumber.js";
-import { counter, CountingTime } from "utils/index";
+import { useEffect, useMemo, useState } from "react";
+import { type CountingTime, counter } from "utils/index";
 
 export function useCounter(time: string | number | undefined | bigint) {
   const [count, setCount] = useState<CountingTime | null>(null);

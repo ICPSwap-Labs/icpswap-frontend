@@ -1,16 +1,16 @@
-import { useMemo, useContext, useEffect, useCallback } from "react";
-import { Box, useTheme } from "components/Mui";
-import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { useSwapState, useSwapHandlers } from "store/swap/hooks";
-import { BigNumber } from "@icpswap/utils";
-import { SWAP_FIELD } from "constants/swap";
-import { UseCurrencyState } from "hooks/useCurrency";
-import { SwapContext } from "components/swap/index";
-import { Image } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
-import { useNavigate } from "react-router-dom";
-import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
 import { useParsedQueryString } from "@icpswap/hooks";
+import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Image } from "@icpswap/ui";
+import { BigNumber } from "@icpswap/utils";
+import { Box, useTheme } from "components/Mui";
+import { SwapContext } from "components/swap/index";
+import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
+import { SWAP_FIELD } from "constants/swap";
+import type { UseCurrencyState } from "hooks/useCurrency";
+import { useCallback, useContext, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSwapHandlers, useSwapState } from "store/swap/hooks";
 
 export interface SwapInputWrapperProps {
   onInput: (value: string, type: "input" | "output") => void;

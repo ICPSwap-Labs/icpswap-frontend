@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { useLogout, getConnector } from "store/auth/hooks";
 import { Connector } from "constants/wallet";
+import { useEffect } from "react";
+import { getConnector, useLogout } from "store/auth/hooks";
 
 export function usePlugExternalDisconnect() {
   const cleanLogState = useLogout();
 
   useEffect(() => {
-    if (window.ic && window.ic.plug) {
+    if (window.ic?.plug) {
       if (window.ic.plug.onExternalDisconnect) {
         window.ic.plug.onExternalDisconnect(() => {
           const connector = getConnector();

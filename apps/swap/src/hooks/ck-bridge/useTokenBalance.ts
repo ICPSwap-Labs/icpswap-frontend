@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useERC20Balance, useETHBalance as __useETHBalance } from "hooks/web3/index";
 import { BridgeChainType } from "@icpswap/constants";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { BigNumber } from "@icpswap/utils";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useETHBalance as __useETHBalance, useERC20Balance } from "hooks/web3/index";
+import { useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface UseIcpTokenBalanceProps {
   token: Token | Null;

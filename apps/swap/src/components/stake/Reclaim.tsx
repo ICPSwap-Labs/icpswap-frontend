@@ -1,14 +1,14 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Typography, Box, Button, CircularProgress } from "components/Mui";
-import { NoData, LoadingRow, TokenImage, Flex } from "components/index";
-import { parseTokenAmount } from "@icpswap/utils";
-import { ResultStatus } from "@icpswap/types";
-import { useToken } from "hooks/index";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { useUserUnusedTokenByPool } from "hooks/staking-token/index";
 import { stakingPoolClaim, stakingPoolWithdraw } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ResultStatus } from "@icpswap/types";
+import { parseTokenAmount } from "@icpswap/utils";
+import { Flex, LoadingRow, NoData, TokenImage } from "components/index";
+import { Box, Button, CircularProgress, Typography } from "components/Mui";
+import { useToken } from "hooks/index";
+import { useUserUnusedTokenByPool } from "hooks/staking-token/index";
 import { usePendingRewardsByPool } from "hooks/staking-token/usePendingRewards";
-import { Token } from "@icpswap/swap-sdk";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ReclaimContext } from "./reclaimContext";

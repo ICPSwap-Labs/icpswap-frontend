@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { area, curveStepAfter, ScaleLinear } from "d3";
-import inRange from "lodash/inRange";
 import { Box } from "components/Mui";
 import { SWAP_CHART_RANGE_AREA_COLOR } from "constants/swap";
+import { area, curveStepAfter, type ScaleLinear } from "d3";
+import inRange from "lodash/inRange";
+import { useMemo } from "react";
 
-import { ChartEntry } from "./types";
+import type { ChartEntry } from "./types";
 
 export interface AreaProps {
   series: ChartEntry[];

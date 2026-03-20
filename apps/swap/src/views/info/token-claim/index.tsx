@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { Typography, Box, makeStyles } from "components/Mui";
-import { InfoWrapper } from "components/index";
-import { pageArgsFormat, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { useClaimEvents } from "@icpswap/hooks";
 import type { ClaimEventInfo } from "@icpswap/types";
-import { getEventState } from "utils/info/token-claim";
 import {
-  MainCard,
-  NoData,
-  LoadingRow,
-  TextButton,
+  BodyCell,
   Header,
   HeaderCell,
-  TableRow,
-  BodyCell,
+  LoadingRow,
+  MainCard,
+  NoData,
   Pagination,
+  TableRow,
+  TextButton,
 } from "@icpswap/ui";
+import { BigNumber, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { InfoWrapper } from "components/index";
+import { Box, makeStyles, Typography } from "components/Mui";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getEventState } from "utils/info/token-claim";
 
 const useStyles = makeStyles(() => {
   return {
@@ -97,7 +97,9 @@ export default function TokenClaim() {
               <HeaderCell>&nbsp;</HeaderCell>
             </Header>
 
-            {data?.content?.map((ele, index) => <ClaimEventItem key={index} ele={ele} />)}
+            {data?.content?.map((ele, index) => (
+              <ClaimEventItem key={index} ele={ele} />
+            ))}
 
             {isLoading ? (
               <Box sx={{ padding: "16px" }}>

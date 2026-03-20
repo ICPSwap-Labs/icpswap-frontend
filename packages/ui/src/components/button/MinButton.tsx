@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import { TypographyProps } from "../Mui";
+import type { TypographyProps } from "../Mui";
 import { SmallButton } from "./SmallButton";
 
 export interface MinButtonProps {

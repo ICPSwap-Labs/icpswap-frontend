@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, makeStyles } from "components/Mui";
+import { Box, Grid, makeStyles, Typography } from "components/Mui";
 
 const useStyles = makeStyles(() => {
   return {

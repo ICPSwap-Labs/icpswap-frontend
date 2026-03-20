@@ -1,13 +1,13 @@
-import { useEffect, useMemo } from "react";
-import { Box, Typography } from "components/Mui";
 import { usePoolPositionHolders } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, shorten } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
+import { PieChartTitle } from "components/info/swap/PieChart/PieChartTitle";
+import { Box, Typography } from "components/Mui";
+import * as Highcharts from "highcharts";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
-import * as Highcharts from "highcharts";
-import { PieChartTitle } from "components/info/swap/PieChart/PieChartTitle";
 
 const OTHER_ACCOUNTS = "Other accounts";
 const POSITION_SIZE = 20;
@@ -68,7 +68,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
 
   useEffect(() => {
     if (charts && charts.length) {
-      // @ts-ignore
+      // @ts-expect-error
       // The TypeScript compilation shows errors, but the code functions correctly.
       // These errors can be safely ignored, as the official Highcharts documentation uses the same approach.
       Highcharts.chart("highcharts-id", {

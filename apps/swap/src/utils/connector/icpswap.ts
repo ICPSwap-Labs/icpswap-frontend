@@ -1,6 +1,6 @@
 import { AuthClient } from "@honopu/auth-client";
-import { Actor, ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
-import { type CreateActorArgs, ConnectorAbstract, Connector, WalletConnectorConfig } from "./connectors";
+import { Actor, type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
+import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds
 

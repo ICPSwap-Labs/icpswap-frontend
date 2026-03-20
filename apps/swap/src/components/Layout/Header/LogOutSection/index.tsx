@@ -1,5 +1,5 @@
-import { useState, ReactNode } from "react";
 import { Box } from "components/Mui";
+import { type ReactNode, useState } from "react";
 import { useConnectManager } from "store/auth/hooks";
 
 import LogoutConfirmModal from "./Confirm";

@@ -1,7 +1,7 @@
-import { resultFormat } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
 import { farmIndex } from "@icpswap/actor";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 /**
  *

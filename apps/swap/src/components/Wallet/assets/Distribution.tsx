@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { Box, Typography } from "components/Mui";
+import type { AddressOverview, Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount, isUndefinedOrNull, numToPercent } from "@icpswap/utils";
-import { AddressOverview, Null } from "@icpswap/types";
+import { Box, Typography } from "components/Mui";
+import { useMemo } from "react";
 
 enum Colors {
   Token = "#8672FF",

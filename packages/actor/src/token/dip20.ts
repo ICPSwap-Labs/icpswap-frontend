@@ -1,15 +1,15 @@
-import { actor } from "../actor";
-import { ActorIdentity } from "@icpswap/types";
 import {
-  DIP20,
-  DIP20Balance,
-  DIP20InterfaceFactory,
+  type DIP20,
+  type DIP20Balance,
   DIP20BalanceInterfaceFactory,
-  XTC,
-  XTCInterfaceFactory,
-  DIP20Supply,
+  DIP20InterfaceFactory,
+  type DIP20Supply,
   DIP20SupplyInterfaceFactory,
+  type XTC,
+  XTCInterfaceFactory,
 } from "@icpswap/candid";
+import type { ActorIdentity } from "@icpswap/types";
+import { actor } from "../actor";
 
 export const xtc = (identity?: ActorIdentity) =>
   actor.create<XTC>({
@@ -25,20 +25,14 @@ export const dip20 = (canisterId: string, identity?: ActorIdentity) =>
     canisterId,
   });
 
-export const dip20BalanceActor = (
-  canisterId: string,
-  identity?: ActorIdentity
-) =>
+export const dip20BalanceActor = (canisterId: string, identity?: ActorIdentity) =>
   actor.create<DIP20Balance>({
     identity,
     idlFactory: DIP20BalanceInterfaceFactory,
     canisterId,
   });
 
-export const dip20SupplyActor = (
-  canisterId: string,
-  identity?: ActorIdentity
-) =>
+export const dip20SupplyActor = (canisterId: string, identity?: ActorIdentity) =>
   actor.create<DIP20Supply>({
     identity,
     idlFactory: DIP20SupplyInterfaceFactory,

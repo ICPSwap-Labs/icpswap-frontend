@@ -1,12 +1,12 @@
-import { useCallback } from "react";
-import { resultFormat, optionalArg, isAvailablePageArgs } from "@icpswap/utils";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { getCanisterId, CANISTER_NAMES } from "constants/index";
 import { Principal } from "@icp-sdk/core/principal";
-import { TradeOrder, TxRecord } from "types";
-import type { NFTSaleArgs, Null, StatusResult, PaginationResult } from "@icpswap/types";
-import { NFTs, AdapterName, NFTsTrade, TradeAdapterName } from "utils/nft/index";
 import { NFTTradeCanister } from "@icpswap/actor";
+import type { NFTSaleArgs, Null, PaginationResult, StatusResult } from "@icpswap/types";
+import { isAvailablePageArgs, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { CANISTER_NAMES, getCanisterId } from "constants/index";
+import { useCallback } from "react";
+import type { TradeOrder, TxRecord } from "types";
+import { AdapterName, NFTs, NFTsTrade, TradeAdapterName } from "utils/nft/index";
 
 export interface AllowanceArgs {
   canisterId: string;
@@ -74,9 +74,7 @@ export async function getTradeOrders(
   desc = false,
 ) {
   return resultFormat<PaginationResult<TradeOrder>>(
-    await (
-      await NFTTradeCanister()
-    ).findOrderPage(
+    await (await NFTTradeCanister()).findOrderPage(
       optionalArg<string>(canisterId),
       optionalArg<string>(name),
       optionalArg<string>(user),
@@ -140,9 +138,7 @@ export function useTradeTxList(
       if (!isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<TxRecord>>(
-        await (
-          await NFTTradeCanister()
-        ).findTxPage(
+        await (await NFTTradeCanister()).findTxPage(
           optionalArg<string>(canisterId),
           optionalArg<string>(name),
           optionalArg<number>(tokenIndex),
@@ -172,9 +168,7 @@ export function useUserTradeTxList(
       if (!account || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<TxRecord>>(
-        await (
-          await NFTTradeCanister()
-        ).findUserTxPage(
+        await (await NFTTradeCanister()).findUserTxPage(
           account,
           optionalArg<string>(canisterId),
           optionalArg<string>(name),

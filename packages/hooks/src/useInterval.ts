@@ -1,5 +1,5 @@
-import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 
 interface UseIntervalProps<T> {
   callback: (() => Promise<T | undefined>) | (() => void) | undefined;

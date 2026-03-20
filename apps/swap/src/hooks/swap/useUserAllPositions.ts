@@ -1,10 +1,10 @@
 import { getSwapUserPositions } from "@icpswap/hooks";
-import { useEffect, useMemo, useState } from "react";
-import { useStoreUserPositionPools } from "store/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { UserPositionByList } from "types/swap";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useStoreUserPositionPools } from "store/hooks";
+import type { UserPositionByList } from "types/swap";
 
 export function useUserAllPositionsByPoolIds(poolIds: string[] | undefined, refresh?: number) {
   const [loading, setLoading] = useState(false);

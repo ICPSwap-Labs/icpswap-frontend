@@ -1,4 +1,4 @@
-import { ICP, ICS, ckUSDC, ckBTC, ckETH } from "@icpswap/tokens";
+import { ckBTC, ckETH, ckUSDC, ICP, ICS } from "@icpswap/tokens";
 import { Connector } from "constants/wallet";
 
 export const DISPLAY_IN_WALLET_BY_DEFAULT = [ICP.address, ICS.address, ckUSDC.address, ckBTC.address, ckETH.address];

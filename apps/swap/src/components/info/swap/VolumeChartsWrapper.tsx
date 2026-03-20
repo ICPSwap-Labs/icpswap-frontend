@@ -1,17 +1,17 @@
-import { useState, useMemo } from "react";
-import { Typography, Box } from "components/Mui";
-import { formatDollarAmount } from "@icpswap/utils";
 import { useTransformedVolumeData } from "@icpswap/hooks";
-import { GridAutoRows, MainCard, BarChartAlt, Tooltip, ChartDateButtons, ImageLoading } from "@icpswap/ui";
-import dayjs from "dayjs";
 import {
-  ApiResult,
-  InfoGlobalDataResponse,
-  InfoGlobalRealTimeDataResponse,
-  Null,
-  PageResponse,
+  type ApiResult,
+  type InfoGlobalDataResponse,
+  type InfoGlobalRealTimeDataResponse,
+  type Null,
+  type PageResponse,
   VolumeWindow,
 } from "@icpswap/types";
+import { BarChartAlt, ChartDateButtons, GridAutoRows, ImageLoading, MainCard, Tooltip } from "@icpswap/ui";
+import { formatDollarAmount } from "@icpswap/utils";
+import { Box, Typography } from "components/Mui";
+import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface VolumeChartsWrapperProps {
@@ -74,8 +74,8 @@ export function VolumeChartsWrapper({ globalCharts, globalProtocol }: VolumeChar
             volumeWindow === VolumeWindow.monthly
               ? monthlyVolumeData
               : volumeWindow === VolumeWindow.weekly
-              ? weeklyVolumeData
-              : formattedVolumeData
+                ? weeklyVolumeData
+                : formattedVolumeData
           }
           setValue={setVolumeHover}
           setLabel={setRightLabel}

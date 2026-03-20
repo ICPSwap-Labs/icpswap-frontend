@@ -1,5 +1,6 @@
 import copyToClipboard from "copy-to-clipboard";
-import React, { forwardRef, useImperativeHandle } from "react";
+import type React from "react";
+import { forwardRef, useImperativeHandle } from "react";
 
 import { Box } from "./Mui";
 

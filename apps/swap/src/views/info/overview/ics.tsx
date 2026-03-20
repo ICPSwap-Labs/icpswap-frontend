@@ -1,17 +1,17 @@
-import { useMemo } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
+import { useInfoToken, useTokenAnalysis, useTokenBurned, useTokenSupply } from "@icpswap/hooks";
 import { ICP, ICS } from "@icpswap/tokens";
+import { Flex, Proportion } from "@icpswap/ui";
 import {
-  parseTokenAmount,
+  BigNumber,
   formatAmount,
   formatDollarAmount,
-  BigNumber,
-  nonUndefinedOrNull,
   formatDollarTokenPrice,
+  nonUndefinedOrNull,
+  parseTokenAmount,
 } from "@icpswap/utils";
-import { useInfoToken, useTokenAnalysis, useTokenSupply, useTokenBurned } from "@icpswap/hooks";
-import { Flex, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ICSPriceChart } from "./icsPriceChart";

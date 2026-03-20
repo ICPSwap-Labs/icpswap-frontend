@@ -1,4 +1,4 @@
-import { SECONDS_IN_YEAR, SECONDS_IN_MONTH, SECONDS_IN_DAY } from "@icpswap/constants";
+import { SECONDS_IN_DAY, SECONDS_IN_MONTH, SECONDS_IN_YEAR } from "@icpswap/constants";
 
 type LabelKey = "year" | "month" | "day" | "hour" | "minute" | "second";
 type LabelInfo = {

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Typography, Tooltip as MuiTooltip } from "components/Mui";
+import { Tooltip as MuiTooltip, Typography } from "components/Mui";
+import type React from "react";
+import { useState } from "react";
 import { HelpCircle } from "react-feather";
 
 export interface TooltipProps {
@@ -24,7 +25,6 @@ export function Tooltip({ tips, background, maxWidth, iconSize = "16px", iconCol
         timeout: 300,
       }}
       PopperProps={{
-        // @ts-ignore
         sx: {
           display: "flex",
           justifyContent: "center",

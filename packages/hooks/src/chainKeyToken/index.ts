@@ -1,2 +1,2 @@
-export * from "./eth";
 export * from "./doge";
+export * from "./eth";

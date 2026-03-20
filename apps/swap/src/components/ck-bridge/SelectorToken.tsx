@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { useTheme, Typography, Box, useMediaQuery } from "components/Mui";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useERC20Balance, useETHBalance } from "hooks/web3/index";
-import { DotLoading, Flex } from "components/index";
 import { BridgeChainType } from "@icpswap/constants";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useUSDPriceById } from "hooks/useUSDPrice";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import {
-  parseTokenAmount,
-  formatDollarAmount,
   BigNumber,
+  formatAmount,
+  formatDollarAmount,
   isValidPrincipal,
   nonUndefinedOrNull,
-  formatAmount,
+  parseTokenAmount,
 } from "@icpswap/utils";
-import { useToken } from "hooks/index";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
 import { TokenImageWithChain } from "components/ck-bridge/ChainImage";
+import { DotLoading, Flex } from "components/index";
+import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { useToken } from "hooks/index";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useERC20Balance, useETHBalance } from "hooks/web3/index";
+import { useCallback, useEffect, useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface SelectorTokenUIProps {
   onClick?: (token: Token, chain: BridgeChainType) => void;

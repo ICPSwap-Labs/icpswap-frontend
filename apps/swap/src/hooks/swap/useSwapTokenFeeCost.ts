@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { getTokenInsufficient } from "hooks/swap/index";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
+import { getTokenInsufficient } from "hooks/swap/index";
+import { useMemo } from "react";
 
 export interface useSwapTokenFeeCostProps {
   tokenBalance: string | undefined;

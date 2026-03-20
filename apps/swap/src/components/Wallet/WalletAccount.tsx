@@ -1,15 +1,15 @@
-import { useMemo, useRef } from "react";
-import { Box, Typography } from "components/Mui";
 import { formatDollarTokenPrice, formatIcpAmount, principalToAccount } from "@icpswap/utils";
+import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import Copy, { type CopyRef } from "components/Copy";
+import { Flex, Tooltip } from "components/index";
+import { Box, Typography } from "components/Mui";
+import { useWalletTokenContext } from "components/Wallet/token/context";
 import { useSuccessTip } from "hooks/useTips";
 import { useICPPrice } from "hooks/useUSDPrice";
-import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import { useAccountPrincipal } from "store/auth/hooks";
-import Copy, { CopyRef } from "components/Copy";
-import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
-import { Flex, Tooltip } from "components/index";
+import { useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface AddressWrapperProps {
   address: string | undefined;

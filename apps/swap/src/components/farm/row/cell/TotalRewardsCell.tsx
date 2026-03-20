@@ -1,10 +1,10 @@
-import { Typography } from "components/Mui";
-import { Flex, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
-import { useToken } from "hooks/useCurrency";
-import { formatDollarAmount, parseTokenAmount, BigNumber, nonUndefinedOrNull, formatAmount } from "@icpswap/utils";
 import type { FarmInfo } from "@icpswap/types";
+import { BodyCell, Flex } from "@icpswap/ui";
+import { BigNumber, formatAmount, formatDollarAmount, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { Typography } from "components/Mui";
+import { useToken } from "hooks/useCurrency";
 import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 
 export interface TotalRewardsCellProps {
   farmInfo: FarmInfo;

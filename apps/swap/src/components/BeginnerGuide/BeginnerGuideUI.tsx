@@ -54,7 +54,7 @@ export function BeginnerGuideUI({ open, onClose, onGotIt, guides }: BeginnerGuid
 
   const handlePrev = useCallback(() => {
     setStep((prev) => (prev > 0 ? prev - 1 : prev));
-  }, [setStep]);
+  }, []);
 
   const handleNext = useCallback(() => {
     if (step === guides.length - 1 && onGotIt) {
@@ -63,7 +63,7 @@ export function BeginnerGuideUI({ open, onClose, onGotIt, guides }: BeginnerGuid
     }
 
     setStep((prev) => (prev < guides.length ? prev + 1 : prev));
-  }, [step, setStep, guides, onClose, onGotIt]);
+  }, [step, guides, onGotIt]);
 
   return (
     <Modal title="Quick Start" open={open} onClose={onClose}>

@@ -1,8 +1,8 @@
-import type { Null, PaginationResult, PositionTransaction } from "@icpswap/types";
-import { baseIndex, positionTransactionsStorage } from "@icpswap/actor";
-import { isAvailablePageArgs, isUndefinedOrNull, resultFormat } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { baseIndex, positionTransactionsStorage } from "@icpswap/actor";
+import type { Null, PaginationResult, PositionTransaction } from "@icpswap/types";
+import { isAvailablePageArgs, isUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getPositionTransactionsStorage() {
   return resultFormat<string>(await (await baseIndex()).transferPositionLastStorage()).data;
@@ -26,9 +26,12 @@ export async function getPositionStorageTransactions(
 ) {
   if (principal) {
     return resultFormat<PaginationResult<PositionTransaction>>(
-      await (
-        await positionTransactionsStorage(storageId)
-      ).getByUser(BigInt(offset), BigInt(limit), Principal.fromText(principal), poolIds[0] ?? ""),
+      await (await positionTransactionsStorage(storageId)).getByUser(
+        BigInt(offset),
+        BigInt(limit),
+        Principal.fromText(principal),
+        poolIds[0] ?? "",
+      ),
     ).data;
   }
 

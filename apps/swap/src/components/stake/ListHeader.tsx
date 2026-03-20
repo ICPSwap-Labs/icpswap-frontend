@@ -1,6 +1,6 @@
-import { Box } from "components/Mui";
-import { Flex } from "components/index";
 import { HeaderCell } from "@icpswap/ui";
+import { Flex } from "components/index";
+import { Box } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export interface PoolListHeaderProps {

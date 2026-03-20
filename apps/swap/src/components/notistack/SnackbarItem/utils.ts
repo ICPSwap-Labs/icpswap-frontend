@@ -1,11 +1,11 @@
-import {
-  InternalSnack,
-  SlideTransitionDirection,
-  SnackbarOrigin,
-  SnackbarClassKey,
-  SnackbarProviderProps,
+import type {
   ClassNameMap,
   ContainerClassKey,
+  InternalSnack,
+  SlideTransitionDirection,
+  SnackbarClassKey,
+  SnackbarOrigin,
+  SnackbarProviderProps,
 } from "../types";
 import { originKeyExtractor } from "../utils";
 

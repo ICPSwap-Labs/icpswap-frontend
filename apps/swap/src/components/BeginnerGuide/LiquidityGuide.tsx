@@ -1,5 +1,5 @@
 import { BeginnerGuideUI } from "components/BeginnerGuide/BeginnerGuideUI";
-import { useShowGuideModalManager, LiquidityGuideName } from "hooks/global/guide";
+import { LiquidityGuideName, useShowGuideModalManager } from "hooks/global/guide";
 import { useLiquidityGuideShow } from "hooks/global/guide/useLiquidityGuide";
 
 const Guides = [

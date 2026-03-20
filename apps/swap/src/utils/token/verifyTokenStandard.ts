@@ -1,16 +1,16 @@
+import { icrc1, icrc2 } from "@icpswap/actor";
 import {
   DIP20Adapter,
   DIP20WICPAdapter,
   DIP20XTCAdapter,
   EXTAdapter,
+  icpAdapter,
   icrc1Adapter,
   icrc2Adapter,
-  icpAdapter,
 } from "@icpswap/token-adapter";
-import { icrc1, icrc2 } from "@icpswap/actor";
-import { TOKEN_STANDARD } from "constants/tokens";
-import { Metadata } from "types/token";
 import { ICP } from "@icpswap/tokens";
+import { TOKEN_STANDARD } from "constants/tokens";
+import type { Metadata } from "types/token";
 
 export type VerifyTokenStandardResult = {
   valid: boolean;

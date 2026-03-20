@@ -1,21 +1,21 @@
-import { useState, useCallback, useMemo } from "react";
-import { InputAdornment, useTheme, Typography, Box, useMediaQuery, makeStyles } from "components/Mui";
-import { useGlobalTokenList } from "store/global/hooks";
-import { isDarkTheme } from "utils/index";
-import { FilledTextField, NoData } from "components/index";
-import { isValidPrincipal } from "@icpswap/utils";
-import { Search as SearchIcon } from "react-feather";
-import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
-import { useStateSnsAllTokensInfo } from "store/sns/hooks";
-import { TokenListMetadata } from "types/token-list";
-import { useTaggedTokenManager, useSortedTokensManager } from "store/wallet/hooks";
-import { ImportToken } from "components/ImportToken/index";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
+import type { Token } from "@icpswap/swap-sdk";
 import { Modal } from "@icpswap/ui";
-import { TokenItem } from "components/CurrencySelector/TokenItem";
+import { isValidPrincipal } from "@icpswap/utils";
 import { BaseTokens } from "components/CurrencySelector/BaseToken";
+import { TokenItem } from "components/CurrencySelector/TokenItem";
+import { ImportToken } from "components/ImportToken/index";
+import { FilledTextField, NoData } from "components/index";
+import { Box, InputAdornment, makeStyles, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
+import { useCallback, useMemo, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useGlobalTokenList } from "store/global/hooks";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
+import { useSortedTokensManager, useTaggedTokenManager } from "store/wallet/hooks";
+import type { TokenListMetadata } from "types/token-list";
+import { isDarkTheme } from "utils/index";
 import { getNnsRootId } from "utils/sns/utils";
 
 const useStyles = makeStyles(() => {
@@ -62,7 +62,7 @@ export default function Selector({
 
   const yourTokens: string[] = useMemo(() => {
     return [...new Set(DEFAULT_DISPLAYED_TOKENS.map((e) => e.address).concat(taggedTokens))];
-  }, [DEFAULT_DISPLAYED_TOKENS, taggedTokens]);
+  }, [taggedTokens]);
 
   const { snsTokens, noneSnsTokens } = useMemo(() => {
     if (!snsAllTokensInfo) return {};
@@ -92,7 +92,7 @@ export default function Selector({
       if (disabledCurrencyIds.includes(token?.address.toString())) return;
       if (onChange) onChange(token);
     },
-    [disabledCurrencyIds],
+    [disabledCurrencyIds, onChange],
   );
 
   const handleSearchToken = useCallback((value: string) => {
@@ -147,93 +147,121 @@ export default function Selector({
   }, [sortedTokens, yourTokens]);
 
   return (
-    <>
-      <Modal
-        open={open}
-        title={t("common.select.a.token")}
-        onClose={onClose}
-        dialogProps={{
-          sx: {
-            "& .MuiDialog-paper": {
-              padding: "0",
-              width: "570px",
-              backgroundColor: isDark ? theme.palette.background.level2 : theme.colors.lightGray200,
-            },
-            "& .MuiDialogContent-root": {
-              padding: "0",
-            },
+    <Modal
+      open={open}
+      title={t("common.select.a.token")}
+      onClose={onClose}
+      dialogProps={{
+        sx: {
+          "& .MuiDialog-paper": {
+            padding: "0",
+            width: "570px",
+            backgroundColor: isDark ? theme.palette.background.level2 : theme.colors.lightGray200,
           },
+          "& .MuiDialogContent-root": {
+            padding: "0",
+          },
+        },
+      }}
+    >
+      <Box
+        sx={{
+          position: "relative",
         }}
       >
+        <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "12px 0 0 0" }}>
+          <Typography sx={{ fontSize: "12px", lineHeight: "1.15rem" }}>
+            {t("common.disclaimer.descriptions")}
+          </Typography>
+        </Box>
+
         <Box
           sx={{
             position: "relative",
+            margin: "12px 0 0 0",
+            padding: matchDownSM ? "0 16px" : "0 24px",
           }}
         >
-          <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "12px 0 0 0" }}>
-            <Typography sx={{ fontSize: "12px", lineHeight: "1.15rem" }}>
-              {t("common.disclaimer.descriptions")}
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              position: "relative",
-              margin: "12px 0 0 0",
-              padding: matchDownSM ? "0 16px" : "0 24px",
-            }}
-          >
-            <FilledTextField
-              contained
-              borderRadius="8px"
-              background={theme.palette.background.level1}
-              placeholderSize="14px"
-              fullWidth
-              placeholder={t`Search name or canister ID`}
-              textFieldProps={{
-                slotProps: {
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
-                      </InputAdornment>
-                    ),
-                    maxLength: 50,
-                  },
+          <FilledTextField
+            contained
+            borderRadius="8px"
+            background={theme.palette.background.level1}
+            placeholderSize="14px"
+            fullWidth
+            placeholder={t`Search name or canister ID`}
+            textFieldProps={{
+              slotProps: {
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
+                    </InputAdornment>
+                  ),
+                  maxLength: 50,
                 },
-              }}
-              onChange={debouncedSearch}
-            />
+              },
+            }}
+            onChange={debouncedSearch}
+          />
+        </Box>
+
+        <BaseTokens onTokenClick={handleTokenClick} />
+
+        <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
+
+        <Box sx={{ height: "315px", overflow: "hidden auto" }}>
+          {noData ? <NoData /> : null}
+
+          {showImportToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (
+            <Box className={classes.wrapper}>
+              <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
+            </Box>
+          ) : null}
+
+          <Box>
+            {searchKeyword ? null : (
+              <Box className={classes.wrapper}>
+                <Typography fontSize="16px">{t("swap.currency.selector.your.tokens")}</Typography>
+              </Box>
+            )}
+
+            <Box mt={searchKeyword ? "0px" : "16px"}>
+              {sortedYourTokens.map((tokenId) => (
+                <TokenItem
+                  key={tokenId}
+                  canisterId={tokenId}
+                  onClick={handleTokenClick}
+                  searchWord={searchKeyword}
+                  showBalance
+                  onTokenHide={handleTokenHidden}
+                  isActive={activeCurrencyIds.includes(tokenId)}
+                  isDisabled={disabledCurrencyIds.includes(tokenId)}
+                />
+              ))}
+            </Box>
           </Box>
 
-          <BaseTokens onTokenClick={handleTokenClick} />
+          <Box mt={searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
+            {searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? null : (
+              <Typography className={classes.wrapper} fontSize="16px">
+                {t("common.token.list")}
+              </Typography>
+            )}
 
-          <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
-
-          <Box sx={{ height: "315px", overflow: "hidden auto" }}>
-            {noData ? <NoData /> : null}
-
-            {showImportToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (
-              <Box className={classes.wrapper}>
-                <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
-              </Box>
-            ) : null}
-
-            <Box>
-              {searchKeyword ? null : (
-                <Box className={classes.wrapper}>
-                  <Typography fontSize="16px">{t("swap.currency.selector.your.tokens")}</Typography>
-                </Box>
+            <Box mt={searchKeyword || (snsTokens ?? []).length === 0 ? "0px" : "16px"}>
+              {searchKeyword || (snsTokens ?? []).length === 0 ? null : (
+                <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
+                  {t("common.sns.tokens")}
+                </Typography>
               )}
 
-              <Box mt={searchKeyword ? "0px" : "16px"}>
-                {sortedYourTokens.map((tokenId) => (
+              <Box mt={searchKeyword || (snsTokens ?? []).length === 0 ? "0px" : "16px"}>
+                {(snsTokens ?? []).map((tokenId) => (
                   <TokenItem
                     key={tokenId}
                     canisterId={tokenId}
                     onClick={handleTokenClick}
                     searchWord={searchKeyword}
-                    showBalance
                     onTokenHide={handleTokenHidden}
                     isActive={activeCurrencyIds.includes(tokenId)}
                     isDisabled={disabledCurrencyIds.includes(tokenId)}
@@ -242,60 +270,30 @@ export default function Selector({
               </Box>
             </Box>
 
-            <Box mt={searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
-              {searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? null : (
-                <Typography className={classes.wrapper} fontSize="16px">
-                  {t("common.token.list")}
+            <Box mt={searchKeyword || (noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
+              {searchKeyword || (noneSnsTokens ?? []).length === 0 ? null : (
+                <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
+                  {t("common.other.tokens")}
                 </Typography>
               )}
 
-              <Box mt={searchKeyword || (snsTokens ?? []).length === 0 ? "0px" : "16px"}>
-                {searchKeyword || (snsTokens ?? []).length === 0 ? null : (
-                  <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
-                    {t("common.sns.tokens")}
-                  </Typography>
-                )}
-
-                <Box mt={searchKeyword || (snsTokens ?? []).length === 0 ? "0px" : "16px"}>
-                  {(snsTokens ?? []).map((tokenId) => (
-                    <TokenItem
-                      key={tokenId}
-                      canisterId={tokenId}
-                      onClick={handleTokenClick}
-                      searchWord={searchKeyword}
-                      onTokenHide={handleTokenHidden}
-                      isActive={activeCurrencyIds.includes(tokenId)}
-                      isDisabled={disabledCurrencyIds.includes(tokenId)}
-                    />
-                  ))}
-                </Box>
-              </Box>
-
               <Box mt={searchKeyword || (noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
-                {searchKeyword || (noneSnsTokens ?? []).length === 0 ? null : (
-                  <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
-                    {t("common.other.tokens")}
-                  </Typography>
-                )}
-
-                <Box mt={searchKeyword || (noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
-                  {(noneSnsTokens ?? []).map((tokenId) => (
-                    <TokenItem
-                      key={tokenId}
-                      canisterId={tokenId}
-                      onClick={handleTokenClick}
-                      searchWord={searchKeyword}
-                      onTokenHide={handleTokenHidden}
-                      isActive={activeCurrencyIds.includes(tokenId)}
-                      isDisabled={disabledCurrencyIds.includes(tokenId)}
-                    />
-                  ))}
-                </Box>
+                {(noneSnsTokens ?? []).map((tokenId) => (
+                  <TokenItem
+                    key={tokenId}
+                    canisterId={tokenId}
+                    onClick={handleTokenClick}
+                    searchWord={searchKeyword}
+                    onTokenHide={handleTokenHidden}
+                    isActive={activeCurrencyIds.includes(tokenId)}
+                    isDisabled={disabledCurrencyIds.includes(tokenId)}
+                  />
+                ))}
               </Box>
             </Box>
           </Box>
         </Box>
-      </Modal>
-    </>
+      </Box>
+    </Modal>
   );
 }

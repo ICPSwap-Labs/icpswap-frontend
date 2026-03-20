@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { Button, Box, Grid, Typography, Checkbox, CircularProgress, Avatar } from "components/Mui";
-import { Modal, TextButton, FilledTextField, TokenStandardLabel } from "components/index";
-import { TOKEN_STANDARD } from "constants/tokens";
-import { isValidPrincipal } from "@icpswap/utils";
-import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
-import { useUpdateTokenStandard, getTokenStandard } from "store/token/cache/hooks";
-import { useSuccessTip } from "hooks/useTips";
-import { Metadata } from "types/token";
-import { INFO_URL } from "constants/index";
-import { useGlobalTokenList } from "store/global/hooks";
 import { registerTokens } from "@icpswap/token-adapter";
-import { useUpdateTaggedTokenCallback } from "store/wallet/hooks";
+import { isValidPrincipal } from "@icpswap/utils";
+import { FilledTextField, Modal, TextButton, TokenStandardLabel } from "components/index";
+import { Avatar, Box, Button, Checkbox, CircularProgress, Grid, Typography } from "components/Mui";
+import { INFO_URL } from "constants/index";
+import { TOKEN_STANDARD } from "constants/tokens";
+import { useSuccessTip } from "hooks/useTips";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useGlobalTokenList } from "store/global/hooks";
+import { getTokenStandard, useUpdateTokenStandard } from "store/token/cache/hooks";
+import { useUpdateTaggedTokenCallback } from "store/wallet/hooks";
+import type { Metadata } from "types/token";
+import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import MarketWrapper, { Pages, MarketPageConfig } from "components/NFT/market/MarketWrapper";
 import MarketCarousel from "components/NFT/market/Carousel1";
+import MarketWrapper, { type MarketPageConfig, Pages } from "components/NFT/market/MarketWrapper";
+import { useState } from "react";
 
 export default function NFTMarketplace() {
   const [searchValue, setSearchValue] = useState("");

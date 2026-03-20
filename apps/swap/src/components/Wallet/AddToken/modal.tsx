@@ -1,18 +1,18 @@
-import { useState, useMemo, useCallback } from "react";
-import { Box, Typography, InputAdornment, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
-import { useTaggedTokenManager } from "store/wallet/hooks";
-import { ImportToken } from "components/ImportToken/index";
-import { Modal, FilledTextField, NoData, Flex } from "components/index";
-import { useGlobalTokenList } from "store/global/hooks";
-import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
-import { useStateSnsAllTokensInfo } from "store/sns/hooks";
-import { isValidPrincipal, classNames } from "@icpswap/utils";
-import { Search as SearchIcon } from "react-feather";
-import { TokenListMetadata } from "types/token-list";
-import { TokenItem } from "components/CurrencySelector/TokenItem";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
+import { classNames, isValidPrincipal } from "@icpswap/utils";
+import { TokenItem } from "components/CurrencySelector/TokenItem";
+import { ImportToken } from "components/ImportToken/index";
+import { FilledTextField, Flex, Modal, NoData } from "components/index";
+import { Box, InputAdornment, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import i18n from "i18n/index";
+import { useCallback, useMemo, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { useGlobalTokenList } from "store/global/hooks";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
+import { useTaggedTokenManager } from "store/wallet/hooks";
+import type { TokenListMetadata } from "types/token-list";
 import { getNnsRootId, tokenEqualToNnsLedger } from "utils/sns/utils";
 
 const useStyles = makeStyles((theme: Theme) => {

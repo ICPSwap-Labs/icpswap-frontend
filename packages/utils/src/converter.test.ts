@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { hexToBytes, toHexString, asciiStringToByteArray } from "./converter";
+import { describe, expect, it } from "vitest";
+import { asciiStringToByteArray, hexToBytes, toHexString } from "./converter";
 
 describe("converter", () => {
   describe("hexToBytes", () => {

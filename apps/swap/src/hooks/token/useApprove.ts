@@ -1,9 +1,9 @@
-import { useCallback } from "react";
 import { Principal } from "@icp-sdk/core/principal";
-import { TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter";
-import { NumberType, StatusResult } from "@icpswap/types";
-import { allowance } from "hooks/token/useAllowance";
+import { type TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter";
+import type { NumberType, StatusResult } from "@icpswap/types";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { allowance } from "hooks/token/useAllowance";
+import { useCallback } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
 
 export interface ApproveArgs {

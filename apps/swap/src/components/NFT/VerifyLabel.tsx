@@ -1,5 +1,5 @@
-import { Grid } from "components/Mui";
 import VerifyImage from "assets/images/nft/verify.svg";
+import { Grid } from "components/Mui";
 
 export default function NFTLabel() {
   return (

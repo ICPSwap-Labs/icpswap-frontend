@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import JSBI from "jsbi";
+import { describe, expect, it } from "vitest";
 import { Q96 } from "../internalConstants";
 import { encodeSqrtRatioX96 } from "./encodeSqrtRatioX96";
 

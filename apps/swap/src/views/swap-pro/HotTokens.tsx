@@ -1,15 +1,15 @@
-import { useMemo } from "react";
-import { Box, Typography, useTheme, keyframes } from "components/Mui";
-import HotIcon from "assets/icons/swap-pro/hot.svg";
-import { useToken } from "hooks/index";
-import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
-import { TokenImage } from "components/index";
-import { useNavigate } from "react-router-dom";
-import { ICP, ICS } from "@icpswap/tokens";
 import { useInfoAllTokens } from "@icpswap/hooks";
+import { ICP, ICS } from "@icpswap/tokens";
+import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
 import { BigNumber } from "@icpswap/utils";
+import HotIcon from "assets/icons/swap-pro/hot.svg";
+import { TokenImage } from "components/index";
+import { Box, keyframes, Typography, useTheme } from "components/Mui";
+import { useToken } from "hooks/index";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const animationKeyframes = keyframes`
   0% {

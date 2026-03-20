@@ -1,11 +1,11 @@
-import { Typography } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
-import { isUseTransfer } from "utils/token/index";
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex, TokenImage } from "components/index";
-import type { StepContents } from "types/step";
-import { ArrowRight } from "react-feather";
+import { Typography } from "components/Mui";
 import i18n from "i18n";
+import { ArrowRight } from "react-feather";
 import themeColors from "theme/colors";
+import type { StepContents } from "types/step";
+import { isUseTransfer } from "utils/token/index";
 
 export interface ConsolidatedSwapStepsProps {
   inputToken: Token;

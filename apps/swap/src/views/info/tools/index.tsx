@@ -1,6 +1,6 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { InfoWrapper } from "components/index";
 import { Flex, Image, Link } from "@icpswap/ui";
+import { InfoWrapper } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import i18n from "i18n/index";
 
 const tools = [

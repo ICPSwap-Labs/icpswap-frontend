@@ -1,13 +1,13 @@
-import { useCallback } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import type { Token } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { tokenTransfer } from "hooks/token/calls";
 import { useApprove } from "hooks/token/useApprove";
+import { type TIP_OPTIONS, useErrorTip } from "hooks/useTips";
+import { useCallback } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isUseTransferByStandard } from "utils/token/index";
-import { tokenTransfer } from "hooks/token/calls";
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 
 export interface UseTokenSubAccountTransferArgs {
   token: Token;

@@ -1,11 +1,11 @@
-import { useMemo } from "react";
 import { TradeType } from "@icpswap/constants";
-import { CurrencyAmount, Trade, Token, Route } from "@icpswap/swap-sdk";
-import { tryParseAmount } from "utils/swap";
-import { BigNumber } from "bignumber.js";
+import { CurrencyAmount, type Route, type Token, Trade } from "@icpswap/swap-sdk";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
-import { useQuoteExactInput, useSwapPoolAvailable } from "hooks/swap/v3Calls";
+import { BigNumber } from "bignumber.js";
 import { useAllRoutes } from "hooks/swap/useAllRoutes";
+import { useQuoteExactInput, useSwapPoolAvailable } from "hooks/swap/v3Calls";
+import { useMemo } from "react";
+import { tryParseAmount } from "utils/swap";
 
 export enum TradeState {
   LOADING = "LOADING",

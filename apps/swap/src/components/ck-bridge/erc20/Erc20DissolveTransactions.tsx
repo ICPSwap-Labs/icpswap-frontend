@@ -1,16 +1,16 @@
-import { useTheme, makeStyles, Box, Typography } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
-import { LoadingRow, Flex } from "@icpswap/ui";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
-import type { WithdrawalDetail, ChainKeyETHMinterInfo } from "@icpswap/types";
-import { useMemo } from "react";
-import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "constants/ckERC20";
-import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
-import { useToken } from "hooks/index";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, WithdrawalDetail } from "@icpswap/types";
+import { Flex, LoadingRow } from "@icpswap/ui";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { EXPLORER_ADDRESS_LINK, EXPLORER_TX_LINK, MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
+import { useToken } from "hooks/index";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
 
 const useStyles = makeStyles(() => ({
   txLink: {

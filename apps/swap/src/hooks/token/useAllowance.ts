@@ -1,8 +1,8 @@
 import { Principal } from "@icp-sdk/core/principal";
-import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import type { Null } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export interface AllowanceArgs {
   canisterId: string;

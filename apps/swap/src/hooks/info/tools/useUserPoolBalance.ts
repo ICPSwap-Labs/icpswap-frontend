@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { Override } from "@icpswap/types";
 import { Principal } from "@icp-sdk/core/principal";
-import { useSwapPools, getUserUnusedBalance, getTokenBalance } from "@icpswap/hooks";
-import type { SwapPoolData } from "@icpswap/types";
+import { getTokenBalance, getUserUnusedBalance, useSwapPools } from "@icpswap/hooks";
+import type { Override, SwapPoolData } from "@icpswap/types";
 import { principalToSubaccount } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export type UserSwapPoolsBalance = Override<
   SwapPoolData,

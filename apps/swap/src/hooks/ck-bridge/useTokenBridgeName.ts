@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { isUndefinedOrNull } from "@icpswap/utils";
 import { BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useMemo } from "react";
 
 export function useTokenBridgeName(token: Token | Null, chain: BridgeChainType | Null) {
   return useMemo(() => {

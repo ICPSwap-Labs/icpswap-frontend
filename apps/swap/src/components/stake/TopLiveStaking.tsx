@@ -1,19 +1,19 @@
-import { Typography, Box } from "components/Mui";
-import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
-import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { StakingTokenImages } from "components/stake/StakingTokenImage";
-import { useToken } from "hooks/useCurrency";
 import { useStakingPools } from "@icpswap/hooks";
+import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
+import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
+import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Box, Typography } from "components/Mui";
+import { StakingTokenImages } from "components/stake/StakingTokenImage";
 import { useIntervalStakingPoolInfo } from "hooks/staking-token/index";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { getStateValue } from "utils/stake/index";
 import { useApr } from "hooks/staking-token/useApr";
 import { useTokenBalance } from "hooks/token";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { useToken } from "hooks/useCurrency";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { getStateValue } from "utils/stake/index";
 
 interface TopLiveCardProps {
   pool: StakingPoolControllerPoolInfo;
@@ -203,7 +203,9 @@ export function TopLiveStaking() {
               },
             }}
           >
-            {topLivePools?.map((pool) => <TopLiveCard key={pool.canisterId.toString()} pool={pool} />)}
+            {topLivePools?.map((pool) => (
+              <TopLiveCard key={pool.canisterId.toString()} pool={pool} />
+            ))}
           </Box>
         )}
       </Box>

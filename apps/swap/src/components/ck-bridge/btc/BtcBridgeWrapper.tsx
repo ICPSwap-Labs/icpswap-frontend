@@ -1,19 +1,19 @@
-import { BridgeChainType, BridgeType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { Box } from "components/Mui";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
+import { type BridgeChainType, BridgeType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
-import { Wrapper } from "components/index";
-import { useBtcDepositAddress, useBitcoinBlockNumber } from "hooks/ck-bridge/index";
-import { TopContent } from "components/ck-bridge/TopContent";
 import { BridgeTokens } from "components/ck-bridge/BridgeTokens";
-import { BtcBridgeMint } from "components/ck-bridge/btc/Mint";
 import { BtcBridgeDissolve } from "components/ck-bridge/btc/Dissolve";
-import { BtcBridgeNetworkState } from "components/ck-bridge/btc/NetworkState";
 import { DissolveTransactions } from "components/ck-bridge/btc/DissolveTransactions";
+import { BtcBridgeMint } from "components/ck-bridge/btc/Mint";
 import { MintTransactions } from "components/ck-bridge/btc/MintTransactions";
-import { useActiveUserTokenBalance } from "hooks/token";
+import { BtcBridgeNetworkState } from "components/ck-bridge/btc/NetworkState";
+import { TopContent } from "components/ck-bridge/TopContent";
+import { Wrapper } from "components/index";
+import { Box } from "components/Mui";
 import { BALANCE_REFRESH_INTERVAL } from "constants/chain-key";
+import { useBitcoinBlockNumber, useBtcDepositAddress } from "hooks/ck-bridge/index";
+import { useActiveUserTokenBalance } from "hooks/token";
 
 interface BtcBridgeWrapperProps {
   token: Token;

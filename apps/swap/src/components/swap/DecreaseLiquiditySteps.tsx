@@ -1,10 +1,10 @@
-import { Box, Avatar } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Avatar, Box } from "components/Mui";
 import { BURN_FIELD } from "constants/swap";
-import { toFormat } from "utils/index";
-import { StepContents } from "types/step";
 import i18n from "i18n/index";
-import { Null } from "@icpswap/types";
+import type { StepContents } from "types/step";
+import { toFormat } from "utils/index";
 
 export interface DecreaseLiquidityStepsProps {
   formattedAmounts: { [key in BURN_FIELD]?: string };

@@ -1,16 +1,16 @@
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useCallback, useMemo, useState } from "react";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { principalToBytes32 } from "utils/ic/index";
-import { useEthMinterHelperContract } from "hooks/web3/useContract";
+import type { ERC20Token, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { formatTokenAmount } from "@icpswap/utils";
-import { ERC20Token, Token } from "@icpswap/swap-sdk";
-import { calculateGasMargin } from "utils/web3/calculateGasMargin";
-import { ApprovalState, useApproveCallback } from "hooks/web3/useApproveCallback";
-import { Null } from "@icpswap/types";
-import { useUpdateErc20MintTX } from "store/web3/hooks";
 import { bytesStringOfNullSubAccount } from "constants/ckETH";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { ApprovalState, useApproveCallback } from "hooks/web3/useApproveCallback";
+import { useEthMinterHelperContract } from "hooks/web3/useContract";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useUpdateErc20MintTX } from "store/web3/hooks";
+import { principalToBytes32 } from "utils/ic/index";
+import { calculateGasMargin } from "utils/web3/calculateGasMargin";
 
 export interface UseMintProps {
   helperContractAddress: string | undefined;

@@ -1,8 +1,8 @@
-import { forwardRef } from "react";
 import clsx from "clsx";
 import { makeStyles } from "components/Mui";
+import { forwardRef } from "react";
 
-import { SnackbarContentProps } from "../types";
+import type { SnackbarContentProps } from "../types";
 import { breakpoints } from "../utils";
 
 const useStyles = makeStyles({

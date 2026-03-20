@@ -1,11 +1,11 @@
-import { useState, ReactNode } from "react";
+import type { NFTTokenMetadata } from "@icpswap/types";
 import {
-  ExtNFTSendInfo,
-  WalletNFTContext,
   type DisplayedNFTInfo,
   type DisplayedNFTTokenInfo,
+  type ExtNFTSendInfo,
+  WalletNFTContext,
 } from "components/Wallet/NFT/NFTContext";
-import { NFTTokenMetadata } from "@icpswap/types";
+import { type ReactNode, useState } from "react";
 
 interface WalletContextProviderProps {
   children: ReactNode;

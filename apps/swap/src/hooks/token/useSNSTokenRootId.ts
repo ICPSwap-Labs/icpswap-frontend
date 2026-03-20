@@ -1,6 +1,6 @@
+import type { Null } from "@icpswap/types";
 import { useMemo } from "react";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
-import { Null } from "@icpswap/types";
 
 export function useSNSTokenRootId(tokenId: string | Null) {
   const snsAllTokensInfo = useStateSnsAllTokensInfo();

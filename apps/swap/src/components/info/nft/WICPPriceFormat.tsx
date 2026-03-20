@@ -1,7 +1,7 @@
-import { Grid, Typography } from "components/Mui";
 import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
-import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import { parseTokenAmount } from "@icpswap/utils";
+import WICPCurrencyImage from "assets/images/wicp_currency.svg";
+import { Grid, Typography } from "components/Mui";
 
 export default function WICPPriceFormat({
   price,

@@ -1,4 +1,4 @@
-import { Tooltip, Flex, Link } from "@icpswap/ui";
+import { Flex, Link, Tooltip } from "@icpswap/ui";
 import { Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
 

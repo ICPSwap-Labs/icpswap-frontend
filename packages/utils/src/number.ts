@@ -1,8 +1,8 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 
 import { BigNumber } from "./bignumber";
-import { toSignificant, toSignificantWithGroupSeparator } from "./toSignificant";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "./isUndefinedOrNull";
+import { toSignificant, toSignificantWithGroupSeparator } from "./toSignificant";
 
 function removeUselessZeroes(number: string) {
   const regexp = /(?:\.0*|(\.\d+?)0+)$/;

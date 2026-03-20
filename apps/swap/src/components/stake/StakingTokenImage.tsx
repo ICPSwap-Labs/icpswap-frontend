@@ -1,6 +1,6 @@
-import { Grid, Box } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/index";
-import { Token } from "@icpswap/swap-sdk";
+import { Box, Grid } from "components/Mui";
 
 export interface StakingTokenImagesProps {
   rewardToken: Token | undefined;

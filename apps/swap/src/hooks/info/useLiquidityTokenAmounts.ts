@@ -1,6 +1,6 @@
-import { useSwapUserPositionWithAmount, useInfoPoolDetails } from "@icpswap/hooks";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { useInfoPoolDetails, useSwapUserPositionWithAmount } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useMemo } from "react";
 

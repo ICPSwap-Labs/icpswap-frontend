@@ -1,7 +1,7 @@
-import { useState, useCallback, ReactNode } from "react";
-import { Pool, Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { SwapContext } from "components/swap/index";
+import { type ReactNode, useCallback, useState } from "react";
 
 interface SwapContextProviderProps {
   children: ReactNode;

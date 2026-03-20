@@ -1,5 +1,5 @@
-import { atom, useAtom } from "jotai";
 import { useQuery } from "@tanstack/react-query";
+import { atom, useAtom } from "jotai";
 
 const blockNumberAtom = atom<number | undefined>(undefined);
 

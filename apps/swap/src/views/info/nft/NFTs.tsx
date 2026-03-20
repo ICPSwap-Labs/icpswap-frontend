@@ -1,22 +1,22 @@
-import { pageArgsFormat, timestampFormat, cycleValueFormat } from "@icpswap/utils";
-import { useState } from "react";
-import { Typography, Box, Avatar, makeStyles } from "components/Mui";
-import { useNFTCanisterCycles, useNFTCanisterCount } from "hooks/info/nft";
-import { InfoWrapper } from "components/index";
-import { NFTCanisterInfo } from "@icpswap/types";
 import { useNFTCanisters } from "@icpswap/hooks";
+import type { NFTCanisterInfo } from "@icpswap/types";
 import {
-  MainCard,
-  Pagination,
-  NoData,
-  LoadingRow,
-  TextButton,
-  Header,
-  HeaderCell,
-  TableRow,
   BodyCell,
   Flex,
+  Header,
+  HeaderCell,
+  LoadingRow,
+  MainCard,
+  NoData,
+  Pagination,
+  TableRow,
+  TextButton,
 } from "@icpswap/ui";
+import { cycleValueFormat, pageArgsFormat, timestampFormat } from "@icpswap/utils";
+import { InfoWrapper } from "components/index";
+import { Avatar, Box, makeStyles, Typography } from "components/Mui";
+import { useNFTCanisterCount, useNFTCanisterCycles } from "hooks/info/nft";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {

@@ -1,12 +1,12 @@
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex, GridRowBetween, Proportion } from "@icpswap/ui";
-import { Typography, Box, useTheme } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
-import { formatAmount, BigNumber, formatTokenPrice, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { useTranslation } from "react-i18next";
+import { BigNumber, formatAmount, formatDollarTokenPrice, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useUSDPrice } from "hooks";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
-import { ChartEntry } from "./type";
+import type { ChartEntry } from "./type";
 
 interface LiquidityChartToolTipProps {
   chartProps: any;

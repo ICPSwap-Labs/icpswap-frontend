@@ -1,5 +1,5 @@
-import { Box, Typography } from "components/Mui";
 import { TokenImage } from "components/index";
+import { Box, Typography } from "components/Mui";
 
 interface TokenPairProps {
   token0Logo: string | undefined;

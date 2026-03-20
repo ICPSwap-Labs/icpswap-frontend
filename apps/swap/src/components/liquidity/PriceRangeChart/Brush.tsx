@@ -1,7 +1,7 @@
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { brushX, select, ScaleLinear, BrushBehavior } from "d3";
 import { usePrevious } from "@icpswap/hooks";
-import { useTheme, Box } from "components/Mui";
+import { Box, useTheme } from "components/Mui";
+import { type BrushBehavior, brushX, type ScaleLinear, select } from "d3";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 
 interface HandleProps {

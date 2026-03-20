@@ -1,7 +1,7 @@
-import { getStorageTokenInfo } from "hooks/token";
-import { SwapInfo } from "@icpswap/types";
+import type { SwapInfo } from "@icpswap/types";
 import { parseTokenAmount } from "@icpswap/utils";
-import { SwapTransactionResult, SWAP_TRANSACTIONS_FAILED_STATUS } from "utils/transaction/constant";
+import { getStorageTokenInfo } from "hooks/token";
+import { SWAP_TRANSACTIONS_FAILED_STATUS, type SwapTransactionResult } from "utils/transaction/constant";
 
 export async function swapTransactionSwapFormat(info: SwapInfo): Promise<SwapTransactionResult> {
   const __status = info.status;

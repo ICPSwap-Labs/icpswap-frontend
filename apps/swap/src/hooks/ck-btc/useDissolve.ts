@@ -1,13 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
-import { retrieveBTC, useApprove } from "hooks/ck-btc";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { type Null, ResultStatus } from "@icpswap/types";
 import { formatTokenAmount, numberToString } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { Null, ResultStatus } from "@icpswap/types";
+import { retrieveBTC, useApprove } from "hooks/ck-btc";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { useBitcoinDissolveTxsManager } from "store/wallet/hooks";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BitcoinTx } from "types/ckBTC";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useBitcoinDissolveTxsManager } from "store/wallet/hooks";
+import type { BitcoinTx } from "types/ckBTC";
 
 export interface DissolveProps {
   amount: string | number | Null;

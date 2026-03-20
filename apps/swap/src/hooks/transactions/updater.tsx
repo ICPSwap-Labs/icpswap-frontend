@@ -1,13 +1,13 @@
-import { TransactionReceipt } from "viem";
 import { ChainId } from "@icpswap/constants";
 import { useBlockNumber, useCurrentBlockTimestamp } from "hooks/web3/index";
 import ms from "ms";
 import { useCallback, useEffect } from "react";
 import { useTransactionRemover } from "store/transactions/hooks";
-import { TransactionDetails } from "store/transactions/types";
+import type { TransactionDetails } from "store/transactions/types";
+import type { TransactionReceipt } from "viem";
 import { useAccount, usePublicClient } from "wagmi";
 
-import { CanceledError, retry, RetryableError, RetryOptions } from "./retry";
+import { CanceledError, RetryableError, type RetryOptions, retry } from "./retry";
 
 interface Transaction {
   addedTime: number;

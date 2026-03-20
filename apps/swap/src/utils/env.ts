@@ -1,18 +1,18 @@
 export function isDevelopmentEnv(): boolean {
-  return process.env.NODE_ENV === "development";
+  return import.meta.env.MODE === "development";
 }
 
 export function isTestEnv(): boolean {
-  return process.env.NODE_ENV === "test";
+  return import.meta.env.MODE === "test";
 }
 
 export function isStagingEnv(): boolean {
   // This is set in vercel builds and deploys from releases/staging.
-  return Boolean(process.env.REACT_APP_STAGING);
+  return Boolean(import.meta.env.VITE_STAGING);
 }
 
 export function isProductionEnv(): boolean {
-  return process.env.NODE_ENV === "production" && !isStagingEnv();
+  return import.meta.env.MODE === "production" && !isStagingEnv();
 }
 
 export function isLocalhost({ hostname }: { hostname: string }): boolean {
@@ -23,7 +23,7 @@ export function isSentryEnabled(): boolean {
   // disable in develop
   if (isDevelopmentEnv()) return false;
 
-  return process.env.REACT_APP_SENTRY_ENABLED === "true";
+  return import.meta.env.VITE_SENTRY_ENABLED === "true";
 }
 
 export function getEnvName(): "production" | "staging" | "development" {

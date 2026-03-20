@@ -1,7 +1,7 @@
-import { useState, useCallback, useRef } from "react";
-import { Typography, Box, useTheme } from "components/Mui";
-import { Flex, MenuWrapper, Image, ALink } from "@icpswap/ui";
-import { getTransactionExplorerLink, TransactionLink } from "@icpswap/hooks";
+import { getTransactionExplorerLink, type TransactionLink } from "@icpswap/hooks";
+import { ALink, Flex, Image, MenuWrapper } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useCallback, useRef, useState } from "react";
 
 import { Button } from "./Button";
 

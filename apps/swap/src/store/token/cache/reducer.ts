@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateTokenStandards, updateAllTokenIds } from "./actions";
+import { updateAllTokenIds, updateTokenStandards } from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {

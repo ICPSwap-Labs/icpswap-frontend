@@ -1,7 +1,7 @@
-import { Null, AlertInfo, AddAlertArgs } from "@icpswap/types";
-import { icpswap_fetch_post, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { priceAlerts } from "@icpswap/actor";
+import type { AddAlertArgs, AlertInfo, Null } from "@icpswap/types";
+import { icpswap_fetch_post, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getPriceAlertEmail(principal: string) {
   const result = await icpswap_fetch_post<string>("/info/account/get/email", { principal });

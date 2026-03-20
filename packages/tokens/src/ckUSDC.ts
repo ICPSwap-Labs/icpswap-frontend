@@ -1,5 +1,5 @@
 import { Token } from "@icpswap/swap-sdk";
-import { TokenInfo, TOKEN_STANDARD } from "@icpswap/types";
+import { TOKEN_STANDARD, type TokenInfo } from "@icpswap/types";
 
 export const ckUSDCTokenInfo: TokenInfo = {
   standardType: TOKEN_STANDARD.ICRC2,

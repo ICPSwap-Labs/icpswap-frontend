@@ -1,8 +1,8 @@
-import { useState, ReactNode } from "react";
-import { Grid, Box, useTheme } from "components/Mui";
-import { useNavigate, useLocation } from "react-router-dom";
-import { mockALinkAndOpen } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
+import { mockALinkAndOpen } from "@icpswap/utils";
+import { Box, Grid, useTheme } from "components/Mui";
+import { type ReactNode, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export interface Tab {
   key: string | any;

@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { SECONDS_IN_DAY } from "@icpswap/constants";
+import dayjs from "dayjs";
 
 import { toDoubleNumber } from "./global";
 

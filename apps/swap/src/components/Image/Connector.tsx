@@ -1,5 +1,5 @@
-import { useMemo } from "react";
 import { ConnectorConfigs } from "constants/wallet";
+import { useMemo } from "react";
 import { useConnector } from "store/auth/hooks";
 
 import { Image } from "./Image";

@@ -1,6 +1,6 @@
-import { useState, useCallback, ReactNode } from "react";
-import { ConvertToIcp } from "components/Wallet/context";
 import { BalanceConvertContext } from "components/Wallet/BalanceConvert/context";
+import type { ConvertToIcp } from "components/Wallet/context";
+import { type ReactNode, useCallback, useState } from "react";
 
 interface BalanceConvertProviderProps {
   children: ReactNode;

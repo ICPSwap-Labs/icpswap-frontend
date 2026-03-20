@@ -2,7 +2,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "target": "ES2022",
+    "target": "esnext",
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -10,15 +10,15 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "ESNext",
-    "moduleResolution":"bundler",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "downlevelIteration": true,
     "baseUrl": "src",
-    "noImplicitAny":false,
+    "noImplicitAny": false
   },
   "exclude": ["node_modules", "src/abis/types/**/*"],
-  "include": ["src/**/*", "../../packages/ui/src/components/info/ValueLabel.tsx"]
+  "include": ["src/**/*", "../../packages/ui/src/components/info/ValueLabel.tsx", "src/vite-env.d.ts" ]
 }

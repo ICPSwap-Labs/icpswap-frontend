@@ -1,17 +1,17 @@
-import { useContext, useCallback, useRef, useEffect } from "react";
+import { useParsedQueryString } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { SwapContext, SwapWrapper, type SwapWrapperRef, CreatePool, SwapSettings } from "components/swap/index";
-import { SWAP_REFRESH_KEY, Tab } from "constants/index";
-import { Flex } from "@icpswap/ui";
+import { CreatePool, SwapContext, SwapSettings, SwapWrapper, type SwapWrapperRef } from "components/swap/index";
 import { LimitWrapper } from "components/swap/limit-order";
-import { useParsedQueryString } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
-import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
+import { SwapProCardWrapper, SwapProContext } from "components/swap/pro";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
-import { useWalletIsConnected } from "store/auth/hooks";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
+import { SWAP_REFRESH_KEY, Tab } from "constants/index";
+import { useCallback, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useWalletIsConnected } from "store/auth/hooks";
 
 const tabs = [
   { value: Tab.Swap, label: Tab.Swap },

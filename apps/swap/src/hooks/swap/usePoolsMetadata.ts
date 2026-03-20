@@ -1,8 +1,8 @@
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { Token, FeeAmount } from "@icpswap/swap-sdk";
-import { useMemo, useEffect, useState } from "react";
 import { getSwapPool, getSwapPoolMetadata } from "@icpswap/hooks";
+import type { FeeAmount, Token } from "@icpswap/swap-sdk";
 import type { Null, PoolMetadata } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export interface PoolResult {
   poolId: string;

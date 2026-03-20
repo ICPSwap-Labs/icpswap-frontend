@@ -1,15 +1,15 @@
-import { useCallback, useContext, useMemo, useState, useEffect } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
+import { FREE_LIQUIDITY_NAME } from "@icpswap/constants";
 import { useAllLiquidityLocks, usePoolTVLValue, usePositionsValue } from "@icpswap/hooks";
+import type { Position } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { LiquidityLock, LoadingRow, Tooltip } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { Flex } from "components/index";
-import { ChevronDown } from "react-feather";
-import { Position } from "@icpswap/swap-sdk";
-import { useLiquidityLocksImage } from "hooks/swap/index";
-import { Null } from "@icpswap/types";
-import { LoadingRow, LiquidityLock, Tooltip } from "@icpswap/ui";
-import { FREE_LIQUIDITY_NAME } from "@icpswap/constants";
+import { Box, Typography, useTheme } from "components/Mui";
 import { SwapContext } from "components/swap";
+import { useLiquidityLocksImage } from "hooks/swap/index";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 interface LiquidityLocksItemProps {

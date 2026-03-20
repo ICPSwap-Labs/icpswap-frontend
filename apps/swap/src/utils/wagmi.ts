@@ -1,4 +1,4 @@
-import { Address } from "viem";
+import type { Address } from "viem";
 
 export function assume0xAddress(address: string): Address {
   // eslint-disable-next-line no-restricted-syntax

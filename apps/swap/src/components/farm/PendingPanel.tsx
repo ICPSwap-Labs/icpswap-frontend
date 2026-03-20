@@ -1,8 +1,8 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { Tooltip } from "@icpswap/ui";
-import { useFarmIsPending } from "hooks/staking-farm/useFarmIsPending";
+import type { Token } from "@icpswap/swap-sdk";
 import type { FarmState, Null } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import { Tooltip } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useFarmIsPending } from "hooks/staking-farm/useFarmIsPending";
 import { useTranslation } from "react-i18next";
 
 interface PendingPanelProps {

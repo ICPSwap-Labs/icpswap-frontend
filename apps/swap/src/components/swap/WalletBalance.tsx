@@ -1,8 +1,8 @@
-import { Typography } from "components/Mui";
-import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatAmount } from "@icpswap/utils";
 import { WalletIcon } from "assets/icons/swap/WalletIcon";
+import { Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export interface WalletBalanceProps {

@@ -1,7 +1,7 @@
-import { actor, BeforeSubmitArgs, Connector } from "@icpswap/actor";
+import { actor, type BeforeSubmitArgs, Connector } from "@icpswap/actor";
+import i18n from "i18n/index";
 import { useEffect } from "react";
 import store from "store/index";
-import i18n from "i18n/index";
 
 async function isCurrentAccount() {
   // const { principal } = store.getState().auth;

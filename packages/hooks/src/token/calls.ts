@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { isPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
-import { tokenAdapter } from "@icpswap/token-adapter";
 import { Principal } from "@icp-sdk/core/principal";
+import { tokenAdapter } from "@icpswap/token-adapter";
 import type { ActorIdentity, StatusResult } from "@icpswap/types";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { isPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 export interface getTokenTransactionProps {
   canisterId: string;

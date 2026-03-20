@@ -1,5 +1,5 @@
-import { Token } from "@icpswap/swap-sdk";
-import { NumberType } from "@icpswap/types";
+import type { Token } from "@icpswap/swap-sdk";
+import type { NumberType } from "@icpswap/types";
 import { BigNumber } from "@icpswap/utils";
 
 export function isBalanceGreaterThanFee(balance: NumberType, token: Token) {

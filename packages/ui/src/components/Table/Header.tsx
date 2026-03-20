@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import { Override } from "@icpswap/types";
+import type { Override } from "@icpswap/types";
+import { useCallback, useState } from "react";
 
-import { Box, BoxProps } from "../Mui";
+import { Box, type BoxProps } from "../Mui";
 import HeaderContext from "./headerContext";
 import { SortDirection } from "./types";
 

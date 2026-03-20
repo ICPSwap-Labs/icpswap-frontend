@@ -1,28 +1,28 @@
-import { useCallback, useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography } from "components/Mui";
-import { CurrencyAmount } from "@icpswap/swap-sdk";
-import { BigNumber } from "@icpswap/utils";
-import { Flex } from "@icpswap/ui";
-import { MuiSlider } from "components/Slider/MuiSlider";
-import HeaderTab from "components/swap/Header";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
-import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swap/burn/hooks";
-import { BURN_FIELD } from "constants/swap";
-import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
-import { useSuccessTip, useLoadingTip } from "hooks/useTips";
-import { CurrencyAmountFormatDecimals } from "constants/index";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { CurrencyAmount } from "@icpswap/swap-sdk";
+import { Flex } from "@icpswap/ui";
+import { BigNumber } from "@icpswap/utils";
+import { AuthButton, LoadingRow, MainCard, Wrapper } from "components/index";
+import { DecreaseLiquidityConfirm } from "components/liquidity/Decrease/Confirm";
+import { DecreaseLiquidityInput } from "components/liquidity/Decrease/Input";
+import { Unclaimed } from "components/liquidity/Decrease/Unclaimed";
+import { Box, Typography } from "components/Mui";
+import { MuiSlider } from "components/Slider/MuiSlider";
+import StepViewButton from "components/Steps/View";
+import HeaderTab from "components/swap/Header";
 import LiquidityInfo from "components/swap/LiquidityInfo";
+import { CurrencyAmountFormatDecimals } from "constants/index";
+import { BURN_FIELD } from "constants/swap";
+import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
 import { PoolState } from "hooks/swap/usePools";
 import { usePositionFees } from "hooks/swap/usePositionFees";
-import StepViewButton from "components/Steps/View";
-import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
-import { LoadingRow, MainCard, Wrapper, AuthButton } from "components/index";
+import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
+import { useLoadingTip, useSuccessTip } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { DecreaseLiquidityConfirm } from "components/liquidity/Decrease/Confirm";
-import { Unclaimed } from "components/liquidity/Decrease/Unclaimed";
-import { DecreaseLiquidityInput } from "components/liquidity/Decrease/Input";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useBurnHandlers, useBurnInfo, useBurnState, useResetBurnState } from "store/swap/burn/hooks";
 
 export default function DecreaseLiquidity() {
   const { t } = useTranslation();
@@ -60,15 +60,15 @@ export default function DecreaseLiquidity() {
     [BURN_FIELD.CURRENCY_A]:
       independentField === BURN_FIELD.CURRENCY_A
         ? typedValue
-        : parsedAmounts[BURN_FIELD.CURRENCY_A]?.toFixed(
+        : (parsedAmounts[BURN_FIELD.CURRENCY_A]?.toFixed(
             CurrencyAmountFormatDecimals(parsedAmounts[BURN_FIELD.CURRENCY_A]?.currency.decimals),
-          ) ?? "",
+          ) ?? ""),
     [BURN_FIELD.CURRENCY_B]:
       independentField === BURN_FIELD.CURRENCY_B
         ? typedValue
-        : parsedAmounts[BURN_FIELD.CURRENCY_B]?.toFixed(
+        : (parsedAmounts[BURN_FIELD.CURRENCY_B]?.toFixed(
             CurrencyAmountFormatDecimals(parsedAmounts[BURN_FIELD.CURRENCY_B]?.currency.decimals),
-          ) ?? "",
+          ) ?? ""),
   };
 
   const totalAmount = useMemo(() => {

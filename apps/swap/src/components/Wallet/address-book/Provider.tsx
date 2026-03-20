@@ -1,7 +1,7 @@
-import { useState, ReactNode } from "react";
-import { WalletManagerPage } from "components/Wallet/context";
 import type { AddressBook as AddressBookType } from "@icpswap/types";
 import { WalletAddressBookContext } from "components/Wallet/address-book/context";
+import { WalletManagerPage } from "components/Wallet/context";
+import { type ReactNode, useState } from "react";
 
 interface WalletAddressBookProviderProps {
   children: ReactNode;

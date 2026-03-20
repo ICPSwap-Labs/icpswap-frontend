@@ -1,8 +1,8 @@
 import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { Principal } from "@icp-sdk/core/principal";
-import { getUserWithdrawQueue, getTokenBalance, getUserUnusedBalance } from "@icpswap/hooks";
-import { Pool } from "@icpswap/swap-sdk";
-import { Null, SwapPoolData, UserSwapPoolsBalance, UserWithdrawQueueInfo } from "@icpswap/types";
+import { getTokenBalance, getUserUnusedBalance, getUserWithdrawQueue } from "@icpswap/hooks";
+import type { Pool } from "@icpswap/swap-sdk";
+import type { Null, SwapPoolData, UserSwapPoolsBalance, UserWithdrawQueueInfo } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useEffect, useMemo, useState } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";

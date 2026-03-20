@@ -1,17 +1,17 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { parseTokenAmount } from "@icpswap/utils";
-import { LoadingRow, Flex } from "@icpswap/ui";
-import { useWithdrawErc20TokenStatus, useChainKeyMinterInfo } from "@icpswap/hooks";
-import type { WithdrawalSearchParameter, WithdrawalDetail, ChainKeyETHMinterInfo } from "@icpswap/types";
-import { useMemo } from "react";
-import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "constants/ckERC20";
 import { Principal } from "@icp-sdk/core/principal";
-import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
+import { useChainKeyMinterInfo, useWithdrawErc20TokenStatus } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, WithdrawalDetail, WithdrawalSearchParameter } from "@icpswap/types";
+import { Flex, LoadingRow } from "@icpswap/ui";
+import { parseTokenAmount } from "@icpswap/utils";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import { EXPLORER_ADDRESS_LINK, EXPLORER_TX_LINK, MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useToken } from "hooks/index";
-import { Token } from "@icpswap/swap-sdk";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
 
 interface TransactionProps {
   transaction: WithdrawalDetail;

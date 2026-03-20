@@ -1,18 +1,19 @@
-import React, { ReactNode } from "react";
+import type React from "react";
+import type { ReactNode } from "react";
 import { XCircle } from "react-feather";
 import { isElement } from "react-is";
 
 import {
-  makeStyles,
-  useTheme,
+  Box,
   Button,
   Dialog,
-  DialogTitle,
   DialogContent,
+  DialogTitle,
+  makeStyles,
+  type Theme,
   Typography,
   useMediaQuery,
-  Theme,
-  Box,
+  useTheme,
 } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({

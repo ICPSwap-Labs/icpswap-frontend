@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
-import { Grid, Typography, Box, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
+import { Box, Grid, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { RISK_WARNING_INDEX } from "constants/zIndex";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import RiskStatementModal, { getRiskStorage } from "./Modal";

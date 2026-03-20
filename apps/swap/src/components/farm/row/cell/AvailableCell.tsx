@@ -1,14 +1,14 @@
-import { Typography, BoxProps, useTheme } from "components/Mui";
-import { Flex, Tooltip, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
-import { usePositionsTotalValue } from "hooks/swap/index";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useSwapPoolMetadata, useSwapUserPositions } from "@icpswap/hooks";
+import type { FarmInfo, FarmState, InitFarmArgs, Null } from "@icpswap/types";
+import { BodyCell, Flex, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount } from "@icpswap/utils";
-import { useSwapUserPositions, useSwapPoolMetadata } from "@icpswap/hooks";
-import type { FarmInfo, Null, FarmState, InitFarmArgs } from "@icpswap/types";
+import { type BoxProps, Typography, useTheme } from "components/Mui";
 import dayjs from "dayjs";
-import { FilterState } from "types/staking-farm";
+import { usePositionsTotalValue } from "hooks/swap/index";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import type { FilterState } from "types/staking-farm";
 
 const DAYJS_FORMAT0 = "MMMM D, YYYY";
 const DAYJS_FORMAT1 = "h:mm A";

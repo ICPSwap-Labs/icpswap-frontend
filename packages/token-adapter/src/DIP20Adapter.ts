@@ -1,22 +1,22 @@
-import { resultFormat } from "@icpswap/utils";
-import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { dip20, dip20BalanceActor, dip20SupplyActor } from "@icpswap/actor";
-import { DIP20 } from "@icpswap/candid";
-import { Transaction, DIP20Metadata, Metadata } from "./types";
+import type { DIP20 } from "@icpswap/candid";
+import { type PaginationResult, ResultStatus } from "@icpswap/types";
+import { resultFormat } from "@icpswap/utils";
 import {
+  type ActualReceivedByTransferRequest,
+  type AllowanceRequest,
+  type ApproveRequest,
+  type BalanceRequest,
   BaseTokenAdapter,
-  SupplyRequest,
-  BalanceRequest,
-  TransferRequest,
-  SetFeeRequest,
-  SetFeeToRequest,
-  GetFeeRequest,
-  ApproveRequest,
-  AllowanceRequest,
-  MetadataRequest,
-  ActualReceivedByTransferRequest,
-  BaseTokenResult,
+  type BaseTokenResult,
+  type GetFeeRequest,
+  type MetadataRequest,
+  type SetFeeRequest,
+  type SetFeeToRequest,
+  type SupplyRequest,
+  type TransferRequest,
 } from "./BaseTokenAdapter";
+import type { DIP20Metadata, Metadata, Transaction } from "./types";
 
 export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
   public async supply({ canisterId }: SupplyRequest) {

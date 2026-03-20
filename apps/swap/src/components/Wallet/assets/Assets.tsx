@@ -1,13 +1,13 @@
-import { useCallback } from "react";
-import { Box, Typography } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { WalletManager } from "components/Wallet/WalletManager";
+import { Box, Typography } from "components/Mui";
 import { SyncYourTokens } from "components/Wallet/assets/SyncYourTokens";
 import { TokenAssets } from "components/Wallet/assets/TokenAssets";
 import { NFTAssets } from "components/Wallet/NFT/NFTAssets";
-import { useWalletTokenContext, AssetsType } from "components/Wallet/token/context";
 import { NFTImportIcon } from "components/Wallet/NFT/NFTImportIcon";
 import { NFTSettings } from "components/Wallet/NFT/NFTSettings";
+import { AssetsType, useWalletTokenContext } from "components/Wallet/token/context";
+import { WalletManager } from "components/Wallet/WalletManager";
+import { useCallback } from "react";
 
 const Tabs = [
   { label: AssetsType.Token, value: AssetsType.Token },

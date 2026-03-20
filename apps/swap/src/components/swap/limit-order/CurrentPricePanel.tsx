@@ -1,9 +1,9 @@
-import { useContext } from "react";
-import { Typography } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex, MainCard, Tooltip } from "@icpswap/ui";
+import { Typography } from "components/Mui";
 import { TokenPrice } from "components/swap/index";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LimitContext } from "./context";

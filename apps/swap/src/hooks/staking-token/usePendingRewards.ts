@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { useStakingPools, getStakingTokenUserInfo } from "@icpswap/hooks";
-import { STATE, UserPendingRewards } from "types/staking-token";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icp-sdk/core/principal";
+import { getStakingTokenUserInfo, useStakingPools } from "@icpswap/hooks";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { STATE, type UserPendingRewards } from "types/staking-token";
 
 let stake_pending_reward_fetch_index = 0;
 const CALL_LIMITED = 10;

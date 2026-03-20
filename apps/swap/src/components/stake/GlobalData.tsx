@@ -1,12 +1,13 @@
-import { Typography, Box } from "components/Mui";
-import { useStakeIntervalGlobalData, useUserStakedTokens, useInfoAllTokens } from "@icpswap/hooks";
-import { Tooltip, Flex } from "components/index";
-import React, { useMemo } from "react";
-import { useICPPrice } from "store/global/hooks";
-import { formatDollarAmount, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useInfoAllTokens, useStakeIntervalGlobalData, useUserStakedTokens } from "@icpswap/hooks";
+import { BigNumber, formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
+import { Flex, Tooltip } from "components/index";
+import { Box, Typography } from "components/Mui";
 import { useUserAvailableTokensValue } from "hooks/staking-token/useUserAvailableTokens";
+import type React from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useICPPrice } from "store/global/hooks";
 
 interface ItemProps {
   label0: React.ReactNode;

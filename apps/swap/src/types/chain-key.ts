@@ -1,13 +1,13 @@
 export enum DogeDissolveTxState {
-  "Signing" = "Signing",
-  "Confirmed" = "Confirmed",
-  "Sending" = "Sending",
-  "AmountTooLow" = "AmountTooLow",
-  "WillReimburse" = "WillReimburse",
-  "Unknown" = "Unknown",
-  "Submitted" = "Submitted",
-  "Reimbursed" = "Reimbursed",
-  "Pending" = "Pending",
+  Signing = "Signing",
+  Confirmed = "Confirmed",
+  Sending = "Sending",
+  AmountTooLow = "AmountTooLow",
+  WillReimburse = "WillReimburse",
+  Unknown = "Unknown",
+  Submitted = "Submitted",
+  Reimbursed = "Reimbursed",
+  Pending = "Pending",
 }
 
 export type DogeDissolveTx = {

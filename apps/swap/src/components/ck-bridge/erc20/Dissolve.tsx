@@ -1,27 +1,27 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
 import { BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
 import {
+  formatTokenAmount,
   nonUndefinedOrNull,
   parseTokenAmount,
-  formatTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
-import { InputWrapper, Erc20Fee } from "components/ck-bridge";
+import ButtonConnector from "components/authentication/ButtonConnector";
+import { Erc20Fee, InputWrapper } from "components/ck-bridge";
+import { DisconnectButton } from "components/ck-bridge/Disconnect";
+import { Box, CircularProgress, TextField, Typography, useTheme } from "components/Mui";
+import { ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
 import { useErc20TokenBalance, useIcpTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useAccount } from "wagmi";
 import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
-import { isAddress } from "utils/web3/index";
-import ButtonConnector from "components/authentication/ButtonConnector";
-import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
-import { ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
-import { DisconnectButton } from "components/ck-bridge/Disconnect";
-import { Flex } from "@icpswap/ui";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { isAddress } from "utils/web3/index";
+import { useAccount } from "wagmi";
 
 export interface Erc20DissolveProps {
   token: Token;

@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { toHexString } from "@icpswap/utils";
 import { setNeuronFollows } from "@icpswap/hooks";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Neuron } from "@icpswap/types";
+import type { Neuron } from "@icpswap/types";
 import { ConfirmModal } from "@icpswap/ui";
+import { toHexString } from "@icpswap/utils";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface DeleteFolloweeProps {

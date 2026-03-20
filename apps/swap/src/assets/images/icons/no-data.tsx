@@ -1,4 +1,4 @@
-import { SvgIcon, useTheme, SvgIconProps } from "components/Mui";
+import { SvgIcon, type SvgIconProps, useTheme } from "components/Mui";
 
 export default function NoDataIcon(props: SvgIconProps) {
   const theme = useTheme();

@@ -1,12 +1,12 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { toSignificant, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
-import { ICP } from "@icpswap/tokens";
 import { useInfoPool } from "@icpswap/hooks";
-import { useMemo } from "react";
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
+import type { Null } from "@icpswap/types";
+import { BigNumber, nonUndefinedOrNull, toSignificant } from "@icpswap/utils";
 import { TokenImage } from "components/index";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { Box, Typography, useTheme } from "components/Mui";
 import { uesTokenPairWithIcp } from "hooks/swap/useTokenPairWithIcp";
+import { useMemo } from "react";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface TokenPriceProps {

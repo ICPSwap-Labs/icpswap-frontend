@@ -1,6 +1,6 @@
-import { icpswap_info_fetch_get } from "@icpswap/utils";
 import type { InfoPoolRealTimeDataResponse } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { icpswap_info_fetch_get } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getInfoPool(poolId: string) {
   const result = await icpswap_info_fetch_get<InfoPoolRealTimeDataResponse>(`/pool/${poolId}`);

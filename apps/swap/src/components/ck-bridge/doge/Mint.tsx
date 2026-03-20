@@ -1,13 +1,13 @@
-import { Token } from "@icpswap/swap-sdk";
-import { BigNumber } from "@icpswap/utils";
-// import { useTheme } from "components/Mui";
-import { useState, useCallback } from "react";
-import { Null } from "@icpswap/types";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { useTranslation } from "react-i18next";
-import { useInterval, updateDogeBalance } from "@icpswap/hooks";
+import { updateDogeBalance, useInterval } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import type { BigNumber } from "@icpswap/utils";
 import { BitcoinStyleMintUI } from "components/ck-bridge/ui/BitcoinStyleMintUI";
+import { MessageTypes, useTips } from "hooks/useTips";
+// import { useTheme } from "components/Mui";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 import { dogeAddressExplorer } from "utils/chain-key";
 
 interface MintProps {

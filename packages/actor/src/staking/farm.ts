@@ -1,16 +1,16 @@
-import { ActorIdentity } from "@icpswap/types";
 import {
-  Farm,
-  FarmInterfaceFactory,
-  FarmController,
+  type Farm,
+  type FarmController,
   FarmControllerInterfaceFactory,
-  FarmStorage,
-  FarmStorageInterfaceFactory,
-  FarmIndex,
+  type FarmIndex,
   FarmIndexInterfaceFactory,
+  FarmInterfaceFactory,
+  type FarmStorage,
+  FarmStorageInterfaceFactory,
 } from "@icpswap/candid";
-import { actor } from "../actor";
+import type { ActorIdentity } from "@icpswap/types";
 import { ActorName } from "../ActorName";
+import { actor } from "../actor";
 
 export const farmController = (identity?: ActorIdentity) =>
   actor.create<FarmController>({

@@ -1,12 +1,12 @@
 import {
-  Price,
-  Token,
-  priceToClosestTick,
-  nearestUsableTick,
-  FeeAmount,
-  TICK_SPACINGS,
   encodeSqrtRatioX96,
+  type FeeAmount,
+  nearestUsableTick,
+  Price,
+  priceToClosestTick,
+  TICK_SPACINGS,
   TickMath,
+  type Token,
 } from "@icpswap/swap-sdk";
 import JSBI from "jsbi";
 

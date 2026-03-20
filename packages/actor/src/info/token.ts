@@ -1,6 +1,6 @@
+import { type TokenStorage, TokenStorageInterfaceFactory } from "@icpswap/candid";
+import type { ActorIdentity } from "@icpswap/types";
 import { actor } from "../actor";
-import { ActorIdentity } from "@icpswap/types";
-import { TokenStorage, TokenStorageInterfaceFactory } from "@icpswap/candid";
 
 export const tokenStorage = (id: string, identity?: ActorIdentity) =>
   actor.create<TokenStorage>({

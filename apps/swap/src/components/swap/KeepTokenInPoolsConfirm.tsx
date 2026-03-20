@@ -1,6 +1,6 @@
-import { Typography, Button, Box } from "components/Mui";
-import { AlertTriangle } from "react-feather";
 import { Flex, Modal } from "@icpswap/ui";
+import { Box, Button, Typography } from "components/Mui";
+import { AlertTriangle } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 export interface KeepTokenInPoolsConfirmModalProps {

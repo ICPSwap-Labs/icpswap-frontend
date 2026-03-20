@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import { useSettingGlobalAds } from "@icpswap/hooks";
-import { nonUndefinedOrNull } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
+import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useState } from "react";
 
 import { AdsUI } from "./UI";
 

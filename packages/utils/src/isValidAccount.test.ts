@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { isValidAccount, ICP_ADDRESS_LENGTH } from "./isValidAccount";
+import { describe, expect, it } from "vitest";
+import { ICP_ADDRESS_LENGTH, isValidAccount } from "./isValidAccount";
 
 describe("isValidAccount", () => {
   it("returns true for 64-char hex string", () => {

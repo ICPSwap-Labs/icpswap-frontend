@@ -1,6 +1,6 @@
-import { useAccount } from "wagmi";
-import { useEffect, useMemo, useState } from "react";
 import { BigNumber } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
+import { useAccount } from "wagmi";
 import Web3 from "web3";
 
 export function useETHBalance(reload?: boolean) {

@@ -1,10 +1,10 @@
-import { Typography, Box } from "components/Mui";
+import { FeeTierPercentLabel, Flex, MainCard, Modal } from "@icpswap/ui";
 import { TokenImage } from "components/index";
-import { FeeTierPercentLabel, Flex, Modal, MainCard } from "@icpswap/ui";
-import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { PoolCharts as InfoPoolCharts } from "components/info/PoolCharts";
+import { Box, Typography } from "components/Mui";
+import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { useTranslation } from "react-i18next";
-import { PoolInfoWithApr } from "types/info";
+import type { PoolInfoWithApr } from "types/info";
 
 export interface PoolChartsProps {
   showOnlyTokenList?: boolean;

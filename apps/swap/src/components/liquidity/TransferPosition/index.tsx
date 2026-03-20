@@ -1,6 +1,6 @@
-import { useState, useCallback, ReactNode } from "react";
+import type { Position } from "@icpswap/swap-sdk";
 import { Box } from "components/Mui";
-import { Position } from "@icpswap/swap-sdk";
+import { type ReactNode, useCallback, useState } from "react";
 
 import { TransferPositionModal } from "./Modal";
 

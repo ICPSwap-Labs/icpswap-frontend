@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { ckBTC, ckETH, ckUSDC, ICP } from "@icpswap/tokens";
 import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { ckBTC, ckETH, ckUSDC, ICP } from "@icpswap/tokens";
+import { useMemo } from "react";
 import { useTokenStandard } from "store/token/cache/hooks";
 
 import { useIsSnsToken } from "./useTokenInSNS";

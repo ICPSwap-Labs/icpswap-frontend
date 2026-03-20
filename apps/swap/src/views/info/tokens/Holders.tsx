@@ -1,9 +1,9 @@
-import { useParams } from "react-router-dom";
-import { Box, Typography, useTheme } from "components/Mui";
-import { InfoWrapper } from "components/index";
 import { BreadcrumbsV1 } from "@icpswap/ui";
+import { InfoWrapper } from "components/index";
 import { Holders } from "components/info/tokens";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 export default function __Holders() {
   const { t } = useTranslation();

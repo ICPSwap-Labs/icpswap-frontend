@@ -1,7 +1,7 @@
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useMemo } from "react";
-import { type Null } from "@icpswap/types";
-import { Pool, Token } from "@icpswap/swap-sdk";
 
 import { useInfoAllTokens } from "../info";
 import { useTokenBalance } from "../token";

@@ -1,8 +1,8 @@
-import { useCallback } from "react";
-import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
+import { useTheme } from "components/Mui";
 import { useWalletContext } from "components/Wallet/context";
 import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useCallback } from "react";
 
 interface TopUpItemProps {
   tokenId: string;

@@ -1,13 +1,13 @@
-import { Contract } from "@ethersproject/contracts";
-import { useAccount } from "wagmi";
+import type { Contract } from "@ethersproject/contracts";
+import type { Null } from "@icpswap/types";
+import ERC20ABI from "abis/ERC20.json";
+import EthHelperABI from "abis/EthHelper.json";
+import type { ERC20, EthHelper } from "abis/types";
 import { chain } from "constants/web3";
+import { useEthersWeb3Provider } from "hooks/web3/useEthersProvider";
 import { useMemo } from "react";
 import { getContract } from "utils/web3/index";
-import { Null } from "@icpswap/types";
-import type { ERC20, EthHelper } from "abis/types";
-import EthHelperABI from "abis/EthHelper.json";
-import ERC20ABI from "abis/ERC20.json";
-import { useEthersWeb3Provider } from "hooks/web3/useEthersProvider";
+import { useAccount } from "wagmi";
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(

@@ -1,9 +1,15 @@
-import { useState, useEffect, useMemo } from "react";
-import { Typography, Box } from "components/Mui";
+import type {
+  ApiResult,
+  InfoGlobalDataResponse,
+  InfoGlobalRealTimeDataResponse,
+  Null,
+  PageResponse,
+} from "@icpswap/types";
+import { GridAutoRows, ImageLoading, LineChartAlt, MainCard, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount, isUndefinedOrNull } from "@icpswap/utils";
-import { GridAutoRows, MainCard, LineChartAlt, Tooltip, ImageLoading } from "@icpswap/ui";
+import { Box, Typography } from "components/Mui";
 import dayjs from "dayjs";
-import { ApiResult, InfoGlobalDataResponse, InfoGlobalRealTimeDataResponse, Null, PageResponse } from "@icpswap/types";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 interface TVLChartsWrapperProps {
@@ -37,10 +43,10 @@ export function TVLChartsWrapper({ globalCharts, globalProtocol }: TVLChartsWrap
         data.snapshotTime.toString() === "1686787200"
           ? 3694463
           : data.snapshotTime.toString() === "1686873600"
-          ? 3756323
-          : Number(data.snapshotTime) >= 1690502400 && Number(data.snapshotTime) <= 1690934400
-          ? 1342535
-          : Number(data.tvlUSD),
+            ? 3756323
+            : Number(data.snapshotTime) >= 1690502400 && Number(data.snapshotTime) <= 1690934400
+              ? 1342535
+              : Number(data.tvlUSD),
     }));
   }, [reversedGlobalCharts]);
 

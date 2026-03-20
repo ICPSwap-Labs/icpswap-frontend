@@ -1,7 +1,7 @@
-import { resultFormat } from "@icpswap/utils";
 import { sns_swap } from "@icpswap/actor";
 import type { GetDerivedStateResponse } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getSNSSwapDerivedState(swap_id: string) {
   return resultFormat<GetDerivedStateResponse>(await (await sns_swap(swap_id)).get_derived_state({})).data;

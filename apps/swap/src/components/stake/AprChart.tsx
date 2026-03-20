@@ -1,13 +1,13 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { MainCard } from "components/index";
 import { useStakeAprChartData } from "@icpswap/hooks";
 import { Flex, Tooltip as Tip } from "@icpswap/ui";
-import { useMemo, useState } from "react";
-import { ResponsiveContainer, YAxis, Tooltip, AreaChart, Area } from "recharts";
-import { darken } from "polished";
 import { BigNumber } from "@icpswap/utils";
+import { MainCard } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import dayjs from "dayjs";
+import { darken } from "polished";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 
 const DAYJS_FORMAT = "MMM D, YYYY HH:mm:ss";
 
@@ -91,8 +91,8 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
             {value
               ? `${new BigNumber(value).toFixed(2)}%`
               : aprCharts
-              ? `${defaultAprData.value ? new BigNumber(defaultAprData.value).toFixed(2) : "--"}%`
-              : "--"}
+                ? `${defaultAprData.value ? new BigNumber(defaultAprData.value).toFixed(2) : "--"}%`
+                : "--"}
           </Typography>
 
           <Typography
@@ -104,8 +104,8 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
             {label
               ? `${dayjs(Number(label) * 1000).format(DAYJS_FORMAT)}`
               : aprCharts
-              ? `${defaultAprData?.time ? dayjs(Number(defaultAprData.time) * 1000).format(DAYJS_FORMAT) : "--"}`
-              : "--"}
+                ? `${defaultAprData?.time ? dayjs(Number(defaultAprData.time) * 1000).format(DAYJS_FORMAT) : "--"}`
+                : "--"}
           </Typography>
         </Box>
 

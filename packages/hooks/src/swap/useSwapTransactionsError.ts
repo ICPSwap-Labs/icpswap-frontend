@@ -1,7 +1,7 @@
-import { resultFormat } from "@icpswap/utils";
 import { swapPool } from "@icpswap/actor";
 import type { SwapFailedTransaction } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getSwapFailedTransactions(canisterId: string) {
   return resultFormat<Array<[bigint, SwapFailedTransaction]>>(

@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { Box, Button, Typography } from "components/Mui";
-import { TokenImage } from "components/index";
 import { Flex, Link, Modal } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
-import { ArrowRight } from "react-feather";
-import { useSwapFinalMetadataManager } from "store/hooks";
 import { formatAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { TokenImage } from "components/index";
+import { Box, Button, Typography } from "components/Mui";
 import { APP_URL } from "constants/index";
+import { useMemo } from "react";
+import { ArrowRight } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useSwapFinalMetadataManager } from "store/hooks";
 
 export interface SwapSuccessModalProps {
   open: boolean;

@@ -1,7 +1,7 @@
-import { resultFormat } from "@icpswap/utils";
 import { sns_swap } from "@icpswap/actor";
 import type { GetInitResponse } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getSNSSwapInitArgs(swap_id: string) {
   const result = resultFormat<GetInitResponse>(await (await sns_swap(swap_id)).get_init({})).data;

@@ -1,27 +1,27 @@
-import { useMemo, useCallback, useState } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
-import { CurrencySelector } from "components/swap/index";
+import { useSetTimeoutCall } from "@icpswap/hooks";
+import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, Tooltip } from "@icpswap/ui";
 import {
-  formatDollarAmount,
   BigNumber,
-  nonUndefinedOrNull,
-  parseTokenAmount,
+  formatDollarAmount,
   formatTokenAmount,
   isUndefinedOrNull,
+  nonUndefinedOrNull,
+  parseTokenAmount,
 } from "@icpswap/utils";
-import { Flex, Tooltip } from "@icpswap/ui";
-import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
-import { UseCurrencyState } from "hooks/useCurrency";
-import { SwapInput } from "components/swap/SwapInput";
-import { impactColor } from "utils/swap/prices";
-import { Null } from "@icpswap/types";
-import { useBalanceMaxSpend, usePoolBalanceMaxSpend } from "hooks/swap";
-import { maxAmountFormat } from "utils/index";
-import { useTranslation } from "react-i18next";
+import { Box, Typography, useTheme } from "components/Mui";
 import { TokenBalanceSlider } from "components/Slider/index";
+import { CurrencySelector } from "components/swap/index";
+import { SwapInput } from "components/swap/SwapInput";
 import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
 import { WalletBalance } from "components/swap/WalletBalance";
-import { useSetTimeoutCall } from "@icpswap/hooks";
+import { useBalanceMaxSpend, usePoolBalanceMaxSpend } from "hooks/swap";
+import { UseCurrencyState } from "hooks/useCurrency";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { maxAmountFormat } from "utils/index";
+import { impactColor } from "utils/swap/prices";
 
 const LOADING_TRANSFORM_DURATION = 100;
 
@@ -83,12 +83,12 @@ export function SwapInputCurrency({
   const USDChangeColor = !new BigNumber(usdChange ?? 0).isLessThan(0)
     ? "#54C081"
     : impactTier === 3
-    ? "#D7331A"
-    : impactTier === 2
-    ? "#D3625B"
-    : impactTier === 1
-    ? "#F7B231"
-    : "#8492c4";
+      ? "#D7331A"
+      : impactTier === 2
+        ? "#D3625B"
+        : impactTier === 1
+          ? "#F7B231"
+          : "#8492c4";
 
   const maxWalletBalanceSpent = useBalanceMaxSpend({
     token,

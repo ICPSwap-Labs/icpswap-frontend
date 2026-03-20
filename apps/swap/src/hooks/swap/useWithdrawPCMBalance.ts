@@ -1,10 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
-import { parseTokenAmount } from "@icpswap/utils";
-import { TokenInfo } from "types/token";
-import { useTips, MessageTypes } from "hooks/useTips";
 import { destroyPassCode, withdrawPCMBalance } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { type PassCode, type PCMMetadata, ResultStatus } from "@icpswap/types";
-import { type Token } from "@icpswap/swap-sdk";
+import { parseTokenAmount } from "@icpswap/utils";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
+import type { TokenInfo } from "types/token";
 
 export interface WithdrawPCMBalanceArgs {
   token: TokenInfo | Token;

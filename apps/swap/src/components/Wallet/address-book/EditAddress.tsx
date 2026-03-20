@@ -1,14 +1,14 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Box, Typography, useTheme, Button, CircularProgress } from "components/Mui";
-import { FilledTextField, Flex } from "components/index";
-import { isUndefinedOrNull, isValidAccount, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
-import { useTranslation } from "react-i18next";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { editAddressBook, useAddressBook } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
-import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
+import { isUndefinedOrNull, isValidAccount, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
+import { FilledTextField, Flex } from "components/index";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function EditAddress() {
   const theme = useTheme();

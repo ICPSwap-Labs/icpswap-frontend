@@ -1,8 +1,8 @@
-import { useCallback } from "react";
-import { useTheme, Typography } from "components/Mui";
+import type { Null } from "@icpswap/types";
 import { Flex, Image, Link } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { Typography, useTheme } from "components/Mui";
+import { useCallback } from "react";
 
 export type LinkButtonProps = { k: string; l?: string; v: string; i: string };
 

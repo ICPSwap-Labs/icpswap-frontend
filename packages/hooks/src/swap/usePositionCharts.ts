@@ -1,6 +1,6 @@
+import type { Null, PoolApr, PoolAprIndex, PositionAPR, PositionFees, PositionValue, PriceIndex } from "@icpswap/types";
 import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
-import type { Null, PriceIndex, PositionValue, PositionFees, PositionAPR, PoolApr, PoolAprIndex } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getPoolPricePeriodRange(poolId: string) {
   const result = await icpswap_fetch_post<PriceIndex>("/swap/pool/price/index", { pid: poolId });

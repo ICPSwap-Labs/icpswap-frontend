@@ -1,10 +1,9 @@
-import { ERC20Token } from "@icpswap/swap-sdk";
+import type { TransactionResponse } from "@ethersproject/providers";
+import type { ERC20Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { useCallback } from "react";
 import { useHasPendingApproval, useTransactionAdder } from "store/transactions/hooks";
 import { TransactionType } from "store/transactions/types";
-import type { TransactionResponse } from "@ethersproject/providers";
-
-import { Null } from "@icpswap/types";
 import { ApprovalState, useApproval } from "./useERC20Approve";
 
 function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) {

@@ -1,26 +1,26 @@
-import { useMemo } from "react";
-import { Typography, Box, Button, useTheme } from "components/Mui";
-import {
-  formatDollarAmount,
-  nanosecond2Millisecond,
-  toSignificantWithGroupSeparator,
-  formatTokenAmount,
-  parseTokenAmount,
-  BigNumber,
-} from "@icpswap/utils";
-import { Modal, Line } from "@icpswap/ui";
-import { Position } from "@icpswap/swap-sdk";
-import { Flex, TokenImage, Tooltip } from "components/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { ArrowDown } from "react-feather";
-import dayjs from "dayjs";
-import { useLimitDetails } from "hooks/swap/limit-order/index";
-import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { useTokenBalance, useUserUnusedBalance } from "@icpswap/hooks";
+import type { Position } from "@icpswap/swap-sdk";
+import type { LimitOrder } from "@icpswap/types";
+import { Line, Modal } from "@icpswap/ui";
+import {
+  BigNumber,
+  formatDollarAmount,
+  formatTokenAmount,
+  nanosecond2Millisecond,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
+import { Flex, TokenImage, Tooltip } from "components/index";
+import { Box, Button, Typography, useTheme } from "components/Mui";
+import dayjs from "dayjs";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
-import { LimitOrder } from "@icpswap/types";
+import { useLimitDetails } from "hooks/swap/limit-order/index";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useMemo } from "react";
+import { ArrowDown } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import { LimitDealRatio } from "./LimitDealRatio";
 

@@ -1,22 +1,21 @@
-import { useAppSelector } from "store/hooks";
-import { StyledEngineProvider, ThemeProvider } from "components/Mui";
-import { SnackbarProvider } from "components/notistack";
-import TransactionsUpdater from "store/transactions/updater";
-import { WagmiProvider } from "wagmi";
-import { wagmiConfig } from "constants/wagmi";
+import { IdentityKitAuthType, NFIDW } from "@nfid/identitykit";
+import { IdentityKitProvider } from "@nfid/identitykit/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DisableIframe } from "components/DisableIframe";
-import { WalletContextProvider } from "components/Wallet/WalletContextProvider";
 import { GlobalContextProvider } from "components/Global";
-import { I18nextProvider } from "react-i18next";
+import { StyledEngineProvider, ThemeProvider } from "components/Mui";
+import { SnackbarProvider } from "components/notistack";
+import { WalletContextProvider } from "components/Wallet/WalletContextProvider";
+import { wagmiConfig } from "constants/wagmi";
 import i18n from "i18n/index";
-import { IdentityKitProvider } from "@nfid/identitykit/react";
-import { NFIDW, IdentityKitAuthType } from "@nfid/identitykit";
 import { useState } from "react";
-
-import { theme } from "./theme";
+import { I18nextProvider } from "react-i18next";
+import { useAppSelector } from "store/hooks";
+import TransactionsUpdater from "store/transactions/updater";
+import { WagmiProvider } from "wagmi";
 import { App } from "./App";
 import { MAX_IDENTITY_KIT_TIME_LIVE } from "./constants";
+import { theme } from "./theme";
 
 import "@nfid/identitykit/react/styles.css";
 

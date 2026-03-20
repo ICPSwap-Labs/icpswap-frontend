@@ -1,4 +1,4 @@
-import { Flex, BodyCell } from "@icpswap/ui";
+import { BodyCell, Flex } from "@icpswap/ui";
 
 interface EmptyCellProps {
   justify?: "flex-start" | "flex-end";

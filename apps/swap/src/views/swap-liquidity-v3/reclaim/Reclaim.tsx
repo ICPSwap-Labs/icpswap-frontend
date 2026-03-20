@@ -1,13 +1,12 @@
-import { Typography, Box } from "components/Mui";
-import { Wrapper, Breadcrumbs, TabPanel, Tooltip } from "components/index";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Breadcrumbs, TabPanel, Tooltip, Wrapper } from "components/index";
+import { Box, Typography } from "components/Mui";
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { isMobile } from "react-device-detect";
-
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ReclaimAll } from "./All";
 import { ReclaimWithPair } from "./Pair";
 import { ReclaimWithToken } from "./Token";
-import { ReclaimAll } from "./All";
 
 const Tabs = [
   {

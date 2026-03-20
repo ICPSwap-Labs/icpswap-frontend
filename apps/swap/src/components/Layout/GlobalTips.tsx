@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { GlobalTips as GlobalTipsUI } from "@icpswap/ui";
 import { useSettingGlobalTips } from "@icpswap/hooks";
+import { GlobalTips as GlobalTipsUI } from "@icpswap/ui";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useState } from "react";
 
 export function GlobalTips() {
   const [globalTipsShow, setGlobalTipsShow] = useState<boolean>(true);

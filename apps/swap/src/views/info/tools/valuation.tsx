@@ -1,33 +1,33 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { InfoWrapper, FilledTextField, TokenImage } from "components/index";
-import { makeStyles, Box, Typography, Link, useTheme } from "components/Mui";
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { TokenBalanceState, useParsedQueryString, useTokensBalance, useTokensFromList } from "@icpswap/hooks";
+import { ICP } from "@icpswap/tokens";
 import {
-  isValidPrincipal,
-  toSignificant,
-  parseTokenAmount,
-  BigNumber,
-  icDashboardExplorerLink,
-  locationSearchReplace,
-} from "@icpswap/utils";
-import { useTokensBalance, useTokensFromList, useParsedQueryString, TokenBalanceState } from "@icpswap/hooks";
-import {
-  MainCard,
+  BodyCell,
+  BreadcrumbsV1,
   Header,
   HeaderCell,
-  TableRow,
-  BodyCell,
   LoadingRow,
-  OnlyTokenList,
+  MainCard,
   NoData,
-  BreadcrumbsV1,
+  OnlyTokenList,
+  TableRow,
 } from "@icpswap/ui";
-import { ICP } from "@icpswap/tokens";
-import { getAllTokens } from "store/allTokens";
+import {
+  BigNumber,
+  icDashboardExplorerLink,
+  isValidPrincipal,
+  locationSearchReplace,
+  parseTokenAmount,
+  toSignificant,
+} from "@icpswap/utils";
+import { FilledTextField, InfoWrapper, TokenImage } from "components/index";
+import { Box, Link, makeStyles, Typography, useTheme } from "components/Mui";
 import { useTokensInfo } from "hooks/token";
-import { TokenInfo } from "types/token";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getAllTokens } from "store/allTokens";
+import type { TokenInfo } from "types/token";
 
 const useStyles = makeStyles(() => {
   return {

@@ -1,10 +1,9 @@
+import type { Null, SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
 import { useMemo } from "react";
-import type { Null, UserSwapPoolsBalance, SwapPoolData } from "@icpswap/types";
-
+import { useNodeInfoAllPools } from "../info";
 import { useSwapPools } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
-import { useNodeInfoAllPools } from "../info";
 
 interface UseUserSwapPoolBalancesProps {
   principal: string | Null;

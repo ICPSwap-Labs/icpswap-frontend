@@ -1,13 +1,13 @@
 /**
  * Credit to MUI team @ https://mui.com
  */
-import * as React from "react";
+
 import clsx from "clsx";
 import { ClickAwayListener } from "components/Mui";
-
-import useEventCallback from "../utils/useEventCallback";
-import { CloseReason, SharedProps, SnackbarKey } from "../types";
+import * as React from "react";
+import type { CloseReason, SharedProps, SnackbarKey } from "../types";
 import { ComponentClasses } from "../utils/styles";
+import useEventCallback from "../utils/useEventCallback";
 
 interface SnackbarProps extends Required<Pick<SharedProps, "disableWindowBlurListener" | "onClose">> {
   open: boolean;
@@ -99,7 +99,7 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>((props, ref) =>
 
   const handleClickAway = (event: MouseEvent | TouchEvent) => {
     if (onClose) {
-      // @ts-ignore
+      // @ts-expect-error
       onClose(event, "clickaway", id);
     }
   };

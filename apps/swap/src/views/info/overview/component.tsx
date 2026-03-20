@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
-import { Typography, Box, useTheme } from "components/Mui";
-import { mockALinkAndOpen } from "@icpswap/utils";
-import { useNavigate } from "react-router-dom";
 import { Flex, Tooltip } from "@icpswap/ui";
+import { mockALinkAndOpen } from "@icpswap/utils";
+import { Box, Typography, useTheme } from "components/Mui";
+import type { ReactNode } from "react";
 import { ArrowRight } from "react-feather";
+import { useNavigate } from "react-router-dom";
 
 export interface RowProps {
   children: ReactNode;

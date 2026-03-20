@@ -1,28 +1,28 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { PaginationResult } from "@icpswap/types";
+import { Principal } from "@icp-sdk/core/principal";
+import { NFTCanister, NFTCanisterController, swapNFT } from "@icpswap/actor";
 import type {
+  NFTBatchMintArgs,
+  NFTCanisterInfo,
+  NFTControllerArgs,
+  NFTControllerInfo,
   NFTTokenMetadata,
   NFTTransaction,
-  NFTCanisterInfo,
   NFTTransferArgs,
-  NFTControllerArgs,
-  NFTBatchMintArgs,
-  NFTControllerInfo,
-  StatusResult,
   Null,
+  PaginationResult,
+  StatusResult,
 } from "@icpswap/types";
-import { OLD_CANISTER_IDS } from "constants/nft";
 import {
-  resultFormat,
-  principalToAccount,
   isAvailablePageArgs,
   isUndefinedOrNull,
   isValidPrincipal,
   pageArgsFormat,
+  principalToAccount,
+  resultFormat,
 } from "@icpswap/utils";
-import { swapNFT, NFTCanisterController, NFTCanister } from "@icpswap/actor";
-import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { OLD_CANISTER_IDS } from "constants/nft";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export async function approveForAll(spenderCanisterId: string) {
   const spender = principalToAccount(spenderCanisterId);
@@ -71,9 +71,7 @@ export function useMintNFTCallback(): (canisterId: string, params: NFTBatchMintA
     }
 
     return resultFormat<bigint>(
-      await (
-        await NFTCanister(canisterId, true)
-      ).mint({
+      await (await NFTCanister(canisterId, true)).mint({
         ...params,
       }),
     );
@@ -91,7 +89,7 @@ export function useNFTMetadata(
       if (!canisterId || (!tokenId && tokenId !== 0)) return undefined;
       return resultFormat<NFTTokenMetadata>(await (await NFTCanister(canisterId)).icsMetadata(Number(tokenId))).data;
     },
-    enabled: !!canisterId && (tokenId !== undefined && tokenId !== null),
+    enabled: !!canisterId && tokenId !== undefined && tokenId !== null,
   });
 }
 
@@ -126,9 +124,11 @@ export function useUserNFTTransactions(
       if (!canisterId || !principal || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<NFTTransaction>>(
-        await (
-          await NFTCanister(canisterId)
-        ).findTokenTxRecord({ principal: Principal.fromText(principal) }, BigInt(offset), BigInt(limit)),
+        await (await NFTCanister(canisterId)).findTokenTxRecord(
+          { principal: Principal.fromText(principal) },
+          BigInt(offset),
+          BigInt(limit),
+        ),
       ).data;
     },
     enabled: !!canisterId && !!principal && isAvailablePageArgs(offset, limit),
@@ -239,9 +239,7 @@ export async function getCanisterLogo(canisterId: string) {
   return resultFormat<NFTCanisterInfo>(await (await NFTCanister(canisterId)).canisterInfo()).data?.image;
 }
 
-export function useCanisterLogo(
-  canisterId: string,
-): UseQueryResult<string | undefined, Error> {
+export function useCanisterLogo(canisterId: string): UseQueryResult<string | undefined, Error> {
   return useQuery({
     queryKey: ["useCanisterLogo", canisterId],
     queryFn: async () => {
@@ -253,9 +251,7 @@ export function useCanisterLogo(
 }
 export async function getCanisterNFTs(canisterId: string, address: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<NFTTokenMetadata>>(
-    await (
-      await NFTCanister(canisterId)
-    ).findTokenList(
+    await (await NFTCanister(canisterId)).findTokenList(
       isValidPrincipal(address) ? { principal: Principal.fromText(address) } : { address },
       BigInt(offset),
       BigInt(limit),

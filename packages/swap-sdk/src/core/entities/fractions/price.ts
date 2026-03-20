@@ -1,10 +1,10 @@
 import JSBI from "jsbi";
 import invariant from "tiny-invariant";
 
-import { BigintIsh, Rounding } from "../../constants";
-import { Token } from "../token";
-import { Fraction } from "./fraction";
+import { type BigintIsh, Rounding } from "../../constants";
+import type { Token } from "../token";
 import { CurrencyAmount } from "./currencyAmount";
+import { Fraction } from "./fraction";
 
 export class Price<TBase extends Token, TQuote extends Token> extends Fraction {
   public readonly baseCurrency: TBase; // input i.e. denominator

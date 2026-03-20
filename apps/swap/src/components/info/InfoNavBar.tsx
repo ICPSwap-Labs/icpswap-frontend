@@ -1,9 +1,9 @@
+import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
+import { Link } from "components/index";
+import { Box, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MenuWrapper, MenuItem, Flex } from "@icpswap/ui";
-import { Link } from "components/index";
-import { makeStyles, useTheme, Box, Typography, useMediaQuery, Theme } from "components/Mui";
-import { routes, Route } from "./nav.config";
+import { type Route, routes } from "./nav.config";
 
 const linearGradient = "linear-gradient(89.44deg, #5569DB -0.31%, #8572FF 91.14%)";
 

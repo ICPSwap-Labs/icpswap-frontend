@@ -1,13 +1,13 @@
-import { Typography } from "components/Mui";
-import { Flex, Tooltip, BodyCell } from "@icpswap/ui";
-import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { useToken } from "hooks/useCurrency";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useStakingPoolState } from "@icpswap/hooks";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { useTokenBalance } from "hooks/token";
+import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
+import { BodyCell, Flex, Tooltip } from "@icpswap/ui";
+import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Typography } from "components/Mui";
 import dayjs from "dayjs";
+import { useTokenBalance } from "hooks/token";
+import { useToken } from "hooks/useCurrency";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 const DAYJS_FORMAT0 = "MMMM D, YYYY";
 const DAYJS_FORMAT1 = "h:mm A";

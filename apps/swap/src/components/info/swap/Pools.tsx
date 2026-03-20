@@ -1,25 +1,25 @@
-import { useState, useMemo } from "react";
-import { Box, useMediaQuery, makeStyles, useTheme } from "components/Mui";
-import { useNavigate } from "react-router-dom";
-import { InfoPoolRealTimeDataResponse } from "@icpswap/types";
-import { ImageLoading, TokenImage } from "components/index";
-import { useToken } from "hooks/index";
+import { usePoolAPR } from "@icpswap/hooks";
+import type { InfoPoolRealTimeDataResponse } from "@icpswap/types";
 import {
+  APRPanel,
+  BodyCell,
+  FeeTierPercentLabel,
+  Flex,
   Header,
   HeaderCell,
-  BodyCell,
-  TableRow,
-  SortDirection,
-  FeeTierPercentLabel,
-  APRPanel,
   NoData,
-  Flex,
   Pagination,
+  SortDirection,
+  TableRow,
 } from "@icpswap/ui";
-import { usePoolAPR } from "@icpswap/hooks";
 import { BigNumber, formatDollarAmount } from "@icpswap/utils";
+import { ImageLoading, TokenImage } from "components/index";
+import { Box, makeStyles, useMediaQuery, useTheme } from "components/Mui";
 import { HIDDEN_POOLS } from "constants/info";
+import { useToken } from "hooks/index";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   return {

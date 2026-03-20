@@ -1,12 +1,12 @@
-import { Typography } from "components/Mui";
-import { Flex, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
-import { useToken } from "hooks/useCurrency";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount, parseTokenAmount, BigNumber, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { useFarmUserPositions, useV3UserFarmRewardInfo } from "@icpswap/hooks";
-import type { FarmInfo, Null, InitFarmArgs } from "@icpswap/types";
+import type { FarmInfo, InitFarmArgs, Null } from "@icpswap/types";
+import { BodyCell, Flex } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Typography } from "components/Mui";
+import { useToken } from "hooks/useCurrency";
 import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface UserRewardsCellProps {
   farmId: string;

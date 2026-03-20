@@ -1,11 +1,18 @@
 import { Flex } from "@icpswap/ui";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { BitcoinTransactionEvent } from "components/ck-bridge/ui/events/BitcoinTransactionEvent";
+import { Divider } from "components/ck-bridge/ui/events/Divider";
+import { DogeTransactionEvent } from "components/ck-bridge/ui/events/DogeTransactionEvent";
+import {
+  Erc20DissolveTransactionEventUI,
+  Erc20MintTransactionEvent,
+} from "components/ck-bridge/ui/events/Erc20TransactionEvent";
+import { ETHTransactionEvent } from "components/ck-bridge/ui/events/ETHTransactionEvent";
 import { Box, Typography, useTheme } from "components/Mui";
 import { useAllEvents } from "hooks/ck-bridge/useAllEvents";
 import { useBridgeWatcher } from "hooks/ck-bridge/useBridgeWatcher";
 import { useCallback, useMemo, useState } from "react";
 import { ChevronLeft, ChevronRight } from "react-feather";
-import { BitcoinTransactionEvent } from "components/ck-bridge/ui/events/BitcoinTransactionEvent";
-import { DogeTransactionEvent } from "components/ck-bridge/ui/events/DogeTransactionEvent";
 import {
   isBtcTransactionEvent,
   isDogeTransactionEvent,
@@ -13,13 +20,6 @@ import {
   isErc20MintTransactionEvent,
   isEthTransactionEvent,
 } from "utils/web3/ck-bridge";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { ETHTransactionEvent } from "components/ck-bridge/ui/events/ETHTransactionEvent";
-import {
-  Erc20DissolveTransactionEventUI,
-  Erc20MintTransactionEvent,
-} from "components/ck-bridge/ui/events/Erc20TransactionEvent";
-import { Divider } from "components/ck-bridge/ui/events/Divider";
 
 interface PaginationProps {
   total: number;

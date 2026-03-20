@@ -1,15 +1,15 @@
-import { ReactNode, useMemo } from "react";
-import { Typography, Grid, Box, Avatar, makeStyles, Theme } from "components/Mui";
-import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
-import { useNFTMintSupply } from "hooks/nft/useNFTMintSupply";
-import { useCollectionData } from "hooks/nft/tradeData";
+import { formatAmount } from "@icpswap/utils";
+import { Breadcrumbs, LoadingRow } from "components/index";
+import { Avatar, Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import CollectionLinks from "components/NFT/collectionsIcon/index";
 import VerifyNFT from "components/NFT/VerifyNFT";
 import WICPPriceFormat from "components/NFT/WICPPriceFormat";
-import { formatAmount } from "@icpswap/utils";
-import { LoadingRow, Breadcrumbs } from "components/index";
-import { useTranslation } from "react-i18next";
-import CollectionLinks from "components/NFT/collectionsIcon/index";
+import { useCollectionData } from "hooks/nft/tradeData";
+import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
+import { useNFTMintSupply } from "hooks/nft/useNFTMintSupply";
 import { useMediaQuery640, useMediaQuery1290 } from "hooks/theme";
+import { type ReactNode, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

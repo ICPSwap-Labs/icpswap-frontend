@@ -1,7 +1,7 @@
+import type { Null } from "@icpswap/types";
 import { TokenImage as UITokenImage } from "@icpswap/ui";
+import type { BoxProps } from "components/Mui";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
-import { BoxProps } from "components/Mui";
-import { Null } from "@icpswap/types";
 
 export interface TokenImageProps {
   logo: string | undefined;

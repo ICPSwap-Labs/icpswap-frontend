@@ -1,6 +1,6 @@
+import type { EXTCollection, ExtNft } from "@icpswap/types";
+import { ImageLoading as Loading, NoData } from "components/index";
 import { Box } from "components/Mui";
-import { NoData, ImageLoading as Loading } from "components/index";
-import { EXTCollection, type ExtNft } from "@icpswap/types";
 import { NFTCard } from "./NFTCard";
 
 export interface NFTListProps {
@@ -57,7 +57,9 @@ export default function NFTList({ nfts, collection, loading, setReload }: NFTLis
           },
         }}
       >
-        {nfts?.map((nft) => <NFTCard key={nft.id} nft={nft} collection={collection} setReload={setReload} />)}
+        {nfts?.map((nft) => (
+          <NFTCard key={nft.id} nft={nft} collection={collection} setReload={setReload} />
+        ))}
       </Box>
 
       {nfts && !loading && nfts.length === 0 ? <NoData /> : null}

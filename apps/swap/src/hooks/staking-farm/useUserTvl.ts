@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { useICPPrice } from "hooks/useUSDPrice";
-import { parseTokenAmount } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
 import { useInfoAllTokens } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { parseTokenAmount } from "@icpswap/utils";
+import { useICPPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
 
 import { useIntervalFarmUserTVL } from "./useIntervalFarmUserTVL";

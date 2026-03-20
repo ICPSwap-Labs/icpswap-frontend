@@ -1,5 +1,10 @@
-import type { NFTTransferArgs, NFTTransferResult, NFTAllowanceArgs, NFTApproveArgs } from "@icpswap/types";
-import { StatusResult } from "@icpswap/types";
+import type {
+  NFTAllowanceArgs,
+  NFTApproveArgs,
+  NFTTransferArgs,
+  NFTTransferResult,
+  StatusResult,
+} from "@icpswap/types";
 
 export interface TransferParameters {
   params: NFTTransferArgs;

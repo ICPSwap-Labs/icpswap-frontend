@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
-import { erc20DissolveHash, isErc20Finalized } from "utils/web3/dissolve";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { Erc20DissolveTransactionEvent, EthereumTransactionEvent } from "types/web3";
-import { useErc20UnTxFinalizedTxs } from "store/web3/hooks";
 import { BridgeChainType, BridgeType } from "@icpswap/constants";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
+import { useMemo } from "react";
+import { useErc20UnTxFinalizedTxs } from "store/web3/hooks";
+import type { Erc20DissolveTransactionEvent, EthereumTransactionEvent } from "types/web3";
+import { erc20DissolveHash, isErc20Finalized } from "utils/web3/dissolve";
 
 export function useErc20DissolveEvents() {
   const { result: erc20DissolveTxs } = useErc20DissolveTxs();

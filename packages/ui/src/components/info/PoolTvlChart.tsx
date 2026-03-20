@@ -1,10 +1,9 @@
-import { useMemo, useState } from "react";
-import dayjs from "dayjs";
-import { InfoPoolDataResponse, VolumeWindow } from "@icpswap/types";
+import type { InfoPoolDataResponse, VolumeWindow } from "@icpswap/types";
 import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
-
-import { ImageLoading } from "../Loading";
+import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 import { LineChartAlt } from "../LineChart/alt";
+import { ImageLoading } from "../Loading";
 import { Box, Typography } from "../Mui";
 
 export interface PoolTvlChartProps {

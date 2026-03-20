@@ -1,9 +1,9 @@
-import { useCallback } from "react";
+import type { NFTTokenMetadata } from "@icpswap/types";
 import { Box, Typography } from "components/Mui";
+import NFTAvatar from "components/NFT/NFTAvatar";
 import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
-import type { NFTTokenMetadata } from "@icpswap/types";
-import NFTAvatar from "components/NFT/NFTAvatar";
+import { useCallback } from "react";
 
 interface NFTRowUIProps {
   nft: NFTTokenMetadata;

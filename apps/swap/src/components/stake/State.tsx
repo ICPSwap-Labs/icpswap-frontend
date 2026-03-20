@@ -1,10 +1,10 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { Flex } from "@icpswap/ui";
-import { Null, type StakingPoolControllerPoolInfo, type StakingPoolInfo } from "@icpswap/types";
-import { useStateColors } from "hooks/staking-token";
 import { useStakingPoolState } from "@icpswap/hooks";
+import type { Null, StakingPoolControllerPoolInfo, StakingPoolInfo } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useStateColors } from "hooks/staking-token";
 import upperFirst from "lodash/upperFirst";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 interface StateProps {
   poolInfo: StakingPoolControllerPoolInfo | StakingPoolInfo | Null;

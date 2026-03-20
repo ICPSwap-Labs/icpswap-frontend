@@ -1,23 +1,23 @@
-import React from "react";
-import { Box, Collapse, Typography, useTheme } from "components/Mui";
-import { MainCard, Flex, Link, Image } from "components/index";
-import { INFO_URL } from "constants/index";
+import { useFarmCycles, useFarmInitArgs, useFarmState } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { FarmInfo, FarmRewardMetadata } from "@icpswap/types";
 import {
-  parseTokenAmount,
-  toSignificantWithGroupSeparator,
   cycleValueFormat,
+  formatDollarAmount,
+  icDashboardExplorerLink,
+  parseTokenAmount,
   shorten,
   timestampFormat,
-  icDashboardExplorerLink,
-  formatDollarAmount,
+  toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { useFarmInitArgs, useFarmCycles, useFarmState } from "@icpswap/hooks";
+import { Flex, Image, Link, MainCard } from "components/index";
+import { Box, Collapse, Typography, useTheme } from "components/Mui";
+import { INFO_URL } from "constants/index";
+import React from "react";
 import Countdown from "react-countdown";
-import { STATE } from "types/staking-farm";
-import { Token } from "@icpswap/swap-sdk";
 import { ArrowUpRight } from "react-feather";
-import { FarmInfo, FarmRewardMetadata } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
+import { STATE } from "types/staking-farm";
 
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
   const { t } = useTranslation();

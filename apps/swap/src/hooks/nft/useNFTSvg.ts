@@ -1,9 +1,9 @@
-import { useMemo } from "react";
 import type { NFTTokenMetadata, Null } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { V3SwapNFTCanisterId } from "constants/canister";
 import v2Ids from "constants/swap-v2-ids.json";
 import { usePositionNFTSvg } from "hooks/swap/useNFTSvg";
-import { isUndefinedOrNull } from "@icpswap/utils";
+import { useMemo } from "react";
 
 export function useIsPositionNFT(metadata: NFTTokenMetadata | Null): boolean {
   if (isUndefinedOrNull(metadata)) return false;

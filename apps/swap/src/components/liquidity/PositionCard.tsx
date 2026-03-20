@@ -1,22 +1,22 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
-import { CurrenciesAvatar } from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { isDarkTheme } from "utils/index";
-import { Loading } from "components/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { usePositionContext, PositionRangeState, PoolCurrentPrice } from "components/swap/index";
+import { CurrencyAmount, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
-import { encodePositionKey, PositionState } from "utils/swap/index";
-import { PositionFilterState, PositionSort } from "types/swap";
-import { usePositionState } from "hooks/liquidity";
-import { LimitLabel } from "components/swap/limit-order/index";
-import { useTranslation } from "react-i18next";
-import { TokenPairName } from "components/TokenPairName";
+import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
+import { Loading } from "components/index";
 import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
 import { PositionDetails } from "components/liquidity/PositionDetails";
+import { Box, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { PoolCurrentPrice, PositionRangeState, usePositionContext } from "components/swap/index";
+import { LimitLabel } from "components/swap/limit-order/index";
+import { TokenPairName } from "components/TokenPairName";
+import { usePositionState } from "hooks/liquidity";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { PositionFilterState, type PositionSort } from "types/swap";
+import { isDarkTheme } from "utils/index";
+import { encodePositionKey, PositionState } from "utils/swap/index";
 
 const useStyle = makeStyles((theme: Theme) => ({
   wrapper: {

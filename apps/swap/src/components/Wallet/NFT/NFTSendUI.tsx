@@ -1,7 +1,4 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
-import { FilledTextField, Flex } from "components/index";
+import type { NFTTokenMetadata } from "@icpswap/candid";
 import {
   isUndefinedOrNull,
   isUndefinedOrNullOrEmpty,
@@ -10,15 +7,18 @@ import {
   nonUndefinedOrNull,
   principalToAccount,
 } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import NFTAvatar from "components/NFT/NFTAvatar";
+import { FilledTextField, Flex } from "components/index";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { NFTAvatar as NFTExtAvatar } from "components/NFT/ext/NFTAvatar";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import NFTAvatar from "components/NFT/NFTAvatar";
 import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
 import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
-import { NFTTokenMetadata } from "@icpswap/candid";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 export interface NFTSendUIProps {
   isExt?: boolean;

@@ -1,6 +1,6 @@
-import { isUndefinedOrNull, icpswap_fetch_post } from "@icpswap/utils";
 import type { Null, PoolPositionHolderResult } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getPoolPositionHolders(poolId: string, size: number) {
   const result = await icpswap_fetch_post<PoolPositionHolderResult>("/info/holder/position/top", {

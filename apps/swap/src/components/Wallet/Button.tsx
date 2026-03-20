@@ -1,5 +1,5 @@
-import { Typography, Box, BoxProps } from "components/Mui";
-import { Override } from "@icpswap/types";
+import type { Override } from "@icpswap/types";
+import { Box, type BoxProps, Typography } from "components/Mui";
 import { forwardRef } from "react";
 
 export type ButtonProps = Override<BoxProps, { label: string }>;

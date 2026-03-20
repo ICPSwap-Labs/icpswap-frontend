@@ -1,6 +1,6 @@
 import { icDashboardExplorerLink } from "@icpswap/utils";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 import { AddressSection } from "./Address";
 

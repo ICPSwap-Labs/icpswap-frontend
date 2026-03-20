@@ -1,10 +1,10 @@
-import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { Header } from "components/Wallet/Header";
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState } from "react";
-import { DistributionWrapper } from "components/Wallet/assets/DistributionWrapper";
+import { Box, Typography, useTheme } from "components/Mui";
 import { AssetsWrapper } from "components/Wallet/assets/AssetsWrapper";
+import { DistributionWrapper } from "components/Wallet/assets/DistributionWrapper";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { Header } from "components/Wallet/Header";
+import { useState } from "react";
 
 enum TABS {
   Assets = "Assets",

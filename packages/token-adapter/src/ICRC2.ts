@@ -1,17 +1,17 @@
-import { resultFormat, optionalArg, isBigIntMemo } from "@icpswap/utils";
 import { icrc2 } from "@icpswap/actor";
-import { ICRC2 } from "@icpswap/candid";
+import type { ICRC2 } from "@icpswap/candid";
+import { isBigIntMemo, optionalArg, resultFormat } from "@icpswap/utils";
 import {
+  type ActualReceivedByTransferRequest,
+  type AllowanceRequest,
+  type ApproveRequest,
+  type BalanceRequest,
   BaseTokenAdapter,
-  SupplyRequest,
-  BalanceRequest,
-  TransferRequest,
-  GetFeeRequest,
-  TransactionRequest,
-  ApproveRequest,
-  AllowanceRequest,
-  MetadataRequest,
-  ActualReceivedByTransferRequest,
+  type GetFeeRequest,
+  type MetadataRequest,
+  type SupplyRequest,
+  type TransactionRequest,
+  type TransferRequest,
 } from "./BaseTokenAdapter";
 import { icrc1Adapter } from "./ICRC1";
 
@@ -57,9 +57,7 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
 
   public async approve({ canisterId, params, identity }: ApproveRequest) {
     return resultFormat<boolean>(
-      await (
-        await this.actor(canisterId, identity)
-      ).icrc2_approve({
+      await (await this.actor(canisterId, identity)).icrc2_approve({
         spender: {
           owner: params.spender,
           subaccount: optionalArg<number[]>(params.spenderSub ? params.spenderSub : undefined),
@@ -78,9 +76,7 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
   public async allowance({ canisterId, params }: AllowanceRequest) {
     if (!params.owner.principal) throw Error("no principal");
 
-    const result = await (
-      await this.actor(canisterId)
-    ).icrc2_allowance({
+    const result = await (await this.actor(canisterId)).icrc2_allowance({
       spender: {
         owner: params.spender,
         subaccount: optionalArg<Array<number>>(params.spenderSub ? params.spenderSub : undefined),

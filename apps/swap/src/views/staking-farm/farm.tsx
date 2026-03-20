@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useV3FarmRewardMetadata } from "@icpswap/hooks";
+import { Breadcrumbs } from "@icpswap/ui";
+import { FarmAprCharts, FarmDetails, FarmMain, FarmTokenImages, Reclaim } from "components/farm/index";
+import { State } from "components/farm/State";
+import { Flex, MainCard, type Tab, TabPanel } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
-import { MainCard, Flex, TabPanel, type Tab } from "components/index";
+import { AnonymousPrincipal } from "constants/index";
 import { useIntervalUserFarmInfo } from "hooks/staking-farm";
 import { useToken } from "hooks/useCurrency";
-import { AnonymousPrincipal } from "constants/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useV3FarmRewardMetadata } from "@icpswap/hooks";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { useParams } from "react-router-dom";
-import { Breadcrumbs } from "@icpswap/ui";
-import { FarmTokenImages, FarmDetails, FarmMain, Reclaim, FarmAprCharts } from "components/farm/index";
-import { State } from "components/farm/State";
-import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 const tabs = [
   { key: "stake", value: "Stake" },

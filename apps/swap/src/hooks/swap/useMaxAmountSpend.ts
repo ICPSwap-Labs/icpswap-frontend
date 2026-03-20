@@ -1,6 +1,6 @@
-import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import { CurrencyAmount, type Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
 import { useAllowance } from "hooks/token";
 import { useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";

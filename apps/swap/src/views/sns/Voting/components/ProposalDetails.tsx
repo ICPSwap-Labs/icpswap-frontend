@@ -1,12 +1,12 @@
-import { Box, Typography } from "components/Mui";
-import { useMemo } from "react";
 import type { ProposalData } from "@icpswap/types";
-import { shorten, nowInSeconds, toHexString } from "@icpswap/utils";
-import { useParams } from "react-router-dom";
+import { nowInSeconds, shorten, toHexString } from "@icpswap/utils";
 import { Copy } from "components/Copy/icon";
+import { Box, Typography } from "components/Mui";
 import dayjs from "dayjs";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { convertProposalNumberToText, snsRewardStatus, SnsRewordsText } from "utils/sns/proposal.utils";
+import { useParams } from "react-router-dom";
+import { convertProposalNumberToText, SnsRewordsText, snsRewardStatus } from "utils/sns/proposal.utils";
 
 interface ProposalDetailItemProps {
   label: React.ReactNode;

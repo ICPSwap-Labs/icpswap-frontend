@@ -1,10 +1,10 @@
-import { useCallback } from "react";
-import { BigNumber } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { tokenTransfer } from "hooks/token/calls";
 import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import type { Token } from "@icpswap/swap-sdk";
+import { BigNumber } from "@icpswap/utils";
+import { tokenTransfer } from "hooks/token/calls";
+import { type TIP_OPTIONS, useErrorTip } from "hooks/useTips";
+import { useCallback } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export function useSwapTransfer() {
   const [openErrorTip] = useErrorTip();

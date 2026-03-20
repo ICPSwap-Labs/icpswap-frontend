@@ -1,10 +1,10 @@
-import { Box, useTheme } from "components/Mui";
-import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { useSwapState } from "store/swap/hooks";
-import { SWAP_FIELD } from "constants/swap";
-import { UseCurrencyState } from "hooks/useCurrency";
+import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Image } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
+import { Box, useTheme } from "components/Mui";
+import { SWAP_FIELD } from "constants/swap";
+import type { UseCurrencyState } from "hooks/useCurrency";
+import { useSwapState } from "store/swap/hooks";
 
 import { SwapInputCurrency } from "../SwapInputCurrency";
 

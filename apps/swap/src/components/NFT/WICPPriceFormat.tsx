@@ -1,7 +1,7 @@
+import { formatAmount, parseTokenAmount } from "@icpswap/utils";
+import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import { Grid, Typography } from "components/Mui";
 import { WRAPPED_ICP } from "constants/index";
-import WICPCurrencyImage from "assets/images/wicp_currency.svg";
-import { parseTokenAmount, formatAmount } from "@icpswap/utils";
 
 export default function WICPPriceFormat({
   price,

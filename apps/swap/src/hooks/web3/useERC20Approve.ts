@@ -1,14 +1,14 @@
 /* eslint-disable no-else-return */
 import { MaxUint256 } from "@ethersproject/constants";
 import type { TransactionResponse } from "@ethersproject/providers";
-import { ERC20Token } from "@icpswap/swap-sdk";
-import { useAccount, useChainId } from "wagmi";
+import type { ERC20Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import BigNumber from "bignumber.js";
 import { useERC20Contract } from "hooks/web3/useContract";
+import { useERC20TokenAllowance } from "hooks/web3/useERC20Allowance";
 import { useCallback, useMemo } from "react";
 import { calculateGasMargin } from "utils/web3/calculateGasMargin";
-import { useERC20TokenAllowance } from "hooks/web3/useERC20Allowance";
-import BigNumber from "bignumber.js";
-import { Null } from "@icpswap/types";
+import { useAccount, useChainId } from "wagmi";
 
 export enum ApprovalState {
   UNKNOWN = "UNKNOWN",

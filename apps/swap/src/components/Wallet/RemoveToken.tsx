@@ -1,9 +1,9 @@
-import { useState, useRef } from "react";
-import { Typography, Box, Popper, makeStyles } from "components/Mui";
 import { ClickAwayListener } from "@mui/base";
-import { useTaggedTokenManager } from "store/wallet/hooks";
 import { Modal } from "components/index";
+import { Box, makeStyles, Popper, Typography } from "components/Mui";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useTaggedTokenManager } from "store/wallet/hooks";
 
 const useStyles = makeStyles(() => ({
   dot: {

@@ -1,11 +1,11 @@
-import { useCallback } from "react";
-import { useDogeUnFinalizedDissolveTxs, useDissolveTxManager } from "hooks/ck-bridge/doge/useDissolveTxManager";
-import { dogeDissolveState, getDogeHashFromStatus, isDogeDissolveEnded } from "utils/chain-key";
-import { useSuccessTip } from "hooks/useTips";
-import { useTranslation } from "react-i18next";
-import { useInterval, retrieveDogeStatus } from "@icpswap/hooks";
-import { DogeDissolveTxState } from "types/chain-key";
+import { retrieveDogeStatus, useInterval } from "@icpswap/hooks";
 import { toHexString } from "@icpswap/utils";
+import { useDissolveTxManager, useDogeUnFinalizedDissolveTxs } from "hooks/ck-bridge/doge/useDissolveTxManager";
+import { useSuccessTip } from "hooks/useTips";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { DogeDissolveTxState } from "types/chain-key";
+import { dogeDissolveState, getDogeHashFromStatus, isDogeDissolveEnded } from "utils/chain-key";
 
 export function useDogeDissolveTxWatcher() {
   const [openTip] = useSuccessTip();

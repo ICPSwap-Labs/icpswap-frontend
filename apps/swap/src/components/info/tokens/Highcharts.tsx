@@ -1,10 +1,11 @@
 // @ts-nocheck
 /* eslint-disable object-shorthand */
 /* eslint-disable func-names */
-import { useEffect } from "react";
+
 import { getTextualAddress } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNullOrEmpty, principalToAccount, shorten } from "@icpswap/utils";
 import * as Highcharts from "highcharts";
+import { useEffect } from "react";
 
 const OTHER_ACCOUNTS = "Other accounts";
 
@@ -22,7 +23,7 @@ export interface UseInitialHighchartsProps {
 export function useInitialHighcharts({ id, charts }: UseInitialHighchartsProps) {
   useEffect(() => {
     if (charts.length) {
-      // @ts-ignore
+      // @ts-expect-error
       // The TypeScript compilation shows errors, but the code functions correctly.
       // These errors can be safely ignored, as the official Highcharts documentation uses the same approach.
       Highcharts.chart(id, {
@@ -102,7 +103,7 @@ export function useInitialHighcharts({ id, charts }: UseInitialHighchartsProps) 
               const name =
                 element.address === OTHER_ACCOUNTS
                   ? "Other accounts"
-                  : textualAddress ?? (pid ? `${shorten(element.address, 4)}/${shorten(aid, 4)}` : shorten(aid, 4));
+                  : (textualAddress ?? (pid ? `${shorten(element.address, 4)}/${shorten(aid, 4)}` : shorten(aid, 4)));
 
               return {
                 name,

@@ -1,5 +1,5 @@
 import invariant from "tiny-invariant";
-import { Fraction, Percent, Price, sortedInsert, CurrencyAmount, TradeType, Token } from "../core";
+import { CurrencyAmount, Fraction, Percent, Price, sortedInsert, type Token, TradeType } from "../core";
 import { ONE, ZERO } from "../internalConstants";
 import { Pool } from "./pool";
 import { Route } from "./route";
@@ -30,17 +30,14 @@ export function tradeComparator<TInput extends Token, TOutput extends Token, TTr
     // trade A requires less input than trade B, so A should come first
     if (a.inputAmount.lessThan(b.inputAmount)) {
       return -1;
-    } 
-      return 1;
-    
-  } 
-    // tradeA has less output than trade B, so should come second
-    if (a.outputAmount.lessThan(b.outputAmount)) {
-      return 1;
-    } 
-      return -1;
-    
-  
+    }
+    return 1;
+  }
+  // tradeA has less output than trade B, so should come second
+  if (a.outputAmount.lessThan(b.outputAmount)) {
+    return 1;
+  }
+  return -1;
 }
 
 export interface BestTradeOptions {
@@ -445,13 +442,12 @@ export class Trade<TInput extends Token, TOutput extends Token, TTradeType exten
     invariant(!slippageTolerance.lessThan(ZERO), "SLIPPAGE_TOLERANCE");
     if (this.tradeType === TradeType.EXACT_OUTPUT) {
       return amountOut;
-    } 
-      const slippageAdjustedAmountOut = new Fraction(ONE)
-        .add(slippageTolerance)
-        .invert()
-        .multiply(amountOut.quotient).quotient;
-      return CurrencyAmount.fromRawAmount(amountOut.currency, slippageAdjustedAmountOut);
-    
+    }
+    const slippageAdjustedAmountOut = new Fraction(ONE)
+      .add(slippageTolerance)
+      .invert()
+      .multiply(amountOut.quotient).quotient;
+    return CurrencyAmount.fromRawAmount(amountOut.currency, slippageAdjustedAmountOut);
   }
 
   /**
@@ -463,10 +459,9 @@ export class Trade<TInput extends Token, TOutput extends Token, TTradeType exten
     invariant(!slippageTolerance.lessThan(ZERO), "SLIPPAGE_TOLERANCE");
     if (this.tradeType === TradeType.EXACT_INPUT) {
       return amountIn;
-    } 
-      const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(amountIn.quotient).quotient;
-      return CurrencyAmount.fromRawAmount(amountIn.currency, slippageAdjustedAmountIn);
-    
+    }
+    const slippageAdjustedAmountIn = new Fraction(ONE).add(slippageTolerance).multiply(amountIn.quotient).quotient;
+    return CurrencyAmount.fromRawAmount(amountIn.currency, slippageAdjustedAmountIn);
   }
 
   /**

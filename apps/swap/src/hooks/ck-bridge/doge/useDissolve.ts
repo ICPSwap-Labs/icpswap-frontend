@@ -1,13 +1,13 @@
-import { useCallback, useMemo, useState } from "react";
-import { useUserTokenApprove } from "hooks/token/useApprove";
-import { formatTokenAmount, numberToString } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { ResultStatus } from "@icpswap/types";
-import { MessageTypes, useTips } from "hooks/useTips";
-import { useTranslation } from "react-i18next";
 import { DOGE_MINTER_ID } from "@icpswap/constants";
 import { retrieveDogeWithApproval } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ResultStatus } from "@icpswap/types";
+import { formatTokenAmount, numberToString } from "@icpswap/utils";
 import { useUpdateDissolveTx } from "hooks/ck-bridge/doge/useDissolveTxManager";
+import { useUserTokenApprove } from "hooks/token/useApprove";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface DissolveProps {
   amount: string | number;

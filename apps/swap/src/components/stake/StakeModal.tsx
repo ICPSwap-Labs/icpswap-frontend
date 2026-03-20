@@ -1,15 +1,16 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Button, Typography, Grid, Box, CircularProgress } from "components/Mui";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { Token } from "@icpswap/swap-sdk";
-import { parseTokenAmount, numberToString, formatTokenAmount, isUndefinedOrNull, BigNumber } from "@icpswap/utils";
+import type { Token } from "@icpswap/swap-sdk";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { Flex, MaxButton } from "@icpswap/ui";
-import { useToken } from "hooks/useCurrency";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull, numberToString, parseTokenAmount } from "@icpswap/utils";
 import { Modal, NumberTextField } from "components/index";
-import { isUseTransfer } from "utils/token";
+import { Box, Button, CircularProgress, Grid, Typography } from "components/Mui";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useToken } from "hooks/useCurrency";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { isUseTransfer } from "utils/token";
 
 export interface StakingProps {
   token: Token;

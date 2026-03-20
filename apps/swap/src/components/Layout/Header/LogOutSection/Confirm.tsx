@@ -1,4 +1,4 @@
-import { makeStyles, Theme, Button, Grid, Typography, Dialog, DialogTitle, DialogContent } from "components/Mui";
+import { Button, Dialog, DialogContent, DialogTitle, Grid, makeStyles, type Theme, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({

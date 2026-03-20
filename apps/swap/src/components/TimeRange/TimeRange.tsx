@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Flex, DropDownMenu } from "@icpswap/ui";
-import { Box, Typography, useTheme } from "components/Mui";
+import { DropDownMenu, Flex } from "@icpswap/ui";
 import { BigNumber, nonUndefinedOrNull, toEndTimeOfDay, toStartTimeOfDay } from "@icpswap/utils";
-import { ChevronDown } from "react-feather";
+import { Box, Typography, useTheme } from "components/Mui";
 import { TimeRangeSelector } from "components/TimeRange/TimeRangeSelector";
 import dayjs from "dayjs";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronDown } from "react-feather";
 
 type RangeValue = { value: number; label: string };
 

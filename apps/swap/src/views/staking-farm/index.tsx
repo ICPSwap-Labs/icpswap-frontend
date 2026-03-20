@@ -1,20 +1,20 @@
-import { useCallback, useMemo, useState } from "react";
-import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { NoData, MainCard, Flex, Wrapper, ScrollTop } from "components/index";
-import { FilterState } from "types/staking-farm";
 import { useParsedQueryString } from "@icpswap/hooks";
-import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import type { Null } from "@icpswap/types";
 import { LoadingRow } from "@icpswap/ui";
-import { useNavigate } from "react-router-dom";
-import { FarmListHeader, GlobalData, FarmRow } from "components/farm/index";
-import { useFarms } from "hooks/staking-farm/index";
-import { Null } from "@icpswap/types";
-import { useAccountPrincipal } from "store/auth/hooks";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useTranslation } from "react-i18next";
-import i18n from "i18n/index";
-import FarmContext from "views/staking-farm/context";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { YourFarmEmpty } from "components/farm/Empty";
+import { FarmListHeader, FarmRow, GlobalData } from "components/farm/index";
+import { Flex, MainCard, NoData, ScrollTop, Wrapper } from "components/index";
+import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { useFarms } from "hooks/staking-farm/index";
+import i18n from "i18n/index";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { FilterState } from "types/staking-farm";
+import FarmContext from "views/staking-farm/context";
 
 const Tabs = [
   { label: i18n.t("farm.tabs.all"), state: FilterState.ALL },
@@ -115,10 +115,10 @@ function MainContent() {
             : "220px 220px 100px 240px 180px 180px"
           : "220px 220px 100px 240px 180px"
         : state === undefined
-        ? __state === FilterState.YOUR
-          ? "180px 180px 80px 1fr 1fr 1fr 120px"
-          : "220px 220px 120px 1fr 1fr 180px"
-        : "220px 220px 120px 1fr 1fr",
+          ? __state === FilterState.YOUR
+            ? "180px 180px 80px 1fr 1fr 1fr 120px"
+            : "220px 220px 120px 1fr 1fr 180px"
+          : "220px 220px 120px 1fr 1fr",
     };
   }, [state, matchDownSM, __state]);
 

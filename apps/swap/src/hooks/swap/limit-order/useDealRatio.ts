@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { Position } from "@icpswap/swap-sdk";
+import type { Position } from "@icpswap/swap-sdk";
+import type { LimitOrder, Null } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { LimitOrder, Null } from "@icpswap/types";
+import { useMemo } from "react";
 
 import { getLimitTokenAndAmount } from "./useLimitDetails";
 

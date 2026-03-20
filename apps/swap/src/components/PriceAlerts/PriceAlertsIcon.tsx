@@ -1,5 +1,5 @@
 import { usePriceAlerts } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { Box, useTheme } from "components/Mui";
 import { PriceAlerts } from "components/PriceAlerts/PriceAlerts";

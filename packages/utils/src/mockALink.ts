@@ -1,5 +1,5 @@
 export function mockALinkAndOpen(url: string, id: string): void {
-  let a = document.createElement("a");
+  const a = document.createElement("a");
   a.setAttribute("href", url);
   a.setAttribute("target", "_blank");
   a.setAttribute("id", id);

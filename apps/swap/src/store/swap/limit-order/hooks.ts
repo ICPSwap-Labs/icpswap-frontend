@@ -1,28 +1,35 @@
-import { useCallback, useMemo, useState } from "react";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { SWAP_FIELD } from "constants/swap";
-import { useToken } from "hooks/useCurrency";
-import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
-import { TradeState, useBestTrade } from "hooks/swap/useTrade";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { getTokenInsufficient, TokenInsufficient } from "hooks/swap/index";
-import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
-import store from "store/index";
-import { useUserUnusedBalance, useDebounce } from "@icpswap/hooks";
-import { formatTokenAmount, isUndefinedOrNull, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { useAllowance } from "hooks/token";
-import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
-import { Null } from "@icpswap/types";
-import { usePlaceOrderPosition } from "hooks/swap/limit-order";
-import { Token, CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick, TickMath } from "@icpswap/swap-sdk";
-import { useSwapState } from "store/swap/hooks";
-import { MIN_LIMIT_ORDER_VALUE } from "constants/limit";
-import { useUSDPriceById } from "hooks/index";
-import { useTranslation } from "react-i18next";
+import { useDebounce, useUserUnusedBalance } from "@icpswap/hooks";
+import {
+  availableTick,
+  CurrencyAmount,
+  nearestUsableTick,
+  TICK_SPACINGS,
+  TickMath,
+  type Token,
+} from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { SAFE_DECIMALS_LENGTH } from "constants/index";
+import { MIN_LIMIT_ORDER_VALUE } from "constants/limit";
+import { SWAP_FIELD } from "constants/swap";
+import { useUSDPriceById } from "hooks/index";
+import { getTokenInsufficient, TokenInsufficient } from "hooks/swap/index";
+import { usePlaceOrderPosition } from "hooks/swap/limit-order";
+import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
+import { TradeState, useBestTrade } from "hooks/swap/useTrade";
+import { useAllowance } from "hooks/token";
+import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
+import { useToken } from "hooks/useCurrency";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import store from "store/index";
+import { useSwapState } from "store/swap/hooks";
+import { inputNumberCheck, isUseTransfer, tryParseAmount } from "utils/index";
 
-import { updateSwapOutAmount, updatePlaceOrderPositionId } from "./actions";
+import { updatePlaceOrderPositionId, updateSwapOutAmount } from "./actions";
 
 export interface UseSwapInfoArgs {
   refresh?: number | boolean;

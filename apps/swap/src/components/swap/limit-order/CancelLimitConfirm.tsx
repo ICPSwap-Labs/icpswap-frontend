@@ -1,5 +1,5 @@
-import { Typography } from "components/Mui";
 import { Modal } from "@icpswap/ui";
+import { Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export interface CancelLimitConfirmProps {

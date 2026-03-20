@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { BitcoinTransactionEvent } from "types/web3";
-import { ckBTC } from "@icpswap/tokens";
-import { useBtcDepositAddress, useBtcMintUnconfirmedTransactions } from "hooks/ck-bridge/btc";
-import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
 import { BridgeChainType, BridgeType } from "@icpswap/constants/dist/constants";
+import { ckBTC } from "@icpswap/tokens";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useBtcDepositAddress, useBtcMintUnconfirmedTransactions } from "hooks/ck-bridge/btc";
+import { useMemo } from "react";
+import type { BitcoinTransactionEvent } from "types/web3";
+import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
 
 export function useBtcMintEvents() {
   const bitcoinMintTransactions = useBtcMintUnconfirmedTransactions();

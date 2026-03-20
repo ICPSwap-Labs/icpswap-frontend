@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
 import JSBI from "jsbi";
+import { describe, expect, it } from "vitest";
 
 import { MaxUint256 } from "../constants";
 import { sqrt } from "./sqrt";

@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from "react";
-import { Connector } from "constants/index";
-import { useConnector } from "store/auth/hooks";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { type OisyDisabledPage, OisyDisabledTips } from "components/OisyDisabledTips";
+import { Connector } from "constants/index";
 import { useErrorTip } from "hooks/useTips";
-import { OisyDisabledTips, type OisyDisabledPage } from "components/OisyDisabledTips";
+import { useEffect, useMemo } from "react";
+import { useConnector } from "store/auth/hooks";
 
 export interface UseOisyDisabledProps {
   page: OisyDisabledPage;

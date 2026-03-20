@@ -1,4 +1,4 @@
-import { Route, Pool, Token } from "@icpswap/swap-sdk";
+import { type Pool, Route, type Token } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
 import { useIsSingleHop } from "store/swap/cache/hooks";
 

@@ -1,10 +1,10 @@
-import { useState, useCallback, memo, useEffect } from "react";
-import { Box, Typography } from "components/Mui";
-import { Flex, Checkbox } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
-import { Null } from "@icpswap/types";
 import { useSwapFailedTransactions } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { Checkbox, Flex } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, nanosecond2Millisecond, nonUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography } from "components/Mui";
+import { memo, useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { swapTransactionActionFormat } from "utils/transaction";
 
 export interface SwapFailedTransactionTipsProps {

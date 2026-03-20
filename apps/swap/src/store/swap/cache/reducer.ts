@@ -1,17 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
+  removeTaggedTokens,
+  updateKeepTokenInPools,
+  updateShowClosedPosition,
+  updateSwapProAutoRefresh,
+  updateTaggedTokens,
   updateUserExpertMode,
+  updateUserMultipleApprove,
+  updateUserPositionPools,
   updateUserSelectedToken,
   updateUserSingleHop,
   updateUserSlippage,
   updateUserTransactionsDeadline,
-  updateTaggedTokens,
-  removeTaggedTokens,
-  updateShowClosedPosition,
-  updateUserPositionPools,
-  updateUserMultipleApprove,
-  updateSwapProAutoRefresh,
-  updateKeepTokenInPools,
 } from "./actions";
 import { initialState } from "./state";
 

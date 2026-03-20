@@ -1,8 +1,8 @@
-import { useCallback } from "react";
+import type { Token } from "@icpswap/swap-sdk";
 import { getUnstakeSteps } from "components/stake/UnstakeSteps";
-import { useStepContentManager } from "store/steps/hooks";
-import { Token } from "@icpswap/swap-sdk";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useStepContentManager } from "store/steps/hooks";
 
 export type UnstakeCallsStepArgs = {
   token: Token;

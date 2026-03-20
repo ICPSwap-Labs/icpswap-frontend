@@ -1,15 +1,15 @@
-import { useCallback, useMemo, useState } from "react";
-import { Button, useMediaQuery, useTheme } from "components/Mui";
-import { CurrencyAmount, Percent, Position } from "@icpswap/swap-sdk";
-import { BURN_FIELD } from "constants/swap";
-import { useSuccessTip, useLoadingTip } from "hooks/useTips";
-import { CurrencyAmountFormatDecimals } from "constants/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import StepViewButton from "components/Steps/View";
-import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
-import { useTranslation } from "react-i18next";
+import { CurrencyAmount, Percent, type Position } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { DecreaseLiquidityConfirm } from "components/liquidity/Decrease/Confirm";
-import { Null } from "@icpswap/types";
+import { Button, useMediaQuery, useTheme } from "components/Mui";
+import StepViewButton from "components/Steps/View";
+import { CurrencyAmountFormatDecimals } from "constants/index";
+import { BURN_FIELD } from "constants/swap";
+import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
+import { useLoadingTip, useSuccessTip } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface RemoveAllLiquidityProps {
   position: Position | undefined;

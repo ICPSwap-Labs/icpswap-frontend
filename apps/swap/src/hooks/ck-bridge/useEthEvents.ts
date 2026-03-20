@@ -1,9 +1,9 @@
+import { BridgeChainType, BridgeType } from "@icpswap/constants";
+import { ckETH } from "@icpswap/tokens";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useMemo } from "react";
 import { useEthDissolveTxs, useEthUnTxFinalizedTxs } from "store/web3/hooks";
-import { ckETH } from "@icpswap/tokens";
-import { EthereumTransactionEvent } from "types/web3";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { BridgeChainType, BridgeType } from "@icpswap/constants";
+import type { EthereumTransactionEvent } from "types/web3";
 
 export function useEthEvents() {
   const ethMintTxs = useEthUnTxFinalizedTxs();

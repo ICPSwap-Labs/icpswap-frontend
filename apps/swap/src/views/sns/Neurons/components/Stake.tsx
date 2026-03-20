@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { Button, Typography, Box, InputAdornment, CircularProgress } from "components/Mui";
-import { parseTokenAmount, formatTokenAmount, formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { claimOrRefreshNeuron } from "@icpswap/hooks";
-import { tokenTransfer } from "hooks/token/calls";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Modal, NumberFilledTextField, MaxButton } from "components/index";
-import { useTokenBalance } from "hooks/token";
-import { useAccountPrincipal } from "store/auth/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { BigNumber, formatDollarAmount, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
+import { MaxButton, Modal, NumberFilledTextField } from "components/index";
+import { Box, Button, CircularProgress, InputAdornment, Typography } from "components/Mui";
 import { useUSDPriceById } from "hooks";
-import { Token } from "@icpswap/swap-sdk";
+import { useTokenBalance } from "hooks/token";
+import { tokenTransfer } from "hooks/token/calls";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import type React from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface StakeProps {
   open: boolean;

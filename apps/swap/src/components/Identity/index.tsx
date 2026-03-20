@@ -1,6 +1,7 @@
-import React, { useState, useMemo, forwardRef, Ref, useImperativeHandle } from "react";
-import isFunction from "lodash/isFunction";
 import { useFullscreenLoading } from "hooks/useTips";
+import isFunction from "lodash/isFunction";
+import type React from "react";
+import { forwardRef, type Ref, useImperativeHandle, useMemo, useState } from "react";
 
 export type SubmitLoadingProps = { loading: boolean; closeLoading: () => void };
 
@@ -45,7 +46,7 @@ function Identity({ onSubmit, children, fullScreenLoading }: IdentityProps, ref:
   const loading = useMemo(() => {
     if (fullScreenLoading) return fullLoading;
     return commonLoading;
-  }, [fullLoading, commonLoading]);
+  }, [fullLoading, commonLoading, fullScreenLoading]);
 
   const submit: Submit = async (params?: any) => {
     try {

@@ -1,4 +1,4 @@
-import { LiquidityLocksService, LiquidityLocksInterfaceFactory } from "@icpswap/candid";
+import { LiquidityLocksInterfaceFactory, type LiquidityLocksService } from "@icpswap/candid";
 import { ActorName } from "../ActorName";
 
 import { actor } from "../actor";

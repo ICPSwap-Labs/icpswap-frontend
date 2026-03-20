@@ -1,15 +1,16 @@
-import { BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { nonUndefinedOrNull, parseTokenAmount, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { useTheme, Box, Typography, CircularProgress, TextField } from "components/Mui";
-import React, { useCallback, useMemo, useState } from "react";
+import type { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null, NumberType } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { InputWrapper } from "components/ck-bridge";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import ButtonConnector from "components/authentication/ButtonConnector";
-import { useTranslation } from "react-i18next";
-import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { InputWrapper } from "components/ck-bridge";
+import { Box, CircularProgress, TextField, Typography, useTheme } from "components/Mui";
 import { useActiveUserTokenBalance } from "hooks/token";
-import { Null, NumberType } from "@icpswap/types";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import type React from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { isBalanceGreaterThanFee } from "utils/token/balanceGreaterThanFee";
 
 interface BitcoinStyleDissolveUIProps {

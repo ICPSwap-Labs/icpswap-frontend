@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Box, makeStyles } from "components/Mui";
-import { useParams } from "react-router-dom";
-import { Breadcrumbs, Copy, InfoWrapper } from "components/index";
 import { useClaimEventTransactions } from "@icpswap/hooks";
-import { type ClaimTransaction } from "@icpswap/types";
-import { getClaimEventState } from "utils/info/token-claim";
-import { Header, HeaderCell, TableRow, BodyCell, NoData, MainCard, Pagination, LoadingRow } from "@icpswap/ui";
-import { shorten, timestampFormat, pageArgsFormat, parseTokenAmount, isPrincipalUser } from "@icpswap/utils";
+import type { ClaimTransaction } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, LoadingRow, MainCard, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { isPrincipalUser, pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
+import { Breadcrumbs, Copy, InfoWrapper } from "components/index";
+import { Box, makeStyles } from "components/Mui";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { getClaimEventState } from "utils/info/token-claim";
 
 const useStyles = makeStyles(() => {
   return {
@@ -75,7 +75,9 @@ export default function TokenClaimTransactions() {
               <HeaderCell>{t("common.state")}</HeaderCell>
             </Header>
 
-            {data?.content?.map((ele, index) => <ClaimEventTransaction key={index} ele={ele} />)}
+            {data?.content?.map((ele, index) => (
+              <ClaimEventTransaction key={index} ele={ele} />
+            ))}
 
             {data?.content?.length === 0 && !isLoading ? <NoData /> : null}
 

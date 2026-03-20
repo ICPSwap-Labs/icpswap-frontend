@@ -1,7 +1,7 @@
+import type { Null } from "@icpswap/types";
+import type { BigNumber } from "@icpswap/utils";
 import { createContext, useContext } from "react";
-import { BigNumber } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { type PositionKey, UserPositionByList, UserPositionForFarm } from "types/swap";
+import type { PositionKey, UserPositionByList, UserPositionForFarm } from "types/swap";
 
 export interface PositionContextProps {
   allPositionsUSDValue: { [key: PositionKey]: BigNumber | undefined } | undefined;

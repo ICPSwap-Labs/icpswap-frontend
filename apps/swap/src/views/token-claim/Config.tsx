@@ -1,28 +1,30 @@
 /* eslint-disable no-param-reassign */
-import React, { useCallback, useState } from "react";
-import { Typography, Box, Input } from "components/Mui";
-import { FilledTextField, AuthButton } from "components/index";
-import { MessageTypes, useTips } from "hooks/useTips";
+
+import { Principal } from "@icp-sdk/core/principal";
 import {
-  formatTokenAmount,
-  isValidAccount,
-  numberToString,
-  isValidPrincipal,
-  BigNumber,
-  isUndefinedOrNull,
-} from "@icpswap/utils";
-import { ResultStatus, type StatusResult } from "@icpswap/types";
-import {
-  useEvent,
+  setClaimEventData,
   setClaimEventReady,
   setClaimEventState,
-  setClaimEventData,
+  useEvent,
   useLoadingCallData,
 } from "@icpswap/hooks";
-import { read, utils } from "xlsx";
+import { ResultStatus, type StatusResult } from "@icpswap/types";
+import {
+  BigNumber,
+  formatTokenAmount,
+  isUndefinedOrNull,
+  isValidAccount,
+  isValidPrincipal,
+  numberToString,
+} from "@icpswap/utils";
+import { AuthButton, FilledTextField } from "components/index";
+import { Box, Input, Typography } from "components/Mui";
 import { useToken } from "hooks/index";
-import { Principal } from "@icp-sdk/core/principal";
+import { MessageTypes, useTips } from "hooks/useTips";
+import type React from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { read, utils } from "xlsx";
 
 import EventSelector from "./EventSelector";
 
@@ -120,14 +122,14 @@ export default function EventConfig() {
     useCallback(async () => {
       const { status, message } = await setClaimEventReady(eventId);
       openTip(status === ResultStatus.OK ? "Set event ready successfully" : message, status);
-    }, [eventId]),
+    }, [eventId, openTip]),
   );
 
   const { loading, callback: handleSetState } = useLoadingCallData(
     useCallback(async () => {
       const { status: status3, message: message3 } = await setClaimEventState(eventId, stateValue === "live");
       openTip(status3 === ResultStatus.OK ? "Set event state successfully" : message3, status3);
-    }, [eventId, stateValue]),
+    }, [eventId, stateValue, openTip]),
   );
 
   const { loading: uploadDataLoading, callback: handleImportUserData } = useLoadingCallData(
@@ -153,13 +155,13 @@ export default function EventConfig() {
       await Promise.all(promises)
         .then((result) => {
           result.forEach((res) => {
-            openTip(res.status === ResultStatus.OK ? t`Set event user data successfully` : res.message, res.status);
+            openTip(res.status === ResultStatus.OK ? t("event.set.data.success") : res.message, res.status);
           });
         })
         .catch((err) => {
           console.error(err);
         });
-    }, [token, userClaims]),
+    }, [token, userClaims, eventId, openTip, t]),
   );
 
   return (

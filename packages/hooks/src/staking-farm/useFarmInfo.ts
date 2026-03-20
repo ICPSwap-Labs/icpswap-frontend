@@ -1,8 +1,8 @@
-import { resultFormat, optionalArg } from "@icpswap/utils";
 import { Principal } from "@icp-sdk/core/principal";
 import { farmIndex } from "@icpswap/actor";
-import type { FarmState, FarmStatusArgs, FarmRewardInfo } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import type { FarmRewardInfo, FarmState, FarmStatusArgs } from "@icpswap/types";
+import { optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getFarmRewardInfo(farmId: string) {
   const result = await (await farmIndex()).getFarmRewardTokenInfo(Principal.fromText(farmId));
@@ -24,9 +24,9 @@ export function useFarmRewardInfo(
 }
 
 export async function getFarmRewardInfos(state: FarmState | undefined) {
-  const result = await (
-    await farmIndex()
-  ).getFarmRewardTokenInfos(optionalArg<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined));
+  const result = await (await farmIndex()).getFarmRewardTokenInfos(
+    optionalArg<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined),
+  );
 
   return resultFormat<Array<[Principal, FarmRewardInfo]>>(result).data;
 }

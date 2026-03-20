@@ -1,4 +1,4 @@
-import { Switch, SwitchProps, makeStyles, Theme } from "components/Mui";
+import { makeStyles, Switch, type SwitchProps, type Theme } from "components/Mui";
 
 const useStyles = makeStyles((theme: Theme) => {
   const trackBorder =

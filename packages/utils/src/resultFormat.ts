@@ -1,5 +1,6 @@
-import { StatusResult, ResultStatus } from "@icpswap/types";
+import { ResultStatus, type StatusResult } from "@icpswap/types";
 import isObject from "lodash/isObject";
+import { isUndefinedOrNull } from "./isUndefinedOrNull";
 
 export function isResultErrKey(key: string) {
   return key === ResultStatus.ERROR || key === "Err";
@@ -14,7 +15,7 @@ export function isResultKey(key: string) {
 }
 
 export function resultFormat<T>(result: any): StatusResult<T> {
-  if (result === null || result === undefined) {
+  if (isUndefinedOrNull(result)) {
     return {
       status: ResultStatus.ERROR,
       message: "",
@@ -24,7 +25,7 @@ export function resultFormat<T>(result: any): StatusResult<T> {
 
   const key = Object.keys(result);
 
-  if (result && isObject(result as object) && key && key[0] && isResultKey(key[0])) {
+  if (isObject(result as object) && key?.[0] && isResultKey(key[0])) {
     let message = "";
 
     if (isResultErrKey(key[0]) && isObject(result[key[0]])) {

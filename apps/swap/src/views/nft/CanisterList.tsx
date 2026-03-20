@@ -1,15 +1,15 @@
-import { NoData, MainCard, TextButton, Wrapper } from "components/index";
-import { useUserCanisterList, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
-import { pageArgsFormat, cycleValueFormat, timestampFormat } from "@icpswap/utils";
+import type { NFTControllerInfo } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, ImageLoading, Pagination, TableRow } from "@icpswap/ui";
+import { cycleValueFormat, pageArgsFormat, timestampFormat } from "@icpswap/utils";
+import CanSVG from "assets/images/nft/CanSVG";
+import ExplorerLink from "components/ExternalLink/Explorer";
+import { MainCard, NoData, TextButton, Wrapper } from "components/index";
+import { Box, Button, Grid, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { useCanisterCycles, useCanisterUserNFTCount, useUserCanisterList } from "hooks/nft/useNFTCalls";
 import { useState } from "react";
-import { Grid, Typography, Button, Box, useMediaQuery, makeStyles, useTheme, Theme } from "components/Mui";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "store/auth/hooks";
-import type { NFTControllerInfo } from "@icpswap/types";
-import ExplorerLink from "components/ExternalLink/Explorer";
-import CanSVG from "assets/images/nft/CanSVG";
-import { useTranslation } from "react-i18next";
-import { TableRow, Header, HeaderCell, BodyCell, ImageLoading, Pagination } from "@icpswap/ui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {

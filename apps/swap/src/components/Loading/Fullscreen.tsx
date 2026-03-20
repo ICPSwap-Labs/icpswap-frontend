@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react";
+import { Backdrop, makeStyles, type Theme } from "components/Mui";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import { closeLoading } from "store/loadingReducer";
-import LoadingImage from "assets/images/loading.png";
-import { makeStyles, Theme, Backdrop } from "components/Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -47,7 +46,7 @@ export default function FullscreenLoading({
 
   return (
     <Backdrop className={classes.backdrop} open={open} onClick={onClick}>
-      <img width="80px" height="80px" src={LoadingImage} alt="" />
+      <img width="80px" height="80px" src="/images/loading.png" alt="" />
     </Backdrop>
   );
 }

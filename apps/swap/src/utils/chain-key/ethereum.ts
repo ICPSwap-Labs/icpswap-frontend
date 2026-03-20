@@ -1,5 +1,5 @@
-import { DissolveTx } from "types/ckETH";
-import { RetrieveEthStatus } from "@icpswap/candid";
+import type { RetrieveEthStatus } from "@icpswap/candid";
+import type { DissolveTx } from "types/ckETH";
 
 export const isEthereumDissolveTxEnd = (tx: DissolveTx) => {
   return tx.state === "TxFinalized";

@@ -1,21 +1,21 @@
-import { useMemo, useState } from "react";
-import { Button, Typography, Box, useTheme, CircularProgress } from "components/Mui";
+import { increaseNeuronDelay } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { NervousSystemParameters, Neuron } from "@icpswap/types";
+import { MaxButton, MinButton } from "@icpswap/ui";
 import {
+  BigNumber,
+  daysToSeconds,
   parseTokenAmount,
+  secondsToDays,
   toHexString,
   toSignificantWithGroupSeparator,
-  secondsToDays,
-  daysToSeconds,
-  BigNumber,
 } from "@icpswap/utils";
-import { increaseNeuronDelay } from "@icpswap/hooks";
-import { MaxButton, MinButton } from "@icpswap/ui";
-import type { NervousSystemParameters, Neuron } from "@icpswap/types";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { Modal, NumberFilledTextField } from "components/index";
-import { secondsToDissolveDelayDuration, getSnsDelayTimeInSeconds, neuronFormat } from "utils/sns/index";
-import { Token } from "@icpswap/swap-sdk";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getSnsDelayTimeInSeconds, neuronFormat, secondsToDissolveDelayDuration } from "utils/sns/index";
 
 export interface SetDissolveDelayProps {
   open: boolean;

@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { numberToString, bigNumberToString } from "./numberToString";
 import BigNumber from "bignumber.js";
+import { describe, expect, it } from "vitest";
+import { bigNumberToString, numberToString } from "./numberToString";
 
 describe("numberToString", () => {
   it("returns 0 for zero", () => {

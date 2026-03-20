@@ -1,10 +1,10 @@
-import { Box, useTheme, Typography } from "components/Mui";
-import { useCallback, useRef, useState } from "react";
-import { Flex, MenuWrapper, MenuItem } from "@icpswap/ui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import type { AddressBook as AddressBookType } from "@icpswap/types";
-import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
+import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
+import { useCallback, useRef, useState } from "react";
 
 interface AddressBookManagerProps {
   addressBook: AddressBookType;

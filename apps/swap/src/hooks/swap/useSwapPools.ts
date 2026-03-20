@@ -1,4 +1,4 @@
-import { FeeAmount, Token } from "@icpswap/swap-sdk";
+import { FeeAmount, type Token } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
 import { useAllCurrencyCombinations } from "./useAllCurrencyCombinations";
 import { PoolState, usePools } from "./usePools";

@@ -1,27 +1,27 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
 import { BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import { ckETH } from "@icpswap/tokens";
+import { Flex } from "@icpswap/ui";
 import {
+  formatTokenAmount,
   nonUndefinedOrNull,
   parseTokenAmount,
-  formatTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { ckETH } from "@icpswap/tokens";
-import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
-import { InputWrapper, EthFee } from "components/ck-bridge";
+import ButtonConnector from "components/authentication/ButtonConnector";
+import { EthFee, InputWrapper } from "components/ck-bridge";
+import { DisconnectButton } from "components/ck-bridge/Disconnect";
+import { Box, CircularProgress, TextField, Typography, useTheme } from "components/Mui";
+import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
 import { useIcpTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useAccount } from "wagmi";
-import { isAddress } from "utils/web3/index";
 import { useDissolveCallback } from "hooks/ck-eth/index";
 import { useRefreshTriggerManager } from "hooks/index";
-import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
-import ButtonConnector from "components/authentication/ButtonConnector";
-import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
-import { Flex } from "@icpswap/ui";
-import { DisconnectButton } from "components/ck-bridge/Disconnect";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { isAddress } from "utils/web3/index";
+import { useAccount } from "wagmi";
 
 export interface EthDissolveProps {
   token: Token;

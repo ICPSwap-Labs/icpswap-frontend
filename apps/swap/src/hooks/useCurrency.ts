@@ -1,10 +1,10 @@
-import { useMemo } from "react";
 import { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { TOKEN_STANDARD } from "constants/index";
-import { TokenInfo } from "types/token";
 import { useTokenInfo, useTokensInfo } from "hooks/token/useTokenInfo";
+import { useMemo } from "react";
 import { getTokenStandard } from "store/token/cache/hooks";
-import { Null } from "@icpswap/types";
+import type { TokenInfo } from "types/token";
 
 export enum UseCurrencyState {
   LOADING = "LOADING",

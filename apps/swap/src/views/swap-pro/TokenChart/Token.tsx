@@ -1,15 +1,15 @@
-import { useContext, useMemo } from "react";
-import { Box, Typography, useTheme, useMediaQuery, Button } from "components/Mui";
-import { TokenImage, Link } from "components/index";
+import type { InfoTokenRealTimeDataResponse, TokenListMetadata } from "@icpswap/types";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarTokenPrice } from "@icpswap/utils";
-import type { InfoTokenRealTimeDataResponse, TokenListMetadata } from "@icpswap/types";
 import { Copy } from "components/Copy/icon";
-import { TokenListIdentifying } from "components/TokenListIdentifying";
+import { Link, TokenImage } from "components/index";
+import { Box, Button, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { PriceAlertsIcon } from "components/PriceAlerts";
 import { useSwapContext } from "components/swap";
 import { SwapProContext } from "components/swap/pro";
+import { TokenListIdentifying } from "components/TokenListIdentifying";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { PriceAlertsIcon } from "components/PriceAlerts";
 import { TokenChartsViewSelector } from "views/swap-pro/TokenChart/TokenChartsViewSelector";
 
 interface MediasProps {

@@ -1,9 +1,9 @@
-import { Button } from "components/Mui";
 import { disburseNeuronMaturity } from "@icpswap/hooks";
+import type { Neuron } from "@icpswap/types";
 import { ConfirmModal } from "@icpswap/ui";
-import { Neuron } from "@icpswap/types";
+import { Button } from "components/Mui";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
 import { useMemo, useState } from "react";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
 import { useTranslation } from "react-i18next";
 
 export interface DisburseMaturityProps {

@@ -1,6 +1,6 @@
-import { type ActorSubclass, Actor, HttpAgent } from "@icp-sdk/core/agent";
+import { MsqClient, type MsqIdentity } from "@fort-major/msq-client";
+import { Actor, type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
 import { Connector } from "@icpswap/actor";
-import { MsqClient, MsqIdentity } from "@fort-major/msq-client";
 import type { ConnectorAbstract, CreateActorArgs, WalletConnectorConfig } from "./connectors";
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds

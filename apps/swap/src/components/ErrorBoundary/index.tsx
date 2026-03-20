@@ -1,11 +1,12 @@
-import React, { useEffect } from "react";
+import { Flex } from "@icpswap/ui";
 import * as Sentry from "@sentry/react";
-import { Box, Typography, useTheme } from "components/Mui";
 import { ReactComponent as BoundaryErrorImage } from "assets/images/boundary-error.svg";
 import { Layout } from "components/Layout/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import copy from "copy-to-clipboard";
-import { Flex } from "@icpswap/ui";
 import i18n from "i18n/index";
+import type React from "react";
+import { useEffect } from "react";
 
 interface FallbackProps {
   error: Error;
@@ -90,7 +91,6 @@ export interface ErrorBoundaryProps {
 
 export default function ErrorBoundary({ children }: ErrorBoundaryProps) {
   return (
-    // @ts-ignore
     <Sentry.ErrorBoundary fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}>
       {children}
     </Sentry.ErrorBoundary>

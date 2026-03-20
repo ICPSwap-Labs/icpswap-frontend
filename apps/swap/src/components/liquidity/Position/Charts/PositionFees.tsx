@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
-import { Typography, Box } from "components/Mui";
-import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
 import { usePositionFeesChartData } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
-import { LineChartAlt, ImageLoading, Flex } from "@icpswap/ui";
+import { Flex, ImageLoading, LineChartAlt } from "@icpswap/ui";
+import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography } from "components/Mui";
 import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 
 interface PositionFeesChartProps {
   poolId: string | Null;

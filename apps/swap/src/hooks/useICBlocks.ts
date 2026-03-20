@@ -1,4 +1,4 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 const INTERNET_COMPUTER_BASE = "https://ic-api.internetcomputer.org/api/v3";
 

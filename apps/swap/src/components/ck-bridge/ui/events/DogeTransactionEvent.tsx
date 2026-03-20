@@ -1,16 +1,16 @@
 import { BridgeChainType, BridgeType } from "@icpswap/constants";
 import { ckDoge } from "@icpswap/tokens";
 import { formatAmount, parseTokenAmount } from "@icpswap/utils";
-import { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { DogeTransactionEvent as DogeTransactionEventType } from "types/web3";
 import {
   DogeDissolveConfirmations,
   DogeMintConfirmations,
 } from "components/ck-bridge/ui/confirmations/DogeConfirmations";
+import { CHAIN_DOGE_LOGO, CHIAN_ICP_LOGO } from "components/ck-bridge/ui/events/config";
 import { Divider } from "components/ck-bridge/ui/events/Divider";
 import { TransactionEventUI } from "components/ck-bridge/ui/events/TransactionEvent";
-import { CHIAN_ICP_LOGO, CHAIN_DOGE_LOGO } from "components/ck-bridge/ui/events/config";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import type { DogeTransactionEvent as DogeTransactionEventType } from "types/web3";
 
 interface DogeTransactionEventProps {
   event: DogeTransactionEventType;

@@ -1,4 +1,4 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 
 import { Dolphin, Fish, Whale } from "./icons";
@@ -19,10 +19,10 @@ export function getValueLabel(value: string | number | Null) {
   return new BigNumber(value).isGreaterThan(WhaleValue)
     ? TransactionValueLabel.whale
     : new BigNumber(value).isGreaterThan(DolphinValue)
-    ? TransactionValueLabel.dolphin
-    : new BigNumber(value).isGreaterThan(FishValue)
-    ? TransactionValueLabel.fish
-    : undefined;
+      ? TransactionValueLabel.dolphin
+      : new BigNumber(value).isGreaterThan(FishValue)
+        ? TransactionValueLabel.fish
+        : undefined;
 }
 
 export interface ValueLabelProps {

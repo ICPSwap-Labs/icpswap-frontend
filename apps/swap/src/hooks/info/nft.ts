@@ -1,15 +1,10 @@
-import { OLD_CANISTER_IDS } from "constants/nft";
-import { resultFormat } from "@icpswap/utils";
-import {
-  getNFTCanisterMetadata,
-  getV1NFTCanisterMetadata,
-  getNFTStat,
-  getV1NFTStat,
-} from "@icpswap/hooks";
-import { swapNFT, NFTCanister } from "@icpswap/actor";
-import { SwapNFTCanisterId } from "constants/canister";
+import { NFTCanister, swapNFT } from "@icpswap/actor";
+import { getNFTCanisterMetadata, getNFTStat, getV1NFTCanisterMetadata, getV1NFTStat } from "@icpswap/hooks";
 import type { NFTCanisterInfo } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { SwapNFTCanisterId } from "constants/canister";
+import { OLD_CANISTER_IDS } from "constants/nft";
 
 export function useNFTCanisterCycles(canisterId: string): UseQueryResult<bigint | undefined, Error> {
   return useQuery({
@@ -68,7 +63,10 @@ export function useNFTCanisterMetadata(
 
 export function useNFTOtherStat(
   canisterId: string | undefined,
-): UseQueryResult<Awaited<ReturnType<typeof getNFTStat>> | Awaited<ReturnType<typeof getV1NFTStat>> | undefined, Error> {
+): UseQueryResult<
+  Awaited<ReturnType<typeof getNFTStat>> | Awaited<ReturnType<typeof getV1NFTStat>> | undefined,
+  Error
+> {
   return useQuery({
     queryKey: ["useNFTOtherStat", canisterId],
     queryFn: async () => {

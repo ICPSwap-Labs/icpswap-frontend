@@ -1,19 +1,18 @@
-import { resultFormat, optionalArg, isBigIntMemo } from "@icpswap/utils";
-import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { icrc1, icrcArchive } from "@icpswap/actor";
-import { ICRC1_SERVICE, MetadataValue, GetTransactionsResponse, ArchivedTransaction } from "@icpswap/candid";
-
-import { Transaction, Metadata } from "./types";
+import type { ArchivedTransaction, GetTransactionsResponse, ICRC1_SERVICE, MetadataValue } from "@icpswap/candid";
+import { type PaginationResult, ResultStatus } from "@icpswap/types";
+import { isBigIntMemo, optionalArg, resultFormat } from "@icpswap/utils";
 import {
+  type ActualReceivedByTransferRequest,
+  type BalanceRequest,
   BaseTokenAdapter,
-  SupplyRequest,
-  BalanceRequest,
-  TransferRequest,
-  GetFeeRequest,
-  TransactionRequest,
-  MetadataRequest,
-  ActualReceivedByTransferRequest,
+  type GetFeeRequest,
+  type MetadataRequest,
+  type SupplyRequest,
+  type TransactionRequest,
+  type TransferRequest,
 } from "./BaseTokenAdapter";
+import type { Metadata, Transaction } from "./types";
 import { icrcTransactionFormat } from "./utils";
 
 const byTimestamp = (a: { timestamp: bigint }, b: { timestamp: bigint }) => Number(a.timestamp - b.timestamp);
@@ -26,9 +25,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
   public async balance({ canisterId, params }: BalanceRequest) {
     if (params.user.principal) {
       return resultFormat<bigint>(
-        await (
-          await this.actor(canisterId)
-        ).icrc1_balance_of({
+        await (await this.actor(canisterId)).icrc1_balance_of({
           owner: params.user.principal,
           subaccount: optionalArg<Array<number>>(params.subaccount ? params.subaccount : undefined),
         }),
@@ -42,9 +39,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
     if (!params.to.principal) throw Error("no user principal address");
     if (isBigIntMemo(params.memo)) throw Error("Can't support bigint (memo)");
 
-    const result = await (
-      await this.actor(canisterId, identity)
-    ).icrc1_transfer({
+    const result = await (await this.actor(canisterId, identity)).icrc1_transfer({
       to: {
         owner: params.to.principal,
         subaccount: optionalArg<Array<number>>(params.subaccount ? params.subaccount : undefined),
@@ -88,9 +83,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
       if (start_index < 0) start_index = 0;
 
       const _result = resultFormat<GetTransactionsResponse>(
-        await (
-          await this.actor(canisterId)
-        ).get_transactions({
+        await (await this.actor(canisterId)).get_transactions({
           start: BigInt(start_index),
           length: BigInt(params.limit),
         }),
@@ -119,7 +112,7 @@ export class ICRC1Adapter extends BaseTokenAdapter<ICRC1_SERVICE> {
           .concat(token_canister_transactions)
           .sort(byTimestamp)
           .map((ele, index) =>
-            // @ts-ignore
+            // @ts-expect-error
             icrcTransactionFormat(ele, BigInt(start_index) + BigInt(index)),
           );
 

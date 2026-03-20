@@ -1,4 +1,4 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useSwapContext } from "components/swap/context";
 import { useCallback, useMemo } from "react";

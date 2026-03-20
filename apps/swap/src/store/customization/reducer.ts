@@ -1,7 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { changeTheme, updateLocal, updateHideUnavailableClaim } from "./actions";
+import { changeTheme, updateHideUnavailableClaim, updateLocal } from "./actions";
 import { initialState } from "./states";
-
 
 export default createReducer(initialState, (builder) => {
   builder

@@ -1,24 +1,24 @@
-import { useCallback, useMemo, useState } from "react";
-import { Typography, Button, Box } from "components/Mui";
-import { MainCard, Flex, TokenImage, NumberTextField, MaxButton, StepViewButton } from "components/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import {
-  parseTokenAmount,
-  formatDollarAmount,
-  toSignificantWithGroupSeparator,
-  BigNumber,
-  formatTokenAmount,
-} from "@icpswap/utils";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { StakingPoolInfo, StakingState } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
-import { useStakeCall } from "hooks/staking-token/useStake";
-import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { useStakingPoolState } from "@icpswap/hooks";
-import { useTranslation } from "react-i18next";
-import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import type { Token } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { type StakingPoolInfo, StakingState } from "@icpswap/types";
+import {
+  BigNumber,
+  formatDollarAmount,
+  formatTokenAmount,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
+} from "@icpswap/utils";
+import { Flex, MainCard, MaxButton, NumberTextField, StepViewButton, TokenImage } from "components/index";
+import { Box, Button, Typography } from "components/Mui";
 import { TokenBalanceSlider } from "components/Slider";
+import { useStakeCall } from "hooks/staking-token/useStake";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { MessageTypes, useLoadingTip, useTips } from "hooks/useTips";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface StakeProps {
   poolId: string | undefined;

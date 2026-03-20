@@ -1,11 +1,11 @@
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { BigNumber, parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Box, Typography, useTheme } from "components/Mui";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { type BigNumber, parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import Copy from "components/Copy";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface MintExtraContentProps {
   token: Token | Null;

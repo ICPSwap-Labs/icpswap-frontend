@@ -1,13 +1,13 @@
-import { useMemo } from "react";
-import { Box, Typography, makeStyles } from "components/Mui";
-import { formatDollarAmount, formatDollarTokenPrice, BigNumber, formatIcpAmount } from "@icpswap/utils";
+import type { TokensTreeMapRow } from "@icpswap/types";
+import { BodyCell, Flex, Header, HeaderCell, Link, Proportion, TableRow } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice, formatIcpAmount } from "@icpswap/utils";
 import { LoadingRow, TokenImage } from "components/index";
-import { useICPPrice } from "store/global/hooks";
-import { Header, HeaderCell, TableRow, BodyCell, Flex, Proportion, Link } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
+import { Box, makeStyles, Typography } from "components/Mui";
 import { useTokens } from "hooks/info/tokens/index";
-import { type TokensTreeMapRow } from "@icpswap/types";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useICPPrice } from "store/global/hooks";
 
 const useStyles = makeStyles(() => {
   return {

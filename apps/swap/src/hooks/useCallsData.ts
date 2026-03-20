@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from "react";
 import type { ApiResult } from "@icpswap/types";
-import { useCallKeysIndexManager, useUpdateCallResult, useCallResult, getCallIndex } from "store/call/hooks";
+import { useEffect, useMemo, useState } from "react";
+import { getCallIndex, useCallKeysIndexManager, useCallResult, useUpdateCallResult } from "store/call/hooks";
 
 export type Call<T> = () => Promise<ApiResult<T>>;
 

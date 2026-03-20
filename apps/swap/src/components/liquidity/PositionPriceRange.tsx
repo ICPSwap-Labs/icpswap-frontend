@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
-import { Box, BoxProps, Typography, useTheme } from "components/Mui";
+import { getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
 import { Bound } from "constants/swap";
-import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
+import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { useMemo, useState } from "react";
+import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PositionPriceRangeProps {

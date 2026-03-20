@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { Token } from "@icpswap/swap-sdk";
 import { withdraw } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { useErrorTip } from "hooks/useTips";
-import { OpenExternalTip } from "types/index";
 import i18n from "i18n/index";
+import { useCallback } from "react";
+import type { OpenExternalTip } from "types/index";
 
 export function useSwapWithdraw() {
   const [openErrorTip] = useErrorTip();

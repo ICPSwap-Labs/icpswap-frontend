@@ -1,15 +1,15 @@
-import { useState, useMemo, useCallback } from "react";
-import { Modal } from "components/index";
-import { getPool } from "hooks/swap/v3Calls";
-import { useTheme, Typography, Box, Avatar, CircularProgress, Button } from "components/Mui";
-import CurrencySelector from "components/CurrencySelector/selector";
-import { getUserPositionIds } from "hooks/swap/useUserPositionIds";
-import { useUpdateUserPositionPools } from "store/hooks";
 import { updateUserPositionPoolId } from "@icpswap/hooks";
-import { useTips, TIP_SUCCESS } from "hooks/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import CurrencySelector from "components/CurrencySelector/selector";
+import { Modal } from "components/index";
+import { Avatar, Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
+import { TIP_SUCCESS, useTips } from "hooks/index";
+import { getUserPositionIds } from "hooks/swap/useUserPositionIds";
+import { getPool } from "hooks/swap/v3Calls";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useUpdateUserPositionPools } from "store/hooks";
 
 function AddIcon() {
   return (

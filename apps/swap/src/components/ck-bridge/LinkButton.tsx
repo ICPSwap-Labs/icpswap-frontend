@@ -1,8 +1,8 @@
-import { ArrowUpRight } from "react-feather";
 import { Flex } from "@icpswap/ui";
-import { useTheme, Typography } from "components/Mui";
-import { ReactNode } from "react";
 import { Link } from "components/index";
+import { Typography, useTheme } from "components/Mui";
+import type { ReactNode } from "react";
+import { ArrowUpRight } from "react-feather";
 
 export interface LinkButtonProps {
   label: ReactNode;

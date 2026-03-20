@@ -1,13 +1,13 @@
-import { useState, useMemo } from "react";
-import { useMediaQuery, makeStyles, useTheme } from "components/Mui";
-import { InfoPoolRealTimeDataResponse, Null } from "@icpswap/types";
-import { Header, HeaderCell, SortDirection, NoData, ImageLoading, Pagination } from "@icpswap/ui";
-import { HIDDEN_POOLS } from "constants/info";
-import { useTranslation } from "react-i18next";
-import { PoolRow } from "components/info/swap/pool";
 import { getPoolAPR } from "@icpswap/hooks";
-import { PoolInfoWithApr } from "types/info";
+import type { InfoPoolRealTimeDataResponse, Null } from "@icpswap/types";
+import { Header, HeaderCell, ImageLoading, NoData, Pagination, SortDirection } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, percentToNum } from "@icpswap/utils";
+import { PoolRow } from "components/info/swap/pool";
+import { makeStyles, useMediaQuery, useTheme } from "components/Mui";
+import { HIDDEN_POOLS } from "constants/info";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { PoolInfoWithApr } from "types/info";
 
 const useStyles = makeStyles(() => {
   return {

@@ -1,6 +1,6 @@
-import { Token } from "@icpswap/swap-sdk";
-import { TokenInfo, TOKEN_STANDARD } from "@icpswap/types";
 import { LEDGER_CANISTER_ID } from "@icpswap/constants";
+import { Token } from "@icpswap/swap-sdk";
+import { TOKEN_STANDARD, type TokenInfo } from "@icpswap/types";
 
 export const ICP_TOKEN_INFO: TokenInfo = {
   symbol: "ICP",

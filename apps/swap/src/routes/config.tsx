@@ -1,15 +1,14 @@
-import { lazy } from "react";
 import Loadable from "components/Loading/Loadable";
 import i18n from "i18n";
-
-import { infoRoutes } from "./info.config";
-import { nnsRoutes } from "./nns.config";
-import { nftRoutes } from "./nft.config";
-import { swapRoutes } from "./swap.config";
-import { farmRoutes } from "./farm.config";
-import { stakeRoutes } from "./stake.config";
+import { lazy } from "react";
 import { claimRoutes } from "./claim.config";
-import { RouteDefinition } from "./type";
+import { farmRoutes } from "./farm.config";
+import { infoRoutes } from "./info.config";
+import { nftRoutes } from "./nft.config";
+import { nnsRoutes } from "./nns.config";
+import { stakeRoutes } from "./stake.config";
+import { swapRoutes } from "./swap.config";
+import type { RouteDefinition } from "./type";
 
 const StaticTitlesAndDescriptions = {
   CkBridge: i18n.t("title.ck-bridge"),

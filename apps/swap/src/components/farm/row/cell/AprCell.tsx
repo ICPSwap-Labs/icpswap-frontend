@@ -1,18 +1,18 @@
-import { Flex, APRPanel, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
+import { useV3FarmRewardMetadata } from "@icpswap/hooks";
+import type { FarmInfo, FarmState, InitFarmArgs, Null } from "@icpswap/types";
+import { APRPanel, BodyCell, Flex } from "@icpswap/ui";
+import {
+  BigNumber,
+  formatAmount,
+  formatDollarAmount,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+} from "@icpswap/utils";
 import { useFarmApr, useFarmTvlValue } from "hooks/staking-farm";
 import { useToken } from "hooks/useCurrency";
-import {
-  formatDollarAmount,
-  parseTokenAmount,
-  BigNumber,
-  nonUndefinedOrNull,
-  formatAmount,
-  isUndefinedOrNull,
-} from "@icpswap/utils";
-import { useV3FarmRewardMetadata } from "@icpswap/hooks";
-import type { FarmInfo, Null, FarmState, InitFarmArgs } from "@icpswap/types";
 import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface AprCellProps {

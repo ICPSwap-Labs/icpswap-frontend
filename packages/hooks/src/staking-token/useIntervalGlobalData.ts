@@ -1,8 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
 import type { StakingPoolGlobalData } from "@icpswap/types";
-
-import { getStakingPoolGlobalData } from "./calls";
+import { useCallback, useMemo, useState } from "react";
 import { useInterval } from "../useInterval";
+import { getStakingPoolGlobalData } from "./calls";
 
 export function useStakeIntervalGlobalData() {
   const [forceUpdate, setForceUpdate] = useState<number>(0);

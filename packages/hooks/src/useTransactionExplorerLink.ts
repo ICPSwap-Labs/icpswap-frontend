@@ -1,6 +1,6 @@
-import { useMemo } from "react";
 import { ICP } from "@icpswap/tokens";
 import { principalToAccount } from "@icpswap/utils";
+import { useMemo } from "react";
 
 export type TransactionLink = "dashboard" | "ic-explorer" | "NFTGeek" | "ic-house";
 

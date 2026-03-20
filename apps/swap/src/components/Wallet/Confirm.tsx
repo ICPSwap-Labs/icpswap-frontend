@@ -1,8 +1,8 @@
 import { Flex } from "@icpswap/ui";
 import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
-import { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
 import { WALLET_DRAWER_WIDTH } from "constants/wallet";
+import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 
 interface ConfirmProps {
   title: ReactNode;

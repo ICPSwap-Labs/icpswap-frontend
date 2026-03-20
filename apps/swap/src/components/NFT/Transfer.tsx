@@ -1,29 +1,28 @@
-import { useCallback, useState, useMemo } from "react";
+import { useLoadingCallData } from "@icpswap/hooks";
+import type { NFTTokenMetadata } from "@icpswap/types";
+import { isUndefinedOrNull, isValidAccount } from "@icpswap/utils";
 import LazyImage from "components/LazyImage";
 import {
-  Button,
-  Grid,
-  TextField,
-  Typography,
-  CircularProgress,
   Box,
+  Button,
+  CircularProgress,
+  Grid,
   makeStyles,
+  TextField,
+  type Theme,
+  Typography,
   useTheme,
-  Theme,
 } from "components/Mui";
-import { stringToArrayBuffer, encodeTokenIdentifier } from "utils";
-import { isUndefinedOrNull, isValidAccount } from "@icpswap/utils";
 import Modal from "components/modal/index";
-import { useErrorTip, useSuccessTip } from "hooks/useTips";
-import { useAccount } from "store/auth/hooks";
-import { useNFTTransfer, useCanisterMetadata } from "hooks/nft/useNFTCalls";
+import { useCanisterMetadata, useNFTTransfer } from "hooks/nft/useNFTCalls";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
-import type { NFTTokenMetadata } from "@icpswap/types";
+import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-
+import { useAccount } from "store/auth/hooks";
+import { encodeTokenIdentifier, stringToArrayBuffer } from "utils";
 import FileImage from "./FileImage";
-import { useLoadingCallData } from "@icpswap/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -102,23 +101,23 @@ export default function NFTTransfer({
       }
 
       if (onTransferSuccess) onTransferSuccess(result);
-    }, [nftTransfer, account, nft, memo, to]),
+    }, [nftTransfer, account, nft, memo, to, canisterId, onTransferSuccess, openErrorTip, openSuccessTip, t]),
   );
 
   const addressHelpText = useMemo(() => {
     if (account === to) return <span className={classes.warningText}>{t("common.warning.transfer")}</span>;
-  }, [account, to]);
+  }, [account, to, classes.warningText, t]);
 
   const handleClose = useCallback(() => {
     setTo("");
     setMemo("");
     if (onClose) onClose();
-  }, [onClose, setTo, setMemo]);
+  }, [onClose]);
 
   const errorMsg = useMemo(() => {
-    if (!to) return t`Enter account address`;
-    if (!isValidAccount(to)) return t`Invalid address`;
-  }, [to]);
+    if (!to) return t("common.enter.account.address");
+    if (!isValidAccount(to)) return t("invalid.address");
+  }, [to, t]);
 
   return open ? (
     <Modal open={open} onClose={handleClose} title={t`NFT Transfer`}>

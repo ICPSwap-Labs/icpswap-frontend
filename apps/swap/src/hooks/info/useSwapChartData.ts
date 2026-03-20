@@ -1,6 +1,6 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import type { InfoGlobalRealTimeDataResponse } from "@icpswap/types";
 import { icpswap_info_fetch_get } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export function useGlobalProtocol(): UseQueryResult<InfoGlobalRealTimeDataResponse | undefined, Error> {
   return useQuery({

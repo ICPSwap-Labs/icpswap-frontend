@@ -1,11 +1,11 @@
-import { useState, useMemo, memo } from "react";
-import { Grid, Box, Typography, Theme, makeStyles } from "components/Mui";
-import { usePoolsTokenAmountsFromKey } from "hooks/swap/v3Calls";
-import { isDarkTheme } from "utils";
+import { FeeAmount, type Token } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
-import { Token, FeeAmount } from "@icpswap/swap-sdk";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { usePoolsTokenAmountsFromKey } from "hooks/swap/v3Calls";
 import i18n from "i18n/index";
+import { memo, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { isDarkTheme } from "utils";
 
 export const FEE_DESCRIPTION = {
   [FeeAmount.LOW]: i18n.t`Best for stable pairs`,

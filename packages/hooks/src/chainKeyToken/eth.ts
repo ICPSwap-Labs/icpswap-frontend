@@ -1,14 +1,14 @@
-import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import type { Principal } from "@icp-sdk/core/principal";
 import { chainKeyETHMinter } from "@icpswap/actor";
 import type {
-  WithdrawalSearchParameter,
-  WithdrawalDetail,
   ChainKeyETHMinterInfo,
   Eip1559TransactionPrice,
   Null,
+  WithdrawalDetail,
+  WithdrawalSearchParameter,
 } from "@icpswap/types";
-import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export interface WithdrawErc20TokenArgs {
   ledger_id: Principal;
@@ -22,9 +22,7 @@ export async function withdrawErc20Token({ minter_id, ledger_id, recipient, amou
     ckerc20_block_index: bigint;
     cketh_block_index: bigint;
   }>(
-    await (
-      await chainKeyETHMinter(minter_id, true)
-    ).withdraw_erc20({
+    await (await chainKeyETHMinter(minter_id, true)).withdraw_erc20({
       recipient,
       amount,
       ckerc20_ledger_id: ledger_id,
@@ -118,9 +116,7 @@ export async function withdraw_eth(minter_id: string, recipient: string, amount:
   return resultFormat<{
     block_index: bigint;
   }>(
-    await (
-      await chainKeyETHMinter(minter_id, true)
-    ).withdraw_eth({
+    await (await chainKeyETHMinter(minter_id, true)).withdraw_eth({
       recipient,
       amount,
       from_subaccount: [],

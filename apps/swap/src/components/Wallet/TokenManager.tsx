@@ -1,24 +1,24 @@
+import { useDebouncedChangeHandler } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { registerTokens } from "@icpswap/token-adapter";
+import { ICP } from "@icpswap/tokens";
+import { isUndefinedOrNull, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
+import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
+import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
+import { IOSSwitch } from "components/switch/IOSSwitch";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
 import { useToken, useTokens } from "hooks";
-import { IOSSwitch } from "components/switch/IOSSwitch";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Box, Typography, InputAdornment, useTheme } from "components/Mui";
-import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
+import { getTokenStandard } from "hooks/token";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
+import { useTranslation } from "react-i18next";
 import { useGlobalTokenList } from "store/global/hooks";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
-import { isUndefinedOrNull, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
-import { Search as SearchIcon } from "react-feather";
-import { TokenListMetadata } from "types/token-list";
-import { useDebouncedChangeHandler } from "@icpswap/hooks";
-import { useTranslation } from "react-i18next";
-import { getNnsRootId, tokenEqualToNnsLedger } from "utils/sns/utils";
-import { useTaggedTokenManager } from "store/wallet/hooks";
-import { Token } from "@icpswap/swap-sdk";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { ICP } from "@icpswap/tokens";
-import { getTokenStandard } from "hooks/token";
 import { useUpdateTokenStandard } from "store/token/cache/hooks";
-import { registerTokens } from "@icpswap/token-adapter";
+import { useTaggedTokenManager } from "store/wallet/hooks";
+import type { TokenListMetadata } from "types/token-list";
+import { getNnsRootId, tokenEqualToNnsLedger } from "utils/sns/utils";
 
 function isTokenHidden(token: Token, search: string) {
   return !(

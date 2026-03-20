@@ -1,21 +1,20 @@
-import { ReactElement } from "react";
-import { Typography, Grid, Box, Link, useMediaQuery, useTheme, makeStyles, Theme } from "components/Mui";
+import { useTradeOrder } from "@icpswap/hooks";
+import type { NFTTokenMetadata } from "@icpswap/types";
+import { Flex, TextButton } from "@icpswap/ui";
+import { BigNumber, mockALinkAndOpen, openBase64ImageInNewWindow, shorten, timestampFormat } from "@icpswap/utils";
+import ExplorerLink from "components/ExternalLink/Explorer";
 import { Copy } from "components/index";
 import { NFTVerifyLabel } from "components/info/nft/VerifyLabel";
 import LazyImage from "components/LazyImage";
-import { isICPSwapOfficial, encodeTokenIdentifier, arrayBufferToString } from "utils/index";
-import { useTradeOrder } from "@icpswap/hooks";
-import { openBase64ImageInNewWindow, mockALinkAndOpen, shorten, timestampFormat, BigNumber } from "@icpswap/utils";
-import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
-import { Flex, TextButton } from "@icpswap/ui";
-import type { NFTTokenMetadata } from "@icpswap/types";
+import { Box, Grid, Link, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { useNFTCanisterMetadata } from "hooks/info/nft";
-import ExplorerLink from "components/ExternalLink/Explorer";
+import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
+import type { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
-
+import { arrayBufferToString, encodeTokenIdentifier, isICPSwapOfficial } from "utils/index";
+import CollectionIcons from "./collectionsIcon";
 import DetailsToggle from "./DetailsToggle";
 import FileImage from "./FileImage";
-import CollectionIcons from "./collectionsIcon";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -372,7 +371,10 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
                 <DetailsItem
                   label={t`NFT Canister ID`}
                   value={
-                    <ExplorerLink label={metadata ? metadata.cId : "--"} value={metadata ? metadata.cId ?? "" : "--"} />
+                    <ExplorerLink
+                      label={metadata ? metadata.cId : "--"}
+                      value={metadata ? (metadata.cId ?? "") : "--"}
+                    />
                   }
                 />
 

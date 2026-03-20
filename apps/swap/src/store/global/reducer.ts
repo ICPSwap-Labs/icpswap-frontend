@@ -1,13 +1,13 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
-  updateUserLocale,
-  updateTokenList,
   updateAllSwapTokens,
-  updateWalletConnector,
   updateBridgeTokens,
-  updateGlobalMinterInfo,
-  updateDefaultTokens,
   updateDefaultChartType,
+  updateDefaultTokens,
+  updateGlobalMinterInfo,
+  updateTokenList,
+  updateUserLocale,
+  updateWalletConnector,
 } from "./actions";
 import { initialState } from "./states";
 

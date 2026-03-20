@@ -1,5 +1,5 @@
 import type { TokenRoots } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export function useSNSTokensRootIds(): UseQueryResult<
   { data: TokenRoots[]; total_snses: number; max_sns_index: number } | undefined,

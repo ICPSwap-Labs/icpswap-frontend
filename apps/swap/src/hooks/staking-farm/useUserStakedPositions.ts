@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { useUserFarms, getFarmUserTVL, useInfoAllTokens } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { FarmUserTvl } from "@icpswap/types";
-import { nonUndefinedOrNull, parseTokenAmount, BigNumber } from "@icpswap/utils";
+import { getFarmUserTVL, useInfoAllTokens, useUserFarms } from "@icpswap/hooks";
+import type { FarmUserTvl } from "@icpswap/types";
+import { BigNumber, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useTokens } from "hooks/useCurrency";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export function useUserStakedPositions() {
   const principal = useAccountPrincipal();
@@ -33,7 +33,7 @@ export function useUserStakedPositions() {
 
   const allTokenIds = useMemo(() => {
     if (!allFarmsUserTvl) return [];
-    return [...new Set(allFarmsUserTvl.map((e) => [e.poolToken0.address, e.poolToken1.address]).flat())];
+    return [...new Set(allFarmsUserTvl.flatMap((e) => [e.poolToken0.address, e.poolToken1.address]))];
   }, [allFarmsUserTvl]);
 
   const tokens = useTokens(allTokenIds);

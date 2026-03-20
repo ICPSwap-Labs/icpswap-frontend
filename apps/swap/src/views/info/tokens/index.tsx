@@ -1,13 +1,13 @@
-import { Box, Typography } from "components/Mui";
-import { MainCard } from "@icpswap/ui";
-import { Tokens } from "components/info/tokens/index";
-import { InfoWrapper } from "components/index";
-import { useTranslation } from "react-i18next";
-import { TokensTreeMap, TreeMapColorsLabel } from "components/info/tokens/TreeMap";
 import { useTokensFromAPI } from "@icpswap/hooks";
+import { MainCard } from "@icpswap/ui";
+import { nonUndefinedOrNull } from "@icpswap/utils";
+import { InfoWrapper } from "components/index";
+import { Tokens } from "components/info/tokens/index";
+import { TokensTreeMap, TreeMapColorsLabel } from "components/info/tokens/TreeMap";
+import { Box, Typography } from "components/Mui";
 import { useTokensManager } from "hooks/info/tokens/index";
 import { memo, useEffect } from "react";
-import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useTranslation } from "react-i18next";
 
 function __Tokens() {
   const { t } = useTranslation();

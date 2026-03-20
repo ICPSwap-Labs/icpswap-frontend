@@ -1,10 +1,10 @@
 import { Flex } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { Arrow } from "components/ck-bridge/ui/confirmations/Confirmations";
 import { Typography } from "components/Mui";
+import { useEthereumTxBlocksToSyncedBlock } from "hooks/ck-bridge/useEthereumConfirmations";
 import { useMemo } from "react";
 import { useEthDissolveTx, useEthTxResponse } from "store/web3/hooks";
-import { useEthereumTxBlocksToSyncedBlock } from "hooks/ck-bridge/useEthereumConfirmations";
-import { Arrow } from "components/ck-bridge/ui/confirmations/Confirmations";
 
 interface EthereumMintConfirmationsProps {
   hash: string;

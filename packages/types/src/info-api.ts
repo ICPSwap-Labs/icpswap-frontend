@@ -302,7 +302,7 @@ export interface UserWalletResponse extends Serializable {
   tokens: TokenBalance[];
 }
 
-export interface Serializable {}
+export type Serializable = {};
 
 export interface TokenBalance {
   token: string;

@@ -1,7 +1,7 @@
-import { Flex, BodyCell } from "@icpswap/ui";
-import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { useToken } from "hooks/useCurrency";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { BodyCell, Flex } from "@icpswap/ui";
 import { TokenImage } from "components/Image";
+import { useToken } from "hooks/useCurrency";
 
 interface StakeTokenCellProps {
   poolInfo: StakingPoolControllerPoolInfo;

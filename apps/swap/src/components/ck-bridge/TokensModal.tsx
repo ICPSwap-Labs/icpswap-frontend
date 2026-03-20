@@ -1,17 +1,17 @@
-import { useState, useCallback, useMemo } from "react";
-import { InputAdornment, useTheme, Typography, Box, useMediaQuery } from "components/Mui";
-import { isDarkTheme } from "utils/index";
-import { FilledTextField, NoData } from "components/index";
-import { Search as SearchIcon } from "react-feather";
-import { useDebouncedChangeHandler, useChainKeyMinterInfo } from "@icpswap/hooks";
-import { MINTER_CANISTER_ID } from "constants/index";
-import { useAllBridgeTokens } from "hooks/ck-bridge";
 import { BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
+import { useChainKeyMinterInfo, useDebouncedChangeHandler } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { Modal } from "@icpswap/ui";
 import { SelectorToken } from "components/ck-bridge/SelectorToken";
 import { getBridgeChainByTokenId } from "components/ck-bridge/utils";
+import { FilledTextField, NoData } from "components/index";
+import { Box, InputAdornment, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { MINTER_CANISTER_ID } from "constants/index";
+import { useAllBridgeTokens } from "hooks/ck-bridge";
+import { useCallback, useMemo, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { isDarkTheme } from "utils/index";
 
 export interface SelectorProps {
   open: boolean;

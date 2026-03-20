@@ -1,16 +1,16 @@
+import { type BridgeChainType, BridgeType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
-import { BridgeChainType, BridgeType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
+import { Erc20DissolveTransactions, Erc20MintTransactions } from "components/ck-bridge";
+import { BridgeTokens } from "components/ck-bridge/BridgeTokens";
+import { Erc20Dissolve } from "components/ck-bridge/erc20/Dissolve";
+import { Erc20Mint } from "components/ck-bridge/erc20/Mint";
+import { Erc20NetworkState } from "components/ck-bridge/erc20/NetworkState";
+import { TopContent } from "components/ck-bridge/TopContent";
 import { Wrapper } from "components/index";
 import { Box } from "components/Mui";
-import { Erc20DissolveTransactions, Erc20MintTransactions } from "components/ck-bridge";
 import { useBlockNumber } from "hooks/web3/useBlockNumber";
-import { TopContent } from "components/ck-bridge/TopContent";
-import { BridgeTokens } from "components/ck-bridge/BridgeTokens";
-import { Erc20NetworkState } from "components/ck-bridge/erc20/NetworkState";
-import { Erc20Mint } from "components/ck-bridge/erc20/Mint";
-import { Erc20Dissolve } from "components/ck-bridge/erc20/Dissolve";
 
 export interface Erc20BridgeWrapperProps {
   token: Token;

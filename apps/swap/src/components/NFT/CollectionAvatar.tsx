@@ -1,5 +1,5 @@
-import { Box, Grid, Avatar, makeStyles } from "components/Mui";
 import type { NFTControllerInfo } from "@icpswap/types";
+import { Avatar, Box, Grid, makeStyles } from "components/Mui";
 import VerifyNFT from "components/NFT/VerifyNFT";
 
 const useStyles = makeStyles(() => {

@@ -1,9 +1,9 @@
-import { useEffect, useState, useRef, useMemo, ReactNode, memo } from "react";
+import { memo, type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 
 import { Box } from "../Mui";
-import { SelectPanel } from "./Panel";
 import { DropDownMenu } from "./DropDownMenu";
-import { MenuProps } from "./types";
+import { SelectPanel } from "./Panel";
+import type { MenuProps } from "./types";
 
 export interface SelectProps {
   label?: string;

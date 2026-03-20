@@ -1,7 +1,7 @@
-import { useState, ReactNode, useCallback, useRef, useEffect, memo } from "react";
-import { Box, useTheme, Typography } from "components/Mui";
-import { Null } from "@icpswap/types";
 import { useSetTimeoutCall } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { Box, Typography, useTheme } from "components/Mui";
+import { memo, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 export interface UnderLineTab {
   value: string;

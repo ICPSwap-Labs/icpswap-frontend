@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { InfoTransactionResponse, PageResponse, Null } from "@icpswap/types";
+import type { InfoTransactionResponse, Null, PageResponse } from "@icpswap/types";
 import { icpswap_info_fetch_get } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export async function getPoolTransactions(poolId: string, page: number, limit: number) {
   const result = await icpswap_info_fetch_get<PageResponse<InfoTransactionResponse>>(`/pool/${poolId}/transaction`, {

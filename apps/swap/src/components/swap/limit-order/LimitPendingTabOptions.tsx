@@ -1,8 +1,8 @@
-import { Typography } from "components/Mui";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
+import { Typography } from "components/Mui";
 import { SelectPair } from "components/Select/SelectPair";
+import { useTranslation } from "react-i18next";
 
 interface LimitPendingTabOptionsProps {
   onPairChange: (pair: string | undefined) => void;

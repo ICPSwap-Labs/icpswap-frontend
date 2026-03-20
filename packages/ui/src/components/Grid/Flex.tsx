@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { Box, BoxProps } from "../Mui";
+import { Box, type BoxProps } from "../Mui";
 
 export interface FlexProps {
   width?: string;

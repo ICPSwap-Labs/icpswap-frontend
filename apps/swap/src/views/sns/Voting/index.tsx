@@ -1,22 +1,22 @@
-import { Box, Typography, useTheme } from "components/Mui";
+import { secondsToDuration } from "@dfinity/utils";
+import { SnsProposalDecisionStatus } from "@icpswap/constants";
 import { getListProposals, useParsedQueryString } from "@icpswap/hooks";
 import type { ProposalData } from "@icpswap/types";
-import { shortenString, nowInSeconds } from "@icpswap/utils";
-import { useMemo, useState, useEffect } from "react";
-import { SnsProposalDecisionStatus } from "@icpswap/constants";
-import { SelectSns } from "components/sns/SelectSNSTokens";
-import { secondsToDuration } from "@dfinity/utils";
-import { Tabs } from "components/sns/Tab";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useNavigate } from "react-router-dom";
-import { LoadingRow, Wrapper, Link } from "components/index";
+import { nowInSeconds, shortenString } from "@icpswap/utils";
+import { Link, LoadingRow, Wrapper } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
 import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
-import { useTranslation } from "react-i18next";
+import { SelectSns } from "components/sns/SelectSNSTokens";
+import { Tabs } from "components/sns/Tab";
 import { DEFAULT_ROOT_ID } from "constants/nns";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useNavigate } from "react-router-dom";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
-import { getNnsGovernanceId, getNnsLedgerId, nnsEqualToRootId } from "utils/sns/utils";
 import { getProposalStatus } from "utils/sns/proposal.utils";
+import { getNnsGovernanceId, getNnsLedgerId, nnsEqualToRootId } from "utils/sns/utils";
 
 interface ProposalItemProps {
   proposal: ProposalData;

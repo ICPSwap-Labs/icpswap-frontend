@@ -1,18 +1,18 @@
-import { resultFormat, isAvailablePageArgs, optionalArg } from "@icpswap/utils";
-import { stakingPoolController, stakingPool } from "@icpswap/actor";
+import { Principal } from "@icp-sdk/core/principal";
+import { stakingPool, stakingPoolController } from "@icpswap/actor";
 import type {
   CreateStakingPoolArgs,
-  StakingPoolInfo,
-  StakingPoolControllerPoolInfo,
-  StakingPoolTransaction,
-  StakingPoolUserInfo,
-  StakingPoolCycle,
-  StakingPoolGlobalData,
   PaginationResult,
   StakeGlobalDataInfo,
+  StakingPoolControllerPoolInfo,
+  StakingPoolCycle,
+  StakingPoolGlobalData,
+  StakingPoolInfo,
+  StakingPoolTransaction,
+  StakingPoolUserInfo,
 } from "@icpswap/types";
-import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { isAvailablePageArgs, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 /* token controller */
 export async function createStakingPool(args: CreateStakingPoolArgs) {
@@ -21,9 +21,11 @@ export async function createStakingPool(args: CreateStakingPoolArgs) {
 
 export async function getStakingPools(state: bigint | undefined, offset: number, limit: number) {
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
-    await (
-      await stakingPoolController()
-    ).findStakingPoolPage(optionalArg<bigint>(state), BigInt(offset), BigInt(limit)),
+    await (await stakingPoolController()).findStakingPoolPage(
+      optionalArg<bigint>(state),
+      BigInt(offset),
+      BigInt(limit),
+    ),
   ).data;
 }
 
@@ -52,9 +54,7 @@ export interface GetStakePoolsProps {
 
 export async function getStakePools({ state, offset, limit, rewardTokenId, stakeTokenId }: GetStakePoolsProps) {
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
-    await (
-      await stakingPoolController()
-    ).findStakingPoolPageV2(
+    await (await stakingPoolController()).findStakingPoolPageV2(
       optionalArg<bigint>(state),
       BigInt(offset),
       BigInt(limit),
@@ -226,9 +226,11 @@ export async function getStakingPoolTransactions(
   limit: number,
 ) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
-    await (
-      await stakingPool(canisterId)
-    ).findStakingRecordPage(optionalArg<Principal>(principal), BigInt(offset), BigInt(limit)),
+    await (await stakingPool(canisterId)).findStakingRecordPage(
+      optionalArg<Principal>(principal),
+      BigInt(offset),
+      BigInt(limit),
+    ),
   ).data;
 }
 
@@ -256,9 +258,11 @@ export async function getStakingPoolClaimTransactions(
   limit: number,
 ) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
-    await (
-      await stakingPool(canisterId)
-    ).findRewardRecordPage(optionalArg<Principal>(principal), BigInt(offset), BigInt(limit)),
+    await (await stakingPool(canisterId)).findRewardRecordPage(
+      optionalArg<Principal>(principal),
+      BigInt(offset),
+      BigInt(limit),
+    ),
   ).data;
 }
 

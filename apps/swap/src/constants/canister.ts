@@ -1,13 +1,13 @@
 /* eslint-disable global-require */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { actor, Actor } from "@icpswap/actor";
-import { network, NETWORK, host } from "./server";
+import { Actor, actor } from "@icpswap/actor";
+import { host, NETWORK, network } from "./server";
 
 let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 
 try {
-  const canister_ids = require("../canister_ids.json");
-  const temp_canister_ids = require("../temp_canister_ids.json");
+  const canister_ids = (await import("../canister_ids.json")).default;
+  const temp_canister_ids = (await import("../temp_canister_ids.json")).default;
 
   CanisterIdsJson = {
     ...canister_ids,
@@ -75,6 +75,7 @@ export const PassCodeManagerId = getCanisterId(CANISTER_NAMES.PassCodeManager);
 
 Actor.setActorCanisterIds(canisterIds);
 actor.setHost(host);
+actor.setLog(import.meta.env.VITE_APP_ENV === "development");
 
 export const ALL_CANISTER_IDS = [...Object.values(canisterIds)];
 

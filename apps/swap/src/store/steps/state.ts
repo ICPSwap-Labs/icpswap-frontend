@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { type StepContents, StepType } from "types/step";
+import type { ReactNode } from "react";
+import type { StepContents, StepType } from "types/step";
 
 export interface StepDetailsProps {
   title: ReactNode;

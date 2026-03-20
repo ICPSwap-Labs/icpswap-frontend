@@ -1,7 +1,17 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
-import { TextField, Typography, Box, Menu, MenuItem, makeStyles, Theme, TextFieldProps } from "components/Mui";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Flex, NoData } from "@icpswap/ui";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import {
+  Box,
+  Menu,
+  MenuItem,
+  makeStyles,
+  TextField,
+  type TextFieldProps,
+  type Theme,
+  Typography,
+} from "components/Mui";
+import type React from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 interface UseStylesProps {
   contained: boolean;
@@ -28,12 +38,12 @@ const useStyles = ({
         display: "flex",
         alignItems: "center",
         border: contained
-          ? border ?? theme.palette.border.normal
+          ? (border ?? theme.palette.border.normal)
           : border === true
-          ? theme.palette.border.normal
-          : border === "border0"
-          ? theme.palette.border.border0
-          : "none",
+            ? theme.palette.border.normal
+            : border === "border0"
+              ? theme.palette.border.border0
+              : "none",
         background: background
           ? background === "level3"
             ? theme.palette.background.level3
@@ -46,7 +56,7 @@ const useStyles = ({
         ...(multiline ? { minHeight: "48px" } : {}),
         margin: "0px",
         "@media(max-width: 640px)": {
-          padding: inputPadding ?? contained ? `4px 6px` : "0 16px",
+          padding: (inputPadding ?? contained) ? `4px 6px` : "0 16px",
         },
         "& input": {
           color: theme.palette.text.primary,
@@ -130,7 +140,7 @@ function Value({ select, value, menus = [], helperText }: ValueProps) {
         }}
         color="textPrimary"
       >
-        {select ? menus.filter((menu) => menu.value === value)[0]?.label ?? value : value}
+        {select ? (menus.filter((menu) => menu.value === value)[0]?.label ?? value) : value}
       </Typography>
       {helperText ? (
         <Typography
@@ -233,65 +243,63 @@ function FilledTextField(
         }}
         onClick={handleOuterBoxClick}
       >
-        <>
-          <Flex fullWidth sx={{ flex: 1 }} justify="space-between">
-            {!select ? (
-              <TextField
-                sx={{
-                  "& input.MuiInputBase-input": {
-                    lineHeight: "1.15rem",
-                    fontSize: props.fontSize ?? "16px",
-                  },
-                  "& textarea": {
-                    lineHeight: "1.15rem",
-                    fontSize: props.fontSize ?? "16px",
-                  },
-                  "& input::placeholder": {
-                    fontSize: props.placeholderSize ?? "16px",
-                  },
-                  "& textarea::placeholder": {
-                    fontSize: props.placeholderSize ?? "16px",
-                  },
-                  ...textFieldProps?.sx,
-                }}
-                slotProps={{
-                  ...textFieldProps?.slotProps,
-                  input: {
-                    disableUnderline: true,
-                    autoComplete: "off",
-                    ...textFieldProps?.slotProps?.input,
-                  },
-                }}
-                inputRef={inputRef}
-                {...props}
-                variant="standard"
-                onChange={({ target: { value } }) => onChange && onChange(value)}
-                value={value}
-                multiline={multiline}
-                fullWidth
-                disabled={disabled}
-                helperText={helperText}
-                onFocus={onFocus}
-                autoComplete="off"
-                spellCheck={false}
-              />
-            ) : value ? (
-              <Value menus={menus} value={value} helperText={helperText} select={select} />
-            ) : (
-              <Typography
-                sx={{
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-                color="#c5c5c5"
-              >
-                {props.placeholder}
-              </Typography>
-            )}
-            {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
-          </Flex>
-        </>
+        <Flex fullWidth sx={{ flex: 1 }} justify="space-between">
+          {!select ? (
+            <TextField
+              sx={{
+                "& input.MuiInputBase-input": {
+                  lineHeight: "1.15rem",
+                  fontSize: props.fontSize ?? "16px",
+                },
+                "& textarea": {
+                  lineHeight: "1.15rem",
+                  fontSize: props.fontSize ?? "16px",
+                },
+                "& input::placeholder": {
+                  fontSize: props.placeholderSize ?? "16px",
+                },
+                "& textarea::placeholder": {
+                  fontSize: props.placeholderSize ?? "16px",
+                },
+                ...textFieldProps?.sx,
+              }}
+              slotProps={{
+                ...textFieldProps?.slotProps,
+                input: {
+                  disableUnderline: true,
+                  autoComplete: "off",
+                  ...textFieldProps?.slotProps?.input,
+                },
+              }}
+              inputRef={inputRef}
+              {...props}
+              variant="standard"
+              onChange={({ target: { value } }) => onChange?.(value)}
+              value={value}
+              multiline={multiline}
+              fullWidth
+              disabled={disabled}
+              helperText={helperText}
+              onFocus={onFocus}
+              autoComplete="off"
+              spellCheck={false}
+            />
+          ) : value ? (
+            <Value menus={menus} value={value} helperText={helperText} select={select} />
+          ) : (
+            <Typography
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+              color="#c5c5c5"
+            >
+              {props.placeholder}
+            </Typography>
+          )}
+          {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
+        </Flex>
       </Box>
 
       {Boolean(anchorEl) && (

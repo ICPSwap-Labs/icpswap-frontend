@@ -1,5 +1,5 @@
-import { useMemo } from "react";
 import { useToken } from "hooks/index";
+import { useMemo } from "react";
 import { useGlobalMinterInfoManager } from "store/global/hooks";
 
 interface UseErc20TokenFromSymbolProps {

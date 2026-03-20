@@ -1,6 +1,6 @@
+import type { BigNumber } from "@icpswap/utils";
 import { useMemo } from "react";
-import { BigNumber } from "@icpswap/utils";
-import { PositionSort, UserPositionByList, UserPositionForFarm } from "types/swap";
+import { PositionSort, type UserPositionByList, type UserPositionForFarm } from "types/swap";
 
 function getPositionId(data: UserPositionByList | UserPositionForFarm) {
   return "farm" in data ? data.positionId.toString() : data.position.id.toString();

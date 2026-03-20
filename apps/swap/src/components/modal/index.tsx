@@ -1,19 +1,19 @@
-import { ReactNode } from "react";
+import DialogCloseIcon from "assets/images/icons/dialog-close";
 import {
-  makeStyles,
-  useTheme,
-  Theme,
   Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+  type Theme,
   Typography,
   useMediaQuery,
-  Dialog,
-  DialogTitle,
-  DialogContent,
+  useTheme,
 } from "components/Mui";
-import DialogCloseIcon from "assets/images/icons/dialog-close";
-import { isElement } from "react-is";
 import i18n from "i18n/index";
+import type { ReactNode } from "react";
+import { isElement } from "react-is";
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleContainer: {

@@ -1,6 +1,6 @@
 import invariant from "tiny-invariant";
-import { Token, Price } from "../core";
-import { Pool } from "./pool";
+import { Price, type Token } from "../core";
+import type { Pool } from "./pool";
 
 /**
  * Represents a list of pools through which a swap can occur

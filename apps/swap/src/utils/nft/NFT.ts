@@ -1,6 +1,6 @@
-import { type NFTTransferArgs, type NFTAllowanceArgs, type NFTApproveArgs, ResultStatus } from "@icpswap/types";
+import { type NFTAllowanceArgs, type NFTApproveArgs, type NFTTransferArgs, ResultStatus } from "@icpswap/types";
 
-import { BaseNFTAdapter } from "./BaseNFTAdapter";
+import type { BaseNFTAdapter } from "./BaseNFTAdapter";
 import { ICPSwapAdapter } from "./ICPSwapNFTAdapter";
 
 export class NFT {

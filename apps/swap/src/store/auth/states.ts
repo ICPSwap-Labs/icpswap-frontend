@@ -1,5 +1,5 @@
-import { Null } from "@icpswap/types";
-import { Connector } from "constants/wallet";
+import type { Null } from "@icpswap/types";
+import type { Connector } from "constants/wallet";
 
 export type LoginState = {
   name: string | Null;

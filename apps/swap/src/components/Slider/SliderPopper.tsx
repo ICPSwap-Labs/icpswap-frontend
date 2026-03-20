@@ -1,6 +1,6 @@
-import { Typography, Popper } from "components/Mui";
-import { percentToNum, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
+import { BigNumber, nonUndefinedOrNull, percentToNum } from "@icpswap/utils";
+import { Popper, Typography } from "components/Mui";
 
 export interface SliderRefProps {
   setAmount: (value: string) => void;

@@ -1,4 +1,4 @@
-import { Box, BoxProps, useTheme } from "./Mui";
+import { Box, type BoxProps, useTheme } from "./Mui";
 
 export interface LineProps {
   sx?: BoxProps["sx"];

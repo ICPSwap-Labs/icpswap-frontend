@@ -1,15 +1,14 @@
-import { useEffect, useMemo } from "react";
+import { FREE_LIQUIDITY_NAME, INFO_URL } from "@icpswap/constants";
+import type { Position } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useMemo } from "react";
 import { ArrowUpRight } from "react-feather";
-import { Position } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { INFO_URL, FREE_LIQUIDITY_NAME } from "@icpswap/constants";
-
-import { Box, Typography, useTheme } from "../Mui";
-import { Image } from "../Image";
 import { Flex } from "../Grid/Flex";
-import { Tooltip } from "../Tooltip";
+import { Image } from "../Image";
 import { Link } from "../Link";
+import { Box, Typography, useTheme } from "../Mui";
+import { Tooltip } from "../Tooltip";
 
 export interface LiquidityLockProps {
   name: string;

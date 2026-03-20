@@ -1,14 +1,14 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useCallback, useMemo } from "react";
-import { Box, Typography, Button, Checkbox, CircularProgress } from "components/Mui";
-import { Flex, LoadingRow, NoData } from "components/index";
-import { useTranslation } from "react-i18next";
-import { useWalletContext, WalletManagerPage, ConvertToIcp } from "components/Wallet/context";
-import { BigNumber, formatAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
-import { useSmallBalanceTokens, SmallBalanceResult } from "hooks/wallet/useSmallBalanceTokens";
-import { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
+import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
+import { BigNumber, formatAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { Flex, LoadingRow, NoData } from "components/index";
+import { Box, Button, Checkbox, CircularProgress, Typography } from "components/Mui";
 import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
+import { type ConvertToIcp, useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { type SmallBalanceResult, useSmallBalanceTokens } from "hooks/wallet/useSmallBalanceTokens";
+import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 const GREATER_THAN_BALANCE_WOULD_BE_FILTERED = 5;
 
@@ -62,7 +62,7 @@ export function BalanceConvert() {
     setPages(WalletManagerPage.Index);
   }, [setPages]);
 
-  const { result: result, loading } = useSmallBalanceTokens();
+  const { result, loading } = useSmallBalanceTokens();
 
   const smallBalances = useMemo(() => {
     if (isUndefinedOrNull(result)) return undefined;

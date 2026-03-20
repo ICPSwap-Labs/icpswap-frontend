@@ -1,20 +1,19 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { useSNSSwapDerivedState, useSwapLifeCycle, useSNSBuyerState, useIpLocationCode } from "@icpswap/hooks";
-import { useMemo, useState, useContext } from "react";
-import { TextButton, AuthButton } from "components/index";
-import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
-import dayjs from "dayjs";
-import { BigNumber, parseTokenAmount, toSignificant } from "@icpswap/utils";
-import { ICP } from "@icpswap/tokens";
-import { useAccountPrincipal, useConnector } from "store/auth/hooks";
 import { SnsSwapLifecycle } from "@icpswap/constants";
+import { useIpLocationCode, useSNSBuyerState, useSNSSwapDerivedState, useSwapLifeCycle } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
+import type { SNSSwapInitArgs, SwapSaleParameters } from "@icpswap/types";
+import { BigNumber, parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { AuthButton, TextButton } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { Connector } from "constants/wallet";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
+import dayjs from "dayjs";
 import i18n from "i18n";
-
-import { Participate } from "./Participate";
+import { useContext, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal, useConnector } from "store/auth/hooks";
 import { LaunchContext } from "./context";
+import { Participate } from "./Participate";
 
 export interface LaunchStatusProps {
   ledger_id: string | undefined;

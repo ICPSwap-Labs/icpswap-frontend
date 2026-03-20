@@ -1,10 +1,10 @@
-import { Box, Avatar } from "components/Mui";
-import { Position } from "@icpswap/swap-sdk";
+import type { Position } from "@icpswap/swap-sdk";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { isUseTransfer } from "utils/token/index";
-import { StepContents } from "types/step";
 import { TextButton } from "components/index";
+import { Avatar, Box } from "components/Mui";
 import i18n from "i18n/index";
+import type { StepContents } from "types/step";
+import { isUseTransfer } from "utils/token/index";
 
 export interface IncreaseLiquidityStepsProps {
   position: Position;

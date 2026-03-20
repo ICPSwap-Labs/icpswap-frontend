@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { isResultKey, isResultErrKey, isResultOkKey, resultFormat } from "./resultFormat";
 import { ResultStatus } from "@icpswap/types";
+import { describe, expect, it } from "vitest";
+import { isResultErrKey, isResultKey, isResultOkKey, resultFormat } from "./resultFormat";
 
 describe("resultFormat helpers", () => {
   describe("isResultErrKey", () => {

@@ -1,11 +1,11 @@
-import { BoxProps } from "components/Mui";
-import { AnonymousPrincipal } from "constants/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useFarmState, useUserFarmInfo, useFarmInitArgs } from "@icpswap/hooks";
-import { FilterState } from "types/staking-farm";
+import { useFarmInitArgs, useFarmState, useUserFarmInfo } from "@icpswap/hooks";
+import { EmptyRow } from "components/farm/row/EmptyRow";
 import { FinishedFarmRowUI } from "components/farm/row/FinishedFarmRow";
 import { LiveFarmRow } from "components/farm/row/LiveFarmRow";
-import { EmptyRow } from "components/farm/row/EmptyRow";
+import type { BoxProps } from "components/Mui";
+import { AnonymousPrincipal } from "constants/index";
+import { useAccountPrincipal } from "store/auth/hooks";
+import type { FilterState } from "types/staking-farm";
 
 interface FarmRowProps {
   farmId: string;

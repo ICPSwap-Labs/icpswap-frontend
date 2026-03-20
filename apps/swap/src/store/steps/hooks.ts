@@ -1,9 +1,8 @@
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import type { StepDetails } from "types/step";
-
-import { open, close, updateStepDetails, updateKey, closeAll, updateData } from "./actions";
 import store from "../index";
+import { close, closeAll, open, updateData, updateKey, updateStepDetails } from "./actions";
 
 export function getStepDetails(key: string) {
   return store.getState().step.steps[key];

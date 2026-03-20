@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
-import { Typography, Box, useTheme } from "components/Mui";
+import { usePoolAverageAPRs, usePositionAPRChartData } from "@icpswap/hooks";
+import { ChartTimeEnum, type Null } from "@icpswap/types";
+import { ChartAPRLabel, Flex, ImageLoading, LineChartAlt } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, numToPercent } from "@icpswap/utils";
-import { usePositionAPRChartData, usePoolAverageAPRs } from "@icpswap/hooks";
-import { type Null, ChartTimeEnum } from "@icpswap/types";
-import { LineChartAlt, ImageLoading, ChartAPRLabel, Flex } from "@icpswap/ui";
-import { ReferenceLine } from "recharts";
+import { Box, Typography, useTheme } from "components/Mui";
 import dayjs from "dayjs";
+import { useMemo, useState } from "react";
+import { ReferenceLine } from "recharts";
 
 const CHART_HEIGHT = 240;
 
@@ -108,7 +108,7 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
                       stroke={theme.colors.apr}
                       y={lineY}
                       label={
-                        // @ts-ignore
+                        // @ts-expect-error The props 'viewBox' is inject by recharts
                         <ChartAPRLabel
                           apr={
                             new BigNumber(averageApr).isLessThan(1)

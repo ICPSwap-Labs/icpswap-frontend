@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useFarmTVL, useInfoAllTokens } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { useInfoAllTokens, useFarmTVL } from "@icpswap/hooks";
+import { useMemo } from "react";
 
 export interface UseFarmTvlValueArgs {
   token0: Token | undefined;

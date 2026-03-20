@@ -1,10 +1,10 @@
-import { useMemo, useEffect, useState, useCallback } from "react";
-import type { TokenInfo, StorageTokenInfo, Null } from "@icpswap/types";
-import { getTokenStandard } from "store/token/cache/hooks";
-import { DB_NAME, DB_VERSION } from "constants/db";
-import { BigNumber, IdbStorage } from "@icpswap/utils";
 import { getPromisesAwait } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
+import type { Null, StorageTokenInfo, TokenInfo } from "@icpswap/types";
+import { BigNumber, IdbStorage } from "@icpswap/utils";
+import { DB_NAME, DB_VERSION } from "constants/db";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { getTokenStandard } from "store/token/cache/hooks";
 
 import { getTokenInfo } from "./calls";
 import { generateLogoUrl } from "./useTokenLogo";

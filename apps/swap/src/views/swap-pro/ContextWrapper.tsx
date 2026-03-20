@@ -1,22 +1,22 @@
-import { useMemo, useState, useEffect, useContext } from "react";
-import { Box, useTheme, useMediaQuery } from "components/Mui";
-import { useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
+import { useInfoToken, useTokenListTokenInfo } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { SwapContext } from "components/swap/index";
-import { ChartButton, ChartView } from "@icpswap/ui";
-import { SwapProContext, PoolTokensInformation } from "components/swap/pro";
-import { Tab } from "constants/index";
-import { useFetchGlobalDefaultChartType } from "store/global/hooks";
+import { type ChartButton, ChartView } from "@icpswap/ui";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { Box, useMediaQuery, useTheme } from "components/Mui";
+import { SwapContext } from "components/swap/index";
+import { PoolTokensInformation, SwapProContext } from "components/swap/pro";
+import { Tab } from "constants/index";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { useFetchGlobalDefaultChartType } from "store/global/hooks";
 import { getChartView } from "utils/swap/chartType";
 
 import HotTokens from "./HotTokens";
+import { SearchWrapper } from "./layout/SearchWrapper";
 import Swap from "./Swap";
 import TokenTvlAndLiquidityLocks from "./Token";
 import { TokenChartWrapper } from "./TokenChart";
-import Transactions from "./Transactions";
-import { SearchWrapper } from "./layout/SearchWrapper";
 import TokenChartInfo from "./TokenChart/Token";
+import Transactions from "./Transactions";
 
 export function SwapProContextWrapper() {
   const theme = useTheme();

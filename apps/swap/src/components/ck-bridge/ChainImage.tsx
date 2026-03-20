@@ -1,6 +1,6 @@
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
 import { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Image } from "@icpswap/ui";
 import { Box, useTheme } from "components/Mui";
 
@@ -36,10 +36,10 @@ export function TokenImageWithChain({ token, chain, size = "40px", chainSize = "
               chain === BridgeChainType.icp
                 ? "/images/ck-bridge/chain-icp.svg"
                 : chain === BridgeChainType.btc
-                ? "/images/ck-bridge/chain-btc.svg"
-                : chain === BridgeChainType.doge
-                ? "/images/ck-bridge/chain-doge.svg"
-                : "/images/ck-bridge/chain-eth.svg"
+                  ? "/images/ck-bridge/chain-btc.svg"
+                  : chain === BridgeChainType.doge
+                    ? "/images/ck-bridge/chain-doge.svg"
+                    : "/images/ck-bridge/chain-eth.svg"
             }
             sx={{
               width: chainSize,

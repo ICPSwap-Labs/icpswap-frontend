@@ -1,6 +1,6 @@
-import { DogeDissolveTx } from "types/chain-key";
-import { BitcoinTx } from "types/ckBTC";
-import { WalletSortType, SortBalanceEnum } from "types/index";
+import type { DogeDissolveTx } from "types/chain-key";
+import type { BitcoinTx } from "types/ckBTC";
+import { SortBalanceEnum, type WalletSortType } from "types/index";
 
 export interface WalletState {
   taggedTokens: string[];

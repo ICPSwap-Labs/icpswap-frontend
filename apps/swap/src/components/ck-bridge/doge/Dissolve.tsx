@@ -1,12 +1,12 @@
-import { BridgeChainName, BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { useCallback } from "react";
-import { useDissolve } from "hooks/ck-bridge/doge/useDissolve";
-import { BitcoinStyleDissolveUI } from "components/ck-bridge/ui/BitcoinStyleDissolveUI";
-import { isValidDogeAddress } from "utils/chain-key";
+import { BridgeChainName, type BridgeChainType } from "@icpswap/constants";
 import { useDogeMinterInfo, useDogeWithdrawalFee } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount } from "@icpswap/utils";
+import { BitcoinStyleDissolveUI } from "components/ck-bridge/ui/BitcoinStyleDissolveUI";
 import { useUpdateDissolveTx } from "hooks/ck-bridge";
+import { useDissolve } from "hooks/ck-bridge/doge/useDissolve";
+import { useCallback } from "react";
+import { isValidDogeAddress } from "utils/chain-key";
 
 interface DissolveProps {
   token: Token;

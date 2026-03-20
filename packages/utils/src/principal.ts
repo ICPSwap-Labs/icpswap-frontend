@@ -15,8 +15,8 @@ export function principalToAccount(principal: string, subAccount?: SubAccount | 
     ? isSubAccount(subAccount)
       ? subAccount
       : isValidPrincipal(subAccount)
-      ? SubAccount.fromPrincipal(Principal.fromText(subAccount))
-      : undefined
+        ? SubAccount.fromPrincipal(Principal.fromText(subAccount))
+        : undefined
     : undefined;
 
   return AccountIdentifier.fromPrincipal({

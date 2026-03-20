@@ -1,9 +1,9 @@
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Button } from "components/Mui";
 import { memo } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export interface AddLiquidityProps {
   token0: Token | Null;

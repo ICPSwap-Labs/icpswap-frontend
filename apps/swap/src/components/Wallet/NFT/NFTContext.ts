@@ -1,5 +1,5 @@
-import { createContext, useContext } from "react";
 import type { NFTTokenMetadata } from "@icpswap/types";
+import { createContext, useContext } from "react";
 
 export type DisplayedNFTInfo = {
   id: string;

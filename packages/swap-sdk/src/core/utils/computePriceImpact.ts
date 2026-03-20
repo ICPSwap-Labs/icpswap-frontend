@@ -1,4 +1,4 @@
-import { Token, CurrencyAmount, Percent, Price } from "../entities";
+import { type CurrencyAmount, Percent, type Price, type Token } from "../entities";
 
 /**
  * Returns the percent difference between the mid price and the execution price, i.e. price impact.

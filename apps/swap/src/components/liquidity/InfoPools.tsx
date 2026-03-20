@@ -1,23 +1,19 @@
-import { useState, useMemo, useCallback } from "react";
-import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme, BoxProps } from "components/Mui";
-import { useNavigate } from "react-router-dom";
-import { NoData, TokenImage, TabPanel, type Tab, ScrollTop } from "components/index";
+import { getPoolAPR, useDebouncedChangeHandler, useNodeInfoAllPools, useTokensFromList } from "@icpswap/hooks";
+import { ICP } from "@icpswap/tokens";
 import {
+  APRPanel,
+  BodyCell,
+  FeeTierPercentLabel,
+  FilledTextField,
+  Flex,
   Header,
   HeaderCell,
-  BodyCell,
-  TableRow,
-  SortDirection,
-  FeeTierPercentLabel,
-  OnlyTokenList,
-  Flex,
-  LoadingRow,
-  FilledTextField,
-  APRPanel,
   Link,
+  LoadingRow,
+  OnlyTokenList,
+  SortDirection,
+  TableRow,
 } from "@icpswap/ui";
-import { useTokensFromList, useNodeInfoAllPools, useDebouncedChangeHandler, getPoolAPR } from "@icpswap/hooks";
-import { ICP } from "@icpswap/tokens";
 import {
   BigNumber,
   formatDollarAmount,
@@ -26,14 +22,27 @@ import {
   percentToNum,
   urlStringFormat,
 } from "@icpswap/utils";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { generateLogoUrl } from "hooks/token/useTokenLogo";
-import { Search } from "react-feather";
-import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
-import { PoolTvlTooltip } from "components/swap/index";
-import { useTranslation } from "react-i18next";
+import { NoData, ScrollTop, type Tab, TabPanel, TokenImage } from "components/index";
 import { PoolCharts } from "components/liquidity/PoolCharts";
-import { PoolInfoWithApr } from "types/info";
+import {
+  Box,
+  type BoxProps,
+  InputAdornment,
+  makeStyles,
+  type Theme,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "components/Mui";
+import { PoolTvlTooltip } from "components/swap/index";
+import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
+import { generateLogoUrl } from "hooks/token/useTokenLogo";
+import { useCallback, useMemo, useState } from "react";
+import { Search } from "react-feather";
+import { useTranslation } from "react-i18next";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useNavigate } from "react-router-dom";
+import type { PoolInfoWithApr } from "types/info";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

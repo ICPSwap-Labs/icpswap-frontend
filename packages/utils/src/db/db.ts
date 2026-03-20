@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-constructor */
-import { openDB, IDBPDatabase, deleteDB } from "idb";
+import { deleteDB, type IDBPDatabase, openDB } from "idb";
 
 type Database = IDBPDatabase<unknown>;
 type IDBValidKey = string | number | Date | BufferSource | IDBValidKey[];

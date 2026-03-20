@@ -1,15 +1,15 @@
-import { Box, useTheme } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, Image } from "@icpswap/ui";
 import {
   BigNumber,
-  nonUndefinedOrNull,
   isUndefinedOrNull,
+  nonUndefinedOrNull,
+  numToPercent,
   parseTokenAmount,
   percentToNum,
-  numToPercent,
 } from "@icpswap/utils";
-import { Flex, Image } from "@icpswap/ui";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { Box, useTheme } from "components/Mui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 let MouseDownX: number | null = null;
@@ -57,8 +57,8 @@ export function BalanceSlider({ amount, token, balance, onAmountChange }: Balanc
     return !amount
       ? "0%"
       : !new BigNumber(amount).isLessThan(unformattedBalance)
-      ? "100%"
-      : numToPercent(new BigNumber(amount).dividedBy(unformattedBalance).toString());
+        ? "100%"
+        : numToPercent(new BigNumber(amount).dividedBy(unformattedBalance).toString());
   }, [balance, token, amount]);
 
   const arrowPosition = useMemo(() => {
@@ -124,8 +124,8 @@ export function BalanceSlider({ amount, token, balance, onAmountChange }: Balanc
         const position = new BigNumber(percentToNum(__position)).isGreaterThan(1)
           ? "100%"
           : new BigNumber(percentToNum(__position)).isLessThan(0)
-          ? "0%"
-          : __position;
+            ? "0%"
+            : __position;
 
         setArrowPosition(position);
         onArrowPositionChange(position);

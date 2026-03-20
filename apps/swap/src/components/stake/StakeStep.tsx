@@ -1,12 +1,12 @@
-import { Box } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { parseTokenAmount } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { toFormat } from "utils/index";
-import { isUseTransferByStandard, actualAmountToPool } from "utils/token/index";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { getStepData } from "store/steps/hooks";
 import { TokenImage } from "components/index";
+import { Box } from "components/Mui";
 import i18n from "i18n/index";
+import { getStepData } from "store/steps/hooks";
+import { toFormat } from "utils/index";
+import { actualAmountToPool, isUseTransferByStandard } from "utils/token/index";
 
 export interface GetSteps {
   token: Token;

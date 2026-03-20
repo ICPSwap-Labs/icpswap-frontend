@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
 import { Box } from "components/Mui";
+import type { ReactNode } from "react";
 
 import { InfoNavBar } from "./InfoNavBar";
 

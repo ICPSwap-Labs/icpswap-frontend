@@ -1,5 +1,5 @@
+import type { NFTTokenMetadata } from "@icpswap/types";
 import LazyImage from "components/LazyImage";
-import { type NFTTokenMetadata } from "@icpswap/types";
 import FileImage from "./FileImage";
 import NFTVideo from "./NFTVideo";
 

@@ -1,4 +1,4 @@
-import { SvgIcon, SvgIconProps } from "../../components/Mui";
+import { SvgIcon, type SvgIconProps } from "../../components/Mui";
 
 export function SearchIcon(props: SvgIconProps) {
   return (

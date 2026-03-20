@@ -1,10 +1,10 @@
+import _Big from "big.js";
+import _Decimal from "decimal.js-light";
 import JSBI from "jsbi";
 import invariant from "tiny-invariant";
-import _Decimal from "decimal.js-light";
-import _Big from "big.js";
 import toFormat from "toformat";
 
-import { BigintIsh, Rounding } from "../../constants";
+import { type BigintIsh, Rounding } from "../../constants";
 
 const Decimal = toFormat(_Decimal);
 const Big = toFormat(_Big);
@@ -15,7 +15,7 @@ const toSignificantRounding = {
   [Rounding.ROUND_UP]: Decimal.ROUND_UP,
 };
 
-const enum RoundingMode {
+enum RoundingMode {
   /**
    * Rounds towards zero.
    * I.e. truncate, no rounding.

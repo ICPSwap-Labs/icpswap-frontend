@@ -1,16 +1,16 @@
-import { useState, useCallback } from "react";
-import { isUndefinedOrNull, principalToAccount } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import { MessageTypes, useTips } from "hooks/index";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { nftTransfer } from "hooks/nft/useNFTCalls";
-import { encodeTokenIdentifier, stringToArrayBuffer } from "utils";
 import { ResultStatus } from "@icpswap/types";
-import { getLocaleMessage } from "i18n/service";
+import { isUndefinedOrNull, principalToAccount } from "@icpswap/utils";
+import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
 import { NFTSendUI } from "components/Wallet/NFT/NFTSendUI";
+import { MessageTypes, useTips } from "hooks/index";
+import { nftTransfer } from "hooks/nft/useNFTCalls";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { encodeTokenIdentifier, stringToArrayBuffer } from "utils";
 
 export function NFTSend() {
   const { t } = useTranslation();

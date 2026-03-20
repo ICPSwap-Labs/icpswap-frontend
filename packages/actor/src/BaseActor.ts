@@ -1,5 +1,5 @@
-import { Actor, HttpAgent } from "@icp-sdk/core/agent";
-import { IDL } from "@icp-sdk/core/candid";
+import { Actor, type HttpAgent } from "@icp-sdk/core/agent";
+import type { IDL } from "@icp-sdk/core/candid";
 
 export interface CreateBaseActorProps {
   canisterId: string;

@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { ReactComponent as AddIcon } from "assets/icons/add.svg";
+import { useState } from "react";
 import AddNFTCanisterModal from "./Modal";
 
 export default function AddNFTCanister() {

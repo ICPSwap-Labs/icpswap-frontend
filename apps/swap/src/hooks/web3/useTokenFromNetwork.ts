@@ -1,9 +1,9 @@
 import { ERC20Token } from "@icpswap/swap-sdk";
-import { useCallback, useMemo } from "react";
-import { useSupportedActiveChain, useWeb3CallsData, useActiveChain } from "hooks/web3/index";
-import { useAccount, useReadContract } from "wagmi";
-import { erc20Abi } from "abis/abis";
 import { isUndefinedOrNull } from "@icpswap/utils/dist/isUndefinedOrNull";
+import { erc20Abi } from "abis/abis";
+import { useActiveChain, useSupportedActiveChain, useWeb3CallsData } from "hooks/web3/index";
+import { useCallback, useMemo } from "react";
+import { useAccount, useReadContract } from "wagmi";
 
 export function useTokenName(tokenAddress: string | undefined) {
   const { address: account, chainId } = useAccount();

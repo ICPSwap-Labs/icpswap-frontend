@@ -1,7 +1,7 @@
+import { Principal } from "@icp-sdk/core/principal";
 import { passCodeManager } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
-import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export function usePCMMetadata(): UseQueryResult<
   | {
@@ -36,9 +36,11 @@ export async function withdrawPCMBalance(amount: bigint, fee: bigint | number) {
 }
 
 export async function destroyPassCode(token0: string, token1: string, fee: bigint) {
-  const result = await (
-    await passCodeManager(true)
-  ).destoryPasscode(Principal.fromText(token0), Principal.fromText(token1), fee);
+  const result = await (await passCodeManager(true)).destoryPasscode(
+    Principal.fromText(token0),
+    Principal.fromText(token1),
+    fee,
+  );
 
   return resultFormat<string>(result);
 }

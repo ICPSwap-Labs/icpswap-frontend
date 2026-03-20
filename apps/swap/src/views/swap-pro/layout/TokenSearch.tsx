@@ -1,19 +1,19 @@
-import { useEffect, useMemo, useState, useRef } from "react";
-import { Box, Typography, InputAdornment, useTheme, useMediaQuery } from "components/Mui";
-import { FilledTextField, TokenImage } from "components/index";
-import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
-import { useNavigate } from "react-router-dom";
-import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { useInfoAllTokens } from "@icpswap/hooks";
-import { isValidPrincipal, formatDollarTokenPrice, nonUndefinedOrNull, shortenString, BigNumber } from "@icpswap/utils";
+import { ICP } from "@icpswap/tokens";
 import type { IcpSwapAPITokenInfo, InfoTokenRealTimeDataResponse, Null } from "@icpswap/types";
 import { NoData, Proportion } from "@icpswap/ui";
-import { useToken } from "hooks/index";
-import { ICP } from "@icpswap/tokens";
-import DialogCloseIcon from "assets/images/icons/dialog-close";
-import { useGlobalTokenList, useStateSwapAllTokens } from "store/global/hooks";
+import { BigNumber, formatDollarTokenPrice, isValidPrincipal, nonUndefinedOrNull, shortenString } from "@icpswap/utils";
+import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
+import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
+import DialogCloseIcon from "assets/images/icons/dialog-close";
+import { FilledTextField, TokenImage } from "components/index";
+import { Box, InputAdornment, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { useToken } from "hooks/index";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useGlobalTokenList, useStateSwapAllTokens } from "store/global/hooks";
 
 interface SearchItemProps {
   tokenInfo: IcpSwapAPITokenInfo;
@@ -30,7 +30,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
 
   const info = useMemo(() => {
     return infoAllTokens?.find((e) => e.tokenLedgerId === tokenInfo.ledgerId);
-  }, [infoAllTokens]);
+  }, [infoAllTokens, tokenInfo]);
 
   const handleTokenClick = () => {
     if (onTokenClick) onTokenClick(tokenInfo);
@@ -164,7 +164,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
     if (open && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [open, inputRef]);
+  }, [open]);
 
   const globalTokenList = useGlobalTokenList();
 

@@ -1,5 +1,5 @@
 import { SnsSwapLifecycle } from "@icpswap/constants";
-import { NnsTokenInfo } from "@icpswap/types";
+import type { NnsTokenInfo } from "@icpswap/types";
 
 export function tokenEqualToNnsLedger(nns: NnsTokenInfo, tokenId: string) {
   return nns.list_sns_canisters.ledger === tokenId;

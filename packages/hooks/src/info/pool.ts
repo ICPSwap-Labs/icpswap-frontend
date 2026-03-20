@@ -1,6 +1,6 @@
-import { icpswap_fetch_get } from "@icpswap/utils";
 import type { InfoPoolDataResponse, InfoPoolRealTimeDataResponse, Null, PageResponse } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { icpswap_fetch_get } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 interface GetPoolChartsProps {
   poolId: string;

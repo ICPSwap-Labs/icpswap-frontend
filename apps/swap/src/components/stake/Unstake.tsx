@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Button } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
-import { UnstakeModal } from "components/stake/UnstakeModal";
+import type { Token } from "@icpswap/swap-sdk";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { Button } from "components/Mui";
+import { UnstakeModal } from "components/stake/UnstakeModal";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface UnstakeProps {

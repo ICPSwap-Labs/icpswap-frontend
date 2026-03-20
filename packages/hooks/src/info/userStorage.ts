@@ -1,6 +1,6 @@
-import { resultFormat } from "@icpswap/utils";
 import { userStorage } from "@icpswap/actor";
-import { UserStorageTransaction, PaginationResult } from "@icpswap/types";
+import type { PaginationResult, UserStorageTransaction } from "@icpswap/types";
+import { resultFormat } from "@icpswap/utils";
 
 /**
  * @param storageId The user storage canister id

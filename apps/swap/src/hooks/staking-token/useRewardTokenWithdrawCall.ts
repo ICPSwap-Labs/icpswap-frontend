@@ -1,7 +1,7 @@
-import { useCallback } from "react";
 import { stakingPoolWithdraw } from "@icpswap/hooks";
-import { Token } from "@icpswap/swap-sdk";
-import { useTips, MessageTypes } from "hooks/useTips";
+import type { Token } from "@icpswap/swap-sdk";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback } from "react";
 import { getStepData } from "store/steps/hooks";
 
 export interface UseWithdrawCallbackArgs {

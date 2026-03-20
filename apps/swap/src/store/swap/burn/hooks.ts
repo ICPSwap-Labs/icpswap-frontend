@@ -1,17 +1,17 @@
-import { useAppSelector, useAppDispatch } from "store/hooks";
-import { useCallback, useMemo } from "react";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
+import { CurrencyAmount, Percent, Position, type Token } from "@icpswap/swap-sdk";
 import { numberToString } from "@icpswap/utils";
-import { Percent, CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
 import { BURN_FIELD } from "constants/swap";
-import { tryParseAmount, inputNumberCheck } from "utils/swap";
-import { useToken } from "hooks/useCurrency";
 import { usePool } from "hooks/swap/usePools";
-import { UserPosition } from "types/swap";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
+import { useToken } from "hooks/useCurrency";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import type { UserPosition } from "types/swap";
+import { inputNumberCheck, tryParseAmount } from "utils/swap";
 
-import { updateTypedInput, resetBurnState } from "./actions";
+import { resetBurnState, updateTypedInput } from "./actions";
 
 export function useBurnState() {
   return useAppSelector((state) => state.swapBurn);

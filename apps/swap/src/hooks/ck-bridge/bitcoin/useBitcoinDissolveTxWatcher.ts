@@ -1,15 +1,15 @@
-import { useCallback } from "react";
 import { ckBtcMinter } from "@icpswap/actor";
-import { useBTCDissolveUnFinalizedTxs, useBitcoinDissolveTxsManager } from "store/wallet/hooks";
+import { useInterval } from "@icpswap/hooks";
+import { useSuccessTip } from "hooks/useTips";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useBitcoinDissolveTxsManager, useBTCDissolveUnFinalizedTxs } from "store/wallet/hooks";
 import {
   bitcoinBytesToHexString,
   bitcoinDissolveState,
   getBitcoinTxFromStatus,
   isBitcoinDissolveEnded,
 } from "utils/web3/ck-bridge";
-import { useSuccessTip } from "hooks/useTips";
-import { useTranslation } from "react-i18next";
-import { useInterval } from "@icpswap/hooks";
 
 export function useBitcoinDissolveTxWatcher() {
   const [openTip] = useSuccessTip();

@@ -1,15 +1,15 @@
 export type {
   CreateStakingPoolArgs,
-  StakingPoolInfo,
-  StakingPoolCycle,
-  StakingPoolUserInfo,
-  StakingPoolTransaction,
-  StakingPoolGlobalData,
-  StakingPoolControllerPoolInfo,
-  StakeIndexPoolInfo,
   StakeAprInfo,
-  StakeUserStakeInfo,
   StakeGlobalDataInfo,
+  StakeIndexPoolInfo,
+  StakeUserStakeInfo,
+  StakingPoolControllerPoolInfo,
+  StakingPoolCycle,
+  StakingPoolGlobalData,
+  StakingPoolInfo,
+  StakingPoolTransaction,
+  StakingPoolUserInfo,
 } from "@icpswap/candid";
 
 export enum StakingState {

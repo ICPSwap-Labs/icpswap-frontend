@@ -1,11 +1,11 @@
-import { useCallback } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { useErrorTip, TIP_OPTIONS } from "hooks/useTips";
+import type { Token } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { allowance } from "hooks/token/useAllowance";
 import { approve } from "hooks/token/useApprove";
+import { type TIP_OPTIONS, useErrorTip } from "hooks/useTips";
+import { useCallback } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useMultipleApproveManager } from "store/swap/cache/hooks";
-import { allowance } from "hooks/token/useAllowance";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 
 export interface UseSwapApproveArgs {
   token: Token;

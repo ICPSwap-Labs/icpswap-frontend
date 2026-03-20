@@ -1,7 +1,7 @@
-import { useCallback } from "react";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletTokenContext, AssetsType } from "components/Wallet/token/context";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { AssetsType, useWalletTokenContext } from "components/Wallet/token/context";
+import { useCallback } from "react";
 
 export function useClosePageBackToNFT() {
   const { setPages } = useWalletContext();

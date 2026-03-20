@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-import { useCallback } from "react";
-import { PaginationResult } from "@icpswap/types";
+
+import type { PaginationResult } from "@icpswap/types";
 import { pageArgsFormat, sleep } from "@icpswap/utils";
+import { useCallback } from "react";
 
 export function usePaginationAllDataCallback<T>(
   callback: (offset: number, limit: number) => Promise<PaginationResult<T> | undefined>,

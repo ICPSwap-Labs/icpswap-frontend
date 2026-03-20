@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { ReactComponent as ImportIcon } from "assets/icons/import.svg";
+import { useState } from "react";
 import { ImportNFTCanisterModal } from "./Modal";
 
 export function ImportEXTNft() {

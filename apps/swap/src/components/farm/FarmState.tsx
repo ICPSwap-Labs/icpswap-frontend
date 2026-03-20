@@ -1,7 +1,7 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { Flex } from "@icpswap/ui";
 import { useFarmState } from "@icpswap/hooks";
-import { type FarmInfo } from "@icpswap/types";
+import type { FarmInfo } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useStateColors } from "hooks/staking-farm";
 import upperFirst from "lodash/upperFirst";
 

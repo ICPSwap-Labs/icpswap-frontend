@@ -1,11 +1,11 @@
-import { useCallback } from "react";
-import { Typography, useTheme } from "components/Mui";
-import { isDarkTheme } from "utils";
-import { Token } from "@icpswap/swap-sdk";
-import { TokenImage, Loading } from "components/index";
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
+import { Loading, TokenImage } from "components/index";
+import { Typography, useTheme } from "components/Mui";
+import { useCallback } from "react";
 import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { isDarkTheme } from "utils";
 
 export interface CurrencySelectorButtonProps {
   currency: undefined | null | Token;
@@ -39,8 +39,8 @@ export function CurrencySelectorButton({
         backgroundColor: isDarkTheme(theme)
           ? theme.palette.background.level2
           : bgGray
-          ? theme.colors.lightGray200
-          : "#ffffff",
+            ? theme.colors.lightGray200
+            : "#ffffff",
         borderRadius: "12px",
       }}
       onClick={handleButtonClick}

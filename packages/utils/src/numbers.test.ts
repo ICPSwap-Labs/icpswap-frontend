@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatDollarAmount, formatAmount } from "./number";
+import { formatAmount, formatDollarAmount } from "./number";
 
 describe("#numbers", () => {
   describe("#formatDollarAmount", () => {

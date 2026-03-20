@@ -1,13 +1,13 @@
-import { useMemo } from "react";
-import { BigNumber, isUndefinedOrNull, toHexString } from "@icpswap/utils";
-import { BitcoinTransactionEvent, DogeTransactionEvent } from "types/web3";
-import { ckDoge } from "@icpswap/tokens";
 import { BridgeChainType, BridgeType } from "@icpswap/constants";
-import { useDogeUnFinalizedDissolveTxs } from "hooks/ck-bridge/doge/useDissolveTxManager";
 import { useDogeKnownUtxos } from "@icpswap/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useDogeBlockNumber } from "hooks/ck-bridge/doge/useBlockNumber";
+import { ckDoge } from "@icpswap/tokens";
+import { BigNumber, isUndefinedOrNull, toHexString } from "@icpswap/utils";
 import { DOGE_MINT_CONFIRMATIONS } from "constants/chain-key";
+import { useDogeBlockNumber } from "hooks/ck-bridge/doge/useBlockNumber";
+import { useDogeUnFinalizedDissolveTxs } from "hooks/ck-bridge/doge/useDissolveTxManager";
+import { useMemo } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import type { BitcoinTransactionEvent, DogeTransactionEvent } from "types/web3";
 
 export function useDogeDissolveEvents() {
   const unFinalizedDissolveTxs = useDogeUnFinalizedDissolveTxs();

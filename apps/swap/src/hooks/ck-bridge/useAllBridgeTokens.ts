@@ -1,8 +1,8 @@
-import { useMemo } from "react";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
+import { ckBTC, ckDoge, ckETH } from "@icpswap/tokens";
+import type { ChainKeyETHMinterInfo } from "@icpswap/types";
 import { MINTER_CANISTER_ID } from "constants/index";
-import { ckETH, ckBTC, ckDoge } from "@icpswap/tokens";
-import { ChainKeyETHMinterInfo } from "@icpswap/types";
+import { useMemo } from "react";
 
 export interface UseAllBridgeTokensProps {
   minter?: ChainKeyETHMinterInfo;

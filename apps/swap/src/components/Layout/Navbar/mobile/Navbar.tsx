@@ -1,13 +1,12 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { mockALinkAndOpen } from "@icpswap/utils";
-import { XCircle } from "react-feather";
+import { ReactComponent as ArrowDownIcon } from "assets/images/arrow-down.svg";
 import { ReactComponent as Logo } from "assets/images/logo1.svg";
 import { Box, Collapse } from "components/Mui";
-import { ReactComponent as ArrowDownIcon } from "assets/images/arrow-down.svg";
-
+import { useMemo, useState } from "react";
+import { XCircle } from "react-feather";
+import { useNavigate } from "react-router-dom";
+import { MOBILE_MAX_NUMBER, type Route, routeKey, routes } from "../config";
 import { Routes } from "./Routes";
-import { routes, Route, MOBILE_MAX_NUMBER, routeKey } from "../config";
 
 export interface MobileNavbarProps {
   onClose?: () => void;
@@ -41,12 +40,12 @@ export default function MobileNavbar({ onClose }: MobileNavbarProps) {
   };
 
   const noExceedRoutes = useMemo(() => {
-    return routes.filter((route, index) => index < MOBILE_MAX_NUMBER);
-  }, [routes, MOBILE_MAX_NUMBER]);
+    return routes.filter((_route, index) => index < MOBILE_MAX_NUMBER);
+  }, []);
 
   const exceedRoutes = useMemo(() => {
-    return routes.filter((route, index) => index >= MOBILE_MAX_NUMBER);
-  }, [routes, MOBILE_MAX_NUMBER]);
+    return routes.filter((_route, index) => index >= MOBILE_MAX_NUMBER);
+  }, []);
 
   return (
     <>

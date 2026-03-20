@@ -1,9 +1,16 @@
-import { tickToPrice, TICK_SPACINGS, Token, FeeAmount, TickMath, computeSurroundingTicks } from "@icpswap/swap-sdk";
-import { JSBI } from "utils/index";
-import { useMemo } from "react";
 import { useSwapAllTicks } from "@icpswap/hooks";
+import {
+  computeSurroundingTicks,
+  type FeeAmount,
+  TICK_SPACINGS,
+  TickMath,
+  type Token,
+  tickToPrice,
+} from "@icpswap/swap-sdk";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { usePoolCanisterId } from "hooks/swap/index";
-import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
+import { useMemo } from "react";
+import { JSBI } from "utils/index";
 
 import { PoolState, usePool } from "./usePools";
 

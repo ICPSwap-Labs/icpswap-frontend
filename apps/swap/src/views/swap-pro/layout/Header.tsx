@@ -1,14 +1,13 @@
-import { Grid, Box, InputAdornment, useMediaQuery, useTheme } from "components/Mui";
+import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
-import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
-import { useNavigate } from "react-router-dom";
 import ProfileSection from "components/Layout/Header/ProfileSection";
+import { Box, Grid, InputAdornment, useMediaQuery, useTheme } from "components/Mui";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import { ReactComponent as ProLogo } from "./pro-logo.svg";
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as MobileSearchIcon } from "./mobile-search.svg";
+import { ReactComponent as ProLogo } from "./pro-logo.svg";
 import { TokenSearch } from "./TokenSearch";
 
 export default function Header() {

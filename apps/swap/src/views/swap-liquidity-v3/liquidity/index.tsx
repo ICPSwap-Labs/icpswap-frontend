@@ -1,13 +1,13 @@
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Typography, Button } from "components/Mui";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { Flex, Wrapper } from "components/index";
 import { InfoPools, Positions } from "components/liquidity/index";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Box, Button, Typography } from "components/Mui";
+import { type UnderLineTab, UnderLineTabList } from "components/TabPanel";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
-import { useTranslation } from "react-i18next";
 import i18n from "i18n/index";
-import { UnderLineTabList, type UnderLineTab } from "components/TabPanel";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 
 enum TabName {
   TopPools = "TopPools",

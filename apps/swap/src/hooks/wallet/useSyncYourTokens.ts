@@ -1,10 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
 import { getUserTokens } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
-import { useTaggedTokenManager } from "store/wallet/hooks";
-import { useTips, MessageTypes } from "hooks/index";
+import { MessageTypes, useTips } from "hooks/index";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useTaggedTokenManager } from "store/wallet/hooks";
 
 export function useSyncYourTokensHandler() {
   const { t } = useTranslation();

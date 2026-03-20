@@ -1,25 +1,25 @@
-import { memo, useState, useMemo, useCallback } from "react";
-import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
-import { Token, Price, Pool } from "@icpswap/swap-sdk";
-import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
-import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
-import { TokenToggle } from "components/TokenToggle";
-import { isDarkTheme } from "utils/index";
-import { NumberTextField } from "components/index";
+import { usePoolPricePeriodRange } from "@icpswap/hooks";
+import type { Pool, Price, Token } from "@icpswap/swap-sdk";
+import { ChartTimeEnum, type Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Null, ChartTimeEnum } from "@icpswap/types";
-import { usePoolPricePeriodRange } from "@icpswap/hooks";
-import { useTranslation } from "react-i18next";
-import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
-import PriceRangeChart from "components/liquidity/PriceRangeChart";
+import { NumberTextField } from "components/index";
+import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
 import { FullRangeWarning } from "components/liquidity/FullRangeWarning";
-import { PriceRangeSelector } from "components/liquidity/PriceRangeSelector";
-import { RangeButton } from "components/liquidity/RangeButton";
+import { AutoPriceRangeButton } from "components/liquidity/PriceRange/Auto";
+import PriceRangeChart from "components/liquidity/PriceRangeChart";
 import { PriceRangeChartTimeButtons } from "components/liquidity/PriceRangeChartTimeButtons";
 import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
-import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
-import { AutoPriceRangeButton } from "components/liquidity/PriceRange/Auto";
+import { PriceRangeSelector } from "components/liquidity/PriceRangeSelector";
+import { RangeButton } from "components/liquidity/RangeButton";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { TokenToggle } from "components/TokenToggle";
+import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
+import { Bound, type FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
+import { memo, useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { isDarkTheme } from "utils/index";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const useSetPriceStyle = makeStyles((theme: Theme) => {
   return {
@@ -200,17 +200,17 @@ export const PriceRange = memo(
         poolPriceLower: isSorted
           ? poolPriceLower
           : poolPriceLower
-          ? poolPriceUpper
-            ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
-            : null
-          : null,
+            ? poolPriceUpper
+              ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
+              : null
+            : null,
         poolPriceUpper: isSorted
           ? poolPriceUpper
           : poolPriceUpper
-          ? poolPriceLower
-            ? new BigNumber(1).dividedBy(poolPriceLower).toString()
-            : null
-          : null,
+            ? poolPriceLower
+              ? new BigNumber(1).dividedBy(poolPriceLower).toString()
+              : null
+            : null,
       };
     }, [periodPriceRange, chartTime, isSorted]);
 
@@ -338,7 +338,7 @@ export const PriceRange = memo(
                     <PriceRangeSelector
                       label={t("common.min.price")}
                       value={
-                        ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : leftPrice?.toSignificant(5) ?? ""
+                        ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : (leftPrice?.toSignificant(5) ?? "")
                       }
                       onRangeInput={onLeftRangeInput}
                       decrement={isSorted ? getDecrementLower : getIncrementUpper}
@@ -353,7 +353,7 @@ export const PriceRange = memo(
                     <PriceRangeSelector
                       label={t("common.max.price")}
                       value={
-                        ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : rightPrice?.toSignificant(6) ?? ""
+                        ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : (rightPrice?.toSignificant(6) ?? "")
                       }
                       onRangeInput={(value) => onRightRangeInput(value)}
                       decrement={isSorted ? getDecrementUpper : getIncrementLower}

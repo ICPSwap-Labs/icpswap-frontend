@@ -1,24 +1,24 @@
-import { Box, Typography } from "components/Mui";
-import { useState, useMemo } from "react";
-import {
-  MainCard,
-  FilledTextField,
-  NumberFilledTextField,
-  MaxButton,
-  AuthButton,
-  SelectToken,
-  InfoWrapper,
-} from "components/index";
-import { type IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useTokenMintingAccount } from "@icpswap/hooks";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useToken } from "hooks/index";
-import { parseTokenAmount, BigNumber } from "@icpswap/utils";
+import type { IcpSwapAPITokenInfo } from "@icpswap/types";
 import { BreadcrumbsV1 } from "@icpswap/ui";
+import { BigNumber, parseTokenAmount } from "@icpswap/utils";
+import {
+  AuthButton,
+  FilledTextField,
+  InfoWrapper,
+  MainCard,
+  MaxButton,
+  NumberFilledTextField,
+  SelectToken,
+} from "components/index";
 import { BurnConfirmModal } from "components/info/tools/BurnConfirm";
+import { Box, Typography } from "components/Mui";
 import { icrc_standards } from "constants/swap";
+import { useToken } from "hooks/index";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 import { parseTokenStandards } from "utils/parseTokenStandards";
 
 export default function Burn() {

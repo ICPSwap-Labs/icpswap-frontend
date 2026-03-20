@@ -1,6 +1,6 @@
 import { ClickAwayListener } from "@mui/base";
-import { ReactNode } from "react";
-import { useTheme, Box, Popper, makeStyles } from "components/Mui";
+import { Box, makeStyles, Popper, useTheme } from "components/Mui";
+import type { ReactNode } from "react";
 
 const useStyles = makeStyles(() => {
   return {

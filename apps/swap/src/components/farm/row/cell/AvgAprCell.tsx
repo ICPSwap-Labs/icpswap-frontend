@@ -1,10 +1,10 @@
-import { Flex, APRPanel, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
-import { useToken } from "hooks/useCurrency";
-import { formatDollarAmount, parseTokenAmount, BigNumber, nonUndefinedOrNull, formatAmount } from "@icpswap/utils";
 import { useFarmAvgApr } from "@icpswap/hooks";
 import type { FarmInfo } from "@icpswap/types";
+import { APRPanel, BodyCell, Flex } from "@icpswap/ui";
+import { BigNumber, formatAmount, formatDollarAmount, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { useToken } from "hooks/useCurrency";
 import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface AvgAprCellProps {

@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
-import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
-import { TradeTransaction } from "@icpswap/types";
-import { Copy } from "components/index";
 import { useNFTTradeTransactions } from "@icpswap/hooks";
+import { WRAPPED_ICP_TOKEN_INFO } from "@icpswap/tokens";
+import type { TradeTransaction } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, ImageLoading, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
+import { Copy } from "components/index";
+import { Box, makeStyles } from "components/Mui";
 import upperFirst from "lodash/upperFirst";
-import { shorten, timestampFormat, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Pagination, NoData, Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
-import { makeStyles, Box } from "components/Mui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -24,7 +24,7 @@ export interface NFTActivityProps {
   reload?: boolean;
 }
 
-export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
+export function NFTActivity({ canisterId, tokenId }: NFTActivityProps) {
   const { t } = useTranslation();
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
@@ -32,7 +32,7 @@ export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
 
   useEffect(() => {
     setPagination({ pageNum: 1, pageSize: 10 });
-  }, [reload, setPagination]);
+  }, []);
 
   const { isLoading: loading, data: result } = useNFTTradeTransactions({
     canisterId,
@@ -55,34 +55,30 @@ export function NFTActivity({ canisterId, tokenId, reload }: NFTActivityProps) {
   return (
     <>
       <Box sx={{ width: "100%" }}>
-        <>
-          <Header className={classes.wrapper}>
-            <HeaderCell>{t("common.time")}</HeaderCell>
-            <HeaderCell>{t("common.seller")}</HeaderCell>
-            <HeaderCell>{t("common.buyer")}</HeaderCell>
-            <HeaderCell>{t("common.price")}</HeaderCell>
-            <HeaderCell>{t("common.status")}</HeaderCell>
-          </Header>
+        <Header className={classes.wrapper}>
+          <HeaderCell>{t("common.time")}</HeaderCell>
+          <HeaderCell>{t("common.seller")}</HeaderCell>
+          <HeaderCell>{t("common.buyer")}</HeaderCell>
+          <HeaderCell>{t("common.price")}</HeaderCell>
+          <HeaderCell>{t("common.status")}</HeaderCell>
+        </Header>
 
-          <>
-            {content.map((record, index) => (
-              <TableRow key={`${Number(record.hash)}_${index}`} className={classes.wrapper}>
-                <BodyCell>{timestampFormat(record.time)}</BodyCell>
-                <Copy content={record.seller}>
-                  <BodyCell>{shorten(record.seller, 6)}</BodyCell>
-                </Copy>
-                <Copy content={record.buyer}>
-                  <BodyCell>{shorten(record.buyer, 6)}</BodyCell>
-                </Copy>
-                <BodyCell>
-                  {parseTokenAmount(record.price, WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()}{" "}
-                  {WRAPPED_ICP_TOKEN_INFO.symbol}
-                </BodyCell>
-                <BodyCell>{upperFirst(record.txStatus === "complete" ? "done" : record.txStatus)}</BodyCell>
-              </TableRow>
-            ))}
-          </>
-        </>
+        {content.map((record, index) => (
+          <TableRow key={`${Number(record.hash)}_${index}`} className={classes.wrapper}>
+            <BodyCell>{timestampFormat(record.time)}</BodyCell>
+            <Copy content={record.seller}>
+              <BodyCell>{shorten(record.seller, 6)}</BodyCell>
+            </Copy>
+            <Copy content={record.buyer}>
+              <BodyCell>{shorten(record.buyer, 6)}</BodyCell>
+            </Copy>
+            <BodyCell>
+              {parseTokenAmount(record.price, WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()}{" "}
+              {WRAPPED_ICP_TOKEN_INFO.symbol}
+            </BodyCell>
+            <BodyCell>{upperFirst(record.txStatus === "complete" ? "done" : record.txStatus)}</BodyCell>
+          </TableRow>
+        ))}
         {content.length === 0 && !loading ? <NoData /> : null}
         <ImageLoading loading={loading} />
       </Box>

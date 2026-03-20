@@ -1,10 +1,10 @@
-import { useCallback } from "react";
-import { Box, Typography, makeStyles } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { RotateCcw } from "react-feather";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { formatDollarTokenPrice, formatIcpAmount } from "@icpswap/utils";
+import { Box, makeStyles, Typography } from "components/Mui";
+import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useCallback } from "react";
+import { RotateCcw } from "react-feather";
 
 const useStyles = makeStyles(() => {
   return {

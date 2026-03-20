@@ -1,20 +1,20 @@
-import { useState, useMemo } from "react";
-import { Box, makeStyles, useTheme } from "components/Mui";
-import { useTokenHolders, useLiquidityLockIds } from "@icpswap/hooks";
+import { useLiquidityLockIds, useTokenHolders } from "@icpswap/hooks";
+import type { IcpSwapAPITokenHolderDetail, Null } from "@icpswap/types";
 import {
+  BodyCell,
   Header,
   HeaderCell,
-  TableRow,
-  BodyCell,
+  Image,
   LoadingRow,
   NoData,
   Pagination,
+  TableRow,
   TextualAddress,
-  Image,
 } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount, principalToAccount } from "@icpswap/utils";
-import { Null, IcpSwapAPITokenHolderDetail } from "@icpswap/types";
+import { Box, makeStyles, useTheme } from "components/Mui";
 import { useCopySuccess } from "hooks/index";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {

@@ -1,5 +1,5 @@
-import { Box, Typography } from "components/Mui";
 import { MainCard } from "components/index";
+import { Box, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export default function LiquidityPoolIntro() {

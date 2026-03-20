@@ -1,20 +1,28 @@
-import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
-import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
-import { useTransformedVolumeData, useTokenCharts } from "@icpswap/hooks";
-import type { Null, InfoTokenDataResponse } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
+import { useTokenCharts, useTransformedVolumeData } from "@icpswap/hooks";
+import type { InfoTokenDataResponse, Null } from "@icpswap/types";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import dayjs from "dayjs";
-
-import { Typography, Box, BoxProps } from "../Mui";
-import { LineChartAlt } from "../LineChart/alt";
+import {
+  forwardRef,
+  type ReactNode,
+  type Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import { BarChartAlt } from "../BarChart/alt";
-import { SwapAnalyticLoading } from "./Loading";
-import { ChartDateButtons } from "./ChartDateButton";
-import { ChartView } from "./types";
-import { Flex } from "../Grid/Flex";
-import { MainCard } from "../MainCard";
 import { DexTools } from "../DexTools";
+import { Flex } from "../Grid/Flex";
+import { LineChartAlt } from "../LineChart/alt";
+import { MainCard } from "../MainCard";
+import { Box, type BoxProps, Typography } from "../Mui";
 import { Select } from "../Select";
+import { ChartDateButtons } from "./ChartDateButton";
+import { SwapAnalyticLoading } from "./Loading";
+import { ChartView } from "./types";
 
 export interface ChartButton {
   label: string;
@@ -214,10 +222,10 @@ export const TokenCharts = forwardRef(
               chartView === ChartView.PRICE && priceChart
                 ? "none"
                 : chartView === ChartView.DexTools
-                ? showTopIfDexScreen
-                  ? "flex"
-                  : "none"
-                : "flex",
+                  ? showTopIfDexScreen
+                    ? "flex"
+                    : "none"
+                  : "flex",
           }}
         >
           <Box>
@@ -244,15 +252,15 @@ export const TokenCharts = forwardRef(
                 ? chartView === ChartView.TRANSACTIONS
                   ? latestValue
                   : chartView === ChartView.PRICE
-                  ? formatDollarTokenPrice(latestValue)
-                  : formatDollarAmount(latestValue)
+                    ? formatDollarTokenPrice(latestValue)
+                    : formatDollarAmount(latestValue)
                 : chartView === ChartView.VOL
-                ? volume
-                  ? formatDollarAmount(volume)
-                  : formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-                : chartView === ChartView.TVL
-                ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
-                : "--"}
+                  ? volume
+                    ? formatDollarAmount(volume)
+                    : formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                  : chartView === ChartView.TVL
+                    ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
+                    : "--"}
             </Typography>
 
             <Typography
@@ -335,8 +343,8 @@ export const TokenCharts = forwardRef(
                   volumeWindow === VolumeWindow.daily
                     ? "daily"
                     : volumeWindow === VolumeWindow.monthly
-                    ? "monthly"
-                    : "weekly"
+                      ? "monthly"
+                      : "weekly"
                 }
               />
             ) : (

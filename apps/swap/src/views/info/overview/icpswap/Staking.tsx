@@ -1,12 +1,12 @@
-import { useContext, useEffect, useMemo } from "react";
-import { formatDollarAmount, BigNumber } from "@icpswap/utils";
 import { useStakeIntervalGlobalData } from "@icpswap/hooks";
 import { Flex, Image, Link } from "@icpswap/ui";
-import { useICPPrice } from "store/global/hooks";
+import { BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { Typography } from "components/Mui";
+import { useContext, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useICPPrice } from "store/global/hooks";
 
-import { Item, Card } from "../component";
+import { Card, Item } from "../component";
 import { IcpswapContext } from "./context";
 
 export function Staking() {

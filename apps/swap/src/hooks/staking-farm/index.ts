@@ -1,6 +1,6 @@
-import { useCallback } from "react";
-import { getUserFarmInfo, getV3UserFarmRewardInfo, getFarmTVL } from "@icpswap/hooks";
+import { getFarmTVL, getUserFarmInfo, getV3UserFarmRewardInfo } from "@icpswap/hooks";
 import { useIntervalFetch } from "hooks/useIntervalFetch";
+import { useCallback } from "react";
 
 export function useIntervalUserFarmInfo(canisterId: string | undefined, user: string | undefined, force?: boolean) {
   const call = useCallback(async () => {
@@ -33,15 +33,15 @@ export function useIntervalUserRewardInfo(
   return useIntervalFetch(call, force);
 }
 
-export * from "./useFarmApr";
-export * from "./useFarmTvlValue";
-export * from "./useStateColors";
-export * from "./useFarmGlobalData";
-export * from "./useFarms";
-export * from "./useIntervalFarmUserTVL";
-export * from "./useUserTvl";
-export * from "./useUserAllFarmsInfo";
-export * from "./useFarmRewardAmountAndValue";
-export * from "./useFarmTvl";
 export * from "./useAvailableFarmsForPool";
+export * from "./useFarmApr";
+export * from "./useFarmGlobalData";
+export * from "./useFarmRewardAmountAndValue";
+export * from "./useFarms";
+export * from "./useFarmTvl";
+export * from "./useFarmTvlValue";
+export * from "./useIntervalFarmUserTVL";
 export * from "./useLiquidityIsStaked";
+export * from "./useStateColors";
+export * from "./useUserAllFarmsInfo";
+export * from "./useUserTvl";

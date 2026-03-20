@@ -1,12 +1,12 @@
-import { useCallback, useMemo, useState } from "react";
-import { Position, nearestUsableTick, TICK_SPACINGS, TickMath } from "@icpswap/swap-sdk";
-import { Flex } from "@icpswap/ui";
 import { usePoolPricePeriodRange } from "@icpswap/hooks";
-import { Bound } from "constants/swap";
-import { ChartTimeEnum, Null } from "@icpswap/types";
-import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
-import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
+import { nearestUsableTick, type Position, TICK_SPACINGS, TickMath } from "@icpswap/swap-sdk";
+import { ChartTimeEnum, type Null } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
+import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
+import { Bound } from "constants/swap";
+import { useCallback, useMemo, useState } from "react";
 
 import PriceRangeChart from "./RangeCharts";
 
@@ -79,18 +79,18 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
       poolPriceLower: !inverted
         ? poolPriceLower
         : poolPriceLower
-        ? poolPriceUpper
-          ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
-          : null
-        : null,
+          ? poolPriceUpper
+            ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
+            : null
+          : null,
       sortedPoolPriceUpper: poolPriceUpper,
       poolPriceUpper: !inverted
         ? poolPriceUpper
         : poolPriceUpper
-        ? poolPriceLower
-          ? new BigNumber(1).dividedBy(poolPriceLower).toString()
-          : null
-        : null,
+          ? poolPriceLower
+            ? new BigNumber(1).dividedBy(poolPriceLower).toString()
+            : null
+          : null,
     };
   }, [periodPriceRange, inverted, time]);
 

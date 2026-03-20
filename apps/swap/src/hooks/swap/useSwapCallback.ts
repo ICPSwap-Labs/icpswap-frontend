@@ -1,29 +1,29 @@
-import { TradeType } from "@icpswap/constants";
-import { Null, ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
-import { Trade, Token } from "@icpswap/swap-sdk";
-import { useCallback } from "react";
-import { useSlippageManager } from "store/swap/cache/hooks";
-import { useSwapFinalMetadataManager, useUpdateSwapOutAmount } from "store/swap/hooks";
-import { slippageToPercent } from "constants/index";
+import type { TradeType } from "@icpswap/constants";
 import { depositAndSwap, depositFromAndSwap } from "@icpswap/hooks";
-import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
+import type { Token, Trade } from "@icpswap/swap-sdk";
+import { type Null, ResultStatus, type TOKEN_STANDARD } from "@icpswap/types";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
+import { getSwapSteps } from "components/swap/SwapSteps";
+import { slippageToPercent } from "constants/index";
 import {
-  useSwapApprove,
-  useSwapTransfer,
   getTokenActualTransferRawAmount,
   getTokenInsufficient,
   noApproveOrTransferByTokenInsufficient,
+  useSwapApprove,
+  useSwapTransfer,
 } from "hooks/swap/index";
-import { StepCallback, useStepCalls, newStepKey } from "hooks/useStepCall";
-import { getLocaleMessage } from "i18n/service";
-import { MessageTypes, TIP_SUCCESS, useTips } from "hooks/useTips";
-import { isUseTransfer } from "utils/token/index";
-import { getSwapSteps } from "components/swap/SwapSteps";
-import { useStepContentManager } from "store/steps/hooks";
-import { OpenExternalTip } from "types/index";
-import { isUndefinedOrNull, BigNumber, formatTokenAmount } from "@icpswap/utils";
-import { useTranslation } from "react-i18next";
 import { useAllowance } from "hooks/token";
+import { newStepKey, type StepCallback, useStepCalls } from "hooks/useStepCall";
+import { MessageTypes, TIP_SUCCESS, useTips } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
+import { useStepContentManager } from "store/steps/hooks";
+import { useSlippageManager } from "store/swap/cache/hooks";
+import { useSwapFinalMetadataManager, useUpdateSwapOutAmount } from "store/swap/hooks";
+import type { OpenExternalTip } from "types/index";
+import { isUseTransfer } from "utils/token/index";
 
 export enum SwapCallbackState {
   INVALID = "INVALID",

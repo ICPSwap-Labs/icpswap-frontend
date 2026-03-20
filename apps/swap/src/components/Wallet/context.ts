@@ -1,5 +1,5 @@
-import { createContext, ReactNode, useContext } from "react";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import { createContext, type ReactNode, useContext } from "react";
 
 export type Page = "token" | "nft";
 

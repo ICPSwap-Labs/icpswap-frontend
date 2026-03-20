@@ -1,6 +1,6 @@
-import type { ProposalData } from "@icpswap/types";
-import { nowInSeconds, BigNumber } from "@icpswap/utils";
 import { SnsProposalDecisionStatus } from "@icpswap/constants";
+import type { ProposalData } from "@icpswap/types";
+import { BigNumber, nowInSeconds } from "@icpswap/utils";
 import i18n from "i18n/index";
 
 const PROPOSAL_TYPES = [

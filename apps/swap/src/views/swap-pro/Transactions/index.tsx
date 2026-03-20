@@ -1,22 +1,21 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { PoolTransactions, UserTransactions } from "components/info/swap";
 import { Holders } from "components/info/tokens";
-import { PendingTablePro, HistoryTablePro } from "components/swap/limit-order/index";
-import { SwapProContext, SwapProCardWrapper } from "components/swap/pro";
+import { Box, Typography, useTheme } from "components/Mui";
 import { SwapContext } from "components/swap";
-import i18n from "i18n/index";
+import { HistoryTablePro, PendingTablePro } from "components/swap/limit-order/index";
+import { SwapProCardWrapper, SwapProContext } from "components/swap/pro";
 import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
-import { useScrollToTop } from "hooks/useScrollToTop";
-import { Tab } from "constants/index";
 import { OutlineCircleTabList } from "components/TabPanel";
-
-import { YourPositions } from "./YourPositions";
-import { Positions } from "./Positions";
-import { AutoRefresh } from "./AutoRefresh";
+import { Tab } from "constants/index";
+import { useScrollToTop } from "hooks/useScrollToTop";
+import i18n from "i18n/index";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AddLiquidity } from "./AddLiquidity";
+import { AutoRefresh } from "./AutoRefresh";
+import { Positions } from "./Positions";
 import { SocialMedia } from "./SocialMedia";
+import { YourPositions } from "./YourPositions";
 
 enum Tabs {
   TRANSACTIONS = "TRANSACTIONS",
@@ -84,7 +83,7 @@ export default function Transactions() {
   const handleTabClick = useCallback((tab: Tabs) => {
     const menu = Menus.find((e) => e.value === tab);
 
-    if (menu && menu.subMenus) {
+    if (menu?.subMenus) {
       setActiveSubTab(menu.subMenus[0].value);
     } else {
       setActiveSubTab(null);

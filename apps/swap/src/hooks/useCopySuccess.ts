@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useTips, MessageTypes } from "./useTips";
+import { MessageTypes, useTips } from "./useTips";
 
 export function useCopySuccess() {
   const { t } = useTranslation();

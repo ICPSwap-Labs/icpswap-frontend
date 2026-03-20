@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Grid, Theme, makeStyles } from "components/Mui";
+import { Box, Grid, makeStyles, type Theme } from "components/Mui";
+import type React from "react";
 import { isDarkTheme } from "utils";
 
 const useStyles = makeStyles((theme: Theme) => {

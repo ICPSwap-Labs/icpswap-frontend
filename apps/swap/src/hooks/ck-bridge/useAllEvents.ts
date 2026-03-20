@@ -1,9 +1,9 @@
-import { useMemo } from "react";
-import { useEthEvents } from "hooks/ck-bridge/useEthEvents";
-import { useErc20DissolveEvents, useErc20MintEvents } from "hooks/ck-bridge/useErc20Events";
+import { useDogeBridgeEvents } from "hooks/ck-bridge/doge/useBridgeEvents";
 import { useBtcDissolveEvents } from "hooks/ck-bridge/useBtcDissolveEvents";
 import { useBtcMintEvents } from "hooks/ck-bridge/useBtcMintEvents";
-import { useDogeBridgeEvents } from "hooks/ck-bridge/doge/useBridgeEvents";
+import { useErc20DissolveEvents, useErc20MintEvents } from "hooks/ck-bridge/useErc20Events";
+import { useEthEvents } from "hooks/ck-bridge/useEthEvents";
+import { useMemo } from "react";
 
 export function useAllEvents() {
   const ethEvents = useEthEvents();

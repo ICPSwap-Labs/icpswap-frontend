@@ -1,13 +1,11 @@
 import { sns_governance } from "@icpswap/actor";
-import { optionalArg, resultFormat } from "@icpswap/utils";
 import type { GetProposalResponse, ListProposalsResponse, ProposalData, ProposalId } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getProposal(canisterId: string, proposal_id: bigint) {
   const result = resultFormat<GetProposalResponse>(
-    await (
-      await sns_governance(canisterId)
-    ).get_proposal({
+    await (await sns_governance(canisterId)).get_proposal({
       proposal_id: optionalArg<{ id: bigint }>({ id: proposal_id }),
     }),
   ).data?.result;
@@ -56,9 +54,7 @@ export async function getListProposals({
   limit,
 }: GetListProposalsArgs) {
   const result = resultFormat<ListProposalsResponse>(
-    await (
-      await sns_governance(canisterId)
-    ).list_proposals({
+    await (await sns_governance(canisterId)).list_proposals({
       include_reward_status,
       before_proposal,
       limit,

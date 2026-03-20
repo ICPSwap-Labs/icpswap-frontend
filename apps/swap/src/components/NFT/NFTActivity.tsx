@@ -1,13 +1,13 @@
-import { useState, useCallback, useEffect } from "react";
-import Copy from "components/Copy";
-import { useTradeTxList } from "hooks/nft/trade";
+import { BodyCell, Header, HeaderCell, ImageLoading, NoData, Pagination, TableRow } from "@icpswap/ui";
 import { pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
-import { WRAPPED_ICP } from "constants/index";
-import { TxRecord } from "types/index";
-import upperFirst from "lodash/upperFirst";
-import { useTranslation } from "react-i18next";
+import Copy from "components/Copy";
 import { Box, makeStyles } from "components/Mui";
-import { Header, HeaderCell, TableRow, BodyCell, ImageLoading, NoData, Pagination } from "@icpswap/ui";
+import { WRAPPED_ICP } from "constants/index";
+import { useTradeTxList } from "hooks/nft/trade";
+import upperFirst from "lodash/upperFirst";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { TxRecord } from "types/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -18,15 +18,7 @@ const useStyles = makeStyles(() => {
   };
 });
 
-export default function NFTActivity({
-  canisterId,
-  tokenId,
-  reload,
-}: {
-  canisterId: string;
-  tokenId: number;
-  reload?: boolean;
-}) {
+export default function NFTActivity({ canisterId, tokenId }: { canisterId: string; tokenId: number }) {
   const classes = useStyles();
   const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
@@ -34,17 +26,22 @@ export default function NFTActivity({
 
   useEffect(() => {
     setPagination({ pageNum: 1, pageSize: 10 });
-  }, [reload, setPagination]);
+  }, []);
 
-  const { isLoading: loading, data: result } = useTradeTxList(canisterId, null, tokenId, offset, pagination.pageSize, "time", true);
+  const { isLoading: loading, data: result } = useTradeTxList(
+    canisterId,
+    null,
+    tokenId,
+    offset,
+    pagination.pageSize,
+    "time",
+    true,
+  );
   const { totalElements, content } = result ?? { totalElements: 0, content: [] as TxRecord[] };
 
-  const onPageChange = useCallback(
-    (page: number) => {
-      setPagination({ pageNum: page, pageSize: 10 });
-    },
-    [setPagination],
-  );
+  const onPageChange = useCallback((page: number) => {
+    setPagination({ pageNum: page, pageSize: 10 });
+  }, []);
 
   return (
     <>
@@ -58,25 +55,23 @@ export default function NFTActivity({
             <HeaderCell>{t("common.status")}</HeaderCell>
           </Header>
 
-          <>
-            {content.map((record, index) => (
-              <TableRow key={`${Number(record.hash)}_${index}`} className={classes.wrapper}>
-                <BodyCell>{timestampFormat(record.time)}</BodyCell>
+          {content.map((record, index) => (
+            <TableRow key={`${Number(record.hash)}_${index}`} className={classes.wrapper}>
+              <BodyCell>{timestampFormat(record.time)}</BodyCell>
 
-                <Copy content={record.seller}>
-                  <BodyCell>{shorten(record.seller, 6)}</BodyCell>
-                </Copy>
+              <Copy content={record.seller}>
+                <BodyCell>{shorten(record.seller, 6)}</BodyCell>
+              </Copy>
 
-                <Copy content={record.buyer}>
-                  <BodyCell>{shorten(record.buyer, 6)}</BodyCell>
-                </Copy>
-                <BodyCell>
-                  {parseTokenAmount(record.price, WRAPPED_ICP.decimals).toFormat()} {WRAPPED_ICP.symbol}
-                </BodyCell>
-                <BodyCell>{upperFirst(record.txStatus === "complete" ? "done" : record.txStatus)}</BodyCell>
-              </TableRow>
-            ))}
-          </>
+              <Copy content={record.buyer}>
+                <BodyCell>{shorten(record.buyer, 6)}</BodyCell>
+              </Copy>
+              <BodyCell>
+                {parseTokenAmount(record.price, WRAPPED_ICP.decimals).toFormat()} {WRAPPED_ICP.symbol}
+              </BodyCell>
+              <BodyCell>{upperFirst(record.txStatus === "complete" ? "done" : record.txStatus)}</BodyCell>
+            </TableRow>
+          ))}
         </Box>
         {content.length === 0 && !loading ? <NoData /> : null}
         <ImageLoading loading={loading} />

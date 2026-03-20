@@ -1,8 +1,8 @@
-import { Box, Typography } from "components/Mui";
 import { Switch } from "components/index";
-import { useSwapProAutoRefreshManager } from "store/swap/cache/hooks";
+import { Box, Typography } from "components/Mui";
 import { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSwapProAutoRefreshManager } from "store/swap/cache/hooks";
 
 const AUTO_REFRESH_SECONDS = 30;
 
@@ -16,7 +16,7 @@ export const AutoRefresh = memo(({ initSeconds = AUTO_REFRESH_SECONDS, trigger }
   const [seconds, setSeconds] = useState(initSeconds);
   const [autoRefresh, updateAutoRefresh] = useSwapProAutoRefreshManager();
 
-  const handleSwitch = (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+  const handleSwitch = (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     updateAutoRefresh(checked);
   };
 
@@ -45,7 +45,7 @@ export const AutoRefresh = memo(({ initSeconds = AUTO_REFRESH_SECONDS, trigger }
       timer = undefined;
       return undefined;
     };
-  }, [autoRefresh]);
+  }, [autoRefresh, initSeconds, trigger]);
 
   return (
     <Box sx={{ display: "flex", gap: "0 8px", alignItems: "center" }}>

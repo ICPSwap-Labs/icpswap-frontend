@@ -1,10 +1,10 @@
-import { memo, useMemo, useCallback } from "react";
-import { Token, Pool } from "@icpswap/swap-sdk";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
-import { RangeButton } from "components/liquidity/RangeButton";
 import { useLiquidityChartPriceRange } from "@icpswap/hooks";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { RangeButton } from "components/liquidity/RangeButton";
+import { memo, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface AutoPriceRangeButtonProps {
   onLeftRangeInput: (value: string) => void;

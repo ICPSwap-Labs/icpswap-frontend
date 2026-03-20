@@ -1,19 +1,19 @@
-import { resultFormat, optionalArg, isBigIntMemo } from "@icpswap/utils";
 import { ledgerService } from "@icpswap/actor";
-import { Ledger } from "@icpswap/candid";
-import { ActorIdentity, PaginationResult, ResultStatus } from "@icpswap/types";
-import { Transaction, Metadata } from "./types";
+import type { Ledger } from "@icpswap/candid";
+import { type ActorIdentity, type PaginationResult, ResultStatus } from "@icpswap/types";
+import { isBigIntMemo, optionalArg, resultFormat } from "@icpswap/utils";
 import {
+  type ActualReceivedByTransferRequest,
+  type AllowanceRequest,
+  type ApproveRequest,
+  type BalanceRequest,
   BaseTokenAdapter,
-  BalanceRequest,
-  TransferRequest,
-  MetadataRequest,
-  ActualReceivedByTransferRequest,
-  ApproveRequest,
-  AllowanceRequest,
+  type MetadataRequest,
+  type TransferRequest,
 } from "./BaseTokenAdapter";
 import { icrc1Adapter } from "./ICRC1";
 import { icrc2Adapter } from "./ICRC2";
+import type { Metadata, Transaction } from "./types";
 
 export class ICPAdapter extends BaseTokenAdapter<Ledger> {
   public async supply() {
@@ -137,6 +137,5 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
 }
 
 export const icpAdapter = new ICPAdapter({
-  // @ts-ignore
   actor: async (canisterId?: string, identity?: ActorIdentity) => await ledgerService(identity),
 });

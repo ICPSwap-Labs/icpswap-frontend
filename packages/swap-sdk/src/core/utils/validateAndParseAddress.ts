@@ -1,5 +1,5 @@
-import { isValidPrincipal } from "@icpswap/utils";
 import { getAddress } from "@ethersproject/address";
+import { isValidPrincipal } from "@icpswap/utils";
 
 /**
  * Validates an address and returns the address

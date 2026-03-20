@@ -1,7 +1,7 @@
-import { ButtonBase, Grid, makeStyles, Theme } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
-import { isDarkTheme } from "utils";
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
+import { ButtonBase, Grid, makeStyles, type Theme } from "components/Mui";
+import { isDarkTheme } from "utils";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const useStyle = makeStyles((theme: Theme) => ({

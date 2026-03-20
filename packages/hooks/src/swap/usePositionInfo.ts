@@ -1,5 +1,5 @@
+import type { Null, UserPositionInfo, UserPositionInfoWithId } from "@icpswap/types";
 import { useMemo } from "react";
-import { type UserPositionInfoWithId, type UserPositionInfo, Null } from "@icpswap/types";
 
 import { useMultiPositionInfos, useMultiPositionInfosByIds } from "./useMultiPositionInfos";
 

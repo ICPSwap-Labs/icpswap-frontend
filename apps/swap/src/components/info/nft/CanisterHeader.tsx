@@ -1,7 +1,7 @@
-import { Box, Grid, Avatar, Typography, Button, makeStyles, Theme } from "components/Mui";
 import type { NFTCanisterInfo } from "@icpswap/types";
+import { cycleValueFormat, mockALinkAndOpen } from "@icpswap/utils";
 import ExplorerLink from "components/ExternalLink/Explorer";
-import { mockALinkAndOpen, cycleValueFormat } from "@icpswap/utils";
+import { Avatar, Box, Button, Grid, makeStyles, type Theme, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => ({

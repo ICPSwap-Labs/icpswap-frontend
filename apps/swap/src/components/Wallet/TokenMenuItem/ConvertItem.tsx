@@ -1,10 +1,10 @@
-import { useCallback } from "react";
-import { useTheme } from "components/Mui";
-import { MenuItem } from "@icpswap/ui";
-import { useTaggedTokenManager } from "store/wallet/hooks";
-import { useNavigate } from "react-router-dom";
 import { BridgeChainType } from "@icpswap/constants";
+import { MenuItem } from "@icpswap/ui";
+import { useTheme } from "components/Mui";
 import { useWalletContext } from "components/Wallet/context";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTaggedTokenManager } from "store/wallet/hooks";
 
 interface ConvertItemProps {
   tokenId: string;

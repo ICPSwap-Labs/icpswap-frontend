@@ -1,7 +1,7 @@
-import * as Sentry from "@sentry/react";
-import { ClientOptions, ErrorEvent } from "@sentry/types";
-import { isSentryEnabled, getEnvName } from "utils/env";
 import { BrowserTracing } from "@sentry/browser";
+import * as Sentry from "@sentry/react";
+import type { ClientOptions, ErrorEvent } from "@sentry/types";
+import { getEnvName, isSentryEnabled } from "utils/env";
 
 import { version } from "./.version";
 
@@ -43,10 +43,10 @@ export const beforeSend: Required<ClientOptions>["beforeSend"] = (event: ErrorEv
 };
 
 Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DSN,
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   environment: getEnvName(),
   enabled: isSentryEnabled(),
-  tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
+  tracesSampleRate: Number(import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   beforeSend,
   integrations: [
     new BrowserTracing({

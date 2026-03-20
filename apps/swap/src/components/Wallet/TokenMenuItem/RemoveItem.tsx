@@ -1,8 +1,8 @@
-import { useCallback } from "react";
-import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
+import { useTheme } from "components/Mui";
 import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 interface RemoveItemProps {
   tokenId: string;

@@ -1,11 +1,10 @@
 import { Principal } from "@icp-sdk/core/principal";
-import { type SwapNFTTokenMetadata } from "@icpswap/types";
+import type { SwapNFTTokenMetadata } from "@icpswap/types";
 
 export function from32bits(data: number[]) {
   let value;
 
   for (let i = 0; i < 4; i++) {
-    // @ts-ignore
     value = (value << 8) | data[i];
   }
 
@@ -25,7 +24,7 @@ export function toHexString(byteArray: number[]) {
 }
 
 export function encodeTokenIdentifier(principal: string, index: number | bigint) {
-  // @ts-ignore
+  // @ts-expect-error Ignore the Buffer error
   const padding = Buffer("\x0Atid");
 
   const array = new Uint8Array([
@@ -40,7 +39,7 @@ export function decodeTokenId(tid: string) {
   const p = [...Principal.fromText(tid).toUint8Array()];
   const padding = p.splice(0, 4);
 
-  // @ts-ignore
+  // @ts-expect-error
   if (toHexString(padding) !== toHexString(Buffer("\x0Atid"))) {
     return {
       index: 0,
@@ -50,7 +49,7 @@ export function decodeTokenId(tid: string) {
   }
   return {
     index: from32bits(p.splice(-4)),
-    // @ts-ignore
+    // @ts-expect-error
     canister: Principal.fromUint8Array(p).toText(),
     token: tid,
   };

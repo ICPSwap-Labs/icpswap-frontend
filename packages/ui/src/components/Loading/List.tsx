@@ -1,5 +1,4 @@
-import LoadingImage from "assets/images/loading.png";
-import { Grid, Box, makeStyles, Theme } from "../Mui";
+import { Box, Grid, makeStyles, type Theme } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -31,7 +30,7 @@ export function ListLoading({ loading, mask = true }: { loading: boolean; mask?:
   return loading ? (
     <Grid className={classes.loadingContainer} container justifyContent="center" alignContent="center">
       <Box className={mask ? classes.mask : ""} />
-      <img style={{ zIndex: 2 }} width="80px" height="80px" src={LoadingImage} alt="" />
+      <img style={{ zIndex: 2 }} width="80px" height="80px" src="/images/loading.png" alt="" />
     </Grid>
   ) : null;
 }

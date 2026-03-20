@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { getPromisesAwait, getTokenBalance, quote, useInfoAllTokens } from "@icpswap/hooks";
+import { Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { useTaggedTokenManager } from "store/wallet/hooks";
-import { useInfoAllTokens, getTokenBalance, getPromisesAwait, quote } from "@icpswap/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import { __getTokenInfo } from "hooks/token";
 import { useGlobalContext } from "hooks/useGlobalContext";
-import { ICP } from "@icpswap/tokens";
-import { Token } from "@icpswap/swap-sdk";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useTaggedTokenManager } from "store/wallet/hooks";
 
 export type SmallBalanceResult = {
   balance: bigint;

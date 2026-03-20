@@ -1,6 +1,6 @@
+import type { Token } from "@icpswap/swap-sdk";
+import type { BigNumber } from "@icpswap/utils";
 import { createContext, useContext } from "react";
-import { BigNumber } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
 
 export type TokenBalance = { [tokenId: string]: BigNumber };
 

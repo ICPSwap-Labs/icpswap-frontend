@@ -1,18 +1,18 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { enumToString, BigNumber } from "@icpswap/utils";
-import { LoadingRow, TokenImage } from "components/index";
-import type { InfoTransactionResponse } from "@icpswap/types";
-import dayjs from "dayjs";
-import { DAYJS_FORMAT } from "constants/index";
-import { useToken } from "hooks/index";
-import { ArrowUpRight } from "react-feather";
-import { Link, Modal, SwapTransactionPriceTip } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
-import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
 import { useUserSwapTransactions } from "@icpswap/hooks";
-import { useMemo } from "react";
+import type { InfoTransactionResponse } from "@icpswap/types";
+import { Link, Modal, SwapTransactionPriceTip } from "@icpswap/ui";
+import { BigNumber, enumToString } from "@icpswap/utils";
+import { LoadingRow, TokenImage } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { SwapTransactionType } from "components/swap/SwapTransactionType";
+import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
+import { DAYJS_FORMAT } from "constants/index";
+import dayjs from "dayjs";
+import { useToken } from "hooks/index";
+import { useMemo } from "react";
+import { ArrowUpRight } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 interface SwapTransactionItemProps {
   transaction: InfoTransactionResponse;
@@ -117,7 +117,9 @@ export function SwapTransactionsModal({ open, onClose }: SwapTransactionsModalPr
   return (
     <Modal open={open} onClose={onClose} title={t("swap.history")}>
       <Box sx={{ overflow: "hidden auto", height: "340px" }}>
-        {transactions?.map((transaction, index) => <SwapTransactionItem key={index} transaction={transaction} />)}
+        {transactions?.map((transaction, index) => (
+          <SwapTransactionItem key={index} transaction={transaction} />
+        ))}
         {(transactions?.length === 0 || !transactions) && !loading ? <UserTransactionsEmpty onClick={onClose} /> : null}
 
         {loading ? (

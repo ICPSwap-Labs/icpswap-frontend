@@ -1,5 +1,5 @@
-import { FarmInfoWithId, Override, UserPositionInfo, UserPositionInfoWithId } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import type { FarmInfoWithId, Override, UserPositionInfo, UserPositionInfoWithId } from "@icpswap/types";
 
 export type PositionDetail = {
   pool: string;

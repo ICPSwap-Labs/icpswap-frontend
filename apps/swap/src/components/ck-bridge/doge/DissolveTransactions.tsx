@@ -1,10 +1,10 @@
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
 import { useDogeDissolveTxs } from "hooks/ck-bridge/doge/index";
 import { useTranslation } from "react-i18next";
-import { DogeDissolveTx } from "types/chain-key";
+import type { DogeDissolveTx } from "types/chain-key";
 import { dogeTransactionExplorer } from "utils/chain-key";
 
 const useStyles = makeStyles(() => ({

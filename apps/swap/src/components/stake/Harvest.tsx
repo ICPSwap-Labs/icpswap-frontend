@@ -1,13 +1,13 @@
-import React, { useMemo } from "react";
-import { Button, CircularProgress, Box } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useAccountPrincipal, useWalletIsConnected } from "store/auth/hooks";
 import ConnectWallet from "components/authentication/ButtonConnector";
-import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
 import { StepViewButton } from "components/index";
+import { Box, Button, CircularProgress } from "components/Mui";
 import { useHarvestCall } from "hooks/staking-token/useHarvest";
+import { MessageTypes, useLoadingTip, useTips } from "hooks/useTips";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal, useWalletIsConnected } from "store/auth/hooks";
 
 export interface HarvestProps {
   rewardToken: Token | undefined | null;

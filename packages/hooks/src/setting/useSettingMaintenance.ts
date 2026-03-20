@@ -1,5 +1,5 @@
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { setting } from "@icpswap/actor";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getSettingMaintenance() {
   const result = await (await setting()).get_active_maintenance_pages();

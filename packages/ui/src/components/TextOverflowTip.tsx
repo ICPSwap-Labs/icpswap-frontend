@@ -1,10 +1,10 @@
-import React from "react";
+import type React from "react";
 
-import { Typography, Tooltip as MuiToolTip } from "./Mui";
+import { Tooltip as MuiToolTip, Typography } from "./Mui";
 
 export interface TextOverflowTipProps {
   background?: string;
-  tips: React.ReactChild;
+  tips: React.ReactNode;
   maxWidth?: string;
   children: React.ReactElement;
 }
@@ -13,7 +13,6 @@ export function TextOverflowTip({ tips, background, maxWidth, children }: TextOv
   return (
     <MuiToolTip
       PopperProps={{
-        // @ts-ignore
         sx: {
           display: "flex",
           justifyContent: "center",

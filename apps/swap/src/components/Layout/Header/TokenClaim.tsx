@@ -1,9 +1,9 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { ButtonChip } from "components/ButtonChip";
 import { Flex } from "components/index";
 import { Box, useMediaQuery, useTheme } from "components/Mui";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const READ_CLAIM = "READ_CLAIM";
 
@@ -25,32 +25,30 @@ export default function TokenClaim() {
   };
 
   return (
-    <>
-      <Flex gap="0 8px">
-        {!matchDownSM && isRead === false ? (
-          <Box sx={{ width: "222px", height: "24px" }}>
-            <img src="/images/claim.png" alt="" />
+    <Flex gap="0 8px">
+      {!matchDownSM && isRead === false ? (
+        <Box sx={{ width: "222px", height: "24px" }}>
+          <img src="/images/claim.png" alt="" />
+        </Box>
+      ) : null}
+
+      <Box sx={{ position: "relative" }}>
+        <ButtonChip label={t("common.claim")} border="primary" onClick={handleTokenClaim} />
+        {matchDownSM && isRead === false ? (
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: "calc(-100% - 3px)",
+              left: "50%",
+              transform: "translate(-50%, 0)",
+              width: "222px",
+              height: "30px",
+            }}
+          >
+            <img src="/images/claim-mobile.png" alt="" />
           </Box>
         ) : null}
-
-        <Box sx={{ position: "relative" }}>
-          <ButtonChip label={t("common.claim")} border="primary" onClick={handleTokenClaim} />
-          {matchDownSM && isRead === false ? (
-            <Box
-              sx={{
-                position: "absolute",
-                bottom: "calc(-100% - 3px)",
-                left: "50%",
-                transform: "translate(-50%, 0)",
-                width: "222px",
-                height: "30px",
-              }}
-            >
-              <img src="/images/claim-mobile.png" alt="" />
-            </Box>
-          ) : null}
-        </Box>
-      </Flex>
-    </>
+      </Box>
+    </Flex>
   );
 }

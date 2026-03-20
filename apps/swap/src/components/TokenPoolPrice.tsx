@@ -1,7 +1,7 @@
-import { Typography, Box, useTheme, BoxProps, useMediaQuery } from "components/Mui";
-import { formatAmount, BigNumber, formatDollarTokenPrice } from "@icpswap/utils";
+import type { Token } from "@icpswap/swap-sdk";
+import { BigNumber, formatAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import { TokenImage } from "components/index";
-import { Token } from "@icpswap/swap-sdk";
+import { Box, type BoxProps, Typography, useMediaQuery, useTheme } from "components/Mui";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface TokenPoolPriceProps {

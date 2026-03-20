@@ -1,16 +1,14 @@
-import { ICP, WRAPPED_ICP, ICS } from "@icpswap/tokens";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { ICP, ICS } from "@icpswap/tokens";
 import { ChartView } from "@icpswap/ui";
-
-import { isIC } from "./server";
 
 export enum SWAP_FIELD {
   INPUT = "INPUT",
   OUTPUT = "OUTPUT",
 }
 
-export const DEFAULT_SWAP_INPUT_ID = isIC ? ICP.address : WRAPPED_ICP.address;
-export const DEFAULT_SWAP_OUTPUT_ID = isIC ? ICS.address : ICS.address;
+export const DEFAULT_SWAP_INPUT_ID = ICP.address;
+export const DEFAULT_SWAP_OUTPUT_ID = ICS.address;
 
 export const SWAP_REFRESH_KEY = "swap";
 
@@ -32,5 +30,5 @@ export enum Tab {
   Limit = "Limit",
 }
 
-export * from "./mint";
 export * from "./liquidity";
+export * from "./mint";

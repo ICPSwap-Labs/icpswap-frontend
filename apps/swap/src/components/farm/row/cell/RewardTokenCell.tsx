@@ -1,8 +1,8 @@
-import { Flex, BodyCell } from "@icpswap/ui";
-import { useToken } from "hooks/useCurrency";
-import type { FarmInfo, Null, FarmState } from "@icpswap/types";
-import { TokenImage } from "components/index";
+import type { FarmInfo, FarmState, Null } from "@icpswap/types";
+import { BodyCell, Flex } from "@icpswap/ui";
 import { PendingPanel } from "components/farm/PendingPanel";
+import { TokenImage } from "components/index";
+import { useToken } from "hooks/useCurrency";
 
 interface RewardTokenCellProps {
   farmId: string;

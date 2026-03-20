@@ -1,10 +1,10 @@
-import keyBy from "lodash/keyBy";
-import { TickMath, tickToPrice, Token, FeeAmount } from "@icpswap/swap-sdk";
+import { useLiquidityTickInfos, useSwapPool } from "@icpswap/hooks";
+import { type FeeAmount, TickMath, type Token, tickToPrice } from "@icpswap/swap-sdk";
 import type { PoolMetadata } from "@icpswap/types";
 import { useToken } from "hooks/useCurrency";
 import JSBI from "jsbi";
+import keyBy from "lodash/keyBy";
 import { useMemo } from "react";
-import { useLiquidityTickInfos, useSwapPool } from "@icpswap/hooks";
 
 const PRICE_FIXED_DIGITS = 18;
 const DEFAULT_SURROUNDING_TICKS = 300;

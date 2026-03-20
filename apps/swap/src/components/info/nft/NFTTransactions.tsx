@@ -1,14 +1,13 @@
-import { useState, useMemo } from "react";
-import { encodeTokenIdentifier } from "utils/index";
-import { Copy } from "components/index";
-import { NFTTransaction } from "@icpswap/types";
 import { useNFTTransactions } from "@icpswap/hooks";
-import { Pagination, NoData, Header, HeaderCell, BodyCell, TableRow, ImageLoading } from "@icpswap/ui";
+import type { NFTTransaction, PaginationResult } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, ImageLoading, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { arrayBufferToString, enumToString, pageArgsFormat, shorten, timestampFormat } from "@icpswap/utils";
+import { Copy } from "components/index";
+import { Box, makeStyles } from "components/Mui";
 import upperFirst from "lodash/upperFirst";
-import { shorten, timestampFormat, enumToString, pageArgsFormat, arrayBufferToString } from "@icpswap/utils";
-import type { PaginationResult } from "@icpswap/types";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { makeStyles, Box } from "components/Mui";
+import { encodeTokenIdentifier } from "utils/index";
 
 const useStyles = makeStyles(() => {
   return {

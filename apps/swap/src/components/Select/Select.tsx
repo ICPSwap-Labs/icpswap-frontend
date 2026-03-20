@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Typography, Box, Menu, Grid, MenuItem, useTheme, makeStyles, Theme } from "components/Mui";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { isDarkTheme } from "utils";
 import { NoData } from "components/index";
+import { Box, Grid, Menu, MenuItem, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import { isDarkTheme } from "utils";
 
 const useStyles = (contained: boolean, fullHeight?: boolean) => {
   return makeStyles((theme: Theme) => {

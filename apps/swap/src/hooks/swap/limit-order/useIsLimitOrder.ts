@@ -1,7 +1,7 @@
-import { useMemo } from "react";
 import { useUserLimitOrders } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { useMemo } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 interface UseIsLimitOrderProps {

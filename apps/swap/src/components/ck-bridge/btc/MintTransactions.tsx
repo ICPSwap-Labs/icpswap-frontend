@@ -1,18 +1,18 @@
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
-import { Flex, LoadingRow } from "@icpswap/ui";
-import { useBitcoinConfirmations, useBtcMintTransactions } from "hooks/ck-bridge/index";
-import { Null } from "@icpswap/types";
-import dayjs from "dayjs";
-import { RotateCcw } from "react-feather";
-import { useRefreshTriggerManager } from "hooks/index";
-import { useTranslation } from "react-i18next";
-import { BITCOIN_CONFIRMATIONS, BITCOIN_MINT_REFRESH } from "constants/chain-key";
-import { bitcoinAddressExplorer, bitcoinBlockExplorer, bitcoinTransactionExplorer } from "utils/chain-key/bitcoin";
-import { BitcoinTransaction } from "types/ckBTC";
-import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
 import { BridgeChainName } from "@icpswap/constants";
+import type { Null } from "@icpswap/types";
+import { Flex, LoadingRow } from "@icpswap/ui";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { BITCOIN_CONFIRMATIONS, BITCOIN_MINT_REFRESH } from "constants/chain-key";
+import dayjs from "dayjs";
+import { useBitcoinConfirmations, useBtcMintTransactions } from "hooks/ck-bridge/index";
+import { useRefreshTriggerManager } from "hooks/index";
+import { RotateCcw } from "react-feather";
+import { useTranslation } from "react-i18next";
+import type { BitcoinTransaction } from "types/ckBTC";
+import { bitcoinAddressExplorer, bitcoinBlockExplorer, bitcoinTransactionExplorer } from "utils/chain-key/bitcoin";
+import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
 
 const useStyles = makeStyles(() => ({
   txLink: {

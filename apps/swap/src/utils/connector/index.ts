@@ -1,19 +1,19 @@
-import { IDL } from "@icp-sdk/core/candid";
-import { ActorSubclass } from "@icp-sdk/core/agent";
-import { Connector, IIv2ProviderUrl } from "constants/wallet";
-import { host } from "constants/server";
-import { updateAuth } from "store/auth/hooks";
-import { getDelegationIds } from "constants/connector";
+import type { ActorSubclass } from "@icp-sdk/core/agent";
+import type { IDL } from "@icp-sdk/core/candid";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { getDelegationIds } from "constants/connector";
+import { host } from "constants/server";
+import { Connector, IIv2ProviderUrl } from "constants/wallet";
+import { updateAuth } from "store/auth/hooks";
 import type { ConnectorAbstract } from "utils/connector/connectors";
-import { InternetIdentityConnector } from "utils/connector/internet-identity";
-import { StoicConnector } from "utils/connector/stoic";
-import { PlugConnector } from "utils/connector/plug";
 import { ICPSwapConnector } from "utils/connector/icpswap";
 import { InfinityConnector } from "utils/connector/infinity";
+import { InternetIdentityConnector } from "utils/connector/internet-identity";
 import { isMeWebview, MeConnector } from "utils/connector/me";
 import { MetamaskConnector } from "utils/connector/metamask";
 import { OisyConnector } from "utils/connector/Oisy";
+import { PlugConnector } from "utils/connector/plug";
+import { StoicConnector } from "utils/connector/stoic";
 
 export class WalletConnector {
   public connector: ConnectorAbstract | null = null;

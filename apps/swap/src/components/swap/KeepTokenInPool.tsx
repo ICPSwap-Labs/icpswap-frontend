@@ -1,12 +1,12 @@
-import { ReactNode, useCallback, useState } from "react";
-import { Typography, Checkbox } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { RotateCcw } from "react-feather";
-import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { Checkbox, Typography } from "components/Mui";
 import { KeepTokenInPoolsConfirmModal } from "components/swap/KeepTokenInPoolsConfirm";
 import { useGlobalContext } from "hooks/index";
+import { type ReactNode, useCallback, useState } from "react";
+import { RotateCcw } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { useSwapKeepTokenInPoolsManager } from "store/swap/cache/hooks";
 
 export interface KeepTokenInPoolProps {
   ui?: "pro" | "normal";

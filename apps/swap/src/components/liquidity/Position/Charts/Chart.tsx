@@ -1,12 +1,12 @@
-import { max, scaleLinear, ZoomTransform } from "d3";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useTheme } from "components/Mui";
-import { PriceLine, Area, AxisBottom } from "components/liquidity/Charts/index";
-import Zoom, { ZoomOverlay } from "components/liquidity/PriceRangeChart/Zoom";
-import { ChartEntry, ZoomLevels, Dimensions, Margins } from "components/liquidity/PriceRangeChart/types";
 import type { Null } from "@icpswap/types";
-import { Bound } from "constants/swap";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { Area, AxisBottom, PriceLine } from "components/liquidity/Charts/index";
+import type { ChartEntry, Dimensions, Margins, ZoomLevels } from "components/liquidity/PriceRangeChart/types";
+import Zoom, { ZoomOverlay } from "components/liquidity/PriceRangeChart/Zoom";
+import { useTheme } from "components/Mui";
+import type { Bound } from "constants/swap";
+import { max, scaleLinear, type ZoomTransform } from "d3";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 export const xAccessor = (d: ChartEntry) => d.price0;
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity;

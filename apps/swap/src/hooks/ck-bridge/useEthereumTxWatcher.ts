@@ -1,4 +1,11 @@
+import { useInterval } from "@icpswap/hooks";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useErc20UnFinalizedDissolveHashes, useErc20UnFinalizedMintHashes } from "hooks/ck-bridge/erc20";
+import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "hooks/ck-bridge/eth";
+import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
+import { useSuccessTip } from "hooks/useTips";
 import { useCallback, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import {
   useErc20AllMintTxs,
@@ -6,14 +13,7 @@ import {
   useEthMintTxs,
   useUpdateEthereumTxResponse,
 } from "store/web3/hooks";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { useSuccessTip } from "hooks/useTips";
-import { useErc20UnFinalizedDissolveHashes, useErc20UnFinalizedMintHashes } from "hooks/ck-bridge/erc20";
-import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "hooks/ck-bridge/eth";
-import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
-import { useTranslation } from "react-i18next";
 import { usePublicClient } from "wagmi";
-import { useInterval } from "@icpswap/hooks";
 
 const INTERVAL_TIME = 20000;
 

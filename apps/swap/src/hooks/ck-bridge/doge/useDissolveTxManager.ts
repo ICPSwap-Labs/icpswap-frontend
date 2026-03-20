@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { updateDogeDissolveTxs, cleanDogeDissolveTxs } from "store/wallet/actions";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { useCallback, useEffect, useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { cleanDogeDissolveTxs, updateDogeDissolveTxs } from "store/wallet/actions";
+import { type DogeDissolveTx, DogeDissolveTxState } from "types/chain-key";
 import { isDogeDissolveEnded } from "utils/chain-key/doge";
-import { DogeDissolveTx, DogeDissolveTxState } from "types/chain-key";
 
 export function useUpdateDissolveTx() {
   const dispatch = useAppDispatch();

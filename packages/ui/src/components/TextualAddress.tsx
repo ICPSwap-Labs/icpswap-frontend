@@ -1,13 +1,12 @@
-import { isValidAccount, nonUndefinedOrNull, shorten, subAccountToUint8Array, toHexString } from "@icpswap/utils";
 import { decodeIcrcAccount, encodeIcrcAccount } from "@icp-sdk/canisters/ledger/icrc";
-import { useMemo } from "react";
 import { Principal } from "@icp-sdk/core/principal";
 import { NONE_SUB_HEX } from "@icpswap/constants";
-
-import { Tooltip } from "./Tooltip";
-import { Typography, TypographyProps } from "./Mui";
-import { Flex } from "./Grid/index";
+import { isValidAccount, nonUndefinedOrNull, shorten, subAccountToUint8Array, toHexString } from "@icpswap/utils";
+import { useMemo } from "react";
 import { Copy } from "./Copy";
+import { Flex } from "./Grid/index";
+import { Typography, type TypographyProps } from "./Mui";
+import { Tooltip } from "./Tooltip";
 
 interface GetTextualAddressProps {
   shorten?: boolean;
@@ -31,19 +30,19 @@ export function getTextualAddress({
   const __textualAddress = nonUndefinedOrNull(textualAddress)
     ? textualAddress
     : nonUndefinedOrNull(__owner)
-    ? encodeIcrcAccount({
-        owner: Principal.fromText(__owner),
-        subaccount: __subaccount && __subaccount !== NONE_SUB_HEX ? subAccountToUint8Array(__subaccount) : undefined,
-      })
-    : nonUndefinedOrNull(__account)
-    ? __account
-    : undefined;
+      ? encodeIcrcAccount({
+          owner: Principal.fromText(__owner),
+          subaccount: __subaccount && __subaccount !== NONE_SUB_HEX ? subAccountToUint8Array(__subaccount) : undefined,
+        })
+      : nonUndefinedOrNull(__account)
+        ? __account
+        : undefined;
 
   return nonUndefinedOrNull(alias)
     ? alias
     : isShorten
-    ? `${shorten(__textualAddress, shortenLength)}`
-    : __textualAddress;
+      ? `${shorten(__textualAddress, shortenLength)}`
+      : __textualAddress;
 }
 
 export interface TextualAddressProps {

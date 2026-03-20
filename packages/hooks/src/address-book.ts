@@ -1,7 +1,7 @@
 import { addressBook } from "@icpswap/actor";
-import { resultFormat } from "@icpswap/utils";
 import { type AddressBook, ResultStatus } from "@icpswap/types";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getAddressBook() {
   return resultFormat<Array<AddressBook>>(await (await addressBook(true)).get()).data;

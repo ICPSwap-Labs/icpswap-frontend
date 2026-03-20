@@ -1,7 +1,7 @@
-import { CssBaseline } from "components/Mui";
 import ErrorBoundary from "components/ErrorBoundary";
+import { GlobalLayout, useGlobalUpdater } from "components/Global";
+import { CssBaseline } from "components/Mui";
 import NavigationScroll from "components/NavigationScroll";
-import { useGlobalUpdater, GlobalLayout } from "components/Global";
 import Routes from "routes/index";
 import "utils/dayjs";
 

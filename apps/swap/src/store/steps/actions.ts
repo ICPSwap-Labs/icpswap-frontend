@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { StepDetailsProps } from "./state";
+import type { StepDetailsProps } from "./state";
 
 export const updateStepDetails = createAction<{ key: string; value: StepDetailsProps }>("steps/updateStepDetails");
 

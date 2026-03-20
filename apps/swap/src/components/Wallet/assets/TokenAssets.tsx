@@ -1,18 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import { Box, useTheme, Typography } from "components/Mui";
-import { Flex, MenuWrapper } from "@icpswap/ui";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import {
-  useDisplayedTokensInWallet,
-  useHideSmallBalanceManager,
-  useTaggedTokenManager,
-  useWalletSortManager,
-} from "store/wallet/hooks";
-import { useBridgeTokens, useGlobalTokenList } from "store/global/hooks";
-import { DISPLAY_IN_WALLET_BY_DEFAULT, TOKEN_ASSETS_REFRESH } from "constants/wallet";
-import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
-import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
+import { ckSepoliaETHTokenInfo, ckSepoliaUSDCTokenInfo } from "@icpswap/tokens";
+import { Flex, MenuWrapper } from "@icpswap/ui";
 import {
   BigNumber,
   formatAmount,
@@ -22,21 +10,33 @@ import {
   parseTokenAmount,
 } from "@icpswap/utils";
 import { TokenImage } from "components/Image";
-import { useRefreshTrigger, useToken, useUSDPrice } from "hooks/index";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { DotLoading } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import {
+  ConvertItem,
+  RemoveItem,
+  SwapItem,
   TokenReceiveItem,
   TokenSendItem,
-  RemoveItem,
-  ConvertItem,
-  TransactionItem,
-  SwapItem,
   TopUpItem,
+  TransactionItem,
 } from "components/Wallet/TokenMenuItem/index";
-import { useTokenDataManager } from "hooks/wallet/useTokenDataManager";
-import { DotLoading } from "components/index";
-import { XTC } from "constants/tokens";
 import { useWalletTokenContext } from "components/Wallet/token/context";
+import { XTC } from "constants/tokens";
+import { DISPLAY_IN_WALLET_BY_DEFAULT, TOKEN_ASSETS_REFRESH } from "constants/wallet";
+import { chain } from "constants/web3";
+import { useRefreshTrigger, useToken, useUSDPrice } from "hooks/index";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useTokenDataManager } from "hooks/wallet/useTokenDataManager";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useBridgeTokens, useGlobalTokenList } from "store/global/hooks";
+import {
+  useDisplayedTokensInWallet,
+  useHideSmallBalanceManager,
+  useTaggedTokenManager,
+  useWalletSortManager,
+} from "store/wallet/hooks";
 
 interface TokenRowProps {
   tokenId: string;

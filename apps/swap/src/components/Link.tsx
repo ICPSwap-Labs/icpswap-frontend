@@ -42,8 +42,8 @@ export function Link({ to, link, color, children, width, height, display }: Link
               color === "primary"
                 ? theme.colors.primaryMain
                 : color === "secondary"
-                ? theme.colors.secondaryMain
-                : "inherit",
+                  ? theme.colors.secondaryMain
+                  : "inherit",
           }}
         >
           {children}

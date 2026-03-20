@@ -1,5 +1,5 @@
-import { Box, Typography } from "components/Mui";
 import { Flex, Link } from "@icpswap/ui";
+import { Box, Typography } from "components/Mui";
 import { X } from "react-feather";
 
 export interface AdsUIProps {

@@ -1,4 +1,4 @@
-import { Box, BoxProps } from "../Mui";
+import { Box, type BoxProps } from "../Mui";
 
 interface ImageDisableTouchProps {
   src: string;

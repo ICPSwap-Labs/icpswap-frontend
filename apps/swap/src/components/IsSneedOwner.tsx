@@ -1,6 +1,6 @@
 import { Image, Tooltip } from "@icpswap/ui";
 import { Box } from "components/Mui";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export interface IsSneedOwnerProps {
   isSneed: boolean;

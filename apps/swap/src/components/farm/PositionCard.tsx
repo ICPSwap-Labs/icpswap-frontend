@@ -1,18 +1,18 @@
-import { useCallback, useMemo, useState } from "react";
-import { Button, Typography } from "components/Mui";
-import { MainCard, Flex } from "components/index";
-import { BigNumber, formatAmount, formatDollarAmount } from "@icpswap/utils";
-import { FarmInfo, InitFarmArgs } from "@icpswap/types";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { usePosition } from "hooks/swap/usePosition";
-import { Token } from "@icpswap/swap-sdk";
 import { useFarmState } from "@icpswap/hooks";
-import { useTranslation } from "react-i18next";
-import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
-import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
+import type { Token } from "@icpswap/swap-sdk";
+import type { FarmInfo, InitFarmArgs } from "@icpswap/types";
+import { BigNumber, formatAmount, formatDollarAmount } from "@icpswap/utils";
 import PositionRangeState from "components/farm/PositionState";
-import { Unstake } from "components/farm/Unstake";
 import { Stake } from "components/farm/Stake";
+import { Unstake } from "components/farm/Unstake";
+import { Flex, MainCard } from "components/index";
+import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
+import { Button, Typography } from "components/Mui";
+import { usePosition } from "hooks/swap/usePosition";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface PositionInfo {
   id: bigint;

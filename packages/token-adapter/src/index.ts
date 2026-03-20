@@ -1,23 +1,23 @@
-import { ActorIdentity, Override } from "@icpswap/types";
-import {
-  SupplyRequest,
+import type { ActorIdentity, Override } from "@icpswap/types";
+import type {
+  ActualReceivedByTransferRequest,
+  AllowanceRequest,
+  ApproveRequest,
   BalanceRequest,
-  TransferRequest,
+  MetadataRequest,
   SetFeeRequest,
   SetFeeToRequest,
+  SupplyRequest,
   TransactionRequest,
-  ApproveRequest,
-  AllowanceRequest,
-  MetadataRequest,
-  ActualReceivedByTransferRequest,
+  TransferRequest,
 } from "./BaseTokenAdapter";
-import { EXTAdapter, EXTTokenAdapter } from "./EXTAdapter";
-import { DIP20Adapter, DIP20TokenAdapter } from "./DIP20Adapter";
-import { DIP20WICPAdapter, DIP20WICPTokenAdapter } from "./DIP20WICPAdapter";
-import { DIP20XTCAdapter, DIP20XTCTokenAdapter } from "./DIP20XTCAdapter";
-import { icrc1Adapter, ICRC1Adapter } from "./ICRC1";
-import { icrc2Adapter, ICRC2Adapter } from "./ICRC2";
-import { icpAdapter, ICPAdapter } from "./ICP";
+import { DIP20Adapter, type DIP20TokenAdapter } from "./DIP20Adapter";
+import { DIP20WICPAdapter, type DIP20WICPTokenAdapter } from "./DIP20WICPAdapter";
+import { DIP20XTCAdapter, type DIP20XTCTokenAdapter } from "./DIP20XTCAdapter";
+import { EXTAdapter, type EXTTokenAdapter } from "./EXTAdapter";
+import { ICPAdapter, icpAdapter } from "./ICP";
+import { ICRC1Adapter, icrc1Adapter } from "./ICRC1";
+import { ICRC2Adapter, icrc2Adapter } from "./ICRC2";
 import { TOKEN_STANDARD } from "./types";
 
 export type AdapterRequest<T> = T;
@@ -125,19 +125,18 @@ tokenAdapter.initialAdapter(TOKEN_STANDARD.ICRC1, icrc1Adapter);
 tokenAdapter.initialAdapter(TOKEN_STANDARD.ICRC2, icrc2Adapter);
 tokenAdapter.initialAdapter(TOKEN_STANDARD.ICP, icpAdapter);
 
-export {
-  EXTAdapter,
-  DIP20Adapter,
-  DIP20XTCAdapter,
-  DIP20WICPAdapter,
-  ICRC1Adapter,
-  ICRC2Adapter,
-  icrc1Adapter,
-  icrc2Adapter,
-  icpAdapter,
-  ICPAdapter,
-  TOKEN_STANDARD,
-};
-
 export * from "./token-standard-verification";
 export * from "./utils";
+export {
+  DIP20Adapter,
+  DIP20WICPAdapter,
+  DIP20XTCAdapter,
+  EXTAdapter,
+  ICPAdapter,
+  ICRC1Adapter,
+  ICRC2Adapter,
+  icpAdapter,
+  icrc1Adapter,
+  icrc2Adapter,
+  TOKEN_STANDARD,
+};

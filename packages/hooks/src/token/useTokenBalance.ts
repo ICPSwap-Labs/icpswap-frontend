@@ -1,7 +1,7 @@
-import { isPrincipal, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
-import { tokenAdapter } from "@icpswap/token-adapter";
 import { Principal } from "@icp-sdk/core/principal";
-import { useQuery, UseQueryResult } from "@tanstack/react-query";
+import { tokenAdapter } from "@icpswap/token-adapter";
+import { isPrincipal, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export interface GetTokenBalanceArgs {
   canisterId: string;
@@ -16,10 +16,10 @@ export async function getTokenBalance({ canisterId, address, sub }: GetTokenBala
       user: isPrincipal(address)
         ? { principal: address }
         : isValidPrincipal(address)
-        ? {
-            principal: Principal.fromText(address),
-          }
-        : { address },
+          ? {
+              principal: Principal.fromText(address),
+            }
+          : { address },
       token: "",
       subaccount: sub ? [...sub] : undefined,
     },

@@ -1,14 +1,14 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { SWAP_FIELD } from "constants/swap";
 import {
-  typeInput,
   clearSwapState,
   selectCurrency,
   switchCurrencies,
-  updatePoolCanisterIds,
-  updateSwapOutAmount,
+  typeInput,
   updateAllSwapPools,
+  updatePoolCanisterIds,
   updateSwapFinalMetadata,
+  updateSwapOutAmount,
 } from "./actions";
 import { initialState } from "./state";
 

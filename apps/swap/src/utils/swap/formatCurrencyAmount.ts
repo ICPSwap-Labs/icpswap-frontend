@@ -1,6 +1,6 @@
-import { CurrencyAmount, Token, Fraction } from "@icpswap/swap-sdk";
-import { NONE_PRICE_SYMBOL } from "constants/index";
+import { type CurrencyAmount, Fraction, type Token } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
+import { NONE_PRICE_SYMBOL } from "constants/index";
 
 export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, sigFigs: number | undefined | null) {
   if (!amount) {

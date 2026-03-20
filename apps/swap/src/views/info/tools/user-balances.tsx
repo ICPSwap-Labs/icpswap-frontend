@@ -1,15 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import { Box, Avatar, makeStyles, useTheme } from "components/Mui";
+import { useParsedQueryString, useUserSwapPoolBalances } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { BodyCell, BreadcrumbsV1, Flex, Header, HeaderCell, LoadingRow, NoData, TableRow } from "@icpswap/ui";
+import { locationSearchReplace, parseTokenAmount } from "@icpswap/utils";
+import { InfoWrapper, SelectPair, SelectToken } from "components/index";
+import { PrincipalSearcher, ToolsWrapper } from "components/info/tools";
+import { Avatar, Box, makeStyles, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
-import { UserSwapPoolsBalance } from "hooks/info/tools";
-import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
+import type { UserSwapPoolsBalance } from "hooks/info/tools";
 import { useMemo } from "react";
-import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, NoData, BreadcrumbsV1, Flex } from "@icpswap/ui";
-import { SelectToken, InfoWrapper, SelectPair } from "components/index";
-import { parseTokenAmount, locationSearchReplace } from "@icpswap/utils";
-import { ToolsWrapper, PrincipalSearcher } from "components/info/tools";
-import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   return {

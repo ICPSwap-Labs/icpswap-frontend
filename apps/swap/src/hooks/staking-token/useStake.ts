@@ -1,18 +1,18 @@
-import { useCallback, useMemo } from "react";
 import { stakingPoolDeposit, stakingPoolDepositFrom, stakingTokenStake } from "@icpswap/hooks";
-import { Null, ResultStatus } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { type Null, ResultStatus } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull, sleep } from "@icpswap/utils";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getSteps } from "components/stake/StakeStep";
-import { useStepContentManager, useUpdateStepData } from "store/steps/hooks";
-import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { useTranslation } from "react-i18next";
 import { useAllowance } from "hooks/token";
+import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useStepContentManager, useUpdateStepData } from "store/steps/hooks";
+import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
 import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
 
 interface UpdateStepArgs {

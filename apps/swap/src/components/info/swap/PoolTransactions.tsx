@@ -1,7 +1,7 @@
 import { usePoolTransactions } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 
-import { Transactions, StyleProps } from "./Transactions";
+import { type StyleProps, Transactions } from "./Transactions";
 
 interface PoolTransactionsProps {
   canisterId: string | Null;

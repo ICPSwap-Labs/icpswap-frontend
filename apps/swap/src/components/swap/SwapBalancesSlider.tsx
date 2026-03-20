@@ -1,15 +1,15 @@
-import { Box, useTheme } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, Image } from "@icpswap/ui";
 import {
   BigNumber,
-  nonUndefinedOrNull,
   isUndefinedOrNull,
+  nonUndefinedOrNull,
+  numToPercent,
   parseTokenAmount,
   percentToNum,
-  numToPercent,
 } from "@icpswap/utils";
-import { Flex, Image } from "@icpswap/ui";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { Box, useTheme } from "components/Mui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const GAP = 4;
@@ -154,18 +154,18 @@ export function SwapBalancesSlider({
     const canisterWidth = !amount
       ? "0%"
       : !new BigNumber(amount).isLessThan(totalCanisterAmount)
-      ? "100%"
-      : `${new BigNumber(amount).dividedBy(totalCanisterAmount).multipliedBy(100)}%`;
+        ? "100%"
+        : `${new BigNumber(amount).dividedBy(totalCanisterAmount).multipliedBy(100)}%`;
 
     const balanceWidth = !amount
       ? "0%"
       : !new BigNumber(amount).isLessThan(totalAmount)
-      ? "100%"
-      : new BigNumber(maxSpentAmount).isEqualTo(amount)
-      ? "100%"
-      : new BigNumber(amount).isGreaterThan(totalCanisterAmount)
-      ? `${new BigNumber(amount).minus(totalCanisterAmount).dividedBy(unformattedBalance).multipliedBy(100)}%`
-      : "0%";
+        ? "100%"
+        : new BigNumber(maxSpentAmount).isEqualTo(amount)
+          ? "100%"
+          : new BigNumber(amount).isGreaterThan(totalCanisterAmount)
+            ? `${new BigNumber(amount).minus(totalCanisterAmount).dividedBy(unformattedBalance).multipliedBy(100)}%`
+            : "0%";
 
     return {
       balancePercent,
@@ -366,8 +366,8 @@ export function SwapBalancesSlider({
         const position = new BigNumber(percentToNum(__position)).isGreaterThan(1)
           ? "100%"
           : new BigNumber(percentToNum(__position)).isLessThan(0)
-          ? "0%"
-          : __position;
+            ? "0%"
+            : __position;
 
         setArrowPosition(position);
         onArrowPositionChange(position);

@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Typography, makeStyles, Theme } from "components/Mui";
-import { MainCard, Wrapper } from "components/index";
-import { useNFTCanisterList, useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { ImageLoading } from "@icpswap/ui";
+import { MainCard, Wrapper } from "components/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
 import CollectionAvatar from "components/NFT/CollectionAvatar";
+import { useCanisterMetadata, useNFTCanisterList } from "hooks/nft/useNFTCalls";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

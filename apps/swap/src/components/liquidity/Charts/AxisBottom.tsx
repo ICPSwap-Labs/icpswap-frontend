@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { Axis as d3Axis, axisBottom, NumberValue, ScaleLinear, select } from "d3";
 import { Box, useTheme } from "components/Mui";
+import { axisBottom, type Axis as d3Axis, type NumberValue, type ScaleLinear, select } from "d3";
+import { useMemo } from "react";
 
 const Axis = ({ axisGenerator }: { axisGenerator: d3Axis<NumberValue> }) => {
   const axisRef = (axis: SVGGElement) => {

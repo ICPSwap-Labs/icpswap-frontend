@@ -1,4 +1,4 @@
-import { Avatar, AvatarProps } from "components/Mui";
+import { Avatar, type AvatarProps } from "components/Mui";
 
 export default function AvatarImage(props: AvatarProps) {
   return (

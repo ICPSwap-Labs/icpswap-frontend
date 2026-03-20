@@ -1,6 +1,6 @@
 import { Box } from "components/Mui";
+import { ROTATE_ANIMATION_LOADING_CLASS, useRotateAnimationLoading } from "components/theme";
 import { useSyncYourTokensHandler } from "hooks/wallet/useSyncYourTokens";
-import { useRotateAnimationLoading, ROTATE_ANIMATION_LOADING_CLASS } from "components/theme";
 
 export function SyncYourTokens() {
   const classes = useRotateAnimationLoading();

@@ -1,13 +1,13 @@
-import { Box, Avatar } from "components/Mui";
-import { parseTokenAmount } from "@icpswap/utils";
-import { Position, Token } from "@icpswap/swap-sdk";
-import { TextButton } from "components/index";
-import { toFormat } from "utils/index";
-import { isUseTransfer } from "utils/token/index";
-import { StepContents, StepContent } from "types/step";
+import type { Position, Token } from "@icpswap/swap-sdk";
 import type { PCMMetadata } from "@icpswap/types";
+import { parseTokenAmount } from "@icpswap/utils";
+import { TextButton } from "components/index";
+import { Avatar, Box } from "components/Mui";
 import { PassCodeManagerId } from "constants/canister";
 import i18n from "i18n/index";
+import type { StepContent, StepContents } from "types/step";
+import { toFormat } from "utils/index";
+import { isUseTransfer } from "utils/token/index";
 
 export interface GetAddLiquidityStepDetails {
   noLiquidity: boolean;

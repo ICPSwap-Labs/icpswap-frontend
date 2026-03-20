@@ -1,7 +1,7 @@
+import { usePositionTransactions } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
 import { pageArgsFormat } from "@icpswap/utils";
 import { useEffect, useMemo, useState } from "react";
-import { Null } from "@icpswap/types";
-import { usePositionTransactions } from "@icpswap/hooks";
 
 import { PositionTransactionsTableUI } from "./PositionTransactionsTableUI";
 

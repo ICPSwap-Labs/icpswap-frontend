@@ -1,22 +1,23 @@
-import React, { Component } from "react";
-import { createPortal } from "react-dom";
 import clsx from "clsx";
-import SnackbarContext from "../SnackbarContext";
-import { originKeyExtractor, isDefined } from "../utils";
-import { defaults, merge } from "./merger";
-import SnackbarItem from "../SnackbarItem";
+import type React from "react";
+import { Component } from "react";
+import { createPortal } from "react-dom";
 import SnackbarContainer from "../SnackbarContainer";
-import warning from "../utils/warning";
-import {
-  SnackbarProviderProps,
-  SnackbarKey,
-  ProviderContext,
-  TransitionHandlerProps,
+import SnackbarContext from "../SnackbarContext";
+import SnackbarItem from "../SnackbarItem";
+import type {
   InternalSnack,
   OptionsObject,
+  ProviderContext,
   SharedProps,
+  SnackbarKey,
+  SnackbarProviderProps,
+  TransitionHandlerProps,
 } from "../types";
+import { isDefined, originKeyExtractor } from "../utils";
 import createChainedFunction from "../utils/createChainedFunction";
+import warning from "../utils/warning";
+import { defaults, merge } from "./merger";
 
 type Reducer = (state: State) => State;
 type SnacksByPosition = { [key: string]: InternalSnack[] };

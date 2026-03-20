@@ -1,9 +1,9 @@
 import { getSwapPosition } from "@icpswap/hooks";
+import type { FarmInfoWithId, Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { Null, type FarmInfoWithId } from "@icpswap/types";
 import { useEffect, useMemo, useState } from "react";
-import { UserPosition, UserPositionForFarm } from "types/swap";
 import { useAccountPrincipal } from "store/auth/hooks";
+import type { UserPosition, UserPositionForFarm } from "types/swap";
 
 type UserPositions = {
   positions: bigint[];

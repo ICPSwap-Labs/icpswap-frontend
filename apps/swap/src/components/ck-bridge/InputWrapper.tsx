@@ -1,10 +1,7 @@
-import { NumberTextField, MaxButton } from "components/index";
-import { Box, Typography, useTheme } from "components/Mui";
-import { useCallback, useMemo } from "react";
-import { Null } from "@icpswap/types";
+import type { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { BridgeChainType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
 import {
   BigNumber,
   formatDollarAmount,
@@ -12,10 +9,13 @@ import {
   parseTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { useTokenSymbol } from "hooks/ck-bridge";
-import { useTranslation } from "react-i18next";
 import { TokenImageWithChain } from "components/ck-bridge/ChainImage";
+import { MaxButton, NumberTextField } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useTokenSymbol } from "hooks/ck-bridge";
 import { useUSDPrice } from "hooks/index";
+import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface InputWrapperProps {
   token: Token | Null;

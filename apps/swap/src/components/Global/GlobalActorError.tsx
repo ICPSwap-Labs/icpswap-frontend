@@ -1,9 +1,9 @@
-import { useErrorTip } from "hooks/useTips";
-import { actor, ActorError } from "@icpswap/actor";
-import { useEffect } from "react";
-import { useLogout, useConnectManager } from "store/auth/hooks";
-import { Typography } from "components/Mui";
+import { type ActorError, actor } from "@icpswap/actor";
 import { TextButton } from "@icpswap/ui";
+import { Typography } from "components/Mui";
+import { useErrorTip } from "hooks/useTips";
+import { useEffect } from "react";
+import { useConnectManager, useLogout } from "store/auth/hooks";
 
 const INTERVAL = 30; // 30 seconds
 
@@ -12,7 +12,7 @@ const timeOfMessages: { [message: string]: number } = {};
 function isNewMessage(message: string) {
   const last_time = timeOfMessages[message];
 
-  const now = new Date().getTime();
+  const now = Date.now();
 
   if (!last_time) {
     timeOfMessages[message] = now;
@@ -73,7 +73,7 @@ export function GlobalActorError() {
         showConnector(true);
       }
     });
-  }, []);
+  }, [logout, showConnector]);
 
   return null;
 }

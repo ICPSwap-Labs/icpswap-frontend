@@ -1,7 +1,7 @@
 import { Principal } from "@icp-sdk/core/principal";
-import { resultFormat } from "@icpswap/utils";
 import { swapPool } from "@icpswap/actor";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getUserPositionIds(canisterId: string, principal: string) {
   return resultFormat<Array<bigint>>(

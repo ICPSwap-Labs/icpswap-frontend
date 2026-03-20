@@ -1,11 +1,11 @@
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { Principal } from "@icp-sdk/core/principal";
 import { useWithdrawErc20TokenStatus, withdrawErc20TokenStatus } from "@icpswap/hooks";
 import type { WithdrawalDetail, WithdrawalSearchParameter } from "@icpswap/types";
-import { useEffect, useMemo, useState } from "react";
-import { MINTER_CANISTER_ID, ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
-import { Principal } from "@icp-sdk/core/principal";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { ERC20_DISSOLVE_REFRESH, MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { useErc20DissolveCompletedTxsManager, useErc20DissolveDetailsManager } from "store/web3/hooks";
 import { isErc20Finalized } from "utils/web3/dissolve";
 

@@ -1,5 +1,5 @@
-import { ExecuteLimitOrderInfo } from "@icpswap/types";
-import { SwapTransactionResult, SWAP_TRANSACTIONS_FAILED_STATUS } from "utils/transaction/constant";
+import type { ExecuteLimitOrderInfo } from "@icpswap/types";
+import { SWAP_TRANSACTIONS_FAILED_STATUS, type SwapTransactionResult } from "utils/transaction/constant";
 
 export function swapTransactionExecuteLimitFormat(info: ExecuteLimitOrderInfo): SwapTransactionResult {
   const __status = info.status;

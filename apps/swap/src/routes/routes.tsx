@@ -1,10 +1,10 @@
-import { Route, Routes, useLocation } from "react-router-dom";
-import { Layout } from "components/Layout/index";
-import PageNotFound from "components/404";
-import { Maintenance } from "components/Maintenance";
-import { useMemo } from "react";
 import { useSettingMaintenance } from "@icpswap/hooks";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import PageNotFound from "components/404";
+import { Layout } from "components/Layout/index";
+import { Maintenance } from "components/Maintenance";
+import { useMemo } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 
 import { routeConfigs } from "./config";
 

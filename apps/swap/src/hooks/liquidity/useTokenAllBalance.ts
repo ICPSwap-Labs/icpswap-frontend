@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { useUserUnusedBalance } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface UseTokenAllBalanceProps {
   token0: Token | undefined;

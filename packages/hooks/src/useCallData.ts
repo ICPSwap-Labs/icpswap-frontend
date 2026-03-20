@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import type { PaginationResult } from "@icpswap/types";
 import { pageArgsFormat, sleep } from "@icpswap/utils";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const DEFAULT_CONCURRENCY = 5;
 const MAX_RETRIES = 3;

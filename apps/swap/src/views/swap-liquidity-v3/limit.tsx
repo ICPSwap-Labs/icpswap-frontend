@@ -1,12 +1,12 @@
-import { useState, useCallback } from "react";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, MainCard, Wrapper } from "components/index";
 import { Box } from "components/Mui";
-import { MainCard, Flex, Wrapper } from "components/index";
-import { SwapTabPanels, TABS, SwapProEntry } from "components/swap/index";
+import { SwapProEntry, SwapTabPanels, TABS } from "components/swap/index";
+import { LimitHelpTooltip, PlaceOrder, TransactionForSimpleMode } from "components/swap/limit-order";
 import { LimitContext } from "components/swap/limit-order/context";
-import { Pool, Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { useCallback, useState } from "react";
 import { useWalletIsConnected } from "store/auth/hooks";
-import { PlaceOrder, TransactionForSimpleMode, LimitHelpTooltip } from "components/swap/limit-order";
 
 export default function Limit() {
   const [selectedPool, setSelectedPool] = useState<Pool | Null>(null);

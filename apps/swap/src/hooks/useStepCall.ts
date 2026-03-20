@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { useStepManager, useUpdateCallStep, useCloseAllSteps } from "store/steps/hooks";
+import { useCloseAllSteps, useStepManager, useUpdateCallStep } from "store/steps/hooks";
 
 export type StepCallback = () => Promise<boolean | "skip">;
 

@@ -1,32 +1,32 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { SWAP_FIELD } from "constants/swap";
-import { useToken } from "hooks/useCurrency";
-import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
-import { TradeState, useBestTrade } from "hooks/swap/useTrade";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
-import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
-import { getTokenInsufficient } from "hooks/swap/index";
-import store from "store/index";
-import { isValidPrincipal, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
-import { useParsedQueryString, useDebouncedChangeHandler, useDebounce } from "@icpswap/hooks";
 import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { useAllowance } from "hooks/token";
+import { useDebounce, useDebouncedChangeHandler, useParsedQueryString } from "@icpswap/hooks";
+import type { SwapPoolData } from "@icpswap/types";
+import { formatTokenAmount, isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
+import { SWAP_FIELD } from "constants/swap";
+import { getTokenInsufficient } from "hooks/swap/index";
 import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
+import { TradeState, useBestTrade } from "hooks/swap/useTrade";
+import { useAllowance } from "hooks/token";
+import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
+import { useToken } from "hooks/useCurrency";
+import { useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { type SwapPoolData } from "@icpswap/types";
-import { SwapFinalMetadata } from "types/swap";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import store from "store/index";
+import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
+import type { SwapFinalMetadata } from "types/swap";
+import { inputNumberCheck, isUseTransfer, tryParseAmount } from "utils/index";
 import {
+  clearSwapState,
+  type PoolCanisterRecord,
   selectCurrency,
   switchCurrencies,
   typeInput,
-  clearSwapState,
-  updatePoolCanisterIds,
-  PoolCanisterRecord,
-  updateSwapOutAmount,
   updateAllSwapPools,
+  updatePoolCanisterIds,
   updateSwapFinalMetadata,
+  updateSwapOutAmount,
 } from "./actions";
 
 export function useSwapHandlers() {

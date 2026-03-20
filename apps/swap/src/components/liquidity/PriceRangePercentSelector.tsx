@@ -1,19 +1,19 @@
-import React, { memo, useState, useEffect, useCallback, useMemo } from "react";
-import { Box, Grid, Typography, TextField, Chip, Button, makeStyles, useTheme, Theme } from "components/Mui";
-import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
-import { Token, Price } from "@icpswap/swap-sdk";
-import { Bound, FeeAmount } from "constants/swap";
-import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
-import { TokenToggle } from "components/TokenToggle";
-import { isDarkTheme } from "utils/index";
-import { NumberTextField } from "components/index";
+import type { Price, Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
+import { NumberTextField } from "components/index";
+import { Box, Button, Chip, Grid, makeStyles, TextField, type Theme, Typography, useTheme } from "components/Mui";
+import { TokenToggle } from "components/TokenToggle";
+import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
+import { Bound, type FeeAmount } from "constants/swap";
 import i18n from "i18n/index";
-
+import type React from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import PriceRangeChart from "./PriceRangeChart";
+import { isDarkTheme } from "utils/index";
 import { FullRangeWarning } from "./FullRangeWarning";
+import PriceRangeChart from "./PriceRangeChart";
 
 const usePriceRangeInputStyle = makeStyles((theme: Theme) => {
   return {
@@ -405,7 +405,7 @@ export const PriceRange = memo(
                     <PriceRangeSelector
                       label={t("common.min.price")}
                       value={
-                        ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : leftPrice?.toSignificant(5) ?? ""
+                        ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : (leftPrice?.toSignificant(5) ?? "")
                       }
                       onRangeInput={onLeftRangeInput}
                       decrement={isSorted ? getDecrementLower : getIncrementUpper}
@@ -420,7 +420,7 @@ export const PriceRange = memo(
                     <PriceRangeSelector
                       label={t("common.max.price")}
                       value={
-                        ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : rightPrice?.toSignificant(6) ?? ""
+                        ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : (rightPrice?.toSignificant(6) ?? "")
                       }
                       onRangeInput={(value) => onRightRangeInput(value)}
                       decrement={isSorted ? getDecrementUpper : getIncrementLower}

@@ -1,10 +1,10 @@
-import { memo, forwardRef, useEffect, useState } from "react";
-import { Box, makeStyles, Theme } from "components/Mui";
-import clsx from "clsx";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
+import clsx from "clsx";
+import { Box, makeStyles, type Theme } from "components/Mui";
+import { forwardRef, memo, useEffect, useState } from "react";
 
 import SnackbarContent from "../../SnackbarContent";
-import { CustomContentProps } from "../../types";
+import type { CustomContentProps } from "../../types";
 import { ComponentClasses } from "../../utils/styles";
 
 const useStyles = makeStyles((theme: Theme) => {

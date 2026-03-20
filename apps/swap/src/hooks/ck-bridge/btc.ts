@@ -1,29 +1,29 @@
-import { resultFormat, optionalArg, isUndefinedOrNull } from "@icpswap/utils";
-import { useQuery, type UseQueryResult } from "@tanstack/react-query";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ckBtcMinter } from "@icpswap/actor";
 import { Principal } from "@icp-sdk/core/principal";
-import {
-  useUserBTCDepositAddress,
-  useUpdateUserBTCDepositAddress,
-  useUserBTCWithdrawAddress,
-  useUpdateUserBTCWithdrawAddress,
-  useBitcoinDissolveTxs,
-} from "store/wallet/hooks";
+import { ckBtcMinter } from "@icpswap/actor";
+import type { Null } from "@icpswap/types";
+import { isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { BITCOIN_MINT_REFRESH } from "constants/chain-key";
+import { useRefreshTriggerManager } from "hooks/useGlobalContext";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { BitcoinTxResponse, BitcoinTransaction } from "types/ckBTC";
-import { Null } from "@icpswap/types";
+import {
+  useBitcoinDissolveTxs,
+  useUpdateUserBTCDepositAddress,
+  useUpdateUserBTCWithdrawAddress,
+  useUserBTCDepositAddress,
+  useUserBTCWithdrawAddress,
+} from "store/wallet/hooks";
+import { useBitcoinAllTxResponse } from "store/web3/hooks";
+import useSwr from "swr";
+import useSWRImmutable from "swr/immutable";
+import type { BitcoinTransaction, BitcoinTxResponse } from "types/ckBTC";
 import {
   isBitcoinTransactionUnFinalized,
   isBitcoinTxUnFinalized,
   isBitcoinTxUnFinalizedByBlock,
   isBtcMintTransaction,
 } from "utils/web3/ck-bridge";
-import { useRefreshTriggerManager } from "hooks/useGlobalContext";
-import { BITCOIN_MINT_REFRESH } from "constants/chain-key";
-import useSwr from "swr";
-import useSWRImmutable from "swr/immutable";
-import { useBitcoinAllTxResponse } from "store/web3/hooks";
 
 export function useFetchBitcoinBlockNumber(): number | undefined {
   const { data } = useSwr(
@@ -98,9 +98,7 @@ export function useBtcDepositAddress(subaccount?: Uint8Array) {
       setLoading(true);
 
       const address = resultFormat<string>(
-        await (
-          await ckBtcMinter(true)
-        ).get_btc_address({
+        await (await ckBtcMinter(true)).get_btc_address({
           owner: optionalArg(Principal.fromText(principal)),
           subaccount: optionalArg<Uint8Array>(subaccount),
         }),
@@ -122,9 +120,7 @@ export function useBtcDepositAddress(subaccount?: Uint8Array) {
 
 export function useRefreshBtcBalanceCallback() {
   return useCallback(async (principal: string, subaccount?: Uint8Array) => {
-    return await (
-      await ckBtcMinter(true)
-    ).update_balance({
+    return await (await ckBtcMinter(true)).update_balance({
       owner: optionalArg<Principal>(Principal.fromText(principal)),
       subaccount: optionalArg<Uint8Array>(subaccount),
     });

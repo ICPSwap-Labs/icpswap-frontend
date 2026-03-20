@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
-import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow, Tooltip } from "components/index";
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
-import { useHideUnavailableClaimManager } from "store/customization/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { LoadingRow, NoData, Tooltip } from "components/index";
+import { Box, Checkbox, Typography } from "components/Mui";
+import { useMemo, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useHideUnavailableClaimManager } from "store/customization/hooks";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 

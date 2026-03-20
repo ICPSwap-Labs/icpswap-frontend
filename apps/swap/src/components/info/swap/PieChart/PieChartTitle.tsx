@@ -1,7 +1,7 @@
-import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { useMediaQuery640 } from "hooks/theme";
 import { Bulb } from "components/info/swap/PieChart/Bulb";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useMediaQuery640 } from "hooks/theme";
 
 export interface PieChartTitleProps {
   content0: string;

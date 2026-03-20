@@ -1,9 +1,9 @@
-import { Flex, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
-import { useToken } from "hooks/useCurrency";
-import { isUndefinedOrNull } from "@icpswap/utils";
 import type { FarmInfo, Null } from "@icpswap/types";
+import { BodyCell, Flex } from "@icpswap/ui";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { TokenImage } from "components/index";
+import { useToken } from "hooks/useCurrency";
+import { useMemo } from "react";
 
 interface PoolCellProps {
   farmInfo: FarmInfo | Null;

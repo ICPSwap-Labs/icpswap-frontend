@@ -1,5 +1,5 @@
+import type { Position } from "@icpswap/swap-sdk";
 import { Box, makeStyles } from "components/Mui";
-import { Position } from "@icpswap/swap-sdk";
 import { usePositionState } from "hooks/liquidity";
 
 const useStyle = ({ borderRadius = "12px" }: { borderRadius?: string }) => {

@@ -1,11 +1,11 @@
-import { useMemo, ReactNode } from "react";
-import { Box, Typography, useTheme, BoxProps, TypographyProps } from "components/Mui";
+import type { Null } from "@icpswap/types";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, numToPercent } from "@icpswap/utils";
+import { Box, type BoxProps, Typography, type TypographyProps, useTheme } from "components/Mui";
+import { type ReactNode, useMemo } from "react";
 import { X } from "react-feather";
-import { Null } from "@icpswap/types";
-import { inputValueFormat } from "utils/swap/limit-order";
 import { useTranslation } from "react-i18next";
+import { inputValueFormat } from "utils/swap/limit-order";
 
 const VALUES = [0.1, 0.3, 0.5];
 const MIN_STEP = 0.01;
@@ -124,8 +124,8 @@ export function PriceMutator({
             percent.isGreaterThan(new BigNumber(`-${val}`).minus(MIN_STEP)),
         )
       : percent.isLessThan(MIN_STEP)
-      ? null
-      : VALUES.find((val) => percent.isLessThan(val + MIN_STEP) && percent.isGreaterThan(val - MIN_STEP));
+        ? null
+        : VALUES.find((val) => percent.isLessThan(val + MIN_STEP) && percent.isGreaterThan(val - MIN_STEP));
 
     return activePercent;
   }, [percent, inverted]);
@@ -171,8 +171,8 @@ export function PriceMutator({
         {showPercent && nonUndefinedOrNull(percent)
           ? `${percent.isGreaterThan(0) ? "+" : ""}${numToPercent(percent.toFixed(2))}`
           : inverted
-          ? t("common.max")
-          : t("common.min")}
+            ? t("common.max")
+            : t("common.min")}
       </Mutator>
 
       {VALUES.map((val) => (
