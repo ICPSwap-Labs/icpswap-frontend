@@ -5,6 +5,7 @@ import { isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { BITCOIN_MINT_REFRESH } from "constants/chain-key";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
+import { atom, useAtom, useAtomValue } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import {
@@ -15,8 +16,6 @@ import {
   useUserBTCWithdrawAddress,
 } from "store/wallet/hooks";
 import { useBitcoinAllTxResponse } from "store/web3/hooks";
-import useSwr from "swr";
-import useSWRImmutable from "swr/immutable";
 import type { BitcoinTransaction, BitcoinTxResponse } from "types/ckBTC";
 import {
   isBitcoinTransactionUnFinalized,
@@ -25,28 +24,31 @@ import {
   isBtcMintTransaction,
 } from "utils/web3/ck-bridge";
 
-export function useFetchBitcoinBlockNumber(): number | undefined {
-  const { data } = useSwr(
-    "bitcoinBlocknumber",
-    async () => {
+const bitcoinBlockNumberAtom = atom<number | undefined>(undefined);
+
+export function useFetchBitcoinBlockNumber() {
+  const [, setBitcoinBlockNumber] = useAtom(bitcoinBlockNumberAtom);
+
+  useQuery({
+    queryKey: ["bitcoinBlocknumber"],
+    queryFn: async () => {
+      let blockNumber: number | undefined;
+
       try {
         const result = await fetch(`https://blockchain.info/q/getblockcount`);
-        return (await result.json()) as number;
-      } catch (_error) {
-        return undefined;
-      }
-    },
-    {
-      refreshInterval: 10000,
-    },
-  );
+        blockNumber = (await result.json()) as number;
+      } catch (_error) {}
 
-  return data;
+      setBitcoinBlockNumber(blockNumber);
+
+      return blockNumber;
+    },
+    refetchInterval: 10_000,
+  });
 }
 
 export function useBitcoinBlockNumber() {
-  const { data } = useSWRImmutable<number>("bitcoinBlocknumber");
-  return data;
+  return useAtomValue(bitcoinBlockNumberAtom);
 }
 
 export function useBtcUnconfirmedDissolveHashes() {

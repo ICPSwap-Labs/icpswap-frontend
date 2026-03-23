@@ -24,6 +24,7 @@ export function useFetchDogeBlockNumber(): number | undefined {
     queryFn: async () => {
       const blockNumber = await getDogeBlockNumber();
       setBlockNumber(blockNumber);
+      return blockNumber;
     },
     refetchInterval: DOGE_BLOCK_NUMBER_REFETCH_INTERVAL_MS,
   });
