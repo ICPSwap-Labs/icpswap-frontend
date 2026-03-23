@@ -68,7 +68,7 @@ function UserTokenBalance({
         new BigNumber(tokenUSDPrice).multipliedBy(parseTokenAmount(balance, tokenInfo.decimals)).toString(),
       );
     }
-  }, [tokenInfo, tokenUSDPrice, balance]);
+  }, [tokenInfo, tokenUSDPrice, balance, onUpdateUSDValues]);
 
   return (
     <TableRow
@@ -159,7 +159,7 @@ export default function SwapScanValuation() {
 
   const loading = useMemo(() => {
     return !!allTokensBalance.find((e) => e.state === TokenBalanceState.LOADING);
-  }, [allTokensBalance, allTokenIds]);
+  }, [allTokensBalance]);
 
   useEffect(() => {
     if (!allTokensInfo || !allTokensBalance) return;
@@ -176,7 +176,7 @@ export default function SwapScanValuation() {
         }));
       }
     });
-  }, [address, allTokensBalance, allTokensInfo]);
+  }, [allTokensBalance, allTokenIds, allTokensInfo]);
 
   const handleCheckChange = (checked: boolean) => {
     setChecked(checked);

@@ -50,7 +50,7 @@ export function ReclaimItem({
     if (unavailableClaim === true) {
       updateUnavailableKeys(claimedKey);
     }
-  }, [unavailableClaim, claimedKey]);
+  }, [unavailableClaim, claimedKey, updateUnavailableKeys]);
 
   const handleClaim = async () => {
     if (loading || unavailableClaim) return;

@@ -55,7 +55,7 @@ export default function Burn() {
     if (new BigNumber(amount).isEqualTo(0)) return t("common.must.greater.than", { symbol: "Amount", amount: "0" });
     if (parseTokenAmount(new BigNumber(balance).minus(token.transFee.toString()), token.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
-  }, [amount, balance, token, mintingAccount, tokenId]);
+  }, [amount, balance, token, mintingAccount, tokenId, t]);
 
   const showMax = useMemo(() => {
     if (!balance || !token) return false;

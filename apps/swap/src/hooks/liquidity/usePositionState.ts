@@ -44,5 +44,5 @@ export function usePositionState(position: Position | undefined) {
     }
 
     return state;
-  }, [pool, tickUpper, tickUpper]);
+  }, [pool, tickUpper, position, tickLower]);
 }

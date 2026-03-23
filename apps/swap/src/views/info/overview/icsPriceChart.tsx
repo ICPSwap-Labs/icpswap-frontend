@@ -79,14 +79,14 @@ export function ICSPriceChart() {
           ]
         : [],
     };
-  }, [defaultChartConfig, matchDownMD, chartData]);
+  }, [matchDownMD, chartData]);
 
   useEffect(() => {
     if (chartConfig && chartConfig.series.length > 0) {
       ApexCharts.exec(`support-chart`, "updateOptions", chartConfig.options);
       setLoading(false);
     }
-  }, [chartConfig, chartData]);
+  }, [chartConfig]);
 
   return (
     <Box className={classes.card}>

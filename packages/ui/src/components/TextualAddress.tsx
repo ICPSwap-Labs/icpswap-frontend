@@ -112,7 +112,7 @@ export function TextualAddress({
     }
 
     return owner;
-  }, [owner, sub, NONE_SUB_HEX]);
+  }, [owner, sub]);
 
   return __textualAddress ? (
     <Tooltip

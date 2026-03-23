@@ -23,16 +23,13 @@ export function EditAddress() {
     setPages(WalletManagerPage.AddressBook);
   }, [setPages]);
 
-  const handleValueChange = useCallback(
-    (filed: "name" | "address", value: string) => {
-      if (filed === "name") {
-        setName(value);
-      } else {
-        setAddress(value);
-      }
-    },
-    [setAddress, setName],
-  );
+  const handleValueChange = useCallback((filed: "name" | "address", value: string) => {
+    if (filed === "name") {
+      setName(value);
+    } else {
+      setAddress(value);
+    }
+  }, []);
 
   const isValidAddress = useMemo(() => {
     if (isUndefinedOrNull(address)) return undefined;
@@ -59,7 +56,7 @@ export function EditAddress() {
       setName(addressBook.name);
       setAddress(addressBook.address);
     }
-  }, [addressBook, setName, setAddress]);
+  }, [addressBook]);
 
   const isEdited = useMemo(() => {
     if (isUndefinedOrNull(name) || isUndefinedOrNull(address) || isUndefinedOrNull(addressBook)) return false;
@@ -88,7 +85,7 @@ export function EditAddress() {
     if (isExist) return t("wallet.address.name.exist");
 
     return undefined;
-  }, [addresses, name, address, loading, isValidAddress, addressBook]);
+  }, [addresses, name, address, isValidAddress, addressBook, t]);
 
   return (
     <DrawerWrapper

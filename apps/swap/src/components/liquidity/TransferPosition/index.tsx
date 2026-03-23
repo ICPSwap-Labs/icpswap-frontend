@@ -16,7 +16,7 @@ export function TransferPosition({ position, positionId, children, onTransferSuc
 
   const handleTransferPosition = useCallback(() => {
     setTransferShow(true);
-  }, [setTransferShow]);
+  }, []);
 
   return (
     <>

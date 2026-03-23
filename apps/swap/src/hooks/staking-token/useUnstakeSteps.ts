@@ -15,17 +15,20 @@ export function useUnstakeSteps() {
   const { t } = useTranslation();
   const initialAndUpdateDetails = useStepContentManager();
 
-  return useCallback((key: string, { token, amount, rewardToken }: UnstakeCallsStepArgs) => {
-    const content = getUnstakeSteps({
-      token,
-      amount: amount.toString(),
-      rewardToken,
-      key,
-    });
+  return useCallback(
+    (key: string, { token, amount, rewardToken }: UnstakeCallsStepArgs) => {
+      const content = getUnstakeSteps({
+        token,
+        amount: amount.toString(),
+        rewardToken,
+        key,
+      });
 
-    initialAndUpdateDetails(String(key), {
-      content,
-      title: t("stake.unstake.details"),
-    });
-  }, []);
+      initialAndUpdateDetails(String(key), {
+        content,
+        title: t("stake.unstake.details"),
+      });
+    },
+    [initialAndUpdateDetails, t],
+  );
 }

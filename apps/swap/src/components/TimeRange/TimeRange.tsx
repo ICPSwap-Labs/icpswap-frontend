@@ -31,15 +31,12 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
   const [startTime, setStartTime] = useState<number | string | undefined>(undefined);
   const [endTime, setEndTime] = useState<number | string | undefined>(undefined);
 
-  const handleSetRange = useCallback(
-    (rangeValue: number) => {
-      const range = TimeRanges.find((range) => range.value === rangeValue);
-      if (range) {
-        setRange(range);
-      }
-    },
-    [setRange, onChange],
-  );
+  const handleSetRange = useCallback((rangeValue: number) => {
+    const range = TimeRanges.find((range) => range.value === rangeValue);
+    if (range) {
+      setRange(range);
+    }
+  }, []);
 
   // Set default range
   useEffect(() => {
@@ -66,7 +63,7 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
         } else {
           if (__range.value === range?.value) return;
 
-          const now = new Date().getTime();
+          const now = Date.now();
           const start = new BigNumber(now)
             .minus(new BigNumber(__range.value).multipliedBy(24).multipliedBy(3600).multipliedBy(1000))
             .toNumber();
@@ -76,12 +73,12 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
         }
       }
     },
-    [onChange, range, setRange],
+    [onChange, range],
   );
 
   // Set default startTime/endTime
   useEffect(() => {
-    const now = new Date().getTime();
+    const now = Date.now();
     const endTime = toEndTimeOfDay(now);
 
     setEndTime(endTime);
@@ -101,7 +98,7 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
 
   const handleRangeSelectorClose = useCallback(() => {
     setDateRangeOpen(false);
-  }, [setDateRangeOpen, handleSetRange]);
+  }, []);
 
   return (
     <>

@@ -85,7 +85,7 @@ export function AddressBook() {
       setPages(WalletManagerPage.AddAddress);
       setAddAddressBookPrevPage(WalletManagerPage.AddressBook);
     },
-    [setPages],
+    [setPages, setAddAddressBookPrevPage],
   );
 
   const { data: addresses, isLoading: loading } = useAddressBook(refreshTrigger);

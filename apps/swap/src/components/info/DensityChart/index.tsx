@@ -179,7 +179,7 @@ export function DensityChart({ address }: DensityChartProps) {
       setLoading(true);
       formatData();
     }
-  }, [feeTier, formattedData, setLoading, loading, __pool, poolTickData, token0, token1]);
+  }, [feeTier, formattedData, __pool, poolTickData, token0, token1, address]);
 
   const zoomedData = useMemo(() => {
     if (formattedData) {
@@ -191,7 +191,7 @@ export function DensityChart({ address }: DensityChartProps) {
   // reset data on address change
   useEffect(() => {
     setFormattedData(undefined);
-  }, [address]);
+  }, []);
 
   return (
     <Box

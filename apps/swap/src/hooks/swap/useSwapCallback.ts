@@ -41,34 +41,37 @@ export function useInitialSwapSteps() {
   const { t } = useTranslation();
   const updateStep = useStepContentManager();
 
-  return useCallback(({ trade, key, retry }: InitialSwapStepsArgs) => {
-    if (!trade) return undefined;
+  return useCallback(
+    ({ trade, key, retry }: InitialSwapStepsArgs) => {
+      if (!trade) return undefined;
 
-    const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
-    const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
-    const pool = trade.route.pools[0];
-    const token0 = pool.token0;
-    const token1 = pool.token1;
-    const inputToken = token0.address === trade.inputAmount.currency.address ? token0 : token1;
-    const outputToken = token0.address === trade.outputAmount.currency.address ? token0 : token1;
+      const pool = trade.route.pools[0];
+      const token0 = pool.token0;
+      const token1 = pool.token1;
+      const inputToken = token0.address === trade.inputAmount.currency.address ? token0 : token1;
+      const outputToken = token0.address === trade.outputAmount.currency.address ? token0 : token1;
 
-    const content = getSwapSteps({
-      inputToken,
-      outputToken,
-      amount0,
-      amount1,
-      key: key.toString(),
-      retry,
-    });
+      const content = getSwapSteps({
+        inputToken,
+        outputToken,
+        amount0,
+        amount1,
+        key: key.toString(),
+        retry,
+      });
 
-    updateStep(String(key), {
-      content,
-      title: t("swap.details"),
-      description: t("swap.details.descriptions"),
-      type: "swap",
-    });
-  }, []);
+      updateStep(String(key), {
+        content,
+        title: t("swap.details"),
+        description: t("swap.details.descriptions"),
+        type: "swap",
+      });
+    },
+    [t, updateStep],
+  );
 }
 
 export interface SwapCallsCallbackArgs {
@@ -231,7 +234,16 @@ export function useSwapCalls() {
 
       return calls;
     },
-    [principal, slippageTolerance, allowedSlippage],
+    [
+      principal,
+      approve,
+      slippageTolerance,
+      initialAndUpdateSwapStep,
+      openTip,
+      swapFinalMetadataCallback,
+      transfer,
+      updateSwapOutAmount,
+    ],
   );
 }
 

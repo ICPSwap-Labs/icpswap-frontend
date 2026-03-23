@@ -27,11 +27,11 @@ export function TransactionButton({ tokenId, principal, snsRootId, isBridgeToken
 
   const handleMouseEnter = useCallback(() => {
     setOpen(true);
-  }, [setOpen]);
+  }, []);
 
   const handleMouseLeave = useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
+  }, []);
 
   return principal ? (
     <Box ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>

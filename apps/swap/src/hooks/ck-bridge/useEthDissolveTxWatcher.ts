@@ -18,8 +18,9 @@ export function useEthDissolveTxWatcher() {
   const [openTip] = useSuccessTip();
   const { t } = useTranslation();
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   const callback = useCallback(async () => {
-    if (txs && txs.length && nonUndefinedOrNull(principal)) {
+    if (txs?.length && nonUndefinedOrNull(principal)) {
       for (let i = 0; i < txs.length; i++) {
         const tx = txs[i];
         const block_index = BigInt(tx.block_index);

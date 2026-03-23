@@ -31,7 +31,7 @@ export function SwapContextWrapper() {
       if (!inputToken) return;
       swapWrapperRef.current?.setInputAmount(parseTokenAmount(tokenAmount, inputToken.decimals).toString());
     },
-    [swapWrapperRef, inputToken],
+    [inputToken],
   );
 
   return (

@@ -37,7 +37,14 @@ export function useConvertCallback() {
     setTokensConvertToIcp(undefined);
     setConvertLoading(false);
     setCheckedConvertTokenIds([]);
-  }, [tokensConvertToSwap, convertToSwap, setTokensConvertToIcp]);
+  }, [
+    tokensConvertToSwap,
+    convertToSwap,
+    setTokensConvertToIcp,
+    setCheckedConvertTokenIds,
+    setConvertLoading,
+    setConvertedTokenIds,
+  ]);
 
   return useMemo(() => ({ loading, callback }), [callback, loading]);
 }

@@ -57,7 +57,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
     closeTip(loading_key);
 
     setLoading(false);
-  }, [positionFees, availableFees]);
+  }, [availableFees, closeTip, openTip, setRefreshTriggers, t]);
 
   return (
     <Box sx={{ width: "260px" }}>

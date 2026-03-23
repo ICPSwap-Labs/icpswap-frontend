@@ -19,7 +19,7 @@ export function LimitAndCurrentPrice({ inputToken, outputToken, limitPrice, pool
 
   const handleInvert = useCallback(() => {
     setInvertPrice(!invertPrice);
-  }, [invertPrice, setInvertPrice]);
+  }, [invertPrice]);
 
   const isSorted = useMemo(() => {
     if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return undefined;

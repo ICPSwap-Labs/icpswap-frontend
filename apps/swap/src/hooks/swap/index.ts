@@ -76,7 +76,7 @@ export function usePoolCanisterId(
     };
 
     call();
-  }, [id, token0CanisterId, token1CanisterId, fee, key]);
+  }, [id, token0CanisterId, token1CanisterId, fee, key, updatePoolCanisterId]);
 
   return useMemo(() => id, [id]);
 }
@@ -174,44 +174,47 @@ export interface UseSwapDepositArgs {
 export function useSwapDeposit() {
   const [openErrorTip] = useErrorTip();
 
-  return useCallback(async ({ token, amount, poolId, openExternalTip, standard }: UseSwapDepositArgs) => {
-    const useTransfer = isUseTransferByStandard(standard);
+  return useCallback(
+    async ({ token, amount, poolId, openExternalTip, standard }: UseSwapDepositArgs) => {
+      const useTransfer = isUseTransferByStandard(standard);
 
-    let status: ResultStatus = ResultStatus.ERROR;
-    let message = "";
+      let status: ResultStatus = ResultStatus.ERROR;
+      let message = "";
 
-    if (useTransfer) {
-      const { status: _status, message: _message } = await deposit(
-        poolId,
-        token.address,
-        BigInt(amount),
-        BigInt(token.transFee),
-      );
-      status = _status;
-      message = _message;
-    } else {
-      const { status: _status, message: _message } = await depositFrom(
-        poolId,
-        token.address,
-        BigInt(amount),
-        BigInt(token.transFee),
-      );
-      status = _status;
-      message = _message;
-    }
-
-    if (status === "err") {
-      if (openExternalTip) {
-        openExternalTip({ message });
+      if (useTransfer) {
+        const { status: _status, message: _message } = await deposit(
+          poolId,
+          token.address,
+          BigInt(amount),
+          BigInt(token.transFee),
+        );
+        status = _status;
+        message = _message;
       } else {
-        openErrorTip(`Failed to deposit ${token.symbol}: ${message}.`);
+        const { status: _status, message: _message } = await depositFrom(
+          poolId,
+          token.address,
+          BigInt(amount),
+          BigInt(token.transFee),
+        );
+        status = _status;
+        message = _message;
       }
 
-      return false;
-    }
+      if (status === "err") {
+        if (openExternalTip) {
+          openExternalTip({ message });
+        } else {
+          openErrorTip(`Failed to deposit ${token.symbol}: ${message}.`);
+        }
 
-    return true;
-  }, []);
+        return false;
+      }
+
+      return true;
+    },
+    [openErrorTip],
+  );
 }
 
 export * from "./swap";

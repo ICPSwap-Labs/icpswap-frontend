@@ -102,7 +102,7 @@ export function PositionCard({
   const handleToggleShow = useCallback(() => {
     if (!position) return;
     setDetailShow(!detailShow);
-  }, [detailShow, setDetailShow, position]);
+  }, [detailShow, position]);
 
   const pool = position?.pool;
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -185,7 +185,7 @@ export function PositionCard({
     if (nonUndefinedOrNull(totalUSDValue) && nonUndefinedOrNull(positionKey) && isLimit === false) {
       setAllPositionsUSDValue(positionKey, new BigNumber(totalUSDValue));
     }
-  }, [totalUSDValue, positionKey, staked, isLimit]);
+  }, [totalUSDValue, positionKey, isLimit, setAllPositionsUSDValue]);
 
   const displayByFilter = useMemo(() => {
     if (isUndefinedOrNull(positionState) || isUndefinedOrNull(isLimit)) return true;

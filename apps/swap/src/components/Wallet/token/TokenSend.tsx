@@ -62,21 +62,15 @@ export function TokenSend() {
     if (selectedContact) {
       setAddress(selectedContact.address);
     }
-  }, [selectedContact, setAddress]);
+  }, [selectedContact]);
 
-  const handleAddressChange = useCallback(
-    (value: string) => {
-      setAddress(value);
-    },
-    [setAddress],
-  );
+  const handleAddressChange = useCallback((value: string) => {
+    setAddress(value);
+  }, []);
 
-  const onUserInput = useCallback(
-    (value: string) => {
-      setAmount(value);
-    },
-    [setAmount],
-  );
+  const onUserInput = useCallback((value: string) => {
+    setAmount(value);
+  }, []);
 
   const tokenUSDPrice = useUSDPrice(token);
   const { result: balance } = useTokenBalance({ tokenId: token?.address, account: principal, refresh: refreshTrigger });
@@ -91,7 +85,7 @@ export function TokenSend() {
     if (new BigNumber(balance).isEqualTo(0)) return;
 
     setAmount(parseTokenAmount(balance, token.decimals).toString());
-  }, [balance, token, setAmount]);
+  }, [balance, token]);
 
   const actualTransferAmount = useMemo(() => {
     if (isUndefinedOrNull(amount)) return 0;
@@ -105,12 +99,9 @@ export function TokenSend() {
     return isValidAccount(address);
   }, [address]);
 
-  const handleInputChange = useCallback(
-    (value: string) => {
-      setAmount(value);
-    },
-    [setAmount],
-  );
+  const handleInputChange = useCallback((value: string) => {
+    setAmount(value);
+  }, []);
 
   const handleSend = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(address) || isUndefinedOrNull(amount)) return;
@@ -144,7 +135,7 @@ export function TokenSend() {
     }
 
     setLoading(false);
-  }, [setSelectedContact, setLoading, principal, address, amount]);
+  }, [setSelectedContact, principal, address, amount, openTip, setRefreshTrigger, t, token]);
 
   const error = useMemo(() => {
     if (
@@ -171,11 +162,11 @@ export function TokenSend() {
     }
 
     return undefined;
-  }, [address, token, amount, balance]);
+  }, [address, token, amount, balance, t]);
 
   const disableSend = useMemo(() => {
     return isValidAddress === false || loading || nonUndefinedOrNull(error);
-  }, [address, error, amount, loading, isValidAddress]);
+  }, [error, loading, isValidAddress]);
 
   const handleSelectToken = useCallback(() => {
     setPages(WalletManagerPage.TokenSelector, false);

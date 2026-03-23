@@ -210,6 +210,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     inputTokenUnusedBalance,
     Trade,
     tokenInsufficient,
+    t,
   ]);
 
   return {

@@ -57,12 +57,9 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
     }
   }, [balance, stakeToken]);
 
-  const handleAmountChange = useCallback(
-    (amount: string) => {
-      setAmount(amount);
-    },
-    [setAmount],
-  );
+  const handleAmountChange = useCallback((amount: string) => {
+    setAmount(amount);
+  }, []);
 
   const handleStaking = async () => {
     if (!stakeToken || !principal || !poolInfo || !amount || !rewardToken || !poolId) return;
@@ -102,104 +99,102 @@ export function Stake({ poolId, poolInfo, balance, stakeToken, rewardToken, onSt
       return t("common.error.amount.greater.than.fee");
 
     return null;
-  }, [amount, balance, stakeToken, state]);
+  }, [amount, balance, stakeToken, state, t]);
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "stake" });
 
   return (
-    <>
-      <MainCard padding="24px 16px" level={4} borderRadius="16px 16px 0 0">
-        <Flex justify="space-between" sx={{ width: "100%" }}>
-          <Flex gap="0 8px">
-            <TokenImage logo={stakeToken?.logo} tokenId={stakeToken?.address} size="28px" />
-            <Typography
-              sx={{
-                fontSize: "18px",
-                fontWeight: 500,
-                color: "text.primary",
-                maxWidth: "100px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-              title={stakeToken ? stakeToken.symbol : ""}
-            >
-              {stakeToken ? stakeToken.symbol : "--"}
-            </Typography>
-          </Flex>
-
-          {stakeToken ? (
-            <NumberTextField
-              value={amount}
-              fullWidth
-              placeholder="0.00"
-              variant="standard"
-              sx={{
-                "& input": {
-                  textAlign: "right",
-                  fontSize: "20px",
-                  fontWeight: 600,
-                  color: "text.primary",
-                },
-                "& input::placeholder": {
-                  fontSize: "20px",
-                  fontWeight: 600,
-                },
-              }}
-              numericProps={{
-                thousandSeparator: true,
-                decimalScale: stakeToken.decimals,
-                allowNegative: false,
-                maxLength: 20,
-              }}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                handleAmountChange(event.target.value);
-              }}
-            />
-          ) : null}
-        </Flex>
-
-        <Flex justify="space-between" sx={{ margin: "8px 0 0 0", width: "100%" }}>
-          <Flex gap="0 5px">
-            <Typography>
-              {t("common.balance.colon")}&nbsp;
-              {balance && stakeToken
-                ? toSignificantWithGroupSeparator(parseTokenAmount(balance, stakeToken.decimals).toString(), 8)
-                : "--"}
-            </Typography>
-
-            <MaxButton onClick={handleMax} background="rgba(86, 105, 220, 0.50)" />
-          </Flex>
-
-          <Typography>
-            {stakeToken && amount && stakeTokenPrice
-              ? formatDollarAmount(new BigNumber(amount).multipliedBy(stakeTokenPrice).toString())
-              : "--"}
+    <MainCard padding="24px 16px" level={4} borderRadius="16px 16px 0 0">
+      <Flex justify="space-between" sx={{ width: "100%" }}>
+        <Flex gap="0 8px">
+          <TokenImage logo={stakeToken?.logo} tokenId={stakeToken?.address} size="28px" />
+          <Typography
+            sx={{
+              fontSize: "18px",
+              fontWeight: 500,
+              color: "text.primary",
+              maxWidth: "100px",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+            title={stakeToken ? stakeToken.symbol : ""}
+          >
+            {stakeToken ? stakeToken.symbol : "--"}
           </Typography>
         </Flex>
 
-        <Box mt="24px" sx={{ padding: "0 10px 0 0" }}>
-          <TokenBalanceSlider
+        {stakeToken ? (
+          <NumberTextField
             value={amount}
-            width="100%"
-            totalAmount={balance && stakeToken ? parseTokenAmount(balance, stakeToken.decimals).toString() : undefined}
-            token={stakeToken}
-            onAmountChange={handleAmountChange}
-            trackColor="#4F5A84"
+            fullWidth
+            placeholder="0.00"
+            variant="standard"
+            sx={{
+              "& input": {
+                textAlign: "right",
+                fontSize: "20px",
+                fontWeight: 600,
+                color: "text.primary",
+              },
+              "& input::placeholder": {
+                fontSize: "20px",
+                fontWeight: 600,
+              },
+            }}
+            numericProps={{
+              thousandSeparator: true,
+              decimalScale: stakeToken.decimals,
+              allowNegative: false,
+              maxLength: 20,
+            }}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              handleAmountChange(event.target.value);
+            }}
           />
-        </Box>
+        ) : null}
+      </Flex>
 
-        <Button
-          fullWidth
-          variant="contained"
-          size="large"
-          sx={{ margin: "20px 0 0 0", height: "48px" }}
-          disabled={!!error || oisyButtonDisabled}
-          onClick={handleStaking}
-        >
-          {error ?? t("common.stake")}
-        </Button>
-      </MainCard>
-    </>
+      <Flex justify="space-between" sx={{ margin: "8px 0 0 0", width: "100%" }}>
+        <Flex gap="0 5px">
+          <Typography>
+            {t("common.balance.colon")}&nbsp;
+            {balance && stakeToken
+              ? toSignificantWithGroupSeparator(parseTokenAmount(balance, stakeToken.decimals).toString(), 8)
+              : "--"}
+          </Typography>
+
+          <MaxButton onClick={handleMax} background="rgba(86, 105, 220, 0.50)" />
+        </Flex>
+
+        <Typography>
+          {stakeToken && amount && stakeTokenPrice
+            ? formatDollarAmount(new BigNumber(amount).multipliedBy(stakeTokenPrice).toString())
+            : "--"}
+        </Typography>
+      </Flex>
+
+      <Box mt="24px" sx={{ padding: "0 10px 0 0" }}>
+        <TokenBalanceSlider
+          value={amount}
+          width="100%"
+          totalAmount={balance && stakeToken ? parseTokenAmount(balance, stakeToken.decimals).toString() : undefined}
+          token={stakeToken}
+          onAmountChange={handleAmountChange}
+          trackColor="#4F5A84"
+        />
+      </Box>
+
+      <Button
+        fullWidth
+        variant="contained"
+        size="large"
+        sx={{ margin: "20px 0 0 0", height: "48px" }}
+        disabled={!!error || oisyButtonDisabled}
+        onClick={handleStaking}
+      >
+        {error ?? t("common.stake")}
+      </Button>
+    </MainCard>
   );
 }

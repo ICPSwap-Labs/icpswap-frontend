@@ -291,7 +291,7 @@ export function SelectorToken({
     if (isValidPrincipal(searchWord)) return token?.address.toString() !== searchWord;
     const symbol = chain !== BridgeChainType.icp ? token.symbol.replace("ck", "") : token.symbol;
     return !symbol.toLocaleLowerCase().includes(searchWord.toLocaleLowerCase());
-  }, [searchWord, token, hidden]);
+  }, [searchWord, token, hidden, chain]);
 
   useEffect(() => {
     updateTokenHide(tokenId, isHidden);

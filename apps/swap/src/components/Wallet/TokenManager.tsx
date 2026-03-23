@@ -40,14 +40,14 @@ function TokenRow({ token }: TokenRowProps) {
   }, [taggedTokens, token]);
 
   const handleCheckChange = useCallback(
-    (event, checked: boolean) => {
+    (_event, checked: boolean) => {
       if (checked) {
         updateTaggedTokens([token.address]);
       } else {
         deleteTaggedTokens([token.address]);
       }
     },
-    [token],
+    [token, updateTaggedTokens, deleteTaggedTokens],
   );
 
   return (
@@ -90,7 +90,7 @@ function ImportableToken({ tokenId }: ImportableTokenProps) {
     }
 
     call();
-  }, [tokenId]);
+  }, [tokenId, updateTokenStandard]);
 
   useEffect(() => {
     if (registerSuccess) {
@@ -166,7 +166,7 @@ export function TokenManager() {
   const allTokenIds = useMemo(() => {
     if (isUndefinedOrNull(snsTokens) || isUndefinedOrNull(noneSnsTokens)) return [];
     return [...snsTokens, ...noneSnsTokens];
-  }, [snsTokens, noneSnsTokens, activeTab, searchKeyword]);
+  }, [snsTokens, noneSnsTokens]);
 
   const allTokens = useTokens(allTokenIds);
 
@@ -182,7 +182,7 @@ export function TokenManager() {
           (activeTab === TAB.SNS ? snsTokens.includes(token.address) : noneSnsTokens.includes(token.address))
         );
       }) as Token[];
-  }, [allTokens, searchKeyword, activeTab]);
+  }, [allTokens, snsTokens, noneSnsTokens, searchKeyword, activeTab]);
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.Index);

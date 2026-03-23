@@ -69,7 +69,7 @@ export function useMultipleApproveManager() {
     (multipleApprove: number) => {
       dispatch(updateUserMultipleApprove(multipleApprove));
     },
-    [dispatch, multipleApprove],
+    [dispatch],
   );
 
   return useMemo(() => ({ multipleApprove, updateMultipleApprove }), [updateMultipleApprove, multipleApprove]);
@@ -96,10 +96,10 @@ export function useSlippageManager(type: string): [number, (value: number) => vo
     (value: number) => {
       dispatch(updateUserSlippage({ type, value }));
     },
-    [dispatch],
+    [dispatch, type],
   );
 
-  return [userSlippage, setUserSlippage];
+  return useMemo(() => [userSlippage, setUserSlippage], [userSlippage, setUserSlippage]);
 }
 
 export function useSlippageToleranceToPercent(type: string) {
@@ -119,7 +119,7 @@ export function useSlippageToleranceToPercent(type: string) {
     }
 
     return percentSlippage;
-  }, [slippageTolerance, slippageToPercent]);
+  }, [slippageTolerance, type]);
 }
 
 export function useTransactionsDeadlineManager(): [number, (value: number) => void] {
@@ -199,6 +199,7 @@ export function useInitialUserPositionPools() {
 
   const { data: positionPools, isLoading: loading } = useUserPositionPools(account);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     if (positionPools) {
       const allPoolIds = [...new Set([...storeUserPositionPools, ...positionPools])];
@@ -207,7 +208,7 @@ export function useInitialUserPositionPools() {
     } else if (loading === false) {
       setInitialLoading(false);
     }
-  }, [JSON.stringify(storeUserPositionPools), positionPools, updateStoreUserPositionPools, loading]);
+  }, [positionPools, updateStoreUserPositionPools, loading, JSON.stringify(storeUserPositionPools)]);
 
   return {
     loading: initialLoading,

@@ -2,7 +2,7 @@ import { Loading } from "@icpswap/ui";
 import Identity, { type IdentityRef, type SubmitLoadingProps } from "components/Identity";
 import { Grid, makeStyles, TextField, type Theme, Typography, useTheme } from "components/Mui";
 import useFileUpload from "hooks/useNFTUpload";
-import { forwardRef, type Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, type Ref, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { getFileType } from "utils/type";
 
@@ -108,7 +108,7 @@ const Upload = forwardRef(
       if (props.defaultValue) {
         setImagePreview(props.defaultValue);
       }
-    }, [props]);
+    }, [props.defaultValue]);
 
     useEffect(() => {
       if (filePath) {
@@ -129,21 +129,21 @@ const Upload = forwardRef(
       }
     }, [fileError, onFileError]);
 
-    async function uploadCb() {
+    const uploadCb = useCallback(async () => {
       if (file) {
         return await uploadCallback({
           file,
           canisterId,
         });
       }
-    }
+    }, [file, uploadCallback, canisterId]);
 
     useImperativeHandle(
       ref,
       () => ({
         uploadCb,
       }),
-      [uploadCallback, file, uploadCb],
+      [uploadCb],
     );
 
     const handleIdentityFileUpload = async (

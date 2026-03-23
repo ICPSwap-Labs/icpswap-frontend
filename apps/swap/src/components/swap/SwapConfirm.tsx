@@ -155,152 +155,150 @@ export function SwapConfirmModal({
 
   return (
     <Modal open={open} title={t("swap.submit")} onClose={onClose} background="level1">
-      <>
-        <Box className={classes.box}>
-          <Box className={classes.wrapper}>
-            <Flex gap="0 12px">
-              <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
-              <Flex gap="8px 0" vertical align="flex-start">
-                <Flex gap="0 4px">
-                  <Typography>{t("common.you.pay")}</Typography>
-                  <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
-                </Flex>
-
-                <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
-                  {trade
-                    ? `${trade.inputAmount.toSignificant(6, { groupSeparator: "," })} ${
-                        trade.inputAmount.currency.symbol
-                      }`
-                    : "--"}
-                </Typography>
+      <Box className={classes.box}>
+        <Box className={classes.wrapper}>
+          <Flex gap="0 12px">
+            <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
+            <Flex gap="8px 0" vertical align="flex-start">
+              <Flex gap="0 4px">
+                <Typography>{t("common.you.pay")}</Typography>
+                <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
               </Flex>
-            </Flex>
-          </Box>
 
-          <Box className={classes.line} />
-
-          <Box className={classes.wrapper}>
-            <Flex gap="0 12px">
-              <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
-              <Flex gap="8px 0" vertical align="flex-start">
-                <Typography>{t("common.you.receive")}</Typography>
-                <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
-                  {trade
-                    ? `${trade.outputAmount.toSignificant(6, { groupSeparator: "," })} ${
-                        trade.outputAmount.currency.symbol
-                      }`
-                    : "--"}
-                </Typography>
-              </Flex>
+              <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
+                {trade
+                  ? `${trade.inputAmount.toSignificant(6, { groupSeparator: "," })} ${
+                      trade.inputAmount.currency.symbol
+                    }`
+                  : "--"}
+              </Typography>
             </Flex>
-          </Box>
+          </Flex>
         </Box>
 
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0", margin: "24px 0 0 0" }}>
-          <DetailItem
-            label={t`Price`}
-            value={
-              <TradePrice
-                price={trade?.executionPrice}
-                showConvert={false}
-                color="text.primary"
-                token0={inputToken}
-                token1={outputToken}
-                token0PriceUSDValue={inputTokenPrice}
-                token1PriceUSDValue={outputTokenPrice}
-                noInfo
-              />
-            }
-          />
-          <DetailItem
-            label={t("swap.liquidity.provider.fee", { value: pool ? feeAmountPercent(pool.fee) : "--" })}
-            value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
-            tooltip={<Tooltip background="#ffffff" tips={t("swap.liquidity.provider.fee.tips")} />}
-          />
-          <DetailItem
-            label={t("swap.price.impact")}
-            value={FormattedPriceImpact({ priceImpact })}
-            tooltip={
-              <Tooltip
-                background="#ffffff"
-                tips={t`The difference between the market price and your price due to trade size.`}
-              />
-            }
-          />
-          <DetailItem
-            label={t("swap.slippage.tolerance")}
-            value={`${slippageTolerance?.toFixed(2)}%`}
-            tooltip={
-              <Tooltip
-                background="#ffffff"
-                tips={t`Your transaction will revert if the price changes unfavorably
+        <Box className={classes.line} />
+
+        <Box className={classes.wrapper}>
+          <Flex gap="0 12px">
+            <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
+            <Flex gap="8px 0" vertical align="flex-start">
+              <Typography>{t("common.you.receive")}</Typography>
+              <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
+                {trade
+                  ? `${trade.outputAmount.toSignificant(6, { groupSeparator: "," })} ${
+                      trade.outputAmount.currency.symbol
+                    }`
+                  : "--"}
+              </Typography>
+            </Flex>
+          </Flex>
+        </Box>
+      </Box>
+
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "24px 0", margin: "24px 0 0 0" }}>
+        <DetailItem
+          label={t`Price`}
+          value={
+            <TradePrice
+              price={trade?.executionPrice}
+              showConvert={false}
+              color="text.primary"
+              token0={inputToken}
+              token1={outputToken}
+              token0PriceUSDValue={inputTokenPrice}
+              token1PriceUSDValue={outputTokenPrice}
+              noInfo
+            />
+          }
+        />
+        <DetailItem
+          label={t("swap.liquidity.provider.fee", { value: pool ? feeAmountPercent(pool.fee) : "--" })}
+          value={realizedLPFee ? `${realizedLPFee.toSignificant(4)} ${realizedLPFee.currency.symbol}` : "-"}
+          tooltip={<Tooltip background="#ffffff" tips={t("swap.liquidity.provider.fee.tips")} />}
+        />
+        <DetailItem
+          label={t("swap.price.impact")}
+          value={FormattedPriceImpact({ priceImpact })}
+          tooltip={
+            <Tooltip
+              background="#ffffff"
+              tips={t`The difference between the market price and your price due to trade size.`}
+            />
+          }
+        />
+        <DetailItem
+          label={t("swap.slippage.tolerance")}
+          value={`${slippageTolerance?.toFixed(2)}%`}
+          tooltip={
+            <Tooltip
+              background="#ffffff"
+              tips={t`Your transaction will revert if the price changes unfavorably
               by more than this percentage.`}
-              />
-            }
-          />
-          <DetailItem
-            label={t("swap.minimum.received")}
-            value={`${slippageTolerance ? trade?.minimumAmountOut(slippageTolerance).toSignificant(6) : "--"} ${
-              trade?.outputAmount.currency.symbol
-            }`}
-            tooltip={
-              <Tooltip
-                background="#ffffff"
-                tips="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
-              />
-            }
-            valueColor={colors.warningDark}
-          />
-          <DetailItem
-            label={t("swap.estimated.fee")}
-            value={
-              <Box>
-                <Typography
-                  color="text.primary"
-                  sx={{ textAlign: "right", "@media(max-width: 640px)": { fontSize: "12px" } }}
-                >
-                  {swapTokenFee && inputToken && inputTokenPrice
-                    ? `${parseTokenAmount(swapTokenFee, inputToken.decimals).toFormat()} ${
-                        inputToken.symbol
-                      } (${formatDollarAmount(
-                        parseTokenAmount(swapTokenFee, inputToken.decimals).multipliedBy(inputTokenPrice).toString(),
-                      )})`
-                    : "--"}
-                </Typography>
-                <Typography
-                  color="text.primary"
-                  sx={{ textAlign: "right", margin: "5px 0 0 0", "@media(max-width: 640px)": { fontSize: "12px" } }}
-                >
-                  {outputToken && outputTokenPrice
-                    ? `${parseTokenAmount(outputToken.transFee, outputToken.decimals).toFormat()} ${
-                        outputToken.symbol
-                      } (${formatDollarAmount(
-                        parseTokenAmount(outputToken.transFee, outputToken.decimals)
-                          .multipliedBy(outputTokenPrice)
-                          .toString(),
-                      )})`
-                    : "--"}
-                </Typography>
-              </Box>
-            }
-            tooltip={<Tooltip background="#ffffff" tips={t`Swapping a too small amount might lead to failure!`} />}
-          />
-          <DetailItem label={t("swap.gas.fee")} value="0 (forever)" />
-        </Box>
+            />
+          }
+        />
+        <DetailItem
+          label={t("swap.minimum.received")}
+          value={`${slippageTolerance ? trade?.minimumAmountOut(slippageTolerance).toSignificant(6) : "--"} ${
+            trade?.outputAmount.currency.symbol
+          }`}
+          tooltip={
+            <Tooltip
+              background="#ffffff"
+              tips="Your transaction will revert if there is a large, unfavorable price movement before it is confirmed."
+            />
+          }
+          valueColor={colors.warningDark}
+        />
+        <DetailItem
+          label={t("swap.estimated.fee")}
+          value={
+            <Box>
+              <Typography
+                color="text.primary"
+                sx={{ textAlign: "right", "@media(max-width: 640px)": { fontSize: "12px" } }}
+              >
+                {swapTokenFee && inputToken && inputTokenPrice
+                  ? `${parseTokenAmount(swapTokenFee, inputToken.decimals).toFormat()} ${
+                      inputToken.symbol
+                    } (${formatDollarAmount(
+                      parseTokenAmount(swapTokenFee, inputToken.decimals).multipliedBy(inputTokenPrice).toString(),
+                    )})`
+                  : "--"}
+              </Typography>
+              <Typography
+                color="text.primary"
+                sx={{ textAlign: "right", margin: "5px 0 0 0", "@media(max-width: 640px)": { fontSize: "12px" } }}
+              >
+                {outputToken && outputTokenPrice
+                  ? `${parseTokenAmount(outputToken.transFee, outputToken.decimals).toFormat()} ${
+                      outputToken.symbol
+                    } (${formatDollarAmount(
+                      parseTokenAmount(outputToken.transFee, outputToken.decimals)
+                        .multipliedBy(outputTokenPrice)
+                        .toString(),
+                    )})`
+                  : "--"}
+              </Typography>
+            </Box>
+          }
+          tooltip={<Tooltip background="#ffffff" tips={t`Swapping a too small amount might lead to failure!`} />}
+        />
+        <DetailItem label={t("swap.gas.fee")} value="0 (forever)" />
+      </Box>
 
-        <Box sx={{ margin: "24px 0 0 0" }}>
-          <Button
-            variant="contained"
-            size="large"
-            fullWidth
-            onClick={onConfirm}
-            disabled={loading}
-            startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-          >
-            {loading ? "" : t("swap.submit")}
-          </Button>
-        </Box>
-      </>
+      <Box sx={{ margin: "24px 0 0 0" }}>
+        <Button
+          variant="contained"
+          size="large"
+          fullWidth
+          onClick={onConfirm}
+          disabled={loading}
+          startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+        >
+          {loading ? "" : t("swap.submit")}
+        </Button>
+      </Box>
     </Modal>
   );
 }

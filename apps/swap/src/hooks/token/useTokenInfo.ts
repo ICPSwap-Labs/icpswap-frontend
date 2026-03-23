@@ -56,8 +56,6 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
   const [tokenInfos, setTokenInfos] = useState<{ [id: string]: TokenInfo | undefined }>({});
   const [loadings, setLoadings] = useState<{ [id: string]: boolean }>({});
 
-  const tokenIdsKey = useMemo(() => JSON.stringify(tokenIds), [tokenIds]);
-
   const fetch_token_info = useCallback(async (tokenId: string | undefined | null) => {
     if (!tokenId) return undefined;
 
@@ -147,6 +145,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
     }));
   }, []);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     let mounted = true;
 
@@ -164,7 +163,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
     return () => {
       mounted = false;
     };
-  }, [tokenIdsKey, fetch_token_info]);
+  }, [JSON.stringify(tokenIds), fetch_token_info]);
 
   return useMemo(() => {
     return tokenIds.map((tokenId) => {

@@ -84,7 +84,7 @@ export function PositionPriceRange({
       {arrow ? (
         <SyncAltIcon
           sx={{
-            fontSize: fontSize === "inherit" ? 14 : parseInt(fontSize),
+            fontSize: fontSize === "inherit" ? 14 : parseInt(fontSize, 10),
             cursor: "pointer",
             color: arrowColor === "primary" ? theme.palette.text.primary : theme.palette.text.secondary,
             margin: "0 0 0 4px",

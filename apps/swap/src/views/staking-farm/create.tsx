@@ -74,8 +74,8 @@ type Values = {
 };
 
 const DefaultValue = {
-  startDateTime: new Date(new Date().getTime() + 10 * 60 * 1000),
-  endDateTime: new Date(new Date().getTime() + 10 * 24 * 60 * 60 * 1000),
+  startDateTime: new Date(Date.now() + 10 * 60 * 1000),
+  endDateTime: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
   token0AmountLimit: 0,
   token1AmountLimit: 0,
   secondPerCycle: 600,

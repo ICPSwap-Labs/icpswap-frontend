@@ -49,31 +49,27 @@ export function NFTTransactions({ canisterId, tokenId }: NFTTransactionProps) {
   return (
     <>
       <Box sx={{ width: "100%" }}>
-        <>
-          <Header className={classes.wrapper}>
-            <HeaderCell>{t("common.time")}</HeaderCell>
-            <HeaderCell>{t("common.type")}</HeaderCell>
-            <HeaderCell>{t("common.from")}</HeaderCell>
-            <HeaderCell>{t("common.to")}</HeaderCell>
-            <HeaderCell>{t("common.memo")}</HeaderCell>
-          </Header>
+        <Header className={classes.wrapper}>
+          <HeaderCell>{t("common.time")}</HeaderCell>
+          <HeaderCell>{t("common.type")}</HeaderCell>
+          <HeaderCell>{t("common.from")}</HeaderCell>
+          <HeaderCell>{t("common.to")}</HeaderCell>
+          <HeaderCell>{t("common.memo")}</HeaderCell>
+        </Header>
 
-          <>
-            {list.map((row, index) => (
-              <TableRow key={`${Number(row.tokenId)}_${index}`} className={classes.wrapper}>
-                <BodyCell>{timestampFormat(row.time)}</BodyCell>
-                <BodyCell>{upperFirst(enumToString(row.txType))}</BodyCell>
-                <Copy content={row.from}>
-                  <BodyCell>{shorten(row.from, 8)}</BodyCell>
-                </Copy>
-                <Copy content={row.to}>
-                  <BodyCell>{shorten(row.to, 8)}</BodyCell>
-                </Copy>
-                <BodyCell>{row.memo[0] ? arrayBufferToString(Uint8Array.from(row.memo[0])) : ""}</BodyCell>
-              </TableRow>
-            ))}
-          </>
-        </>
+        {list.map((row, index) => (
+          <TableRow key={`${Number(row.tokenId)}_${index}`} className={classes.wrapper}>
+            <BodyCell>{timestampFormat(row.time)}</BodyCell>
+            <BodyCell>{upperFirst(enumToString(row.txType))}</BodyCell>
+            <Copy content={row.from}>
+              <BodyCell>{shorten(row.from, 8)}</BodyCell>
+            </Copy>
+            <Copy content={row.to}>
+              <BodyCell>{shorten(row.to, 8)}</BodyCell>
+            </Copy>
+            <BodyCell>{row.memo[0] ? arrayBufferToString(Uint8Array.from(row.memo[0])) : ""}</BodyCell>
+          </TableRow>
+        ))}
         {list.length === 0 && !loading ? <NoData /> : null}
         <ImageLoading loading={loading} />
       </Box>

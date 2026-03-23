@@ -27,5 +27,5 @@ export function useFarmTvlValue({ farmId, token0, token1 }: UseFarmTvlValueArgs)
     const token1Tvl = parseTokenAmount(poolToken1.amount, token1.decimals).multipliedBy(token1Price);
 
     return token0Tvl.plus(token1Tvl).toFixed(3);
-  }, [farmTvl, token0, infoAllTokens, farmTvl]);
+  }, [farmTvl, token0, infoAllTokens, token1]);
 }

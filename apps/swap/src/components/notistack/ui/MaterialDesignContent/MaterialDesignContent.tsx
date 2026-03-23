@@ -98,7 +98,7 @@ const MaterialDesignContent = forwardRef<HTMLDivElement, CustomContentProps>((pr
 
   useEffect(() => {
     setTick(true);
-  }, [setTick]);
+  }, []);
 
   return (
     <SnackbarContent

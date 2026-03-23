@@ -35,7 +35,7 @@ export function OnlyTokenList({ checked: _checked, onChange }: OnlyTokenListProp
         <Checkbox
           sx={{ "&.MuiCheckbox-root": { padding: 0 } }}
           size="small"
-          onChange={(event: any, checked: boolean) => handleCheckboxChange(checked)}
+          onChange={(_event: any, checked: boolean) => handleCheckboxChange(checked)}
           checked={checked}
         />
 

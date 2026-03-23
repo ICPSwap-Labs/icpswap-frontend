@@ -23,7 +23,7 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
   const [label, setLabel] = useState<null | string>(null);
 
   const { start_time, end_time } = useMemo(() => {
-    const now = parseInt(String(new Date().getTime() / 1000));
+    const now = parseInt(String(Date.now() / 1000), 10);
 
     let start_time = now - 30 * 24 * 3600;
     const end_time = now;
@@ -150,12 +150,12 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
                 <Tooltip
                   cursor={{ stroke: "#8572FF" }}
                   contentStyle={{ display: "none" }}
-                  formatter={(value: number, name: string, props) => {
-                    if (props && props.payload && props.payload.time) {
+                  formatter={(value: number, _name: string, props) => {
+                    if (props?.payload?.time) {
                       setLabel(props.payload.time);
                     }
 
-                    if (props && props.payload && props.payload.value) {
+                    if (props?.payload?.value) {
                       setValue(props.payload.value);
                     }
 

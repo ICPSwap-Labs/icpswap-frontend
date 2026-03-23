@@ -7,7 +7,7 @@ import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
 import i18n from "i18n/index";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 enum TabName {
   TopPools = "TopPools",
@@ -22,7 +22,6 @@ const tabs = [
 function Liquidity() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [loadedTabs, setLoadedTabs] = useState<Array<TabName>>([]);
   const { tab: activeTabName } = useParsedQueryString() as { tab: TabName | undefined };
@@ -34,7 +33,7 @@ function Liquidity() {
       if (tab.value === activeTabName) return;
       navigate(`/liquidity?tab=${tab.value}`);
     },
-    [navigate, activeTabName, location],
+    [navigate, activeTabName],
   );
 
   const activeTab = useMemo(() => {
@@ -49,44 +48,42 @@ function Liquidity() {
 
   return (
     <Wrapper>
-      <>
-        <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
-          {t("swap.liquidity.pools.title")}
-        </Typography>
-        <Typography sx={{ fontSize: "16px", margin: "16px 0 0 0", lineHeight: "24px" }}>
-          {t("swap.liquidity.description")}
-        </Typography>
+      <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
+        {t("swap.liquidity.pools.title")}
+      </Typography>
+      <Typography sx={{ fontSize: "16px", margin: "16px 0 0 0", lineHeight: "24px" }}>
+        {t("swap.liquidity.description")}
+      </Typography>
 
-        <Flex
-          fullWidth
-          sx={{
-            margin: "56px 0 0 0",
-            "@media(max-width: 640px)": {
-              flexDirection: "column",
-              gap: "30px 0",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-            },
-          }}
-          justify="space-between"
-        >
-          <UnderLineTabList tabs={tabs} onChange={handleTabChange} activeTabValue={activeTab} />
+      <Flex
+        fullWidth
+        sx={{
+          margin: "56px 0 0 0",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "30px 0",
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+          },
+        }}
+        justify="space-between"
+      >
+        <UnderLineTabList tabs={tabs} onChange={handleTabChange} activeTabValue={activeTab} />
 
-          <Button variant="contained" onClick={loadAddLiquidity}>
-            {t("swap.add.liquidity")}
-          </Button>
-        </Flex>
+        <Button variant="contained" onClick={loadAddLiquidity}>
+          {t("swap.add.liquidity")}
+        </Button>
+      </Flex>
 
-        <Box sx={{ margin: "35px 0 0 0" }}>
-          <Box sx={{ display: activeTab === TabName.Positions ? "block" : "none" }}>
-            {loadedTabs.includes(TabName.Positions) ? <Positions /> : null}
-          </Box>
-
-          <Box sx={{ display: activeTab === TabName.TopPools ? "block" : "none" }}>
-            {loadedTabs.includes(TabName.TopPools) ? <InfoPools /> : null}
-          </Box>
+      <Box sx={{ margin: "35px 0 0 0" }}>
+        <Box sx={{ display: activeTab === TabName.Positions ? "block" : "none" }}>
+          {loadedTabs.includes(TabName.Positions) ? <Positions /> : null}
         </Box>
-      </>
+
+        <Box sx={{ display: activeTab === TabName.TopPools ? "block" : "none" }}>
+          {loadedTabs.includes(TabName.TopPools) ? <InfoPools /> : null}
+        </Box>
+      </Box>
     </Wrapper>
   );
 }

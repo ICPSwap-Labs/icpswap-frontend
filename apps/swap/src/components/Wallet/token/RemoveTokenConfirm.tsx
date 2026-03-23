@@ -25,7 +25,7 @@ export function RemoveTokenConfirm() {
     openTip(t("wallet.token.removed.success"), TIP_SUCCESS);
     setLoading(false);
     setRemoveTokenId(undefined);
-  }, [removeTokenId, loading]);
+  }, [removeTokenId, loading, openTip, removeTokenHandler, setRemoveTokenId, t]);
 
   return (
     <Confirm

@@ -62,7 +62,7 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
     if (isSafari()) {
       call();
     }
-  }, []);
+  }, [value]);
 
   const handleConnect = async () => {
     if (disabled) return;

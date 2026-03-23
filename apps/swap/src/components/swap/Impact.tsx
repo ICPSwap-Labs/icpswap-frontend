@@ -13,10 +13,13 @@ export const Impact = ({ showImpact, onCheckChange, ui }: ImpactProps) => {
   const { t } = useTranslation();
   const [impactChecked, setImpactChecked] = useState(false);
 
-  const handleCheck = useCallback((check: boolean) => {
-    setImpactChecked(check);
-    onCheckChange(check);
-  }, []);
+  const handleCheck = useCallback(
+    (check: boolean) => {
+      setImpactChecked(check);
+      onCheckChange(check);
+    },
+    [onCheckChange],
+  );
 
   return showImpact ? (
     <Box

@@ -41,6 +41,6 @@ export function AxisBottom({ xScale, innerHeight, offset = 0 }: AxisBottomProps)
         <Axis axisGenerator={axisBottom(xScale).ticks(6)} />
       </Box>
     ),
-    [innerHeight, offset, xScale],
+    [innerHeight, offset, xScale, theme.colors.darkTextSecondary],
   );
 }

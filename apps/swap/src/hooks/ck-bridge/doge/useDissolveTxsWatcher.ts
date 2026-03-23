@@ -14,7 +14,7 @@ export function useDogeDissolveTxWatcher() {
   const { t } = useTranslation();
 
   const callback = useCallback(async () => {
-    if (txs && txs.length) {
+    if (txs?.length) {
       for (let i = 0; i < txs.length; i++) {
         const tx = txs[i];
 
@@ -37,7 +37,7 @@ export function useDogeDissolveTxWatcher() {
         }
       }
     }
-  }, [txs, dissolveTxManager]);
+  }, [txs, dissolveTxManager, openTip, t]);
 
   useInterval({ callback, interval: 10_000 });
 }

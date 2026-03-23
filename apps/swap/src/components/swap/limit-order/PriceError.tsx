@@ -26,7 +26,7 @@ export function PriceError({
   ui = "normal",
 }: PriceErrorProps) {
   const { t } = useTranslation();
-  const { selectedPool, inverted } = useContext(LimitContext);
+  const { inverted } = useContext(LimitContext);
 
   const pricePercent = useMemo(() => {
     if (
@@ -47,7 +47,7 @@ export function PriceError({
     if (new BigNumber(__percent).isLessThan(0)) return __percent;
 
     return null;
-  }, [selectedPool, orderPriceTick, inputToken, minSettableTick, inputToken, outputToken]);
+  }, [orderPriceTick, inputToken, minSettableTick, outputToken]);
 
   return pricePercent ? (
     <Box

@@ -15,11 +15,13 @@ export default memo(({ children }: NavigationScrollProps) => {
 
   // Every time pathname change should scrollTo top
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
+    if (pathname) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
   }, [pathname]);
 
   return (

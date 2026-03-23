@@ -140,7 +140,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   const handleIncreaseCounter = useCallback(() => {
     setRefreshInnerCounter(COUNTER + 1);
     COUNTER += 1;
-  }, [setRefreshInnerCounter]);
+  }, []);
 
   // Interval update user's token balance
   useEffect(() => {
@@ -169,7 +169,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
         parseTokenAmount(tokenBalance, token.decimals).multipliedBy(usdBeforeChange),
       );
     }
-  }, [tokenBalance, infoToken, token, tokenUSDPrice]);
+  }, [tokenBalance, infoToken, token, setTotalUSDBeforeChange, setTotalValue]);
 
   useEffect(() => {
     if (
@@ -182,7 +182,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
     ) {
       setNoUSDTokens(token.address);
     }
-  }, [token, tokenBalance, tokenBalanceLoading, infoToken]);
+  }, [token, tokenBalance, tokenBalanceLoading, infoToken, setNoUSDTokens]);
 
   const allSupportedErc20Tokens = useMemo(() => {
     if (!chainKeyMinterInfo) return ckTokens;
@@ -200,7 +200,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
         };
       }),
     );
-  }, [ckTokens, chainKeyMinterInfo]);
+  }, [chainKeyMinterInfo]);
 
   const handleCloseModal = async () => {
     setOpen(false);
@@ -308,7 +308,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
             <Typography sx={{ fontSize: "12px" }}>{token?.name}</Typography>
           </Box>
         </Box>
-        <TokenStandardLabel standard={token && token.standard ? (token.standard as TOKEN_STANDARD) : null} />
+        <TokenStandardLabel standard={token?.standard ? (token.standard as TOKEN_STANDARD) : null} />
       </Box>
 
       <Box sx={{ display: "flex", margin: "12px 0 0 0" }}>

@@ -105,7 +105,7 @@ export function ReclaimTokensInPool({
         if (onInputTokenClick) onInputTokenClick(tokenAmount);
       }
     },
-    [inputToken],
+    [inputToken, onInputTokenClick],
   );
 
   const availableWithdrawTokens = useMemo(() => {

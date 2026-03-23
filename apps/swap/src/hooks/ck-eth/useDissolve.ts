@@ -60,7 +60,7 @@ export function useDissolveCallback() {
 
       return withdraw_status === ResultStatus.OK;
     },
-    [approve, updateUserTx],
+    [approve, updateUserTx, openTip, principal, t],
   );
 
   return useMemo(

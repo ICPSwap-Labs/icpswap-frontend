@@ -2,7 +2,7 @@ import { getFarmTVL, getUserFarmInfo, getV3UserFarmRewardInfo } from "@icpswap/h
 import { useIntervalFetch } from "hooks/useIntervalFetch";
 import { useCallback } from "react";
 
-export function useIntervalUserFarmInfo(canisterId: string | undefined, user: string | undefined, force?: boolean) {
+export function useIntervalUserFarmInfo(canisterId: string | undefined, user: string | undefined, force?: number) {
   const call = useCallback(async () => {
     if (!canisterId || !user) return undefined;
     return await getUserFarmInfo(canisterId, user);
@@ -11,7 +11,7 @@ export function useIntervalUserFarmInfo(canisterId: string | undefined, user: st
   return useIntervalFetch(call, force);
 }
 
-export function userIntervalFarmTVL(canisterId: string | undefined, force?: boolean) {
+export function userIntervalFarmTVL(canisterId: string | undefined, force?: number) {
   const call = useCallback(async () => {
     if (!canisterId) return undefined;
     return await getFarmTVL(canisterId);
@@ -23,7 +23,7 @@ export function userIntervalFarmTVL(canisterId: string | undefined, force?: bool
 export function useIntervalUserRewardInfo(
   canisterId: string | undefined,
   positionIds: bigint[] | undefined,
-  force?: boolean,
+  force?: number,
 ) {
   const call = useCallback(async () => {
     if (!canisterId || !positionIds || positionIds.length === 0) return undefined;

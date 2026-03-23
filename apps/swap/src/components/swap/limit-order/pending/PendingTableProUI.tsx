@@ -50,7 +50,7 @@ export function PendingTableProUI({
   const handleCancelSuccess = useCallback(() => {
     setLimitOrdersRefreshTrigger();
     setRefreshTrigger();
-  }, [setLimitOrdersRefreshTrigger]);
+  }, [setLimitOrdersRefreshTrigger, setRefreshTrigger]);
 
   const scrollToTop = useScrollToTop();
 
@@ -60,51 +60,49 @@ export function PendingTableProUI({
   }, [scrollToTop, navigate]);
 
   return (
-    <>
-      <Box sx={{ width: "100%", overflow: "auto" }}>
-        <Box sx={{ minWidth: "1096px" }}>
-          <Header className={wrapperClassName ?? classes.wrapper}>
-            <HeaderCell>{t("common.time")}</HeaderCell>
-            <HeaderCell>{t("common.you.pay")}</HeaderCell>
-            <HeaderCell>{t("common.you.receive")}</HeaderCell>
-            <HeaderCell align="right">Limit/Current price</HeaderCell>
-            <HeaderCell align="right">{t("common.filled")}</HeaderCell>
-            <HeaderCell align="right">&nbsp;</HeaderCell>
-          </Header>
+    <Box sx={{ width: "100%", overflow: "auto" }}>
+      <Box sx={{ minWidth: "1096px" }}>
+        <Header className={wrapperClassName ?? classes.wrapper}>
+          <HeaderCell>{t("common.time")}</HeaderCell>
+          <HeaderCell>{t("common.you.pay")}</HeaderCell>
+          <HeaderCell>{t("common.you.receive")}</HeaderCell>
+          <HeaderCell align="right">Limit/Current price</HeaderCell>
+          <HeaderCell align="right">{t("common.filled")}</HeaderCell>
+          <HeaderCell align="right">&nbsp;</HeaderCell>
+        </Header>
 
-          {!loading
-            ? limitOrders?.map((ele, index) => (
-                <PendingRowPro
-                  key={index}
-                  limitOrder={ele}
-                  pool={pool}
-                  wrapperClassName={wrapperClassName ?? classes.wrapper}
-                  noBorder={index === limitOrders.length - 1}
-                  onCancelSuccess={handleCancelSuccess}
-                />
-              ))
-            : null}
+        {!loading
+          ? limitOrders?.map((ele, index) => (
+              <PendingRowPro
+                key={index}
+                limitOrder={ele}
+                pool={pool}
+                wrapperClassName={wrapperClassName ?? classes.wrapper}
+                noBorder={index === limitOrders.length - 1}
+                onCancelSuccess={handleCancelSuccess}
+              />
+            ))
+          : null}
 
-          {(limitOrders ?? []).length === 0 && !loading ? <LimitTransactionsEmpty onClick={handleToLimit} /> : null}
+        {(limitOrders ?? []).length === 0 && !loading ? <LimitTransactionsEmpty onClick={handleToLimit} /> : null}
 
-          {loading ? (
-            <Box sx={{ padding: "24px" }}>
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
-            </Box>
-          ) : null}
-        </Box>
+        {loading ? (
+          <Box sx={{ padding: "24px" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        ) : null}
       </Box>
-    </>
+    </Box>
   );
 }

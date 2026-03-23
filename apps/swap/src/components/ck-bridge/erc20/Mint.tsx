@@ -48,7 +48,7 @@ export function Erc20Mint({ token, minterInfo, blockNumber }: Erc20MintProps) {
 
     const response = await mint_call(erc20Token, amount, token, blockNumber);
 
-    if (response && response.hash) {
+    if (response?.hash) {
       setAmount("");
     }
   }, [mint_call, token, erc20Token, principal, amount, blockNumber]);
@@ -60,13 +60,13 @@ export function Erc20Mint({ token, minterInfo, blockNumber }: Erc20MintProps) {
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [chainId, chain, amount, erc20Token, ercTokenBalance, approveState]);
+  }, [chainId, amount, erc20Token, ercTokenBalance, t]);
 
   const handleMax = useCallback(() => {
     if (ercTokenBalance) {
       setAmount(parseTokenAmount(ercTokenBalance, token.decimals).toString());
     }
-  }, [token, tokenBalance, ercTokenBalance, setAmount]);
+  }, [token, ercTokenBalance]);
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 

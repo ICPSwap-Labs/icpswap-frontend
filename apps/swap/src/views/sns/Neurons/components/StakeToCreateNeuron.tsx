@@ -150,19 +150,15 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
           />
 
           <Typography>
-            {token && balance && tokenUSDPrice ? (
-              <>
-                {t("common.balance.colon.amount", {
+            {token && balance && tokenUSDPrice
+              ? t("common.balance.colon.amount", {
                   amount: `${new BigNumber(
                     parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
                   ).toFormat()} ${token.symbol} (${formatDollarAmount(
                     parseTokenAmount(balance, token.decimals).multipliedBy(tokenUSDPrice).toString(),
                   )})`,
-                })}
-              </>
-            ) : (
-              "--"
-            )}
+                })
+              : "--"}
           </Typography>
 
           <Typography>

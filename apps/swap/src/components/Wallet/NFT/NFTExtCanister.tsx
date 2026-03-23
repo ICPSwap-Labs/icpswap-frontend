@@ -27,7 +27,7 @@ function NFTRow({ nft, extNFT }: NFTRowProps) {
   const handleNFTClick = useCallback(() => {
     setDisplayedNFTTokenInfo({ id: nft.id, index });
     setPages(WalletManagerPage.NFTExtTokenDetails);
-  }, [setDisplayedNFTTokenInfo, setPages, nft]);
+  }, [setDisplayedNFTTokenInfo, setPages, nft, index]);
 
   return (
     <Box sx={{ maxWidth: "160px" }} onClick={handleNFTClick}>

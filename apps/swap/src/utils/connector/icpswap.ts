@@ -91,7 +91,7 @@ export class ICPSwapConnector implements ConnectorAbstract {
     this.identity = identity;
     this.principal = principal;
 
-    window.localStorage.setItem("ICPSwap-wallet-expire-time", (new Date().getTime() + EXPIRE_TIME * 1000).toString());
+    window.localStorage.setItem("ICPSwap-wallet-expire-time", (Date.now() + EXPIRE_TIME * 1000).toString());
 
     return true;
   }
@@ -103,7 +103,7 @@ export class ICPSwapConnector implements ConnectorAbstract {
   async expired() {
     const iiExpireTime = window.localStorage.getItem("ICPSwap-wallet-expire-time");
     if (!iiExpireTime) return true;
-    return new Date().getTime() >= Number(iiExpireTime);
+    return Date.now() >= Number(iiExpireTime);
   }
 }
 

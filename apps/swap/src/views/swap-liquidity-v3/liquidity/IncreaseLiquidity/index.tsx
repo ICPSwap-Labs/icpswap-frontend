@@ -153,7 +153,7 @@ export default function IncreaseLiquidity() {
 
   const handleCancel = useCallback(() => {
     setConfirmModalShow(false);
-  }, [setConfirmModalShow]);
+  }, []);
 
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
@@ -226,7 +226,23 @@ export default function IncreaseLiquidity() {
     }
 
     closeLoadingTip(loadingTipKey);
-  }, [position, poolId, positionId, token0SubAccountBalance, token1SubAccountBalance, unusedBalance]);
+  }, [
+    position,
+    poolId,
+    positionId,
+    token0SubAccountBalance,
+    token1SubAccountBalance,
+    unusedBalance,
+    closeLoadingTip,
+    increaseLiquidityCall,
+    loadLiquidityPage,
+    openErrorTip,
+    openLoadingTip,
+    principal,
+    t,
+    token0Balance,
+    token1Balance,
+  ]);
 
   const handleCurrencyAMax = () => {
     const currencyAAmount = maxAmounts[FIELD.CURRENCY_A];

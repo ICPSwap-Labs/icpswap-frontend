@@ -20,11 +20,11 @@ export function LiquidityLocksWrapper({ poolId }: LiquidityLocksWrapperProps) {
 
   const handleMouseEnter = useCallback(() => {
     setPopper(true);
-  }, [setPopper]);
+  }, []);
 
   const handleMouseLeave = useCallback(() => {
     setPopper(false);
-  }, [setPopper]);
+  }, []);
 
   return (
     <Box ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: "pointer" }}>

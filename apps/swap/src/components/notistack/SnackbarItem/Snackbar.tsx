@@ -67,11 +67,11 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>((props, ref) =>
    * Pause the timer when the user is interacting with the Snackbar
    * or when the user hide the window.
    */
-  const handlePause = () => {
+  const handlePause = React.useCallback(() => {
     if (timerAutoHide.current) {
       clearTimeout(timerAutoHide.current);
     }
-  };
+  }, []);
 
   /**
    * Restart the timer when the user is no longer interacting with the Snackbar
@@ -116,11 +116,11 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>((props, ref) =>
     }
 
     return undefined;
-  }, [disableWindowBlurListener, handleResume, open]);
+  }, [disableWindowBlurListener, open, handlePause, handleResume]);
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
-      {/* @ts-ignore */}
+      {/* biome-ignore lint: ignore */}
       <div
         ref={ref}
         {...SnackbarProps}

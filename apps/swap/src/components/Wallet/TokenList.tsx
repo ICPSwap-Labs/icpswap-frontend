@@ -9,7 +9,6 @@ import { useWalletTokenContext } from "components/Wallet/token/context";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { chain } from "constants/web3";
 import { useMemo } from "react";
-import { useGlobalTokenList } from "store/global/hooks";
 import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
 
 export default function WalletTokenList() {
@@ -17,7 +16,6 @@ export default function WalletTokenList() {
   const { allTokenUSDMap, noUSDTokens } = useWalletTokenContext();
   const { sort } = useWalletSortManager();
 
-  const globalTokenList = useGlobalTokenList();
   const { data: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   const tokens = useMemo(() => {
@@ -26,7 +24,7 @@ export default function WalletTokenList() {
     ];
 
     return [...new Set([...tokenIds, ...taggedTokens])];
-  }, [taggedTokens, globalTokenList]);
+  }, [taggedTokens]);
 
   const sortedTokens = useMemo(() => {
     if (Object.keys(allTokenUSDMap).length + noUSDTokens.length < tokens.length) return tokens;
@@ -46,22 +44,20 @@ export default function WalletTokenList() {
   }, [tokens, allTokenUSDMap, noUSDTokens, sort]);
 
   return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px 0",
-          overflow: "auto hidden",
-          "@media(max-width: 640px)": {
-            gap: "16px 0",
-          },
-        }}
-      >
-        <TokenListHeader />
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "24px 0",
+        overflow: "auto hidden",
+        "@media(max-width: 640px)": {
+          gap: "16px 0",
+        },
+      }}
+    >
+      <TokenListHeader />
 
-        <TokenListTable tokens={sortedTokens} chainKeyMinterInfo={chainKeyMinterInfo} />
-      </Box>
-    </>
+      <TokenListTable tokens={sortedTokens} chainKeyMinterInfo={chainKeyMinterInfo} />
+    </Box>
   );
 }

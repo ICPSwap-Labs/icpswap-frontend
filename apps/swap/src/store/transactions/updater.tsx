@@ -70,7 +70,7 @@ export default function Updater() {
       // );
     },
     // [addPopup, analyticsContext, dispatch, isL2, pendingTransactions],
-    [dispatch, pendingTransactions],
+    [dispatch],
   );
 
   return <LibUpdater pendingTransactions={pendingTransactions} onCheck={onCheck} onReceipt={onReceipt} />;

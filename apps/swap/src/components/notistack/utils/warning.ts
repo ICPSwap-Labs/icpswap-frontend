@@ -15,5 +15,5 @@ export default (messageKey: keyof typeof messages): void => {
   }
   try {
     throw new Error(message);
-  } catch (x) {}
+  } catch (_x) {}
 };

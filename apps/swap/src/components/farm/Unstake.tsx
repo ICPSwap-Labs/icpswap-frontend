@@ -41,7 +41,7 @@ export function Unstake({
 
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const __userRewardAmount = useIntervalUserRewardInfo(farmId, [positionId]);
+  const { data: __userRewardAmount } = useIntervalUserRewardInfo(farmId, [positionId]);
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 

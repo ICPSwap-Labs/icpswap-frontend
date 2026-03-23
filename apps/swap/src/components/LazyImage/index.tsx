@@ -73,7 +73,7 @@ export default function LazyImage(props: LazyImageProps) {
         }
       }
     },
-    [props.onError, props.src],
+    [props.src, props.onError],
   );
 
   const {
@@ -108,7 +108,7 @@ export default function LazyImage(props: LazyImageProps) {
         handleLoadImage();
       }
     }
-  }, [props.showDefault, handleLoadImage, handleImageError]);
+  }, [props.showDefault, handleImageError, handleLoadImage]);
 
   return (
     <Grid container justifyContent="center" sx={{ position: "relative", overflow: "hidden" }}>

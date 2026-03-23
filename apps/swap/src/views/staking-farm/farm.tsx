@@ -27,9 +27,7 @@ export default function Farm() {
   const [tabKey, setTabKey] = useState<"stake" | "reclaim">("stake");
 
   const { id: farmId } = useParams() as { id: string };
-
-  const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
-
+  const { data: userFarmInfo } = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
   const [, token0] = useToken(userFarmInfo?.poolToken0.address) ?? undefined;
   const [, token1] = useToken(userFarmInfo?.poolToken1.address) ?? undefined;
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address) ?? undefined;

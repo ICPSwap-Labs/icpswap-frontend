@@ -63,7 +63,7 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
     await withdrawPCMBalance(args);
 
     setRefreshTriggers(TRIGGER_KEY);
-  }, [unusedPCMBalance, pcmToken, pcmMetadata, passCodes]);
+  }, [unusedPCMBalance, pcmToken, pcmMetadata, passCodes, setRefreshTriggers, withdrawPCMBalance]);
 
   const totalTokenAmount = useMemo(() => {
     if (

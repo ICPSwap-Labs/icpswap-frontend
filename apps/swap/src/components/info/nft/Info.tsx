@@ -200,238 +200,233 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
   const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
 
   return (
-    <>
-      <Box className={classes.wrapper}>
-        <Box className={classes.leftWrapper}>
-          <Box className={classes.logoWrapper}>
-            <Grid
-              item
-              sx={{ position: "relative", background: theme.palette.background.level3, borderRadius: "8px" }}
-              container
-              justifyContent="center"
-            >
-              {metadata ? (
-                <LazyImage
-                  src={metadata.filePath}
-                  showDefault={metadata.fileType !== "image"}
-                  CustomImage={
-                    metadata?.fileType !== "image" && !!metadata?.fileType ? (
-                      <FileImage fileType={metadata.fileType ?? ""} />
-                    ) : null
-                  }
-                  onClick={handleImageClick}
-                  boxSX={{
-                    cursor: "pointer",
-                  }}
-                />
-              ) : null}
-            </Grid>
-          </Box>
-
-          {!matchDownMD && NFTMetadata.length > 0 ? (
-            <Box className={classes.metadataWrapper}>
-              <DetailsToggle title={t("common.metadata")}>
-                <Grid container spacing="10px">
-                  {NFTMetadata.map((metadata, index) => (
-                    <Grid item xs={4} key={index}>
-                      <NFTMetadataWrapper metadata={metadata} />
-                    </Grid>
-                  ))}
-                </Grid>
-              </DetailsToggle>
-            </Box>
-          ) : null}
+    <Box className={classes.wrapper}>
+      <Box className={classes.leftWrapper}>
+        <Box className={classes.logoWrapper}>
+          <Grid
+            item
+            sx={{ position: "relative", background: theme.palette.background.level3, borderRadius: "8px" }}
+            container
+            justifyContent="center"
+          >
+            {metadata ? (
+              <LazyImage
+                src={metadata.filePath}
+                showDefault={metadata.fileType !== "image"}
+                CustomImage={
+                  metadata?.fileType !== "image" && !!metadata?.fileType ? (
+                    <FileImage fileType={metadata.fileType ?? ""} />
+                  ) : null
+                }
+                onClick={handleImageClick}
+                boxSX={{
+                  cursor: "pointer",
+                }}
+              />
+            ) : null}
+          </Grid>
         </Box>
 
-        <Box className={classes.rightWrapper}>
-          <Box className={classes.infoWrapper}>
-            <Grid container>
-              <Typography color="secondary">{canisterMetadata?.name}</Typography>
-              {isICPSwapOfficial(metadata?.minter) ? (
-                <Grid item sx={{ marginLeft: "5px" }}>
-                  <NFTVerifyLabel />
-                </Grid>
-              ) : null}
-            </Grid>
-            <Box mt="14px">
-              <Typography
-                className="text-overflow-ellipsis"
-                variant="h3"
-                color="text.primary"
-                sx={{
-                  fontSize: "26px",
-                  fontWeight: 700,
-                  maxWidth: "680px",
-                  wordBreak: "break-all",
-                }}
-                component="span"
-              >
-                {metadata?.name}#{String(metadata?.tokenId ?? "")}
-              </Typography>
-            </Box>
-            <Box mt="18px">
-              <Typography component="span" sx={{ marginRight: "5px" }}>
-                {t("common.owned.by")}
-              </Typography>
-              <TextButton>{shorten(metadata?.owner, 12)}</TextButton>
-            </Box>
-            {Boolean(orderInfo?.price) && (
-              <Grid container mt="25px" alignItems="end">
-                <Grid item>
-                  {/* <WICPPriceFormat
+        {!matchDownMD && NFTMetadata.length > 0 ? (
+          <Box className={classes.metadataWrapper}>
+            <DetailsToggle title={t("common.metadata")}>
+              <Grid container spacing="10px">
+                {NFTMetadata.map((metadata, index) => (
+                  <Grid item xs={4} key={index}>
+                    <NFTMetadataWrapper metadata={metadata} />
+                  </Grid>
+                ))}
+              </Grid>
+            </DetailsToggle>
+          </Box>
+        ) : null}
+      </Box>
+
+      <Box className={classes.rightWrapper}>
+        <Box className={classes.infoWrapper}>
+          <Grid container>
+            <Typography color="secondary">{canisterMetadata?.name}</Typography>
+            {isICPSwapOfficial(metadata?.minter) ? (
+              <Grid item sx={{ marginLeft: "5px" }}>
+                <NFTVerifyLabel />
+              </Grid>
+            ) : null}
+          </Grid>
+          <Box mt="14px">
+            <Typography
+              className="text-overflow-ellipsis"
+              variant="h3"
+              color="text.primary"
+              sx={{
+                fontSize: "26px",
+                fontWeight: 700,
+                maxWidth: "680px",
+                wordBreak: "break-all",
+              }}
+              component="span"
+            >
+              {metadata?.name}#{String(metadata?.tokenId ?? "")}
+            </Typography>
+          </Box>
+          <Box mt="18px">
+            <Typography component="span" sx={{ marginRight: "5px" }}>
+              {t("common.owned.by")}
+            </Typography>
+            <TextButton>{shorten(metadata?.owner, 12)}</TextButton>
+          </Box>
+          {Boolean(orderInfo?.price) && (
+            <Grid container mt="25px" alignItems="end">
+              <Grid item>
+                {/* <WICPPriceFormat
                     price={orderInfo?.price}
                     fontSize="28px"
                     imgSize="28px"
                     fontWeight={700}
                     align="end"
                   /> */}
-                </Grid>
-                {/* {NFTUSDValue ? (
+              </Grid>
+              {/* {NFTUSDValue ? (
                   <Grid item xs sx={{ marginLeft: "10px" }}>
                     <Typography fontSize="16px">({formatDollarAmount(NFTUSDValue?.toNumber())})</Typography>
                   </Grid>
                 ) : null} */}
+            </Grid>
+          )}
+          {isView && (
+            <Grid container alignItems="center" mt="30px">
+              <Grid item xs>
+                <Grid container justifyContent="flex-start" />
               </Grid>
-            )}
-            {isView && (
-              <Grid container alignItems="center" mt="30px">
-                <Grid item xs>
-                  <Grid container justifyContent="flex-start" />
-                </Grid>
-              </Grid>
-            )}
-          </Box>
-
-          <Box className={classes.detailsWrapper}>
-            <DetailsToggle title={t("nft.details")}>
-              <Flex vertical gap="15px" fullWidth align="flex-start">
-                <DetailsItem
-                  label={t`Token ID`}
-                  value={
-                    metadata && !!metadata.cId && !!metadata.tokenId
-                      ? encodeTokenIdentifier(metadata.cId, metadata.tokenId)
-                      : "--"
-                  }
-                />
-                {metadata && !metadata.filePath?.includes("base64") ? (
-                  <DetailsItem
-                    label={t("common.file.link")}
-                    value={
-                      <Link
-                        href={metadata.filePath}
-                        target="_blank"
-                        sx={{
-                          wordBreak: "break-all",
-                        }}
-                      >
-                        {metadata.filePath}
-                      </Link>
-                    }
-                  />
-                ) : null}
-                <DetailsItem
-                  label={t("nft.mint.time")}
-                  value={metadata ? timestampFormat(metadata.mintTime?.toString() ?? "--") : "--"}
-                />
-                <DetailsItem
-                  label={t("nft.minter")}
-                  value={
-                    <Copy content={metadata ? metadata.minter : ""}>
-                      {metadata ? shorten(metadata.minter, 12) : "--"}
-                    </Copy>
-                  }
-                />
-
-                <Flex fullWidth vertical align="flex-start" gap="8px">
-                  <Typography
-                    sx={{
-                      "@media(max-width: 640px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >
-                    {t("nft.description")}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      lineHeight: "20px",
-                      "@media(max-width: 640px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >{`${metadata ? metadata.introduction : "--"}`}</Typography>
-                </Flex>
-              </Flex>
-            </DetailsToggle>
-          </Box>
-
-          <Box className={classes.collectionsWrapper}>
-            <DetailsToggle title={t("common.about.collections")}>
-              <Flex fullWidth gap="15px 0" vertical align="flex-start">
-                <DetailsItem
-                  label={t`NFT Canister ID`}
-                  value={
-                    <ExplorerLink
-                      label={metadata ? metadata.cId : "--"}
-                      value={metadata ? (metadata.cId ?? "") : "--"}
-                    />
-                  }
-                />
-
-                <Flex fullWidth vertical align="flex-start" gap="8px">
-                  <Typography
-                    sx={{
-                      "@media(max-width: 640px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >
-                    {t("nft.collection.description")}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      lineHeight: "20px",
-                      "@media(max-width: 640px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >
-                    {canisterMetadata?.introduction ?? "--"}
-                  </Typography>
-                </Flex>
-
-                <DetailsItem
-                  label={t("common.creator")}
-                  value={<Copy content={canisterMetadata?.owner ?? ""}>{shorten(canisterMetadata?.owner, 12)}</Copy>}
-                />
-                <DetailsItem
-                  label={t("nft.creator.royalty")}
-                  value={`${new BigNumber(String(canisterMetadata?.royalties ?? 0)).dividedBy(100).toFormat()}%`}
-                />
-              </Flex>
-              {!!canisterMetadata?.linkMap && canisterMetadata?.linkMap?.length > 0 ? (
-                <Box mt="20px">
-                  <CollectionIcons links={canisterMetadata?.linkMap} />
-                </Box>
-              ) : null}
-            </DetailsToggle>
-          </Box>
-
-          {matchDownMD && NFTMetadata.length > 0 ? (
-            <Box className={classes.metadataWrapper}>
-              <DetailsToggle title={t("common.metadata")}>
-                <Grid container spacing="10px">
-                  {NFTMetadata.map((metadata, index) => (
-                    <Grid item xs={4} key={index}>
-                      <NFTMetadataWrapper metadata={metadata} />
-                    </Grid>
-                  ))}
-                </Grid>
-              </DetailsToggle>
-            </Box>
-          ) : null}
+            </Grid>
+          )}
         </Box>
+
+        <Box className={classes.detailsWrapper}>
+          <DetailsToggle title={t("nft.details")}>
+            <Flex vertical gap="15px" fullWidth align="flex-start">
+              <DetailsItem
+                label={t`Token ID`}
+                value={
+                  metadata && !!metadata.cId && !!metadata.tokenId
+                    ? encodeTokenIdentifier(metadata.cId, metadata.tokenId)
+                    : "--"
+                }
+              />
+              {metadata && !metadata.filePath?.includes("base64") ? (
+                <DetailsItem
+                  label={t("common.file.link")}
+                  value={
+                    <Link
+                      href={metadata.filePath}
+                      target="_blank"
+                      sx={{
+                        wordBreak: "break-all",
+                      }}
+                    >
+                      {metadata.filePath}
+                    </Link>
+                  }
+                />
+              ) : null}
+              <DetailsItem
+                label={t("nft.mint.time")}
+                value={metadata ? timestampFormat(metadata.mintTime?.toString() ?? "--") : "--"}
+              />
+              <DetailsItem
+                label={t("nft.minter")}
+                value={
+                  <Copy content={metadata ? metadata.minter : ""}>
+                    {metadata ? shorten(metadata.minter, 12) : "--"}
+                  </Copy>
+                }
+              />
+
+              <Flex fullWidth vertical align="flex-start" gap="8px">
+                <Typography
+                  sx={{
+                    "@media(max-width: 640px)": {
+                      fontSize: "12px",
+                    },
+                  }}
+                >
+                  {t("nft.description")}
+                </Typography>
+                <Typography
+                  sx={{
+                    lineHeight: "20px",
+                    "@media(max-width: 640px)": {
+                      fontSize: "12px",
+                    },
+                  }}
+                >{`${metadata ? metadata.introduction : "--"}`}</Typography>
+              </Flex>
+            </Flex>
+          </DetailsToggle>
+        </Box>
+
+        <Box className={classes.collectionsWrapper}>
+          <DetailsToggle title={t("common.about.collections")}>
+            <Flex fullWidth gap="15px 0" vertical align="flex-start">
+              <DetailsItem
+                label={t`NFT Canister ID`}
+                value={
+                  <ExplorerLink label={metadata ? metadata.cId : "--"} value={metadata ? (metadata.cId ?? "") : "--"} />
+                }
+              />
+
+              <Flex fullWidth vertical align="flex-start" gap="8px">
+                <Typography
+                  sx={{
+                    "@media(max-width: 640px)": {
+                      fontSize: "12px",
+                    },
+                  }}
+                >
+                  {t("nft.collection.description")}
+                </Typography>
+                <Typography
+                  sx={{
+                    lineHeight: "20px",
+                    "@media(max-width: 640px)": {
+                      fontSize: "12px",
+                    },
+                  }}
+                >
+                  {canisterMetadata?.introduction ?? "--"}
+                </Typography>
+              </Flex>
+
+              <DetailsItem
+                label={t("common.creator")}
+                value={<Copy content={canisterMetadata?.owner ?? ""}>{shorten(canisterMetadata?.owner, 12)}</Copy>}
+              />
+              <DetailsItem
+                label={t("nft.creator.royalty")}
+                value={`${new BigNumber(String(canisterMetadata?.royalties ?? 0)).dividedBy(100).toFormat()}%`}
+              />
+            </Flex>
+            {!!canisterMetadata?.linkMap && canisterMetadata?.linkMap?.length > 0 ? (
+              <Box mt="20px">
+                <CollectionIcons links={canisterMetadata?.linkMap} />
+              </Box>
+            ) : null}
+          </DetailsToggle>
+        </Box>
+
+        {matchDownMD && NFTMetadata.length > 0 ? (
+          <Box className={classes.metadataWrapper}>
+            <DetailsToggle title={t("common.metadata")}>
+              <Grid container spacing="10px">
+                {NFTMetadata.map((metadata, index) => (
+                  <Grid item xs={4} key={index}>
+                    <NFTMetadataWrapper metadata={metadata} />
+                  </Grid>
+                ))}
+              </Grid>
+            </DetailsToggle>
+          </Box>
+        ) : null}
       </Box>
-    </>
+    </Box>
   );
 }

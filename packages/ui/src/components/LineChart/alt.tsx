@@ -120,7 +120,7 @@ export function LineChartAlt({
           <Tooltip
             cursor={{ stroke: "#8572FF" }}
             contentStyle={{ display: "none" }}
-            formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
+            formatter={(value: number, _name: string, props: { payload: { time: string; value: number } }) => {
               if (setValue && parsedValue !== props.payload.value) {
                 setValue(props.payload.value);
               }

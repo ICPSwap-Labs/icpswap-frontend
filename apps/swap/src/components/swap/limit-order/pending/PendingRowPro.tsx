@@ -103,7 +103,17 @@ export function PendingRowPro({
     await call();
 
     closeLoadingTip(loadingKey);
-  }, [position, positionId, limitOrder, cancelLimit]);
+  }, [
+    position,
+    positionId,
+    limitOrder,
+    cancelLimit,
+    closeLoadingTip,
+    onCancelSuccess,
+    openErrorTip,
+    openLoadingTip,
+    t,
+  ]);
 
   return (
     <>

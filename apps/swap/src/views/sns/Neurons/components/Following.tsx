@@ -48,7 +48,7 @@ function FollowNeuron({
   };
 
   const handleCheckChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
       onCheckChange(checked, func.id);
     },
     [func, onCheckChange],
@@ -172,14 +172,14 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
       setCheckedFunc([...func_ids]);
       setSelectAllOpen(true);
     }
-  }, [neuron_system_functions, checkedFunc, selectAllOpen]);
+  }, [neuron_system_functions, selectAllOpen]);
 
   const handleCheckChange = useCallback(
     (checked: boolean, func_id: bigint) => {
       if (checked) {
         setCheckedFunc([...new Set([...checkedFunc, func_id])]);
       } else {
-        const index = checkedFunc.findIndex((e) => e === func_id);
+        const index = checkedFunc.indexOf(func_id);
         if (index !== -1) {
           const __checkedFunc = [...checkedFunc];
           __checkedFunc.splice(index, 1);
@@ -210,7 +210,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
       .toNumber();
 
     return followeesCount === 0;
-  }, [neuron]);
+  }, [neuron, checkedFunc.length]);
 
   return (
     <Box>

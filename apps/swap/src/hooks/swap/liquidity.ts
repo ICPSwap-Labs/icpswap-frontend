@@ -21,32 +21,35 @@ function useDecreaseLiquidityCalls() {
   const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
 
-  return useCallback(({ position, liquidityToRemove, poolId, positionId }: DecreaseLiquidityCallsArgs) => {
-    const __decreaseLiquidity = async () => {
-      if (!position || !liquidityToRemove || !principal || !poolId || !positionId) return false;
+  return useCallback(
+    ({ position, liquidityToRemove, poolId, positionId }: DecreaseLiquidityCallsArgs) => {
+      const __decreaseLiquidity = async () => {
+        if (!position || !liquidityToRemove || !principal || !poolId || !positionId) return false;
 
-      const partialPosition = new Position({
-        pool: position.pool,
-        liquidity: liquidityToRemove.multiply(position.liquidity).quotient,
-        tickLower: position.tickLower,
-        tickUpper: position.tickUpper,
-      });
+        const partialPosition = new Position({
+          pool: position.pool,
+          liquidity: liquidityToRemove.multiply(position.liquidity).quotient,
+          tickLower: position.tickLower,
+          tickUpper: position.tickUpper,
+        });
 
-      const { status, message } = await decreaseLiquidity(poolId, {
-        positionId,
-        liquidity: partialPosition.liquidity.toString(),
-      });
+        const { status, message } = await decreaseLiquidity(poolId, {
+          positionId,
+          liquidity: partialPosition.liquidity.toString(),
+        });
 
-      if (status === "err") {
-        openErrorTip(`${getLocaleMessage(message)}.`);
-        return false;
-      }
+        if (status === "err") {
+          openErrorTip(`${getLocaleMessage(message)}.`);
+          return false;
+        }
 
-      return true;
-    };
+        return true;
+      };
 
-    return [__decreaseLiquidity];
-  }, []);
+      return [__decreaseLiquidity];
+    },
+    [openErrorTip, principal],
+  );
 }
 
 export interface DecreaseLiquidityCallbackProps {
@@ -99,6 +102,8 @@ export function useDecreaseLiquidityCallback({
 
     return { call, reset, retry, key };
   }, [
+    t,
+    getCalls,
     getStepCalls,
     stepContentManage,
     position,

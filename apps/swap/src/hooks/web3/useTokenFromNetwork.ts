@@ -1,7 +1,7 @@
 import { ERC20Token } from "@icpswap/swap-sdk";
 import { isUndefinedOrNull } from "@icpswap/utils/dist/isUndefinedOrNull";
 import { erc20Abi } from "abis/abis";
-import { useActiveChain, useSupportedActiveChain, useWeb3CallsData } from "hooks/web3/index";
+import { useWeb3CallsData } from "hooks/web3/index";
 import { useCallback, useMemo } from "react";
 import { useAccount, useReadContract } from "wagmi";
 
@@ -80,9 +80,6 @@ export function useTokenLogo(tokenAddress: string | undefined) {
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useTokenFromActiveNetwork(tokenAddress: string | undefined): ERC20Token | undefined {
-  const chainId = useActiveChain();
-  const supportedActiveChain = useSupportedActiveChain();
-
   // TODO (WEB-1709): reduce this to one RPC call instead of 5
   // TODO: Fix redux-multicall so that these values do not reload.
   const { result: name } = useTokenName(tokenAddress);
@@ -99,5 +96,5 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): ERC
     }
 
     return new ERC20Token({ address: tokenAddress, decimals, name, symbol, logo });
-  }, [tokenAddress, chainId, name, symbol, decimals, logo, supportedActiveChain]);
+  }, [tokenAddress, name, symbol, decimals, logo]);
 }

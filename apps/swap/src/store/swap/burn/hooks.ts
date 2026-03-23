@@ -89,11 +89,11 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
   const parsedAmounts = {
     [BURN_FIELD.LIQUIDITY_PERCENT]: percentToRemove,
     [BURN_FIELD.CURRENCY_A]:
-      token0 && discountedAmount0 && percentToRemove && percentToRemove.greaterThan("0")
+      token0 && discountedAmount0 && percentToRemove?.greaterThan("0")
         ? CurrencyAmount.fromRawAmount(token0, discountedAmount0)
         : undefined,
     [BURN_FIELD.CURRENCY_B]:
-      token1 && discountedAmount1 && percentToRemove && percentToRemove.greaterThan("0")
+      token1 && discountedAmount1 && percentToRemove?.greaterThan("0")
         ? CurrencyAmount.fromRawAmount(token1, discountedAmount1)
         : undefined,
   };

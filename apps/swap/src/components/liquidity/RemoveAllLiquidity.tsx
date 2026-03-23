@@ -48,11 +48,11 @@ export function RemoveAllLiquidity({ position, positionId, onDecreaseSuccess }: 
   const parsedAmounts = {
     [BURN_FIELD.LIQUIDITY_PERCENT]: percentToRemove,
     [BURN_FIELD.CURRENCY_A]:
-      currencyA && discountedAmount0 && percentToRemove && percentToRemove.greaterThan("0")
+      currencyA && discountedAmount0 && percentToRemove?.greaterThan("0")
         ? CurrencyAmount.fromRawAmount(currencyA, discountedAmount0)
         : undefined,
     [BURN_FIELD.CURRENCY_B]:
-      currencyB && discountedAmount1 && percentToRemove && percentToRemove.greaterThan("0")
+      currencyB && discountedAmount1 && percentToRemove?.greaterThan("0")
         ? CurrencyAmount.fromRawAmount(currencyB, discountedAmount1)
         : undefined,
   };
@@ -102,7 +102,19 @@ export function RemoveAllLiquidity({ position, positionId, onDecreaseSuccess }: 
     }
 
     setLoading(false);
-  }, [position, liquidityToRemove, loading]);
+  }, [
+    position,
+    loading,
+    closeLoadingTip,
+    currencyA?.symbol,
+    currencyB?.symbol,
+    getDecreaseLiquidityCall,
+    onDecreaseSuccess,
+    openLoadingTip,
+    openSuccessTip,
+    principal,
+    t,
+  ]);
 
   return (
     <>

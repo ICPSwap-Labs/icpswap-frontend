@@ -66,7 +66,7 @@ const __Select = ({
   useEffect(() => {
     const width = wrapperRef?.current?.clientWidth;
     setMenuWidth(width ?? undefined);
-  }, [wrapperRef]);
+  }, []);
 
   const handleOuterBoxClick = (event: any) => {
     if (disabled) return;

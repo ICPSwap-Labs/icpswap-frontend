@@ -69,7 +69,7 @@ export default createReducer(initialState, (builder) => {
     .addCase(updateRemovedWalletDefaultTokens, (state, { payload }) => {
       if (payload.add) {
         const __removedWalletDefaultTokens = [...state.removedWalletDefaultTokens];
-        const index = __removedWalletDefaultTokens.findIndex((tokenId) => tokenId === payload.tokenId);
+        const index = __removedWalletDefaultTokens.indexOf(payload.tokenId);
         if (index !== -1) {
           __removedWalletDefaultTokens.splice(index, 1);
         }

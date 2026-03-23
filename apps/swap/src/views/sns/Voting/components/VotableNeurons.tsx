@@ -37,7 +37,7 @@ export function VotableNeurons({ voteableNeurons, onCheckedChange, proposal }: P
     );
 
     onCheckedChange(checkedNeurons, votingPowers);
-  }, [voteableNeurons, proposal]);
+  }, [voteableNeurons, proposal, onCheckedChange]);
 
   const handleToggleOpen = () => {
     setVoteableOpen(!votableOpen);
@@ -130,7 +130,7 @@ export function VotableNeurons({ voteableNeurons, onCheckedChange, proposal }: P
 
                   <Checkbox
                     checked={checkedNeurons.includes(formattedNeuron.id)}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+                    onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                       handleCheckedChange(checked, formattedNeuron.id)
                     }
                   />

@@ -18,7 +18,7 @@ export function useBitcoinDissolveTxWatcher() {
   const { t } = useTranslation();
 
   const callback = useCallback(async () => {
-    if (txs && txs.length) {
+    if (txs?.length) {
       for (let i = 0; i < txs.length; i++) {
         const tx = txs[i];
         const block_index = BigInt(tx.block_index);
@@ -40,7 +40,7 @@ export function useBitcoinDissolveTxWatcher() {
         }
       }
     }
-  }, [txs, bitcoinDissolveTxManager]);
+  }, [txs, bitcoinDissolveTxManager, openTip, t]);
 
   useInterval({ callback, interval: 10_000 });
 }

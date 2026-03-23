@@ -60,5 +60,5 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
           ? new BigNumber(token1Balance).plus(token1SubAccountBalance).plus(unusedBalance.balance1.toString())
           : undefined,
     };
-  }, [token0, token1, unusedBalance, token0SubAccountBalance, token1SubAccountBalance, token0Balance, token1Balance]);
+  }, [unusedBalance, token0SubAccountBalance, token1SubAccountBalance, token0Balance, token1Balance]);
 }

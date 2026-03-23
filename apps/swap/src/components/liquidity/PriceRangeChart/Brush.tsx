@@ -220,7 +220,7 @@ export const Brush = ({
     setShowLabels(true);
     const timeout = setTimeout(() => setShowLabels(false), 1500);
     return () => clearTimeout(timeout);
-  }, [localBrushExtent]);
+  }, []);
 
   // variables to help render the SVGs
   const flipWestHandle = localBrushExtent && xScale(localBrushExtent[0]) > FLIP_HANDLE_THRESHOLD_PX;
@@ -250,7 +250,7 @@ export const Brush = ({
           </clipPath>
         </defs>
 
-        {/* will host the d3 brush */}
+        {/* biome-ignore lint: will host the d3 brush */}
         <g
           ref={brushRef}
           clipPath={`url(#${id}-brush-clip)`}

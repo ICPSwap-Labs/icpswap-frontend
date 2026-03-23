@@ -30,7 +30,6 @@ export function useTips(): [
   (message: ReactNode, type: MessageTypes | ResultStatus, options?: TIP_OPTIONS) => TIP_KEY,
   (key: string | undefined | number) => void,
 ] {
-  const dispatch = useAppDispatch();
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
 
   const open = useCallback(
@@ -41,14 +40,14 @@ export function useTips(): [
         ...(options ?? {}),
       });
     },
-    [dispatch],
+    [enqueueSnackbar],
   );
 
   const close = useCallback(
     (messageKey: TIP_KEY) => {
       closeSnackbar(messageKey);
     },
-    [dispatch],
+    [closeSnackbar],
   );
 
   return useMemo(() => [open, close], [open, close]);

@@ -58,13 +58,11 @@ export function StakeClaimTransactions({ id }: { id: string | undefined }) {
           <HeaderCell>{t("common.address")}</HeaderCell>
         </Header>
 
-        <>
-          {list
-            .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
-            .map((transactions, index) => (
-              <PoolItem key={index} transactions={transactions} />
-            ))}
-        </>
+        {list
+          .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+          .map((transactions, index) => (
+            <PoolItem key={index} transactions={transactions} />
+          ))}
         {list.length === 0 && !loading && !!id ? <NoData /> : null}
         {loading || !id ? <ImageLoading loading={loading || !id} /> : null}
         {Number(totalElements) > 0 ? (

@@ -47,7 +47,7 @@ export default function CkBridge() {
 
   const bridgeType = useMemo(() => {
     return bridgeChain === BridgeChainType.icp ? BridgeType.dissolve : BridgeType.mint;
-  }, [token, bridgeChain]);
+  }, [bridgeChain]);
 
   const targetTokenBridgeChain = useMemo(() => {
     if (bridgeChain === BridgeChainType.icp) {
@@ -75,7 +75,7 @@ export default function CkBridge() {
 
   const handleBridgeChangeChange = useCallback(() => {
     navigate(`/ck-bridge?tokenId=${tokenId ?? ckUSDC.address}&chainType=${targetTokenBridgeChain}`);
-  }, [targetTokenBridgeChain, tokenId]);
+  }, [targetTokenBridgeChain, tokenId, navigate]);
 
   useEffect(() => {
     if (tokenFromUrl) {

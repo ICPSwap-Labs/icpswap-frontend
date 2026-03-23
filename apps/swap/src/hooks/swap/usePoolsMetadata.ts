@@ -59,9 +59,10 @@ export function useMultiPoolsMetadata(poolKeys: [Token | undefined, Token | unde
   const [pools, setPools] = useState<(PoolResult | Null)[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     async function call() {
-      if (poolKeys && poolKeys.length) {
+      if (poolKeys?.length) {
         setLoading(true);
 
         const result = await getMultiPoolsMetadata(poolKeys);

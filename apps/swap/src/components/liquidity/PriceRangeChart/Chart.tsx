@@ -65,7 +65,7 @@ export function Chart({
   useEffect(() => {
     // reset zoom as necessary
     setZoom(null);
-  }, [zoomLevels]);
+  }, []);
 
   useEffect(() => {
     if (!brushDomain) {

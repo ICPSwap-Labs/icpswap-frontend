@@ -1,9 +1,9 @@
 import { getSwapPosition } from "@icpswap/hooks";
 import type { FarmInfoWithId, Null } from "@icpswap/types";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { useEffect, useMemo, useState } from "react";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useQuery } from "@tanstack/react-query";
 import { useAccountPrincipal } from "store/auth/hooks";
-import type { UserPosition, UserPositionForFarm } from "types/swap";
+import type { UserPosition } from "types/swap";
 
 type UserPositions = {
   positions: bigint[];
@@ -11,20 +11,15 @@ type UserPositions = {
 };
 
 export function useSwapPositions(data: UserPositions[] | undefined, refresh?: number) {
-  const [loading, setLoading] = useState(false);
-  const [positions, setPositions] = useState<UserPosition[] | undefined>(undefined);
-
   const principal = useAccountPrincipal();
 
-  useEffect(() => {
-    async function call() {
+  return useQuery({
+    queryKey: ["swapPositions", data, refresh, principal],
+    queryFn: async () => {
       if (isUndefinedOrNull(data)) return;
       if (data.length === 0 || isUndefinedOrNull(principal)) {
-        setPositions([]);
-        return;
+        return [];
       }
-
-      setLoading(true);
 
       const positions = await Promise.all(
         data
@@ -40,29 +35,21 @@ export function useSwapPositions(data: UserPositions[] | undefined, refresh?: nu
           }),
       );
 
-      setPositions(positions.filter((position) => !!position) as UserPosition[]);
-      setLoading(false);
-    }
-
-    call();
-  }, [data, principal, refresh]);
-
-  return useMemo(() => ({ loading, result: positions }), [positions, loading]);
+      return positions.filter((position) => !!position) as UserPosition[];
+    },
+    enabled: nonUndefinedOrNull(principal) && nonUndefinedOrNull(data),
+  });
 }
 
 export function useSwapPositionsMultipleFarm(farms: FarmInfoWithId[] | Null, refresh?: number) {
   const principal = useAccountPrincipal();
-  const [loading, setLoading] = useState(false);
-  const [positions, setPositions] = useState<UserPositionForFarm[] | undefined>(undefined);
 
-  useEffect(() => {
-    async function call() {
+  return useQuery({
+    queryKey: ["swapPositionsMultipleFarm", farms, principal, refresh],
+    queryFn: async () => {
       if (isUndefinedOrNull(farms) || isUndefinedOrNull(principal) || farms.length === 0) {
-        setPositions([]);
-        return;
+        return [];
       }
-
-      setLoading(true);
 
       const positions = await Promise.all(
         farms
@@ -84,14 +71,10 @@ export function useSwapPositionsMultipleFarm(farms: FarmInfoWithId[] | Null, ref
           }),
       );
 
-      setPositions(positions.filter((position) => !!position));
-      setLoading(false);
-    }
-
-    call();
-  }, [farms, principal, refresh]);
-
-  return useMemo(() => ({ loading, result: positions }), [positions, loading]);
+      return positions.filter((position) => !!position);
+    },
+    enabled: nonUndefinedOrNull(farms) && farms.length > 0,
+  });
 }
 
 export function useSwapPositionsByFarm(farm: FarmInfoWithId | undefined, refresh?: number) {

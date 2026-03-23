@@ -40,7 +40,7 @@ export function useSyncYourTokensHandler() {
     }
 
     setLoading(false);
-  }, [principal, taggedTokens]);
+  }, [principal, taggedTokens, openTip, t, updateTaggedTokens]);
 
   return useMemo(() => ({ loading, syncYourTokensHandler: callback }), [callback, loading]);
 }

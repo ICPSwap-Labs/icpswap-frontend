@@ -67,7 +67,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
   }, [result]);
 
   useEffect(() => {
-    if (charts && charts.length) {
+    if (charts?.length) {
       // @ts-expect-error
       // The TypeScript compilation shows errors, but the code functions correctly.
       // These errors can be safely ignored, as the official Highcharts documentation uses the same approach.

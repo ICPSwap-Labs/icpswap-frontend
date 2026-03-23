@@ -22,7 +22,7 @@ import { STATE } from "types/staking-farm";
 const CountdownBox = ({ startTime, endTime }: { startTime: number; endTime: number }) => {
   const { t } = useTranslation();
 
-  const nowTime = parseInt(String(Date.now() / 1000));
+  const nowTime = parseInt(String(Date.now() / 1000), 10);
   let expand = false;
   let date = startTime;
   if (nowTime > endTime) {

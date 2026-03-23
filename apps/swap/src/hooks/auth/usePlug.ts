@@ -28,5 +28,5 @@ export function usePlugExternalDisconnect() {
           }
         });
     }
-  }, []);
+  }, [cleanLogState]);
 }

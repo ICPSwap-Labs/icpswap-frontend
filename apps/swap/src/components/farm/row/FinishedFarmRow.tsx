@@ -66,9 +66,7 @@ export function FinishedFarmRowUI({
 
         {filterState === FilterState.ALL ? (
           <Flex gap="0 4px" justify="flex-end" className="row-item">
-            <>
-              <BodyCell>$0.00</BodyCell>
-            </>
+            <BodyCell>$0.00</BodyCell>
           </Flex>
         ) : null}
 

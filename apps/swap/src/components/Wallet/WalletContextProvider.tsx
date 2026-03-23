@@ -15,26 +15,23 @@ export function WalletContextProvider({ children }: WalletContextProviderProps) 
   const [pages, setPages] = useState<Array<WalletManagerPage>>([]);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
-  const handleSetPage = useCallback(
-    (page: WalletManagerPage) => {
-      setPages([page]);
-    },
-    [setPages, pages],
-  );
+  const handleSetPage = useCallback((page: WalletManagerPage) => {
+    setPages([page]);
+  }, []);
 
   useEffect(() => {
     handleSetPage(WalletManagerPage.Index);
-  }, []);
+  }, [handleSetPage]);
 
   const closeDrawer = useCallback(() => {
     setOpen(false);
     handleSetPage(WalletManagerPage.Index);
-  }, [setOpen, handleSetPage]);
+  }, [handleSetPage]);
 
   const openDrawer = useCallback(() => {
     setOpen(true);
     handleSetPage(WalletManagerPage.Index);
-  }, [setOpen, handleSetPage]);
+  }, [handleSetPage]);
 
   return (
     <WalletContext.Provider

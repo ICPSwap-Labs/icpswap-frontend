@@ -100,11 +100,7 @@ export function getLimitOrderSteps({
         },
         { label: i18n.t("common.canister.id"), value: inputToken.address },
       ],
-      errorActions: [
-        <>
-          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
-        </>,
-      ],
+      errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
     {

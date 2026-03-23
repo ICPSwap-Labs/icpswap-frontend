@@ -13,7 +13,7 @@ import { Erc20Fee, InputWrapper } from "components/ck-bridge";
 import { DisconnectButton } from "components/ck-bridge/Disconnect";
 import { Box, CircularProgress, TextField, Typography, useTheme } from "components/Mui";
 import { ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
-import { useErc20TokenBalance, useIcpTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
+import { useIcpTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useDissolveCallback } from "hooks/ck-erc20/index";
 import { useRefreshTriggerManager } from "hooks/index";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
@@ -28,7 +28,7 @@ export interface Erc20DissolveProps {
   minterInfo?: ChainKeyETHMinterInfo | Null;
 }
 
-export function Erc20Dissolve({ token, minterInfo }: Erc20DissolveProps) {
+export function Erc20Dissolve({ token }: Erc20DissolveProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const { address: account } = useAccount();
@@ -47,15 +47,10 @@ export function Erc20Dissolve({ token, minterInfo }: Erc20DissolveProps) {
     token,
     refresh: refreshTrigger,
   });
-  const ercTokenBalance = useErc20TokenBalance({
-    token,
-    minterInfo,
-    refresh: refreshTrigger,
-  });
 
   useEffect(() => {
     setAddress(account);
-  }, [account, setAddress]);
+  }, [account]);
 
   const dissolve_error = useMemo(() => {
     if (!address) return t("common.enter.address");
@@ -71,13 +66,13 @@ export function Erc20Dissolve({ token, minterInfo }: Erc20DissolveProps) {
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, token, address, tokenBalance]);
+  }, [amount, token, address, tokenBalance, t]);
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
   const handleMax = useCallback(() => {
     setAmount(parseTokenAmount(tokenBalance, token.decimals).toString());
-  }, [token, tokenBalance, ercTokenBalance, setAmount]);
+  }, [token, tokenBalance]);
 
   const { loading, dissolve_call } = useDissolveCallback();
 
@@ -91,7 +86,7 @@ export function Erc20Dissolve({ token, minterInfo }: Erc20DissolveProps) {
       setAmount("");
       setAddress("");
     }
-  }, [address, amount, principal, token]);
+  }, [address, amount, principal, token, dissolve_call, setRefreshTrigger]);
 
   return (
     <>

@@ -77,7 +77,7 @@ export function PendingRow({ wrapperClasses, order, poolId, onCancelSuccess }: P
     await call();
 
     closeLoadingTip(loadingKey);
-  }, [position, positionId, cancelLimit, order]);
+  }, [position, positionId, cancelLimit, order, closeLoadingTip, onCancelSuccess, openErrorTip, openLoadingTip, t]);
 
   return (
     <>

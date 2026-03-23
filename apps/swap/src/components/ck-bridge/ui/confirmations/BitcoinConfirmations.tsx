@@ -22,7 +22,7 @@ export function BitcoinMintConfirmations({ hash }: BitcoinMintConfirmationsProps
     const block = BITCOIN_CONFIRMATIONS - confirmations;
 
     return block < 0 ? 0 : block;
-  }, [BITCOIN_CONFIRMATIONS, confirmations]);
+  }, [confirmations]);
 
   return (
     <Flex sx={{ gap: "0 3px" }}>

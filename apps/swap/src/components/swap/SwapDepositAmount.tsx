@@ -151,7 +151,7 @@ export function SwapDepositAmount({
           .toString(),
       );
     }
-  }, [subAccountBalance, unusedBalance, currency]);
+  }, [subAccountBalance, unusedBalance, currency, onUserInput]);
 
   const maxWalletBalanceSpent = useBalanceMaxSpend({
     token: currency,

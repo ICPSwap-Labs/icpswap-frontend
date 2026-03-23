@@ -18,17 +18,20 @@ export function useStepManager() {
 
   const stepsToReclaimCallback = useStepsToReclaimCallback();
 
-  return useCallback(({ key, position, inputToken, retry }: LimitOrderStepsArgs) => {
-    const content = getLimitOrderSteps({
-      position,
-      retry,
-      handleReclaim: stepsToReclaimCallback,
-      inputToken,
-    });
+  return useCallback(
+    ({ key, position, inputToken, retry }: LimitOrderStepsArgs) => {
+      const content = getLimitOrderSteps({
+        position,
+        retry,
+        handleReclaim: stepsToReclaimCallback,
+        inputToken,
+      });
 
-    initialStepContent(String(key), {
-      content,
-      title: t("swap.limit.order.details"),
-    });
-  }, []);
+      initialStepContent(String(key), {
+        content,
+        title: t("swap.limit.order.details"),
+      });
+    },
+    [initialStepContent, stepsToReclaimCallback, t],
+  );
 }

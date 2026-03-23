@@ -92,7 +92,7 @@ export function useDissolveCallback() {
 
       return result.status === ResultStatus.OK;
     },
-    [bytes32, principal, setLoading],
+    [bytes32, principal, approve, openTip, t],
   );
 
   return useMemo(() => ({ loading, dissolve_call }), [loading, dissolve_call]);

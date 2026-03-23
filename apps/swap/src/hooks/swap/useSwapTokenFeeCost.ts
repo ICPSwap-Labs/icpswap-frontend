@@ -42,5 +42,5 @@ export function useSwapTokenFeeCost({
     if (tokenInsufficient === "NEED_TRANSFER_APPROVE") return (token.transFee * 2).toString();
 
     return "0";
-  }, [token, tokenBalance, subAccountBalance, unusedBalance]);
+  }, [token, amount, tokenBalance, subAccountBalance, unusedBalance]);
 }

@@ -91,7 +91,7 @@ export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
       __locksValue[name] = value;
       setLocksValue(__locksValue);
     },
-    [locksValue, setLocksValue],
+    [locksValue],
   );
 
   const freeLiquidityValue = useMemo(() => {
@@ -113,6 +113,7 @@ export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
     return "0";
   }, [locksValue, allLiquidityLocks, poolTvlValue]);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   const sortedLiquidityLocks = useMemo(() => {
     if (isUndefinedOrNull(allLiquidityLocks)) return undefined;
     if (isUndefinedOrNull(locksValue)) return allLiquidityLocks;

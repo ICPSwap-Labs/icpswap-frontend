@@ -94,7 +94,7 @@ export function UnstakeModal({
   // Reset amount
   useEffect(() => {
     setAmount("");
-  }, [open]);
+  }, []);
 
   const errorMessage = useMemo(() => {
     if (!stakeToken || !stakeAmount) return t`Confirm`;
@@ -103,7 +103,7 @@ export function UnstakeModal({
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, stakeToken, stakeAmount]);
+  }, [amount, stakeToken, stakeAmount, t]);
 
   return (
     <Modal open={open} onClose={onClose} title={t`Unstake`} background="level1">

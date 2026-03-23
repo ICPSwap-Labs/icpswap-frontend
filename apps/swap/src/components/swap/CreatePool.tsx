@@ -32,7 +32,7 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
         `/swap?input=${inputToken.address}&output=${outputToken.address}`,
       )}`,
     );
-  }, [inputToken, outputToken]);
+  }, [inputToken, outputToken, navigate]);
 
   return (
     <Box

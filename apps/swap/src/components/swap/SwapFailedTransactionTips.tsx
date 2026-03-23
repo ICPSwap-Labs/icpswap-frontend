@@ -21,10 +21,13 @@ export const SwapFailedTransactionTips = memo(
     const [tokenSymbol, setTokenSymbol] = useState<string | undefined>(undefined);
     const [outOfCyclesFailedTransactions, setOutOfCyclesFailedTransaction] = useState<bigint[]>([]);
 
-    const handleCheck = useCallback((check: boolean) => {
-      setChecked(check);
-      onCheckChange(check);
-    }, []);
+    const handleCheck = useCallback(
+      (check: boolean) => {
+        setChecked(check);
+        onCheckChange(check);
+      },
+      [onCheckChange],
+    );
 
     const { data: swapFailedTransactions } = useSwapFailedTransactions(poolId);
 
@@ -70,7 +73,7 @@ export const SwapFailedTransactionTips = memo(
       if (outOfCyclesFailedTransactions && outOfCyclesFailedTransactions.length > 0) {
         updateNeedCheckOrNot(true);
       }
-    }, [outOfCyclesFailedTransactions]);
+    }, [outOfCyclesFailedTransactions, updateNeedCheckOrNot]);
 
     return outOfCyclesFailedTransactions &&
       outOfCyclesFailedTransactions.length > 0 &&

@@ -75,7 +75,7 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
         const existIndex = prev.findIndex(({ poolId }) => poolId === curr.poolId);
 
         if (existIndex === -1)
-          return [...prev, { poolId: curr.poolId, positionIds: [curr.position.id] }] as Array<{
+          return [prev.slice(), { poolId: curr.poolId, positionIds: [curr.position.id] }] as Array<{
             poolId: string;
             positionIds: bigint[];
           }>;

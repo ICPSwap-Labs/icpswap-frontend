@@ -162,7 +162,7 @@ export function LaunchStatus({ token, swap_id, swapInitArgs, saleParameters }: L
 
   let error: string | undefined;
 
-  if (!location_code || (location_code && restricted_countries && restricted_countries.includes(location_code)))
+  if (!location_code || (location_code && restricted_countries?.includes(location_code)))
     error = t`Participation is not allowed in your region`;
   if (!connector || connector !== Connector.PLUG) error = t`Only Plug wallet can participate`;
 

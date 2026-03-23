@@ -37,7 +37,7 @@ function TokenTvl({ token, poolId, onUpdateTvl }: TokenTvlProps) {
     if (tokenUsdTvl) {
       onUpdateTvl(tokenUsdTvl);
     }
-  }, [tokenUsdTvl]);
+  }, [tokenUsdTvl, onUpdateTvl]);
 
   return (
     <Box sx={{ display: "flex", gap: "0 6px", alignItems: "center" }}>

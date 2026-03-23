@@ -189,5 +189,5 @@ export function usePoolActiveLiquidity(
       data: ticksProcessed,
       isError: ticks === undefined,
     };
-  }, [currencyA, currencyB, activeTick, pool, sortedTicks, isLoading, poolState, ticks]);
+  }, [activeTick, pool, sortedTicks, isLoading, poolState, ticks, token0, token1]);
 }

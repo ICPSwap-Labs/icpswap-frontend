@@ -54,7 +54,7 @@ export function NFTSend() {
 
       setLoading(false);
     },
-    [setSelectedContact, setLoading, principal, setPages],
+    [setSelectedContact, principal, setPages, openTip, sendingNFTMetadata, t],
   );
 
   return sendingNFTMetadata ? (

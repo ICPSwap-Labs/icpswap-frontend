@@ -115,8 +115,8 @@ export default function NFTTransfer({
   }, [onClose]);
 
   const errorMsg = useMemo(() => {
-    if (!to) return t("common.enter.account.address");
-    if (!isValidAccount(to)) return t("invalid.address");
+    if (!to) return t`Enter account address`;
+    if (!isValidAccount(to)) return t`Invalid address`;
   }, [to, t]);
 
   return open ? (

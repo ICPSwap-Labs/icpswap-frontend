@@ -17,7 +17,7 @@ export function HideStableCoins({ onChange }: HideStableCoinsProps) {
   const handleToggle = useCallback(() => {
     setHideStableCoins(!hideStableCoins);
     onChange?.(!hideStableCoins);
-  }, [hideStableCoins, onChange]);
+  }, [hideStableCoins, onChange, setHideStableCoins]);
 
   return (
     <Flex gap="0 3px" align="center">

@@ -23,16 +23,13 @@ export function AddAddress() {
     setPages(addAddressBookPrevPage);
   }, [setPages, addAddressBookPrevPage]);
 
-  const handleValueChange = useCallback(
-    (filed: "name" | "address", value: string) => {
-      if (filed === "name") {
-        setName(value);
-      } else {
-        setAddress(value);
-      }
-    },
-    [setAddress, setName],
-  );
+  const handleValueChange = useCallback((filed: "name" | "address", value: string) => {
+    if (filed === "name") {
+      setName(value);
+    } else {
+      setAddress(value);
+    }
+  }, []);
 
   const isValidAddress = useMemo(() => {
     if (isUndefinedOrNull(address)) return undefined;
@@ -66,7 +63,7 @@ export function AddAddress() {
     if (isExist) return t("wallet.address.name.exist");
 
     return undefined;
-  }, [addresses, name, address, loading, isValidAddress]);
+  }, [addresses, name, address, isValidAddress, t]);
 
   return (
     <DrawerWrapper

@@ -82,7 +82,7 @@ export const SwapLimitPrice = forwardRef(
       if (nonUndefinedOrNull(inputValue) && inputValue !== "" && nonUndefinedOrNull(outputToken)) {
         handleInputPrice(new BigNumber(1).dividedBy(inputValue).toFixed(outputToken.decimals), !inverted);
       }
-    }, [setInverted, outputToken, inputValue, inverted]);
+    }, [setInverted, outputToken, inputValue, inverted, handleInputPrice]);
 
     useEffect(() => {
       if (isUndefinedOrNull(orderPrice) || orderPrice === "") {
@@ -197,7 +197,16 @@ export const SwapLimitPrice = forwardRef(
           : minPrice.toFixed(outputToken.decimals),
         inverted,
       );
-    }, [inverted, inputToken, outputToken, selectedPool, minUseableTick, atLimitedTick]);
+    }, [
+      inverted,
+      inputToken,
+      outputToken,
+      selectedPool,
+      minUseableTick,
+      atLimitedTick,
+      handleInputPrice,
+      isInputTokenSorted,
+    ]);
 
     const handlePriceChange = useCallback(
       (val: number) => {
@@ -210,7 +219,7 @@ export const SwapLimitPrice = forwardRef(
 
         handleInputPrice(invertedNewPrice, inverted);
       },
-      [inverted, currentPrice, atLimitedTick],
+      [inverted, currentPrice, atLimitedTick, handleInputPrice],
     );
 
     // const handleSetDefaultPrice = useCallback(() => {
@@ -252,12 +261,12 @@ export const SwapLimitPrice = forwardRef(
           : useablePrice.toFixed(outputToken.decimals),
         inverted,
       );
-    }, [orderPrice, selectedPool, inputToken, outputToken, isInputTokenSorted, inverted]);
+    }, [orderPrice, selectedPool, inputToken, outputToken, isInputTokenSorted, inverted, handleInputPrice]);
 
     // Set default order price
     useEffect(() => {
       handleMinMax();
-    }, [handleMinMax, inputToken, outputToken, selectedPool, minUseableTick]);
+    }, [handleMinMax]);
 
     useImperativeHandle(
       ref,

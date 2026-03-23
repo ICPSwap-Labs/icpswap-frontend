@@ -61,7 +61,7 @@ export function useMintCallback({ minter_address }: MinterProps) {
         openTip(t("ck.mint.submitted", { symbol: "ETH" }), MessageTypes.success);
 
         updateUserTx(principal, {
-          timestamp: String(new Date().getTime()),
+          timestamp: String(Date.now()),
           block: String(blockNumber),
           hash: result.hash,
           from: result.from,
@@ -77,7 +77,7 @@ export function useMintCallback({ minter_address }: MinterProps) {
 
       return result;
     },
-    [updateUserTx, ethHelpMinter, principal, provider, bytes32, blockNumber, subaccount],
+    [updateUserTx, ethHelpMinter, principal, provider, bytes32, blockNumber, subaccount, openTip, t],
   );
 
   return useMemo(() => ({ loading, mint_call }), [loading, mint_call]);

@@ -52,7 +52,7 @@ export function ReclaimForSinglePool({
     });
 
     setLoading(false);
-  }, [token, loading, reclaim]);
+  }, [token, loading, reclaim, balance, onReclaimSuccess, poolId, type]);
 
   const hide = useMemo(() => {
     if (!token) return false;
@@ -66,7 +66,7 @@ export function ReclaimForSinglePool({
     } else {
       removeUnavailableBalanceKey(id);
     }
-  }, [hide, id]);
+  }, [hide, id, removeUnavailableBalanceKey, setUnavailableBalanceKey]);
 
   return token && !hide ? (
     <Box

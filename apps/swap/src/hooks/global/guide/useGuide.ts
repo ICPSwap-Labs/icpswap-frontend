@@ -24,20 +24,20 @@ export function useShowGuideModalManager(guideName: string, selfGuideShow = true
   const onClose = useCallback(() => {
     setOpen(false);
     setIsRead(true);
-  }, [setOpen, setIsRead]);
+  }, [setIsRead]);
 
   const show = useMemo(() => {
     return !isRead && open && isConnected && selfGuideShow;
   }, [isConnected, open, isRead, selfGuideShow]);
 
-  // Reset open state on route change for re-showing the guide modal if user close it manually
+  // biome-ignore lint: reset open state on route change for re-showing the guide modal if user close it manually
   useEffect(() => {
     setOpen(true);
   }, [location.pathname]);
 
   const read = useCallback(() => {
     setIsRead(true);
-  }, [setIsRead, guideName]);
+  }, [setIsRead]);
 
   return useMemo(() => ({ show, onClose, read }), [show, onClose, read]);
 }

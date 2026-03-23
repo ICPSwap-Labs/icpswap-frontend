@@ -22,7 +22,7 @@ export function useFetchInfoAllTokens() {
 
 export function useInfoAllTokens() {
   const { data } = useSWRImmutable<InfoTokenRealTimeDataResponse[] | undefined>(["info_all_tokens"]);
-  return useMemo(() => data, data);
+  return useMemo(() => data, [data]);
 }
 
 export function useInfoToken(tokenId: string | Null): InfoTokenRealTimeDataResponse | undefined {

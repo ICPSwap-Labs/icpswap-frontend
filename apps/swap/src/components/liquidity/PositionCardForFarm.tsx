@@ -118,7 +118,7 @@ export function PositionCardForFarm({
   const handleToggleShow = useCallback(() => {
     if (!position) return;
     setDetailShow(!detailShow);
-  }, [detailShow, setDetailShow, position]);
+  }, [detailShow, position]);
 
   const pool = position?.pool;
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -173,7 +173,7 @@ export function PositionCardForFarm({
     if (nonUndefinedOrNull(totalUSDValue) && nonUndefinedOrNull(positionKey)) {
       setAllPositionsUSDValue(positionKey, new BigNumber(totalUSDValue));
     }
-  }, [totalUSDValue, positionKey, staked]);
+  }, [totalUSDValue, positionKey, setAllPositionsUSDValue]);
 
   const displayByFilter = useMemo(() => {
     if (isUndefinedOrNull(positionState)) return true;

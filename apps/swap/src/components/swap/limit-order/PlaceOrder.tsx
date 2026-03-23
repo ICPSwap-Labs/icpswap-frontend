@@ -103,7 +103,7 @@ export const PlaceOrder = forwardRef(
       if (onInputTokenChange) onInputTokenChange(inputToken);
       if (onOutputTokenChange) onOutputTokenChange(outputToken);
       if (onTradePoolIdChange && poolId) onTradePoolIdChange(poolId);
-    }, [poolId, outputToken, inputToken]);
+    }, [poolId, outputToken, inputToken, onInputTokenChange, onOutputTokenChange, onTradePoolIdChange]);
 
     const isLoadingRoute = swapState === TradeState.LOADING;
     const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
@@ -116,7 +116,7 @@ export const PlaceOrder = forwardRef(
     useEffect(() => {
       setSelectedPool(pool);
       setNoLiquidity(noLiquidity);
-    }, [pool, setSelectedPool, noLiquidity]);
+    }, [pool, setSelectedPool, noLiquidity, setNoLiquidity]);
 
     useEffect(() => {
       setInputToken(inputToken);
@@ -147,7 +147,7 @@ export const PlaceOrder = forwardRef(
 
         navigate(`${prePath}${search}`);
       },
-      [outputTokenId],
+      [location.search, navigate, ui],
     );
 
     const handleTokenBChange = useCallback(
@@ -169,16 +169,19 @@ export const PlaceOrder = forwardRef(
 
         navigate(`${prePath}${search}`);
       },
-      [inputTokenId, location],
+      [location, navigate, ui],
     );
 
-    const handleInput = (value: string, type: "input" | "output") => {
-      if (type === "input") {
-        onUserInput(SWAP_FIELD.INPUT, value);
-      } else if (type === "output") {
-        onUserInput(SWAP_FIELD.OUTPUT, value);
-      }
-    };
+    const handleInput = useCallback(
+      (value: string, type: "input" | "output") => {
+        if (type === "input") {
+          onUserInput(SWAP_FIELD.INPUT, value);
+        } else if (type === "output") {
+          onUserInput(SWAP_FIELD.OUTPUT, value);
+        }
+      },
+      [onUserInput],
+    );
 
     const placeOrderCallback = usePlaceOrderCallback();
 
@@ -257,10 +260,8 @@ export const PlaceOrder = forwardRef(
     }, [
       placeOrderCallback,
       swapLoading,
-      setSwapLoading,
       trade,
       setRefreshTriggers,
-      orderPrice,
       unusedBalance,
       position,
       token0Balance,
@@ -270,7 +271,11 @@ export const PlaceOrder = forwardRef(
       inputToken,
       outputToken,
       orderPriceTick,
-      limitPriceRef,
+      closeLoadingTip,
+      handleInput,
+      openErrorTip,
+      openLoadingTip,
+      t,
     ]);
 
     const handleMaxInput = useCallback(() => {
@@ -283,7 +288,7 @@ export const PlaceOrder = forwardRef(
       return () => {
         clearSwapState();
       };
-    }, []);
+    }, [clearSwapState]);
 
     const handleSwitchTokens = useCallback(() => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
@@ -303,7 +308,7 @@ export const PlaceOrder = forwardRef(
         limitPriceRef?.current?.resetInverted();
         limitPriceRef?.current?.setDefaultPrice();
       }
-    }, [ui, navigate, location, limitPriceRef, outputTokenId, inputTokenId]);
+    }, [ui, navigate, location, handleInput, onSwitchTokens, setOrderPrice]);
 
     useImperativeHandle(
       ref,

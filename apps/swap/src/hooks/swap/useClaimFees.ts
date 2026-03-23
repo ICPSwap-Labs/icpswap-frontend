@@ -49,7 +49,7 @@ function useCollectFeeCalls() {
 
       return [_collect];
     },
-    [principal],
+    [principal, openErrorTip, t],
   );
 }
 
@@ -80,7 +80,7 @@ function useCollectFeeSteps() {
         title: t("swap.claim.fees.details"),
       });
     },
-    [principal],
+    [principal, stepContentManage, t],
   );
 }
 

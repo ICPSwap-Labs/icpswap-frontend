@@ -64,6 +64,6 @@ export function useApprove() {
         message: "No need to approve",
       } as StatusResult<bigint>;
     },
-    [allowance, spender],
+    [allowance],
   );
 }

@@ -92,7 +92,7 @@ export default function LiquidityChartRangeInput({
       const width = wrapperRef.current.clientWidth;
       setWrapperWidth(width);
     }
-  }, [wrapperRef]);
+  }, []);
 
   return (
     <Box style={{ minHeight: "200px" }} ref={wrapperRef}>

@@ -19,7 +19,7 @@ export function NetworkStateIcon({ level, height = "11px" }: NetworkStateIconPro
           key={element}
           sx={{
             width: "2px",
-            height: `${new BigNumber(index + 1).dividedBy(levels.length).multipliedBy(parseInt(height)).toNumber()}px`,
+            height: `${new BigNumber(index + 1).dividedBy(levels.length).multipliedBy(parseInt(height, 10)).toNumber()}px`,
             background:
               element <= level
                 ? level >= 3

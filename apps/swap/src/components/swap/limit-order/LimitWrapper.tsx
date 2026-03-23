@@ -30,12 +30,9 @@ export function LimitWrapper({
 
   const isConnected = useWalletIsConnected();
 
-  const handleAddKeys = useCallback(
-    (key: string) => {
-      setUnavailableBalanceKeys((prevState) => [...new Set([...prevState, key])]);
-    },
-    [unavailableBalanceKeys, setUnavailableBalanceKeys],
-  );
+  const handleAddKeys = useCallback((key: string) => {
+    setUnavailableBalanceKeys((prevState) => [...new Set([...prevState, key])]);
+  }, []);
 
   const handleRemoveKeys = useCallback(
     (key: string) => {
@@ -43,7 +40,7 @@ export function LimitWrapper({
       newKeys.splice(newKeys.indexOf(key), 1);
       setUnavailableBalanceKeys(newKeys);
     },
-    [unavailableBalanceKeys, setUnavailableBalanceKeys],
+    [unavailableBalanceKeys],
   );
 
   return (

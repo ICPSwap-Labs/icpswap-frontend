@@ -107,7 +107,7 @@ export function BarChartAlt({
             cursor={{ fill: "#29314F" }}
             contentStyle={{ display: "none" }}
             // @ts-expect-error
-            formatter={(value: number, name: string, props: { payload: { time: string; value: number } }) => {
+            formatter={(_value: number, _name: string, props: { payload: { time: string; value: number } }) => {
               if (setValue && parsedValue !== props.payload.value) {
                 setValue(props.payload.value);
               }

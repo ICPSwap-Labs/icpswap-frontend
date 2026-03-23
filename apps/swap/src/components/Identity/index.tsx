@@ -1,7 +1,7 @@
 import { useFullscreenLoading } from "hooks/useTips";
 import isFunction from "lodash/isFunction";
 import type React from "react";
-import { forwardRef, type Ref, useImperativeHandle, useMemo, useState } from "react";
+import { forwardRef, type Ref, useCallback, useImperativeHandle, useMemo, useState } from "react";
 
 export type SubmitLoadingProps = { loading: boolean; closeLoading: () => void };
 
@@ -27,45 +27,48 @@ function Identity({ onSubmit, children, fullScreenLoading }: IdentityProps, ref:
   const [commonLoading, setCommonLoading] = useState(false);
   const [openFullscreenLoading, closeFullscreenLoading, fullLoading] = useFullscreenLoading();
 
-  const openLoading = () => {
+  const openLoading = useCallback(() => {
     if (fullScreenLoading) {
       openFullscreenLoading();
     } else {
       setCommonLoading(true);
     }
-  };
+  }, [fullScreenLoading, openFullscreenLoading]);
 
-  const closeLoading = () => {
+  const closeLoading = useCallback(() => {
     if (fullScreenLoading) {
       closeFullscreenLoading();
     } else {
       setCommonLoading(false);
     }
-  };
+  }, [fullScreenLoading, closeFullscreenLoading]);
 
   const loading = useMemo(() => {
     if (fullScreenLoading) return fullLoading;
     return commonLoading;
   }, [fullLoading, commonLoading, fullScreenLoading]);
 
-  const submit: Submit = async (params?: any) => {
-    try {
-      // TODO: Actor.create use un-anonymous
-      openLoading();
-      await onSubmit(true, { loading, closeLoading }, params);
-      closeLoading();
-    } catch (error) {
-      console.error(error);
-      closeLoading();
-    }
-  };
+  const submit: Submit = useCallback(
+    async (params?: any) => {
+      try {
+        // TODO: Actor.create use un-anonymous
+        openLoading();
+        await onSubmit(true, { loading, closeLoading }, params);
+        closeLoading();
+      } catch (error) {
+        console.error(error);
+        closeLoading();
+      }
+    },
+    [openLoading, closeLoading, onSubmit, loading],
+  );
 
   useImperativeHandle(
     ref,
     () => ({
       submit,
     }),
-    [],
+    [submit],
   );
 
   return <>{isFunction(children) ? children({ submit, loading }) : children}</>;

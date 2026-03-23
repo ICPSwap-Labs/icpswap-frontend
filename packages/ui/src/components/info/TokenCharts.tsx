@@ -48,7 +48,7 @@ function volumeDataFormatter(data: InfoTokenDataResponse[]) {
 
     if (next) {
       const diff = next.beginTime - curr.beginTime;
-      const days = parseInt((Number(diff) / (3600 * 24 * 1000)).toString());
+      const days = parseInt((Number(diff) / (3600 * 24 * 1000)).toString(), 10);
 
       if (days === 1) {
         newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
@@ -68,9 +68,9 @@ function volumeDataFormatter(data: InfoTokenDataResponse[]) {
     }
   }
 
-  const now = new Date().getTime();
+  const now = Date.now();
   const endTime = oldData[oldData.length - 1].beginTime;
-  const days = parseInt(((now - Number(endTime) * 1000) / (1000 * 3600 * 24)).toString());
+  const days = parseInt(((now - Number(endTime) * 1000) / (1000 * 3600 * 24)).toString(), 10);
 
   // Fill the latest data to today
   for (let i = 1; i <= days; i++) {

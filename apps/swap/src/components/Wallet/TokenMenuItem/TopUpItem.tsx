@@ -4,11 +4,7 @@ import { useWalletContext } from "components/Wallet/context";
 import { useWalletTokenContext } from "components/Wallet/token/context";
 import { useCallback } from "react";
 
-interface TopUpItemProps {
-  tokenId: string;
-}
-
-export function TopUpItem({ tokenId }: TopUpItemProps) {
+export function TopUpItem() {
   const theme = useTheme();
   const { setOpen } = useWalletContext();
   const { setXTCTopUpShow } = useWalletTokenContext();
@@ -16,7 +12,7 @@ export function TopUpItem({ tokenId }: TopUpItemProps) {
   const handleTopUp = useCallback(() => {
     setOpen(false);
     setXTCTopUpShow(true);
-  }, [tokenId]);
+  }, [setOpen, setXTCTopUpShow]);
 
   return (
     <MenuItem

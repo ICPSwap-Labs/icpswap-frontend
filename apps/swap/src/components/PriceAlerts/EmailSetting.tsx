@@ -3,7 +3,7 @@ import { ResultStatus } from "@icpswap/types";
 import { FilledTextField, Modal, TextButton } from "@icpswap/ui";
 import { isUndefinedOrNull, isUndefinedOrNullOrEmpty, validateEmail } from "@icpswap/utils";
 import { Box, Button, CircularProgress, InputAdornment, Typography } from "components/Mui";
-import { useAlertsRefetchManager, useResetEmailManager } from "components/PriceAlerts/state";
+import { useResetEmailManager } from "components/PriceAlerts/state";
 import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
 import { TIP_ERROR, TIP_SUCCESS, useTips } from "hooks/index";
 import { useCallback, useMemo, useState } from "react";
@@ -15,9 +15,10 @@ interface EmailSettingProps {
   open: boolean;
   onClose?: () => void;
   onVerifySuccess?: () => void;
+  refetch?: () => void;
 }
 
-export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingProps) {
+export function EmailSetting({ open, onClose, onVerifySuccess, refetch }: EmailSettingProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
@@ -28,7 +29,6 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
   const [showGetCode, setShowGetCode] = useShowGetCodeManager();
   const [second] = useEmailSecondManger();
   const [isResetEmail] = useResetEmailManager();
-  const [alertQueryResult] = useAlertsRefetchManager();
 
   const handleGetCode = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(email)) return;
@@ -64,7 +64,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
       // And refetch alerts
       if (isResetEmail) {
         await deletePriceAlertEmail();
-        if (alertQueryResult?.refetch) alertQueryResult.refetch();
+        refetch?.();
       }
 
       openTip(t("price.alerts.email.verify.success"), TIP_SUCCESS);
@@ -76,7 +76,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
     }
 
     setVerifyLoading(false);
-  }, [principal, email, code, onClose, onVerifySuccess, isResetEmail, alertQueryResult, openTip, t]);
+  }, [principal, email, code, onClose, onVerifySuccess, isResetEmail, refetch, openTip, t]);
 
   const disableGetCode = useMemo(() => {
     if (isUndefinedOrNull(email)) return true;

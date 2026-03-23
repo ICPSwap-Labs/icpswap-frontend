@@ -25,7 +25,7 @@ export function useUpdateDissolveTx() {
 
       dispatch(updateDogeDissolveTxs(tx));
     },
-    [principal],
+    [principal, dispatch],
   );
 }
 
@@ -38,7 +38,7 @@ export function useDissolveTxManager() {
       if (!principal) return;
       dispatch(updateDogeDissolveTxs(tx));
     },
-    [principal],
+    [principal, dispatch],
   );
 }
 
@@ -50,7 +50,7 @@ export function useDogeDissolveTxs() {
     if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(principal)) return undefined;
 
     return allDissolveTxs.filter((tx) => tx.principal === principal);
-  }, [principal, JSON.stringify(allDissolveTxs)]);
+  }, [principal, allDissolveTxs]);
 }
 
 export function useDogeDissolveTx(hash: string | undefined) {
@@ -66,6 +66,7 @@ export function useDogeDissolveTx(hash: string | undefined) {
 export function useDogeUnFinalizedDissolveTxs() {
   const dissolveTxs = useDogeDissolveTxs();
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     if (isUndefinedOrNull(dissolveTxs)) return undefined;
 

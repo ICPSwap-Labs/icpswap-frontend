@@ -65,7 +65,7 @@ export function Mint({ token, balance, address, refetch }: MintProps) {
     }
 
     setLoading(false);
-  }, [setLoading, loading, principal, refetch]);
+  }, [loading, principal, refetch, openTip, t]);
 
   useInterval({
     callback: useCallback(() => {

@@ -54,7 +54,7 @@ export function NFTExtSend() {
 
       setLoading(false);
     },
-    [setSelectedContact, setLoading, principal, setPages],
+    [setSelectedContact, principal, setPages, extNFTSendingInfo, openTip, t],
   );
 
   return extNFTSendingInfo ? (

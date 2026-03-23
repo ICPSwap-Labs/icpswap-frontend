@@ -241,6 +241,15 @@ export function usePlaceOrderCalls() {
         placeOrder,
       ].filter((fn) => fn !== undefined) as (() => Promise<boolean>)[];
     },
-    [updatePlaceOrderPositionId, approve, transfer, deposit],
+    [
+      updatePlaceOrderPositionId,
+      approve,
+      transfer,
+      deposit,
+      openErrorTip,
+      openSuccessTip,
+      t,
+      updateStoreUserPositionPool,
+    ],
   );
 }

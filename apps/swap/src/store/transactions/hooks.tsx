@@ -115,7 +115,7 @@ export function useIsTransactionConfirmed(transactionHash?: string): boolean {
  * @param tx to check for recency
  */
 function isTransactionRecent(tx: TransactionDetails): boolean {
-  return new Date().getTime() - tx.addedTime < 86_400_000;
+  return Date.now() - tx.addedTime < 86_400_000;
 }
 
 function usePendingApprovalAmount(token: ERC20Token | Null, spender: string | Null): BigNumber | undefined {

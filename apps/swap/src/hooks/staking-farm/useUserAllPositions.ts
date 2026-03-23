@@ -51,7 +51,7 @@ export function useFarmUserAllPositions() {
                 return farms.find((farm) => farm[1].toString() === farmId && farm[0].toString() === poolId);
               });
 
-              if (farmInitArgs && farmInitArgs[0].priceInsideLimit) {
+              if (farmInitArgs?.[0].priceInsideLimit) {
                 // Filter the invalid position and in range position
                 return {
                   metadata,

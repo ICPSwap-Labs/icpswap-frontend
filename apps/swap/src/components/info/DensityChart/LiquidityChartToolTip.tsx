@@ -136,34 +136,32 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
           />
         </GridRowBetween>
 
-        <>
-          <GridRowBetween>
-            <Typography color="text.primary" fontSize="12px">
-              {price0IsLessThanCurrentPrice ? token0?.symbol : token1?.symbol} Locked:{" "}
-            </Typography>
-            <Typography color="text.primary" fontSize="12px">
-              {price0IsLessThanCurrentPrice
-                ? `${tvlToken0 ? formatAmount(tvlToken0) : ""} ${token0?.symbol}`
-                : `${tvlToken1 ? formatAmount(tvlToken1) : ""} ${token1?.symbol}`}
-            </Typography>
-          </GridRowBetween>
-          <GridRowBetween>
-            <Typography color="text.primary" fontSize="12px">
-              Swap quote:
-            </Typography>
-            <Typography color="text.primary" fontSize="12px">
-              {lockedToken0Amount && lockedToken1Amount
-                ? price0IsLessThanCurrentPrice
-                  ? `${formatAmount(lockedToken1Amount)} ${token1?.symbol} → ${formatAmount(
-                      lockedToken0Amount,
-                    )} ${token0?.symbol}`
-                  : `${formatAmount(lockedToken0Amount)} ${token0?.symbol} → ${formatAmount(
-                      lockedToken1Amount,
-                    )} ${token1?.symbol}`
-                : ""}
-            </Typography>
-          </GridRowBetween>
-        </>
+        <GridRowBetween>
+          <Typography color="text.primary" fontSize="12px">
+            {price0IsLessThanCurrentPrice ? token0?.symbol : token1?.symbol} Locked:{" "}
+          </Typography>
+          <Typography color="text.primary" fontSize="12px">
+            {price0IsLessThanCurrentPrice
+              ? `${tvlToken0 ? formatAmount(tvlToken0) : ""} ${token0?.symbol}`
+              : `${tvlToken1 ? formatAmount(tvlToken1) : ""} ${token1?.symbol}`}
+          </Typography>
+        </GridRowBetween>
+        <GridRowBetween>
+          <Typography color="text.primary" fontSize="12px">
+            Swap quote:
+          </Typography>
+          <Typography color="text.primary" fontSize="12px">
+            {lockedToken0Amount && lockedToken1Amount
+              ? price0IsLessThanCurrentPrice
+                ? `${formatAmount(lockedToken1Amount)} ${token1?.symbol} → ${formatAmount(
+                    lockedToken0Amount,
+                  )} ${token0?.symbol}`
+                : `${formatAmount(lockedToken0Amount)} ${token0?.symbol} → ${formatAmount(
+                    lockedToken1Amount,
+                  )} ${token1?.symbol}`
+              : ""}
+          </Typography>
+        </GridRowBetween>
       </Flex>
     </Box>
   );

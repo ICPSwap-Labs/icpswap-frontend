@@ -36,7 +36,7 @@ export function PositionTable({
     setPagination({ pageNum: page, pageSize: 10 });
   };
 
-  // Reset pagination when pool or principal change
+  // biome-ignore lint: Reset pagination when pool or principal change
   useEffect(() => {
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
   }, [poolId, principal]);

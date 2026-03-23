@@ -127,45 +127,41 @@ export default function NFTCanisterList() {
 
   return (
     <Wrapper>
-      <>
-        <Title />
-        <Grid mt="20px">
-          <MainCard>
-            <Box mb={3}>
-              <Typography variant="h3">{t("canister.list")}</Typography>
-            </Box>
-            <Box sx={{ width: "100%", overflow: "auto" }}>
-              <Box sx={{ width: "100%", minWidth: "960px" }}>
-                <Header className={classes.wrapper}>
-                  <HeaderCell>{t("common.name")}</HeaderCell>
-                  <HeaderCell>{t("common.time")}</HeaderCell>
-                  <HeaderCell>{t("common.canister.id")}</HeaderCell>
-                  <HeaderCell>{t("nft.nfts.count")}</HeaderCell>
-                  <HeaderCell>{t("common.cycles")}</HeaderCell>
-                  <HeaderCell>&nbsp;</HeaderCell>
-                </Header>
+      <Title />
+      <Grid mt="20px">
+        <MainCard>
+          <Box mb={3}>
+            <Typography variant="h3">{t("canister.list")}</Typography>
+          </Box>
+          <Box sx={{ width: "100%", overflow: "auto" }}>
+            <Box sx={{ width: "100%", minWidth: "960px" }}>
+              <Header className={classes.wrapper}>
+                <HeaderCell>{t("common.name")}</HeaderCell>
+                <HeaderCell>{t("common.time")}</HeaderCell>
+                <HeaderCell>{t("common.canister.id")}</HeaderCell>
+                <HeaderCell>{t("nft.nfts.count")}</HeaderCell>
+                <HeaderCell>{t("common.cycles")}</HeaderCell>
+                <HeaderCell>&nbsp;</HeaderCell>
+              </Header>
 
-                <>
-                  {content.map((canister) => (
-                    <NFTCanisterListItem
-                      key={canister.cid}
-                      canister={canister}
-                      onDetailsClick={handleLoadDetails}
-                      onMintNFTClick={handleLoadMintNFT}
-                    />
-                  ))}
-                </>
-              </Box>
-              {content.length === 0 && !loading ? <NoData /> : null}
-              <ImageLoading loading={loading} />
+              {content.map((canister) => (
+                <NFTCanisterListItem
+                  key={canister.cid}
+                  canister={canister}
+                  onDetailsClick={handleLoadDetails}
+                  onMintNFTClick={handleLoadMintNFT}
+                />
+              ))}
             </Box>
+            {content.length === 0 && !loading ? <NoData /> : null}
+            <ImageLoading loading={loading} />
+          </Box>
 
-            {totalElements && Number(totalElements) !== 0 ? (
-              <Pagination length={Number(totalElements)} onPageChange={setPage} />
-            ) : null}
-          </MainCard>
-        </Grid>
-      </>
+          {totalElements && Number(totalElements) !== 0 ? (
+            <Pagination length={Number(totalElements)} onPageChange={setPage} />
+          ) : null}
+        </MainCard>
+      </Grid>
     </Wrapper>
   );
 }

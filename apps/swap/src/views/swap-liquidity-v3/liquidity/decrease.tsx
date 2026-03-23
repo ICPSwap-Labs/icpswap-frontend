@@ -86,7 +86,7 @@ export default function DecreaseLiquidity() {
         CurrencyAmountFormatDecimals(currencyB.decimals),
       ),
     };
-  }, [positionSDK]);
+  }, [positionSDK, currencyA, currencyB]);
 
   const liquidityPercentChangeCallback = useCallback(
     (value: number | number[]) => {
@@ -127,7 +127,7 @@ export default function DecreaseLiquidity() {
     navigate(-1);
   }, [navigate, resetBurnState]);
 
-  const handleDecreaseSuccess = () => {
+  const handleDecreaseSuccess = useCallback(() => {
     resetBurnState();
 
     if (liquidityToRemove.equalTo(1)) {
@@ -135,7 +135,7 @@ export default function DecreaseLiquidity() {
     } else {
       navigate(-1);
     }
-  };
+  }, [resetBurnState, liquidityToRemove, navigate]);
 
   const { amount0: feeAmount0, amount1: feeAmount1 } = usePositionFees(positionSDK?.pool.id, BigInt(positionId));
 
@@ -174,15 +174,28 @@ export default function DecreaseLiquidity() {
     }
 
     setLoading(false);
-  }, [positionSDK, liquidityToRemove, loading]);
+  }, [
+    positionSDK,
+    liquidityToRemove,
+    loading,
+    closeLoadingTip,
+    currencyA?.symbol,
+    currencyB?.symbol,
+    getDecreaseLiquidityCall,
+    handleDecreaseSuccess,
+    openLoadingTip,
+    openSuccessTip,
+    principal,
+    t,
+  ]);
 
   const handleDecreaseLiquidity = useCallback(() => {
     setConfirmModalShow(true);
-  }, [setConfirmModalShow]);
+  }, []);
 
   const handleCancel = useCallback(() => {
     setConfirmModalShow(false);
-  }, [setConfirmModalShow]);
+  }, []);
 
   return (
     <Wrapper>
@@ -230,7 +243,7 @@ export default function DecreaseLiquidity() {
               >
                 <MuiSlider
                   value={new BigNumber(liquidityPercentage?.toString() ?? 0).toNumber()}
-                  onChange={(event, value) => setLiquidityPercentage(value)}
+                  onChange={(_event, value) => setLiquidityPercentage(value)}
                 />
               </Box>
 

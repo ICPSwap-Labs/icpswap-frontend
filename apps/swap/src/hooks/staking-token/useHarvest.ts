@@ -19,19 +19,22 @@ function useHarvestCallback() {
   const updateStepData = useUpdateStepData();
   const stepsManager = useHarvestSteps();
 
-  return useCallback(async ({ poolId, token, key }: UseHarvestCallbackArgs) => {
-    const { status, message, data } = await stakingPoolHarvest(poolId);
+  return useCallback(
+    async ({ poolId, token, key }: UseHarvestCallbackArgs) => {
+      const { status, message, data } = await stakingPoolHarvest(poolId);
 
-    if (status === "err") {
-      openTip(`Failed to unstake ${token.symbol}: ${message}`, MessageTypes.error);
-      return false;
-    }
+      if (status === "err") {
+        openTip(`Failed to unstake ${token.symbol}: ${message}`, MessageTypes.error);
+        return false;
+      }
 
-    updateStepData(key, data);
-    stepsManager(key, { token, poolId });
+      updateStepData(key, data);
+      stepsManager(key, { token, poolId });
 
-    return true;
-  }, []);
+      return true;
+    },
+    [openTip, stepsManager, updateStepData],
+  );
 }
 
 interface UnstakeCallsArgs {

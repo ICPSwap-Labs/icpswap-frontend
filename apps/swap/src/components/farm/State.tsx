@@ -16,16 +16,20 @@ export function State({ farmInfo, noState }: StateProps) {
   const state = useFarmState(farmInfo);
   const stateColor = useStateColors(state);
 
-  return state ? (
-    <Box sx={{ padding: "6px 8px", borderRadius: "8px", background: theme.palette.background.level4 }}>
-      <Flex gap="0 4px">
-        <Box sx={{ width: "6px", height: "6px", borderRadius: "50%", background: stateColor }} />
-        <Typography fontSize="12px" sx={{ color: stateColor }}>
-          {state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())}
-        </Typography>
-      </Flex>
-    </Box>
-  ) : noState ? (
-    <>{noState}</>
-  ) : null;
+  return (
+    <>
+      {state ? (
+        <Box sx={{ padding: "6px 8px", borderRadius: "8px", background: theme.palette.background.level4 }}>
+          <Flex gap="0 4px">
+            <Box sx={{ width: "6px", height: "6px", borderRadius: "50%", background: stateColor }} />
+            <Typography fontSize="12px" sx={{ color: stateColor }}>
+              {state === "NOT_STARTED" ? "Unstart" : upperFirst(state.toLocaleLowerCase())}
+            </Typography>
+          </Flex>
+        </Box>
+      ) : (
+        (noState ?? null)
+      )}
+    </>
+  );
 }

@@ -35,7 +35,7 @@ function Pagination({ total, current, onNext, onPrev }: PaginationProps) {
     } else {
       onPrev(current - 1);
     }
-  }, [total, current, onNext]);
+  }, [total, current, onPrev]);
 
   const handleNext = useCallback(() => {
     if (current === total - 1) {

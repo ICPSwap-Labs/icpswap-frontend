@@ -78,7 +78,7 @@ export function useLogout() {
     dispatch(logout());
     updateLockStatus(true);
     dispatch(updateConnected({ isConnected: false }));
-  }, [dispatch, updateLockStatus]);
+  }, [dispatch]);
 }
 
 export function useDisconnect() {
@@ -90,7 +90,7 @@ export function useDisconnect() {
     if (walletType && window.icConnector) window.icConnector.disconnect();
     await updateLockStatus(true);
     dispatch(updateConnected({ isConnected: false }));
-  }, [dispatch, updateLockStatus]);
+  }, [dispatch, walletType]);
 }
 
 export function useAccountPrincipal(): Principal | undefined {
@@ -169,7 +169,7 @@ export function useInitialConnect() {
     }
 
     call();
-  }, [isUnLocked]);
+  }, [isUnLocked, disconnect, dispatch]);
 
   return useMemo(() => ({ loading }), [loading]);
 }
@@ -206,7 +206,7 @@ export function useIdentityKitInitialConnect() {
         //   return;
         // }
 
-        if (user && user.principal) {
+        if (user?.principal) {
           updateAuth({ walletType: connector, principal: user.principal.toString() });
           dispatch(updateConnected({ isConnected: true }));
           // Initial actor
@@ -223,7 +223,7 @@ export function useIdentityKitInitialConnect() {
     }
 
     call();
-  }, [connectManager, isInitializing, user, agent]);
+  }, [connectManager, isInitializing, user, agent, dispatch]);
 
   return useMemo(
     () => ({
@@ -249,25 +249,28 @@ export function useConnectManager() {
     [dispatch],
   );
 
-  const connect = useCallback(async (connector: Connector, connectorOutside?: null | WalletConnector) => {
-    if (IdentityKitConnector.includes(connector)) {
-      await identityKitConnect(IdentityKitId[connector]);
-      updateAuth({ walletType: connector, connected: false });
-      return true;
-    }
-
-    // Fix pop-up window was blocked when there is a asynchronous call before connecting the wallet
-    if (isSafari()) {
-      if (connectorOutside) {
-        return await connectorOutside.connect();
+  const connect = useCallback(
+    async (connector: Connector, connectorOutside?: null | WalletConnector) => {
+      if (IdentityKitConnector.includes(connector)) {
+        await identityKitConnect(IdentityKitId[connector]);
+        updateAuth({ walletType: connector, connected: false });
+        return true;
       }
 
-      throw new Error("Some unknown error happened. Please refresh the page to reconnect.");
-    }
+      // Fix pop-up window was blocked when there is a asynchronous call before connecting the wallet
+      if (isSafari()) {
+        if (connectorOutside) {
+          return await connectorOutside.connect();
+        }
 
-    await connectManager.init(connector);
-    return await connectManager.connect();
-  }, []);
+        throw new Error("Some unknown error happened. Please refresh the page to reconnect.");
+      }
+
+      await connectManager.init(connector);
+      return await connectManager.connect();
+    },
+    [identityKitConnect],
+  );
 
   const disconnect = useCallback(async () => {
     if (connector) {
@@ -277,7 +280,7 @@ export function useConnectManager() {
     }
 
     await authDisconnect();
-  }, [connector, identityKitDisconnect]);
+  }, [connector, identityKitDisconnect, authDisconnect]);
 
   const { loading } = useInitialConnect();
   useIdentityKitInitialConnect();

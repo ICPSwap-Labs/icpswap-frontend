@@ -22,7 +22,7 @@ import { useTranslation } from "react-i18next";
 
 function CountdownBox({ startTime, endTime }: { startTime: number; endTime: number }) {
   const { t } = useTranslation();
-  const nowTime = parseInt(String(Date.now() / 1000));
+  const nowTime = parseInt(String(Date.now() / 1000), 10);
   const isEnded = nowTime > endTime;
 
   if (isEnded) return <Typography color="text.primary">{t("common.end")}</Typography>;

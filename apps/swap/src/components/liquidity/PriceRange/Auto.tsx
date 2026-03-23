@@ -49,7 +49,7 @@ export const AutoPriceRangeButton = memo(
 
       onLeftRangeInput(chartPriceRange.min);
       onRightRangeInput(chartPriceRange.max);
-    }, [chartPriceRange]);
+    }, [chartPriceRange, onLeftRangeInput, onRightRangeInput, setRangeValue]);
 
     return (
       <RangeButton key="Auto" text={t("common.auto")} value="Auto" onClick={handleAutoRange} active={rangeValue} />

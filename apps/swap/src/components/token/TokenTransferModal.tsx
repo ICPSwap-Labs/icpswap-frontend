@@ -88,7 +88,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
     if (usePrincipalStandard(token.address, token.standard)) {
       try {
         Principal.fromText(values.to);
-      } catch (error) {
+      } catch (_error) {
         return t`Invalid principal ID`;
       }
     } else if (!isValidAccount(values.to) && !isValidPrincipal(values.to)) return t`Invalid account ID or principal ID`;

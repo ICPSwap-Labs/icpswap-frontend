@@ -17,7 +17,7 @@ export function LogoutConfirm() {
     await disconnect();
     setOpen(false);
     setLogoutConfirmOpen(false);
-  }, [disconnect]);
+  }, [disconnect, setLogoutConfirmOpen, setOpen]);
 
   return (
     <Confirm

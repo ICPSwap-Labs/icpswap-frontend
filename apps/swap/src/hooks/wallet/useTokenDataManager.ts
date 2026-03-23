@@ -46,7 +46,7 @@ export function useTokenDataManager({ tokenId, tokenBalance, balanceLoading }: U
         parseTokenAmount(tokenBalance, token.decimals).multipliedBy(priceBeforeChange),
       );
     }
-  }, [tokenBalance, infoToken, token, tokenPrice]);
+  }, [tokenBalance, infoToken, token, setTotalUSDBeforeChange, setTotalValue]);
 
   useEffect(() => {
     if (
@@ -59,7 +59,7 @@ export function useTokenDataManager({ tokenId, tokenBalance, balanceLoading }: U
     ) {
       setNoUSDTokens(token.address);
     }
-  }, [token, tokenBalance, balanceLoading, infoToken]);
+  }, [token, tokenBalance, balanceLoading, infoToken, setNoUSDTokens]);
 
   return useMemo(
     () => ({

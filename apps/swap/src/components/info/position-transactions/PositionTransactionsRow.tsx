@@ -29,42 +29,40 @@ export function PositionTransactionsRow({ transaction, wrapperClassName }: Posit
   const [, token1] = useToken(transaction.token1Id);
 
   return (
-    <>
-      <TableRow className={wrapperClassName} borderBottom={`1px solid ${theme.palette.border.level1}`}>
-        <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD hh:mm:ss")}</BodyCell>
+    <TableRow className={wrapperClassName} borderBottom={`1px solid ${theme.palette.border.level1}`}>
+      <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD hh:mm:ss")}</BodyCell>
 
-        <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
-          <Flex>
-            <TokenImage tokenId={transaction.token0Id} logo={token0?.logo} size="24px" />
-            <TokenImage tokenId={transaction.token1Id} logo={token1?.logo} size="24px" />
-          </Flex>
-          {transaction.token0Symbol}/{transaction.token1Symbol}
-        </BodyCell>
+      <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
+        <Flex>
+          <TokenImage tokenId={transaction.token0Id} logo={token0?.logo} size="24px" />
+          <TokenImage tokenId={transaction.token1Id} logo={token1?.logo} size="24px" />
+        </Flex>
+        {transaction.token0Symbol}/{transaction.token1Symbol}
+      </BodyCell>
 
-        <BodyCell sx={{ justifyContent: "flex-end" }}>{positionId ? positionId.toString() : "--"}</BodyCell>
+      <BodyCell sx={{ justifyContent: "flex-end" }}>{positionId ? positionId.toString() : "--"}</BodyCell>
 
-        <BodyCell sx={{ justifyContent: "flex-end" }}>
-          <Copy content={transaction.from}>{shorten(transaction.from)}</Copy>
-        </BodyCell>
+      <BodyCell sx={{ justifyContent: "flex-end" }}>
+        <Copy content={transaction.from}>{shorten(transaction.from)}</Copy>
+      </BodyCell>
 
-        <BodyCell sx={{ justifyContent: "flex-end" }}>
-          <Copy content={transaction.to}>{shorten(transaction.to)}</Copy>
-        </BodyCell>
+      <BodyCell sx={{ justifyContent: "flex-end" }}>
+        <Copy content={transaction.to}>{shorten(transaction.to)}</Copy>
+      </BodyCell>
 
-        <BodyCell sx={{ justifyContent: "flex-end" }}>
-          <TextButton
-            to={`/liquidity/position/${positionId}/${transaction.poolId}`}
-            sx={{
-              fontSize: "16px",
-              "@media(max-width: 640px)": {
-                fontSize: "14px",
-              },
-            }}
-          >
-            {t("common.details")}
-          </TextButton>
-        </BodyCell>
-      </TableRow>
-    </>
+      <BodyCell sx={{ justifyContent: "flex-end" }}>
+        <TextButton
+          to={`/liquidity/position/${positionId}/${transaction.poolId}`}
+          sx={{
+            fontSize: "16px",
+            "@media(max-width: 640px)": {
+              fontSize: "14px",
+            },
+          }}
+        >
+          {t("common.details")}
+        </TextButton>
+      </BodyCell>
+    </TableRow>
   );
 }

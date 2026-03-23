@@ -1,6 +1,6 @@
 import copyToClipboard from "copy-to-clipboard";
 import type React from "react";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useCallback, useImperativeHandle } from "react";
 
 import { Box } from "./Mui";
 
@@ -12,11 +12,11 @@ export interface CopyProps {
 }
 
 export const Copy = forwardRef(({ content, children, hide, onCopy }: CopyProps, ref) => {
-  const copy = () => {
+  const copy = useCallback(() => {
     if (!content) return;
     copyToClipboard(content);
     if (onCopy) onCopy();
-  };
+  }, [content, onCopy]);
 
   useImperativeHandle(
     ref,

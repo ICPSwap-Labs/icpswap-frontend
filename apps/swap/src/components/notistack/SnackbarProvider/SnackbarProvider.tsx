@@ -55,7 +55,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
     const { key, preventDuplicate, ...options } = opts;
 
     const hasSpecifiedKey = isDefined(key);
-    const id = hasSpecifiedKey ? (key as SnackbarKey) : new Date().getTime() + Math.random();
+    const id = hasSpecifiedKey ? (key as SnackbarKey) : Date.now() + Math.random();
 
     const merger = merge(options, this.props);
     const snack: InternalSnack = {
@@ -191,7 +191,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
   /**
    * Set the entered state of the snackbar with the given key.
    */
-  handleEnteredSnack: TransitionHandlerProps["onEntered"] = (node, isAppearing, key) => {
+  handleEnteredSnack: TransitionHandlerProps["onEntered"] = (_node, _isAppearing, key) => {
     if (!isDefined(key)) {
       throw new Error("handleEnteredSnack Cannot be called with undefined key");
     }
@@ -235,7 +235,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
   closeSnackbar: ProviderContext["closeSnackbar"] = (key) => {
     // call individual snackbar onClose callback passed through options parameter
     const toBeClosed = this.state.snacks.find((item) => item.id === key);
-    if (isDefined(key) && toBeClosed && toBeClosed.onClose) {
+    if (isDefined(key) && toBeClosed?.onClose) {
       toBeClosed.onClose(null, "instructed", key);
     }
 
@@ -249,7 +249,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
    * waiting in the queue (if any). If after this process the queue is not empty, the
    * oldest message is dismissed.
    */
-  handleExitedSnack: TransitionHandlerProps["onExited"] = (node, key) => {
+  handleExitedSnack: TransitionHandlerProps["onExited"] = (_node, key) => {
     if (!isDefined(key)) {
       throw new Error("handleExitedSnack Cannot be called with undefined key");
     }

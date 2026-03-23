@@ -106,7 +106,7 @@ export function SelectNeuronFuncs({ governance_id, onConfirm }: SelectNeuronFunc
               <Typography>{func.name}</Typography>
               <Checkbox
                 checked={selectedFuncIds.includes(func.id)}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+                onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                   handleCheckboxChange(checked, func.id)
                 }
               />

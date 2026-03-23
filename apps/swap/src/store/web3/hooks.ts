@@ -249,7 +249,6 @@ export function useErc20MintTx() {
 export function useErc20UnTxFinalizedTxs() {
   const principal = useAccountPrincipalString();
   const erc20MintTxs = useErc20AllMintTxs();
-  const allTxsResponse = store.getState().web3.ethTxResponse;
   const blockSynced = useEthereumTxSyncFinalized();
 
   return useMemo(() => {
@@ -263,7 +262,7 @@ export function useErc20UnTxFinalizedTxs() {
     });
 
     return unFinalizedTxs;
-  }, [principal, blockSynced, erc20MintTxs, allTxsResponse]);
+  }, [principal, blockSynced, erc20MintTxs]);
 }
 
 export function useUpdateBitcoinTxResponse() {

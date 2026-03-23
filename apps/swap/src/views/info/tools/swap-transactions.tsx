@@ -43,7 +43,7 @@ export default function SwapTransactions() {
 
   const { pair, principal } = useParsedQueryString() as { pair: string; principal: string | undefined };
 
-  const now = new Date().getTime();
+  const now = Date.now();
 
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
   const [startTime, setStartTime] = useState<undefined | number>(
@@ -82,10 +82,13 @@ export default function SwapTransactions() {
     setPagination({ pageNum: page, pageSize: 10 });
   };
 
-  const handleCopy = useCallback((address: string) => {
-    copyToClipboard(address);
-    openTip(t`Copy Success`, TIP_SUCCESS);
-  }, []);
+  const handleCopy = useCallback(
+    (address: string) => {
+      copyToClipboard(address);
+      openTip(t`Copy Success`, TIP_SUCCESS);
+    },
+    [openTip, t],
+  );
 
   const handleTimeRangeChange = useCallback((startTime: number, endTime: number) => {
     setPagination(DEFAULT_PAGINATION);

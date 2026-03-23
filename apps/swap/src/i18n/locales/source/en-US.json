@@ -1345,7 +1345,7 @@
   "swap.top.pools": "Top pools",
   "swap.total.trading.pairs": "Total trading pairs",
   "swap.total.users": "Total users",
-  "swap.tradingview.descriptions": "Token price charts powered by TradingView, the charting platform and social network that provides users with valuable information on market events through tools such as the <component>economic calendar</component>, stock analyser and others",
+  "swap.TradingView.descriptions": "Token price charts powered by TradingView, the charting platform and social network that provides users with valuable information on market events through tools such as the <component>economic calendar</component>, stock analyser and others",
   "swap.transactions.empty": "No Swap history, <highlight>Begin Swap</highlight>",
   "swap.transfer": "Transfer {{symbol}}",
   "swap.unused.token": "Unused {{symbol}}",

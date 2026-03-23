@@ -10,7 +10,7 @@ import { SWAP_FIELD } from "constants/swap";
 import type { UseCurrencyState } from "hooks/useCurrency";
 import { useCallback, useContext, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSwapHandlers, useSwapState } from "store/swap/hooks";
+import { useSwapState } from "store/swap/hooks";
 
 export interface SwapInputWrapperProps {
   onInput: (value: string, type: "input" | "output") => void;
@@ -71,15 +71,17 @@ export function SwapInputWrapper({
     [SWAP_FIELD.OUTPUT]: outputTokenId,
   } = useSwapState();
   const { setUSDValueChange } = useContext(SwapContext);
-  const { onSwitchTokens } = useSwapHandlers();
   const { tab: swapProTab } = useParsedQueryString() as { tab: string };
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6),
-  };
+  const formattedAmounts = useMemo(
+    () => ({
+      [independentField]: typedValue,
+      [dependentField]: parsedAmounts[dependentField]?.toSignificant(6),
+    }),
+    [independentField, typedValue, dependentField, parsedAmounts],
+  );
 
   const inputBalanceUSDValue = useMemo(() => {
     const amount = formattedAmounts[SWAP_FIELD.INPUT];
@@ -107,15 +109,15 @@ export function SwapInputWrapper({
     setUSDValueChange(USDChange);
   }, [setUSDValueChange, USDChange]);
 
+  // biome-ignore lint: should add inputTokenId and outputTokenId on dependencies
   const handleSwitchTokens = useCallback(() => {
     const prePath = ui === "pro" ? "/swap/pro" : "/swap";
-    navigate(
-      `${prePath}?input=${outputTokenId}&output=${inputTokenId}${
-        ui === "pro" && !!swapProTab ? `&tab=${swapProTab}` : ""
-      }`,
-    );
-    onSwitchTokens();
-  }, [onSwitchTokens, inputTokenId, outputTokenId, swapProTab]);
+    const path = `${prePath}?input=${outputTokenId}&output=${inputTokenId}${
+      ui === "pro" && !!swapProTab ? `&tab=${swapProTab}` : ""
+    }`;
+
+    navigate(path);
+  }, [swapProTab, navigate, ui, outputTokenId, inputTokenId]);
 
   return (
     <Box>

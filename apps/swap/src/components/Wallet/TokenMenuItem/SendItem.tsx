@@ -20,7 +20,7 @@ export function TokenSendItem({ tokenId }: TokenSendItemProps) {
       setPages(WalletManagerPage.Send, false);
       setSendToken(token);
     }
-  }, [setPages, tokenId, token]);
+  }, [setPages, token, setSendToken]);
 
   return (
     <MenuItem

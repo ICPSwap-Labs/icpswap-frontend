@@ -240,7 +240,7 @@ export function TokenSelector() {
     setLoading(true);
     await sleep(2000);
     setLoading(false);
-  }, []);
+  }, [setRefreshTrigger]);
 
   return (
     <DrawerWrapper

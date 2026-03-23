@@ -116,10 +116,13 @@ export function Transactions({
     setFilter(filter);
   };
 
-  const handleCopy = useCallback((address: string) => {
-    copyToClipboard(address);
-    openTip(t`Copy Success`, TIP_SUCCESS);
-  }, []);
+  const handleCopy = useCallback(
+    (address: string) => {
+      copyToClipboard(address);
+      openTip(t`Copy Success`, TIP_SUCCESS);
+    },
+    [openTip, t],
+  );
 
   return (
     <>

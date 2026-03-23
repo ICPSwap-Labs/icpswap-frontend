@@ -41,7 +41,7 @@ export function useDogeAddress() {
 
       setAddresses(JSON.stringify({ ...prevAddresses, [principal]: address }));
     }
-  }, [address, addresses, principal]);
+  }, [address, addresses, principal, setAddresses]);
 
   return useMemo(() => activeAddress, [activeAddress]);
 }

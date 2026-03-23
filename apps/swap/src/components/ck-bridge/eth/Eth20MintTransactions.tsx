@@ -133,13 +133,11 @@ export function EthMintTransactions() {
       </Typography>
 
       <Box>
-        <>
-          {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-            <NoData tip={t("ck.empty")} />
-          ) : (
-            transactions.map((transaction, index) => <Transaction key={index} transaction={transaction} />)
-          )}
-        </>
+        {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
+        ) : (
+          transactions.map((transaction, index) => <Transaction key={index} transaction={transaction} />)
+        )}
       </Box>
     </MainCard>
   );

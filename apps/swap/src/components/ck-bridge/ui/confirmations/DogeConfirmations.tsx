@@ -20,7 +20,7 @@ export function DogeMintConfirmations({ hash }: DogeMintConfirmationsProps) {
     const block = DOGE_MINT_CONFIRMATIONS - confirmations;
 
     return block < 0 ? 0 : block;
-  }, [DOGE_MINT_CONFIRMATIONS, confirmations]);
+  }, [confirmations]);
 
   return (
     <Flex sx={{ gap: "0 3px" }}>

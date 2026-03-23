@@ -63,7 +63,7 @@ export function useDissolve() {
 
       return dissolveResult === ResultStatus.OK;
     },
-    [approve, updateDissolveTx],
+    [approve, updateDissolveTx, openTip, t],
   );
 
   return useMemo(() => ({ loading, dissolve_call }), [loading, dissolve_call]);

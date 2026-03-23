@@ -162,154 +162,152 @@ export function PositionDetails({
   }, [feeAmount1, token1]);
 
   return (
-    <>
-      <Box
-        className={classes.detailContainer}
-        sx={{ display: show ? "flex" : "none", margin: "8px 0 0 0", gap: "20px 0", flexDirection: "column" }}
-      >
-        <PositionDetailItem label={t("common.position.id")} value={positionId.toString()} />
-        <PositionDetailItem
-          label={t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
-          value={
-            !position
-              ? "--"
-              : inverted
-                ? toSignificantWithGroupSeparator(
-                    position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
+    <Box
+      className={classes.detailContainer}
+      sx={{ display: show ? "flex" : "none", margin: "8px 0 0 0", gap: "20px 0", flexDirection: "column" }}
+    >
+      <PositionDetailItem label={t("common.position.id")} value={positionId.toString()} />
+      <PositionDetailItem
+        label={t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
+        value={
+          !position
+            ? "--"
+            : inverted
+              ? toSignificantWithGroupSeparator(
+                  position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
+                )
+              : toSignificantWithGroupSeparator(
+                  position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
+                )
+        }
+      />
+      <PositionDetailItem
+        label={t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
+        value={
+          !position
+            ? "--"
+            : inverted
+              ? toSignificantWithGroupSeparator(
+                  position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
+                )
+              : toSignificantWithGroupSeparator(
+                  position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
+                )
+        }
+      />
+      <PositionDetailItem
+        label={t("common.current.price")}
+        value={
+          !!token1 && !!token0 && pool
+            ? inverted
+              ? `${pool.priceOf(token1).toSignificant(6, { groupSeparator: "," })} ${pairName}`
+              : `${pool.priceOf(token0).toSignificant(6, { groupSeparator: "," })} ${pairName}`
+            : "--"
+        }
+        convert
+        onConvertClick={() => setManuallyInverted(!manuallyInverted)}
+      />
+      <PositionDetailItem
+        label={t("common.price.range")}
+        value={
+          <Box>
+            <Typography
+              color="text.primary"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
+              {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
+            </Typography>
+            <Typography
+              color="text.primary"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {pairName}
+            </Typography>
+          </Box>
+        }
+        convert
+        onConvertClick={() => setManuallyInverted(!manuallyInverted)}
+      />
+      <PositionDetailItem
+        label={t("common.uncollected.fees")}
+        value={
+          <Box>
+            <Typography
+              color="text.primary"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
+                ? `${toSignificantWithGroupSeparator(
+                    new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toString(),
+                  )} ${token0?.symbol}`
+                : "--"}
+            </Typography>
+            <Typography
+              color="text.primary"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
+                ? `and ${toSignificantWithGroupSeparator(
+                    new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toString(),
+                  )} ${token1?.symbol}`
+                : "--"}
+            </Typography>
+            <Typography
+              mt="5px"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {currencyFeeAmount0 !== undefined &&
+              currencyFeeAmount1 !== undefined &&
+              !!token0USDPrice &&
+              !!token1USDPrice
+                ? formatDollarAmount(
+                    new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0)
+                      .multipliedBy(token0USDPrice)
+                      .plus(
+                        new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).multipliedBy(
+                          token1USDPrice,
+                        ),
+                      )
+                      .toString(),
                   )
-                : toSignificantWithGroupSeparator(
-                    position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
-                  )
-          }
-        />
-        <PositionDetailItem
-          label={t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
-          value={
-            !position
-              ? "--"
-              : inverted
-                ? toSignificantWithGroupSeparator(
-                    position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
-                  )
-                : toSignificantWithGroupSeparator(
-                    position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
-                  )
-          }
-        />
-        <PositionDetailItem
-          label={t("common.current.price")}
-          value={
-            !!token1 && !!token0 && pool
-              ? inverted
-                ? `${pool.priceOf(token1).toSignificant(6, { groupSeparator: "," })} ${pairName}`
-                : `${pool.priceOf(token0).toSignificant(6, { groupSeparator: "," })} ${pairName}`
-              : "--"
-          }
-          convert
-          onConvertClick={() => setManuallyInverted(!manuallyInverted)}
-        />
-        <PositionDetailItem
-          label={t("common.price.range")}
-          value={
-            <Box>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
-                {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
-              </Typography>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {pairName}
-              </Typography>
-            </Box>
-          }
-          convert
-          onConvertClick={() => setManuallyInverted(!manuallyInverted)}
-        />
-        <PositionDetailItem
-          label={t("common.uncollected.fees")}
-          value={
-            <Box>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
-                  ? `${toSignificantWithGroupSeparator(
-                      new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toString(),
-                    )} ${token0?.symbol}`
-                  : "--"}
-              </Typography>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
-                  ? `and ${toSignificantWithGroupSeparator(
-                      new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toString(),
-                    )} ${token1?.symbol}`
-                  : "--"}
-              </Typography>
-              <Typography
-                mt="5px"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {currencyFeeAmount0 !== undefined &&
-                currencyFeeAmount1 !== undefined &&
-                !!token0USDPrice &&
-                !!token1USDPrice
-                  ? formatDollarAmount(
-                      new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0)
-                        .multipliedBy(token0USDPrice)
-                        .plus(
-                          new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).multipliedBy(
-                            token1USDPrice,
-                          ),
-                        )
-                        .toString(),
-                    )
-                  : "--"}
-              </Typography>
-            </Box>
-          }
-        />
+                : "--"}
+            </Typography>
+          </Box>
+        }
+      />
 
-        <Box>
-          <Typography sx={{ margin: "0  0 10px 0" }}>{t("common.transfer.to")}</Typography>
+      <Box>
+        <Typography sx={{ margin: "0  0 10px 0" }}>{t("common.transfer.to")}</Typography>
 
-          <FilledTextField multiline placeholder="Enter the principal ID" onChange={onPrincipalChange} />
-        </Box>
+        <FilledTextField multiline placeholder="Enter the principal ID" onChange={onPrincipalChange} />
       </Box>
-    </>
+    </Box>
   );
 }
 

@@ -19,7 +19,7 @@ export function __SwapTransactions({ pair, principal, startTime, endTime }: Swap
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
-  const { download, abort } = useDownloadSwapTransactions();
+  const { abort } = useDownloadSwapTransactions();
 
   const handleDownload = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(startTime) || isUndefinedOrNull(endTime)) return;
@@ -35,12 +35,12 @@ export function __SwapTransactions({ pair, principal, startTime, endTime }: Swap
     mockALinkAndOpen(link, "download-swap-transactions");
 
     setLoading(false);
-  }, [download, principal, pair, startTime, endTime]);
+  }, [principal, pair, startTime, endTime]);
 
-  // If principal and pair is changed, abort the elder calls
+  //biome-ignore lint: abort the elder calls when principal and pair is changed
   useEffect(() => {
     abort(true);
-  }, [principal, pair]);
+  }, [abort, principal]);
 
   const disabled = useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(startTime) || isUndefinedOrNull(endTime)) return true;

@@ -1,9 +1,12 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { createChart, type IChartApi } from "lightweight-charts";
 import type React from "react";
 import { type Dispatch, type ReactNode, type SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import { GridRowBetween } from "../Grid/Row";
 import { Box, useTheme } from "../Mui";
+
+dayjs.extend(utc);
 
 const DEFAULT_HEIGHT = 300;
 
@@ -50,7 +53,7 @@ export const CandleChart = ({
       });
       chartCreated.timeScale().scrollToPosition(0, false);
     }
-  }, [chartCreated, chartRef, height]);
+  }, [chartCreated, height]);
 
   // add event listener for resize
   const isClient = typeof window === "object";
@@ -60,7 +63,7 @@ export const CandleChart = ({
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [isClient, chartRef, handleResize]); // Empty array ensures that effect is only run on mount and unmount
+  }, [isClient, handleResize]); // Empty array ensures that effect is only run on mount and unmount
 
   // if chart not instantiated in canvas, create it
   useEffect(() => {
@@ -122,7 +125,7 @@ export const CandleChart = ({
 
       setChart(chart);
     }
-  }, [color, chartCreated, data, height, setValue, textColor, theme]);
+  }, [color, chartCreated, data, height, textColor]);
 
   useEffect(() => {
     if (chartCreated && data) {
@@ -160,10 +163,10 @@ export const CandleChart = ({
           chartRef?.current &&
           (param === undefined ||
             param.time === undefined ||
-            (param && param.point && param.point.x < 0) ||
-            (param && param.point && param.point.x > chartRef.current.clientWidth) ||
-            (param && param.point && param.point.y < 0) ||
-            (param && param.point && param.point.y > height))
+            (param?.point && param.point.x < 0) ||
+            (param?.point && param.point.x > chartRef.current.clientWidth) ||
+            (param?.point && param.point.y < 0) ||
+            (param?.point && param.point.y > height))
         ) {
           // reset values
           if (setValue) setValue(undefined);
@@ -179,7 +182,7 @@ export const CandleChart = ({
         }
       });
     }
-  }, [chartCreated, color, data, height, setValue, setLabel]);
+  }, [chartCreated, data, height, setValue, setLabel, onHoverChange]);
 
   return (
     <Box

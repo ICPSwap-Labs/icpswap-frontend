@@ -11,7 +11,7 @@ export enum POOL_STATE {
 export function getStakingTokenPoolState(pool: StakingPoolControllerPoolInfo | undefined | null): STATE {
   if (!pool) return STATE.LIVE;
 
-  const now = BigInt(new Date().getTime());
+  const now = BigInt(Date.now());
   const end = pool.bonusEndTime * BigInt(1000);
   const start = pool.startTime * BigInt(1000);
 

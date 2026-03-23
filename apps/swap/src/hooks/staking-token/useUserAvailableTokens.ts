@@ -54,7 +54,7 @@ export function useUserAvailableTokensValue() {
     }
 
     call();
-  }, [allAvailableStakeTokens, setAvailableTokens, allTokensInfo, principal, infoAllTokens]);
+  }, [allAvailableStakeTokens, allTokensInfo, principal, infoAllTokens]);
 
   return useMemo(
     () => ({

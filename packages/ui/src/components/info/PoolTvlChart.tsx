@@ -63,11 +63,11 @@ export function PoolTvlChart({ chartsData, loading, noData, height = "340px" }: 
       <LineChartAlt
         data={formattedData}
         setLabel={setValueLabel}
-        minHeight={parseInt(height)}
+        minHeight={parseInt(height, 10)}
         setValue={setLatestValue}
       />
     </>
   ) : noData ? (
-    <>{noData}</>
+    noData
   ) : null;
 }

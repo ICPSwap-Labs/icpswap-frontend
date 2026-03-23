@@ -5,7 +5,6 @@ import { icpAdapter, TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter
 import { ICP } from "@icpswap/tokens";
 import type { Null } from "@icpswap/types";
 import {
-  BigNumber,
   isOkSubAccount,
   isPrincipal,
   isUndefinedOrNull,
@@ -15,7 +14,7 @@ import {
   toHexString,
 } from "@icpswap/utils";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { getTokenStandard } from "store/token/cache/hooks";
 import { balanceAdapter, isNeedBalanceAdapter } from "utils/token/adapter";
@@ -101,12 +100,12 @@ export function useTokenBalance({
 }: {
   tokenId: string | undefined;
   account: string | Principal | Null;
-  refresh?: number | boolean | Null;
+  refresh?: number | Null;
   refetchInterval?: number;
   sub?: Uint8Array;
 }) {
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["getTokenBalance", tokenId, account, sub ? toHexString(sub) : ""],
+    queryKey: ["getTokenBalance", refresh, tokenId, account, sub ? toHexString(sub) : ""],
     queryFn: async () => {
       if (!account || !tokenId) return null;
       const result = await getTokenBalance(tokenId, account, sub);
@@ -116,10 +115,6 @@ export function useTokenBalance({
     enabled: nonUndefinedOrNull(account) && nonUndefinedOrNull(tokenId),
     refetchInterval,
   });
-
-  useEffect(() => {
-    refetch();
-  }, [refresh, refetch]);
 
   return useMemo(() => {
     return {
@@ -137,7 +132,7 @@ export function useActiveUserTokenBalance({
   refetchInterval,
 }: {
   tokenId: string | undefined;
-  refresh?: number | boolean | Null;
+  refresh?: number | Null;
   sub?: Uint8Array;
   refetchInterval?: number;
 }) {
@@ -152,62 +147,10 @@ export function useActiveUserTokenBalance({
   });
 }
 
-export type Balances = {
-  [key: string]: CurrencyAmount<Token>;
-};
-
-export function useCurrencyBalances(
-  account: string | Principal | undefined,
-  currencies: (Token | undefined | null)[],
-  reload?: boolean,
-) {
-  const [balances, setBalances] = useState<Balances>({} as Balances);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (account && currencies && currencies.length) {
-      setLoading(true);
-
-      const queryPromise = currencies.map((token) => {
-        if (token) {
-          return getTokenBalance(token.address, account).then(
-            (result) => new BigNumber(result ? result.toString() : "0"),
-          );
-        }
-
-        return new Promise<BigNumber>((resolve) => resolve(new BigNumber(0)));
-      });
-
-      Promise.all(queryPromise).then((result: BigNumber[]) => {
-        const balances = {} as Balances;
-
-        result.forEach((balance: BigNumber, index: number) => {
-          const token = currencies[index];
-
-          if (token) {
-            balances[token.address] = CurrencyAmount.fromRawAmount<Token>(token, balance ? balance.toString() : 0);
-          }
-        });
-
-        setBalances(balances);
-        setLoading(false);
-      });
-    }
-  }, [currencies, account, reload]);
-
-  return useMemo(
-    () => ({
-      loading,
-      result: balances ?? {},
-    }),
-    [balances, loading],
-  );
-}
-
 export function useCurrencyBalance(
   account: string | Principal | undefined,
   token: Token | undefined,
-  refresh?: boolean | number,
+  refresh?: number,
 ) {
   const { loading, result } = useTokenBalance({ tokenId: token?.address, account, refresh });
 

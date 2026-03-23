@@ -76,7 +76,7 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
 
   useEffect(() => {
     setSlippageValue(new BigNumber(slippageTolerance).div(1000).toString());
-  }, []);
+  }, [slippageTolerance]);
 
   const handleSlippageInput = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +107,7 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
 
       setSlippageTolerance(new BigNumber(value).multipliedBy(1000).toNumber());
     },
-    [setSlippageTolerance],
+    [setSlippageTolerance, type],
   );
 
   const handleToggleSlippage = (slippage: { id: string; value: number }) => {

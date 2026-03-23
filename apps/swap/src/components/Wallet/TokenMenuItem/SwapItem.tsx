@@ -21,7 +21,7 @@ export function SwapItem({ tokenId }: SwapItemProps) {
       navigate(`/swap?input=${tokenId}&output=${ICP.address}`);
     }
     setOpen(false);
-  }, [tokenId]);
+  }, [tokenId, navigate, setOpen]);
 
   return (
     <MenuItem

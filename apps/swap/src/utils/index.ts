@@ -55,7 +55,7 @@ export function toDoubleNumber(value: number | string) {
 }
 
 export function counter(time: string | number | Date): CountingTime {
-  const now = new Date().getTime();
+  const now = Date.now();
   const end = new Date(time).getTime();
 
   const diff = end - now;
@@ -68,9 +68,9 @@ export function counter(time: string | number | Date): CountingTime {
     };
   }
 
-  const sec = parseInt(String((diff / 1000) % 60));
-  const min = parseInt(String((diff / (60 * 1000)) % 60));
-  const hour = parseInt(String(diff / (60 * 60 * 1000)));
+  const sec = parseInt(String((diff / 1000) % 60), 10);
+  const min = parseInt(String((diff / (60 * 1000)) % 60), 10);
+  const hour = parseInt(String(diff / (60 * 60 * 1000)), 10);
 
   return {
     hour: toDoubleNumber(hour),

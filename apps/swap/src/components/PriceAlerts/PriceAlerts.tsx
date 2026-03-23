@@ -6,7 +6,7 @@ import { TokenImage } from "components/Image";
 import { Box, Button, CircularProgress, Collapse, Typography, useTheme } from "components/Mui";
 import { CreateAlertsModal } from "components/PriceAlerts/CreateAlerts";
 import { EmailSetting } from "components/PriceAlerts/EmailSetting";
-import { useAlertsRefetchManager, useResetEmailManager, useShowEmailManager } from "components/PriceAlerts/state";
+import { useResetEmailManager, useShowEmailManager } from "components/PriceAlerts/state";
 import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
 import { TIP_ERROR, TIP_SUCCESS, useTips, useToken } from "hooks/index";
 import { useCallback, useMemo, useState } from "react";
@@ -26,15 +26,15 @@ type SortedAlerts = {
 
 interface PriceAlertRowProps {
   alert: AlertInfo;
+  refetch?: () => void;
 }
 
-function PriceAlertRow({ alert }: PriceAlertRowProps) {
+function PriceAlertRow({ alert, refetch }: PriceAlertRowProps) {
   const theme = useTheme();
   const { t } = useTranslation();
   const [openTip] = useTips();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(true);
-  const [alertQueryResult] = useAlertsRefetchManager();
 
   const alert_message = useMemo(() => {
     const type = alert.alertType;
@@ -63,14 +63,14 @@ function PriceAlertRow({ alert }: PriceAlertRowProps) {
 
     if (status === ResultStatus.OK) {
       openTip("Delete alert successfully", TIP_SUCCESS);
-      if (alertQueryResult?.refetch) alertQueryResult.refetch();
+      refetch?.();
       setVisible(false);
     } else {
       openTip(message ?? "Failed to delete alert", TIP_ERROR);
     }
 
     setLoading(false);
-  }, [alert, openTip, alertQueryResult?.refetch, loading]);
+  }, [alert, openTip, refetch, loading]);
 
   return (
     <Box
@@ -122,9 +122,10 @@ function PriceAlertRow({ alert }: PriceAlertRowProps) {
 interface PriceAlertsGroupProps {
   alerts: Array<AlertInfo>;
   tokenId: string;
+  refetch?: () => void;
 }
 
-function PriceAlertsGroup({ alerts, tokenId }: PriceAlertsGroupProps) {
+function PriceAlertsGroup({ alerts, tokenId, refetch }: PriceAlertsGroupProps) {
   const [, token] = useToken(tokenId);
   const infoToken = useInfoToken(tokenId);
 
@@ -164,7 +165,7 @@ function PriceAlertsGroup({ alerts, tokenId }: PriceAlertsGroupProps) {
       <Collapse in={open} timeout="auto" sx={{ width: "100%" }}>
         <Flex vertical fullWidth align="flex-start" gap="8px 0" sx={{ margin: "16px 0 0 0" }}>
           {alerts.map((element) => (
-            <PriceAlertRow key={element.id.toString()} alert={element} />
+            <PriceAlertRow key={element.id.toString()} alert={element} refetch={refetch} />
           ))}
         </Flex>
       </Collapse>
@@ -178,16 +179,23 @@ interface PriceAlertsProps {
   alerts: AlertInfo[] | undefined;
   isPending: boolean;
   defaultTokenId?: string | Null;
+  refetch?: () => void;
 }
 
-export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts, defaultTokenId }: PriceAlertsProps) {
+export function PriceAlerts({
+  open,
+  onClose,
+  isPending: isAlertsPending,
+  alerts,
+  defaultTokenId,
+  refetch,
+}: PriceAlertsProps) {
   const principal = useAccountPrincipalString();
   const { isPending: alertEmailPending, data: alertEmail, refetch: refetchAlertEmail } = usePriceAlertEmail(principal);
   const { t } = useTranslation();
   const [showEmail, setShowEmail] = useShowEmailManager();
   const [showCreateAlert, setShowCreateAlert] = useState<boolean>(false);
   const [, setIsResetEmail] = useResetEmailManager();
-  const [alertQueryResult] = useAlertsRefetchManager();
 
   const handleCreateAlert = useCallback(() => {
     if (alertEmailPending) return;
@@ -200,8 +208,8 @@ export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts,
   }, [alertEmail, alertEmailPending, setShowEmail]);
 
   const handleCreateAlertSuccess = useCallback(() => {
-    if (alertQueryResult?.refetch) alertQueryResult.refetch();
-  }, [alertQueryResult?.refetch]);
+    refetch?.();
+  }, [refetch]);
 
   const sortedAlerts = useMemo(() => {
     if (isUndefinedOrNull(alerts)) return [];
@@ -214,7 +222,7 @@ export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts,
           return prev.concat([{ tokenId: curr.tokenId, alerts: [curr] }]);
         }
 
-        const new_alerts = [...prev];
+        const new_alerts = prev.slice();
 
         new_alerts.splice(index, 1, {
           tokenId: prev[index].tokenId,
@@ -263,7 +271,12 @@ export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts,
           ) : (
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: "30px 0" }}>
               {sortedAlerts.map((element) => (
-                <PriceAlertsGroup key={element.tokenId.toString()} alerts={element.alerts} tokenId={element.tokenId} />
+                <PriceAlertsGroup
+                  key={element.tokenId.toString()}
+                  alerts={element.alerts}
+                  tokenId={element.tokenId}
+                  refetch={refetch}
+                />
               ))}
             </Box>
           )}
@@ -277,7 +290,12 @@ export function PriceAlerts({ open, onClose, isPending: isAlertsPending, alerts,
       </Modal>
 
       {showEmail ? (
-        <EmailSetting open={showEmail} onClose={handleEmailSettingClose} onVerifySuccess={handleVerifySuccess} />
+        <EmailSetting
+          open={showEmail}
+          onClose={handleEmailSettingClose}
+          onVerifySuccess={handleVerifySuccess}
+          refetch={refetch}
+        />
       ) : null}
       {showCreateAlert ? (
         <CreateAlertsModal

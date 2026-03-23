@@ -9,5 +9,5 @@ export function useCopySuccess() {
 
   return useCallback(() => {
     openTip(t("common.copy.success"), MessageTypes.success);
-  }, []);
+  }, [openTip, t]);
 }

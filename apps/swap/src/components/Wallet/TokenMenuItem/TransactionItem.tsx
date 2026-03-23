@@ -29,11 +29,11 @@ export function TransactionItem({ tokenId, isBridgeToken }: TransactionItemProps
 
   const handleMouseEnter = useCallback(() => {
     setOpen(true);
-  }, [setOpen]);
+  }, []);
 
   const handleMouseLeave = useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
+  }, []);
 
   return (
     <Box ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>

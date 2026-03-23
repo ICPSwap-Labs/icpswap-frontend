@@ -19,7 +19,7 @@ export function BtcBridgeDissolve({ token, bridgeChain }: BtcBridgeDissolveProps
       if (!token) return;
       return await dissolve_call({ address, amount, token });
     },
-    [dissolve_call],
+    [dissolve_call, token],
   );
 
   return (

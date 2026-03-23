@@ -34,7 +34,15 @@ export function DeleteAddressConfirm() {
     if (pages[0] === WalletManagerPage.EditAddress) {
       setPages(WalletManagerPage.AddressBook);
     }
-  }, [addressBook, deleteAddressBookLoading, setRefreshTrigger, pages, setPages]);
+  }, [
+    addressBook,
+    deleteAddressBookLoading,
+    setRefreshTrigger,
+    pages,
+    setPages,
+    setDeleteAddressBook,
+    setDeleteAddressBookLoading,
+  ]);
 
   return (
     <Confirm

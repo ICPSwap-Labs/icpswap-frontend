@@ -91,7 +91,7 @@ export default function CreateStakingTokenPool() {
     };
 
     call();
-  }, [values.rewardToken, values.rewardStandard]);
+  }, [values.rewardToken, values.rewardStandard, openTip, updateTokenStandard]);
 
   const handleCreateEvent = async () => {
     if (loading || !principal) return;

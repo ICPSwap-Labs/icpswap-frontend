@@ -206,7 +206,7 @@ export function useIncreaseLiquidityCalls() {
         _increaseLiquidity,
       ];
     },
-    [principal],
+    [principal, approve, deposit, transfer, openSuccessTip, t],
   );
 }
 
@@ -220,17 +220,20 @@ function useInitialAddLiquiditySteps() {
 
   const stepsToReclaimCallback = useStepsToReclaimCallback();
 
-  return useCallback((key: string, { position }: InitialAddLiquidityStepsArgs) => {
-    const content = getIncreaseLiquiditySteps({
-      position,
-      handleReclaim: stepsToReclaimCallback,
-    });
+  return useCallback(
+    (key: string, { position }: InitialAddLiquidityStepsArgs) => {
+      const content = getIncreaseLiquiditySteps({
+        position,
+        handleReclaim: stepsToReclaimCallback,
+      });
 
-    stepContentManage(String(key), {
-      content,
-      title: t("swap.add.liquidity.details"),
-    });
-  }, []);
+      stepContentManage(String(key), {
+        content,
+        title: t("swap.add.liquidity.details"),
+      });
+    },
+    [stepContentManage, t, stepsToReclaimCallback],
+  );
 }
 
 export interface IncreaseLiquidityCallProps {

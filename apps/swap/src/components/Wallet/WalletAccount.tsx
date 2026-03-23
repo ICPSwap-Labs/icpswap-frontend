@@ -101,7 +101,7 @@ export default function WalletAccount() {
     return `${totalValue.minus(totalUSDBeforeChange).dividedBy(totalUSDBeforeChange).multipliedBy(100).toFixed(2)}%`;
   }, [totalUSDBeforeChange, totalValue]);
 
-  const usdChangeType = usdChange && usdChange.includes("-") ? "down" : "up";
+  const usdChangeType = usdChange?.includes("-") ? "down" : "up";
   const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";
 
   const handleRefreshBalance = () => {

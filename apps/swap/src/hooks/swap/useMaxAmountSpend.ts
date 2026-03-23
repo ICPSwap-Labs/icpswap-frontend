@@ -86,7 +86,7 @@ export function useBalanceMaxSpend({ token, balance, poolId, allowance: __allowa
     }
 
     return CurrencyAmount.fromRawAmount(token, new BigNumber(balance).minus(token.transFee).toString());
-  }, [allowance, __allowance, token, balance, allowanceCanisterId]);
+  }, [allowance, __allowance, token, balance]);
 }
 
 export interface UseMaxAmountSpendArgs {
@@ -115,5 +115,5 @@ export function useAllBalanceMaxSpend({
     if (!maxBalanceSpend.currency.equals(maxPoolBalanceSpent.currency)) return undefined;
 
     return maxBalanceSpend.add(maxPoolBalanceSpent);
-  }, [maxBalanceSpend, maxPoolBalanceSpent]);
+  }, [maxBalanceSpend, maxPoolBalanceSpent, token]);
 }

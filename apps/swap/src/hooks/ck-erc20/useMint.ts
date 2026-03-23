@@ -41,7 +41,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
 
   const subAccountBytes32 = useMemo(() => {
     return bytesStringOfNullSubAccount;
-  }, [principal]);
+  }, []);
 
   const mint_call = useCallback(
     async (erc20: ERC20Token, amount: string | number, token: Token, blockNumber: number | string) => {
@@ -70,9 +70,9 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
           openTip(t("ck.mint.submitted", { symbol: erc20.symbol }), MessageTypes.success);
         }
 
-        if (response && response.hash) {
+        if (response?.hash) {
           updateErc20Tx(principal, token.address, {
-            timestamp: String(new Date().getTime()),
+            timestamp: String(Date.now()),
             block: String(blockNumber),
             hash: response.hash,
             from: response.from,
@@ -95,7 +95,7 @@ export function useMintCallback({ helperContractAddress, amount, erc20Token }: U
 
       return undefined;
     },
-    [helperContract, approveState, approve, bytes32, principal, updateErc20Tx, subAccountBytes32],
+    [helperContract, approveState, approve, bytes32, principal, updateErc20Tx, subAccountBytes32, openTip, t],
   );
 
   return useMemo(() => ({ loading, mint_call, approveState }), [loading, mint_call, approveState]);

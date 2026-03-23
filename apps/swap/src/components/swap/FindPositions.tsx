@@ -136,7 +136,7 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
     onClose();
     setTokenA(null);
     setTokenB(null);
-  }, [onClose, setTokenA, setTokenB]);
+  }, [onClose]);
 
   const selectedTokenIds = useMemo(() => {
     return [tokenA?.address, tokenB?.address].filter((ele) => !!ele) as string[];

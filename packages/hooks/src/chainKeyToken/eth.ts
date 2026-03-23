@@ -65,7 +65,9 @@ export function useWithdrawErc20TokenStatus({
 }
 
 export async function getChainKeyMinterInfo(minter_id: string) {
-  return resultFormat<ChainKeyETHMinterInfo>(await (await chainKeyETHMinter(minter_id)).get_minter_info()).data;
+  const actor = await chainKeyETHMinter(minter_id);
+  const result = await actor.get_minter_info();
+  return resultFormat<ChainKeyETHMinterInfo>(result).data;
 }
 
 export function useChainKeyMinterInfo(

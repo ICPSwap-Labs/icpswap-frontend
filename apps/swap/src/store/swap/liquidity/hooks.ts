@@ -98,7 +98,7 @@ export function useMintInfo(
     return {
       poolId: pool.id,
     };
-  }, [pool, poolState]);
+  }, [pool]);
 
   const hasPairWithBaseToken = useTokensHasPairWithBaseToken(tokens);
 
@@ -235,7 +235,7 @@ export function useMintInfo(
       [Bound.LOWER]: feeAmount && tickLower === tickSpaceLimits.LOWER,
       [Bound.UPPER]: feeAmount && tickUpper === tickSpaceLimits.UPPER,
     }),
-    [tickSpaceLimits, tickLower, tickUpper, feeAmount],
+    [tickSpaceLimits, feeAmount],
   );
 
   const ticksAtLimit = useMemo(() => {
@@ -301,17 +301,7 @@ export function useMintInfo(
     }
 
     return undefined;
-  }, [
-    independentAmount,
-    outOfRange,
-    dependentField,
-    tokenB,
-    tokenA,
-    tickLower,
-    tickUpper,
-    poolForPosition,
-    invalidRange,
-  ]);
+  }, [independentAmount, outOfRange, dependentField, tokenB, tokenA, poolForPosition, invalidRange]);
 
   const parsedAmounts = useMemo(() => {
     return {
@@ -373,17 +363,7 @@ export function useMintInfo(
     }
 
     return undefined;
-  }, [
-    parsedAmounts,
-    poolForPosition,
-    tokenA,
-    tokenB,
-    deposit0Disabled,
-    deposit1Disabled,
-    invalidRange,
-    tickLower,
-    tickUpper,
-  ]);
+  }, [parsedAmounts, poolForPosition, tokenA, tokenB, deposit0Disabled, deposit1Disabled, invalidRange]);
 
   const { data: tokenAAllowance } = useAllowance({
     canisterId: tokenA?.address,
@@ -523,10 +503,9 @@ export function useMintInfo(
     token1,
     token1Insufficient,
     tokenA,
-    currencyAAmount,
     tokenB,
-    currencyBAmount,
     noLiquidity,
+    t,
   ]);
 
   return {

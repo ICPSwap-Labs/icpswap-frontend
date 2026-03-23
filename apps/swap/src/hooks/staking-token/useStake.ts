@@ -27,20 +27,23 @@ function useSteps() {
   const { t } = useTranslation();
   const initialAndUpdateDetails = useStepContentManager();
 
-  return useCallback((key: string, { token, amount, standard, rewardToken }: UpdateStepArgs) => {
-    const content = getSteps({
-      token,
-      amount,
-      standard,
-      key,
-      rewardToken,
-    });
+  return useCallback(
+    (key: string, { token, amount, standard, rewardToken }: UpdateStepArgs) => {
+      const content = getSteps({
+        token,
+        amount,
+        standard,
+        key,
+        rewardToken,
+      });
 
-    initialAndUpdateDetails(String(key), {
-      content,
-      title: t("stake.staking.details"),
-    });
-  }, []);
+      initialAndUpdateDetails(String(key), {
+        content,
+        title: t("stake.staking.details"),
+      });
+    },
+    [initialAndUpdateDetails, t],
+  );
 }
 
 interface UseStakingTokenDepositArgs {
@@ -52,7 +55,6 @@ interface UseStakingTokenDepositArgs {
 
 function useStakingTokenDeposit() {
   const [openTip] = useTips();
-  const principal = useAccountPrincipal();
 
   return useCallback(
     async ({ token, poolId, standard, amount }: UseStakingTokenDepositArgs) => {
@@ -78,7 +80,7 @@ function useStakingTokenDeposit() {
 
       return true;
     },
-    [principal],
+    [openTip],
   );
 }
 
@@ -96,19 +98,22 @@ function useStakeCallback() {
   const updateStepData = useUpdateStepData();
   const updateStep = useSteps();
 
-  return useCallback(async ({ token, poolId, amount, standard, rewardToken, key }: UseStakeCallbackArgs) => {
-    const { status, message, data } = await stakingTokenStake(poolId);
+  return useCallback(
+    async ({ token, poolId, amount, standard, rewardToken, key }: UseStakeCallbackArgs) => {
+      const { status, message, data } = await stakingTokenStake(poolId);
 
-    if (status === "err") {
-      openTip(`Failed to stake ${token.symbol}: ${message}`, MessageTypes.error);
-      return false;
-    }
+      if (status === "err") {
+        openTip(`Failed to stake ${token.symbol}: ${message}`, MessageTypes.error);
+        return false;
+      }
 
-    updateStepData(key, data);
-    updateStep(key, { token, amount, poolId, standard, rewardToken });
+      updateStepData(key, data);
+      updateStep(key, { token, amount, poolId, standard, rewardToken });
 
-    return true;
-  }, []);
+      return true;
+    },
+    [openTip, updateStep, updateStepData],
+  );
 }
 
 interface UseStakeCallsArgs {
@@ -175,7 +180,7 @@ function useStakeCalls({ token, poolId }: UseStakeCallsProps) {
 
       return [call0, call1, call2, call3];
     },
-    [approveOrTransfer, allowance, deposit, stake, withdraw],
+    [approveOrTransfer, allowance, deposit, stake, withdraw, poolId, token],
   );
 }
 

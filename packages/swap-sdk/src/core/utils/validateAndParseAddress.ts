@@ -13,7 +13,7 @@ export function validateAndParseAddress(address: string): string {
 export function validateAndParseERC20Address(address: string): string {
   try {
     return getAddress(address);
-  } catch (error) {
+  } catch (_error) {
     throw new Error(`${address} is not a valid address.`);
   }
 }

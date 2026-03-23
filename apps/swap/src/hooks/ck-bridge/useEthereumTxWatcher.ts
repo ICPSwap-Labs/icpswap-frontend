@@ -31,6 +31,7 @@ export function useEthereumTxWatcher() {
     return [...ethDissolveHashes, ...ethUnFinalizedMintHashes, ...erc20DissolveHashes, ...erc20MintHashes];
   }, [ethDissolveHashes, ethUnFinalizedMintHashes, erc20DissolveHashes, erc20MintHashes]);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   const callback = useCallback(async () => {
     if (ethereumHashes.length === 0 || isUndefinedOrNull(principal) || isUndefinedOrNull(publicClient)) return;
 
@@ -82,5 +83,5 @@ export function useEthereumTxTips() {
     }
 
     call();
-  }, [isSyncedTxs, ethereumFinalizedHashes, updateFinalizedHash]);
+  }, [isSyncedTxs, ethereumFinalizedHashes, updateFinalizedHash, openTip, t]);
 }

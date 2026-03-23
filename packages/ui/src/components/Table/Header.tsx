@@ -27,12 +27,15 @@ export default function Header({
   const [sortField, setSortField] = useState(defaultSortFiled);
   const [sortDirection, setSortDirection] = useState(defaultSortDirection);
 
-  const sortChange = useCallback((sortField: string, sortDirection: SortDirection) => {
-    setSortField(sortField);
-    setSortDirection(sortDirection);
+  const sortChange = useCallback(
+    (sortField: string, sortDirection: SortDirection) => {
+      setSortField(sortField);
+      setSortDirection(sortDirection);
 
-    if (onSortChange) onSortChange(sortField, sortDirection);
-  }, []);
+      if (onSortChange) onSortChange(sortField, sortDirection);
+    },
+    [onSortChange],
+  );
 
   return (
     <HeaderContext.Provider value={{ sortChange, sortField, sortDirection }}>

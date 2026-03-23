@@ -26,24 +26,27 @@ function useCancelLimitCalls() {
   const [openErrorTip] = useErrorTip();
   const [openSuccessTip] = useSuccessTip();
 
-  return useCallback(({ poolId, positionId, refresh }: CancelLimitCallsArgs) => {
-    const __removeOrder = async () => {
-      const { status, message } = await removeOrder(poolId, positionId);
+  return useCallback(
+    ({ poolId, positionId, refresh }: CancelLimitCallsArgs) => {
+      const __removeOrder = async () => {
+        const { status, message } = await removeOrder(poolId, positionId);
 
-      if (status === "err") {
-        openErrorTip(`${getLocaleMessage(message)}.`);
-        return false;
-      }
+        if (status === "err") {
+          openErrorTip(`${getLocaleMessage(message)}.`);
+          return false;
+        }
 
-      openSuccessTip(t("swap.limit.cancel.success"));
+        openSuccessTip(t("swap.limit.cancel.success"));
 
-      if (refresh) refresh();
+        if (refresh) refresh();
 
-      return true;
-    };
+        return true;
+      };
 
-    return [__removeOrder];
-  }, []);
+      return [__removeOrder];
+    },
+    [openErrorTip, openSuccessTip, t],
+  );
 }
 
 export interface CancelLimitCallbackProps {
@@ -93,6 +96,6 @@ export function useCancelLimitCallback() {
 
       return { call, reset, retry, key };
     },
-    [getStepCalls, stepContentManage],
+    [getStepCalls, stepContentManage, getCalls, principal, t],
   );
 }

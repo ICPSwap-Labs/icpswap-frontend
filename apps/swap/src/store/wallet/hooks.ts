@@ -50,7 +50,7 @@ export function useDisplayedTokensInWallet() {
 
   return useMemo(() => {
     return DISPLAY_IN_WALLET_BY_DEFAULT.filter((tokenId) => !removedWalletDefaultTokens.includes(tokenId));
-  }, [removedWalletDefaultTokens, DISPLAY_IN_WALLET_BY_DEFAULT]);
+  }, [removedWalletDefaultTokens]);
 }
 
 export function useTaggedTokens() {
@@ -76,7 +76,7 @@ export function useUpdateTaggedTokenCallback() {
         }
       });
     },
-    [dispatch],
+    [dispatch, removedWalletDefaultTokens],
   );
 }
 
@@ -94,7 +94,7 @@ export function useDeleteTaggedTokenCallback() {
         }
       });
     },
-    [dispatch],
+    [dispatch, removedWalletDefaultTokens],
   );
 }
 
@@ -165,6 +165,7 @@ export function useBitcoinDissolveTxs() {
   const allDissolveTxs = useAppSelector((state) => state.wallet.bitcoinDissolveTxs);
   const principal = useAccountPrincipalString();
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(principal)) return undefined;
     return allDissolveTxs.filter((tx) => tx.principal === principal);
@@ -238,7 +239,7 @@ export function useHideSmallBalanceManager(): [boolean, (hidden: boolean) => voi
     (hidden: boolean) => {
       dispatch(updateHideSmallBalance(hidden));
     },
-    [dispatch, updateHideSmallBalance],
+    [dispatch],
   );
 
   return useMemo(() => [hideSmallBalance, callback], [hideSmallBalance, callback]);

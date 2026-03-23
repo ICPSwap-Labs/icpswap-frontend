@@ -70,7 +70,7 @@ export default function PoolCard({
 
   const handlePoolClick = useCallback(() => {
     navigate(`/liquidity/add/${token0}/${token1}/${Number(fee)}`);
-  }, [navigate]);
+  }, [navigate, fee, token0, token1]);
 
   return (
     <Box className={`${classes.listItem} list-item`} onClick={handlePoolClick}>

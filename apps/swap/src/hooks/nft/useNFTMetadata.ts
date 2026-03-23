@@ -7,18 +7,9 @@ import { useNFTSvg } from "./useNFTSvg";
 export function useNFTMetadata(canisterId: string | Null, tokenId: number | bigint | Null, reload?: boolean) {
   const { data: metadata, isLoading: loading } = useNFTMetadataCall(canisterId, tokenId, reload);
 
-  const { isPositionNFT, positionSVG } = useNFTSvg(metadata);
-
   const __metadata = useMemo(() => {
-    // if (isPositionNFT) {
-    //   return {
-    //     ...metadata,
-    //     filePath: positionSVG ?? "",
-    //   };
-    // }
-
     return metadata;
-  }, [positionSVG, metadata, isPositionNFT]);
+  }, [metadata]);
 
   return useMemo(() => ({ metadata: __metadata, loading }), [__metadata, loading]);
 }

@@ -100,7 +100,7 @@ export function PoolVolumeChart({
 
       <BarChartAlt
         data={formattedData}
-        minHeight={parseInt(height)}
+        minHeight={parseInt(height, 10)}
         setValue={setLatestValue}
         setLabel={setLabel}
         value={latestValue}
@@ -111,6 +111,6 @@ export function PoolVolumeChart({
       />
     </Box>
   ) : noData ? (
-    <>{noData}</>
+    noData
   ) : null;
 }

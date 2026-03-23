@@ -175,7 +175,7 @@ export default function AddLiquidity() {
       }
       navigate(path);
     },
-    [backPath],
+    [backPath, navigate],
   );
 
   const handleTokenChange = useCallback(
@@ -211,7 +211,7 @@ export default function AddLiquidity() {
         handleUrlChange(`/liquidity/add/${currencyIdA}/${currencyIdB}/${feeValue}`);
       }
     },
-    [currencyIdA, currencyIdB],
+    [currencyIdA, currencyIdB, handleUrlChange],
   );
 
   const clearAll = useCallback(() => {
@@ -220,7 +220,7 @@ export default function AddLiquidity() {
     onLeftRangeInput("");
     onRightRangeInput("");
     handleUrlChange("/liquidity/add");
-  }, [onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput]);
+  }, [onFieldAInput, onFieldBInput, onLeftRangeInput, onRightRangeInput, handleUrlChange]);
 
   const {
     getDecrementLower,
@@ -331,6 +331,15 @@ export default function AddLiquidity() {
     noLiquidity,
     installers,
     confirmAddLoading,
+    baseCurrency?.symbol,
+    closeLoadingTip,
+    getAddLiquidityCall,
+    navigate,
+    openErrorTip,
+    openLoadingTip,
+    quoteCurrency?.symbol,
+    resetMintState,
+    t,
   ]);
 
   const handleOnCancel = useCallback(() => {
@@ -340,7 +349,7 @@ export default function AddLiquidity() {
   const isDepositAmountDisabled = useMemo(
     () =>
       invalidRange || tickLower === undefined || tickUpper === undefined || (noLiquidity && !startPrice) || poolLoading,
-    [invalidRange, tickLower, tickUpper, startPrice, noLiquidity, poolLoading],
+    [invalidRange, startPrice, noLiquidity, poolLoading],
   );
 
   const handleTokenToggle = () => {
@@ -373,7 +382,7 @@ export default function AddLiquidity() {
     return () => {
       resetMintState();
     };
-  }, []);
+  }, [resetMintState]);
 
   return (
     <Wrapper>

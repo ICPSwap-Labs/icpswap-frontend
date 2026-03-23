@@ -44,11 +44,11 @@ export default function PositionTransactions() {
   const panels = useMemo(() => {
     if (isUndefinedOrNull(accountPrincipal)) return [__panels[0]];
     return __panels;
-  }, [__panels, accountPrincipal]);
+  }, [accountPrincipal]);
 
   const activePanel = useMemo(() => {
     return panel ?? (isUndefinedOrNull(principal) ? panels[0].value : Panel.MyPosition);
-  }, [panel, principal]);
+  }, [panel, principal, panels[0].value]);
 
   const handlePairChange = (pairId: string | undefined) => {
     const search = locationSearchReplace(location.search, "pair", pairId);

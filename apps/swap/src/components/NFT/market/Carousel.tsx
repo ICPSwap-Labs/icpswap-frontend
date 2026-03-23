@@ -206,7 +206,7 @@ export default function MarketCarousel() {
 
   useEffect(() => {
     if (!initialIndex && collections.length) {
-      setActiveIndex(parseInt(String(collections.length / 2 + 1)) - 1);
+      setActiveIndex(parseInt(String(collections.length / 2 + 1), 10) - 1);
     }
   }, [initialIndex, collections]);
 

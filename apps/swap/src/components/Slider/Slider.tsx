@@ -78,14 +78,14 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
     if (wrapperRef.current) {
       setWrapperWidth(wrapperRef.current.clientWidth);
     }
-  }, [wrapperRef]);
+  }, []);
 
   const timeoutClosePopper = useCallback(() => {
     POPPER_TIMEOUT = setTimeout(() => {
       setPopperOpen(false);
       POPPER_TIMEOUT = null;
     }, 1000);
-  }, [setPopperOpen]);
+  }, []);
 
   const handleOpenPopper = useCallback(() => {
     setPopperOpen(true);
@@ -98,7 +98,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
     if (mouseDown) return;
 
     timeoutClosePopper();
-  }, [setPopperOpen, mouseDown, timeoutClosePopper]);
+  }, [mouseDown, timeoutClosePopper]);
 
   const handleSliderClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
@@ -116,7 +116,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       handleAmountChange(amount);
       handleOpenPopper();
     },
-    [wrapperWidth, totalAmount, handleOpenPopper],
+    [wrapperWidth, totalAmount, handleOpenPopper, handleAmountChange],
   );
 
   const handleMove = useCallback(
@@ -163,7 +163,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       setMouseDown(true);
       handleOpenPopper();
     },
-    [setMouseDown, handleResetAmountBeforeMove, handleOpenPopper],
+    [handleResetAmountBeforeMove, handleOpenPopper],
   );
 
   const handleTouchStart = useCallback(
@@ -174,13 +174,13 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       handleOpenPopper();
       MouseDownX = event.touches[0].screenX;
     },
-    [setMouseDown, handleResetAmountBeforeMove, handleOpenPopper],
+    [handleResetAmountBeforeMove, handleOpenPopper],
   );
 
   const handleEndMove = useCallback(() => {
     setMouseDown(false);
     timeoutClosePopper();
-  }, [setMouseDown, timeoutClosePopper]);
+  }, [timeoutClosePopper]);
 
   useEffect(() => {
     const move = (event: MouseEvent) => {
@@ -231,7 +231,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
       onAmountChange(amount);
       handleOpenPopper();
     },
-    [onPercentageChange, totalAmount, onAmountChange, handleOpenPopper],
+    [totalAmount, onAmountChange, handleOpenPopper],
   );
 
   const handleWrapperStopPropagation = useCallback((event: React.MouseEvent<HTMLDivElement>) => {

@@ -52,11 +52,9 @@ export default function SwapReclaim() {
               <Tooltip
                 maxWidth="calc(100% - 60px)"
                 tips={
-                  <>
-                    <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
-                      {t("swap.reclaim.descriptions")}
-                    </Typography>
-                  </>
+                  <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
+                    {t("swap.reclaim.descriptions")}
+                  </Typography>
                 }
               />
             ) : null}

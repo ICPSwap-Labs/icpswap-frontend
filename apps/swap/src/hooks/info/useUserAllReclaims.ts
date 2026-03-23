@@ -24,6 +24,7 @@ export function useUserUnDepositBalance(
     }
   }, [balances, pools]);
 
+  // biome-ignore lint: refetch dependencies
   useEffect(() => {
     const _fetch = async (pool: SwapPoolData) => {
       if (isUndefinedOrNull(principal) || isUndefinedOrNull(pool)) return;
@@ -101,6 +102,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
     return pools?.map((pool) => pool.canisterId.toString());
   }, [pools]);
 
+  // biome-ignore lint: refetch dependencies
   useEffect(() => {
     const _fetch = async (poolId: string) => {
       if (isUndefinedOrNull(principal)) return;
@@ -140,7 +142,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
       setLoading(true);
       call();
     }
-  }, [poolIds, reload, principal]);
+  }, [poolIds, JSON.stringify(pools), reload, principal]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     pools,

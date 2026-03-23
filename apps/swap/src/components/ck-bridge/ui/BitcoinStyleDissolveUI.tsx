@@ -53,7 +53,7 @@ export function BitcoinStyleDissolveUI({
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, token, address, validate, minAmount, chainName]);
+  }, [amount, token, address, validate, minAmount, chainName, t, tokenBalance]);
 
   const handleMax = useCallback(() => {
     if (!tokenBalance) return;
@@ -64,7 +64,7 @@ export function BitcoinStyleDissolveUI({
         .minus(parseTokenAmount(token.transFee, token.decimals))
         .toFixed(token.decimals - 1),
     );
-  }, [token, tokenBalance, setAmount]);
+  }, [token, tokenBalance]);
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
@@ -78,21 +78,15 @@ export function BitcoinStyleDissolveUI({
       setAddress("");
       setAmount("");
     }
-  }, [refetch, onDissolve, address, amount, setAddress, setAmount]);
+  }, [refetch, onDissolve, address, amount]);
 
-  const handleAddressChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setAddress(event.target.value);
-    },
-    [setAddress],
-  );
+  const handleAddressChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setAddress(event.target.value);
+  }, []);
 
-  const handleAmountChange = useCallback(
-    (amount: string) => {
-      setAmount(amount);
-    },
-    [setAmount],
-  );
+  const handleAmountChange = useCallback((amount: string) => {
+    setAmount(amount);
+  }, []);
 
   return (
     <>

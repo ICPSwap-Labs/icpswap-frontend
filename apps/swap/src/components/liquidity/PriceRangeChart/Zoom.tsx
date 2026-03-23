@@ -67,16 +67,7 @@ export interface ZoomProps {
   noIcons?: boolean;
 }
 
-export default function Zoom({
-  svg,
-  xScale,
-  setZoom,
-  width,
-  height,
-  resetBrush,
-  zoomLevels,
-  noIcons = false,
-}: ZoomProps) {
+export default function Zoom({ svg, setZoom, width, height, resetBrush, zoomLevels, noIcons = false }: ZoomProps) {
   const classes = useStyle();
   const theme = useTheme();
 
@@ -125,10 +116,10 @@ export default function Zoom({
       .on("zoom", ({ transform }) => setZoom(transform));
 
     select(svg as Element).call(zoomBehavior.current);
-  }, [height, width, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min]);
+  }, [height, width, setZoom, svg, zoomLevels, zoomLevels.max, zoomLevels.min]);
 
+  // biome-ignore lint: reset zoom to initial on zoomLevel change
   useEffect(() => {
-    // reset zoom to initial on zoomLevel change
     zoomInitial();
   }, [zoomInitial, zoomLevels]);
 

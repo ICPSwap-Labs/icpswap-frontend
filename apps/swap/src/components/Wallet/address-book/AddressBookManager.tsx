@@ -33,7 +33,7 @@ export function AddressBookManager({ addressBook }: AddressBookManagerProps) {
   const handleEditAddress = useCallback(() => {
     setPages(WalletManagerPage.EditAddress, false);
     setEditAddressBook(addressBook);
-  }, [setPages, addressBook]);
+  }, [setPages, addressBook, setEditAddressBook]);
 
   return (
     <Box

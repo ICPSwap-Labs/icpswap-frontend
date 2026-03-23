@@ -33,6 +33,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
   const [pools, setPools] = useState<{ [key: string]: TypePoolsState | null }>({});
   const [loading, setLoading] = useState(false);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   const sortedPoolKeys: PoolKey[] = useMemo(() => {
     return poolKeys.map(([token0, token1, fee]) => {
       if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(fee))
@@ -45,6 +46,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
     });
   }, [JSON.stringify(poolKeys)]);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     async function call() {
       if (sortedPoolKeys && sortedPoolKeys.length > 0) {
@@ -115,6 +117,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
   }, [JSON.stringify(sortedPoolKeys), withoutVerify]);
 
   // Interval update pool's metadata
+  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     let timer: number | null = null;
 
@@ -156,6 +159,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
     };
   }, [JSON.stringify(pools)]);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     return sortedPoolKeys.map((poolKey, index) => {
       const [token0, token1, fee] = poolKey;
@@ -227,7 +231,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
         return [PoolState.NOT_EXISTS, null];
       }
     });
-  }, [JSON.stringify(pools), loading, , JSON.stringify(sortedPoolKeys)]);
+  }, [JSON.stringify(pools), loading, JSON.stringify(sortedPoolKeys)]);
 }
 
 export function usePool(
@@ -265,7 +269,7 @@ export function useTokenHasPairWithBaseToken(token: string | undefined) {
     if (!tokenPools || !tokenPools[0] || !token) return undefined;
 
     return !!tokenPools[0].find((pool) => pool.token0.address === ICP.address || pool.token1.address === ICP.address);
-  }, [tokenPools]);
+  }, [tokenPools, token]);
 }
 
 export function useTokensHasPairWithBaseToken(tokens: string[] | undefined) {
@@ -278,14 +282,14 @@ export function useTokensHasPairWithBaseToken(tokens: string[] | undefined) {
 
     if (tokens.find((token) => token === ICP.address)) return true;
 
-    return tokens.reduce((prev, curr, index) => {
+    return tokens.reduce((prev, _curr, index) => {
       const hasPairWithBaseToken = !!tokenPools[index].find(
         (pool) => pool.token0.address === ICP.address || pool.token1.address === ICP.address,
       );
 
       return prev || hasPairWithBaseToken;
     }, false);
-  }, [tokenPools]);
+  }, [tokenPools, tokens]);
 }
 
 export function usePoolByPoolId(canisterId: string | Null): [PoolState, Pool | null] {
@@ -404,7 +408,10 @@ export function usePoolsByIds(canisterIds: string[] | undefined): {
     const Pools: [PoolState, null | Pool][] = [];
 
     pools.forEach((pool, index) => {
-      if (!pool || !canisterIds) return [PoolState.NOT_EXISTS, null];
+      if (!pool || !canisterIds) {
+        Pools.push([PoolState.NOT_EXISTS, null]);
+        return;
+      }
 
       const { fee, sqrtPriceX96, liquidity, tick } = pool;
 

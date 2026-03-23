@@ -20,7 +20,7 @@ export function useOisyDisabledTips({ page, noTips = false }: UseOisyDisabledPro
     if (connector === Connector.Oisy && noTips === false) {
       openErrorTip(<OisyDisabledTips page={page} />, { autoHideDuration: 10000 });
     }
-  }, [connector, noTips]);
+  }, [connector, noTips, openErrorTip, page]);
 
   return useMemo(() => {
     if (isUndefinedOrNull(connector)) return true;

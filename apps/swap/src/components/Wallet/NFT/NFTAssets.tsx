@@ -50,7 +50,7 @@ function NFTRow({ info, updateHidedNFTs }: NFTRowProps) {
     if (isHidden && nonUndefinedOrNull(count)) {
       updateHidedNFTs(info.cid, Number(count));
     }
-  }, [info, count, hideZeroNFT]);
+  }, [info, count, isHidden, updateHidedNFTs]);
 
   return (
     <Box
@@ -103,7 +103,7 @@ function ExtNFTRow({ metadata, userAllExtNfts, updateHidedNFTs }: ExtNFTRowProps
     if (nonUndefinedOrNull(count)) {
       updateHidedNFTs(metadata.id, count);
     }
-  }, [metadata, count, hideZeroNFT]);
+  }, [metadata, count, updateHidedNFTs]);
 
   return (
     <Box sx={{ padding: "0 12px", width: "100%", display: isHidden ? "none" : "block" }}>
@@ -175,14 +175,11 @@ export function NFTAssets() {
     });
   }, [userSelectedCanisters, nftResult]);
 
-  const handleUpdateHidedNFTs = useCallback(
-    (canisterId: string) => {
-      setHidedNFTs((prevState) => {
-        return [...new Set([...prevState, canisterId])];
-      });
-    },
-    [setHidedNFTs],
-  );
+  const handleUpdateHidedNFTs = useCallback((canisterId: string) => {
+    setHidedNFTs((prevState) => {
+      return [...new Set([...prevState, canisterId])];
+    });
+  }, []);
 
   const noData = useMemo(() => {
     // always has NFT list, so only hideZeroNFT is true there will be no data

@@ -96,7 +96,7 @@ export function OutlineCircleTabList({ tabs, onChange }: OutlineCircleTabListPro
       setActiveTab(tab.value);
       if (onChange) onChange(tab);
     },
-    [setActiveTab, onChange],
+    [onChange],
   );
 
   useEffect(() => {
@@ -112,7 +112,7 @@ export function OutlineCircleTabList({ tabs, onChange }: OutlineCircleTabListPro
       const dom = tabListRef.current as HTMLElement;
       const activeIndex = tabs.findIndex((tab) => tab.value === activeTab);
 
-      const activeTabElement = Array.from(dom.children).find((child, index) => index === activeIndex) as
+      const activeTabElement = Array.from(dom.children).find((_child, index) => index === activeIndex) as
         | HTMLElement
         | undefined;
 
@@ -122,7 +122,7 @@ export function OutlineCircleTabList({ tabs, onChange }: OutlineCircleTabListPro
         setActiveTabLeft(activeTabElement.offsetLeft);
       }
     }
-  }, [tabs, tabListRef, activeTab, tabListRef.current]);
+  }, [tabs, activeTab]);
 
   return (
     <Box ref={tabListRef} sx={{ position: "relative", display: "flex", gap: "0 4px" }}>

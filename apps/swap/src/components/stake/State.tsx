@@ -26,6 +26,6 @@ export function State({ poolInfo, noState }: StateProps) {
       </Flex>
     </Box>
   ) : noState ? (
-    <>{noState}</>
+    noState
   ) : null;
 }

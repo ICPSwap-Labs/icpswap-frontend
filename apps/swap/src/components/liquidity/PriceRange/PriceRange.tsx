@@ -151,13 +151,13 @@ export const PriceRange = memo(
           }
         }
       },
-      [setRangeValue, getRangeByPercent],
+      [getRangeByPercent, onLeftRangeInput, onRightRangeInput],
     );
 
     const handleIUnderstand = useCallback(() => {
       setFullRangeWarning(true);
       getSetFullRange();
-    }, []);
+    }, [getSetFullRange]);
 
     const handleReset = useCallback(() => {
       if (feeAmount && price) {
@@ -171,7 +171,7 @@ export const PriceRange = memo(
         setRangeValue(null);
         setFullRangeWarning(false);
       }
-    }, [price, ZOOM_LEVEL_INITIAL_MIN_MAX, feeAmount, onLeftRangeInput, onRightRangeInput, setRangeValue]);
+    }, [price, feeAmount, onLeftRangeInput, onRightRangeInput]);
 
     const fullRangeShow = useMemo(() => {
       return rangeValue === "FullRange" && !fullRangeWaring;

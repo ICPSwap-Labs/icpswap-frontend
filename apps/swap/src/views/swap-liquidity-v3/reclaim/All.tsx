@@ -32,7 +32,7 @@ export function ReclaimAll() {
     return balances
       .filter((balance) => balance.balance0 !== BigInt(0) || balance.balance1 !== BigInt(0))
       .reduce((prev, curr) => {
-        const arr = [...prev];
+        const arr = prev.slice();
         const poolId = curr.canisterId.toString();
 
         if (curr.balance0 !== BigInt(0))
@@ -133,7 +133,7 @@ export function ReclaimAll() {
           >
             <Checkbox
               checked={hideUnavailableClaim}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+              onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
                 updateHideUnavailableClaim(checked);
               }}
             />

@@ -19,5 +19,5 @@ export function clientToWeb3js(client?: Client<Transport, Chain> | WalletClient<
 export function useEthersWeb3Provider({ chainId = 1 }: { chainId?: number } = {}) {
   const { data: client } = useConnectorClient({ chainId });
 
-  return useMemo(() => clientToWeb3js(client), [chainId, client]);
+  return useMemo(() => clientToWeb3js(client), [client]);
 }

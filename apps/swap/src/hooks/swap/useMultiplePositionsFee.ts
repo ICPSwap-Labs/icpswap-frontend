@@ -12,6 +12,7 @@ export function useMultiplePositionsFee({ data, refresh }: UseMultiplePositionsF
     undefined,
   );
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     async function call() {
       if (data) {

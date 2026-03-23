@@ -6,14 +6,17 @@ import { useCallback, useMemo } from "react";
 export function useSwapNoLiquidityManager() {
   const { setNoLiquidity, noLiquidity } = useSwapContext();
 
-  const callback = useCallback((noLiquidity: boolean | Null) => {
-    if (isUndefinedOrNull(noLiquidity)) {
-      setNoLiquidity(false);
-      return;
-    }
+  const callback = useCallback(
+    (noLiquidity: boolean | Null) => {
+      if (isUndefinedOrNull(noLiquidity)) {
+        setNoLiquidity(false);
+        return;
+      }
 
-    setNoLiquidity(noLiquidity);
-  }, []);
+      setNoLiquidity(noLiquidity);
+    },
+    [setNoLiquidity],
+  );
 
   return useMemo(() => ({ noLiquidity, updateNoLiquidity: callback }), [callback, noLiquidity]);
 }

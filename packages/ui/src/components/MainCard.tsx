@@ -74,7 +74,14 @@ export function MainCard({
           ...(_border ? { border: `1px solid ${_border}` } : {}),
         };
     }
-  }, [level, border]);
+  }, [
+    level,
+    border,
+    theme.palette.background.level1,
+    theme.palette.background.level2,
+    theme.palette.background.level3,
+    theme.palette.background.level4,
+  ]);
 
   return (
     <Box

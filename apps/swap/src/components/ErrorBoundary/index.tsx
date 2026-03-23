@@ -91,6 +91,7 @@ export interface ErrorBoundaryProps {
 
 export default function ErrorBoundary({ children }: ErrorBoundaryProps) {
   return (
+    // @ts-expect-error
     <Sentry.ErrorBoundary fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}>
       {children}
     </Sentry.ErrorBoundary>

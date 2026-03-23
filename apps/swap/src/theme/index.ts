@@ -54,7 +54,6 @@ export function theme(customization: { [key: string]: any }) {
       themeOption.divider = colors.darkTextPrimary;
       themeOption.heading = colors.darkTextSecondary;
       break;
-    case "light":
     default:
       themeOption.paper = colors.paper;
       themeOption.backgroundDefault = colors.paper;

@@ -60,7 +60,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
   const refreshTrigger = useRefreshTrigger(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { result: allFarms, loading: farmsLoading } = useUserAllFarmsInfo();
-  const { result: positions, loading } = useSwapPositionsMultipleFarm(allFarms, refreshTrigger);
+  const { data: positions, isLoading } = useSwapPositionsMultipleFarm(allFarms, refreshTrigger);
 
   const positionsFeeArgs = useMemo(() => {
     if (!positions) return undefined;
@@ -70,7 +70,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
         const existIndex = prev.findIndex(({ poolId }) => poolId === curr.poolId);
 
         if (existIndex === -1)
-          return [...prev, { poolId: curr.poolId, positionIds: [curr.positionId] }] as Array<{
+          return [prev.slice(), { poolId: curr.poolId, positionIds: [curr.positionId] }] as Array<{
             poolId: string;
             positionIds: bigint[];
           }>;
@@ -99,7 +99,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
     sort,
   });
 
-  return (loading || farmsLoading) && !!principal ? (
+  return (isLoading || farmsLoading) && !!principal ? (
     <LoadingRow>
       <div />
       <div />

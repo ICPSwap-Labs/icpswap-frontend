@@ -32,7 +32,7 @@ export function useFetchBitcoinBlockNumber(): number | undefined {
       try {
         const result = await fetch(`https://blockchain.info/q/getblockcount`);
         return (await result.json()) as number;
-      } catch (error) {
+      } catch (_error) {
         return undefined;
       }
     },
@@ -75,6 +75,7 @@ export function useBtcUnconfirmedDissolveHashes() {
       .map((tx) => tx.txid) as string[];
   }, [dissolveTxs, allBitcoinTxResponse, block, principal]);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => unconfirmedHashes, [JSON.stringify(unconfirmedHashes)]);
 }
 
@@ -113,7 +114,7 @@ export function useBtcDepositAddress(subaccount?: Uint8Array) {
     }
 
     call();
-  }, [principal, subaccount, storeUserDepositAddress]);
+  }, [principal, subaccount, storeUserDepositAddress, updateUserBTCAddress]);
 
   return useMemo(() => ({ result: address, loading }), [address, loading]);
 }
@@ -162,7 +163,7 @@ export async function getBitcoinTransactions(address: string) {
     if ("error" in jsonResult) return undefined;
 
     return jsonResult;
-  } catch (error) {
+  } catch (_error) {
     return undefined;
   }
 }
@@ -209,7 +210,7 @@ export async function getBtcTransactionResponse(tx: string) {
     const result = await fetch(`https://blockchain.info/rawtx/${tx}`);
     const json = await result.json();
     return json as BitcoinTxResponse;
-  } catch (error) {
+  } catch (_error) {
     return undefined;
   }
 }
@@ -242,6 +243,7 @@ export function useBitcoinUnFinalizedMintHashes() {
       .map((tx) => tx.txid);
   }, [mintTransactions, block]);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => unFinalizedHashes, [JSON.stringify(unFinalizedHashes)]);
 }
 

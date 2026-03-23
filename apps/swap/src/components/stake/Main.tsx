@@ -40,7 +40,7 @@ export function MainContent({
     refresh: refreshTrigger,
   });
 
-  const userPoolInfo = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
+  const { data: userPoolInfo } = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
   const { data: stakeStatInfo } = useStakePoolStatInfo(poolId);
 
   const rewardTokenPrice = useUSDPrice(rewardToken);

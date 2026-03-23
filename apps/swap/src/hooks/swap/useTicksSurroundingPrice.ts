@@ -88,7 +88,7 @@ export function useTicksSurroundingPrice(
     };
   }
 
-  const poolCurrentTickIdx = parseInt(String(poolCurrentTick));
+  const poolCurrentTickIdx = parseInt(String(poolCurrentTick), 10);
   const tickSpacing = FEE_TIER_TO_TICK_SPACING(String(feeTier));
 
   // The pools current tick isn't necessarily a tick that can actually be initialized.

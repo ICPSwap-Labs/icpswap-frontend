@@ -29,7 +29,7 @@ export function SneedLockedPositions({ poolId }: SneedLockedPositionsProps) {
     if (isUndefinedOrNull(__positions)) return null;
 
     return __positions.map((ele) => ({ ...ele, poolId }) as PositionDetails);
-  }, [__positions]);
+  }, [__positions, poolId]);
 
   return (
     <PositionTableUI

@@ -18,12 +18,9 @@ export function SwapContextProvider({ children }: SwapContextProviderProps) {
   const [noLiquidity, setNoLiquidity] = useState<boolean | Null>(null);
   const [unavailableBalanceKeys, setUnavailableBalanceKeys] = useState<string[]>([]);
 
-  const handleAddKeys = useCallback(
-    (key: string) => {
-      setUnavailableBalanceKeys((prevState) => [...new Set([...prevState, key])]);
-    },
-    [unavailableBalanceKeys, setUnavailableBalanceKeys],
-  );
+  const handleAddKeys = useCallback((key: string) => {
+    setUnavailableBalanceKeys((prevState) => [...new Set([...prevState, key])]);
+  }, []);
 
   const handleRemoveKeys = useCallback(
     (key: string) => {
@@ -31,7 +28,7 @@ export function SwapContextProvider({ children }: SwapContextProviderProps) {
       newKeys.splice(newKeys.indexOf(key), 1);
       setUnavailableBalanceKeys(newKeys);
     },
-    [unavailableBalanceKeys, setUnavailableBalanceKeys],
+    [unavailableBalanceKeys],
   );
 
   return (

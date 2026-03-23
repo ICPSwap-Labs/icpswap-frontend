@@ -52,6 +52,6 @@ export function useSwapApprove() {
 
       return true;
     },
-    [approve, principal, multipleApprove],
+    [principal, multipleApprove, openErrorTip],
   );
 }

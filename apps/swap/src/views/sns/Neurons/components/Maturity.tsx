@@ -168,8 +168,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
               if (!finalize_disbursement_timestamp_seconds) return null;
 
               const seconds =
-                finalize_disbursement_timestamp_seconds -
-                BigInt(parseInt((new Date().getTime() / 1000).toString(), 10));
+                finalize_disbursement_timestamp_seconds - BigInt(parseInt((Date.now() / 1000).toString(), 10));
 
               const amount = token ? parseTokenAmount(e.amount_e8s, token.decimals).toString() : undefined;
 

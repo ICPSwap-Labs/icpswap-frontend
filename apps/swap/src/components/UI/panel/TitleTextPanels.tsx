@@ -33,7 +33,7 @@ export function TitleTextPanels({ panels, activePanel: __activePanel, onPanelCli
       if (onPanelClick) onPanelClick(panel.value);
       setActivePanel(panel.value);
     },
-    [setActivePanel, onPanelClick],
+    [onPanelClick],
   );
 
   return (

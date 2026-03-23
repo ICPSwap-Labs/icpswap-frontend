@@ -53,7 +53,7 @@ export function useLimitOrders({ val, refreshTrigger }: UseLimitOrdersProps): {
     }
 
     call();
-  }, [usePositionPools, val]);
+  }, [usePositionPools, val, principal]);
 
   return useMemo(
     () => ({

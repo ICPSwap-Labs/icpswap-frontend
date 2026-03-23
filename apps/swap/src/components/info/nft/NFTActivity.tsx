@@ -21,7 +21,6 @@ const useStyles = makeStyles(() => {
 export interface NFTActivityProps {
   canisterId: string;
   tokenId: number;
-  reload?: boolean;
 }
 
 export function NFTActivity({ canisterId, tokenId }: NFTActivityProps) {

@@ -117,7 +117,7 @@ export function SwapInputCurrency({
   const clearTransformLoading = useSetTimeoutCall(
     useCallback(() => {
       setTransformLoading(false);
-    }, [setTransformLoading]),
+    }, []),
     LOADING_TRANSFORM_DURATION,
   );
 

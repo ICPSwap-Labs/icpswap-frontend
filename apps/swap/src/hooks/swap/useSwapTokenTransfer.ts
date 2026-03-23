@@ -35,6 +35,6 @@ export function useSwapTransfer() {
 
       return true;
     },
-    [principal],
+    [principal, openErrorTip],
   );
 }

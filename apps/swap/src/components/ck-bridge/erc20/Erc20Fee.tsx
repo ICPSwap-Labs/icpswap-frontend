@@ -25,7 +25,7 @@ export function Erc20Fee() {
 
   const handleBuy = useCallback(() => {
     navigate(`/swap?input=${ICP.address}&output=${ckETH.address}`);
-  }, [ICP, ckETH, navigate]);
+  }, [navigate]);
 
   return (
     <Box

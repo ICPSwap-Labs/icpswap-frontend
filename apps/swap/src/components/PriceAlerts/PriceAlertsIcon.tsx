@@ -3,36 +3,34 @@ import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { Box, useTheme } from "components/Mui";
 import { PriceAlerts } from "components/PriceAlerts/PriceAlerts";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import { useAlertsOpenManager, useAlertsRefetchManager } from "./state";
+import { useAlertsOpenManager } from "./state";
 
 export function PriceAlertsIcons({ hasAlerts }: { hasAlerts: boolean }) {
   const theme = useTheme();
   const [, setAlertsOpen] = useAlertsOpenManager();
 
   return (
-    <>
-      <Box
-        sx={{
-          width: "36px",
-          height: "36px",
-          borderRadius: "12px",
-          background: theme.palette.background.level4,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-        }}
-        onClick={() => setAlertsOpen(true)}
-      >
-        {hasAlerts ? (
-          <img src="/images/swap/price-alerts-added.svg" alt="" />
-        ) : (
-          <img src="/images/swap/price-alerts-add.svg" alt="" />
-        )}
-      </Box>
-    </>
+    <Box
+      sx={{
+        width: "36px",
+        height: "36px",
+        borderRadius: "12px",
+        background: theme.palette.background.level4,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+      }}
+      onClick={() => setAlertsOpen(true)}
+    >
+      {hasAlerts ? (
+        <img src="/images/swap/price-alerts-added.svg" alt="" />
+      ) : (
+        <img src="/images/swap/price-alerts-add.svg" alt="" />
+      )}
+    </Box>
   );
 }
 
@@ -44,13 +42,8 @@ export function PriceAlertsIcon({ tokenId }: PriceAlertsIconProps) {
   const principal = useAccountPrincipalString();
   const queryResult = usePriceAlerts(principal);
   const [alertsOpen, setAlertsOpen] = useAlertsOpenManager();
-  const [, setAlertsRefetch] = useAlertsRefetchManager();
 
-  const { data, isPending } = queryResult;
-
-  useEffect(() => {
-    setAlertsRefetch(queryResult);
-  }, [queryResult?.refetch, setAlertsRefetch]);
+  const { data, isPending, refetch } = queryResult;
 
   const hasAlerts = useMemo(() => {
     if (isUndefinedOrNull(tokenId) || isUndefinedOrNull(data)) return undefined;
@@ -67,6 +60,7 @@ export function PriceAlertsIcon({ tokenId }: PriceAlertsIconProps) {
           isPending={isPending}
           alerts={data}
           defaultTokenId={tokenId}
+          refetch={refetch}
         />
       ) : null}
     </>

@@ -16,6 +16,7 @@ export interface UseMultiplePositionProps {
 }
 
 export function useMultiplePositions(args: UseMultiplePositionProps[]) {
+  // biome-ignore lint: stringify array dependency to stop hook loop
   const { tokenIds } = useMemo(() => {
     const tokenIds: string[] = [];
 
@@ -36,6 +37,7 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
 
   const tokens = useTokens(tokenIds);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   const poolKeys = useMemo(() => {
     return args.map(({ metadata }) => {
       if (!metadata) return [undefined, undefined, undefined] as PoolKey;
@@ -54,6 +56,7 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
 
   const pools = usePools(poolKeys);
 
+  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     const positions = args.map((arg, index) => {
       const infos = arg.positionInfos;

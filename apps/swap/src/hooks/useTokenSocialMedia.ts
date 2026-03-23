@@ -22,7 +22,7 @@ export function useTokenXHandle(tokenId: string | Null) {
     const __arr = mediaLink.link.split("/");
 
     return __arr[__arr.length - 1];
-  }, [tokenId]);
+  }, [tokenId, globalTokenList]);
 }
 
 export function useTokenSocialMedias(tokenId: string | Null) {

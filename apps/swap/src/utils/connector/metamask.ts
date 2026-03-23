@@ -56,7 +56,7 @@ export class MetamaskConnector implements ConnectorAbstract {
         return false;
       }
 
-      window.localStorage.setItem(EXPIRE_TIME_STORAGE_NAME, (new Date().getTime() + EXPIRE_TIME * 1000).toString());
+      window.localStorage.setItem(EXPIRE_TIME_STORAGE_NAME, (Date.now() + EXPIRE_TIME * 1000).toString());
       this.identity = identity;
       this.principal = identity?.getPrincipal().toString();
     } else {
@@ -75,7 +75,7 @@ export class MetamaskConnector implements ConnectorAbstract {
         return false;
       }
 
-      window.localStorage.setItem(EXPIRE_TIME_STORAGE_NAME, (new Date().getTime() + EXPIRE_TIME * 1000).toString());
+      window.localStorage.setItem(EXPIRE_TIME_STORAGE_NAME, (Date.now() + EXPIRE_TIME * 1000).toString());
       this.identity = identity;
       this.principal = identity.getPrincipal().toString();
       this.client = client;
@@ -102,6 +102,6 @@ export class MetamaskConnector implements ConnectorAbstract {
   async expired() {
     const expireTime = window.localStorage.getItem(EXPIRE_TIME_STORAGE_NAME);
     if (!expireTime) return true;
-    return new Date().getTime() >= Number(expireTime);
+    return Date.now() >= Number(expireTime);
   }
 }

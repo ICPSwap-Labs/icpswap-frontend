@@ -52,52 +52,48 @@ export function HistoryTableProUI({
   }, [scrollToTop, navigate]);
 
   return (
-    <>
-      <Box sx={{ width: "100%", overflow: "auto" }}>
-        <Box sx={{ minWidth: "1096px" }}>
-          <Header className={wrapperClassName ?? classes.wrapper}>
-            <HeaderCell>{t("common.time")}</HeaderCell>
-            <HeaderCell>{t("common.you.paid")}</HeaderCell>
-            <HeaderCell>{t("common.you.received")}</HeaderCell>
-            <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
-            {/* <HeaderCell align="right">&nbsp;</HeaderCell> */}
-          </Header>
+    <Box sx={{ width: "100%", overflow: "auto" }}>
+      <Box sx={{ minWidth: "1096px" }}>
+        <Header className={wrapperClassName ?? classes.wrapper}>
+          <HeaderCell>{t("common.time")}</HeaderCell>
+          <HeaderCell>{t("common.you.paid")}</HeaderCell>
+          <HeaderCell>{t("common.you.received")}</HeaderCell>
+          <HeaderCell align="right">{t("common.limit.price")}</HeaderCell>
+          {/* <HeaderCell align="right">&nbsp;</HeaderCell> */}
+        </Header>
 
-          {!loading
-            ? limitTransactions?.map((ele, index) => (
-                <HistoryRowPro
-                  key={index}
-                  limitTransaction={ele}
-                  pool={pool}
-                  wrapperClassName={wrapperClassName ?? classes.wrapper}
-                  noBorder={index === limitTransactions.length - 1}
-                  unusedBalance={unusedBalance}
-                />
-              ))
-            : null}
+        {!loading
+          ? limitTransactions?.map((ele, index) => (
+              <HistoryRowPro
+                key={index}
+                limitTransaction={ele}
+                pool={pool}
+                wrapperClassName={wrapperClassName ?? classes.wrapper}
+                noBorder={index === limitTransactions.length - 1}
+                unusedBalance={unusedBalance}
+              />
+            ))
+          : null}
 
-          {(limitTransactions ?? []).length === 0 && !loading ? (
-            <LimitTransactionsEmpty onClick={handleToLimit} />
-          ) : null}
+        {(limitTransactions ?? []).length === 0 && !loading ? <LimitTransactionsEmpty onClick={handleToLimit} /> : null}
 
-          {loading ? (
-            <Box sx={{ padding: "24px" }}>
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
-            </Box>
-          ) : null}
-        </Box>
+        {loading ? (
+          <Box sx={{ padding: "24px" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        ) : null}
       </Box>
-    </>
+    </Box>
   );
 }

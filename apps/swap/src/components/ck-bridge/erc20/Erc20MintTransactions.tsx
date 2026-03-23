@@ -157,15 +157,11 @@ export function Erc20MintTransactions({ token, ledger }: Erc20MintTransactionsPr
       </Typography>
 
       <Box>
-        <>
-          {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-            <NoData tip={t("ck.empty")} />
-          ) : (
-            transactions.map((transaction, index) => (
-              <Transaction key={index} transaction={transaction} token={token} />
-            ))
-          )}
-        </>
+        {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
+        ) : (
+          transactions.map((transaction, index) => <Transaction key={index} transaction={transaction} token={token} />)
+        )}
       </Box>
     </MainCard>
   );

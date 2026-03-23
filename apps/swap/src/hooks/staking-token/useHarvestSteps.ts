@@ -13,15 +13,18 @@ export function useHarvestSteps() {
   const { t } = useTranslation();
   const initialAndUpdateDetails = useStepContentManager();
 
-  return useCallback((key: string, { token }: HarvestCallsStepArgs) => {
-    const content = getHarvestSteps({
-      token,
-      key,
-    });
+  return useCallback(
+    (key: string, { token }: HarvestCallsStepArgs) => {
+      const content = getHarvestSteps({
+        token,
+        key,
+      });
 
-    initialAndUpdateDetails(String(key), {
-      content,
-      title: t("stake.harvest.details"),
-    });
-  }, []);
+      initialAndUpdateDetails(String(key), {
+        content,
+        title: t("stake.harvest.details"),
+      });
+    },
+    [initialAndUpdateDetails, t],
+  );
 }

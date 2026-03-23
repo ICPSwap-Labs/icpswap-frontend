@@ -104,7 +104,7 @@ const __SelectToken = ({
         onTokenChange(value);
       }
     },
-    [onTokenChange, setValue],
+    [onTokenChange],
   );
 
   const handleFilterMenu = useCallback(

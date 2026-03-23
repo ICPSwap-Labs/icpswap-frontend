@@ -126,12 +126,12 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
                 <Tooltip
                   cursor={{ stroke: "#8572FF" }}
                   contentStyle={{ display: "none" }}
-                  formatter={(value: number, name: string, props) => {
-                    if (props && props.payload && props.payload.time) {
+                  formatter={(value: number, _name: string, props) => {
+                    if (props?.payload?.time) {
                       setLabel(props.payload.time);
                     }
 
-                    if (props && props.payload && props.payload.value) {
+                    if (props?.payload?.value) {
                       setValue(props.payload.value);
                     }
 

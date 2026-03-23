@@ -30,7 +30,7 @@ function ProposalSwitch({ proposal_id, latest_id, governance_id, prev }: Proposa
     } else {
       navigate(`/sns/voting/${governance_id}/${Number(proposal_id) + 1}?latest_id=${latest_id}`);
     }
-  }, [navigate, prev, proposal_id, governance_id]);
+  }, [navigate, prev, proposal_id, governance_id, latest_id]);
 
   return (
     <Box

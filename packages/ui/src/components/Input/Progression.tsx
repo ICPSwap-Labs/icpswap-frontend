@@ -65,7 +65,7 @@ export interface ProgressionProps {
 export function Progression({ value, onChange }: ProgressionProps) {
   const classes = useStyle();
 
-  const handleSliderChange = (event, value: number | number[]) => {
+  const handleSliderChange = (_event, value: number | number[]) => {
     if (typeof value === "number") {
       onChange(value);
     } else {

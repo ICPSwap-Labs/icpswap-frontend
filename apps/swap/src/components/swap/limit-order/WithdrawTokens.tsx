@@ -74,7 +74,7 @@ export function WithdrawTokens({ open, transaction, onClose }: WithdrawTokensPro
         setLoading((prevState) => ({ ...prevState, output: false }));
       }
     },
-    [withdraw, inputToken, outputToken, inputBalance, outputBalance, transaction, isSorted],
+    [withdraw, inputToken, outputToken, inputBalance, outputBalance, transaction, openTip, setRefreshTrigger, t],
   );
 
   return (

@@ -53,7 +53,7 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
   const XTCTopUp = useXTCTopUp();
 
   const handleTopUp = useCallback(async () => {
-    if (loading || isUndefinedOrNullOrEmpty(canisterId) || isUndefinedOrNullOrEmpty(amount)) return;
+    if (topUpLoading || isUndefinedOrNullOrEmpty(canisterId) || isUndefinedOrNullOrEmpty(amount)) return;
 
     if (onClose) onClose();
     setTopUpLoading(true);
@@ -77,7 +77,7 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
     }
 
     setTopUpLoading(false);
-  }, [topUpLoading, setTopUpLoading, canisterId, amount]);
+  }, [topUpLoading, canisterId, amount, openTip, XTCTopUp, closeTip, onClose, onTopUpSuccess, t]);
 
   const handleMax = useCallback(() => {
     if (nonUndefinedOrNull(balance)) {
@@ -96,7 +96,7 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
     if (new BigNumber(Number(amount)).isGreaterThan(parseTokenAmount(balance, XTC.decimals)))
       return t("common.error.insufficient.balance");
     return undefined;
-  }, [canisterId, balance, amount]);
+  }, [canisterId, balance, amount, t]);
 
   return (
     <Modal open={open} title={t("wallet.topUp.xtc")} onClose={onClose}>

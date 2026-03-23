@@ -23,7 +23,7 @@ export function KeepTokenInPool({ ui, label, showRefresh = true, refreshKey }: K
 
   const [keepInPools, updateKeepInPools] = useSwapKeepTokenInPoolsManager();
 
-  const handleCheckChange = useCallback((event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+  const handleCheckChange = useCallback((_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     if (checked) {
       setCheckOpen(true);
     }
@@ -35,7 +35,7 @@ export function KeepTokenInPool({ ui, label, showRefresh = true, refreshKey }: K
     } else {
       updateKeepInPools(false);
     }
-  }, [setCheckOpen, keepInPools, updateKeepInPools]);
+  }, [keepInPools, updateKeepInPools]);
 
   const handleRefresh = useCallback(() => {
     if (setRefreshTriggers && nonUndefinedOrNull(refreshKey)) {
@@ -46,7 +46,7 @@ export function KeepTokenInPool({ ui, label, showRefresh = true, refreshKey }: K
   const handleCheckConfirm = useCallback(() => {
     updateKeepInPools(true);
     setCheckOpen(false);
-  }, [updateKeepInPools, setCheckOpen]);
+  }, [updateKeepInPools]);
 
   return (
     <>

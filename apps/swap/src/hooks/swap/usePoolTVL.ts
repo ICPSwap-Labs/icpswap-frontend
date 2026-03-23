@@ -82,7 +82,7 @@ export function useV3PoolTVLAndTotalVolume(
       return formatDollarAmount(new BigNumber(token0TVLValue).plus(token1TVLValue).toNumber());
     }
     return new BigNumber(token0TVLValue).plus(token1TVLValue).toNumber();
-  }, [token0, token1, token0USDPrice, token1USDPrice, balance0, balance1]);
+  }, [token0, token1, token0USDPrice, token1USDPrice, balance0, balance1, format]);
 
   const poolTotalVolumeValue = useMemo(() => {
     if (!token0 || !totalVolume || !token0USDPrice) {
@@ -103,7 +103,7 @@ export function useV3PoolTVLAndTotalVolume(
       return formatDollarAmount(token0TotalVolume.toNumber());
     }
     return new BigNumber(token0TotalVolume).toNumber();
-  }, [totalVolume, token0USDPrice, token0]);
+  }, [totalVolume, token0USDPrice, token0, format]);
 
   return useMemo(() => {
     return {

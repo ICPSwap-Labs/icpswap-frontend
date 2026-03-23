@@ -89,51 +89,49 @@ export function CollectFeesModal({ open, onClose, position, positionId, onCollec
 
   return (
     <Modal open={open} onClose={onClose} title={t("common.collect.fees")}>
-      <>
-        <Box sx={{ padding: "16px 16px", borderRadius: "12px", background: theme.palette.background.level3 }}>
-          <Flex fullWidth justify="space-between">
-            <Flex gap="0 8px">
-              <TokenImage logo={token0?.logo} tokenId={token0?.address} />
-              <Typography color="text.primary">{token0?.symbol}</Typography>
-            </Flex>
-
-            <Typography align="right" color="text.primary">
-              {feeAmount0 && token0
-                ? toSignificantWithGroupSeparator(parseTokenAmount(feeAmount0, token0.decimals).toString())
-                : "--"}
-            </Typography>
+      <Box sx={{ padding: "16px 16px", borderRadius: "12px", background: theme.palette.background.level3 }}>
+        <Flex fullWidth justify="space-between">
+          <Flex gap="0 8px">
+            <TokenImage logo={token0?.logo} tokenId={token0?.address} />
+            <Typography color="text.primary">{token0?.symbol}</Typography>
           </Flex>
 
-          <Flex fullWidth sx={{ margin: "16px 0 0 0" }} justify="space-between">
-            <Flex gap="0 8px">
-              <TokenImage logo={token1?.logo} tokenId={token1?.address} />
-              <Typography color="text.primary">{token1?.symbol}</Typography>
-            </Flex>
+          <Typography align="right" color="text.primary">
+            {feeAmount0 && token0
+              ? toSignificantWithGroupSeparator(parseTokenAmount(feeAmount0, token0.decimals).toString())
+              : "--"}
+          </Typography>
+        </Flex>
 
-            <Typography align="right" color="text.primary">
-              {feeAmount1 && token1
-                ? toSignificantWithGroupSeparator(parseTokenAmount(feeAmount1, token1.decimals).toString())
-                : "--"}
-            </Typography>
+        <Flex fullWidth sx={{ margin: "16px 0 0 0" }} justify="space-between">
+          <Flex gap="0 8px">
+            <TokenImage logo={token1?.logo} tokenId={token1?.address} />
+            <Typography color="text.primary">{token1?.symbol}</Typography>
           </Flex>
-        </Box>
 
-        <Typography mt={1} lineHeight="18px">
-          {t("swap.collect.description")}
-        </Typography>
+          <Typography align="right" color="text.primary">
+            {feeAmount1 && token1
+              ? toSignificantWithGroupSeparator(parseTokenAmount(feeAmount1, token1.decimals).toString())
+              : "--"}
+          </Typography>
+        </Flex>
+      </Box>
 
-        <AuthButton
-          variant="contained"
-          size="large"
-          fullWidth
-          sx={{ marginTop: "24px" }}
-          onClick={handleCollect}
-          disabled={loading || disabled}
-          startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
-        >
-          {t("common.collect")}
-        </AuthButton>
-      </>
+      <Typography mt={1} lineHeight="18px">
+        {t("swap.collect.description")}
+      </Typography>
+
+      <AuthButton
+        variant="contained"
+        size="large"
+        fullWidth
+        sx={{ marginTop: "24px" }}
+        onClick={handleCollect}
+        disabled={loading || disabled}
+        startIcon={loading ? <CircularProgress size={24} color="inherit" /> : null}
+      >
+        {t("common.collect")}
+      </AuthButton>
     </Modal>
   );
 }

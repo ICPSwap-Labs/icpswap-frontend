@@ -30,7 +30,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
 
   const info = useMemo(() => {
     return infoAllTokens?.find((e) => e.tokenLedgerId === tokenInfo.ledgerId);
-  }, [infoAllTokens, tokenInfo]);
+  }, [infoAllTokens, tokenInfo.ledgerId]);
 
   const handleTokenClick = () => {
     if (onTokenClick) onTokenClick(tokenInfo);

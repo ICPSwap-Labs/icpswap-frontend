@@ -73,65 +73,63 @@ export function NFTLayoutHeader({ details, cycles }: NFTCanisterHeaderProps) {
   };
 
   return (
-    <>
-      <Box className={classes.wrapper}>
-        <Avatar
-          src={details?.image}
-          sx={{
-            width: "85px",
-            height: "85px",
-          }}
-        >
-          &nbsp;
-        </Avatar>
+    <Box className={classes.wrapper}>
+      <Avatar
+        src={details?.image}
+        sx={{
+          width: "85px",
+          height: "85px",
+        }}
+      >
+        &nbsp;
+      </Avatar>
 
-        <Box className={classes.content}>
-          <Typography className={classes.name}>{details?.name}</Typography>
+      <Box className={classes.content}>
+        <Typography className={classes.name}>{details?.name}</Typography>
 
-          <Box mt="20px">
-            <Grid sx={{ width: "100%" }} container alignItems="center">
-              <Typography color="text.primary">{t("common.canister.id.colon")}</Typography>
-              {details ? (
-                <Grid item xs ml="5px">
-                  <ExplorerLink label={details.cid} value={details.cid} />
-                </Grid>
-              ) : null}
-            </Grid>
-          </Box>
-
-          <Box mt={1}>
-            <Typography color="text.tertiary" className={classes.description}>
-              {details?.introduction}
-            </Typography>
-          </Box>
-
-          <Box mt="20px">
-            <Button variant="contained" size="large" onClick={handleToMarketplace}>
-              {t("nft.marketplace")}
-            </Button>
-          </Box>
+        <Box mt="20px">
+          <Grid sx={{ width: "100%" }} container alignItems="center">
+            <Typography color="text.primary">{t("common.canister.id.colon")}</Typography>
+            {details ? (
+              <Grid item xs ml="5px">
+                <ExplorerLink label={details.cid} value={details.cid} />
+              </Grid>
+            ) : null}
+          </Grid>
         </Box>
 
-        <Box className={classes.button}>
-          <Box
-            className={classes.infoCard}
-            sx={{
-              marginRight: "20px",
-            }}
-          >
-            <Typography color="text.primary" fontWeight={700} fontSize="18px">
-              {cycleValueFormat(cycles)}
-            </Typography>
-            <Typography
-              sx={{
-                marginTop: "4px",
-              }}
-            >
-              {t("common.cycles")}
-            </Typography>
-          </Box>
+        <Box mt={1}>
+          <Typography color="text.tertiary" className={classes.description}>
+            {details?.introduction}
+          </Typography>
+        </Box>
+
+        <Box mt="20px">
+          <Button variant="contained" size="large" onClick={handleToMarketplace}>
+            {t("nft.marketplace")}
+          </Button>
         </Box>
       </Box>
-    </>
+
+      <Box className={classes.button}>
+        <Box
+          className={classes.infoCard}
+          sx={{
+            marginRight: "20px",
+          }}
+        >
+          <Typography color="text.primary" fontWeight={700} fontSize="18px">
+            {cycleValueFormat(cycles)}
+          </Typography>
+          <Typography
+            sx={{
+              marginTop: "4px",
+            }}
+          >
+            {t("common.cycles")}
+          </Typography>
+        </Box>
+      </Box>
+    </Box>
   );
 }

@@ -159,13 +159,13 @@ export function FeeSelector({ currencyA, currencyB, defaultActiveFee = FeeAmount
         token1: currencyB.address,
       };
     });
-  }, [LOCAL_FEES, currencyA, currencyB]);
+  }, [currencyA, currencyB]);
 
   const { result: tvl } = usePoolsTokenAmountsFromKey(feeAmountKeys);
 
   const fees = useMemo(() => {
     return LOCAL_FEES.map((fee, index) => {
-      if (tvl && tvl[index]) {
+      if (tvl?.[index]) {
         return {
           ...tvl[index],
           ...fee,
@@ -176,7 +176,7 @@ export function FeeSelector({ currencyA, currencyB, defaultActiveFee = FeeAmount
         ...fee,
       };
     });
-  }, [tvl, LOCAL_FEES]);
+  }, [tvl]);
 
   const getFee = (feeValue: FeeAmount) => {
     return fees.filter((fee) => fee.feeTier === feeValue)[0];

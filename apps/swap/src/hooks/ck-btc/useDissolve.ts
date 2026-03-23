@@ -65,7 +65,7 @@ export function useDissolve() {
 
       return dissolveResult === ResultStatus.OK;
     },
-    [approve, bitcoinDissolveTxManager, principal],
+    [approve, bitcoinDissolveTxManager, principal, openTip, t],
   );
 
   return useMemo(() => ({ loading, dissolve_call }), [loading, dissolve_call]);

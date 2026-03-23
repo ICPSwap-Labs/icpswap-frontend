@@ -73,7 +73,7 @@ export function useInitialTokenStandard() {
     } else {
       setUpdated(true);
     }
-  }, []);
+  }, [updateAllSwapPools, updatePoolCanisterId, updateTokenStandard]);
 
   // Update the token standards from token list
   // Some token only exist in token list but not in swap pools
@@ -86,7 +86,7 @@ export function useInitialTokenStandard() {
 
       updateTokenStandard(standards);
     }
-  }, [tokensFromTokenList]);
+  }, [tokensFromTokenList, updateTokenStandard]);
 
   useEffect(() => {
     // Tokens that not register in ICPSwap before new version release, so we need to register them manually
@@ -109,7 +109,7 @@ export function useInitialTokenStandard() {
       { canisterId: WRAPPED_ICP.address, standard: WRAPPED_ICP.standard as TOKEN_STANDARD },
       { canisterId: ICP.address, standard: ICP.standard as TOKEN_STANDARD },
     ]);
-  }, []);
+  }, [updateTokenStandard]);
 
   // All token's standards, includes the local cached tokens
   const tokenStandards = useTokenStandards();

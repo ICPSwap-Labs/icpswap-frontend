@@ -86,7 +86,7 @@ export class InternetIdentityConnector implements ConnectorAbstract {
         maxTimeToLive: BigInt(iiExpireTime * 1000 * 1000 * 1000),
       });
     });
-    window.localStorage.setItem("ii-expire-time", (new Date().getTime() + iiExpireTime * 1000).toString());
+    window.localStorage.setItem("ii-expire-time", (Date.now() + iiExpireTime * 1000).toString());
     const identity = this.client?.getIdentity();
     const principal = identity?.getPrincipal().toString();
     this.identity = identity;
@@ -101,7 +101,7 @@ export class InternetIdentityConnector implements ConnectorAbstract {
   async expired() {
     const iiExpireTime = window.localStorage.getItem("ii-expire-time");
     if (!iiExpireTime) return true;
-    return new Date().getTime() >= Number(iiExpireTime);
+    return Date.now() >= Number(iiExpireTime);
   }
 }
 

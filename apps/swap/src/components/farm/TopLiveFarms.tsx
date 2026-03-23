@@ -29,7 +29,7 @@ function TopLiveFarmCard({ farmId }: TopLiveFarmCardProps) {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
+  const { data: userFarmInfo } = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
   const { data: farmInitArgs } = useFarmInitArgs(farmId);
   const { data: userAllPositions } = useSwapUserPositions(userFarmInfo?.pool.toString(), principal?.toString());
   const [, token0] = useToken(userFarmInfo?.poolToken0.address);

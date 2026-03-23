@@ -95,9 +95,11 @@ export default function NFTCanisterCreate() {
         linkMap: (values.socialMediaLinks ?? []).reduce(
           (previousValue, currentValue) => {
             if (currentValue.label && currentValue.value) {
-              return [...previousValue, { k: currentValue.label, v: currentValue.value }];
+              const newValue = previousValue.slice();
+              newValue.push({ k: currentValue.label, v: currentValue.value });
+              return newValue;
             }
-            return [...previousValue];
+            return previousValue.slice();
           },
           [] as { k: string; v: string }[],
         ),
@@ -119,7 +121,7 @@ export default function NFTCanisterCreate() {
       } else {
         openErrorTip(getLocaleMessage(message) ?? t`Failed to create NFT collection`);
       }
-    }, [values, NFTMintInfo]),
+    }, [values, NFTMintInfo, account, approve, navigate, openErrorTip, setSelectedCanisters, t]),
   );
 
   const handleSocialMediaAdd = () => {
@@ -166,9 +168,9 @@ export default function NFTCanisterCreate() {
 
   const getErrorMsg = (values: CanisterCreateDetails) => {
     if (!values.name) return t("nft.enter.collection.name");
-    if (values.name && values.name.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection name`;
+    if (values.name?.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection name`;
     if (!values.minter) return t`Enter the creator`;
-    if (values.minter && values.minter.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection creator`;
+    if (values.minter?.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection creator`;
     if (!values.introduction) return t`Enter the description`;
     if ((values.socialMediaLinks ?? []).length > 0) {
       for (let i = 0; i < values.socialMediaLinks.length; i++) {
@@ -416,7 +418,7 @@ export default function NFTCanisterCreate() {
               <Box mt="30px">
                 <MuiSlider
                   value={Number(values.royalties ?? 0)}
-                  onChange={(event: any, value: string) => onFieldChange(value, "royalties")}
+                  onChange={(_event: any, value: string) => onFieldChange(value, "royalties")}
                   size="small"
                   min={0}
                   max={20}

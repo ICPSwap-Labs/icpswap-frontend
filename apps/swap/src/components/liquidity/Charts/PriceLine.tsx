@@ -46,6 +46,6 @@ export function PriceLine({ value, xScale, height, color = "#ffffff", id = "curr
         />
       </>
     ),
-    [value, xScale, height],
+    [value, xScale, height, color, id],
   );
 }

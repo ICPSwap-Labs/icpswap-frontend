@@ -12,19 +12,16 @@ export function BalanceConvertProvider({ children }: BalanceConvertProviderProps
   const [convertLoading, setConvertLoading] = useState<boolean>(false);
   const [checkedConvertTokenIds, setCheckedConvertTokenIds] = useState<string[]>([]);
 
-  const handleUpdateConvertedTokenIds = useCallback(
-    (tokenIds: string[], clear?: boolean) => {
-      if (clear) {
-        setConvertedTokenIds([]);
-        return;
-      }
+  const handleUpdateConvertedTokenIds = useCallback((tokenIds: string[], clear?: boolean) => {
+    if (clear) {
+      setConvertedTokenIds([]);
+      return;
+    }
 
-      setConvertedTokenIds((prevState) => {
-        return [...new Set([...prevState, ...tokenIds])];
-      });
-    },
-    [setConvertedTokenIds],
-  );
+    setConvertedTokenIds((prevState) => {
+      return [...new Set([...prevState, ...tokenIds])];
+    });
+  }, []);
 
   return (
     <BalanceConvertContext.Provider

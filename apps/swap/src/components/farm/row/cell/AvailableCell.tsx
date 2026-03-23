@@ -47,7 +47,7 @@ export function AvailableCell({ initArgs, state, farmInfo }: AvailableCellProps)
         const outOfRange = poolMetadata.tick < position.tickLower || poolMetadata.tick >= position.tickUpper;
         return !outOfRange;
       });
-  }, [userAllPositions, initArgs, poolMetadata, state]);
+  }, [userAllPositions, initArgs, poolMetadata]);
 
   const allAvailablePositionValue = usePositionsTotalValue({
     metadata: poolMetadata,
@@ -56,34 +56,32 @@ export function AvailableCell({ initArgs, state, farmInfo }: AvailableCellProps)
 
   return (
     <Flex gap="0 4px" justify="flex-end" className="row-item">
-      <>
-        <BodyCell>{allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}</BodyCell>
-        {userAvailablePositions ? (
-          <Typography
-            fontSize={12}
-            fontWeight={500}
-            color="text.primary"
-            sx={{
-              width: "fit-content",
-              background: theme.palette.background.level4,
-              padding: "2px 8px",
-              borderRadius: "44px",
-            }}
-          >
-            {userAvailablePositions.length}
-          </Typography>
-        ) : null}
+      <BodyCell>{allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}</BodyCell>
+      {userAvailablePositions ? (
+        <Typography
+          fontSize={12}
+          fontWeight={500}
+          color="text.primary"
+          sx={{
+            width: "fit-content",
+            background: theme.palette.background.level4,
+            padding: "2px 8px",
+            borderRadius: "44px",
+          }}
+        >
+          {userAvailablePositions.length}
+        </Typography>
+      ) : null}
 
-        {state === "NOT_STARTED" && farmInfo ? (
-          <Tooltip
-            tips={t("farm.not_start.descriptions", {
-              liveTime0: dayjs(Number(farmInfo.startTime) * 1000).format(DAYJS_FORMAT0),
-              liveTime1: dayjs(Number(farmInfo.startTime) * 1000).format(DAYJS_FORMAT1),
-            })}
-            iconSize="14px"
-          />
-        ) : null}
-      </>
+      {state === "NOT_STARTED" && farmInfo ? (
+        <Tooltip
+          tips={t("farm.not_start.descriptions", {
+            liveTime0: dayjs(Number(farmInfo.startTime) * 1000).format(DAYJS_FORMAT0),
+            liveTime1: dayjs(Number(farmInfo.startTime) * 1000).format(DAYJS_FORMAT1),
+          })}
+          iconSize="14px"
+        />
+      ) : null}
     </Flex>
   );
 }

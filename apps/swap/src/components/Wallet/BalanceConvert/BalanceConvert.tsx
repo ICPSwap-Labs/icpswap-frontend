@@ -24,26 +24,24 @@ interface SmallBalanceRowProps {
 function SmallBalanceRow({ amount, icpAmount, infoToken, checked, onCheckedChange }: SmallBalanceRowProps) {
   const handleTokenCheck = useCallback(() => {
     onCheckedChange(!checked, infoToken.tokenLedgerId);
-  }, [checked, onCheckedChange]);
+  }, [checked, onCheckedChange, infoToken.tokenLedgerId]);
 
   return (
-    <>
-      <Flex justify="space-between" fullWidth sx={{ cursor: "pointer" }} onClick={handleTokenCheck}>
-        <Flex gap="0 8px">
-          <Checkbox checked={checked} />
-          <Typography color="text.primary">{infoToken.tokenSymbol}</Typography>
-        </Flex>
-
-        <Box>
-          <Typography color="text.primary" align="right">
-            {formatAmount(amount.toString())}
-          </Typography>
-          <Typography sx={{ margin: "6px 0 0 0", fontSize: "12px" }} align="right">
-            ≈{formatAmount(parseTokenAmount(icpAmount, ICP.decimals).toString())} ICP
-          </Typography>
-        </Box>
+    <Flex justify="space-between" fullWidth sx={{ cursor: "pointer" }} onClick={handleTokenCheck}>
+      <Flex gap="0 8px">
+        <Checkbox checked={checked} />
+        <Typography color="text.primary">{infoToken.tokenSymbol}</Typography>
       </Flex>
-    </>
+
+      <Box>
+        <Typography color="text.primary" align="right">
+          {formatAmount(amount.toString())}
+        </Typography>
+        <Typography sx={{ margin: "6px 0 0 0", fontSize: "12px" }} align="right">
+          ≈{formatAmount(parseTokenAmount(icpAmount, ICP.decimals).toString())} ICP
+        </Typography>
+      </Box>
+    </Flex>
   );
 }
 
@@ -126,7 +124,7 @@ export function BalanceConvert() {
 
       if (checkedConvertTokenIds.includes(tokenId)) {
         const __checkedTokenIds = [...checkedConvertTokenIds];
-        const index = __checkedTokenIds.findIndex((checkedId) => checkedId === tokenId);
+        const index = __checkedTokenIds.indexOf(tokenId);
 
         if (index !== -1) {
           __checkedTokenIds.splice(index, 1);

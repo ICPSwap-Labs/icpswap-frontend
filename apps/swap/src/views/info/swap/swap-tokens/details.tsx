@@ -95,7 +95,7 @@ export default function TokenDetails() {
     if (chartView && tokenChartsRef.current) {
       tokenChartsRef.current.setView(chartView);
     }
-  }, [chartView, tokenChartsRef]);
+  }, [chartView]);
 
   // Make Price chart first if token is icp
   useEffect(() => {

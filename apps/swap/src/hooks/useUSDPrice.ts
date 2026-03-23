@@ -54,7 +54,7 @@ export function useUSDValue(currencyAmount: CurrencyAmount<Token> | undefined) {
     if (!price || !currencyAmount) return null;
     try {
       return new BigNumber(price).multipliedBy(currencyAmount.toExact());
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   }, [currencyAmount, price]);

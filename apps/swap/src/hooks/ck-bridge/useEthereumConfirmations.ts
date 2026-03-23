@@ -84,7 +84,7 @@ export function useEthereumTxSyncedBlock(erc20?: boolean) {
   return useMemo(() => {
     if (isUndefinedOrNull(minterInfo)) return undefined;
     return erc20 ? minterInfo.last_erc20_scraped_block_number[0] : minterInfo.last_eth_scraped_block_number[0];
-  }, [minterInfo]);
+  }, [minterInfo, erc20]);
 }
 
 export function useEthereumTxSyncBlockCallback() {

@@ -80,7 +80,7 @@ export function StepDetails({ title, onClose, open, content, activeStep, errorSt
     if (activeStep === content.length) {
       if (onClose) onClose();
     }
-  }, [content, activeStep]);
+  }, [content, activeStep, onClose]);
 
   const showErrorHint = (ele: StepContents) => {
     return errorStep === ele.step || !!ele.skipError;

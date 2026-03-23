@@ -94,12 +94,9 @@ export function LiquidityCharts({ position, time }: LiquidityChartsProps) {
     };
   }, [periodPriceRange, inverted, time]);
 
-  const handleInverted = useCallback(
-    (inverted: boolean) => {
-      setInverted(inverted);
-    },
-    [setInverted],
-  );
+  const handleInverted = useCallback((inverted: boolean) => {
+    setInverted(inverted);
+  }, []);
 
   const [liquidityChartTokenA, liquidityChartTokenB] = useMemo(() => {
     return inverted ? [token1, token0] : [token0, token1];

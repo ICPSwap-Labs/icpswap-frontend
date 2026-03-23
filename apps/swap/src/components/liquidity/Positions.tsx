@@ -1,7 +1,7 @@
 import { useParsedQueryString } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
 import { Flex, NumberLabel, TextButton, Tooltip } from "@icpswap/ui";
-import { BigNumber, formatDollarAmount, replaceBrowserHistoryMultiple } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, isUndefinedOrNullOrEmpty, replaceBrowserHistoryMultiple } from "@icpswap/utils";
 import { FindPositionsModal, Link } from "components/index";
 import {
   SelectPositionState,
@@ -109,46 +109,39 @@ export function Positions() {
 
   const handleFindPosition = useCallback(() => {
     setFindPosition(true);
-  }, [setFindPosition]);
+  }, []);
 
-  const handleAllPositionsUSDValue = useCallback(
-    (id: string, usdValue: BigNumber) => {
-      setAllPositionsUSDValue((prevState) => ({
-        ...prevState,
-        [id]: usdValue,
-      }));
-    },
-    [setAllPositionsUSDValue],
-  );
+  const handleAllPositionsUSDValue = useCallback((id: string, usdValue: BigNumber) => {
+    setAllPositionsUSDValue((prevState) => ({
+      ...prevState,
+      [id]: usdValue,
+    }));
+  }, []);
 
-  const handleAllPositionFees = useCallback(
-    (id: string, usdValue: BigNumber) => {
-      setAllPositionFees((prevState) => ({
-        ...prevState,
-        [id]: usdValue,
-      }));
-    },
-    [setAllPositionFees],
-  );
+  const handleAllPositionFees = useCallback((id: string, usdValue: BigNumber) => {
+    setAllPositionFees((prevState) => ({
+      ...prevState,
+      [id]: usdValue,
+    }));
+  }, []);
 
   const handleUpdateRefreshTrigger = useCallback(() => {
     setRefreshTrigger(refreshTrigger + 1);
-  }, [refreshTrigger, setRefreshTrigger]);
+  }, [refreshTrigger]);
 
-  const handleSetHiddenNumbers = useCallback(
-    (key: string, hidden: boolean) => {
-      setHiddenNumbers((prevState) => ({ ...prevState, [key]: hidden }));
-    },
-    [setHiddenNumbers],
-  );
+  const handleSetHiddenNumbers = useCallback((key: string, hidden: boolean) => {
+    setHiddenNumbers((prevState) => ({ ...prevState, [key]: hidden }));
+  }, []);
 
   // reset all positions usd value when account change
   useEffect(() => {
-    setAllPositionsUSDValue(undefined);
-    setAllPositions(undefined);
-    setAllStakedPositions(undefined);
-    setAllPositionFees(undefined);
-    setHiddenNumbers({});
+    if (isUndefinedOrNullOrEmpty(principalString)) {
+      setAllPositionsUSDValue(undefined);
+      setAllPositions(undefined);
+      setAllStakedPositions(undefined);
+      setAllPositionFees(undefined);
+      setHiddenNumbers({});
+    }
   }, [principalString]);
 
   useEffect(() => {

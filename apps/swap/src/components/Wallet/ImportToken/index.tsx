@@ -110,7 +110,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
   const isExisted = (id: string | null | undefined) => {
     if (!id) return false;
 
-    if (id && tokens && tokens.length) {
+    if (id && tokens?.length) {
       if (tokens.find((token) => token.canisterId.toString() === id)) return true;
     }
 

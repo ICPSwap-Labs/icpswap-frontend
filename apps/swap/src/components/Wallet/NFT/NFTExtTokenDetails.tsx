@@ -36,7 +36,7 @@ export function NFTExtTokenDetails() {
     if (isUndefinedOrNull(metadata) || isUndefinedOrNull(extNFT)) return;
     setExtNFTSendingInfo({ name: extNFT.name, extTokenId: metadata.id, canister: extNFT.id, logo });
     setPages(WalletManagerPage.NFTExtSend);
-  }, [setPages, metadata, setExtNFTSendingInfo, extNFT, index, logo]);
+  }, [setPages, metadata, setExtNFTSendingInfo, extNFT, logo]);
 
   return (
     <NFTTokenDetailsUI

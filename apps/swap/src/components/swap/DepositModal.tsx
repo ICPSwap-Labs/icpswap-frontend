@@ -50,7 +50,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
   }, [maxDepositAmount]);
 
   const handleSliderChange = useCallback(
-    (event, value) => {
+    (_event, value) => {
       setPercent(value);
 
       if (balance && token) {
@@ -84,7 +84,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
         }
       }
     },
-    [maxDepositAmount, setPercent],
+    [maxDepositAmount],
   );
 
   const depositCallback = useSwapDepositTokenBalance();
@@ -113,7 +113,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
     }
 
     setLoading(false);
-  }, [openTip, closeTip, depositCallback, amount, onClose, token, pool, loading, setLoading, onDepositSuccess]);
+  }, [openTip, closeTip, depositCallback, amount, onClose, token, pool, loading, onDepositSuccess, t]);
 
   const error = useMemo(() => {
     if (amount === "") return t("common.enter.input.amount");
@@ -123,7 +123,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
     if (new BigNumber(maxDepositAmount).isLessThan(amount)) return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, balance, token, maxDepositAmount]);
+  }, [amount, balance, token, maxDepositAmount, t]);
 
   return (
     <Modal open={open} title={t`Deposit`} onClose={onClose} background="level1">

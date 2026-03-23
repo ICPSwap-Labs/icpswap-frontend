@@ -179,18 +179,14 @@ export function Erc20DissolveTransactions({ token }: DissolveRecordsProps) {
               <div />
             </LoadingRow>
           </Box>
+        ) : isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
         ) : (
-          <>
-            {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-              <NoData tip={t("ck.empty")} />
-            ) : (
-              transactions.map((transaction, index) => (
-                <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                  <Transaction transaction={transaction} minterInfo={minterInfo} />
-                </Box>
-              ))
-            )}
-          </>
+          transactions.map((transaction, index) => (
+            <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+              <Transaction transaction={transaction} minterInfo={minterInfo} />
+            </Box>
+          ))
         )}
       </Box>
     </MainCard>

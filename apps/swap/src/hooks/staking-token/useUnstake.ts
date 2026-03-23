@@ -21,19 +21,22 @@ function useUnstakeCallback() {
   const stepManager = useUnstakeSteps();
   const updateStepData = useUpdateStepData();
 
-  return useCallback(async ({ poolId, amount, token, key, rewardToken }: UseUnstakeCallbackArgs) => {
-    const { status, message, data } = await stakingPoolUnstake(poolId, amount);
+  return useCallback(
+    async ({ poolId, amount, token, key, rewardToken }: UseUnstakeCallbackArgs) => {
+      const { status, message, data } = await stakingPoolUnstake(poolId, amount);
 
-    if (status === "err") {
-      openTip(`Failed to unstake ${token.symbol}: ${message}`, MessageTypes.error);
-      return false;
-    }
+      if (status === "err") {
+        openTip(`Failed to unstake ${token.symbol}: ${message}`, MessageTypes.error);
+        return false;
+      }
 
-    updateStepData(key, data);
-    stepManager(key, { token, amount, poolId, rewardToken });
+      updateStepData(key, data);
+      stepManager(key, { token, amount, poolId, rewardToken });
 
-    return true;
-  }, []);
+      return true;
+    },
+    [openTip, stepManager, updateStepData],
+  );
 }
 
 interface UseStakedTokenWithdrawArgs {
@@ -45,19 +48,22 @@ interface UseStakedTokenWithdrawArgs {
 function useStakedTokenWithdrawCallback() {
   const [openTip] = useTips();
 
-  return useCallback(async ({ poolId, amount, token }: UseStakedTokenWithdrawArgs) => {
-    const { status, message } = await stakingPoolWithdraw(poolId, true, amount);
+  return useCallback(
+    async ({ poolId, amount, token }: UseStakedTokenWithdrawArgs) => {
+      const { status, message } = await stakingPoolWithdraw(poolId, true, amount);
 
-    if (status === "err") {
-      openTip(
-        `Failed to withdraw ${parseTokenAmount(amount, token.decimals).toFormat()} ${token.symbol}: ${message}`,
-        MessageTypes.error,
-      );
-      return false;
-    }
+      if (status === "err") {
+        openTip(
+          `Failed to withdraw ${parseTokenAmount(amount, token.decimals).toFormat()} ${token.symbol}: ${message}`,
+          MessageTypes.error,
+        );
+        return false;
+      }
 
-    return true;
-  }, []);
+      return true;
+    },
+    [openTip],
+  );
 }
 
 type UnstakeCallsArgs = {

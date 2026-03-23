@@ -51,7 +51,7 @@ function Transaction({ transaction, address }: TransactionProps) {
           <Typography>{t("common.time")}</Typography>
           <Typography color="text.primary">
             {transaction.status.block_time ? (
-              <>{dayjs(Number(transaction.status.block_time) * 1000).format("YYYY-MM-DD HH:mm:ss")}</>
+              dayjs(Number(transaction.status.block_time) * 1000).format("YYYY-MM-DD HH:mm:ss")
             ) : (
               <>--</>
             )}
@@ -180,18 +180,14 @@ export function MintTransactions({ bitcoinAddress }: MintTransactionProps) {
               <div />
             </LoadingRow>
           </Box>
+        ) : isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
         ) : (
-          <>
-            {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-              <NoData tip={t("ck.empty")} />
-            ) : (
-              transactions.map((transaction, index) => (
-                <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                  <Transaction transaction={transaction} address={bitcoinAddress} />
-                </Box>
-              ))
-            )}
-          </>
+          transactions.map((transaction, index) => (
+            <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+              <Transaction transaction={transaction} address={bitcoinAddress} />
+            </Box>
+          ))
         )}
       </Box>
     </MainCard>

@@ -2,12 +2,18 @@ import { usePoolAPRChartData, usePoolAverageAPRs } from "@icpswap/hooks";
 import { ChartTimeEnum, type Null } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import weekOfYear from "dayjs/plugin/weekOfYear";
 import { useEffect, useMemo, useState } from "react";
 import { ReferenceLine } from "recharts";
 import { LineChartAlt } from "../LineChart/alt";
 import { ImageLoading } from "../Loading";
 import { Box, Typography, useTheme } from "../Mui";
 import { ChartAPRLabel } from "./ChartAPRLabel";
+
+// format dayjs with the libraries that we need
+dayjs.extend(utc);
+dayjs.extend(weekOfYear);
 
 export interface PoolAPRChartProps {
   poolId: string | Null;
@@ -64,8 +70,8 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
 
     const diff = new BigNumber(sortedData[0].value).minus(sortedData[sortedData.length - 1].value);
 
-    return diff.minus(averageApr).dividedBy(diff).multipliedBy(parseInt(height)).toString();
-  }, [formattedChartData, averageApr, time]);
+    return diff.minus(averageApr).dividedBy(diff).multipliedBy(parseInt(height, 10)).toString();
+  }, [formattedChartData, averageApr, height]);
 
   useEffect(() => {
     setTime(__time);
@@ -114,7 +120,7 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
               <LineChartAlt
                 data={formattedChartData}
                 setLabel={setValueLabel}
-                minHeight={parseInt(height)}
+                minHeight={parseInt(height, 10)}
                 setValue={setLatestValue}
                 value={latestValue}
                 label={valueLabel}
@@ -128,7 +134,7 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
                       stroke={theme.colors.apr}
                       y={averageAprSvgY}
                       label={
-                        // @ts-expect-error The props 'viewBox' is inject by recharts
+                        // @ts-expect-error
                         <ChartAPRLabel apr={`${new BigNumber(averageApr).toFixed(2)}%`} />
                       }
                       strokeDasharray="5 4"

@@ -32,10 +32,10 @@ export function PositionTransactionsTable({
     setPagination({ pageNum: page, pageSize: 10 });
   };
 
-  // Reset pagination when pool or principal change
+  //biome-ignore lint: reset pagination when pool or principal change
   useEffect(() => {
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
-  }, [poolId, principal]);
+  }, [pagination.pageSize, principal]);
 
   return (
     <PositionTransactionsTableUI

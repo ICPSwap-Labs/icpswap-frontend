@@ -48,5 +48,5 @@ export function useDensityChartData({ currencyA, currencyB, feeAmount }: UseDens
       isError,
       formattedData: !isLoading && !isUninitialized ? formatData : undefined,
     };
-  }, [isLoading, isUninitialized, isError, formatData]);
+  }, [isLoading, isUninitialized, isError, formatData, data]);
 }

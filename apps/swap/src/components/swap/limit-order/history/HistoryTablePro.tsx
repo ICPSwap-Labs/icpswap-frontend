@@ -14,7 +14,7 @@ export function HistoryTablePro({ poolId, wrapperClassName }: HistoryTableProPro
   const principal = useAccountPrincipal();
 
   const start_time = useMemo(() => {
-    const now = parseInt(String(new Date().getTime() / 1000));
+    const now = parseInt(String(Date.now() / 1000), 10);
     return now - 60 * 24 * 3600;
   }, []);
 

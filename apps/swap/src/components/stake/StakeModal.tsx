@@ -62,11 +62,10 @@ export function StakeModal({ open, onClose, onStakingSuccess, pool, onStaking }:
 
   useEffect(() => {
     setAmount("");
-  }, [open]);
+  }, []);
 
   let errorMessage = "";
-  if (amount && balance && balance.isLessThan(new BigNumber(amount)))
-    errorMessage = t("common.error.insufficient.balance");
+  if (amount && balance?.isLessThan(new BigNumber(amount))) errorMessage = t("common.error.insufficient.balance");
   if (amount && token && !parseTokenAmount(token.transFee, token.decimals).isLessThan(amount))
     errorMessage = t("common.error.amount.greater.than.fee");
   if (!amount || new BigNumber(amount).isEqualTo(0)) errorMessage = t("common.enter.input.amount");

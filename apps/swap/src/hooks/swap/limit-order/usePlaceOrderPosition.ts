@@ -61,7 +61,7 @@ export function usePlaceOrderPosition({
       orderPriceTick: closetTick,
       closetUseableTick,
     };
-  }, [orderPrice, inputToken, token0, token1, pool]);
+  }, [orderPrice, inputToken, token0, token1, pool, isInputTokenSorted]);
 
   const { tickLower, tickUpper } = useMemo(() => {
     if (isUndefinedOrNull(closetUseableTick) || isUndefinedOrNull(feeAmount) || isUndefinedOrNull(isInputTokenSorted))

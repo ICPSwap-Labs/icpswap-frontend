@@ -37,5 +37,5 @@ export function useLiquidityLocksImage(name: string | undefined, principalId: st
     }
 
     return token?.logo;
-  }, [token, tokenId, name, principalId]);
+  }, [token, tokenId, name]);
 }

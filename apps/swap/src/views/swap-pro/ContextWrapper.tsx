@@ -22,7 +22,7 @@ export function SwapProContextWrapper() {
   const theme = useTheme();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { inputToken, outputToken, poolId } = useContext(SwapContext);
+  const { inputToken, outputToken } = useContext(SwapContext);
 
   const [activeTab, setActiveTab] = useState<Tab>(Tab.Swap);
   const [chartView, setChartView] = useState<ChartButton | null>(null);
@@ -69,7 +69,7 @@ export function SwapProContextWrapper() {
         });
       }
     }
-  }, [inputToken, outputToken, defaultChartType, setChartView, poolId]);
+  }, [inputToken, outputToken, defaultChartType]);
 
   return (
     <SwapProContext.Provider

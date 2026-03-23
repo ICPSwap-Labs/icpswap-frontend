@@ -49,7 +49,7 @@ export function EthDissolve({ token, bridgeChain }: EthDissolveProps) {
 
   useEffect(() => {
     setAddress(account);
-  }, [account, setAddress]);
+  }, [account]);
 
   const dissolve_error = useMemo(() => {
     if (!address) return t("common.enter.address");
@@ -68,7 +68,7 @@ export function EthDissolve({ token, bridgeChain }: EthDissolveProps) {
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, token, tokenBalance, address]);
+  }, [amount, token, tokenBalance, address, t]);
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
@@ -78,7 +78,7 @@ export function EthDissolve({ token, bridgeChain }: EthDissolveProps) {
     setAmount(
       parseTokenAmount(tokenBalance, token.decimals).minus(parseTokenAmount(token.transFee, token.decimals)).toFixed(8),
     );
-  }, [token, tokenBalance, setAmount]);
+  }, [token, tokenBalance]);
 
   const { loading, dissolve_call } = useDissolveCallback();
 
@@ -92,7 +92,7 @@ export function EthDissolve({ token, bridgeChain }: EthDissolveProps) {
       setAmount("");
       setAddress("");
     }
-  }, [address, amount, principal, token]);
+  }, [address, amount, principal, token, dissolve_call, setRefreshTrigger]);
 
   return (
     <>

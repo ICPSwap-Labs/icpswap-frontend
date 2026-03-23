@@ -24,7 +24,7 @@ export function ETHTransactionEvent({ event }: ETHTransactionEventProps) {
         event.type === BridgeType.mint ? BridgeChainType.eth : BridgeChainType.icp
       }`,
     );
-  }, [navigate]);
+  }, [navigate, event.type]);
 
   return (
     <>

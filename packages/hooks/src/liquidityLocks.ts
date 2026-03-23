@@ -105,7 +105,7 @@ export function useAllLiquidityLocks(
   const ledgerIds = useMemo(() => {
     if (!lockIds) return undefined;
     return lockIds.map(({ governance_id, ledger_id, alias }) => {
-      if (alias[0] && alias[0].includes("Governance")) return governance_id[0]?.toString();
+      if (alias[0]?.includes("Governance")) return governance_id[0]?.toString();
       return ledger_id.toString();
     });
   }, [lockIds]);

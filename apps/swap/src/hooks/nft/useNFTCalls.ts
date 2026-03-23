@@ -35,12 +35,6 @@ export async function allowanceAll(account: string, spenderCanisterId: string) {
   return resultFormat<boolean>(await (await swapNFT()).isApproveForAll(account, spender)).data;
 }
 
-export async function findTokenListByPool(principal: Principal, pool: string, offset: number, limit: number) {
-  return resultFormat<PaginationResult<NFTTokenMetadata>>(
-    await (await swapNFT()).findTokenListByPool(pool, BigInt(offset), BigInt(limit)),
-  ).data;
-}
-
 export function useUserNFTs(
   user: Principal | undefined,
   offset: number,
@@ -302,7 +296,7 @@ export function useCanisterNFTs(canister: string | Null, account: string | Null,
     }
 
     call();
-  }, [canister, account, setNFTs]);
+  }, [canister, account, page]);
 
   const hasMore = useMemo(() => {
     if (isUndefinedOrNull(totalElements) || isUndefinedOrNull(nfts)) return true;

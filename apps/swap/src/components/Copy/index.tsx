@@ -1,7 +1,7 @@
 import { Box, makeStyles } from "components/Mui";
 import copyToClipboard from "copy-to-clipboard";
 import { TIP_SUCCESS, useTips } from "hooks/useTips";
-import { forwardRef, type ReactNode, type Ref, useImperativeHandle } from "react";
+import { forwardRef, type ReactNode, type Ref, useCallback, useImperativeHandle } from "react";
 
 const useStyles = makeStyles({
   copy: {
@@ -23,10 +23,10 @@ export default forwardRef(
     const classes = useStyles();
     const [openTips] = useTips();
 
-    const copy = () => {
+    const copy = useCallback(() => {
       copyToClipboard(content);
       openTips("Copy Success", TIP_SUCCESS);
-    };
+    }, [content, openTips]);
 
     useImperativeHandle(
       ref,

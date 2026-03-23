@@ -75,57 +75,53 @@ export function AddLiquidityConfirmModal({
 
   return (
     <Modal open={open} onClose={onCancel} title={t("swap.add.liquidity")} background="level1">
-      <>
-        <Flex fullWidth vertical gap="24px 0">
-          <Flex fullWidth align="flex-start" justify="space-between">
-            <Typography>{t("liquidity.deposited.amount")}</Typography>
-            <Flex vertical gap="8px 0" justify="flex-end">
-              <Typography sx={{ width: "100%" }} color="text.primary" textAlign="right">
-                {`${position.amount0.toSignificant(6, { groupSeparator: "," })} ${currency0.symbol}`}
-              </Typography>
-              <Typography sx={{ width: "100%" }} color="text.primary" textAlign="right">
-                {`${position.amount1.toSignificant(6, { groupSeparator: "," })} ${currency1.symbol}`}
-              </Typography>
-            </Flex>
-          </Flex>
-
-          <Flex fullWidth justify="space-between">
-            <Typography>{t("common.current.price")}</Typography>
-            <Flex gap="0 6px">
-              <Typography color="textPrimary" align="right">
-                {`${price.toSignificant(5, { groupSeparator: "," })} ${quoteCurrency.symbol} per ${
-                  baseCurrency.symbol
-                }`}
-              </Typography>
-              <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer" }} onClick={onConvertClick} />
-            </Flex>
-          </Flex>
-
-          <Flex fullWidth justify="space-between">
-            <Typography>{t("common.price.range")}</Typography>
-            <Flex gap="0 6px">
-              <Typography color="textPrimary" align="right">
-                {`${formatTickPrice(priceLower, ticksAtLimit, Bound.LOWER)}`} -{" "}
-                {`${formatTickPrice(priceUpper, ticksAtLimit, Bound.UPPER)}`}{" "}
-                {`${quoteCurrency?.symbol} per ${baseCurrency?.symbol}`}
-              </Typography>
-              <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer" }} onClick={onConvertClick} />
-            </Flex>
+      <Flex fullWidth vertical gap="24px 0">
+        <Flex fullWidth align="flex-start" justify="space-between">
+          <Typography>{t("liquidity.deposited.amount")}</Typography>
+          <Flex vertical gap="8px 0" justify="flex-end">
+            <Typography sx={{ width: "100%" }} color="text.primary" textAlign="right">
+              {`${position.amount0.toSignificant(6, { groupSeparator: "," })} ${currency0.symbol}`}
+            </Typography>
+            <Typography sx={{ width: "100%" }} color="text.primary" textAlign="right">
+              {`${position.amount1.toSignificant(6, { groupSeparator: "," })} ${currency1.symbol}`}
+            </Typography>
           </Flex>
         </Flex>
 
-        <Button
-          variant="contained"
-          size="large"
-          fullWidth
-          sx={{ marginTop: "40px" }}
-          onClick={onConfirm}
-          disabled={loading}
-          startIcon={loading ? <CircularProgress color="inherit" size={22} /> : null}
-        >
-          {t("common.add")}
-        </Button>
-      </>
+        <Flex fullWidth justify="space-between">
+          <Typography>{t("common.current.price")}</Typography>
+          <Flex gap="0 6px">
+            <Typography color="textPrimary" align="right">
+              {`${price.toSignificant(5, { groupSeparator: "," })} ${quoteCurrency.symbol} per ${baseCurrency.symbol}`}
+            </Typography>
+            <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer" }} onClick={onConvertClick} />
+          </Flex>
+        </Flex>
+
+        <Flex fullWidth justify="space-between">
+          <Typography>{t("common.price.range")}</Typography>
+          <Flex gap="0 6px">
+            <Typography color="textPrimary" align="right">
+              {`${formatTickPrice(priceLower, ticksAtLimit, Bound.LOWER)}`} -{" "}
+              {`${formatTickPrice(priceUpper, ticksAtLimit, Bound.UPPER)}`}{" "}
+              {`${quoteCurrency?.symbol} per ${baseCurrency?.symbol}`}
+            </Typography>
+            <SyncAltIcon sx={{ fontSize: "1rem", cursor: "pointer" }} onClick={onConvertClick} />
+          </Flex>
+        </Flex>
+      </Flex>
+
+      <Button
+        variant="contained"
+        size="large"
+        fullWidth
+        sx={{ marginTop: "40px" }}
+        onClick={onConfirm}
+        disabled={loading}
+        startIcon={loading ? <CircularProgress color="inherit" size={22} /> : null}
+      >
+        {t("common.add")}
+      </Button>
     </Modal>
   );
 }

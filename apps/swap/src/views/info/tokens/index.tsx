@@ -18,7 +18,7 @@ function __Tokens() {
     if (nonUndefinedOrNull(tokens)) {
       setTokens(tokens);
     }
-  }, [tokens]);
+  }, [tokens, setTokens]);
 
   return (
     <InfoWrapper>

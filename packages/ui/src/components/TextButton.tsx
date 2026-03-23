@@ -1,5 +1,5 @@
 import { mockALinkAndOpen } from "@icpswap/utils";
-import React, { type ReactNode, useCallback } from "react";
+import { type ReactNode, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "./Link";
 import { Box, Typography } from "./Mui";
@@ -116,7 +116,7 @@ export function TextButton({
     if (to) {
       navigate(to);
     }
-  }, [link, to, onClick, disabled]);
+  }, [link, to, onClick, disabled, navigate]);
 
   return (
     <Typography

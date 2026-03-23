@@ -92,17 +92,15 @@ export function DissolveTransactions() {
       <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{t("common.retrieved")}</Typography>
 
       <Box>
-        <>
-          {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-            <NoData tip={t("ck.empty")} />
-          ) : (
-            transactions.map((transaction, index) => (
-              <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                <Transaction transaction={transaction} />
-              </Box>
-            ))
-          )}
-        </>
+        {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
+        ) : (
+          transactions.map((transaction, index) => (
+            <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+              <Transaction transaction={transaction} />
+            </Box>
+          ))
+        )}
       </Box>
     </MainCard>
   );

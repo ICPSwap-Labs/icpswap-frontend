@@ -25,8 +25,8 @@ export function TokenImageWithChain({ token, chain, size = "40px", chainSize = "
           borderWidth: "2px",
           borderRadius: "4px",
           borderColor: theme.palette.background.level2,
-          width: `${parseInt(chainSize) + 2}px`,
-          height: `${parseInt(chainSize) + 2}px`,
+          width: `${parseInt(chainSize, 10) + 2}px`,
+          height: `${parseInt(chainSize, 10) + 2}px`,
           background: "#1A223F",
         }}
       >

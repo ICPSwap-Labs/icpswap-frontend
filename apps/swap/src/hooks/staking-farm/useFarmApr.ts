@@ -30,7 +30,7 @@ export function useFarmApr({ farmTvlValue, state, rewardToken, farmInitArgs, rew
       .toFixed(2);
 
     return `${val}%`;
-  }, [farmTvlValue, state, farmInitArgs, rewardMetadata, rewardToken]);
+  }, [farmTvlValue, state, farmInitArgs, rewardMetadata, rewardToken, rewardTokenPrice]);
 }
 
 export interface UseUserAprArgs {
@@ -92,7 +92,7 @@ export function useUserApr({
     if (isUndefinedOrNull(apr)) return undefined;
 
     return `${apr.dividedBy(deposits.length)}%`;
-  }, [farmTvlValue, state, farmInitArgs, rewardToken, positionsValue, deposits]);
+  }, [farmTvlValue, state, farmInitArgs, rewardToken, positionsValue, deposits, rewardTokenPrice]);
 }
 
 export interface UseUserSingleLiquidityAprProps {
@@ -144,5 +144,5 @@ export function useUserSingleLiquidityApr({
       .toFixed(2);
 
     return `${val}%`;
-  }, [farmTvlValue, state, farmInitArgs, rewardToken, positionValue, deposit]);
+  }, [farmTvlValue, state, farmInitArgs, rewardToken, positionValue, deposit, rewardAmount, rewardTokenPrice]);
 }

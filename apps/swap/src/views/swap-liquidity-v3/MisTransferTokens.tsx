@@ -51,7 +51,7 @@ export function BalanceItem({ token, symbol, balance, name, pool, data, onClaimS
       }
 
       closeTip(loadingKey);
-    }, [balance, token, pool, data, name]),
+    }, [balance, token, pool, data, name, closeTip, onClaimSuccess, openTip, symbol]),
   );
 
   return (

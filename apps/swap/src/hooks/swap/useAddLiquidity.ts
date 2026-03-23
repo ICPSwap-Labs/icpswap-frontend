@@ -324,7 +324,7 @@ function useAddLiquidityCalls() {
         mint,
       ].filter((fn) => fn !== undefined) as (() => Promise<boolean>)[];
     },
-    [],
+    [approve, transfer, deposit, openErrorTip, openSuccessTip, t, updateStoreUserPositionPool],
   );
 }
 
@@ -345,10 +345,10 @@ function useInitialAddLiquiditySteps() {
   const { t } = useTranslation();
   const stepsToReclaimCallback = useStepsToReclaimCallback();
 
-  const handleReclaimPCMBalance = () => {
+  const handleReclaimPCMBalance = useCallback(() => {
     navigate("/swap/pcm/reclaim");
     closeAllSteps();
-  };
+  }, [closeAllSteps, navigate]);
 
   return useCallback(
     (
@@ -372,7 +372,7 @@ function useInitialAddLiquiditySteps() {
         title: t("swap.add.liquidity.details"),
       });
     },
-    [],
+    [handleReclaimPCMBalance, initialStepContent, t, stepsToReclaimCallback],
   );
 }
 

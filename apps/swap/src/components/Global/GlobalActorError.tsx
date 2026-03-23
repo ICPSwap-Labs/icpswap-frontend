@@ -73,7 +73,7 @@ export function GlobalActorError() {
         showConnector(true);
       }
     });
-  }, [logout, showConnector]);
+  }, [logout, open, showConnector]);
 
   return null;
 }

@@ -16,7 +16,7 @@ export function TokenReceiveItem({ tokenId }: TokenReceiveItemProps) {
   const handleReceive = useCallback(() => {
     setPages(WalletManagerPage.Receive, false);
     setTokenReceiveId(tokenId);
-  }, [setPages, tokenId]);
+  }, [setPages, tokenId, setTokenReceiveId]);
 
   return (
     <MenuItem

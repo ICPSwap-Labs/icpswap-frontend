@@ -1,6 +1,8 @@
 import type { Principal } from "@icp-sdk/core/principal";
 import { getStakingTokenUserInfo, useStakingPools } from "@icpswap/hooks";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { STATE, type UserPendingRewards } from "types/staking-token";
@@ -32,6 +34,7 @@ export function usePendingRewards(refresh?: number | boolean) {
     stake_pending_reward_fetch_index++;
   }, []);
 
+  // biome-ignore lint: reload dependencies
   useEffect(() => {
     const fetch = async (pool: StakingPoolControllerPoolInfo, principal: Principal, fetch_index: number) => {
       try {
@@ -113,32 +116,24 @@ export function usePendingRewards(refresh?: number | boolean) {
   return useMemo(() => ({ loading, result: data }), [loading, data]);
 }
 
-export function usePendingRewardsByPool(poolId: string | undefined, refresh?: number | boolean) {
+export function usePendingRewardsByPool(poolId: string | undefined) {
   const principal = useAccountPrincipal();
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<UserPendingRewards | null>(null);
 
-  useEffect(() => {
-    async function call() {
+  return useQuery({
+    queryKey: ["stakingTokenUserInfo", principal],
+    queryFn: async () => {
       if (!poolId || !principal) return;
-
-      setData(null);
-      setLoading(true);
 
       const result = await getStakingTokenUserInfo(poolId, principal);
       if (!result) return undefined;
 
-      setData({
+      return {
         ...result,
         poolId,
         stakingAmount: result.stakeTokenBalance,
         rewardAmount: result.rewardTokenBalance,
-      } as UserPendingRewards);
-      setLoading(false);
-    }
-
-    call();
-  }, [principal, refresh, poolId]);
-
-  return useMemo(() => ({ loading, result: data }), [loading, data]);
+      } as UserPendingRewards;
+    },
+    enabled: nonUndefinedOrNull(poolId) && nonUndefinedOrNull(principal),
+  });
 }

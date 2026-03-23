@@ -134,163 +134,158 @@ export function LimitOrderConfirm({
     amount: formatTokenAmount(inputAmount, inputToken?.decimals).toString(),
   });
 
-  const handleViewAll = useCallback(
-    (viewAll: boolean) => {
-      setViewAll(viewAll);
-    },
-    [setViewAll],
-  );
+  const handleViewAll = useCallback((viewAll: boolean) => {
+    setViewAll(viewAll);
+  }, []);
 
   return (
     <Modal open={open} title={t("limit.submit")} onClose={onClose} background="level1">
-      <>
-        <Box className={classes.box}>
-          <Box className={classes.wrapper}>
-            <Flex gap="0 12px">
-              <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
-              <Flex gap="8px 0" vertical align="flex-start">
-                <Flex gap="0 4px">
-                  <Typography>{t("common.you.pay")}</Typography>
-                  <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
-                </Flex>
-
-                <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
-                  {inputToken && inputAmount
-                    ? `${toSignificantWithGroupSeparator(inputAmount)} ${inputToken.symbol}`
-                    : "--"}
-                </Typography>
+      <Box className={classes.box}>
+        <Box className={classes.wrapper}>
+          <Flex gap="0 12px">
+            <TokenImage tokenId={inputToken?.address} logo={inputToken?.logo} size="40px" />
+            <Flex gap="8px 0" vertical align="flex-start">
+              <Flex gap="0 4px">
+                <Typography>{t("common.you.pay")}</Typography>
+                <Tooltip background="#ffffff" tips={t`Actual swap amount after deducting transfer fees`} />
               </Flex>
-            </Flex>
-          </Box>
 
-          <Box className={classes.line} />
-
-          <Box className={classes.wrapper}>
-            <Flex gap="0 12px">
-              <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
-              <Flex gap="8px 0" vertical align="flex-start">
-                <Typography>{t("common.you.receive")}</Typography>
-                <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
-                  {outputAmount && outputToken
-                    ? `${toSignificantWithGroupSeparator(outputAmount)} ${outputToken.symbol}`
-                    : "--"}
-                </Typography>
-              </Flex>
-            </Flex>
-          </Box>
-        </Box>
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "16px 0", margin: "24px 0 0 0" }}>
-          <DetailItem
-            label={t("common.limit.price")}
-            value={
-              <TradePrice
-                price={orderPrice}
-                showConvert={false}
-                color="text.primary"
-                token0={inputToken}
-                token1={outputToken}
-              />
-            }
-            tooltip={<Tooltip background="#ffffff" tips={t("common.limit.price.tips")} iconSize="14px" />}
-          />
-
-          <DetailItem
-            label={t("common.current.price")}
-            value={
-              <TradePrice
-                price={currentPrice}
-                showConvert={false}
-                color="text.primary"
-                token0={inputToken}
-                token1={outputToken}
-              />
-            }
-          />
-
-          <DetailItem
-            label={t("limit.estimated.earning")}
-            value={
-              outputToken && outputAmount
-                ? `${toSignificantWithGroupSeparator(
-                    new BigNumber(outputAmount).multipliedBy(0.003).multipliedBy(0.8).toString(),
-                  )} ${outputToken.symbol}`
-                : "--"
-            }
-            tooltip={
-              <Tooltip
-                iconSize="14px"
-                background="#ffffff"
-                tips={t`When you place a limit order on ICPSwap, it's like adding a very narrow liquidity position. If your limit order is fully executed, you'll earn at least the minimum amount of transaction fees displayed.`}
-              />
-            }
-          />
-
-          <DetailItem
-            label={t("limit.estimated.fee")}
-            value={
-              swapFeeCost && inputToken && inputTokenPrice
-                ? `${parseTokenAmount(swapFeeCost, inputToken.decimals).toFormat()} ${
-                    inputToken.symbol
-                  } (${formatDollarAmount(
-                    parseTokenAmount(swapFeeCost, inputToken.decimals).multipliedBy(inputTokenPrice).toString(),
-                  )})`
-                : "--"
-            }
-            tooltip={<Tooltip iconSize="14px" background="#ffffff" tips={t("limit.estimated.fee.tips")} />}
-          />
-
-          <Box sx={{ borderRadius: "12px", background: theme.palette.background.level2, padding: "14px 16px" }}>
-            {viewAll ? (
-              <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
-                {t("limit.confirm.description0")}
-
-                <Typography sx={{ fontSize: "12px", lineHeight: "20px", margin: "15px 0 0 0" }}>
-                  {t("limit.confirm.description1")}
-                </Typography>
-
-                <Typography sx={{ fontSize: "12px", lineHeight: "20px", margin: "15px 0 0 0" }}>
-                  {t("limit.confirm.description2")}
-                </Typography>
-
-                <Typography
-                  sx={{
-                    fontSize: "12px",
-                    cursor: "pointer",
-                    margin: "15px 0 0 0",
-                  }}
-                  color="secondary"
-                  onClick={() => handleViewAll(false)}
-                >
-                  {t("common.hide")}
-                </Typography>
+              <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
+                {inputToken && inputAmount
+                  ? `${toSignificantWithGroupSeparator(inputAmount)} ${inputToken.symbol}`
+                  : "--"}
               </Typography>
-            ) : (
-              <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
-                {t("limit.confirm.description3")}
+            </Flex>
+          </Flex>
+        </Box>
 
-                <Typography
-                  component="span"
-                  sx={{
-                    fontSize: "12px",
-                    cursor: "pointer",
-                  }}
-                  color="secondary"
-                  onClick={() => handleViewAll(true)}
-                >
-                  {t("common.view.all")}
-                </Typography>
+        <Box className={classes.line} />
+
+        <Box className={classes.wrapper}>
+          <Flex gap="0 12px">
+            <TokenImage tokenId={outputToken?.address} logo={outputToken?.logo} size="40px" />
+            <Flex gap="8px 0" vertical align="flex-start">
+              <Typography>{t("common.you.receive")}</Typography>
+              <Typography sx={{ fontSize: "20px", color: "text.primary", fontWeight: 600 }}>
+                {outputAmount && outputToken
+                  ? `${toSignificantWithGroupSeparator(outputAmount)} ${outputToken.symbol}`
+                  : "--"}
               </Typography>
-            )}
-          </Box>
+            </Flex>
+          </Flex>
         </Box>
+      </Box>
 
-        <Box sx={{ margin: "16px 0 0 0" }}>
-          <Button variant="contained" size="large" fullWidth onClick={onConfirm}>
-            {t("limit.place.order")}
-          </Button>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "16px 0", margin: "24px 0 0 0" }}>
+        <DetailItem
+          label={t("common.limit.price")}
+          value={
+            <TradePrice
+              price={orderPrice}
+              showConvert={false}
+              color="text.primary"
+              token0={inputToken}
+              token1={outputToken}
+            />
+          }
+          tooltip={<Tooltip background="#ffffff" tips={t("common.limit.price.tips")} iconSize="14px" />}
+        />
+
+        <DetailItem
+          label={t("common.current.price")}
+          value={
+            <TradePrice
+              price={currentPrice}
+              showConvert={false}
+              color="text.primary"
+              token0={inputToken}
+              token1={outputToken}
+            />
+          }
+        />
+
+        <DetailItem
+          label={t("limit.estimated.earning")}
+          value={
+            outputToken && outputAmount
+              ? `${toSignificantWithGroupSeparator(
+                  new BigNumber(outputAmount).multipliedBy(0.003).multipliedBy(0.8).toString(),
+                )} ${outputToken.symbol}`
+              : "--"
+          }
+          tooltip={
+            <Tooltip
+              iconSize="14px"
+              background="#ffffff"
+              tips={t`When you place a limit order on ICPSwap, it's like adding a very narrow liquidity position. If your limit order is fully executed, you'll earn at least the minimum amount of transaction fees displayed.`}
+            />
+          }
+        />
+
+        <DetailItem
+          label={t("limit.estimated.fee")}
+          value={
+            swapFeeCost && inputToken && inputTokenPrice
+              ? `${parseTokenAmount(swapFeeCost, inputToken.decimals).toFormat()} ${
+                  inputToken.symbol
+                } (${formatDollarAmount(
+                  parseTokenAmount(swapFeeCost, inputToken.decimals).multipliedBy(inputTokenPrice).toString(),
+                )})`
+              : "--"
+          }
+          tooltip={<Tooltip iconSize="14px" background="#ffffff" tips={t("limit.estimated.fee.tips")} />}
+        />
+
+        <Box sx={{ borderRadius: "12px", background: theme.palette.background.level2, padding: "14px 16px" }}>
+          {viewAll ? (
+            <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
+              {t("limit.confirm.description0")}
+
+              <Typography sx={{ fontSize: "12px", lineHeight: "20px", margin: "15px 0 0 0" }}>
+                {t("limit.confirm.description1")}
+              </Typography>
+
+              <Typography sx={{ fontSize: "12px", lineHeight: "20px", margin: "15px 0 0 0" }}>
+                {t("limit.confirm.description2")}
+              </Typography>
+
+              <Typography
+                sx={{
+                  fontSize: "12px",
+                  cursor: "pointer",
+                  margin: "15px 0 0 0",
+                }}
+                color="secondary"
+                onClick={() => handleViewAll(false)}
+              >
+                {t("common.hide")}
+              </Typography>
+            </Typography>
+          ) : (
+            <Typography sx={{ fontSize: "12px", lineHeight: "20px" }}>
+              {t("limit.confirm.description3")}
+
+              <Typography
+                component="span"
+                sx={{
+                  fontSize: "12px",
+                  cursor: "pointer",
+                }}
+                color="secondary"
+                onClick={() => handleViewAll(true)}
+              >
+                {t("common.view.all")}
+              </Typography>
+            </Typography>
+          )}
         </Box>
-      </>
+      </Box>
+
+      <Box sx={{ margin: "16px 0 0 0" }}>
+        <Button variant="contained" size="large" fullWidth onClick={onConfirm}>
+          {t("limit.place.order")}
+        </Button>
+      </Box>
     </Modal>
   );
 }

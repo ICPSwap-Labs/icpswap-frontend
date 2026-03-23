@@ -57,7 +57,7 @@ export function WalletIndex() {
 
   useEffect(() => {
     setPages(WalletManagerPage.Index);
-  }, []);
+  }, [setPages]);
 
   const handleDrawerClose = useCallback(() => {
     setOpen(false);

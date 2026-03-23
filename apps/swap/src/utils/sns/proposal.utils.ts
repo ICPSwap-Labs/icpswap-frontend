@@ -127,7 +127,7 @@ export const snsRewardStatus = ({
 };
 
 export function getProposalStatus(proposal: ProposalData) {
-  const now = new Date().getTime();
+  const now = Date.now();
 
   if (!proposal.decided_timestamp_seconds || new BigNumber(proposal.decided_timestamp_seconds.toString()).gt(now)) {
     return SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN;

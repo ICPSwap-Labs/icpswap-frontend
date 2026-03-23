@@ -39,7 +39,14 @@ function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
     return `${parseTokenAmount(transactions.amount, transactions.stakingTokenDecimals).toFormat()} ${
       transactions.stakingTokenSymbol
     }`;
-  }, [tokenType]);
+  }, [
+    tokenType,
+    transactions.amount,
+    transactions.rewardTokenDecimals,
+    transactions.rewardTokenSymbol,
+    transactions.stakingTokenDecimals,
+    transactions.stakingTokenSymbol,
+  ]);
 
   return (
     <TableRow className={classes.wrapper}>

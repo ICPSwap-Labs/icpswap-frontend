@@ -73,7 +73,7 @@ export function BtcBridgeMint({ token, balance, bitcoinAddress, refetch }: BtcBr
     }
 
     setLoading(false);
-  }, [setLoading, loading, principal, refetch]);
+  }, [loading, principal, refetch, openTip, refreshBtcBalance, t]);
 
   useEffect(() => {
     const timer = setInterval(
@@ -94,7 +94,7 @@ export function BtcBridgeMint({ token, balance, bitcoinAddress, refetch }: BtcBr
         clearInterval(timer);
       }
     };
-  }, [principal]);
+  }, [principal, refreshBtcBalance]);
 
   useOisyDisabledTips({ page: "ck-bridge" });
 

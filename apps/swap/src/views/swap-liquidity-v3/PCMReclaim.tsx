@@ -57,7 +57,7 @@ export function BalanceItem({
     if (unavailableClaim === true) {
       updateUnavailableKeys(claimedKey);
     }
-  }, [unavailableClaim, claimedKey]);
+  }, [unavailableClaim, claimedKey, updateUnavailableKeys]);
 
   const handleClaim = async () => {
     if (loading || unavailableClaim || !metadata) return;

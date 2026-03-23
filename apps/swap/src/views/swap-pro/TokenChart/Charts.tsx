@@ -19,10 +19,10 @@ export function TokenCharts() {
   const tokenChartsRef = useRef<TokenChartsRef>(null);
 
   useEffect(() => {
-    if (chartView && tokenChartsRef && tokenChartsRef.current) {
+    if (chartView && tokenChartsRef?.current) {
       tokenChartsRef.current.setView(chartView);
     }
-  }, [chartView, tokenChartsRef]);
+  }, [chartView]);
 
   useEffect(() => {
     if (token) {
@@ -68,7 +68,7 @@ export function TokenCharts() {
             components={{
               component: <TextButton link="https://www.tradingview.com/economic-calendar" sx={{ fontSize: "12px" }} />,
             }}
-            i18nKey="swap.tradingview.descriptions"
+            i18nKey="swap.TradingView.descriptions"
           />
         </Typography>
       ) : null}

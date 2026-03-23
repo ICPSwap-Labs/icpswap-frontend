@@ -20,7 +20,7 @@ export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
   if (!tx.lastCheckedBlockNumber) return true;
   const blocksSinceCheck = lastBlockNumber - tx.lastCheckedBlockNumber;
   if (blocksSinceCheck < 1) return false;
-  const minutesPending = (new Date().getTime() - tx.addedTime) / ms(`1m`);
+  const minutesPending = (Date.now() - tx.addedTime) / ms(`1m`);
 
   if (minutesPending > 60) {
     // every 10 blocks if pending longer than an hour
@@ -109,7 +109,9 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
       });
 
     return () => {
-      cancels.forEach((cancel) => cancel());
+      cancels.forEach((cancel) => {
+        cancel();
+      });
     };
   }, [chainId, publicClient, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions]);
 

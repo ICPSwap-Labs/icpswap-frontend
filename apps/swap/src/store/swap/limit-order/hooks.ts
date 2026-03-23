@@ -128,7 +128,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     }
 
     return undefined;
-  }, [isExactIn, independentFieldAmount, orderPrice, __inputToken, __outputToken]);
+  }, [isExactIn, independentFieldAmount, orderPrice, inputToken, outputToken]);
 
   const parsedAmounts = useMemo(
     () =>
@@ -136,7 +136,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
         [independentField]: independentFieldAmount,
         [dependentField]: dependentFieldAmount,
       }) as { INPUT: CurrencyAmount<Token> | undefined; OUTPUT: CurrencyAmount<Token> | undefined },
-    [independentField, independentFieldAmount],
+    [independentField, independentFieldAmount, dependentField, dependentFieldAmount],
   );
 
   const isInputTokenSorted = useMemo(() => {
@@ -216,8 +216,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const minSettableTick = useMemo(() => {
     if (nonUndefinedOrNull(minUseableTick) && pool) {
       return isInputTokenSorted
-        ? minUseableTick - parseInt(String(TICK_SPACINGS[pool.fee] / 2)) + 1
-        : minUseableTick + parseInt(String(TICK_SPACINGS[pool.fee] / 2)) - 1;
+        ? minUseableTick - parseInt(String(TICK_SPACINGS[pool.fee] / 2), 10) + 1
+        : minUseableTick + parseInt(String(TICK_SPACINGS[pool.fee] / 2), 10) - 1;
     }
   }, [minUseableTick, pool, isInputTokenSorted]);
 
@@ -253,7 +253,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const outputTokenSubBalance = useMemo(() => {
     if (!principal) return undefined;
     return __outputTokenSubBalance;
-  }, [__outputTokenSubBalance]);
+  }, [__outputTokenSubBalance, principal]);
 
   const { data: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
   const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
@@ -348,7 +348,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   }, [
     parsedAmounts,
     inputSwapAmount,
-    independentFieldAmount,
     inputTokenSubBalance,
     inputTokenUnusedBalance,
     Trade,
@@ -363,6 +362,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     minSettableTick,
     tickError,
     inputCurrencyPrice,
+    outputToken,
+    t,
   ]);
 
   const inputTokenBalance = formatTokenAmount(

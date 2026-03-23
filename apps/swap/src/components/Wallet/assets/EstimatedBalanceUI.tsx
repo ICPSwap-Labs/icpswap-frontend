@@ -42,7 +42,7 @@ export function EstimatedBalanceUI({
   const { setPages } = useWalletContext();
   const { setTokenReceiveId } = useWalletTokenContext();
 
-  const usdChangeType = valueChange && valueChange.includes("-") ? "down" : "up";
+  const usdChangeType = valueChange?.includes("-") ? "down" : "up";
   const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";
 
   const handleReceive = useCallback(() => {

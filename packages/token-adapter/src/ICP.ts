@@ -137,5 +137,5 @@ export class ICPAdapter extends BaseTokenAdapter<Ledger> {
 }
 
 export const icpAdapter = new ICPAdapter({
-  actor: async (canisterId?: string, identity?: ActorIdentity) => await ledgerService(identity),
+  actor: async (_canisterId?: string, identity?: ActorIdentity) => await ledgerService(identity),
 });

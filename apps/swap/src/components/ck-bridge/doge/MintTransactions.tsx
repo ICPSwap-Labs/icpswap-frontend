@@ -181,18 +181,14 @@ export function MintTransactions({ address }: MintTransactionProps) {
               <div />
             </LoadingRow>
           </Box>
+        ) : isUndefinedOrNull(data) || data.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
         ) : (
-          <>
-            {isUndefinedOrNull(data) || data.length === 0 ? (
-              <NoData tip={t("ck.empty")} />
-            ) : (
-              data.map((transaction, index) => (
-                <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                  <Transaction transaction={transaction} address={address} />
-                </Box>
-              ))
-            )}
-          </>
+          data.map((transaction, index) => (
+            <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+              <Transaction transaction={transaction} address={address} />
+            </Box>
+          ))
         )}
       </Box>
     </MainCard>

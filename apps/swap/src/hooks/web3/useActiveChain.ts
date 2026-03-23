@@ -15,5 +15,5 @@ export function useSupportedActiveChain() {
     if (!chainId) return undefined;
 
     return SUPPORTED_CHAINS.includes(chainId);
-  }, [chainId, SUPPORTED_CHAINS]);
+  }, [chainId]);
 }

@@ -45,7 +45,7 @@ export function useTransferOrApprove() {
         standard: token.standard as TOKEN_STANDARD,
       });
     },
-    [principal],
+    [principal, approve, transfer],
   );
 }
 
@@ -105,7 +105,7 @@ export function useSwapCallback() {
 
       return swapOk;
     },
-    [principal],
+    [principal, openTip],
   );
 }
 
@@ -137,6 +137,6 @@ export function useConvertSwap() {
 
       return await swap({ amount: balance, inputAllowance, poolId, token });
     },
-    [principal, approveOrTransfer],
+    [principal, approveOrTransfer, swap],
   );
 }

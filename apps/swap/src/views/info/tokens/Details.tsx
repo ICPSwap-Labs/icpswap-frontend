@@ -112,7 +112,7 @@ export function TokenDetail() {
 
   const handleCopy = useCallback(() => {
     if (copyRef) copyRef.current?.copy();
-  }, [copyRef]);
+  }, []);
 
   return (
     <InfoWrapper>
@@ -316,7 +316,7 @@ export function TokenDetail() {
               <Flex vertical align="flex-start" gap="8px 0">
                 <Typography>{t("common.controllers")}</Typography>
                 <Flex vertical gap="8px 0" align="flex-start">
-                  {canisterInfo && canisterInfo.controllers
+                  {canisterInfo?.controllers
                     ? canisterInfo.controllers.map((element) => {
                         return (
                           <Typography key={element} sx={{ color: "text.primary", fontSize: "16px" }}>
@@ -386,7 +386,7 @@ export default function Details() {
     if (standard) {
       updateTokenStandard([{ canisterId, standard }]);
     }
-  }, [standard, canisterId]);
+  }, [standard, canisterId, updateTokenStandard]);
 
   const tokenStandardIsRegistered = useTokenStandardIsRegistered(canisterId);
 

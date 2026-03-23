@@ -57,7 +57,7 @@ export function WithdrawButton({
     );
 
     setLoading(false);
-  }, [__balances, loading, token, pool]);
+  }, [__balances, loading, token, pool, onReclaimSuccess, reclaim]);
 
   const disabled = useMemo(() => {
     if (isUndefinedOrNull(token)) return true;

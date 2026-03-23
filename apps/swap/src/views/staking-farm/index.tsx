@@ -63,7 +63,7 @@ function MainContent() {
 
   const your = useMemo(() => {
     return __state === FilterState.YOUR;
-  }, [__state, FilterState]);
+  }, [__state]);
 
   const filterUser = useMemo(() => {
     if (your) return principal?.toString();
@@ -84,9 +84,12 @@ function MainContent() {
     return farms.slice(0, PAGE_SIZE * page);
   }, [farms, page]);
 
-  const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
-    navigate(`/farm?state=${value.state}`);
-  }, []);
+  const handleToggle = useCallback(
+    (value: { label: string; state: FilterState }) => {
+      navigate(`/farm?state=${value.state}`);
+    },
+    [navigate],
+  );
 
   const [unStakedFarms, setUnStakedFarms] = useState<string[]>([]);
 
@@ -124,7 +127,7 @@ function MainContent() {
 
   const handleScrollNext = useCallback(() => {
     setPage(page + 1);
-  }, [setPage, page]);
+  }, [page]);
 
   const hasMore = useMemo(() => {
     if (!slicedFarms || !farms) return false;

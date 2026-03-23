@@ -31,7 +31,7 @@ export default function NFTInfo({
         openSuccessTip(t("common.cancelled.success"));
         if (onRevokeSuccess) onRevokeSuccess();
       }
-    }, [metadata, openErrorTip, openSuccessTip, t, onRevokeSuccess]),
+    }, [metadata, onRevokeSuccess, openErrorTip, openSuccessTip, t]),
   );
 
   return (

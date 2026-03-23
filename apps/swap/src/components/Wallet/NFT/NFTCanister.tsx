@@ -24,7 +24,7 @@ export function NFTCanister() {
 
   const handleScrollNext = useCallback(() => {
     setPage(page + 1);
-  }, [page, setPage]);
+  }, [page]);
 
   return displayedNFTInfo ? (
     <DrawerWrapper

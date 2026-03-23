@@ -23,7 +23,7 @@ export function useBitcoinTxResponseManager() {
         if (hash && !bitcoinFinalizedTxs.includes(hash)) {
           const transactionResponse = await getBtcTransactionResponse(hash);
 
-          if (transactionResponse && transactionResponse.block_height) {
+          if (transactionResponse?.block_height) {
             if (new BigNumber(blockNumber).minus(transactionResponse.block_height).isEqualTo(BITCOIN_CONFIRMATIONS)) {
               openTip(t("ck.mint.completed", { symbol: "BTC" }));
               bitcoinFinalizedTxsManager([hash]);
@@ -41,6 +41,6 @@ export function useBitcoinTxResponseManager() {
         }
       }
     },
-    [blockNumber, bitcoinFinalizedTxs],
+    [blockNumber, bitcoinFinalizedTxs, bitcoinFinalizedTxsManager, openTip, t, updateBitcoinTxResponse],
   );
 }

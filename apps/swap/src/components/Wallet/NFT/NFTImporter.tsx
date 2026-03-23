@@ -32,21 +32,18 @@ export function NFTImporter() {
     if (selectedContact) {
       setAddress(selectedContact.address);
     }
-  }, [selectedContact, setAddress]);
+  }, [selectedContact]);
 
-  const handleAddressChange = useCallback(
-    (value: string) => {
-      setAddress(value);
-    },
-    [setAddress],
-  );
+  const handleAddressChange = useCallback((value: string) => {
+    setAddress(value);
+  }, []);
 
   const handleImport = useCallback(async () => {
     if (isUndefinedOrNull(address)) return;
     importNFT({ canisterId: address, standard: NFT_STANDARDS.EXT });
     openTips("NFTs imported successfully.", TIP_SUCCESS);
     setPages(WalletManagerPage.Index);
-  }, [address, setPages, importNFT]);
+  }, [address, setPages, importNFT, openTips]);
 
   const error = useMemo(() => {
     if (isUndefinedOrNull(extNFTs)) return t("common.import");
@@ -60,7 +57,7 @@ export function NFTImporter() {
     if (isImported) return t("common.canister.id.exists");
 
     return undefined;
-  }, [address, extNFTs, importedNFTs]);
+  }, [address, extNFTs, importedNFTs, t]);
 
   return (
     <DrawerWrapper

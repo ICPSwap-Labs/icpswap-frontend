@@ -67,7 +67,7 @@ export function useBestTrade(
       amountIn: route[0].amountIn,
       zeroForOne,
     });
-  }, [routes, pool, actualSwapValue]);
+  }, [routes, pool, actualSwapValue, zeroForOne]);
 
   const available = useSwapPoolAvailable(pool?.id);
 
@@ -168,5 +168,6 @@ export function useBestTrade(
     checked,
     pool,
     noLiquidity,
+    exactInputLoading,
   ]);
 }

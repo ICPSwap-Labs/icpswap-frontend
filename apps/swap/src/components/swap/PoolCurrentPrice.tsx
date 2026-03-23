@@ -61,7 +61,7 @@ export function PoolCurrentPrice({
     }
 
     return manuallyInverted ? token1 : token0;
-  }, [__token, token0, token1]);
+  }, [__token, token0, token1, manuallyInverted]);
 
   const quoteToken = useMemo(() => {
     if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(baseToken)) return undefined;
@@ -79,7 +79,7 @@ export function PoolCurrentPrice({
       : pool.priceOf(baseToken).toFixed(baseToken.decimals);
 
     return formatTokenPrice(price);
-  }, [pool, quoteToken, manuallyInverted]);
+  }, [pool, quoteToken, manuallyInverted, baseToken]);
 
   const label = useMemo(() => {
     if (isUndefinedOrNull(baseToken) || isUndefinedOrNull(quoteToken)) return undefined;

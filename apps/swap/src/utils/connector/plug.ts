@@ -50,7 +50,7 @@ export class PlugConnector implements ConnectorAbstract {
       return false;
     }
 
-    if (window.ic && window.ic.plug) {
+    if (window.ic?.plug) {
       return await window.ic.plug.isConnected();
     }
 

@@ -54,21 +54,15 @@ export function NFTSendUI({ isExt, loading, disabled, metadata, name, logo, toke
     if (selectedContact) {
       setAddress(selectedContact.address);
     }
-  }, [selectedContact, setAddress]);
+  }, [selectedContact]);
 
-  const handleAddressChange = useCallback(
-    (value: string) => {
-      setAddress(value);
-    },
-    [setAddress],
-  );
+  const handleAddressChange = useCallback((value: string) => {
+    setAddress(value);
+  }, []);
 
-  const handleMemoChange = useCallback(
-    (value: string) => {
-      setMemo(value);
-    },
-    [setMemo],
-  );
+  const handleMemoChange = useCallback((value: string) => {
+    setMemo(value);
+  }, []);
 
   const isValidAddress = useMemo(() => {
     if (isUndefinedOrNull(address)) return undefined;
@@ -82,11 +76,11 @@ export function NFTSendUI({ isExt, loading, disabled, metadata, name, logo, toke
     if (!address.includes("-") && !isValidAccount(address)) return t("common.invalid.account.id");
 
     return undefined;
-  }, [address]);
+  }, [address, t]);
 
   const disableSend = useMemo(() => {
     return isValidAddress === false || loading || nonUndefinedOrNull(error);
-  }, [address, error, loading, isValidAddress]);
+  }, [error, loading, isValidAddress]);
 
   const isOwner = useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(address)) return undefined;
@@ -99,7 +93,7 @@ export function NFTSendUI({ isExt, loading, disabled, metadata, name, logo, toke
   const handleSend = useCallback(async () => {
     if (isUndefinedOrNull(address) || isUndefinedOrNull(principal)) return;
     await onSend(address, memo);
-  }, [onSend, address, memo]);
+  }, [onSend, address, memo, principal]);
 
   return (
     <DrawerWrapper

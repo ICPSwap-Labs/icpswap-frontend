@@ -90,7 +90,7 @@ export function AddFolloweeModal({
 
     try {
       hexToBytes(neuronId);
-    } catch (err) {
+    } catch (_err) {
       available = false;
     }
 

@@ -1,11 +1,9 @@
 import { useInfoAllTokens } from "@icpswap/hooks";
 import type { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount } from "@icpswap/utils";
-import { useICPPrice } from "hooks/useUSDPrice";
+import { useIntervalFarmUserTVL } from "hooks/staking-farm/useIntervalFarmUserTVL";
 import { useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
-
-import { useIntervalFarmUserTVL } from "./useIntervalFarmUserTVL";
 
 export interface UseUserTvlProps {
   token0?: Token | undefined;
@@ -16,9 +14,8 @@ export interface UseUserTvlProps {
 export function useUserTvlValue({ farmId, token0, token1 }: UseUserTvlProps) {
   const principal = useAccountPrincipalString();
   const infoAllTokens = useInfoAllTokens();
-  const icpPrice = useICPPrice();
 
-  const userTvl = useIntervalFarmUserTVL(farmId, principal);
+  const { data: userTvl } = useIntervalFarmUserTVL(farmId, principal);
 
   const userTvlValue = useMemo(() => {
     if (!userTvl || !token0 || !token1 || !infoAllTokens || infoAllTokens.length === 0) return undefined;
@@ -34,7 +31,7 @@ export function useUserTvlValue({ farmId, token0, token1 }: UseUserTvlProps) {
     const token1Tvl = parseTokenAmount(poolToken1.amount, token1.decimals).multipliedBy(token1Price);
 
     return token0Tvl.plus(token1Tvl).toString();
-  }, [userTvl, icpPrice, infoAllTokens]);
+  }, [userTvl, infoAllTokens, token0, token1]);
 
   return useMemo(() => userTvlValue, [userTvlValue]);
 }

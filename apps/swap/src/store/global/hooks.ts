@@ -161,7 +161,7 @@ export function useFetchAllSwapTokens() {
     }
 
     call();
-  }, [allSwapTokens, dispatch]);
+  }, [allSwapTokens, dispatch, loading]);
 
   return useMemo(() => ({ loading, result: allSwapTokens }), [loading, allSwapTokens]);
 }
@@ -188,7 +188,7 @@ export function useFetchBridgeTokens() {
     if (allBridgeTokens && allBridgeTokens.length > 0) {
       dispatch(updateBridgeTokens(allBridgeTokens));
     }
-  }, [allBridgeTokens]);
+  }, [allBridgeTokens, dispatch]);
 }
 
 export function useBridgeTokens() {

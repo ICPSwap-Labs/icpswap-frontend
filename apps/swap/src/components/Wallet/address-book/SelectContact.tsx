@@ -77,12 +77,12 @@ export function SelectContact() {
 
   const handlePrev = useCallback(() => {
     setPages(selectContactPrevPage);
-  }, [selectContactPrevPage]);
+  }, [selectContactPrevPage, setPages]);
 
   const handleAddAddress = useCallback(() => {
     setPages(WalletManagerPage.AddAddress);
     setAddAddressBookPrevPage(WalletManagerPage.SelectContact);
-  }, [setPages]);
+  }, [setPages, setAddAddressBookPrevPage]);
 
   const { data: addresses, isLoading: loading } = useAddressBook(refreshTrigger);
 

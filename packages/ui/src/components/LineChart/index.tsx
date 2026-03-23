@@ -38,7 +38,7 @@ export const LineChart = ({
 }: LineChartProps) => {
   // theming
   const theme = useTheme();
-  const textColor = theme.palette.text.secondary;
+  const _textColor = theme.palette.text.secondary;
 
   // chart pointer
   const chartRef = useRef<HTMLDivElement>(null);
@@ -62,7 +62,7 @@ export const LineChart = ({
       chartCreated.timeScale().fitContent();
       chartCreated.timeScale().scrollToPosition(0, false);
     }
-  }, [chartCreated, chartRef, height]);
+  }, [chartCreated, height]);
 
   // add event listener for resize
   const isClient = typeof window === "object";
@@ -72,7 +72,7 @@ export const LineChart = ({
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [isClient, chartRef, handleResize]); // Empty array ensures that effect is only run on mount and unmount
+  }, [isClient, handleResize]); // Empty array ensures that effect is only run on mount and unmount
 
   // if chart not instantiated in canvas, create it
   useEffect(() => {
@@ -124,7 +124,7 @@ export const LineChart = ({
       chart.timeScale().fitContent();
       setChart(chart);
     }
-  }, [color, chartCreated, currentValue, data, height, setValue, textColor, theme]);
+  }, [chartCreated, data, height]);
 
   useEffect(() => {
     if (chartCreated && data) {
@@ -153,10 +153,10 @@ export const LineChart = ({
           chartRef?.current &&
           (param === undefined ||
             param.time === undefined ||
-            (param && param.point && param.point.x < 0) ||
-            (param && param.point && param.point.x > chartRef.current.clientWidth) ||
-            (param && param.point && param.point.y < 0) ||
-            (param && param.point && param.point.y > height))
+            (param?.point && param.point.x < 0) ||
+            (param?.point && param.point.x > chartRef.current.clientWidth) ||
+            (param?.point && param.point.y < 0) ||
+            (param?.point && param.point.y > height))
         ) {
           if (setValue) setValue(undefined);
           if (setLabel) setLabel(undefined);

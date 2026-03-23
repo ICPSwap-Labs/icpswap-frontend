@@ -55,7 +55,7 @@ export default function NFTMint() {
     if (NFTCanisterId) {
       setMintTokenInfo({ ...mintTokenInfo, nftCanister: NFTCanisterId });
     }
-  }, [NFTCanisterId]);
+  }, [NFTCanisterId, mintTokenInfo]);
 
   const handleFieldChange = (value: string, field: string) => {
     let new_value = value;
@@ -99,7 +99,9 @@ export default function NFTMint() {
               (mintTokenInfo.metadata ?? []).reduce(
                 (previousValue, currentValue) => {
                   if (!!currentValue.label && !!currentValue.value) {
-                    return [...previousValue, { label: currentValue.label, value: currentValue.value }];
+                    const newValue = previousValue.slice();
+                    newValue.push({ label: currentValue.label, value: currentValue.value });
+                    return newValue;
                   }
 
                   return [];
@@ -393,31 +395,29 @@ export default function NFTMint() {
               </Box>
 
               <Box className="grid-box">
-                <>
-                  <Box>
-                    <RequiredMark />
-                    <Typography component="span" fontSize="16px" color="text.secondary">
-                      {t("nft.upload.file")}
-                    </Typography>
+                <Box>
+                  <RequiredMark />
+                  <Typography component="span" fontSize="16px" color="text.secondary">
+                    {t("nft.upload.file")}
+                  </Typography>
+                </Box>
+                <Box mt={2}>
+                  <Box sx={{ height: "180px" }}>
+                    <Upload
+                      ref={uploadRef}
+                      maxSize={200 * 1024}
+                      types={NFT_UPLOAD_FILES}
+                      accept=".jpeg, .png, .jpg, .gif, .apng, .pdf, .txt, .json, .ppt, .pptx, .xls, .xlsx, .docx, .doc"
+                      placeholder="Upload your file"
+                      beforeUpload={handleBeforeFileUpload}
+                      canisterId={mintTokenInfo.nftCanister}
+                      uploadImmediately={false}
+                      onFileSelected={handleFileChange}
+                      onFileError={handleFileError}
+                    />
+                    <Typography sx={{ marginTop: "5px" }}>{t("nft.upload.support")}</Typography>
                   </Box>
-                  <Box mt={2}>
-                    <Box sx={{ height: "180px" }}>
-                      <Upload
-                        ref={uploadRef}
-                        maxSize={200 * 1024}
-                        types={NFT_UPLOAD_FILES}
-                        accept=".jpeg, .png, .jpg, .gif, .apng, .pdf, .txt, .json, .ppt, .pptx, .xls, .xlsx, .docx, .doc"
-                        placeholder="Upload your file"
-                        beforeUpload={handleBeforeFileUpload}
-                        canisterId={mintTokenInfo.nftCanister}
-                        uploadImmediately={false}
-                        onFileSelected={handleFileChange}
-                        onFileError={handleFileError}
-                      />
-                      <Typography sx={{ marginTop: "5px" }}>{t("nft.upload.support")}</Typography>
-                    </Box>
-                  </Box>
-                </>
+                </Box>
               </Box>
             </Grid>
             <Box mt={8}>

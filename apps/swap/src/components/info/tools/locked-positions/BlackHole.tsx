@@ -42,7 +42,7 @@ export function BlackHolePositions({ poolId }: BlackHolePositionsProps) {
       .flat()
       .map((ele) => ({ ...ele, poolId }) as PositionDetails)
       .concat(__extraPositions);
-  }, [__positions, extraPositions]);
+  }, [__positions, extraPositions, poolId]);
 
   return (
     <PositionTableUI

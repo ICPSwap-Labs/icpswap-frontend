@@ -29,7 +29,7 @@ export function useSwapUserUnusedTokenByPool(
         canisterId: Principal.fromText(pool.id),
       } as SwapPoolData,
     ];
-  }, [pool?.id.toString()]);
+  }, [pool]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     principal?.toString(),

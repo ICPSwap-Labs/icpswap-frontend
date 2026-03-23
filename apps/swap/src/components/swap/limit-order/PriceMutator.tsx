@@ -111,7 +111,7 @@ export function PriceMutator({
     if (isUndefinedOrNull(currentPrice) || isUndefinedOrNull(inputValue) || inputValue === "") return null;
     const invertedCurrentPrice = inverted ? new BigNumber(1).dividedBy(currentPrice).toString() : currentPrice;
     return new BigNumber(inputValue).minus(invertedCurrentPrice).dividedBy(invertedCurrentPrice);
-  }, [inputValue, inverted]);
+  }, [inputValue, inverted, currentPrice]);
 
   const activePercent = useMemo(() => {
     if (isUndefinedOrNull(percent)) return null;

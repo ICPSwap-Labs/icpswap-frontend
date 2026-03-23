@@ -46,9 +46,12 @@ function MainContent() {
     limit: 100,
   });
 
-  const handleToggle = useCallback((value: { label: string; state: FilterState }) => {
-    navigate(`/stake?state=${value.state}`);
-  }, []);
+  const handleToggle = useCallback(
+    (value: { label: string; state: FilterState }) => {
+      navigate(`/stake?state=${value.state}`);
+    },
+    [navigate],
+  );
 
   const { showState, gridTemplateColumns } = useMemo(() => {
     return {

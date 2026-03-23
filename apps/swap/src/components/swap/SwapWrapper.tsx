@@ -102,7 +102,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     if (pool?.id) {
       setPoolId(pool.id);
     }
-  }, [routes, setSelectedPool, noLiquidity, updateNoLiquidity]);
+  }, [routes, setSelectedPool, noLiquidity, updateNoLiquidity, setCachedPool, setPoolId]);
 
   // Set token for Swap context
   useEffect(() => {
@@ -128,7 +128,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         navigate(`${prePath}?input=${token.address}&output=${outputTokenId}`);
       }
     },
-    [outputTokenId],
+    [navigate, ui],
   );
 
   const handleTokenBChange = useCallback(
@@ -141,32 +141,35 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         navigate(`${prePath}?input=${inputTokenId}&output=${token.address}`);
       }
     },
-    [inputTokenId],
+    [navigate, ui],
   );
 
-  const handleInput = useCallback((value: string, type: "input" | "output") => {
-    const numDecimals = getNumberDecimals(value);
+  const handleInput = useCallback(
+    (value: string, type: "input" | "output") => {
+      const numDecimals = getNumberDecimals(value);
 
-    if (type === "input") {
-      onUserInput(
-        SWAP_FIELD.INPUT,
-        value === ""
-          ? ""
-          : new BigNumber(value).isEqualTo(0)
-            ? "0"
-            : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
-      );
-    } else {
-      onUserInput(
-        SWAP_FIELD.OUTPUT,
-        value === ""
-          ? ""
-          : new BigNumber(value).isEqualTo(0)
-            ? "0"
-            : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
-      );
-    }
-  }, []);
+      if (type === "input") {
+        onUserInput(
+          SWAP_FIELD.INPUT,
+          value === ""
+            ? ""
+            : new BigNumber(value).isEqualTo(0)
+              ? "0"
+              : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
+        );
+      } else {
+        onUserInput(
+          SWAP_FIELD.OUTPUT,
+          value === ""
+            ? ""
+            : new BigNumber(value).isEqualTo(0)
+              ? "0"
+              : new BigNumber(value).toFixed(numDecimals < SAFE_DECIMALS_LENGTH ? numDecimals : SAFE_DECIMALS_LENGTH),
+        );
+      }
+    },
+    [onUserInput],
+  );
 
   const exceedImpact = useMemo(() => {
     if (!usdValueChange) return false;
@@ -233,13 +236,19 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     impactChecked,
     outOfCyclesChecked,
     swapLoading,
-    setSwapLoading,
     trade,
     inputTokenSubBalance,
     inputTokenUnusedBalance,
     setRefreshTriggers,
     inputTokenBalance,
     swapCallback,
+    closeLoadingTip,
+    handleInput,
+    inputToken?.symbol,
+    openErrorTip,
+    openLoadingTip,
+    outputToken?.symbol,
+    t,
   ]);
 
   const handleMaxInput = useCallback(() => {
@@ -259,7 +268,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     return () => {
       clearSwapState();
     };
-  }, []);
+  }, [clearSwapState]);
 
   useImperativeHandle(
     ref,

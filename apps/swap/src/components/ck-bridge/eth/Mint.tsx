@@ -48,21 +48,21 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
     if (response) {
       setAmount("");
     }
-  }, [mint_call, amount, setAmount]);
+  }, [mint_call, amount, principal]);
 
   const mint_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return `Please switch to ${chainIdToNetwork[chain]}`;
     if (!amount || new BigNumber(amount).isEqualTo(0)) return t("ck.enter.transfer.amount");
-    if (ethBalance && ethBalance.isLessThan(amount)) return t("common.error.insufficient.balance");
+    if (ethBalance?.isLessThan(amount)) return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [chainId, chain, amount, ethBalance]);
+  }, [chainId, amount, ethBalance, t]);
 
   const handleMax = useCallback(() => {
     if (ethBalance) {
       setAmount(parseTokenAmount(ethBalance, token.decimals).toString());
     }
-  }, [token, ethBalance, setAmount]);
+  }, [token, ethBalance]);
 
   return (
     <>

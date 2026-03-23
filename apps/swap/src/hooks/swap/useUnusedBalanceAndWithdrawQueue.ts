@@ -14,6 +14,7 @@ export function useUnusedBalanceAndWithdrawQueue(pool: Pool | Null, refresh?: nu
     undefined,
   );
 
+  // biome-ignore lint: reload dependencies
   useEffect(() => {
     async function call() {
       if (isUndefinedOrNull(principal) || isUndefinedOrNull(pool)) return;

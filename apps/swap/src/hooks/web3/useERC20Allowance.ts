@@ -30,5 +30,5 @@ export function useERC20TokenAllowance(
   const rawAmount = data?.toString(); // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(() => (token && rawAmount ? rawAmount : undefined), [token, rawAmount]);
 
-  return useMemo(() => ({ tokenAllowance: allowance, isSyncing: isLoading }), [data, isLoading]);
+  return useMemo(() => ({ tokenAllowance: allowance, isSyncing: isLoading }), [isLoading, allowance]);
 }

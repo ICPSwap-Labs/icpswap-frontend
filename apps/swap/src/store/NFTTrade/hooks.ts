@@ -24,11 +24,15 @@ export function useAllowanceManager(): [Allowance[], (allowance: Allowance[]) =>
 export function useIsAllowedCallback(): (spender: string, tokenIndex: number) => boolean {
   const userAllowance = useUserAllowance();
 
-  return useCallback((spender: string, tokenIndex: number) => {
-    return !!userAllowance.filter(
-      ({ spender: _spender, tokenIndex: _tokenIndex }: Allowance) => spender === _spender && tokenIndex === _tokenIndex,
-    )[0];
-  }, []);
+  return useCallback(
+    (spender: string, tokenIndex: number) => {
+      return !!userAllowance.filter(
+        ({ spender: _spender, tokenIndex: _tokenIndex }: Allowance) =>
+          spender === _spender && tokenIndex === _tokenIndex,
+      )[0];
+    },
+    [userAllowance.filter],
+  );
 }
 
 export function useIsAllowed(spender: string, tokenIndex: number): boolean {

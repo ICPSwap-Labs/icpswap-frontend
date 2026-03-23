@@ -18,7 +18,7 @@ export function CollectFees({ position, positionId, children, onCollectSuccess, 
   const handleShowCollect = useCallback(() => {
     if (disabled) return;
     setOpen(true);
-  }, [setOpen, disabled]);
+  }, [disabled]);
 
   return (
     <>

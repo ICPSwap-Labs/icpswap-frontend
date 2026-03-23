@@ -30,13 +30,13 @@ function ReclaimItem({ tokenId, poolId, balance, onReclaim }: ReclaimItemProps) 
     if (balance <= BigInt(token.transFee)) return t`Reclaim`;
 
     return undefined;
-  }, [token, balance]);
+  }, [token, balance, t]);
 
   const handleClaim = useCallback(async () => {
     setLoading(true);
     await onReclaim(poolId, balance);
     setLoading(false);
-  }, [loading, setLoading]);
+  }, [balance, onReclaim, poolId]);
 
   return (
     <Flex justify="space-between" sx={{ padding: "16px 0" }}>
@@ -73,17 +73,22 @@ export interface ReclaimProps {
   refresh?: boolean;
 }
 
-export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuccess }: ReclaimProps) {
+export function Reclaim({ poolId, rewardToken, stakeToken, onReclaimSuccess }: ReclaimProps) {
   const { t } = useTranslation();
   const [openTip] = useTips();
   const { setReclaimable } = useContext(ReclaimContext);
-  const [trigger, setTrigger] = useState(0);
-  const { loading: unusedLoading, result: unusedToken } = useUserUnusedTokenByPool(
-    poolId,
-    stakeToken?.address,
-    trigger,
-  );
-  const { loading: pendingRewardLoading, result: pendingRewards } = usePendingRewardsByPool(poolId, trigger);
+
+  const {
+    isLoading: unusedLoading,
+    data: unusedToken,
+    refetch: refetchUnusedToken,
+  } = useUserUnusedTokenByPool(poolId, stakeToken?.address);
+  const { isLoading: pendingRewardLoading, data: pendingRewards, refetch } = usePendingRewardsByPool(poolId);
+
+  const handleRefetch = useCallback(() => {
+    refetchUnusedToken();
+    refetch();
+  }, [refetchUnusedToken, refetch]);
 
   const { claimableStakingAmount, claimableRewards } = useMemo(() => {
     if (!pendingRewards) return {};
@@ -105,7 +110,7 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
       }
     } else {
       openTip("Reclaim successfully", MessageTypes.success);
-      setTrigger(trigger + 1);
+      handleRefetch();
       if (onReclaimSuccess) onReclaimSuccess();
     }
   };
@@ -127,7 +132,7 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
       }
     } else {
       openTip("Reclaim successfully", MessageTypes.success);
-      setTrigger(trigger + 1);
+      handleRefetch();
       if (onReclaimSuccess) onReclaimSuccess();
     }
   };
@@ -142,11 +147,7 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
     } else {
       setReclaimable(false);
     }
-  }, [unusedToken, claimableRewards, claimableStakingAmount]);
-
-  useEffect(() => {
-    setTrigger(trigger + 1);
-  }, [refresh]);
+  }, [unusedToken, claimableRewards, claimableStakingAmount, setReclaimable]);
 
   return (
     <>
@@ -154,53 +155,51 @@ export function Reclaim({ poolId, rewardToken, stakeToken, refresh, onReclaimSuc
         {t("stake.reclaim.descriptions")}
       </Typography>
 
-      <>
-        {unusedLoading || pendingRewardLoading ? (
-          <Box sx={{ padding: "20px 0" }}>
-            <LoadingRow>
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-              <div />
-            </LoadingRow>
-          </Box>
-        ) : unusedToken && unusedToken.balance === BigInt(0) && !claimableStakingAmount && !claimableRewards ? (
-          <NoData tip={t("stake.reclaim.empty")} />
-        ) : (
-          <Box>
-            {unusedToken && unusedToken?.balance && unusedToken?.balance > BigInt(0) && poolId && stakeToken ? (
-              <ReclaimItem
-                poolId={poolId}
-                balance={unusedToken.balance}
-                tokenId={stakeToken.address}
-                onReclaim={handleReclaim}
-              />
-            ) : null}
+      {unusedLoading || pendingRewardLoading ? (
+        <Box sx={{ padding: "20px 0" }}>
+          <LoadingRow>
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+            <div />
+          </LoadingRow>
+        </Box>
+      ) : unusedToken && unusedToken.balance === BigInt(0) && !claimableStakingAmount && !claimableRewards ? (
+        <NoData tip={t("stake.reclaim.empty")} />
+      ) : (
+        <Box>
+          {unusedToken?.balance && unusedToken?.balance > BigInt(0) && poolId && stakeToken ? (
+            <ReclaimItem
+              poolId={poolId}
+              balance={unusedToken.balance}
+              tokenId={stakeToken.address}
+              onReclaim={handleReclaim}
+            />
+          ) : null}
 
-            {claimableStakingAmount && claimableStakingAmount > BigInt(0) && poolId && stakeToken ? (
-              <ReclaimItem
-                poolId={poolId}
-                balance={claimableStakingAmount}
-                tokenId={stakeToken.address}
-                onReclaim={(poolId: string, amount: bigint) => handleWithdraw(poolId, amount, true)}
-              />
-            ) : null}
+          {claimableStakingAmount && claimableStakingAmount > BigInt(0) && poolId && stakeToken ? (
+            <ReclaimItem
+              poolId={poolId}
+              balance={claimableStakingAmount}
+              tokenId={stakeToken.address}
+              onReclaim={(poolId: string, amount: bigint) => handleWithdraw(poolId, amount, true)}
+            />
+          ) : null}
 
-            {claimableRewards && claimableRewards > BigInt(0) && poolId && rewardToken ? (
-              <ReclaimItem
-                poolId={poolId}
-                balance={claimableRewards}
-                tokenId={rewardToken.address}
-                onReclaim={(poolId: string, amount: bigint) => handleWithdraw(poolId, amount, false)}
-              />
-            ) : null}
-          </Box>
-        )}
-      </>
+          {claimableRewards && claimableRewards > BigInt(0) && poolId && rewardToken ? (
+            <ReclaimItem
+              poolId={poolId}
+              balance={claimableRewards}
+              tokenId={rewardToken.address}
+              onReclaim={(poolId: string, amount: bigint) => handleWithdraw(poolId, amount, false)}
+            />
+          ) : null}
+        </Box>
+      )}
     </>
   );
 }

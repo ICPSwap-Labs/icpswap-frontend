@@ -77,7 +77,7 @@ export function useAllTokenIds() {
 
 export function useTokenStandardIsRegistered(canisterId: string) {
   const standards = tokenAdapter.getAll();
-  const canisterIds = [...standards.keys()];
+  const canisterIds = useMemo(() => [...standards.keys()], [standards]);
 
   return useMemo(() => {
     if (canisterId === "ICP" || canisterId === "aaaaa-aa") return true;

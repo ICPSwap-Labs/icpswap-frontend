@@ -47,7 +47,7 @@ export function useTokenSubAccountTransfer() {
 
       return true;
     },
-    [principal],
+    [principal, openErrorTip],
   );
 }
 
@@ -83,7 +83,7 @@ export function useTokenApprove() {
 
       return true;
     },
-    [approve, principal],
+    [approve, principal, openErrorTip],
   );
 }
 

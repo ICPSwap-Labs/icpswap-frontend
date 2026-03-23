@@ -13,7 +13,7 @@ export function getFarmsState(pool: FarmInfo | undefined): POOL_STATE {
 
   if ("CLOSED" in pool.status) return POOL_STATE.CLOSURE;
 
-  const now = BigInt(new Date().getTime());
+  const now = BigInt(Date.now());
   const end = pool.endTime * BigInt(1000);
   const start = pool.startTime * BigInt(1000);
 

@@ -56,7 +56,7 @@ export function TradePrice({
 
   const label = showInverted ? `${price?.quoteCurrency?.symbol}` : `${price?.baseCurrency?.symbol} `;
   const labelInverted = showInverted ? `${price?.baseCurrency?.symbol} ` : `${price?.quoteCurrency?.symbol}`;
-  const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted]);
+  const flipPrice = useCallback(() => setShowInverted(!showInverted), [showInverted]);
 
   const usdValue = useMemo(() => {
     if (!price || !token0 || !token0PriceUSDValue || !token1 || !token1PriceUSDValue) return undefined;
@@ -130,7 +130,7 @@ export function TradePriceV2({ price, token0, token1, showConvert = true, color 
 
   const label = showInverted ? `${token1?.symbol}` : `${token0?.symbol} `;
   const labelInverted = showInverted ? `${token0?.symbol} ` : `${token1?.symbol}`;
-  const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted]);
+  const flipPrice = useCallback(() => setShowInverted(!showInverted), [showInverted]);
 
   const usdValue = useMemo(() => {
     if (

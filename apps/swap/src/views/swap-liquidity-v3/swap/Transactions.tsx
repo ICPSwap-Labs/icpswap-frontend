@@ -90,7 +90,7 @@ export function SwapTransactions() {
   const theme = useTheme();
 
   const { startTime, endTime } = useMemo(() => {
-    const now = new Date().getTime();
+    const now = Date.now();
     const startTime = new BigNumber(now).minus(180 * 24 * 3600 * 1000).toNumber();
     const endTime = now;
 

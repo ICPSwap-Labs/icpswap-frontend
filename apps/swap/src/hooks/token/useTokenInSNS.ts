@@ -7,5 +7,5 @@ export function useIsSnsToken(tokenId: string | Null) {
 
   return useMemo(() => {
     return !!root_canister_id;
-  }, [tokenId, root_canister_id]);
+  }, [root_canister_id]);
 }
