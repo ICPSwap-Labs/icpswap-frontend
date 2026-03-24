@@ -53,7 +53,9 @@ function TokenRow({ token, className }: TokenRowProps) {
           <Proportion value={token.priceChange24} />
         </BodyCell>
         <BodyCell align="right">{formatDollarAmount(token.liquidity)}</BodyCell>
-        <BodyCell align="right">{formatAmount(token.holders, { isInteger: true })}</BodyCell>
+        <BodyCell align="right">
+          {token.holders === 0 ? "-" : formatAmount(token.holders, { isInteger: true })}
+        </BodyCell>
         <BodyCell align="right">
           <TimestampCell timestamp={token.createTime} />
         </BodyCell>
@@ -70,79 +72,75 @@ export function LatestTokens() {
   const { data: latestTokens, isPending } = useLatestTokens();
 
   return (
-    <>
-      <ToolsWrapper
-        title={
-          <Flex
-            fullWidth
-            justify="space-between"
-            sx={{
-              "@media(max-width: 640px)": {
-                flexDirection: "column",
-                alignItems: "flex-start",
-                gap: "10px 0",
-              },
-            }}
-          >
-            <Typography color="inherit" fontSize="inherit" fontWeight="inherit">
-              New Tokens (Last 72h)
-            </Typography>
-          </Flex>
-        }
-      >
-        <Box sx={{ width: "100%", overflow: "auto" }}>
-          <Box sx={{ minWidth: "1152px" }}>
-            <Box>
-              <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
-                <HeaderCell field="pair">{t("common.token")}</HeaderCell>
+    <ToolsWrapper
+      title={
+        <Flex
+          fullWidth
+          justify="space-between"
+          sx={{
+            "@media(max-width: 640px)": {
+              flexDirection: "column",
+              alignItems: "flex-start",
+              gap: "10px 0",
+            },
+          }}
+        >
+          <Typography color="inherit" fontSize="inherit" fontWeight="inherit">
+            New Tokens (72h)
+          </Typography>
+        </Flex>
+      }
+    >
+      <Box sx={{ width: "100%", overflow: "auto" }}>
+        <Box sx={{ minWidth: "1152px" }}>
+          <Box>
+            <Header className={classes.wrapper} borderBottom={`1px solid ${theme.palette.border.level1}`}>
+              <HeaderCell field="pair">{t("common.token")}</HeaderCell>
 
-                <HeaderCell align="right" field="tvl">
-                  {t("common.price")}
-                </HeaderCell>
+              <HeaderCell align="right" field="tvl">
+                {t("common.price")}
+              </HeaderCell>
 
-                <HeaderCell align="right" field="change">
-                  {t("common.price.change.24h")}
-                </HeaderCell>
+              <HeaderCell align="right" field="change">
+                {t("common.price.change.24h")}
+              </HeaderCell>
 
-                <HeaderCell align="right" field="liquidity">
-                  {t("common.liquidity")}
-                </HeaderCell>
+              <HeaderCell align="right" field="liquidity">
+                {t("common.liquidity")}
+              </HeaderCell>
 
-                <HeaderCell align="right" field="liquidity">
-                  {t("common.holders")}
-                </HeaderCell>
+              <HeaderCell align="right" field="liquidity">
+                {t("common.holders")}
+              </HeaderCell>
 
-                <HeaderCell align="right" field="added">
-                  Added
-                </HeaderCell>
-              </Header>
+              <HeaderCell align="right" field="added">
+                Created
+              </HeaderCell>
+            </Header>
 
-              {isPending || isUndefinedOrNull(latestTokens) ? (
-                <Box sx={{ padding: "16px" }}>
-                  <LoadingRow>
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                  </LoadingRow>
-                </Box>
-              ) : latestTokens.length > 0 ? (
-                <>
-                  {latestTokens.map((token, index) => (
-                    <TokenRow key={`${token.symbol}_${index}`} token={token} className={classes.wrapper} />
-                  ))}
-                </>
-              ) : (
-                <NoData tip={t("info.tools.latest.tokens.empty")} />
-              )}
-            </Box>
+            {isPending || isUndefinedOrNull(latestTokens) ? (
+              <Box sx={{ padding: "16px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
+            ) : latestTokens.length > 0 ? (
+              latestTokens.map((token, index) => (
+                <TokenRow key={`${token.symbol}_${index}`} token={token} className={classes.wrapper} />
+              ))
+            ) : (
+              <NoData tip={t("info.tools.latest.tokens.empty")} />
+            )}
           </Box>
         </Box>
-      </ToolsWrapper>
-    </>
+      </Box>
+    </ToolsWrapper>
   );
 }

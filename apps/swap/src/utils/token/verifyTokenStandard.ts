@@ -8,6 +8,7 @@ import {
   icrc1Adapter,
   icrc2Adapter,
 } from "@icpswap/token-adapter";
+
 import { ICP } from "@icpswap/tokens";
 import { TOKEN_STANDARD } from "constants/tokens";
 import type { Metadata } from "types/token";

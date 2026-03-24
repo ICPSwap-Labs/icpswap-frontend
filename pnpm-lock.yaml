@@ -2131,6 +2131,10 @@ packages:
     resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
     engines: {node: '>=10.0.0'}
 
+  '@discoveryjs/json-ext@0.5.7':
+    resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
+    engines: {node: '>=10.0.0'}
+
   '@emotion/babel-plugin@11.13.5':
     resolution: {integrity: sha512-pxHCpT2ex+0q+HH91/zsdHkw/lXd468DIN2zvfvLtPKLLMo6gQj7oLObq8PhkrxOZb/gGCq03S3Z7PDhS8pduQ==}
 
@@ -15354,6 +15358,8 @@ snapshots:
 
   '@discoveryjs/json-ext@0.5.7': {}
 
+  '@discoveryjs/json-ext@0.5.7': {}
+
   '@emotion/babel-plugin@11.13.5':
     dependencies:
       '@babel/helper-module-imports': 7.28.6
@@ -16608,7 +16614,7 @@ snapshots:
       react-i18next: 13.5.0(i18next@22.5.1)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.2(@babel/core@7.29.0)(@babel/preset-env@7.26.0(@babel/core@7.29.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)
       react-native-webview: 11.26.1(react-native@0.76.2(@babel/core@7.29.0)(@babel/preset-env@7.26.0(@babel/core@7.29.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)
       readable-stream: 2.3.8
-      rollup-plugin-visualizer: 5.12.0(rollup@4.57.1)
+      rollup-plugin-visualizer: 5.12.0(rollup@2.79.2)
       socket.io-client: 4.8.1(bufferutil@4.0.8)(utf-8-validate@6.0.5)
       util: 0.12.5
       uuid: 8.3.2
@@ -26780,14 +26786,14 @@ snapshots:
       serialize-javascript: 4.0.0
       terser: 5.36.0
 
-  rollup-plugin-visualizer@5.12.0(rollup@4.57.1):
+  rollup-plugin-visualizer@5.12.0(rollup@2.79.2):
     dependencies:
       open: 8.4.2
       picomatch: 2.3.1
       source-map: 0.7.4
       yargs: 17.7.2
     optionalDependencies:
-      rollup: 4.57.1
+      rollup: 2.79.2
 
   rollup@2.79.2:
     optionalDependencies:
