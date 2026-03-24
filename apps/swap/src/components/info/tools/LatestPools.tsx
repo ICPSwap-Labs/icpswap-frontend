@@ -42,11 +42,15 @@ function PoolRow({ pool, className }: PoolRowProps) {
               <TokenImage tokenId={pool.token0LedgerId} logo={generateLogoUrl(pool.token0LedgerId ?? "")} />
               <TokenImage tokenId={pool.token1LedgerId} logo={generateLogoUrl(pool.token1LedgerId ?? "")} />
             </Flex>
-            <Flex>
-              <BodyCell>{pool.token0Symbol}</BodyCell>
+            <BodyCell>
+              <BodyCell overflow="ellipsis" width="60px">
+                {pool.token0Symbol}
+              </BodyCell>
               <BodyCell>/</BodyCell>
-              <BodyCell>{pool.token1Symbol}</BodyCell>
-            </Flex>
+              <BodyCell overflow="ellipsis" width="60px">
+                {pool.token1Symbol}
+              </BodyCell>
+            </BodyCell>
           </Flex>
         </BodyCell>
         <BodyCell align="right">{formatDollarTokenPrice(pool.tvlUSD)}</BodyCell>

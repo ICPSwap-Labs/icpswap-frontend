@@ -40,7 +40,9 @@ function TokenRow({ token, className }: TokenRowProps) {
         <BodyCell>
           <Flex gap="0 8px">
             <TokenImage tokenId={token.ledgerId} logo={generateLogoUrl(token.ledgerId ?? "")} />
-            <BodyCell>{token.symbol}</BodyCell>
+            <BodyCell overflow="ellipsis" width="120px">
+              {token.symbol}
+            </BodyCell>
           </Flex>
         </BodyCell>
         <BodyCell sx={{ flexDirection: "column", gap: "6px" }} align="right">
