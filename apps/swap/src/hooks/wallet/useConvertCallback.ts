@@ -1,5 +1,5 @@
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
+import { useBalanceConvertStore } from "components/Wallet/BalanceConvert/store";
 import { useConvertSwap } from "hooks/wallet/useConvertSwap";
 import { useCallback, useMemo } from "react";
 
@@ -11,7 +11,7 @@ export function useConvertCallback() {
     setConvertLoading,
     convertLoading: loading,
     setCheckedConvertTokenIds,
-  } = useBalanceConvertContext();
+  } = useBalanceConvertStore();
   const convertToSwap = useConvertSwap();
 
   const callback = useCallback(async () => {

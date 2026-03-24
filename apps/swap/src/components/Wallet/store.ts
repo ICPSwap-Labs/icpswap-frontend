@@ -1,13 +1,10 @@
 import type { Token } from "@icpswap/swap-sdk";
-import { createContext, type ReactNode, useContext } from "react";
+import { create } from "zustand";
 
-export type Page = "token" | "nft";
-
-export type ConfirmProps = {
-  open: boolean;
-  title: ReactNode | undefined;
-  content: ReactNode | undefined;
-};
+export enum Page {
+  token = "token",
+  nft = "nft",
+}
 
 export enum WalletManagerPage {
   Index = "Index",
@@ -38,11 +35,9 @@ export type ConvertToIcp = {
   token: Token;
 };
 
-export interface WalletContextProps {
+export interface WalletStoreProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  // refreshCounter: number;
-  // setRefreshCounter: (refreshCounter: number) => void;
   page: Page;
   setPage: (page: Page) => void;
   pages: Array<WalletManagerPage>;
@@ -53,6 +48,17 @@ export interface WalletContextProps {
   openDrawer: () => void;
 }
 
-export const WalletContext = createContext<WalletContextProps>({} as WalletContextProps);
-
-export const useWalletContext = () => useContext(WalletContext);
+export const useWalletStore = create<WalletStoreProps>((set) => ({
+  open: false,
+  setOpen: (open: boolean) => set(() => ({ open })),
+  page: Page.token,
+  setPage: (page: Page) => set(() => ({ page })),
+  pages: [WalletManagerPage.Index],
+  setPages: (page: WalletManagerPage) => set(() => ({ pages: [page] })),
+  logoutConfirmOpen: false,
+  setLogoutConfirmOpen: (open: boolean) => set(() => ({ logoutConfirmOpen: open })),
+  closeDrawer: () => {
+    set(() => ({ open: false, pages: [WalletManagerPage.Index] }));
+  },
+  openDrawer: () => set(() => ({ open: true, pages: [WalletManagerPage.Index] })),
+}));

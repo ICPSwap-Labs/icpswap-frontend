@@ -12,9 +12,9 @@ import { Box, Button, CircularProgress, Typography, useTheme } from "components/
 import { NFTAvatar as NFTExtAvatar } from "components/NFT/ext/NFTAvatar";
 import NFTAvatar from "components/NFT/NFTAvatar";
 import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -35,8 +35,8 @@ export function NFTSendUI({ isExt, loading, disabled, metadata, name, logo, toke
   const theme = useTheme();
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
-  const { setPages } = useWalletContext();
-  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookStore();
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [memo, setMemo] = useState<string | undefined>(undefined);
 

@@ -406,6 +406,7 @@ export function useMintInfo(
   const atMaxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
+        // biome-ignore lint: ignore
         ...accumulator,
         [field]:
           maxAmounts[field] && parsedAmounts[field] ? maxAmounts[field]?.equalTo(parsedAmounts[field] ?? "0") : false,

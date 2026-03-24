@@ -3,17 +3,17 @@ import { ResultStatus } from "@icpswap/types";
 import { isUndefinedOrNull, isValidAccount, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
 import { FilledTextField, Flex } from "components/index";
 import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletContext } from "components/Wallet/context";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore } from "components/Wallet/store";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export function AddAddress() {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { setPages } = useWalletContext();
-  const { addAddressBookPrevPage } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { addAddressBookPrevPage } = useWalletAddressBookStore();
 
   const [name, setName] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);

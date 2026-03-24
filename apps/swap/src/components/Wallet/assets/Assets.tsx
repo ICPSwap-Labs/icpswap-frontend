@@ -5,7 +5,7 @@ import { TokenAssets } from "components/Wallet/assets/TokenAssets";
 import { NFTAssets } from "components/Wallet/NFT/NFTAssets";
 import { NFTImportIcon } from "components/Wallet/NFT/NFTImportIcon";
 import { NFTSettings } from "components/Wallet/NFT/NFTSettings";
-import { AssetsType, useWalletTokenContext } from "components/Wallet/token/context";
+import { AssetsType, useWalletTokenStore } from "components/Wallet/token/store";
 import { WalletManager } from "components/Wallet/WalletManager";
 import { useCallback } from "react";
 
@@ -15,7 +15,7 @@ const Tabs = [
 ];
 
 export function Assets() {
-  const { activeAssetsTab, setActiveAssetsTab, displayedAssetsTabs, setDisplayedAssetsTabs } = useWalletTokenContext();
+  const { activeAssetsTab, setActiveAssetsTab, displayedAssetsTabs, setDisplayedAssetsTabs } = useWalletTokenStore();
 
   const handleSetActiveTab = useCallback(
     (tab: AssetsType) => {

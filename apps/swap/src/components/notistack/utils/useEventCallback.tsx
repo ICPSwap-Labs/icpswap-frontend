@@ -15,5 +15,6 @@ export default function useEventCallback(fn) {
     ref.current = fn;
   });
 
+  // biome-ignore lint: ignore
   return React.useCallback((...args) => (0, ref.current)(...args), []);
 }

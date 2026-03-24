@@ -40,31 +40,35 @@ export function retry<T>(
   let completed = false;
   let rejectCancelled: (error: Error) => void;
   // eslint-disable-next-line no-async-promise-executor
-  const promise = new Promise<T>(async (resolve, reject) => {
-    rejectCancelled = reject;
-    // eslint-disable-next-line no-constant-condition
-    while (true) {
-      let result: T;
-      try {
-        result = await fn();
-        if (!completed) {
-          resolve(result);
-          completed = true;
-        }
-        break;
-      } catch (error) {
-        if (completed) {
+  const promise = new Promise<T>((resolve, reject) => {
+    async function call() {
+      rejectCancelled = reject;
+      // eslint-disable-next-line no-constant-condition
+      while (true) {
+        let result: T;
+        try {
+          result = await fn();
+          if (!completed) {
+            resolve(result);
+            completed = true;
+          }
           break;
+        } catch (error) {
+          if (completed) {
+            break;
+          }
+          if (n <= 0 || !(error instanceof RetryableError)) {
+            reject(error);
+            completed = true;
+            break;
+          }
+          n--;
         }
-        if (n <= 0 || !(error instanceof RetryableError)) {
-          reject(error);
-          completed = true;
-          break;
-        }
-        n--;
+        await waitRandom(minWait, maxWait);
       }
-      await waitRandom(minWait, maxWait);
     }
+
+    call();
   });
   return {
     promise,

@@ -3,9 +3,9 @@ import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { BigNumber, formatAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { Flex, LoadingRow, NoData } from "components/index";
 import { Box, Button, Checkbox, CircularProgress, Typography } from "components/Mui";
-import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
-import { type ConvertToIcp, useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useBalanceConvertStore } from "components/Wallet/BalanceConvert/store";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { type ConvertToIcp, useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { type SmallBalanceResult, useSmallBalanceTokens } from "hooks/wallet/useSmallBalanceTokens";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -47,14 +47,14 @@ function SmallBalanceRow({ amount, icpAmount, infoToken, checked, onCheckedChang
 
 export function BalanceConvert() {
   const { t } = useTranslation();
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
   const {
     setTokensConvertToIcp,
     convertLoading,
     convertedTokenIds,
     checkedConvertTokenIds,
     setCheckedConvertTokenIds,
-  } = useBalanceConvertContext();
+  } = useBalanceConvertStore();
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.Index);

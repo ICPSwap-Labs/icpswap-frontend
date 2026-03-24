@@ -119,6 +119,20 @@ export default function TokenUI() {
     setTvlValue((prevState) => ({ ...prevState, [key]: tvl }));
   }, []);
 
+  const handleUpdateTvl0 = useCallback(
+    (tvl: string | undefined) => {
+      handleUpdateTvl("tvl0", tvl);
+    },
+    [handleUpdateTvl],
+  );
+
+  const handleUpdateTvl1 = useCallback(
+    (tvl: string | undefined) => {
+      handleUpdateTvl("tvl1", tvl);
+    },
+    [handleUpdateTvl],
+  );
+
   return (
     <SwapProCardWrapper padding="0px">
       <Box sx={{ padding: "16px" }}>
@@ -156,16 +170,8 @@ export default function TokenUI() {
               </Box>
               <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
               <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
-                <TokenTvl
-                  token={token0}
-                  poolId={poolId}
-                  onUpdateTvl={(tvl: string | undefined) => handleUpdateTvl("tvl0", tvl)}
-                />
-                <TokenTvl
-                  token={token1}
-                  poolId={poolId}
-                  onUpdateTvl={(tvl: string | undefined) => handleUpdateTvl("tvl1", tvl)}
-                />
+                <TokenTvl token={token0} poolId={poolId} onUpdateTvl={handleUpdateTvl0} />
+                <TokenTvl token={token1} poolId={poolId} onUpdateTvl={handleUpdateTvl1} />
               </Box>
             </Box>
           </Card>

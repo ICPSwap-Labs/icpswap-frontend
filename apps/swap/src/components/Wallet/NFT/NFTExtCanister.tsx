@@ -4,9 +4,9 @@ import { isUndefinedOrNull } from "@icpswap/utils";
 import { LoadingRow, NoData } from "components/index";
 import { Box, Typography } from "components/Mui";
 import { NFTAvatar } from "components/NFT/ext/NFTAvatar";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useCallback, useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { decodeTokenId } from "utils";
@@ -18,8 +18,8 @@ interface NFTRowProps {
 }
 
 function NFTRow({ nft, extNFT }: NFTRowProps) {
-  const { setPages } = useWalletContext();
-  const { setDisplayedNFTTokenInfo } = useWalletNFTContext();
+  const { setPages } = useWalletStore();
+  const { setDisplayedNFTTokenInfo } = useWalletNFTStore();
 
   const { index } = decodeTokenId(nft.id);
   const extNFTImg = extNFTImage(nft.canister, index ?? 0, nft.id, false);
@@ -50,8 +50,8 @@ function NFTRow({ nft, extNFT }: NFTRowProps) {
 }
 
 export function NFTExtCanister() {
-  const { setPages } = useWalletContext();
-  const { displayedNFTInfo } = useWalletNFTContext();
+  const { setPages } = useWalletStore();
+  const { displayedNFTInfo } = useWalletNFTStore();
   const principal = useAccountPrincipalString();
 
   const { data: userExtNFTs, isLoading: loading } = useExtUserNFTs(principal);

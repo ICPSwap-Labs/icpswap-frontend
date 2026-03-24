@@ -7,9 +7,9 @@ import { FilledTextField, Flex, LoadingRow, NoData, TextButton } from "component
 import { JdenticonAvatar } from "components/JdenticonAvatar";
 import { Box, Button, CircularProgress, InputAdornment, Typography, useTheme } from "components/Mui";
 import { AddressBookManager } from "components/Wallet/address-book/AddressBookManager";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { ADDRESS_BOOK_REFRESH } from "constants/index";
 import { useRefreshTriggerManager } from "hooks";
 import { useContactFilter } from "hooks/wallet/useContactFilter";
@@ -24,7 +24,7 @@ interface AddressBookRowProps {
 
 function AddressBookRow({ addressBook }: AddressBookRowProps) {
   const copyRef = useRef<CopyRef>(null);
-  const { deleteAddressBookLoading, deleteAddressBook } = useWalletAddressBookContext();
+  const { deleteAddressBookLoading, deleteAddressBook } = useWalletAddressBookStore();
 
   const handleCopy = () => {
     if (copyRef) {
@@ -70,8 +70,8 @@ export function AddressBook() {
   const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [refreshTrigger] = useRefreshTriggerManager(ADDRESS_BOOK_REFRESH);
-  const { setPages } = useWalletContext();
-  const { setAddAddressBookPrevPage } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { setAddAddressBookPrevPage } = useWalletAddressBookStore();
   const [searchValue, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, setSearchKeyword, 300);
 
   const handlePrev = useCallback(() => {

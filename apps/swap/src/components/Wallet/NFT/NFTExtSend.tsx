@@ -1,9 +1,9 @@
 import { ResultStatus } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { NFTSendUI } from "components/Wallet/NFT/NFTSendUI";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { MessageTypes, useTips } from "hooks/index";
 import { extNFTTransfer } from "hooks/nft/useExtNFTTransfer";
 import { getLocaleMessage } from "i18n/service";
@@ -14,11 +14,11 @@ import { decodeTokenId } from "utils";
 
 export function NFTExtSend() {
   const { t } = useTranslation();
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
-  const { setSelectedContact } = useWalletAddressBookContext();
-  const { extNFTSendingInfo } = useWalletNFTContext();
+  const { setSelectedContact } = useWalletAddressBookStore();
+  const { extNFTSendingInfo } = useWalletNFTStore();
   const [loading, setLoading] = useState<boolean>(false);
 
   const { index } = useMemo(() => {

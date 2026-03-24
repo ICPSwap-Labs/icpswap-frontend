@@ -1,12 +1,12 @@
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { AssetsType, useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { AssetsType, useWalletTokenStore } from "components/Wallet/token/store";
 import { useCallback } from "react";
 
 export function useClosePageBackToNFT() {
-  const { setPages } = useWalletContext();
-  const { setSelectedContact } = useWalletAddressBookContext();
-  const { setActiveAssetsTab } = useWalletTokenContext();
+  const { setPages } = useWalletStore();
+  const { setSelectedContact } = useWalletAddressBookStore();
+  const { setActiveAssetsTab } = useWalletTokenStore();
 
   return useCallback(() => {
     setPages(WalletManagerPage.Index);

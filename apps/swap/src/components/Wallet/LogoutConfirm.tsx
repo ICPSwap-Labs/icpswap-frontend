@@ -1,12 +1,12 @@
 import { Confirm } from "components/Wallet/Confirm";
+import { useWalletStore } from "components/Wallet/store";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useConnectManager } from "store/auth/hooks";
-import { useWalletContext } from "./context";
 
 export function LogoutConfirm() {
   const { t } = useTranslation();
-  const { logoutConfirmOpen, setLogoutConfirmOpen, setOpen } = useWalletContext();
+  const { logoutConfirmOpen, setLogoutConfirmOpen, setOpen } = useWalletStore();
   const { disconnect } = useConnectManager();
 
   const handleCancel = useCallback(() => {

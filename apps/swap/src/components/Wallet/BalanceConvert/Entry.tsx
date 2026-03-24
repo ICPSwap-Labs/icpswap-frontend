@@ -1,14 +1,14 @@
 import { ICP } from "@icpswap/tokens";
 import { AvatarImage, Flex } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 export function BalanceConvertEntry() {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
 
   const handleConvert = useCallback(() => {
     setPages(WalletManagerPage.Convert, false);

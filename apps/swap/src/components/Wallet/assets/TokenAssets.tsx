@@ -21,7 +21,7 @@ import {
   TopUpItem,
   TransactionItem,
 } from "components/Wallet/TokenMenuItem/index";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { XTC } from "constants/tokens";
 import { DISPLAY_IN_WALLET_BY_DEFAULT, TOKEN_ASSETS_REFRESH } from "constants/wallet";
 import { chain } from "constants/web3";
@@ -153,7 +153,7 @@ function TokenRow({ tokenId }: TokenRowProps) {
 export function TokenAssets() {
   const { taggedTokens } = useTaggedTokenManager();
   const { sort } = useWalletSortManager();
-  const { allTokenUSDMap } = useWalletTokenContext();
+  const { allTokenUSDMap } = useWalletTokenStore();
 
   const displayedTokensInWallet = useDisplayedTokensInWallet();
 

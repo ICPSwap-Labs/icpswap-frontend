@@ -1,6 +1,6 @@
 import { MenuItem } from "@icpswap/ui";
 import { useTheme } from "components/Mui";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -13,7 +13,7 @@ interface RemoveItemProps {
 export function RemoveItem({ tokenId, isLast, onRemoveClick }: RemoveItemProps) {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { setRemoveTokenId } = useWalletTokenContext();
+  const { setRemoveTokenId } = useWalletTokenStore();
 
   const handleRemoveToken = useCallback(() => {
     setRemoveTokenId(tokenId);

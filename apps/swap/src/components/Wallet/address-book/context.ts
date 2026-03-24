@@ -1,5 +1,5 @@
 import type { AddressBook } from "@icpswap/types";
-import type { WalletManagerPage } from "components/Wallet/context";
+import type { WalletManagerPage } from "components/Wallet/store";
 import { createContext, useContext } from "react";
 
 export interface WalletAddressBookContextProps {
@@ -21,4 +21,4 @@ export const WalletAddressBookContext = createContext<WalletAddressBookContextPr
   {} as WalletAddressBookContextProps,
 );
 
-export const useWalletAddressBookContext = () => useContext(WalletAddressBookContext);
+export const useWalletAddressBookStore = () => useContext(WalletAddressBookContext);

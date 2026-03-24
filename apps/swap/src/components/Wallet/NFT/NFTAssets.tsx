@@ -3,9 +3,9 @@ import type { EXTCollection, ExtNft, NFTControllerInfo } from "@icpswap/types";
 import { Flex, LoadingRow, NoData } from "@icpswap/ui";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Box } from "components/Mui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { NFTAssetsRowUI } from "components/Wallet/NFT/NFTAssetsRowUI";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useCanisterLogo, useCanisterUserNFTCount, useNFTCanisterList } from "hooks/nft/useNFTCalls";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
@@ -26,8 +26,8 @@ interface NFTRowProps {
 
 function NFTRow({ info, updateHidedNFTs }: NFTRowProps) {
   const account = useAccount();
-  const { setDisplayedNFTInfo } = useWalletNFTContext();
-  const { setPages } = useWalletContext();
+  const { setDisplayedNFTInfo } = useWalletNFTStore();
+  const { setPages } = useWalletStore();
   const [hideZeroNFT] = useHideZeroNFTManager();
 
   const { data: count } = useCanisterUserNFTCount(info.cid, account);
@@ -77,8 +77,8 @@ interface ExtNFTRowProps {
 }
 
 function ExtNFTRow({ metadata, userAllExtNfts, updateHidedNFTs }: ExtNFTRowProps) {
-  const { setDisplayedNFTInfo } = useWalletNFTContext();
-  const { setPages } = useWalletContext();
+  const { setDisplayedNFTInfo } = useWalletNFTStore();
+  const { setPages } = useWalletStore();
   const [hideZeroNFT] = useHideZeroNFTManager();
 
   const handleNFTClick = useCallback(() => {

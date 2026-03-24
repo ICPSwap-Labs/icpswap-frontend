@@ -24,7 +24,7 @@ export function useRefreshTrigger(key: string | undefined) {
   }, [refreshTriggers, key]);
 }
 
-export function useRefreshTriggerManager(key: string | undefined): [undefined | number, () => void] {
+export function useRefreshTriggerManager(key: string | undefined): [number, () => void] {
   const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
 
   const refresh = useCallback(() => {
@@ -33,7 +33,7 @@ export function useRefreshTriggerManager(key: string | undefined): [undefined | 
   }, [key, setRefreshTriggers]);
 
   return useMemo(() => {
-    if (!key) return [undefined, refresh];
+    if (!key) return [0, refresh];
 
     return [refreshTriggers[key], refresh];
   }, [refreshTriggers, key, refresh]);

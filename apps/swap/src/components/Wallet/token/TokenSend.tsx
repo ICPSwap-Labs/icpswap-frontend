@@ -15,11 +15,11 @@ import { FilledTextField, Flex, MaxButton, NumberTextField, TokenImage } from "c
 import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { WalletBalance } from "components/swap/WalletBalance";
 import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { BalanceSlider } from "components/Wallet/BalanceSlider";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { TOKEN_BALANCE_REFRESH } from "constants/wallet";
 import { MessageTypes, useRefreshTriggerManager, useTips, useUSDPrice } from "hooks/index";
 import { useTokenBalance } from "hooks/token";
@@ -36,9 +36,9 @@ function usePrincipalStandard(tokenId: string, standard: string) {
 
 export function TokenSend() {
   const theme = useTheme();
-  const { setPages } = useWalletContext();
-  const { sendToken: token } = useWalletTokenContext();
-  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { sendToken: token } = useWalletTokenStore();
+  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookStore();
 
   const principal = useAccountPrincipalString();
   const { t } = useTranslation();

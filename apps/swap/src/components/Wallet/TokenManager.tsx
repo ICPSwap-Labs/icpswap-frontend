@@ -6,8 +6,8 @@ import { isUndefinedOrNull, isValidPrincipal, nonUndefinedOrNull } from "@icpswa
 import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
 import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
 import { IOSSwitch } from "components/switch/IOSSwitch";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useToken, useTokens } from "hooks";
 import { getTokenStandard } from "hooks/token";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -129,7 +129,7 @@ export function TokenManager() {
   const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [activeTab, setActiveTab] = useState<TAB>(TAB.SNS);
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
   const [, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, setSearchKeyword, 300);
 
   const globalTokenList = useGlobalTokenList();

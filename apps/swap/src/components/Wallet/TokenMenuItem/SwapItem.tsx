@@ -1,7 +1,7 @@
 import { ckUSDC, ICP } from "@icpswap/tokens";
 import { MenuItem } from "@icpswap/ui";
 import { useTheme } from "components/Mui";
-import { useWalletContext } from "components/Wallet/context";
+import { useWalletStore } from "components/Wallet/store";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +12,7 @@ interface SwapItemProps {
 export function SwapItem({ tokenId }: SwapItemProps) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { setOpen } = useWalletContext();
+  const { setOpen } = useWalletStore();
 
   const handleSwap = useCallback(() => {
     if (tokenId === ICP.address) {

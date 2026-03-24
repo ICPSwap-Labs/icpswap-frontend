@@ -1,6 +1,6 @@
 import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
 import { Box, Checkbox, Typography, useTheme } from "components/Mui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useCallback, useRef, useState } from "react";
 import { useHideSmallBalanceManager } from "store/wallet/hooks";
 
@@ -9,7 +9,7 @@ export function WalletManager() {
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
   const [hideSmallBalance, updateHideSmallBalance] = useHideSmallBalanceManager();
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
 
   const handleMouseEnter = () => {
     setOpen(true);

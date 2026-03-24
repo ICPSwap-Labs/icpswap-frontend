@@ -5,7 +5,6 @@ import { DisableIframe } from "components/DisableIframe";
 import { GlobalContextProvider } from "components/Global";
 import { StyledEngineProvider, ThemeProvider } from "components/Mui";
 import { SnackbarProvider } from "components/notistack";
-import { WalletContextProvider } from "components/Wallet/WalletContextProvider";
 import { wagmiConfig } from "constants/wagmi";
 import i18n from "i18n/index";
 import { useState } from "react";
@@ -38,16 +37,14 @@ export function AppWithProvider() {
           <WagmiProvider config={wagmiConfig}>
             <QueryClientProvider client={queryClient}>
               <StyledEngineProvider injectFirst>
-                <WalletContextProvider>
-                  <TransactionsUpdater />
-                  <ThemeProvider theme={theme(customization)}>
-                    <SnackbarProvider maxSnack={100}>
-                      <GlobalContextProvider>
-                        <App />
-                      </GlobalContextProvider>
-                    </SnackbarProvider>
-                  </ThemeProvider>
-                </WalletContextProvider>
+                <TransactionsUpdater />
+                <ThemeProvider theme={theme(customization)}>
+                  <SnackbarProvider maxSnack={100}>
+                    <GlobalContextProvider>
+                      <App />
+                    </GlobalContextProvider>
+                  </SnackbarProvider>
+                </ThemeProvider>
               </StyledEngineProvider>
             </QueryClientProvider>
           </WagmiProvider>

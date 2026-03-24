@@ -42,7 +42,10 @@ export const keepSnackbarClassKeys = (
     containerAnchorOriginTopLeft: true,
     containerAnchorOriginBottomLeft: true,
   };
-  return (Object.keys(classes) as ContainerClassKey[])
-    .filter((key) => !containerClasses[key])
-    .reduce((obj, key) => ({ ...obj, [key]: classes[key] }), {});
+  return (
+    (Object.keys(classes) as ContainerClassKey[])
+      .filter((key) => !containerClasses[key])
+      // biome-ignore lint: ignore
+      .reduce((obj, key) => ({ ...obj, [key]: classes[key] }), {})
+  );
 };

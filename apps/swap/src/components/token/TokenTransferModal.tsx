@@ -1,6 +1,6 @@
 import { Principal } from "@icp-sdk/core/principal";
 import type { Token } from "@icpswap/swap-sdk";
-import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import { ICP } from "@icpswap/tokens";
 import { Flex, MaxButton } from "@icpswap/ui";
 import {
   BigNumber,
@@ -12,7 +12,6 @@ import {
 } from "@icpswap/utils";
 import { FilledTextField, Modal, NumberFilledTextField } from "components/index";
 import { Box, Button, CircularProgress, InputAdornment, makeStyles, type Theme, Typography } from "components/Mui";
-import { useWalletTokenContext } from "components/Wallet/token/context";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { MessageTypes, useFullscreenLoading, useTips } from "hooks/useTips";
@@ -60,8 +59,6 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
   const principal = useAccountPrincipal();
   const [openTip] = useTips();
   const [openFullLoading, closeFullLoading] = useFullscreenLoading();
-
-  const { refreshTotalBalance, setRefreshTotalBalance } = useWalletTokenContext();
 
   const { result: balance } = useTokenBalance({ tokenId: token.address, account: principal });
   const tokenUSDPrice = useUSDPriceById(token.address);
@@ -128,9 +125,6 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
         openTip(t`Transferred successfully`, MessageTypes.success);
         setValues(initialValues);
         if (onTransferSuccess) onTransferSuccess();
-        if (token.address.toString() === ICP.address || token.address.toString() === WRAPPED_ICP.address) {
-          if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
-        }
       } else {
         openTip(getLocaleMessage(message) ?? t`Failed to transfer`, MessageTypes.error);
       }

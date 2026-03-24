@@ -1,8 +1,8 @@
 import type { NFTTokenMetadata } from "@icpswap/types";
 import { Box, Typography } from "components/Mui";
 import NFTAvatar from "components/NFT/NFTAvatar";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useCallback } from "react";
 
 interface NFTRowUIProps {
@@ -10,8 +10,8 @@ interface NFTRowUIProps {
 }
 
 export function NFTRowUI({ nft }: NFTRowUIProps) {
-  const { setPages } = useWalletContext();
-  const { setDisplayedNFTTokenInfo } = useWalletNFTContext();
+  const { setPages } = useWalletStore();
+  const { setDisplayedNFTTokenInfo } = useWalletNFTStore();
 
   const handleNFTClick = useCallback(() => {
     setDisplayedNFTTokenInfo({ id: nft.cId, index: nft.tokenId });

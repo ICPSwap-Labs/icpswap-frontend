@@ -17,11 +17,16 @@ import {
 import { TokenImage } from "components/Image/Token";
 import { ImportToNns, LoadingRow, NoData, TokenStandardLabel, TokenTransferModal } from "components/index";
 import { Box, makeStyles, Typography, useTheme } from "components/Mui";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
-import { DISPLAY_IN_WALLET_BY_DEFAULT, INFO_URL, NO_HIDDEN_TOKENS } from "constants/index";
+import {
+  DISPLAY_IN_WALLET_BY_DEFAULT,
+  INFO_URL,
+  NO_HIDDEN_TOKENS,
+  WALLET_TOKEN_BALANCE_REFRESH,
+} from "constants/index";
 import { TOKEN_STANDARD, XTC } from "constants/tokens";
-import { useToken } from "hooks/index";
+import { useRefreshTriggerManager, useToken } from "hooks/index";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -114,13 +119,15 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [receiveOpen, setReceiveOpen] = useState(false);
-  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletTokenContext();
+  const { setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletTokenStore();
   const { sortBalance } = useSortBalanceManager();
 
   const infoTokenAddress = useMemo(() => {
     if (canisterId === WRAPPED_ICP.address) return ICP.address;
     return canisterId;
   }, [canisterId]);
+
+  const [refreshCounter] = useRefreshTriggerManager(WALLET_TOKEN_BALANCE_REFRESH);
 
   const refreshNumber = useMemo(() => {
     return refreshInnerCounter + refreshCounter;

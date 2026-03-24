@@ -7,7 +7,6 @@ import { EditAddress } from "components/Wallet/address-book/EditAddress";
 import { SelectContact } from "components/Wallet/address-book/SelectContact";
 import { BalanceConvert } from "components/Wallet/BalanceConvert/BalanceConvert";
 import { ConvertToIcpConfirm } from "components/Wallet/BalanceConvert/Confirm";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { LogoutConfirm } from "components/Wallet/LogoutConfirm";
 import { NFTCanister } from "components/Wallet/NFT/NFTCanister";
 import { NFTExtCanister } from "components/Wallet/NFT/NFTExtCanister";
@@ -16,12 +15,13 @@ import { NFTExtTokenDetails } from "components/Wallet/NFT/NFTExtTokenDetails";
 import { NFTImporter } from "components/Wallet/NFT/NFTImporter";
 import { NFTSend } from "components/Wallet/NFT/NFTSend";
 import { NFTTokenDetails } from "components/Wallet/NFT/NFTTokenDetails";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { TokenAssetsWrapper } from "components/Wallet/TokenAssetsWrapper";
 import { TokenManager } from "components/Wallet/TokenManager";
 import { TokenSelector } from "components/Wallet/TokenSelector";
-import { AssetsType, useWalletTokenContext } from "components/Wallet/token/context";
 import { TokenReceive, TokenSend } from "components/Wallet/token/index";
 import { RemoveTokenConfirm } from "components/Wallet/token/RemoveTokenConfirm";
+import { AssetsType, useWalletTokenStore } from "components/Wallet/token/store";
 import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
 import { WALLET_DRAWER_WIDTH } from "constants/wallet";
 import { useMediaQuery640 } from "hooks/theme";
@@ -52,8 +52,8 @@ export function WalletIndex() {
   const theme = useTheme();
   const mediaQuery640 = useMediaQuery640();
   const principal = useAccountPrincipalString();
-  const { open, setOpen, pages, setPages } = useWalletContext();
-  const { xtcTopUpShow, setXTCTopUpShow, setActiveAssetsTab } = useWalletTokenContext();
+  const { open, setOpen, pages, setPages } = useWalletStore();
+  const { xtcTopUpShow, setXTCTopUpShow, setActiveAssetsTab } = useWalletTokenStore();
 
   useEffect(() => {
     setPages(WalletManagerPage.Index);

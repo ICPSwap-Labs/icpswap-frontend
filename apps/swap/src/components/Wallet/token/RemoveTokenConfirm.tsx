@@ -1,6 +1,6 @@
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Confirm } from "components/Wallet/Confirm";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { TIP_SUCCESS, useTips } from "hooks/index";
 import { useRemoveTokenHandler } from "hooks/wallet/useRemoveToken";
 import { useCallback, useState } from "react";
@@ -10,7 +10,7 @@ export function RemoveTokenConfirm() {
   const { t } = useTranslation();
   const [loading, setLoading] = useState<boolean>(false);
   const [openTip] = useTips();
-  const { setRemoveTokenId, removeTokenId } = useWalletTokenContext();
+  const { setRemoveTokenId, removeTokenId } = useWalletTokenStore();
 
   const removeTokenHandler = useRemoveTokenHandler();
 

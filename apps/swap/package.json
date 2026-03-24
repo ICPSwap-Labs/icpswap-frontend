@@ -138,7 +138,8 @@
     "viem": "^2.21.50",
     "wagmi": "2.5.19",
     "web3": "4.13.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz",
+    "zustand": "^5.0.0"
   },
   "browserslist": [
     ">0.2%",

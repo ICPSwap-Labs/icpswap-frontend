@@ -3,9 +3,9 @@ import { useEXTAllCollections } from "@icpswap/hooks";
 import { isUndefinedOrNull, isUndefinedOrNullOrEmpty, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
 import { FilledTextField } from "components/index";
 import { Box, Button, Typography, useTheme } from "components/Mui";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { TIP_SUCCESS, useTips } from "hooks/useTips";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,8 +15,8 @@ export function NFTImporter() {
   const theme = useTheme();
   const { t } = useTranslation();
   const [openTips] = useTips();
-  const { setPages } = useWalletContext();
-  const { selectedContact, setSelectedContact } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { selectedContact, setSelectedContact } = useWalletAddressBookStore();
 
   const [address, setAddress] = useState<string | undefined>(undefined);
 

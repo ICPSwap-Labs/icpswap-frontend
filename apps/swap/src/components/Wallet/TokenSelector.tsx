@@ -12,9 +12,9 @@ import {
 import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
 import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
 import { ROTATE_ANIMATION_LOADING_CLASS, useRotateAnimationLoading } from "components/theme";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { WALLET_TOKEN_SELECTOR_REFRESH } from "constants/wallet";
 import { useRefreshTriggerManager, useTokens, useUSDPrice } from "hooks/index";
 import { useTokenBalance } from "hooks/token";
@@ -39,8 +39,8 @@ interface TokenRowUIProps {
 }
 
 function TokenRowUI({ token, balance, tokenValue }: TokenRowUIProps) {
-  const { setPages } = useWalletContext();
-  const { setSendToken } = useWalletTokenContext();
+  const { setPages } = useWalletStore();
+  const { setSendToken } = useWalletTokenStore();
 
   const handleSelectToken = useCallback(() => {
     setSendToken(token);

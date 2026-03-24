@@ -1,16 +1,16 @@
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
 import { NFTTokenDetailsUI } from "components/Wallet/NFT/NFTTokenDetailsUI";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useCallback, useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { decodeTokenId } from "utils";
 import { extNFTImage } from "utils/nft/ext";
 
 export function NFTExtTokenDetails() {
-  const { setPages } = useWalletContext();
-  const { displayedNFTTokenInfo, setExtNFTSendingInfo } = useWalletNFTContext();
+  const { setPages } = useWalletStore();
+  const { displayedNFTTokenInfo, setExtNFTSendingInfo } = useWalletNFTStore();
   const principal = useAccountPrincipalString();
 
   const { data: userExtNFTs, isLoading: loading } = useExtUserNFTs(principal);

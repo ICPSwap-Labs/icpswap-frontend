@@ -1,13 +1,13 @@
 import { MenuItem } from "@icpswap/ui";
 import { useTheme } from "components/Mui";
-import { useWalletContext } from "components/Wallet/context";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletStore } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { useCallback } from "react";
 
 export function TopUpItem() {
   const theme = useTheme();
-  const { setOpen } = useWalletContext();
-  const { setXTCTopUpShow } = useWalletTokenContext();
+  const { setOpen } = useWalletStore();
+  const { setXTCTopUpShow } = useWalletTokenStore();
 
   const handleTopUp = useCallback(() => {
     setOpen(false);

@@ -32,14 +32,12 @@ export async function getTokenSupply(canisterId: string) {
 }
 
 export function useTokenSupply(canisterId: string | undefined): UseQueryResult<bigint, Error> {
-  const call = useCallback(async () => {
-    if (!canisterId) return undefined;
-    return await getTokenSupply(canisterId!);
-  }, [canisterId]);
-
   return useQuery({
     queryKey: ["tokenSupply", canisterId],
-    queryFn: call,
+    queryFn: async () => {
+      if (!canisterId) return undefined;
+      return await getTokenSupply(canisterId!);
+    },
     enabled: nonUndefinedOrNull(canisterId),
   });
 }

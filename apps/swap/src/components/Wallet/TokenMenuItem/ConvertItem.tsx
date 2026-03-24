@@ -1,7 +1,7 @@
 import { BridgeChainType } from "@icpswap/constants";
 import { MenuItem } from "@icpswap/ui";
 import { useTheme } from "components/Mui";
-import { useWalletContext } from "components/Wallet/context";
+import { useWalletStore } from "components/Wallet/store";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +12,7 @@ interface ConvertItemProps {
 export function ConvertItem({ tokenId }: ConvertItemProps) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { closeDrawer } = useWalletContext();
+  const { closeDrawer } = useWalletStore();
 
   const handleConvert = useCallback(() => {
     navigate(`/ck-bridge?tokenId=${tokenId}&chainType=${BridgeChainType.icp}`);

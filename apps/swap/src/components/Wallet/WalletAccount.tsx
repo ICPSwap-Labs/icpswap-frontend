@@ -4,7 +4,9 @@ import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
 import Copy, { type CopyRef } from "components/Copy";
 import { Flex, Tooltip } from "components/index";
 import { Box, Typography } from "components/Mui";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { WALLET_TOKEN_BALANCE_REFRESH } from "constants/wallet";
+import { useRefreshTriggerManager } from "hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { useICPPrice } from "hooks/useUSDPrice";
 import { useMemo, useRef } from "react";
@@ -82,14 +84,9 @@ export default function WalletAccount() {
   const principal = useAccountPrincipal();
   const [openSuccessTip] = useSuccessTip();
 
-  const {
-    refreshTotalBalance,
-    setRefreshTotalBalance,
-    refreshCounter,
-    setRefreshCounter,
-    totalValue,
-    totalUSDBeforeChange,
-  } = useWalletTokenContext();
+  const { totalValue, totalUSDBeforeChange } = useWalletTokenStore();
+
+  const [, setRefreshCounter] = useRefreshTriggerManager(WALLET_TOKEN_BALANCE_REFRESH);
 
   const useTotalICPValue = useMemo(() => {
     if (icpPrice) return totalValue.dividedBy(icpPrice);
@@ -105,8 +102,8 @@ export default function WalletAccount() {
   const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";
 
   const handleRefreshBalance = () => {
-    if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
-    setRefreshCounter(refreshCounter + 1);
+    setRefreshTotalBalance();
+    setRefreshCounter();
     openSuccessTip("Refresh Success");
   };
 

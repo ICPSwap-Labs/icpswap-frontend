@@ -2,17 +2,17 @@ import { isUndefinedOrNull, shorten } from "@icpswap/utils";
 import { Flex, LoadingRow } from "components/index";
 import { Box, Button, Typography, useTheme } from "components/Mui";
 import NFTAvatar from "components/NFT/NFTAvatar";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 export function NFTTokenDetails() {
-  const { setPages } = useWalletContext();
-  const { displayedNFTTokenInfo, setSendingNFTMetadata } = useWalletNFTContext();
+  const { setPages } = useWalletStore();
+  const { displayedNFTTokenInfo, setSendingNFTMetadata } = useWalletNFTStore();
   const { t } = useTranslation();
   const theme = useTheme();
 

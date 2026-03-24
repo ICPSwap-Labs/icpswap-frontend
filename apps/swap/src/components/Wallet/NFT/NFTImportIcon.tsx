@@ -1,9 +1,9 @@
 import { Box } from "components/Mui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useCallback } from "react";
 
 export function NFTImportIcon() {
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
 
   const handleToNFTImporter = useCallback(() => {
     setPages(WalletManagerPage.NFTImporter);

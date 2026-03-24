@@ -276,6 +276,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
       const category = originKeyExtractor(current.anchorOrigin);
       const existingOfCategory = acc[category] || [];
       return {
+        // biome-ignore lint: ignore
         ...acc,
         [category]: [...existingOfCategory, current],
       };

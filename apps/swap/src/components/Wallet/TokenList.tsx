@@ -5,7 +5,7 @@ import { BigNumber } from "@icpswap/utils";
 import { Box } from "components/Mui";
 import TokenListHeader from "components/Wallet/TokenListHeader";
 import TokenListTable from "components/Wallet/TokenListTable";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { chain } from "constants/web3";
 import { useMemo } from "react";
@@ -13,7 +13,7 @@ import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks"
 
 export default function WalletTokenList() {
   const { taggedTokens } = useTaggedTokenManager();
-  const { allTokenUSDMap, noUSDTokens } = useWalletTokenContext();
+  const { allTokenUSDMap, noUSDTokens } = useWalletTokenStore();
   const { sort } = useWalletSortManager();
 
   const { data: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);

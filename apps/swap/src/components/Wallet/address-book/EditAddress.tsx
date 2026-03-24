@@ -3,9 +3,9 @@ import { ResultStatus } from "@icpswap/types";
 import { isUndefinedOrNull, isValidAccount, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
 import { FilledTextField, Flex } from "components/index";
 import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,8 +16,8 @@ export function EditAddress() {
   const [name, setName] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
-  const { setPages } = useWalletContext();
-  const { editAddressBook: addressBook, deleteAddressBookLoading } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { editAddressBook: addressBook, deleteAddressBookLoading } = useWalletAddressBookStore();
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.AddressBook);

@@ -134,6 +134,8 @@ export function useInitialConnect() {
 
   const [loading, setLoading] = useState(true);
 
+  // TODO
+  // biome-ignore lint: ignore
   useEffect(() => {
     async function call() {
       const connector = getConnector();
@@ -185,6 +187,8 @@ export function useIdentityKitInitialConnect() {
 
   const [loading, setLoading] = useState(true);
 
+  // TODO
+  // biome-ignore lint: ignore
   useEffect(() => {
     async function call() {
       const connector = getConnector();

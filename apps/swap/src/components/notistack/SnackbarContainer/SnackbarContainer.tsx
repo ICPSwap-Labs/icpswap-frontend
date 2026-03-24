@@ -4,7 +4,7 @@ import createTransition from "components/notistack/transitions/createTransition"
 import type { ContainerClassKey, SnackbarProviderProps } from "components/notistack/types";
 import { breakpoints, originKeyExtractor } from "components/notistack/utils";
 import { ComponentClasses } from "components/notistack/utils/styles";
-import { useWalletContext } from "components/Wallet/context";
+import { useWalletStore } from "components/Wallet/store";
 import { WALLET_DRAWER_WIDTH } from "constants/wallet";
 import type React from "react";
 import { memo } from "react";
@@ -93,7 +93,7 @@ interface SnackbarContainerProps {
 const SnackbarContainer: React.FC<SnackbarContainerProps> = (props) => {
   const { classes = {}, anchorOrigin, dense, children } = props;
 
-  const { open } = useWalletContext();
+  const { open } = useWalletStore();
   const styles = useStyles({ walletOpen: open })();
 
   const combinedClassname = clsx(

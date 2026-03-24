@@ -1,5 +1,5 @@
 import type { NFTTokenMetadata } from "@icpswap/types";
-import { createContext, useContext } from "react";
+import { create } from "zustand";
 
 export type DisplayedNFTInfo = {
   id: string;
@@ -29,6 +29,13 @@ export interface WalletNFTContextProps {
   setExtNFTSendingInfo: (info: ExtNFTSendInfo | undefined) => void;
 }
 
-export const WalletNFTContext = createContext<WalletNFTContextProps>({} as WalletNFTContextProps);
-
-export const useWalletNFTContext = () => useContext(WalletNFTContext);
+export const useWalletNFTStore = create<WalletNFTContextProps>((set) => ({
+  displayedNFTInfo: undefined,
+  setDisplayedNFTInfo: (info: DisplayedNFTInfo) => set(() => ({ displayedNFTInfo: info })),
+  displayedNFTTokenInfo: undefined,
+  setDisplayedNFTTokenInfo: (info: DisplayedNFTTokenInfo) => set(() => ({ displayedNFTTokenInfo: info })),
+  sendingNFTMetadata: undefined,
+  setSendingNFTMetadata: (info: NFTTokenMetadata | undefined) => set(() => ({ sendingNFTMetadata: info })),
+  extNFTSendingInfo: undefined,
+  setExtNFTSendingInfo: (info: ExtNFTSendInfo | undefined) => set(() => ({ extNFTSendingInfo: info })),
+}));

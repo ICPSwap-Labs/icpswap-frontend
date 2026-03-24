@@ -8,7 +8,7 @@ import {
   parseTokenAmount,
 } from "@icpswap/utils";
 import { Box, Typography } from "components/Mui";
-import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
+import { useBalanceConvertStore } from "components/Wallet/BalanceConvert/store";
 import { Confirm } from "components/Wallet/Confirm";
 import { useUSDPrice } from "hooks/index";
 import { useConvertCallback } from "hooks/wallet/useConvertCallback";
@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 
 export function ConvertToIcpConfirm() {
   const { t } = useTranslation();
-  const { tokensConvertToSwap, setTokensConvertToIcp, convertLoading } = useBalanceConvertContext();
+  const { tokensConvertToSwap, setTokensConvertToIcp, convertLoading } = useBalanceConvertStore();
   const icpPrice = useUSDPrice(ICP);
   const { callback: convertTokensToIcp } = useConvertCallback();
 

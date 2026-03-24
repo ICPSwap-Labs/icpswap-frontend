@@ -4,8 +4,8 @@ import { Flex, LoadingRow } from "components/index";
 import { Box, Button, Typography, useTheme } from "components/Mui";
 import { NFTAvatar as ExtNFTAvatar } from "components/NFT/ext/NFTAvatar";
 import NFTAvatar from "components/NFT/NFTAvatar";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
@@ -33,7 +33,7 @@ export function NFTTokenDetailsUI({
   isExt,
   metadata,
 }: NFTTokenDetailsUIProps) {
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
   const { t } = useTranslation();
   const theme = useTheme();
 
