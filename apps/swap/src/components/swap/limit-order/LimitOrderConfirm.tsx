@@ -10,9 +10,10 @@ import {
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
 import { Flex, TokenImage, Tooltip } from "components/index";
-import { Box, Button, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { TradePriceV2 as TradePrice } from "components/swap/TradePrice";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
+import { useMediaQuerySM } from "hooks/theme";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -43,8 +44,7 @@ export interface DetailItemProps {
 }
 
 export function DetailItem({ label, value, tooltip }: DetailItemProps) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   return (
     <Box sx={{ display: "flex", alignItems: "flex-start" }}>

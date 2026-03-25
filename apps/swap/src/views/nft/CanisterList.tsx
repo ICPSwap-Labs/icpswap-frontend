@@ -4,8 +4,9 @@ import { cycleValueFormat, pageArgsFormat, timestampFormat } from "@icpswap/util
 import CanSVG from "assets/images/nft/CanSVG";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import { MainCard, NoData, TextButton, Wrapper } from "components/index";
-import { Box, Button, Grid, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, Grid, makeStyles, type Theme, Typography } from "components/Mui";
 import { useCanisterCycles, useCanisterUserNFTCount, useUserCanisterList } from "hooks/nft/useNFTCalls";
+import { useMediaQueryMD } from "hooks/theme";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -37,8 +38,7 @@ export function Title() {
   const { t } = useTranslation();
   const classes = useStyles();
   const navigate = useNavigate();
-  const theme = useTheme();
-  const matchesMd = useMediaQuery(theme.breakpoints.down("md"));
+  const matchesMd = useMediaQueryMD();
 
   const handleCreateCanister = () => {
     navigate("/info-tools/nft/canister/create");

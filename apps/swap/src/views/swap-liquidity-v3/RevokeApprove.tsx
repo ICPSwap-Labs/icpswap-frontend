@@ -3,9 +3,10 @@ import type { IcpSwapAPITokenInfo, SwapPoolData } from "@icpswap/types";
 import { ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
 import { parseTokenAmount, toSignificant } from "@icpswap/utils";
 import { Breadcrumbs, LoadingRow, NoData, SelectToken, Wrapper } from "components/index";
-import { Avatar, Box, Button, CircularProgress, Grid, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Avatar, Box, Button, CircularProgress, Grid, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
 import { revoke, useRevokeApprove } from "hooks/swap/useRevokeApprove";
+import { useMediaQuerySM } from "hooks/theme";
 import { useGlobalContext } from "hooks/useGlobalContext";
 import { MessageTypes, useTips } from "hooks/useTips";
 import { useMemo, useState } from "react";
@@ -62,7 +63,7 @@ export function RevokeItem({ tokenId, pool, allowance }: RevokeItemProps) {
     setLoading(false);
   };
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   return !revoked ? (
     <Grid

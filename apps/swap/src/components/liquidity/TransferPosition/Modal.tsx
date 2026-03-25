@@ -14,14 +14,14 @@ import {
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { FilledTextField, Loading } from "components/index";
-import { Box, Button, Chip, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, Chip, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { PositionRangeState } from "components/swap/index";
 import { CurrencyAmountFormatDecimals, DEFAULT_PERCENT_SYMBOL } from "constants/index";
 import { Bound } from "constants/swap";
 import { usePositionState } from "hooks/liquidity";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { usePositionFees } from "hooks/swap/usePositionFees";
-import { useMediaQuerySM } from "hooks/theme";
+import { useMediaQueryMD, useMediaQuerySM } from "hooks/theme";
 import { useErrorTip, useLoadingTip, useSuccessTip } from "hooks/useTips";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import type React from "react";
@@ -347,7 +347,7 @@ export function TransferPositionModal({
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const { pool } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};

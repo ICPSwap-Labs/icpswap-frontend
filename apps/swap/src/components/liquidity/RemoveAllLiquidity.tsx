@@ -1,11 +1,12 @@
 import { CurrencyAmount, Percent, type Position } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
 import { DecreaseLiquidityConfirm } from "components/liquidity/Decrease/Confirm";
-import { Button, useMediaQuery, useTheme } from "components/Mui";
+import { Button } from "components/Mui";
 import StepViewButton from "components/Steps/View";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import { BURN_FIELD } from "constants/swap";
 import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
+import { useMediaQuerySM } from "hooks/theme";
 import { useLoadingTip, useSuccessTip } from "hooks/useTips";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -19,8 +20,7 @@ export interface RemoveAllLiquidityProps {
 
 export function RemoveAllLiquidity({ position, positionId, onDecreaseSuccess }: RemoveAllLiquidityProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const principal = useAccountPrincipal();
 

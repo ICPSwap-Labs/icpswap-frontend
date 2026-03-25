@@ -1,5 +1,6 @@
-import { Box, Grid, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
 import { RISK_WARNING_INDEX } from "constants/zIndex";
+import { useMediaQuerySM } from "hooks/theme";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -38,12 +39,11 @@ const useStyles = makeStyles((theme: Theme) => {
 export default function RiskStatement() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const theme = useTheme();
 
   const [riskStatementShow, setRickStatementShow] = useState(false);
   const [isRead, setIsRead] = useState(true);
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   useEffect(() => {
     (async () => {

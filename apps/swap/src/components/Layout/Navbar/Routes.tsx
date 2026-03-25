@@ -1,5 +1,6 @@
 import { Link } from "components/index";
-import { Box, Grid, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Grid, Typography, useTheme } from "components/Mui";
+import { useMediaQueryMD } from "hooks/theme";
 import { useState } from "react";
 import { ChevronDown } from "react-feather";
 import { useLocation } from "react-router-dom";
@@ -17,7 +18,7 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
   const pathName = location.pathname;
   const theme = useTheme();
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const [subMenuOpenKey, setSubMenuOpenKey] = useState<string | null>(null);
   const [subMenuTarget, setSubMenuTarget] = useState<any>(undefined);

@@ -14,9 +14,10 @@ import {
 } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount } from "@icpswap/utils";
 import { ImageLoading, TokenImage } from "components/index";
-import { Box, makeStyles, useMediaQuery, useTheme } from "components/Mui";
+import { Box, makeStyles } from "components/Mui";
 import { HIDDEN_POOLS } from "constants/info";
 import { useToken } from "hooks/index";
+import { useMediaQueryMD } from "hooks/theme";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -131,8 +132,7 @@ export interface PoolsProps {
 
 export function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState<string>("volumeUSD");
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);

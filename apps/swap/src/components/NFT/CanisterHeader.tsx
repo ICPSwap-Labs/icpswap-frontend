@@ -4,11 +4,12 @@ import { cycleValueFormat } from "@icpswap/utils";
 import ExternalLink from "components/ExternalLink/index";
 import Avatar from "components/Image/Avatar";
 import { LoadingRow, Modal } from "components/index";
-import { Box, Button, Grid, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, Grid, makeStyles, type Theme, Typography } from "components/Mui";
 import TopUpCanister from "components/modal/TopUpCanister";
 import Upload, { type UploadRef } from "components/NFT/Upload";
 import { INFO_URL } from "constants/index";
 import { setCanisterLogo } from "hooks/nft/useNFTCalls";
+import { useMediaQuerySM } from "hooks/theme";
 import { TIP_ERROR, TIP_SUCCESS, useTips } from "hooks/useTips";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -144,9 +145,8 @@ export default function CanisterHeader({ details, cycles, count, loading }: NFTC
   const { t } = useTranslation();
   const classes = useStyles();
   const navigate = useNavigate();
-  const theme = useTheme();
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownMD = useMediaQuerySM();
 
   const isOwner = true;
 

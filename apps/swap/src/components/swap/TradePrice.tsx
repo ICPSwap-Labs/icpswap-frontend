@@ -11,9 +11,10 @@ import {
 import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import LinkIcon from "assets/images/LinkIcon";
 import { Flex, TextButton } from "components/index";
-import { Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Typography } from "components/Mui";
 import { INFO_URL } from "constants/index";
 import { useUSDPriceById } from "hooks";
+import { useMediaQuerySM } from "hooks/theme";
 import { useCallback, useMemo, useState } from "react";
 
 export interface TradePriceProps {
@@ -42,8 +43,7 @@ export function TradePrice({
   showConvert = true,
   noInfo = false,
 }: TradePriceProps) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [showInverted, setShowInverted] = useState(true);
 
   const formattedPrice = useMemo(() => {
@@ -115,8 +115,7 @@ export interface TradePriceV2Props {
 }
 
 export function TradePriceV2({ price, token0, token1, showConvert = true, color }: TradePriceV2Props) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [showInverted, setShowInverted] = useState(true);
 
   const token0USDPrice = useUSDPriceById(token0?.address);

@@ -1,7 +1,8 @@
 import { useParsedQueryString } from "@icpswap/hooks";
 import { IconSearch } from "@tabler/icons";
 import { FilledTextField, MainCard, Wrapper } from "components/index";
-import { Box, Grid, InputAdornment, makeStyles, TextField, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Grid, InputAdornment, makeStyles, TextField, Typography, useMediaQuery } from "components/Mui";
+import { useMediaQuerySM } from "hooks/theme";
 import i18n from "i18n/index";
 import debounce from "lodash/debounce";
 import type React from "react";
@@ -93,9 +94,8 @@ export default function MarketWrapper({
 }: MarketWrapperProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const theme = useTheme();
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const matchDown1120 = useMediaQuery("@media(max-width:1120px)");
 
   const [sortBy, setSortBy] = useState<string | null>("time");

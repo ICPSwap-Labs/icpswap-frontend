@@ -24,18 +24,10 @@ import {
 } from "@icpswap/utils";
 import { NoData, ScrollTop, type Tab, TabPanel, TokenImage } from "components/index";
 import { PoolCharts } from "components/liquidity/PoolCharts";
-import {
-  Box,
-  type BoxProps,
-  InputAdornment,
-  makeStyles,
-  type Theme,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "components/Mui";
+import { Box, type BoxProps, InputAdornment, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { PoolTvlTooltip } from "components/swap/index";
 import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
+import { useMediaQuerySM } from "hooks/theme";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { useCallback, useMemo, useState } from "react";
 import { Search } from "react-feather";
@@ -98,7 +90,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
   const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const headers: HeaderType[] = matchDownSM
     ? [
@@ -160,7 +152,7 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
   const classes = useStyles();
   const navigate = useNavigate();
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const [poolChartOpen, setPoolChartOpen] = useState(false);
 

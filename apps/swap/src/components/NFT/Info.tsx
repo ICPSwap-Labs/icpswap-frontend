@@ -12,7 +12,7 @@ import { TwitterIcon } from "assets/images/Twitter";
 import Copy from "components/Copy";
 import { TextButton } from "components/index";
 import NFTCanisterLink from "components/info/NFTCanisterLink";
-import { Box, Button, Grid, Link, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, Grid, Link, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import NFTBuyReview from "components/NFT/market/NFTBuyReview";
 import NFTRevoke from "components/NFT/market/NFTRevoke";
 import NFTSell from "components/NFT/market/Sell";
@@ -23,6 +23,7 @@ import { APP_URL } from "constants/index";
 import { useNFTOrderInfo } from "hooks/nft/trade";
 import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
+import { useMediaQueryMD } from "hooks/theme";
 import { type ReactElement, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "store/auth/hooks";
@@ -235,7 +236,7 @@ export default function NFTInfo({
     setBuyReviewShow(false);
   };
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const handleToTwitter = () => {
     const twitterLink = `https://twitter.com/intent/tweet?url=${APP_URL}/wallet/nft/view/${canisterId}/${tokenId}&text=Look at ${

@@ -6,8 +6,9 @@ import ExplorerLink from "components/ExternalLink/Explorer";
 import { Copy } from "components/index";
 import { NFTVerifyLabel } from "components/info/nft/VerifyLabel";
 import LazyImage from "components/LazyImage";
-import { Box, Grid, Link, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Grid, Link, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { useNFTCanisterMetadata } from "hooks/info/nft";
+import { useMediaQueryMD } from "hooks/theme";
 import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import type { ReactElement } from "react";
 import { useTranslation } from "react-i18next";
@@ -197,7 +198,7 @@ export function NFTInfo({ canisterId, tokenId, isView }: NFTInfoProps) {
     mockALinkAndOpen(metadata.filePath, "file_path");
   };
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   return (
     <Box className={classes.wrapper}>

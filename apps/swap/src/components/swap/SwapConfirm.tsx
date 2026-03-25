@@ -3,19 +3,11 @@ import { CurrencyAmount, type Percent, type Token, type Trade } from "@icpswap/s
 import { Modal } from "@icpswap/ui";
 import { formatDollarAmount, formatTokenAmount, numberToString, parseTokenAmount } from "@icpswap/utils";
 import { Flex, TokenImage, Tooltip } from "components/index";
-import {
-  Box,
-  Button,
-  CircularProgress,
-  makeStyles,
-  type Theme,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "components/Mui";
+import { Box, Button, CircularProgress, makeStyles, type Theme, Typography } from "components/Mui";
 import FormattedPriceImpact from "components/swap/FormattedPriceImpact";
 import { TradePrice } from "components/swap/TradePrice";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
+import { useMediaQuerySM } from "hooks/theme";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { type ReactNode, useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -50,8 +42,7 @@ export interface DetailItemProps {
 }
 
 export function DetailItem({ label, value, tooltip, valueColor = "text.primary" }: DetailItemProps) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   return (
     <Box sx={{ display: "flex" }}>

@@ -2,7 +2,8 @@ import { useTokenCharts } from "@icpswap/hooks";
 import { ICS } from "@icpswap/tokens";
 import { toUnixTimestamp } from "@icpswap/utils";
 import ApexCharts from "apexcharts";
-import { Box, makeStyles, type Theme, useMediaQuery, useTheme } from "components/Mui";
+import { Box, makeStyles, type Theme, useTheme } from "components/Mui";
+import { useMediaQueryMD } from "hooks/theme";
 import { useEffect, useMemo, useState } from "react";
 import Chart from "react-apexcharts";
 
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export function ICSPriceChart() {
   const classes = useStyles();
   const theme = useTheme();
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
   const [loading, setLoading] = useState(true);
 
   const { data: result } = useTokenCharts({ tokenId: ICS.address, level: "d1", page: 1, limit: 30 });

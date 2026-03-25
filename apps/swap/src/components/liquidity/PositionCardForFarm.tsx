@@ -15,12 +15,13 @@ import { FarmStateChip } from "components/farm/index";
 import { Loading } from "components/index";
 import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
 import { PositionDetails } from "components/liquidity/PositionDetails";
-import { Box, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { PositionRangeState, usePositionContext } from "components/swap/index";
 import { useRefreshTrigger, useToken } from "hooks/index";
 import { usePositionFeesValue, usePositionState, usePositionValue } from "hooks/liquidity";
 import { useFarmTvlValue, useFarmUserRewardAmountAndValue, useUserSingleLiquidityApr } from "hooks/staking-farm/index";
 import { usePositionsTotalValue } from "hooks/swap/index";
+import { useMediaQueryMD } from "hooks/theme";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -100,7 +101,7 @@ export function PositionCardForFarm({
   const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme();
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
   const principal = useAccountPrincipal();
 
   const [detailShow, setDetailShow] = useState<boolean | undefined>(undefined);

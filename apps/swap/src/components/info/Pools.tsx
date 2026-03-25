@@ -3,8 +3,9 @@ import type { InfoPoolRealTimeDataResponse, Null } from "@icpswap/types";
 import { Header, HeaderCell, ImageLoading, NoData, Pagination, SortDirection } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, percentToNum } from "@icpswap/utils";
 import { PoolRow } from "components/info/swap/pool";
-import { makeStyles, useMediaQuery, useTheme } from "components/Mui";
+import { makeStyles } from "components/Mui";
 import { HIDDEN_POOLS } from "constants/info";
+import { useMediaQueryMD } from "hooks/theme";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { PoolInfoWithApr } from "types/info";
@@ -76,9 +77,8 @@ const DEFAULT_SORT_FILED = "volumeUSD24H";
 
 export default function Pools({ pools: _pools, maxItems = 10, loading }: PoolsProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
   const classes = useStyles();
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
   const [page, setPage] = useState(1);
   const [sortField, setSortField] = useState<string>(DEFAULT_SORT_FILED);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);

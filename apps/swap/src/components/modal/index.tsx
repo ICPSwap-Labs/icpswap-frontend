@@ -11,6 +11,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "components/Mui";
+import { useMediaQueryMD } from "hooks/theme";
 import i18n from "i18n/index";
 import type { ReactNode } from "react";
 import { isElement } from "react-is";
@@ -113,7 +114,7 @@ export default function Modal({
 }: ModalProps) {
   const classes = useStyles();
   const theme = useTheme() as Theme;
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const down760 = useMediaQuery("(max-width:760px)");
 

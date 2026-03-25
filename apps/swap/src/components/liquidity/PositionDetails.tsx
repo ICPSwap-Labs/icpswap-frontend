@@ -12,11 +12,12 @@ import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { TokenImage } from "components/index";
 import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
 import { RemoveAllLiquidity } from "components/liquidity/RemoveAllLiquidity";
-import { Box, Button, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import { TransferPosition, usePositionContext } from "components/swap/index";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/swap";
 import { useRefreshTriggerManager } from "hooks";
+import { useMediaQuerySM } from "hooks/theme";
 import type React from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -31,8 +32,7 @@ interface PositionDetailItemProps {
 }
 
 function PositionDetailItem({ label, value, convert, onConvertClick }: PositionDetailItemProps) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   return (
     <Flex fullWidth align={matchDownSM ? "flex-start" : "center"} gap={matchDownSM ? "0px" : "0 12px"}>
@@ -115,7 +115,7 @@ export function PositionDetails({
 }: PositionDetailsProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [transferShow, setTransferShow] = useState(false);
 
   const { setPositionFees } = usePositionContext();

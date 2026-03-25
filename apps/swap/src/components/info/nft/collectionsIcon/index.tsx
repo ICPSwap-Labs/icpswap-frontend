@@ -1,16 +1,6 @@
 import { mockALinkAndOpen } from "@icpswap/utils";
-import {
-  Box,
-  ClickAwayListener,
-  Grid,
-  MenuItem,
-  MenuList,
-  makeStyles,
-  Popper,
-  type Theme,
-  useMediaQuery,
-  useTheme,
-} from "components/Mui";
+import { Box, ClickAwayListener, Grid, MenuItem, MenuList, makeStyles, Popper, type Theme } from "components/Mui";
+import { useMediaQueryMD } from "hooks/theme";
 import { type FC, useRef, useState } from "react";
 import DiscordIcon from "./Discord";
 import DistriktIcon from "./Distrikt";
@@ -132,9 +122,8 @@ export type Link = { k: string; v: string };
 
 export function LinkIcon({ k }: { k: string }) {
   const Icon = Icons[k];
-  const theme = useTheme() as Theme;
 
-  const matchDownMd = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMd = useMediaQueryMD();
 
   return Icon ? <Icon width={matchDownMd ? 24 : 28} /> : null;
 }

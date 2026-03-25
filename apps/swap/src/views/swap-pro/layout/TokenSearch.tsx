@@ -8,8 +8,9 @@ import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
 import { FilledTextField, TokenImage } from "components/index";
-import { Box, InputAdornment, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useMediaQuerySM } from "hooks/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -24,8 +25,7 @@ interface SearchItemProps {
 
 function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: SearchItemProps) {
   const navigate = useNavigate();
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [, token] = useToken(tokenInfo.ledgerId);
 
   const info = useMemo(() => {
@@ -110,7 +110,7 @@ export interface SearchProps {
 export function TokenSearch({ open, onClose }: SearchProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const navigate = useNavigate();
   const [search, setSearch] = useState<string>("");
   const infoAllTokens = useInfoAllTokens();

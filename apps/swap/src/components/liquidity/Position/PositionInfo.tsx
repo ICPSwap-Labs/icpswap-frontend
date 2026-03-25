@@ -13,13 +13,14 @@ import {
 } from "@icpswap/utils";
 import { IsSneedOwner, MainCard } from "components/index";
 import { PositionPriceRange, PositionRangeState, TransferPosition } from "components/liquidity/index";
-import { Box, Button, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import { LimitLabel } from "components/swap/limit-order/index";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { useCopySuccess, useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
 import { useLoadLiquidityPageCallback, usePositionState } from "hooks/liquidity";
 import { useAvailableFarmsForPool, useLiquidityIsStakedByOwner } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
+import { useMediaQuerySM } from "hooks/theme";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +39,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
   const theme = useTheme();
   const navigate = useNavigate();
   const positionState = usePositionState(position);
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const principal = useAccountPrincipal();
   const copySuccess = useCopySuccess();
 

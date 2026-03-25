@@ -6,11 +6,12 @@ import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { Loading } from "components/index";
 import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
 import { PositionDetails } from "components/liquidity/PositionDetails";
-import { Box, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { PoolCurrentPrice, PositionRangeState, usePositionContext } from "components/swap/index";
 import { LimitLabel } from "components/swap/limit-order/index";
 import { TokenPairName } from "components/TokenPairName";
 import { usePositionState } from "hooks/liquidity";
+import { useMediaQueryMD } from "hooks/theme";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -92,7 +93,7 @@ export function PositionCard({
   const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme();
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const [detailShow, setDetailShow] = useState<boolean | undefined>(undefined);
   const [manuallyInverted, setManuallyInverted] = useState(false);

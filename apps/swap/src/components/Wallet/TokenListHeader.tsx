@@ -1,9 +1,10 @@
-import { Box, useMediaQuery, useTheme } from "components/Mui";
+import { Box } from "components/Mui";
 import { SyncUserTokens } from "components/SyncUserTokens";
 import AddToken from "components/Wallet/AddToken";
 import WalletPageToggle from "components/Wallet/PageToggle";
 import { SelectSortType } from "components/Wallet/SelectSortType";
 import { SortBalance } from "components/Wallet/SortBalance";
+import { useMediaQuerySM } from "hooks/theme";
 import { useSortBalanceManager, useWalletSortManager } from "store/wallet/hooks";
 
 export interface TokenHeaderProps {
@@ -13,8 +14,7 @@ export interface TokenHeaderProps {
 }
 
 export default function TokenListHeader() {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const { sort, updateWalletSortType } = useWalletSortManager();
   const { sortBalance, updateSortBalance } = useSortBalanceManager();
 

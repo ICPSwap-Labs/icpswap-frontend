@@ -14,8 +14,9 @@ import {
 } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { TokenImage } from "components/index";
-import { makeStyles, useMediaQuery, useTheme } from "components/Mui";
+import { makeStyles } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useMediaQueryMD } from "hooks/theme";
 import i18n from "i18n/index";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -128,9 +129,8 @@ const headers: HeaderType[] = [
 export function TokenTable({ tokens: _tokens, maxItems = 10, loading }: TokenTableProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const theme = useTheme();
   const [page, setPage] = useState(1);
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const [sortField, setSortField] = useState<string>(DEFAULT_SORT_FIELD);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);
