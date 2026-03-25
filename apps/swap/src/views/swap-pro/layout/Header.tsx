@@ -2,7 +2,8 @@ import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
 import ProfileSection from "components/Layout/Header/ProfileSection";
-import { Box, Grid, InputAdornment, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Grid, InputAdornment } from "components/Mui";
+import { useMediaQueryMD } from "hooks/theme";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -12,10 +13,9 @@ import { TokenSearch } from "./TokenSearch";
 
 export default function Header() {
   const { t } = useTranslation();
-  const theme = useTheme();
   const navigate = useNavigate();
   const [searchOpen, setSearchOpen] = useState(false);
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownSM = useMediaQueryMD();
 
   const handleLoadPage = (path: string) => {
     navigate(path);

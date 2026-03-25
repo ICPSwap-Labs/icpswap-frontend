@@ -4,7 +4,7 @@ import type { SocialMediaResult } from "@icpswap/types";
 import { Flex, LoadingRow, NoData, Pagination } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { Box, Typography, useTheme } from "components/Mui";
-import { useSwapProContext } from "components/swap/pro";
+import { useSwapProStore } from "components/swap/pro";
 import dayjs from "dayjs";
 import { useTokenSocialMedias } from "hooks/useTokenSocialMedia";
 import { useMemo, useState } from "react";
@@ -53,7 +53,7 @@ function TokenNewsItem({ tokenNews }: TokenNewsItemProps) {
 }
 
 export function SocialMedia() {
-  const { token } = useSwapProContext();
+  const { token } = useSwapProStore();
   const { data: tokenNews, isLoading } = useTokenSocialMedias(token?.address);
 
   const [page, setPage] = useState(1);

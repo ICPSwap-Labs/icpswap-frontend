@@ -6,7 +6,7 @@ import { AuthButton } from "components/index";
 import { Box, CircularProgress, Typography } from "components/Mui";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
-import { Impact, SwapConfirmModal, SwapInputWrapper, useSwapContext } from "components/swap/index";
+import { Impact, SwapConfirmModal, SwapInputWrapper, useSwapStore } from "components/swap/index";
 import { SwapFailedTransactionTips } from "components/swap/SwapFailedTransactionTips";
 import { SwapSuccessModal } from "components/swap/SwapSuccessModal";
 import { TradePrice } from "components/swap/TradePrice";
@@ -40,7 +40,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [isExpertMode] = useExpertModeManager();
-  const { setPoolId, setSelectedPool, setCachedPool, usdValueChange, setInputToken, setOutputToken } = useSwapContext();
+  const { setPoolId, setSelectedPool, setCachedPool, usdValueChange, setInputToken, setOutputToken } = useSwapStore();
   const { setRefreshTriggers } = useGlobalContext();
   const { onUserInput } = useSwapHandlers();
   const clearSwapState = useCleanSwapState();

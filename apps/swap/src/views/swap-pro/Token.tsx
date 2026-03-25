@@ -5,12 +5,12 @@ import { Flex, Tooltip } from "@icpswap/ui";
 import { BigNumber, formatAmount, formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
-import { SwapContext } from "components/swap";
+import { useSwapStore } from "components/swap/index";
 import { SwapProCardWrapper } from "components/swap/pro";
 import { TokenPoolPrice } from "components/TokenPoolPrice";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import type React from "react";
-import { type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowUpRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 
@@ -85,7 +85,7 @@ interface TvlValue {
 export default function TokenUI() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { poolId, inputToken, outputToken } = useContext(SwapContext);
+  const { poolId, inputToken, outputToken } = useSwapStore();
 
   const [token0, setToken0] = useState<Token | Null>(null);
   const [token1, setToken1] = useState<Token | Null>(null);

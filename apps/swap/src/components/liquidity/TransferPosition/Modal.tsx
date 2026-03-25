@@ -21,6 +21,7 @@ import { Bound } from "constants/swap";
 import { usePositionState } from "hooks/liquidity";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { usePositionFees } from "hooks/swap/usePositionFees";
+import { useMediaQuerySM } from "hooks/theme";
 import { useErrorTip, useLoadingTip, useSuccessTip } from "hooks/useTips";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import type React from "react";
@@ -68,8 +69,7 @@ export interface PositionDetailItemProps {
 }
 
 export function PositionDetailItem({ label, value, convert, onConvertClick }: PositionDetailItemProps) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   return (
     <Flex fullWidth>

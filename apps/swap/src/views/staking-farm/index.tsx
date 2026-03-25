@@ -5,8 +5,9 @@ import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils
 import { YourFarmEmpty } from "components/farm/Empty";
 import { FarmListHeader, FarmRow, GlobalData } from "components/farm/index";
 import { Flex, MainCard, NoData, ScrollTop, Wrapper } from "components/index";
-import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useFarms } from "hooks/staking-farm/index";
+import { useMediaQuerySM } from "hooks/theme";
 import i18n from "i18n/index";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,7 +33,7 @@ function MainContent() {
   const theme = useTheme();
   const navigate = useNavigate();
   const principal = useAccountPrincipal();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const { state: _state } = useParsedQueryString() as {
     state: FilterState | undefined;

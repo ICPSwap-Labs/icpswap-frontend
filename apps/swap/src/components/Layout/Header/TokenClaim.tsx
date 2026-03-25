@@ -1,6 +1,7 @@
 import { ButtonChip } from "components/ButtonChip";
 import { Flex } from "components/index";
-import { Box, useMediaQuery, useTheme } from "components/Mui";
+import { Box } from "components/Mui";
+import { useMediaQuerySM } from "hooks/theme";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +15,7 @@ function setReadClaim() {
 export default function TokenClaim() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [isRead, setIsRead] = useState(true);
 
   const handleTokenClaim = () => {

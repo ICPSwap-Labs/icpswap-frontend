@@ -6,9 +6,9 @@ import { LiquidityLock, LoadingRow, Tooltip } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { Flex } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
-import { SwapContext } from "components/swap";
+import { useSwapStore } from "components/swap/index";
 import { useLiquidityLocksImage } from "hooks/swap/index";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 
@@ -66,7 +66,7 @@ export function LiquidityLocks({ poolId }: LiquidityLocksProps) {
   const [tokenIds, setTokenIds] = useState<[string, string] | null>(null);
   const [locksValue, setLocksValue] = useState<null | { [name: string]: string }>(null);
 
-  const { cachedPool: pool } = useContext(SwapContext);
+  const { cachedPool: pool } = useSwapStore();
 
   const poolTvlValue = usePoolTVLValue({ pool });
 

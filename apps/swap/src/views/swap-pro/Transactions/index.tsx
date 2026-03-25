@@ -2,15 +2,15 @@ import { Flex } from "@icpswap/ui";
 import { PoolTransactions, UserTransactions } from "components/info/swap";
 import { Holders } from "components/info/tokens";
 import { Box, Typography, useTheme } from "components/Mui";
-import { SwapContext } from "components/swap";
+import { useSwapStore } from "components/swap/index";
 import { HistoryTablePro, PendingTablePro } from "components/swap/limit-order/index";
-import { SwapProCardWrapper, SwapProContext } from "components/swap/pro";
+import { SwapProCardWrapper, useSwapProStore } from "components/swap/pro";
 import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
 import { OutlineCircleTabList } from "components/TabPanel";
 import { Tab } from "constants/index";
 import { useScrollToTop } from "hooks/useScrollToTop";
 import i18n from "i18n/index";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AddLiquidity } from "./AddLiquidity";
 import { AutoRefresh } from "./AutoRefresh";
 import { Positions } from "./Positions";
@@ -64,8 +64,8 @@ let AUTO_REFRESH_COUNTER = 0;
 
 export default function Transactions() {
   const theme = useTheme();
-  const { poolId, inputToken, outputToken } = useContext(SwapContext);
-  const { token, activeTab: contextActiveTab } = useContext(SwapProContext);
+  const { poolId, inputToken, outputToken } = useSwapStore();
+  const { token, activeTab: contextActiveTab } = useSwapProStore();
 
   const [activeTab, setActiveTab] = useState<Tabs>(Tabs.TRANSACTIONS);
   const [activeSubTab, setActiveSubTab] = useState<Tabs | null>(Tabs.ALL_TRANSACTIONS);

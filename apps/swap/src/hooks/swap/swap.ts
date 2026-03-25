@@ -1,10 +1,10 @@
 import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useSwapContext } from "components/swap/context";
+import { useSwapStore } from "components/swap/index";
 import { useCallback, useMemo } from "react";
 
 export function useSwapNoLiquidityManager() {
-  const { setNoLiquidity, noLiquidity } = useSwapContext();
+  const { setNoLiquidity, noLiquidity } = useSwapStore();
 
   const callback = useCallback(
     (noLiquidity: boolean | Null) => {

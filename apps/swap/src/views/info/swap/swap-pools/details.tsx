@@ -13,12 +13,13 @@ import { Breadcrumbs, InfoWrapper, MainCard, TextButton, TokenImage, TokenPoolPr
 import { PoolTransactions } from "components/info/swap";
 import { PoolPositionHoldersCharts } from "components/info/swap/PoolPositionHoldersCharts";
 import { PositionTable } from "components/liquidity/PositionTable";
-import { Box, Button, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import { TokenSymbol } from "components/TokenSymbol";
 import copyToClipboard from "copy-to-clipboard";
 import { useToken } from "hooks/index";
 import { getFee24HFromVolume24H } from "hooks/info/useFee24h";
 import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
+import { useMediaQueryMD } from "hooks/theme";
 import { TIP_SUCCESS, useTips } from "hooks/useTips";
 import { useMemo, useState } from "react";
 import { Copy } from "react-feather";
@@ -80,7 +81,7 @@ export default function SwapPoolDetails() {
 
   const { poolTvlUSD, token0TvlUSD, token1TvlUSD, token0Balance, token1Balance } = usePoolTokenBalanceTvl({ pool });
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const handleCopy = () => {
     copyToClipboard(canisterId);

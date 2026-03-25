@@ -11,8 +11,9 @@ import {
 } from "@icpswap/utils";
 import { TokenImageWithChain } from "components/ck-bridge/ChainImage";
 import { DotLoading, Flex } from "components/index";
-import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useMediaQuerySM } from "hooks/theme";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useERC20Balance, useETHBalance } from "hooks/web3/index";
@@ -31,7 +32,7 @@ interface SelectorTokenUIProps {
 
 export function SelectorTokenUI({ onClick, hidden, chain, balance, priceUSD, token, loading }: SelectorTokenUIProps) {
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const tokenBalanceAmount = useMemo(() => {
     if (!token || balance === undefined) return undefined;

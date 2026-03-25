@@ -3,7 +3,6 @@ import { Flex, MainCard } from "components/index";
 import { Box } from "components/Mui";
 import {
   CreatePool,
-  SwapContext,
   SwapProEntry,
   SwapSettings,
   SwapTabPanels,
@@ -12,15 +11,16 @@ import {
   SwapWrapper,
   type SwapWrapperRef,
   TABS,
+  useSwapStore,
 } from "components/swap/index";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 import { SWAP_RECLAIM_REFRESH } from "constants/index";
-import { useCallback, useContext, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useWalletIsConnected } from "store/auth/hooks";
 
 export function SwapContextWrapper() {
-  const { cachedPool, inputToken, outputToken, noLiquidity } = useContext(SwapContext);
+  const { cachedPool, inputToken, outputToken, noLiquidity } = useSwapStore();
 
   const isConnected = useWalletIsConnected();
 

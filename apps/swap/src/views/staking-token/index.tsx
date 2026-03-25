@@ -1,10 +1,11 @@
 import { useParsedQueryString } from "@icpswap/hooks";
 import { LoadingRow } from "@icpswap/ui";
 import { Flex, MainCard, NoData, ObserverWrapper, ScrollTop, Wrapper } from "components/index";
-import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { YourPoolsEmpty } from "components/stake/Empty";
 import { GlobalData, PoolListHeader, StakeRow } from "components/stake/index";
 import { usePools } from "hooks/staking-token/index";
+import { useMediaQuerySM } from "hooks/theme";
 import i18n from "i18n/index";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -24,7 +25,7 @@ function MainContent() {
   const { t } = useTranslation();
   const theme = useTheme();
   const navigate = useNavigate();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [headerInViewport, setHeaderInViewport] = useState(true);
 
   const [stakeTokenId] = useState<string | undefined | null>(null);

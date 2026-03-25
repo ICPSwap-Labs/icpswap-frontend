@@ -2,14 +2,14 @@ import { ICP } from "@icpswap/tokens";
 import { LoadingRow } from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { Box, Typography, useTheme } from "components/Mui";
-import { SwapContext } from "components/swap/index";
-import { useContext, useMemo, useState } from "react";
+import { useSwapStore } from "components/swap/store";
+import { useMemo, useState } from "react";
 import { SwapProCardWrapper } from "./SwapProWrapper";
 import { TokenInformation } from "./TokenInformation";
 
 export function PoolTokensInformation() {
   const theme = useTheme();
-  const { inputToken, outputToken, poolId } = useContext(SwapContext);
+  const { inputToken, outputToken, poolId } = useSwapStore();
 
   const [inverted, setInverted] = useState(false);
 

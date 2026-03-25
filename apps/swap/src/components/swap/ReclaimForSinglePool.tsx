@@ -1,10 +1,10 @@
 import { Flex } from "@icpswap/ui";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Box, CircularProgress, Typography } from "components/Mui";
-import { SwapContext } from "components/swap/index";
+import { useSwapStore } from "components/swap/store";
 import { useToken } from "hooks/index";
 import { useReclaim } from "hooks/swap/useReclaim";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface ReclaimForSinglePoolProps {
@@ -32,7 +32,7 @@ export function ReclaimForSinglePool({
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [, token] = useToken(tokenId);
-  const { setUnavailableBalanceKey, removeUnavailableBalanceKey } = useContext(SwapContext);
+  const { setUnavailableBalanceKey, removeUnavailableBalanceKey } = useSwapStore();
 
   const reclaim = useReclaim();
 

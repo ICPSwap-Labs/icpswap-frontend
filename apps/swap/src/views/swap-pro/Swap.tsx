@@ -3,13 +3,13 @@ import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { parseTokenAmount } from "@icpswap/utils";
 import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
-import { CreatePool, SwapContext, SwapSettings, SwapWrapper, type SwapWrapperRef } from "components/swap/index";
+import { CreatePool, SwapSettings, SwapWrapper, type SwapWrapperRef, useSwapStore } from "components/swap/index";
 import { LimitWrapper } from "components/swap/limit-order";
-import { SwapProCardWrapper, SwapProContext } from "components/swap/pro";
+import { SwapProCardWrapper, useSwapProStore } from "components/swap/pro";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
 import { SWAP_REFRESH_KEY, Tab } from "constants/index";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWalletIsConnected } from "store/auth/hooks";
 
@@ -23,9 +23,9 @@ export default function Swap() {
   const navigate = useNavigate();
   const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
   const swapWrapperRef = useRef<SwapWrapperRef>(null);
-  const { activeTab, setActiveTab } = useContext(SwapProContext);
+  const { activeTab, setActiveTab } = useSwapProStore();
   const { setPoolId, selectedPool, inputToken, outputToken, setInputToken, setOutputToken, noLiquidity } =
-    useContext(SwapContext);
+    useSwapStore();
 
   const { tab: tabFromUrl } = useParsedQueryString() as { tab: Tab | Null };
 

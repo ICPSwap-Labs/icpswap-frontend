@@ -3,12 +3,13 @@ import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarTokenPrice } from "@icpswap/utils";
 import { Copy } from "components/Copy/icon";
 import { Link, TokenImage } from "components/index";
-import { Box, Button, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import { PriceAlertsIcon } from "components/PriceAlerts";
-import { useSwapContext } from "components/swap";
-import { SwapProContext } from "components/swap/pro";
+import { useSwapStore } from "components/swap/index";
+import { useSwapProStore } from "components/swap/pro";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
-import { useContext, useMemo } from "react";
+import { useMediaQuerySM } from "hooks/theme";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { TokenChartsViewSelector } from "views/swap-pro/TokenChart/TokenChartsViewSelector";
 
@@ -55,10 +56,9 @@ export interface TokenChartInfoProps {
 
 export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartInfoProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
-  const { token } = useContext(SwapProContext);
-  const { inputToken, outputToken } = useSwapContext();
+  const matchDownSM = useMediaQuerySM();
+  const { token } = useSwapProStore();
+  const { inputToken, outputToken } = useSwapStore();
 
   const tokenId = useMemo(() => {
     return token?.address;

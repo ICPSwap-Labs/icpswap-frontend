@@ -3,18 +3,18 @@ import { TextButton, type TokenChartsRef, TokenCharts as TokenChartsUI } from "@
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
 import { DensityChart } from "components/info/DensityChart";
 import { Box, Typography, useTheme } from "components/Mui";
-import { SwapContext } from "components/swap/index";
-import { SwapProContext } from "components/swap/pro";
+import { useSwapProStore } from "components/swap/pro";
+import { useSwapStore } from "components/swap/store";
 import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 import { uesTokenPairWithIcp, useToken } from "hooks/index";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 
 export function TokenCharts() {
   const theme = useTheme();
   const [priceTokenId, setPriceTokenId] = useState<string | Null>(null);
-  const { token, chartView } = useContext(SwapProContext);
-  const { poolId, selectedPool } = useContext(SwapContext);
+  const { token, chartView } = useSwapProStore();
+  const { poolId, selectedPool } = useSwapStore();
 
   const tokenChartsRef = useRef<TokenChartsRef>(null);
 

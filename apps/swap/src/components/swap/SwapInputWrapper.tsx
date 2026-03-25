@@ -4,11 +4,11 @@ import type { Null } from "@icpswap/types";
 import { Image } from "@icpswap/ui";
 import { BigNumber } from "@icpswap/utils";
 import { Box, useTheme } from "components/Mui";
-import { SwapContext } from "components/swap/index";
 import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
+import { useSwapStore } from "components/swap/store";
 import { SWAP_FIELD } from "constants/swap";
 import type { UseCurrencyState } from "hooks/useCurrency";
-import { useCallback, useContext, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSwapState } from "store/swap/hooks";
 
@@ -70,7 +70,7 @@ export function SwapInputWrapper({
     [SWAP_FIELD.INPUT]: inputTokenId,
     [SWAP_FIELD.OUTPUT]: outputTokenId,
   } = useSwapState();
-  const { setUSDValueChange } = useContext(SwapContext);
+  const { setUSDValueChange } = useSwapStore();
   const { tab: swapProTab } = useParsedQueryString() as { tab: string };
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;

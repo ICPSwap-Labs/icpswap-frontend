@@ -1,6 +1,7 @@
 import type { InfoTokenRealTimeDataResponse, TokenListMetadata } from "@icpswap/types";
-import { Box, useMediaQuery, useTheme } from "components/Mui";
+import { Box } from "components/Mui";
 import { SwapProCardWrapper } from "components/swap/pro";
+import { useMediaQuerySM } from "hooks/theme";
 import { TokenCharts } from "./Charts";
 import Token from "./Token";
 import { TokenChartsViewSelector } from "./TokenChartsViewSelector";
@@ -11,8 +12,7 @@ export interface TokenChartWrapperProps {
 }
 
 export function TokenChartWrapper({ infoToken, tokenListInfo }: TokenChartWrapperProps) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   return (
     <>

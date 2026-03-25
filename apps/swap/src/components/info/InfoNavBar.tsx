@@ -1,6 +1,7 @@
 import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
 import { Link } from "components/index";
-import { Box, makeStyles, type Theme, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
+import { useMediaQueryMD, useMediaQuerySM } from "hooks/theme";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { type Route, routes } from "./nav.config";
@@ -62,13 +63,12 @@ const useStyles = makeStyles((theme: Theme) => {
 export function InfoNavBar() {
   const classes = useStyles();
   const location = useLocation();
-  const theme = useTheme() as Theme;
   const navigate = useNavigate();
   const ref = useRef(null);
   const pathName = location.pathname;
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownMD = useMediaQueryMD();
+  const matchDownSM = useMediaQuerySM();
 
   const RoutesNumber = matchDownMD ? (matchDownSM ? 3 : 4) : 7;
 

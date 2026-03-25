@@ -75,7 +75,7 @@ export function useCleanSwapState() {
 }
 
 export interface UseSwapInfoArgs {
-  refresh?: number | boolean;
+  refresh?: number;
 }
 
 export function useSwapInfo({ refresh }: UseSwapInfoArgs) {

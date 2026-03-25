@@ -6,13 +6,13 @@ import { BigNumber, formatAmount, formatDollarAmount, isUndefinedOrNull } from "
 import { PositionPriceRange } from "components/liquidity";
 import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
 import { Box, makeStyles, Typography, useTheme } from "components/Mui";
-import { SwapContext } from "components/swap";
-import { SwapProContext } from "components/swap/pro";
+import { useSwapStore } from "components/swap/index";
+import { useUSDPrice } from "hooks";
 import { usePool } from "hooks/swap/usePools";
 import { usePositionWithPool } from "hooks/swap/usePosition";
 import { usePositionFees } from "hooks/swap/usePositionFees";
 import { useUserPoolPositions } from "hooks/swap/useUserAllPositions";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipal } from "store/auth/hooks";
 import type { UserPositionByList } from "types/swap";
@@ -38,8 +38,10 @@ function PositionItem({ positionInfo, pool }: PositionItemProps) {
   const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
-  const { inputToken, outputToken } = useContext(SwapContext);
-  const { inputTokenPrice, outputTokenPrice } = useContext(SwapProContext);
+  const { inputToken, outputToken } = useSwapStore();
+
+  const inputTokenPrice = useUSDPrice(inputToken);
+  const outputTokenPrice = useUSDPrice(outputToken);
 
   const position = usePositionWithPool({
     tickLower: positionInfo.position.tickLower.toString(),
@@ -170,7 +172,7 @@ export function YourPositions({ poolId }: PoolTransactionsProps) {
   const classes = useStyles();
   const theme = useTheme();
   const principal = useAccountPrincipal();
-  const { inputToken, outputToken } = useContext(SwapContext);
+  const { inputToken, outputToken } = useSwapStore();
 
   const [page, setPage] = useState(1);
   const { result: userPositions, loading } = useUserPoolPositions(poolId);

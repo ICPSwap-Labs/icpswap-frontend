@@ -5,9 +5,10 @@ import { Modal } from "@icpswap/ui";
 import { SelectorToken } from "components/ck-bridge/SelectorToken";
 import { getBridgeChainByTokenId } from "components/ck-bridge/utils";
 import { FilledTextField, NoData } from "components/index";
-import { Box, InputAdornment, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
 import { MINTER_CANISTER_ID } from "constants/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
+import { useMediaQuerySM } from "hooks/theme";
 import { useCallback, useMemo, useState } from "react";
 import { Search as SearchIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
@@ -24,7 +25,7 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
   const theme = useTheme();
   const isDark = isDarkTheme(theme);
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [hiddenCanisterIds, setHiddenCanisterIds] = useState<{ [canisterId: string]: boolean }>({});
 

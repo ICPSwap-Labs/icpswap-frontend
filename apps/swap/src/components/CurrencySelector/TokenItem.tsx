@@ -9,8 +9,9 @@ import {
   parseTokenAmount,
 } from "@icpswap/utils";
 import { DotLoading, Flex, TokenImage } from "components/index";
-import { Box, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useMediaQuerySM } from "hooks/theme";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import type React from "react";
@@ -44,7 +45,7 @@ export function TokenItem({
 }: TokenItemProps) {
   const theme = useTheme();
   const principal = useAccountPrincipal();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const getBalanceId = useMemo(() => {
     if (showBalance) return canisterId;

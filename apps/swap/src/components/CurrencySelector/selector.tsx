@@ -6,8 +6,9 @@ import { BaseTokens } from "components/CurrencySelector/BaseToken";
 import { TokenItem } from "components/CurrencySelector/TokenItem";
 import { ImportToken } from "components/ImportToken/index";
 import { FilledTextField, NoData } from "components/index";
-import { Box, InputAdornment, makeStyles, Typography, useMediaQuery, useTheme } from "components/Mui";
+import { Box, InputAdornment, makeStyles, Typography, useTheme } from "components/Mui";
 import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
+import { useMediaQuerySM } from "hooks/theme";
 import { useCallback, useMemo, useState } from "react";
 import { Search as SearchIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
@@ -49,7 +50,7 @@ export default function Selector({
   const isDark = isDarkTheme(theme);
   const classes = useStyles();
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [importTokenCanceled, setImportTokenCanceled] = useState(false);
   const [hiddenCanisterIds, setHiddenCanisterIds] = useState<string[]>([]);
