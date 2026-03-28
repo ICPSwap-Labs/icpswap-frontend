@@ -1,5 +1,5 @@
 import { useParsedQueryString } from "@icpswap/hooks";
-import { IconSearch } from "@tabler/icons";
+import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { FilledTextField, MainCard, Wrapper } from "components/index";
 import { Box, Grid, InputAdornment, makeStyles, TextField, Typography, useMediaQuery } from "components/Mui";
 import { useMediaQuerySM } from "hooks/theme";
@@ -170,7 +170,7 @@ export default function MarketWrapper({
                         input: {
                           startAdornment: (
                             <InputAdornment position="start">
-                              <IconSearch stroke={1.5} size="1rem" />
+                              <SearchIcon />
                             </InputAdornment>
                           ),
                         },

@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import { analyzer } from "vite-bundle-analyzer";
 import biome from "vite-plugin-biome";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -14,8 +15,19 @@ export default defineConfig(() => {
     },
     build: {
       outDir: "build",
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            framework: ["react", "react-router-dom", "react-dom"],
+            utils: ["bignumber.js", "dayjs", "lodash", "jsbi"],
+            wagmi: ["wagmi"],
+            recharts: ["recharts"],
+          },
+        },
+      },
     },
     plugins: [
+      analyzer({ analyzerMode: "static" }),
       react(),
       tsconfigPaths(),
       svgr({

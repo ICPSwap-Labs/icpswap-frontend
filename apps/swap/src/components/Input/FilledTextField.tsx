@@ -1,5 +1,4 @@
 import { Flex, NoData } from "@icpswap/ui";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import {
   Box,
   Menu,
@@ -10,6 +9,7 @@ import {
   type Theme,
   Typography,
 } from "components/Mui";
+import { KeyboardArrowDownIcon } from "components/MuiIcon";
 import type React from "react";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 

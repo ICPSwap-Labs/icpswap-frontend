@@ -88,7 +88,12 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
 
   const { updateNoLiquidity } = useSwapNoLiquidityManager();
 
-  // Set pool for Swap context
+  // Update noLiquidity flag
+  useEffect(() => {
+    updateNoLiquidity(noLiquidity);
+  }, [noLiquidity, updateNoLiquidity]);
+
+  // Set pool for Swap store
   useEffect(() => {
     const pool = routes[0]?.pools[0];
     setSelectedPool(pool);
@@ -97,14 +102,12 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
       setCachedPool(pool);
     }
 
-    updateNoLiquidity(noLiquidity);
-
     if (pool?.id) {
       setPoolId(pool.id);
     }
-  }, [routes, setSelectedPool, noLiquidity, updateNoLiquidity, setCachedPool, setPoolId]);
+  }, [routes, setSelectedPool, setCachedPool, setPoolId]);
 
-  // Set token for Swap context
+  // Set token for Swap store
   useEffect(() => {
     setInputToken(inputToken);
     setOutputToken(outputToken);
@@ -118,6 +121,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     [independentField, parsedAmount, trade],
   );
 
+  // biome-ignore lint: This callback need 'outputTokenId' to dependencies
   const handleTokenAChange = useCallback(
     (token: Token) => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap";
@@ -128,9 +132,11 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         navigate(`${prePath}?input=${token.address}&output=${outputTokenId}`);
       }
     },
-    [navigate, ui],
+    [navigate, ui, outputTokenId],
   );
 
+  // TODO: find out why biome has the 'more dependencies than necessary' error
+  // biome-ignore lint: This callback need 'inputTokenId' to dependencies
   const handleTokenBChange = useCallback(
     (token: Token) => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap";
@@ -141,7 +147,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         navigate(`${prePath}?input=${inputTokenId}&output=${token.address}`);
       }
     },
-    [navigate, ui],
+    [navigate, ui, inputTokenId],
   );
 
   const handleInput = useCallback(

@@ -1,6 +1,6 @@
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { MainCard } from "components/index";
 import { Box, Grid, Typography, useTheme } from "components/Mui";
+import { ArrowForwardIosIcon } from "components/MuiIcon";
 import type React from "react";
 import { useState } from "react";
 

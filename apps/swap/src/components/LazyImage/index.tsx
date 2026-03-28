@@ -1,5 +1,5 @@
-import ErrorImage from "@mui/icons-material/BrokenImage";
 import { Box, Grid, makeStyles, useTheme } from "components/Mui";
+import { BrokenImage } from "components/MuiIcon";
 import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DefaultDarkImage } from "./DefaultDarkImage";
@@ -156,7 +156,7 @@ export default function LazyImage(props: LazyImageProps) {
         ) : (
           <LoadingLightImage height={height} sx={imageLoaded ? { marginTop: "-100%" } : {}} />
         ))}
-      {imageLoaded && imageError && <ErrorImage sx={{ marginTop: "-100%" }} />}
+      {imageLoaded && imageError && <BrokenImage sx={{ marginTop: "-100%" }} />}
       {showDefault &&
         !CustomImage &&
         (theme.customization.mode === "dark" ? (

@@ -1,6 +1,6 @@
 import { MainCard } from "@icpswap/ui";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Box, Grid, type Theme, Typography, useTheme } from "components/Mui";
+import { ArrowForwardIosIcon } from "components/MuiIcon";
 import type React from "react";
 import { useState } from "react";
 

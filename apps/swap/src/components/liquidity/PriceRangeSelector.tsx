@@ -1,7 +1,7 @@
 import type { Token } from "@icpswap/swap-sdk";
-import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import { Flex, NumberTextField } from "components/index";
 import { Chip, makeStyles, TextField, type Theme, Typography, useTheme } from "components/Mui";
+import { AddIcon, RemoveIcon } from "components/MuiIcon";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import i18n from "i18n/index";
 import type React from "react";

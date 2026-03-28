@@ -1,6 +1,5 @@
-import Brightness4Icon from "@mui/icons-material/Brightness4";
-import Brightness4OutlinedIcon from "@mui/icons-material/Brightness4Outlined";
 import { Avatar, Box, ButtonBase, makeStyles, type Theme, useTheme } from "components/Mui";
+import { Brightness4Icon, Brightness4OutlinedIcon } from "components/MuiIcon";
 import React from "react";
 import { changeTheme } from "store/customization/actions";
 import { useAppDispatch } from "store/hooks";

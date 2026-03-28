@@ -1,7 +1,7 @@
 import { getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { TokenImage } from "components/Image/Token";
 import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { PositionRangeState } from "components/swap/index";
 import { Bound } from "constants/swap";
 import { usePositionState } from "hooks/liquidity";

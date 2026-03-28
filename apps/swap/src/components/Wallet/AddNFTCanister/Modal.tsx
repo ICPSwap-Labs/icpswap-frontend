@@ -1,10 +1,9 @@
 import type { NFTControllerInfo } from "@icpswap/types";
 import { Flex, Header, HeaderCell, LoadingRow, TableRow } from "@icpswap/ui";
-import AddIcon from "@mui/icons-material/Add";
-import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import { IconSearch } from "@tabler/icons";
+import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { FilledTextField, NoData } from "components/index";
 import { Avatar, Box, Button, InputAdornment, makeStyles, Typography, useTheme } from "components/Mui";
+import { AddIcon, HorizontalRuleIcon } from "components/MuiIcon";
 import Modal from "components/modal/index";
 import { OFFICIAL_CANISTER_IDS } from "constants/index";
 import { useCanisterLogo, useNFTCanisterList } from "hooks/nft/useNFTCalls";
@@ -132,7 +131,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <IconSearch stroke={1.5} size="1rem" />
+                  <SearchIcon />
                 </InputAdornment>
               ),
             },

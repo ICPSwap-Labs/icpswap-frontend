@@ -20,7 +20,7 @@ import { useCallback, useRef } from "react";
 import { useWalletIsConnected } from "store/auth/hooks";
 
 export function SwapContextWrapper() {
-  const { cachedPool, inputToken, outputToken, noLiquidity } = useSwapStore();
+  const { inputToken, outputToken, noLiquidity, selectedPool } = useSwapStore();
 
   const isConnected = useWalletIsConnected();
 
@@ -90,13 +90,13 @@ export function SwapContextWrapper() {
               }}
             >
               <ReclaimTokensInPool
-                pool={cachedPool}
+                pool={selectedPool}
                 refreshKey={SWAP_RECLAIM_REFRESH}
                 onInputTokenClick={handleInputTokenClick}
                 inputToken={inputToken}
               />
 
-              {cachedPool ? <ToReclaim poolId={cachedPool.id} /> : null}
+              {selectedPool ? <ToReclaim poolId={selectedPool.id} /> : null}
             </Flex>
           ) : null}
 

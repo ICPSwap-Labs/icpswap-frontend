@@ -8,11 +8,11 @@ import {
   toSignificantWithGroupSeparator,
   urlStringFormat,
 } from "@icpswap/utils";
-import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { TokenImage } from "components/index";
 import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
 import { RemoveAllLiquidity } from "components/liquidity/RemoveAllLiquidity";
 import { Box, Button, Typography, useTheme } from "components/Mui";
+import { KeyboardArrowUpIcon, SyncAltIcon } from "components/MuiIcon";
 import { TransferPosition, usePositionContext } from "components/swap/index";
 import { CurrencyAmountFormatDecimals } from "constants/index";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/swap";
@@ -395,7 +395,7 @@ export function PositionDetails({
         >
           {t("common.hide")}
         </Typography>
-        <KeyboardArrowUp
+        <KeyboardArrowUpIcon
           sx={{
             color: theme.palette.text["theme-secondary"],
           }}

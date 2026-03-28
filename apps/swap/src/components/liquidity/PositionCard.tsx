@@ -1,12 +1,12 @@
 import { CurrencyAmount, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { Loading } from "components/index";
 import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
 import { PositionDetails } from "components/liquidity/PositionDetails";
 import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { KeyboardArrowDownIcon, KeyboardArrowUpIcon } from "components/MuiIcon";
 import { PoolCurrentPrice, PositionRangeState, usePositionContext } from "components/swap/index";
 import { LimitLabel } from "components/swap/limit-order/index";
 import { TokenPairName } from "components/TokenPairName";
@@ -377,9 +377,9 @@ export function PositionCard({
               </Typography>
 
               {detailShow ? (
-                <KeyboardArrowUp />
+                <KeyboardArrowUpIcon />
               ) : (
-                <KeyboardArrowDown
+                <KeyboardArrowDownIcon
                   sx={{
                     color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
                   }}
@@ -406,7 +406,7 @@ export function PositionCard({
                     borderRadius: "50%",
                   }}
                 >
-                  <KeyboardArrowUp />
+                  <KeyboardArrowUpIcon />
                 </Box>
               ) : (
                 <Box
@@ -417,7 +417,7 @@ export function PositionCard({
                     borderRadius: "50%",
                   }}
                 >
-                  <KeyboardArrowDown
+                  <KeyboardArrowDownIcon
                     sx={{
                       color: theme.palette.text.secondary,
                     }}

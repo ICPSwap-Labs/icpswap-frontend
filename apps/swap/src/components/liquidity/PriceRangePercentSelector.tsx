@@ -1,9 +1,9 @@
 import type { Price, Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
 import { NumberTextField } from "components/index";
 import { Box, Button, Chip, Grid, makeStyles, TextField, type Theme, Typography, useTheme } from "components/Mui";
+import { AddIcon, RemoveIcon } from "components/MuiIcon";
 import { TokenToggle } from "components/TokenToggle";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { Bound, type FeeAmount } from "constants/swap";

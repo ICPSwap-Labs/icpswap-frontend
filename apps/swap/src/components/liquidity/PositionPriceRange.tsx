@@ -1,6 +1,6 @@
 import { getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { Bound } from "constants/swap";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { useMemo, useState } from "react";

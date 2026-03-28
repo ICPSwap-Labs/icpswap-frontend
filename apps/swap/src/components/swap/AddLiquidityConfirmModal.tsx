@@ -1,7 +1,7 @@
 import type { Position, Token } from "@icpswap/swap-sdk";
 import { Flex, Modal } from "@icpswap/ui";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Button, CircularProgress, Typography } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { Bound } from "constants/swap";
 import { useTicksAtLimitInvert } from "hooks/swap/usePriceInvert";
 import { useMemo, useState } from "react";

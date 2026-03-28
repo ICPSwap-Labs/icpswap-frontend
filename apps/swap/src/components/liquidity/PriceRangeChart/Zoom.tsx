@@ -1,8 +1,8 @@
 import { Flex } from "@icpswap/ui";
-import { Replay as ReplayIcon } from "@mui/icons-material";
 import ZoomInIcon from "assets/images/swap/zoomIn";
 import ZoomOutIcon from "assets/images/swap/zoomOut";
 import { Box, Chip, makeStyles, type Theme, useTheme } from "components/Mui";
+import { ReplayIcon } from "components/MuiIcon";
 import { type ScaleLinear, select, type ZoomBehavior, type ZoomTransform, zoom, zoomIdentity } from "d3";
 import { forwardRef, useEffect, useMemo, useRef } from "react";
 import { isDarkTheme } from "utils";

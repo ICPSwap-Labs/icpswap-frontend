@@ -11,10 +11,10 @@ import {
   resultFormat,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { FilledTextField, Loading } from "components/index";
 import { Box, Button, Chip, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { PositionRangeState } from "components/swap/index";
 import { CurrencyAmountFormatDecimals, DEFAULT_PERCENT_SYMBOL } from "constants/index";
 import { Bound } from "constants/swap";

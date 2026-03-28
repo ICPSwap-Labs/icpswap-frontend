@@ -8,10 +8,10 @@ import {
   isUndefinedOrNull,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import LinkIcon from "assets/images/LinkIcon";
 import { Flex, TextButton } from "components/index";
 import { Typography } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { INFO_URL } from "constants/index";
 import { useUSDPriceById } from "hooks";
 import { useMediaQuerySM } from "hooks/theme";

@@ -3,7 +3,6 @@ import { ICP, ICS } from "@icpswap/tokens";
 import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { Proportion } from "@icpswap/ui";
 import { BigNumber } from "@icpswap/utils";
-import HotIcon from "assets/icons/swap-pro/hot.svg";
 import { TokenImage } from "components/index";
 import { Box, keyframes, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
@@ -167,7 +166,7 @@ export default function HotTokens() {
             overflow: "hidden",
           }}
         >
-          <img width="20px" height="20px" src={HotIcon} alt="" />
+          <img width="20px" height="20px" src="/images/swap-pro/hot.svg" alt="" />
           <Typography sx={{ "@media(max-width: 640px)": { display: "none" } }}>{t("swap.hot.tokens")}</Typography>
         </Box>
 

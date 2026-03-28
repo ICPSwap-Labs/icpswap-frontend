@@ -1,9 +1,9 @@
 import type { LimitTransaction } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { BigNumber, formatAmount, formatTokenPrice } from "@icpswap/utils";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { TokenImage } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import dayjs from "dayjs";
 import { useLimitHistory } from "hooks/swap/limit-order/useLimitHistory";
 import { useCallback, useState } from "react";

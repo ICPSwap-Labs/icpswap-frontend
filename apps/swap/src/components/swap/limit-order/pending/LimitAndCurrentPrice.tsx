@@ -2,8 +2,8 @@ import type { Pool, Price, Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { BigNumber, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { Typography } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { PoolCurrentPrice } from "components/swap/PoolCurrentPrice";
 import { useCallback, useMemo, useState } from "react";
 

@@ -9,13 +9,13 @@ import {
   nonUndefinedOrNull,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { FarmStateChip } from "components/farm/index";
 import { Loading } from "components/index";
 import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
 import { PositionDetails } from "components/liquidity/PositionDetails";
 import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { KeyboardArrowDownIcon, KeyboardArrowUpIcon } from "components/MuiIcon";
 import { PositionRangeState, usePositionContext } from "components/swap/index";
 import { useRefreshTrigger, useToken } from "hooks/index";
 import { usePositionFeesValue, usePositionState, usePositionValue } from "hooks/liquidity";
@@ -396,9 +396,9 @@ export function PositionCardForFarm({
               </Typography>
 
               {detailShow ? (
-                <KeyboardArrowUp />
+                <KeyboardArrowUpIcon />
               ) : (
-                <KeyboardArrowDown
+                <KeyboardArrowDownIcon
                   sx={{
                     color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
                   }}
@@ -425,7 +425,7 @@ export function PositionCardForFarm({
                     borderRadius: "50%",
                   }}
                 >
-                  <KeyboardArrowUp />
+                  <KeyboardArrowUpIcon />
                 </Box>
               ) : (
                 <Box
@@ -436,7 +436,7 @@ export function PositionCardForFarm({
                     borderRadius: "50%",
                   }}
                 >
-                  <KeyboardArrowDown
+                  <KeyboardArrowDownIcon
                     sx={{
                       color: theme.palette.text.secondary,
                     }}

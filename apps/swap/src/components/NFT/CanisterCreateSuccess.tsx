@@ -1,6 +1,6 @@
-import CheckCircleIcon from "@mui/icons-material/CheckCircleOutline";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import { Box, Button, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { CheckCircleOutlineIcon } from "components/MuiIcon";
 import Modal from "components/modal/index";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +38,7 @@ export default function CanisterCreateSuccess({ open, onClose, details, canister
   return (
     <Modal open={open} title="Create details" onClose={onClose}>
       <Grid container alignItems="center" flexDirection="column">
-        <CheckCircleIcon className={classes.checkCircle} />
+        <CheckCircleOutlineIcon className={classes.checkCircle} />
         <Typography
           variant="h3"
           color="text.primary"

@@ -1,10 +1,6 @@
 import { useParsedQueryString } from "@icpswap/hooks";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { BigNumber } from "@icpswap/utils";
-import AddIcon from "@mui/icons-material/Add";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import RadioButtonCheckedOutlined from "@mui/icons-material/RadioButtonCheckedOutlined";
-import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
 import {
   AuthButton,
   Breadcrumbs,
@@ -16,6 +12,12 @@ import {
 } from "components/index";
 import { CardContent1120 } from "components/Layout/CardContent1120";
 import { Box, Checkbox, CircularProgress, Grid, InputAdornment, Typography } from "components/Mui";
+import {
+  AddIcon,
+  HighlightOffIcon,
+  RadioButtonCheckedOutlined,
+  RadioButtonUncheckedOutlinedIcon,
+} from "components/MuiIcon";
 import Upload, { type UploadRef } from "components/NFT/Upload";
 import RequiredMark from "components/RequiredMark";
 import { MAX_NFT_MINT_SUPPLY, NFT_UPLOAD_FILES } from "constants/index";

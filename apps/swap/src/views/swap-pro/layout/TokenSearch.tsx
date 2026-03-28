@@ -4,7 +4,6 @@ import type { IcpSwapAPITokenInfo, InfoTokenRealTimeDataResponse, Null } from "@
 import { NoData, Proportion } from "@icpswap/ui";
 import { BigNumber, formatDollarTokenPrice, isValidPrincipal, nonUndefinedOrNull, shortenString } from "@icpswap/utils";
 import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
-import { ReactComponent as HotIcon } from "assets/icons/swap-pro/hot.svg";
 import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
 import { FilledTextField, TokenImage } from "components/index";
@@ -271,7 +270,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                   },
                 }}
               >
-                <HotIcon />
+                <img src="/images/swap-pro/hot.svg" alt="" />
                 <Typography color="text.primary">{t("swap.hot.tokens.colon")}</Typography>
               </Box>
 

@@ -1,11 +1,10 @@
 import { useLoadingCallData } from "@icpswap/hooks";
 import { BigNumber, isUndefinedOrNull, isValidUrl, numberToString, parseTokenAmount } from "@icpswap/utils";
-import AddIcon from "@mui/icons-material/Add";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import FilledTextField, { FilledTextFieldLabel, type FilledTextFiledMenus } from "components/Input/FilledTextField";
 import { AuthButton, Breadcrumbs, MainCard } from "components/index";
 import { CardContent1120 } from "components/Layout/CardContent1120";
 import { Box, Grid, InputAdornment, Typography } from "components/Mui";
+import { AddIcon, HighlightOffIcon } from "components/MuiIcon";
 import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
 import Upload, { type UploadRef } from "components/NFT/Upload";
 import { MuiSlider } from "components/Slider/MuiSlider/Marks";
