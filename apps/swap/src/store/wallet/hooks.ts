@@ -21,12 +21,6 @@ import type { BitcoinTx } from "types/ckBTC";
 import type { SortBalanceEnum, WalletSortType } from "types/index";
 import { isBitcoinDissolveEnded } from "utils/web3/ck-bridge";
 
-export function toHexString(byteArray: number[]) {
-  return Array.from(byteArray, (byte) => {
-    return `0${(byte & 0xff).toString(16)}`.slice(-2);
-  }).join("");
-}
-
 export function useRemovedWalletDefaultTokens() {
   return useAppSelector((state) => state.wallet.removedWalletDefaultTokens);
 }

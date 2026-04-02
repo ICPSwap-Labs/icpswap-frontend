@@ -32,7 +32,6 @@ export * from "./ObserverWrapper";
 export * from "./ReclaimTips";
 export * from "./ScrollTop";
 export * from "./Select";
-export { SelectToken } from "./Select/SelectToken";
 export { default as StepViewButton } from "./Steps/View";
 export { default as FindPositionsModal } from "./swap/FindPositions";
 export { default as Switch } from "./switch";

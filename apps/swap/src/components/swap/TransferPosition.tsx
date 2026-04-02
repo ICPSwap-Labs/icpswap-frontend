@@ -1,6 +1,12 @@
 import { Principal } from "@icp-sdk/core/principal";
 import { swapPool } from "@icpswap/actor";
-import { CurrencyAmount, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
+import {
+  CurrencyAmount,
+  formatTickPrice,
+  getPriceOrderingFromPositionForUI,
+  type Position,
+  useInverter,
+} from "@icpswap/swap-sdk";
 import { ResultStatus } from "@icpswap/types";
 import { Modal } from "@icpswap/ui";
 import {
@@ -29,7 +35,6 @@ import { useTranslation } from "react-i18next";
 import { isElement } from "react-is";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isDarkTheme } from "utils/index";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { feeAmountToPercentage, type PositionState } from "utils/swap/index";
 
 const useStyle = makeStyles((theme: Theme) => ({

@@ -1,4 +1,4 @@
-import type { Position, Token } from "@icpswap/swap-sdk";
+import { formatTickPrice, type Position, type Token } from "@icpswap/swap-sdk";
 import { Flex, Modal } from "@icpswap/ui";
 import { Button, CircularProgress, Typography } from "components/Mui";
 import { SyncAltIcon } from "components/MuiIcon";
@@ -6,7 +6,6 @@ import { Bound } from "constants/swap";
 import { useTicksAtLimitInvert } from "hooks/swap/usePriceInvert";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
 
 export interface AddLiquidityConfirmModalProps {
   open: boolean;

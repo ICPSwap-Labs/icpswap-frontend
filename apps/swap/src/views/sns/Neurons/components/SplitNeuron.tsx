@@ -1,3 +1,4 @@
+import { uint8ArrayToBigInt } from "@dfinity/utils";
 import { splitNeuron } from "@icpswap/hooks";
 import type { Token } from "@icpswap/swap-sdk";
 import type { NervousSystemParameters } from "@icpswap/types";
@@ -7,15 +8,13 @@ import {
   formatTokenAmount,
   parseTokenAmount,
   toSignificantWithGroupSeparator,
-  uint8ArrayToBigInt,
 } from "@icpswap/utils";
 import { MaxButton, Modal, NumberFilledTextField } from "components/index";
 import { Box, Button, CircularProgress, Grid, InputAdornment, Typography } from "components/Mui";
 import { useUSDPriceById } from "hooks/index";
 import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
-import randomBytes from "randombytes";
 import type React from "react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface SplitNeuronProps {
@@ -54,13 +53,13 @@ export function SplitNeuron({
     return neuronSystemParameters.neuron_minimum_stake_e8s[0];
   }, [neuronSystemParameters]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (loading || !amount || !token || !governance_id || !neuron_id) return;
 
     setLoading(true);
     openFullscreenLoading();
 
-    const nonceBytes = new Uint8Array(randomBytes(8));
+    const nonceBytes = crypto.getRandomValues(new Uint8Array(8));
     const memo = uint8ArrayToBigInt(nonceBytes);
 
     const { data, message, status } = await splitNeuron(
@@ -75,32 +74,48 @@ export function SplitNeuron({
 
     if (status === "ok") {
       if (!split_neuron_error) {
-        openTip(t`Split successfully`, TIP_SUCCESS);
+        openTip(t("nns.split.neuron.success"), TIP_SUCCESS);
         if (onSplitSuccess) onSplitSuccess();
       } else {
         const message = split_neuron_error.error_message;
-        openTip(message !== "" ? message : t`Failed to split`, TIP_ERROR);
+        openTip(message !== "" ? message : t("nns.split.neuron.failed"), TIP_ERROR);
       }
     } else {
-      openTip(message ?? t`Failed to split`, TIP_ERROR);
+      openTip(message ?? t("nns.split.neuron.failed"), TIP_ERROR);
     }
 
     setLoading(false);
     closeFullscreenLoading();
-  };
+  }, [
+    amount,
+    governance_id,
+    neuron_id,
+    token,
+    loading,
+    openFullscreenLoading,
+    closeFullscreenLoading,
+    openTip,
+    t,
+    onSplitSuccess,
+  ]);
 
-  const handleMax = (event: React.MouseEvent<HTMLParagraphElement>) => {
-    event.stopPropagation();
+  const handleMax = useCallback(
+    (event: React.MouseEvent<HTMLParagraphElement>) => {
+      event.stopPropagation();
 
-    if (!token || !neuron_minimum_stake) return;
+      if (!token || !neuron_minimum_stake) return;
 
-    setAmount(
-      parseTokenAmount(
-        new BigNumber(neuron_stake.toString()).minus(neuron_minimum_stake.toString()).minus(token.transFee.toString()),
-        token.decimals,
-      ).toString(),
-    );
-  };
+      setAmount(
+        parseTokenAmount(
+          new BigNumber(neuron_stake.toString())
+            .minus(neuron_minimum_stake.toString())
+            .minus(token.transFee.toString()),
+          token.decimals,
+        ).toString(),
+      );
+    },
+    [neuron_stake, neuron_minimum_stake, token],
+  );
 
   let error: string | undefined;
 

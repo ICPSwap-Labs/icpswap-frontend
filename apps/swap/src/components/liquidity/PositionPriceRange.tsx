@@ -1,10 +1,9 @@
-import { getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
+import { formatTickPrice, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
 import { SyncAltIcon } from "components/MuiIcon";
 import { Bound } from "constants/swap";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { useMemo, useState } from "react";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PositionPriceRangeProps {

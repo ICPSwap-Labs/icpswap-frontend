@@ -1,20 +1,20 @@
+import { uint8ArrayToBigInt } from "@dfinity/utils";
 import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { memoToNeuronSubaccount } from "@icp-sdk/canisters/nns";
 import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
 import type { Token } from "@icpswap/swap-sdk";
 import type { NervousSystemParameters } from "@icpswap/types";
-import { BigNumber, formatDollarAmount, formatTokenAmount, parseTokenAmount, uint8ArrayToBigInt } from "@icpswap/utils";
+import { BigNumber, formatDollarAmount, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
 import { MaxButton, Modal, NumberFilledTextField } from "components/index";
 import { Box, Button, CircularProgress, InputAdornment, Typography } from "components/Mui";
 import { useUSDPriceById } from "hooks/index";
 import { useTokenBalance } from "hooks/token";
 import { tokenTransfer } from "hooks/token/calls";
 import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
-import randomBytes from "randombytes";
 import type React from "react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { buildNeuronStakeSubAccount } from "utils/sns/neurons";
 
 export interface StakeProps {
   onStakeSuccess?: () => void;
@@ -54,8 +54,9 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
     setLoading(true);
     openFullscreenLoading();
 
-    const nonceBytes = new Uint8Array(randomBytes(8));
-    const subaccount = buildNeuronStakeSubAccount(nonceBytes, principal);
+    const nonceBytes = crypto.getRandomValues(new Uint8Array(8));
+    const nonceBigint = uint8ArrayToBigInt(nonceBytes);
+    const subaccount = memoToNeuronSubaccount({ controller: principal, memo: nonceBigint });
 
     const { message, status } = await tokenTransfer({
       canisterId: token.address,
@@ -68,8 +69,7 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
 
     if (status === "ok") {
       const refreshSub = SubAccount.fromPrincipal(principal);
-      const memo = uint8ArrayToBigInt(nonceBytes);
-      const { status, message, data } = await claimOrRefreshNeuronFromAccount(governance_id, principal, memo, [
+      const { status, message, data } = await claimOrRefreshNeuronFromAccount(governance_id, principal, nonceBigint, [
         ...refreshSub.toUint8Array(),
       ]);
 

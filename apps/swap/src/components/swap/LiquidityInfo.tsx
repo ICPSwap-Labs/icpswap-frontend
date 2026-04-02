@@ -1,4 +1,4 @@
-import { getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
+import { formatTickPrice, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/Image/Token";
 import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
 import { SyncAltIcon } from "components/MuiIcon";
@@ -8,7 +8,6 @@ import { usePositionState } from "hooks/liquidity";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
 
 const useStyle = makeStyles((theme: Theme) => ({
   NFTBox: {

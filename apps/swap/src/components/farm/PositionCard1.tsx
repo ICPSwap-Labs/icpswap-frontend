@@ -1,11 +1,10 @@
-import { getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
+import { formatTickPrice, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { Flex, MainCard } from "@icpswap/ui";
 import { Typography } from "components/Mui";
 import { Bound } from "constants/swap";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
 
 import PositionRangeState from "./PositionState";
 

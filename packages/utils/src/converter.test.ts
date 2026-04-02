@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { asciiStringToByteArray, hexToBytes, toHexString } from "./converter";
+import { hexToBytes, toHexString } from "./converter";
 
 describe("converter", () => {
   describe("hexToBytes", () => {
@@ -13,12 +13,6 @@ describe("converter", () => {
     it("converts bytes to hex string", () => {
       expect(toHexString([255, 1, 2])).toBe("ff0102");
       expect(toHexString(new Uint8Array([10, 16]))).toBe("0a10");
-    });
-  });
-
-  describe("asciiStringToByteArray", () => {
-    it("converts string to byte array", () => {
-      expect(asciiStringToByteArray("AB")).toEqual([65, 66]);
     });
   });
 });

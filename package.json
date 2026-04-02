@@ -10,10 +10,10 @@
     "build:swap": "node ./scripts/prepare.cjs && turbo run build --filter=swap --no-cache --force",
     "build:packages": "turbo run build --filter={./packages/*} --no-cache --force",
     "clean": "turbo run clean && rm -rf node_modules",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "prepare": "node ./scripts/prepare.cjs",
     "lint": "biome check .",
-    "lint:fix": "biome check --write ."
+    "lint:fix": "biome check --write .",
+    "test": "turbo run test --filter={./packages/*}"
   },
   "resolutions": {
     "@babel/runtime": "7.25.0",
@@ -21,7 +21,8 @@
     "@dfinity/auth-client": "2.1.2",
     "@dfinity/candid": "2.1.2",
     "@dfinity/identity": "2.1.2",
-    "@dfinity/principal": "2.1.2"
+    "@dfinity/principal": "2.1.2",
+    "zod": "3.23.8"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.8",
@@ -40,7 +41,6 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jsx-a11y": "^6.4.1",
-    "eslint-plugin-lodash": "^7.4.0",
     "eslint-plugin-prettier": "5.0.0",
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
@@ -88,5 +88,9 @@
   "engines": {
     "node": "22.x",
     "pnpm": ">=8.x"
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/**"
+  ]
 }

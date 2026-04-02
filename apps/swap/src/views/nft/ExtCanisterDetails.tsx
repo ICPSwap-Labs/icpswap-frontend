@@ -1,9 +1,8 @@
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import type { EXTCollection } from "@icpswap/types";
-import { makeStyles } from "@mui/styles";
 import Avatar from "components/Image/Avatar";
 import { Breadcrumbs, LoadingRow, MainCard, Wrapper } from "components/index";
-import { Box, Grid, type Theme, Typography } from "components/Mui";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
 import NFTList from "components/NFT/ext/NFTList";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
