@@ -1,31 +1,6 @@
-import { baseIndex, baseStorage } from "@icpswap/actor";
-import type { BaseTransaction, InfoTransactionResponse, Null, PageResponse, PaginationResult } from "@icpswap/types";
-import {
-  icpswap_fetch_get,
-  icpswap_info_fetch_get,
-  isUndefinedOrNull,
-  nonUndefinedOrNull,
-  resultFormat,
-} from "@icpswap/utils";
+import type { InfoTransactionResponse, Null, PageResponse } from "@icpswap/types";
+import { icpswap_fetch_get, icpswap_info_fetch_get, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
-
-export async function getBaseStorages() {
-  return resultFormat<string[]>(await (await baseIndex()).baseStorage()).data;
-}
-
-/**
- *
- * @param canisterId The baseStorage canister id
- * @param offset Start of data
- * @param limit Length of data
- * @param poolIds An array of pool ids, empty array will return all pools data
- * @returns
- */
-export async function getBaseTransactions(canisterId: string, offset: number, limit: number, poolIds: string[]) {
-  return resultFormat<PaginationResult<BaseTransaction>>(
-    await (await baseStorage(canisterId)).getBaseRecord(BigInt(offset), BigInt(limit), poolIds),
-  ).data;
-}
 
 interface GetSwapTransactionsProps {
   page: number;

@@ -1,23 +1,4 @@
-import type { PublicPoolOverView } from "@icpswap/candid";
-import type { Override } from "./global";
-
-export type {
-  BaseTransaction,
-  InfoTokenTransaction,
-  PoolOverview,
-  PoolStorageTransaction,
-  PositionTransaction,
-  PublicPoolChartDayData,
-  PublicPoolOverView,
-  PublicProtocolData,
-  PublicSwapChartDayData,
-  PublicTokenChartDayData,
-  PublicTokenOverview,
-  PublicTokenPricesData,
-  TokenPoolsInfo,
-  TvlChartDayData,
-  UserStorageTransaction,
-} from "@icpswap/candid";
+export type { PositionTransaction } from "@icpswap/candid";
 
 export type AllPoolsTVL = Array<[string, number]>;
 
@@ -36,11 +17,6 @@ export type InfoPriceChartData = {
   open: number;
   timestamp: bigint | undefined;
 };
-
-export type InfoPublicPoolWithTvl = Override<
-  PublicPoolOverView,
-  { tvlUSD: number; feeTier: bigint; volumeUSD: number; totalVolumeUSD: number; volume7D: number }
->;
 
 export enum VolumeWindow {
   daily,

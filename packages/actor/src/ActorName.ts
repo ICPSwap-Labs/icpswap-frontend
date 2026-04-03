@@ -50,8 +50,6 @@ export enum ActorName {
   V1TokenPool = "V1TokenPool",
   V1TokenPoolStorage = "V1TokenPoolStorage",
 
-  GlobalIndex = "GlobalIndex",
-  NodeIndex = "NodeIndex",
   BaseIndex = "BaseIndex",
 
   LiquidityLocks = "LiquidityLocks",

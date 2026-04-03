@@ -3,8 +3,7 @@ import type { Null } from "@icpswap/types";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { isUndefinedOrNull, mockALinkAndOpen } from "@icpswap/utils";
 import { Button, CircularProgress } from "components/Mui";
-import { useDownloadSwapTransactions } from "hooks/info/swap/index";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { Download } from "react-feather";
 import { useTranslation } from "react-i18next";
 
@@ -18,8 +17,6 @@ interface SwapTransactionsProps {
 export function __SwapTransactions({ pair, principal, startTime, endTime }: SwapTransactionsProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
-
-  const { abort } = useDownloadSwapTransactions();
 
   const handleDownload = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(startTime) || isUndefinedOrNull(endTime)) return;
@@ -36,11 +33,6 @@ export function __SwapTransactions({ pair, principal, startTime, endTime }: Swap
 
     setLoading(false);
   }, [principal, pair, startTime, endTime]);
-
-  //biome-ignore lint: abort the elder calls when principal and pair is changed
-  useEffect(() => {
-    abort(true);
-  }, [abort, principal]);
 
   const disabled = useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(startTime) || isUndefinedOrNull(endTime)) return true;

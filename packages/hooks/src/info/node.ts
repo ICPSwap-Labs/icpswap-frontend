@@ -1,6 +1,5 @@
-import { node_index } from "@icpswap/actor";
 import type { InfoPoolRealTimeDataResponse, InfoTokenRealTimeDataResponse, Null } from "@icpswap/types";
-import { icpswap_info_fetch_get, resultFormat } from "@icpswap/utils";
+import { icpswap_info_fetch_get } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getNodeInfoAllPools() {
@@ -43,24 +42,5 @@ export function useInfoTokenPools(
       return await getInfoTokenPools(tokenId);
     },
     enabled: !!tokenId,
-  });
-}
-
-export async function getInfoTokenStorageIds(token: string) {
-  return resultFormat<string[]>(await (await node_index()).tokenStorage(token)).data;
-}
-
-export async function getInfoUserStorageIds(principal: string) {
-  return resultFormat<string[]>(await (await node_index()).userStorage(principal)).data;
-}
-
-export function useInfoUserStorageIds(principal: string | Null): UseQueryResult<string[] | undefined, Error> {
-  return useQuery({
-    queryKey: ["useInfoUserStorageIds", principal],
-    queryFn: async () => {
-      if (!principal) return undefined;
-      return await getInfoUserStorageIds(principal!);
-    },
-    enabled: !!principal,
   });
 }

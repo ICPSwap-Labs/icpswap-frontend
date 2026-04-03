@@ -30,6 +30,5 @@ export * from "./usePoolTransactions";
 export * from "./usePrevious";
 export * from "./usePromisesAwait";
 export * from "./useSetTimeout";
-export * from "./useTokenPriceChart";
 export * from "./useTransactionExplorerLink";
 export * from "./useTransformedVolumeData";

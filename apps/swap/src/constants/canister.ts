@@ -55,9 +55,6 @@ export const CANISTER_NAMES = {
   FarmController: "FarmController",
   StakingTokenController: "StakingTokenController",
   StakeIndex: "StakeIndex",
-
-  NodeIndex: "node_index",
-  GlobalIndex: "global_index",
 };
 
 export const fileCanisterId = getCanisterId(CANISTER_NAMES.FILE);
@@ -69,8 +66,6 @@ export const ClaimStorageId = getCanisterId(CANISTER_NAMES.ClaimStorage);
 export const NFTTradeTokenCanisterId = WICPCanisterId;
 export const V3SwapNFTCanisterId = getCanisterId(CANISTER_NAMES.V3SwapNFT);
 export const FarmControllerId = getCanisterId(CANISTER_NAMES.FarmController);
-export const NodeIndexId = getCanisterId(CANISTER_NAMES.NodeIndex);
-export const GlobalId = getCanisterId(CANISTER_NAMES.GlobalIndex);
 export const PassCodeManagerId = getCanisterId(CANISTER_NAMES.PassCodeManager);
 
 Actor.setActorCanisterIds(canisterIds);
