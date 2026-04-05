@@ -267,6 +267,9 @@ importers:
       '@nfid/identitykit':
         specifier: 1.0.7
         version: 1.0.7(3f763cb6e4a0e03118d1252c7cb582eb)
+      '@noble/hashes':
+        specifier: ^1.8.0
+        version: 1.8.0
       '@reduxjs/toolkit':
         specifier: ^1.9.7
         version: 1.9.7(react-redux@8.0.5(@types/react-dom@18.2.0)(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.2(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react@18.2.0)
@@ -336,9 +339,6 @@ importers:
       ic-stoic-identity:
         specifier: 6.0.0
         version: 6.0.0(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@peculiar/webcrypto@1.5.0)
-      js-sha256:
-        specifier: ^0.9.0
-        version: 0.9.0
       lint-staged:
         specifier: ^15.2.10
         version: 15.2.10
@@ -12194,7 +12194,7 @@ snapshots:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
       '@dfinity/principal': 2.1.2
       '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.8.0
       '@peculiar/webcrypto': 1.5.0
       borc: 2.1.2
 
@@ -12218,7 +12218,7 @@ snapshots:
       '@dfinity/nns-proto': 1.0.2
       '@dfinity/principal': 2.1.2
       '@dfinity/utils': 4.2.0(@icp-sdk/core@5.2.0)
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.8.0
       randombytes: 2.1.0
 
   '@dfinity/principal@2.1.2':
@@ -16115,7 +16115,7 @@ snapshots:
 
   bip39@3.1.0:
     dependencies:
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.8.0
 
   bitcoin-address-validation@2.2.3:
     dependencies:
@@ -20029,7 +20029,7 @@ snapshots:
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.8.0
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
       abitype: 1.0.7(typescript@5.3.3)(zod@3.23.8)
@@ -22467,7 +22467,7 @@ snapshots:
   webauthn-p256@0.0.10:
     dependencies:
       '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.8.0
 
   webcrypto-core@1.8.1:
     dependencies:

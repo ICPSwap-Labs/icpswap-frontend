@@ -2,7 +2,7 @@ import type { RetrieveDogeStatus } from "@icpswap/candid";
 import { BridgeChainType } from "@icpswap/constants";
 import type { NumberType } from "@icpswap/types";
 import { parseTokenAmount } from "@icpswap/utils";
-import { sha256 } from "js-sha256";
+import { sha256 } from "@noble/hashes/sha2";
 import { DogeDissolveTxState } from "types/chain-key";
 import type { BridgeTransactionEvent, DogeTransactionEvent } from "types/web3";
 
@@ -50,8 +50,8 @@ export function isValidDogeAddress(address: string): boolean {
 
   const payload = decoded.slice(0, 21);
   const checksum = decoded.slice(21, 25);
-  const hash1 = new Uint8Array(sha256.arrayBuffer(payload));
-  const hash2 = new Uint8Array(sha256.arrayBuffer(hash1));
+  const hash1 = sha256(payload);
+  const hash2 = sha256(hash1);
   for (let i = 0; i < 4; i++) {
     if (hash2[i] !== checksum[i]) return false;
   }
