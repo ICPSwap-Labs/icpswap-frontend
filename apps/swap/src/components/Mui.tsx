@@ -1,4 +1,3 @@
-import type { Theme } from "@mui/material/styles";
 import createTheme from "@mui/material/styles/createTheme";
 import useMuiTheme from "@mui/styles/useTheme";
 
@@ -41,6 +40,23 @@ export { default as Typography, type TypographyProps } from "@mui/material/Typog
 export { default as useMediaQuery } from "@mui/material/useMediaQuery";
 export { default as makeStyles } from "@mui/styles/makeStyles";
 export { default as styled } from "@mui/styles/styled";
+
+interface Theme {
+  direction: string;
+  palette: any;
+  typography: any;
+  components: any;
+  themeOption: any;
+  colors: any;
+  fontSize: any;
+  customization: any;
+  radius: number;
+  breakpoints: any;
+  spacing: (sp: number) => string;
+  shadows: string[];
+  transitions: any;
+  textPrimary: string;
+}
 
 export function useTheme() {
   return useMuiTheme() as Theme;

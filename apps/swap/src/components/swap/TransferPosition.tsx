@@ -19,7 +19,7 @@ import {
 } from "@icpswap/utils";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { FilledTextField, Loading } from "components/index";
-import { Box, Button, Chip, Grid, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { Box, Button, Chip, Grid, Typography, useTheme } from "components/Mui";
 import { SyncAltIcon } from "components/MuiIcon";
 import { PositionRangeState } from "components/swap/index";
 import { CurrencyAmountFormatDecimals, DEFAULT_PERCENT_SYMBOL } from "constants/index";
@@ -36,34 +36,6 @@ import { isElement } from "react-is";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { isDarkTheme } from "utils/index";
 import { feeAmountToPercentage, type PositionState } from "utils/swap/index";
-
-const useStyle = makeStyles((theme: Theme) => ({
-  positionContainer: {
-    position: "relative",
-    backgroundColor: theme.palette.background.level3,
-    borderRadius: `${theme.radius}px`,
-    border: theme.palette.border.gray200,
-    padding: "24px 20px",
-    marginTop: "16px",
-    cursor: "pointer",
-    overflow: "hidden",
-    "&:first-child": {
-      marginTop: "0",
-    },
-    [theme.breakpoints.down("md")]: {
-      padding: "16px 10px",
-    },
-  },
-  detailContainer: {
-    backgroundColor: theme.palette.background.level3,
-    borderRadius: `${theme.radius}px`,
-    border: theme.palette.border.gray200,
-    padding: "20px",
-    [theme.breakpoints.down("md")]: {
-      padding: "10px",
-    },
-  },
-}));
 
 export interface PositionDetailItemProps {
   label: React.ReactChild;
@@ -118,8 +90,8 @@ export function PositionDetails({
   token1USDPrice,
   onPrincipalChange,
 }: PositionDetailsProps) {
+  const theme = useTheme();
   const { t } = useTranslation();
-  const classes = useStyle();
 
   const { pool, tickLower, tickUpper } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -168,8 +140,19 @@ export function PositionDetails({
 
   return (
     <Box
-      className={classes.detailContainer}
-      sx={{ display: show ? "flex" : "none", margin: "8px 0 0 0", gap: "20px 0", flexDirection: "column" }}
+      sx={{
+        display: show ? "flex" : "none",
+        margin: "8px 0 0 0",
+        gap: "20px 0",
+        flexDirection: "column",
+        backgroundColor: theme.palette.background.level3,
+        borderRadius: `${theme.radius}px`,
+        border: theme.palette.border.gray200,
+        padding: "20px",
+        [theme.breakpoints.down("md")]: {
+          padding: "10px",
+        },
+      }}
     >
       <PositionDetailItem label={t("common.position.id")} value={positionId.toString()} />
       <PositionDetailItem
@@ -338,8 +321,7 @@ export function TransferPosition({
   state,
 }: TransferPositionProps) {
   const { t } = useTranslation();
-  const classes = useStyle();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const userPrincipal = useAccountPrincipal();
 
@@ -427,7 +409,25 @@ export function TransferPosition({
 
   return (
     <Modal open={open} title={t`Transfer position`} onClose={onClose} background="level1">
-      <Grid className={classes.positionContainer} container>
+      <Grid
+        sx={{
+          position: "relative",
+          backgroundColor: theme.palette.background.level3,
+          borderRadius: `${theme.radius}px`,
+          border: theme.palette.border.gray200,
+          padding: "24px 20px",
+          marginTop: "16px",
+          cursor: "pointer",
+          overflow: "hidden",
+          "&:first-child": {
+            marginTop: "0",
+          },
+          [theme.breakpoints.down("md")]: {
+            padding: "16px 10px",
+          },
+        }}
+        container
+      >
         {!position && <Loading loading={!position} circularSize={28} />}
 
         <Grid item xs>

@@ -2,8 +2,9 @@ import type { Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
 import { ALink, MainCard, NoData } from "components/index";
-import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK, EXPLORER_TX_LINK } from "constants/ckETH";
 import dayjs from "dayjs";
 import { useEthereumConfirmations } from "hooks/ck-bridge/useEthereumConfirmations";
@@ -11,17 +12,6 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useErc20MintTxs, useEthTxResponse } from "store/web3/hooks";
 import type { TX } from "types/web3";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
 
 interface TransactionProps {
   transaction: TX;
@@ -31,7 +21,6 @@ interface TransactionProps {
 function Transaction({ token, transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
   const transactionResponse = useEthTxResponse(transaction.hash);
   const confirmations = useEthereumConfirmations(transactionResponse);
 
@@ -82,7 +71,7 @@ function Transaction({ token, transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             <ALink link={`${EXPLORER_TX_LINK}/${transaction.hash}`} color="secondary" textDecorationColor="secondary">
               {transaction.hash}
             </ALink>
@@ -91,7 +80,7 @@ function Transaction({ token, transaction }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.from")}</Typography>
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             {transactionResponse ? (
               <ALink
                 link={`${EXPLORER_ADDRESS_LINK}/${transactionResponse.from}`}
@@ -109,7 +98,7 @@ function Transaction({ token, transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.to")}</Typography>
 
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             {transactionResponse?.to ? (
               <ALink
                 link={`${EXPLORER_ADDRESS_LINK}/${transactionResponse.to}`}

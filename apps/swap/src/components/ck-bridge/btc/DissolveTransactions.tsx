@@ -1,22 +1,12 @@
 import { Flex } from "@icpswap/ui";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
 import { ALink, MainCard, NoData } from "components/index";
-import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
 import { useBitcoinDissolveTxs } from "store/wallet/hooks";
 import type { BitcoinTx } from "types/ckBTC";
 import { bitcoinTransactionExplorer } from "utils/chain-key/bitcoin";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
 
 interface TransactionProps {
   transaction: BitcoinTx;
@@ -25,7 +15,6 @@ interface TransactionProps {
 function Transaction({ transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
 
   return (
     <Box
@@ -52,7 +41,7 @@ function Transaction({ transaction }: TransactionProps) {
 
           <Typography component="div">
             {transaction.txid ? (
-              <Typography className={classes.txLink} component="div">
+              <Typography sx={txLinkTypographySx} component="div">
                 <ALink
                   link={bitcoinTransactionExplorer(transaction.txid)}
                   color="secondary"

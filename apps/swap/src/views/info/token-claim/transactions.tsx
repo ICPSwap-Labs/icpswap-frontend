@@ -3,31 +3,26 @@ import type { ClaimTransaction } from "@icpswap/types";
 import { BodyCell, Header, HeaderCell, LoadingRow, MainCard, NoData, Pagination, TableRow } from "@icpswap/ui";
 import { isPrincipalUser, pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
 import { Breadcrumbs, Copy, InfoWrapper } from "components/index";
-import { Box, makeStyles } from "components/Mui";
+import { Box } from "components/Mui";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { getClaimEventState } from "utils/info/token-claim";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      display: "grid",
-      gridTemplateColumns: "repeat(4, 1fr)",
-      padding: "16px",
-      alignItems: "center",
-      minWidth: "1152px",
-    },
-  };
-});
+const wrapperSx = {
+  display: "grid",
+  gridTemplateColumns: "repeat(4, 1fr)",
+  padding: "16px",
+  alignItems: "center",
+  minWidth: "1152px",
+};
 
 function ClaimEventTransaction({ ele }: { ele: ClaimTransaction }) {
-  const classes = useStyles();
   const state = getClaimEventState(ele);
   const address = isPrincipalUser(ele.claimUser) ? ele.claimUser.principal.toString() : ele.claimUser.address;
 
   return (
-    <TableRow className={classes.wrapper}>
+    <TableRow sx={wrapperSx}>
       <BodyCell>
         <Copy content={address}>
           <BodyCell color="primary.main">{shorten(address, 12)}</BodyCell>
@@ -44,7 +39,6 @@ function ClaimEventTransaction({ ele }: { ele: ClaimTransaction }) {
 
 export default function TokenClaimTransactions() {
   const { t } = useTranslation();
-  const classes = useStyles();
   const { id } = useParams<{ id: string }>();
 
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
@@ -68,7 +62,7 @@ export default function TokenClaimTransactions() {
       <Box mt="20px">
         <MainCard>
           <Box sx={{ overflow: "auto" }}>
-            <Header className={classes.wrapper}>
+            <Header sx={wrapperSx}>
               <HeaderCell>{t("common.address")}</HeaderCell>
               <HeaderCell>{t("common.token")}</HeaderCell>
               <HeaderCell>{t("claim.time")}</HeaderCell>

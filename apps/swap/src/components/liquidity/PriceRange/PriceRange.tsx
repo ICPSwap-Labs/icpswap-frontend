@@ -12,7 +12,7 @@ import { PriceRangeChartTimeButtons } from "components/liquidity/PriceRangeChart
 import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
 import { PriceRangeSelector } from "components/liquidity/PriceRangeSelector";
 import { RangeButton } from "components/liquidity/RangeButton";
-import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { TokenToggle } from "components/TokenToggle";
 import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import { Bound, type FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
@@ -20,42 +20,6 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { isDarkTheme } from "utils/index";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
-
-const useSetPriceStyle = makeStyles((theme: Theme) => {
-  return {
-    startPriceDescription: {
-      padding: "16px",
-      borderRadius: "12px",
-      border: `1px solid ${theme.colors.warningDark}`,
-      backgroundColor: theme.palette.background.level3,
-      ". description": {
-        color: theme.colors.warningDark,
-        fontSize: "12px",
-      },
-    },
-    startPrice: {
-      border: isDarkTheme(theme) ? "1px solid #29314F" : `1px solid ${theme.colors.lightGray200BorderColor}`,
-      background: isDarkTheme(theme) ? "transparent" : "#fff",
-      borderRadius: "12px",
-      height: "51px",
-      padding: "0 14px",
-    },
-    priceRangeInput: {
-      position: "relative",
-    },
-    fullRangeButton: {
-      borderRadius: "12px",
-      backgroundColor: isDarkTheme(theme) ? theme.colors.darkLevel1 : "#ffffff",
-      border: theme.palette.border.gray200,
-      color: isDarkTheme(theme) ? theme.palette.grey[700] : theme.colors.lightTextPrimary,
-      textTransform: "none",
-      "&:hover": {
-        backgroundColor: theme.palette.mode === "dark" ? theme.palette.dark.light + 20 : theme.palette.primary.light,
-        borderColor: theme.palette.mode === "dark" ? "#29314F" : theme.palette.grey[100],
-      },
-    },
-  };
-});
 
 const RANGE_BUTTONS = [
   { value: "5", text: "± 5%" },
@@ -118,7 +82,6 @@ export const PriceRange = memo(
   }: PriceRangeProps) => {
     const { t } = useTranslation();
     const theme = useTheme();
-    const classes = useSetPriceStyle();
     const { data: periodPriceRange } = usePoolPricePeriodRange(pool?.id);
 
     const [chartTime, setChartTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
@@ -222,7 +185,18 @@ export const PriceRange = memo(
               {t("liquidity.set.price")}
             </Typography>
             <Box mt={2}>
-              <Box className={classes.startPriceDescription}>
+              <Box
+                sx={{
+                  padding: "16px",
+                  borderRadius: "12px",
+                  border: `1px solid ${theme.colors.warningDark}`,
+                  backgroundColor: theme.palette.background.level3,
+                  ". description": {
+                    color: theme.colors.warningDark,
+                    fontSize: "12px",
+                  },
+                }}
+              >
                 <Typography color={theme.colors.warningDark} fontSize={12} lineHeight="16px">
                   {t("liquidity.set.price.description")}
                 </Typography>
@@ -242,7 +216,19 @@ export const PriceRange = memo(
                   onChange={(e) => onStartPriceInput(e.target.value)}
                 />
               </Box>
-              <Flex sx={{ margin: "16px 0" }} className={classes.startPrice} justify="space-between">
+              <Flex
+                sx={{
+                  margin: "16px 0",
+                  border: isDarkTheme(theme)
+                    ? "1px solid #29314F"
+                    : `1px solid ${theme.colors.lightGray200BorderColor}`,
+                  background: isDarkTheme(theme) ? "transparent" : "#fff",
+                  borderRadius: "12px",
+                  height: "51px",
+                  padding: "0 14px",
+                }}
+                justify="space-between"
+              >
                 <Typography sx={{ marginRight: "8px" }}>
                   {t("liquidity.current.token.price", {
                     symbol: tokenSymbolEllipsis({ symbol: baseCurrency?.symbol }),
@@ -327,7 +313,7 @@ export const PriceRange = memo(
               </Box>
             )}
 
-            <Box mt={4} className={classes.priceRangeInput}>
+            <Box mt={4} sx={{ position: "relative" }}>
               <Box
                 sx={{
                   opacity: fullRangeShow ? 0.05 : 1,

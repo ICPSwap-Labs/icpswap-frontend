@@ -1,7 +1,7 @@
 import { BodyCell, Header, HeaderCell, ImageLoading, NoData, Pagination, TableRow } from "@icpswap/ui";
 import { pageArgsFormat, parseTokenAmount, shorten, timestampFormat } from "@icpswap/utils";
 import Copy from "components/Copy";
-import { Box, makeStyles } from "components/Mui";
+import { Box } from "components/Mui";
 import { WRAPPED_ICP } from "constants/index";
 import { useTradeTxList } from "hooks/nft/trade";
 import upperFirst from "lodash/upperFirst";
@@ -9,17 +9,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { TxRecord } from "types/index";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      display: "grid",
-      gridTemplateColumns: "1.5fr 1.5fr 1.5fr 1fr 1fr",
-    },
-  };
-});
+const wrapperSx = {
+  display: "grid",
+  gridTemplateColumns: "1.5fr 1.5fr 1.5fr 1fr 1fr",
+};
 
 export default function NFTActivity({ canisterId, tokenId }: { canisterId: string; tokenId: number }) {
-  const classes = useStyles();
   const { t } = useTranslation();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
@@ -47,7 +42,7 @@ export default function NFTActivity({ canisterId, tokenId }: { canisterId: strin
     <>
       <Box sx={{ overflow: "auto", width: "100%" }}>
         <Box sx={{ width: "100%", minWidth: "960px" }}>
-          <Header className={classes.wrapper}>
+          <Header sx={wrapperSx}>
             <HeaderCell>{t("common.time")}</HeaderCell>
             <HeaderCell>{t("common.seller")}</HeaderCell>
             <HeaderCell>{t("common.buyer")}</HeaderCell>
@@ -56,7 +51,7 @@ export default function NFTActivity({ canisterId, tokenId }: { canisterId: strin
           </Header>
 
           {content.map((record, index) => (
-            <TableRow key={`${Number(record.hash)}_${index}`} className={classes.wrapper}>
+            <TableRow key={`${Number(record.hash)}_${index}`} sx={wrapperSx}>
               <BodyCell>{timestampFormat(record.time)}</BodyCell>
 
               <Copy content={record.seller}>

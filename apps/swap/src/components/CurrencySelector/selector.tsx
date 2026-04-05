@@ -6,7 +6,7 @@ import { BaseTokens } from "components/CurrencySelector/BaseToken";
 import { TokenItem } from "components/CurrencySelector/TokenItem";
 import { ImportToken } from "components/ImportToken/index";
 import { FilledTextField, NoData } from "components/index";
-import { Box, InputAdornment, makeStyles, Typography, useTheme } from "components/Mui";
+import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
 import { DEFAULT_DISPLAYED_TOKENS } from "constants/wallet";
 import { useMediaQuerySM } from "hooks/theme";
 import { useCallback, useMemo, useState } from "react";
@@ -19,16 +19,12 @@ import type { TokenListMetadata } from "types/token-list";
 import { isDarkTheme } from "utils/index";
 import { getNnsRootId } from "utils/sns/utils";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      padding: "0 24px",
-      "@media(max-width: 640px)": {
-        padding: "0 16px",
-      },
-    },
-  };
-});
+const wrapperSx = {
+  padding: "0 24px",
+  "@media(max-width: 640px)": {
+    padding: "0 16px",
+  },
+};
 
 export interface SelectorProps {
   open: boolean;
@@ -48,7 +44,6 @@ export default function Selector({
   const { t } = useTranslation();
   const theme = useTheme();
   const isDark = isDarkTheme(theme);
-  const classes = useStyles();
 
   const matchDownSM = useMediaQuerySM();
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -214,14 +209,14 @@ export default function Selector({
           {noData ? <NoData /> : null}
 
           {showImportToken && searchKeyword && isValidPrincipal(searchKeyword) && !importTokenCanceled ? (
-            <Box className={classes.wrapper}>
+            <Box sx={wrapperSx}>
               <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
             </Box>
           ) : null}
 
           <Box>
             {searchKeyword ? null : (
-              <Box className={classes.wrapper}>
+              <Box sx={wrapperSx}>
                 <Typography fontSize="16px">{t("swap.currency.selector.your.tokens")}</Typography>
               </Box>
             )}
@@ -244,14 +239,14 @@ export default function Selector({
 
           <Box mt={searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
             {searchKeyword || (snsTokens ?? []).concat(noneSnsTokens ?? []).length === 0 ? null : (
-              <Typography className={classes.wrapper} fontSize="16px">
+              <Typography sx={wrapperSx} fontSize="16px">
                 {t("common.token.list")}
               </Typography>
             )}
 
             <Box mt={searchKeyword || (snsTokens ?? []).length === 0 ? "0px" : "16px"}>
               {searchKeyword || (snsTokens ?? []).length === 0 ? null : (
-                <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
+                <Typography sx={wrapperSx} fontSize="12px" fontWeight={500}>
                   {t("common.sns.tokens")}
                 </Typography>
               )}
@@ -273,7 +268,7 @@ export default function Selector({
 
             <Box mt={searchKeyword || (noneSnsTokens ?? []).length === 0 ? "0px" : "16px"}>
               {searchKeyword || (noneSnsTokens ?? []).length === 0 ? null : (
-                <Typography className={classes.wrapper} fontSize="12px" fontWeight={500}>
+                <Typography sx={wrapperSx} fontSize="12px" fontWeight={500}>
                   {t("common.other.tokens")}
                 </Typography>
               )}

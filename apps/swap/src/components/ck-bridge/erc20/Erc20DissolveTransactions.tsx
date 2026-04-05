@@ -3,25 +3,15 @@ import type { Token } from "@icpswap/swap-sdk";
 import type { ChainKeyETHMinterInfo, WithdrawalDetail } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
 import { ALink, MainCard, NoData } from "components/index";
-import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { EXPLORER_ADDRESS_LINK, EXPLORER_TX_LINK, MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
 import { useToken } from "hooks/index";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
 
 interface TransactionProps {
   transaction: WithdrawalDetail;
@@ -31,7 +21,6 @@ interface TransactionProps {
 function Transaction({ transaction, minterInfo }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
   const { state, hash } = formatWithdrawalStatus(transaction.status);
 
   const { ledger_id } = useMemo(() => {
@@ -79,7 +68,7 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
 
           <Typography component="div">
             {hash ? (
-              <Typography className={classes.txLink} component="div">
+              <Typography sx={txLinkTypographySx} component="div">
                 <ALink
                   link={`${EXPLORER_TX_LINK}/${hash}`}
                   color="secondary"
@@ -112,13 +101,13 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.from")}</Typography>
-          <Typography className={classes.txLink}>{transaction.from.toString()}</Typography>
+          <Typography sx={txLinkTypographySx}>{transaction.from.toString()}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.recipient")}</Typography>
 
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             <ALink
               link={`${EXPLORER_ADDRESS_LINK}/${transaction.recipient_address}`}
               color="secondary"

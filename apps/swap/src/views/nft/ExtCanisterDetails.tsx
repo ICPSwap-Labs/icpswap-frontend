@@ -2,65 +2,12 @@ import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
 import type { EXTCollection } from "@icpswap/types";
 import Avatar from "components/Image/Avatar";
 import { Breadcrumbs, LoadingRow, MainCard, Wrapper } from "components/index";
-import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { Box, Grid, Typography, useTheme } from "components/Mui";
 import NFTList from "components/NFT/ext/NFTList";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { useAccountPrincipalString } from "store/auth/hooks";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  infoCard: {
-    display: "inline-block",
-    background: theme.palette.background.level4,
-    borderRadius: "12px",
-    padding: "20px",
-  },
-
-  wrapper: {
-    background: theme.palette.background.level2,
-    padding: "30px",
-    borderRadius: "12px",
-    display: "grid",
-    gridTemplateColumns: "85px auto fit-content(260px)",
-    [theme.breakpoints.down("md")]: {
-      gridTemplateColumns: "1fr",
-      padding: "10px",
-    },
-  },
-
-  content: {
-    paddingLeft: "30px",
-    [theme.breakpoints.down("md")]: {
-      paddingLeft: "0px",
-      marginTop: "10px",
-    },
-  },
-
-  name: {
-    fontSize: "28px",
-    fontWeight: "700",
-    color: theme.palette.text.primary,
-    [theme.breakpoints.down("md")]: {
-      fontSize: "18px",
-      fontWeight: "500",
-    },
-  },
-
-  description: {
-    maxWidth: "80%",
-    width: "100%",
-    [theme.breakpoints.down("md")]: {
-      maxWidth: "100%",
-    },
-  },
-
-  button: {
-    [theme.breakpoints.down("md")]: {
-      marginTop: "10px",
-    },
-  },
-}));
 
 export interface NFTCanisterHeaderProps {
   collection: EXTCollection | undefined;
@@ -70,7 +17,7 @@ export interface NFTCanisterHeaderProps {
 
 export function CanisterHeader({ collection, count, loading }: NFTCanisterHeaderProps) {
   const { t } = useTranslation();
-  const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <>
@@ -86,7 +33,19 @@ export function CanisterHeader({ collection, count, loading }: NFTCanisterHeader
           <div />
         </LoadingRow>
       ) : (
-        <Box className={classes.wrapper}>
+        <Box
+          sx={{
+            background: theme.palette.background.level2,
+            padding: "30px",
+            borderRadius: "12px",
+            display: "grid",
+            gridTemplateColumns: "85px auto fit-content(260px)",
+            [theme.breakpoints.down("md")]: {
+              gridTemplateColumns: "1fr",
+              padding: "10px",
+            },
+          }}
+        >
           <Avatar
             src={collection.avatar}
             sx={{
@@ -95,8 +54,28 @@ export function CanisterHeader({ collection, count, loading }: NFTCanisterHeader
             }}
           />
 
-          <Box className={classes.content}>
-            <Typography className={classes.name}>{collection.name}</Typography>
+          <Box
+            sx={{
+              paddingLeft: "30px",
+              [theme.breakpoints.down("md")]: {
+                paddingLeft: "0px",
+                marginTop: "10px",
+              },
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "28px",
+                fontWeight: "700",
+                color: theme.palette.text.primary,
+                [theme.breakpoints.down("md")]: {
+                  fontSize: "18px",
+                  fontWeight: "500",
+                },
+              }}
+            >
+              {collection.name}
+            </Typography>
 
             <Box mt="20px">
               <Grid sx={{ width: "100%" }} container alignItems="center">
@@ -108,14 +87,36 @@ export function CanisterHeader({ collection, count, loading }: NFTCanisterHeader
             </Box>
 
             <Box mt={1}>
-              <Typography color="text.tertiary" className={classes.description}>
+              <Typography
+                color="text.tertiary"
+                sx={{
+                  maxWidth: "80%",
+                  width: "100%",
+                  [theme.breakpoints.down("md")]: {
+                    maxWidth: "100%",
+                  },
+                }}
+              >
                 {collection.description}
               </Typography>
             </Box>
           </Box>
 
-          <Box className={classes.button}>
-            <Box className={classes.infoCard}>
+          <Box
+            sx={{
+              [theme.breakpoints.down("md")]: {
+                marginTop: "10px",
+              },
+            }}
+          >
+            <Box
+              sx={{
+                display: "inline-block",
+                background: theme.palette.background.level4,
+                borderRadius: "12px",
+                padding: "20px",
+              }}
+            >
               <Typography color="text.primary" fontWeight={700} fontSize="18px" align="center">
                 {Number(count)}
               </Typography>

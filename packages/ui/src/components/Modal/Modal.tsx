@@ -17,9 +17,6 @@ import {
 } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  titleContainer: {
-    position: "relative",
-  },
   title: {
     fontSize: "20px",
     fontWeight: 700,
@@ -29,13 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     "&.warning": {
       color: "#D3625B",
     },
-  },
-  detailItem: {
-    marginBottom: "24px",
-  },
-  value: {
-    textAlign: "right",
-    wordBreak: "break-all",
   },
   closeButton: {
     position: "absolute",

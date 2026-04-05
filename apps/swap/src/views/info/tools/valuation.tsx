@@ -20,7 +20,7 @@ import {
   toSignificant,
 } from "@icpswap/utils";
 import { FilledTextField, InfoWrapper, TokenImage } from "components/index";
-import { Box, Link, makeStyles, Typography, useTheme } from "components/Mui";
+import { Box, Link, Typography, useTheme } from "components/Mui";
 import { useTokensInfo } from "hooks/token";
 import { useUSDPriceById } from "hooks/useUSDPrice";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -29,18 +29,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getAllTokens } from "store/allTokens";
 import type { TokenInfo } from "types/token";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      gap: "1em",
-      alignItems: "center",
-      gridTemplateColumns: "1fr repeat(3, 1fr)",
-      "@media screen and (max-width: 780px)": {
-        gridTemplateColumns: "1fr repeat(3, 1fr)",
-      },
-    },
-  };
-});
+const wrapperSx = {
+  gap: "1em",
+  alignItems: "center",
+  gridTemplateColumns: "1fr repeat(3, 1fr)",
+  "@media screen and (max-width: 780px)": {
+    gridTemplateColumns: "1fr repeat(3, 1fr)",
+  },
+};
 
 interface UserTokenBalanceProps {
   balance: bigint | undefined;
@@ -58,7 +54,6 @@ function UserTokenBalance({
   onUpdateUSDValues,
 }: UserTokenBalanceProps) {
   const theme = useTheme();
-  const classes = useStyles();
   const tokenUSDPrice = useUSDPriceById(tokenInfo.canisterId);
 
   useEffect(() => {
@@ -72,8 +67,10 @@ function UserTokenBalance({
 
   return (
     <TableRow
-      className={classes.wrapper}
-      sx={{ display: displayTokenInList && !!tokenList && !tokenList.includes(tokenInfo.canisterId) ? "none" : "grid" }}
+      sx={{
+        display: displayTokenInList && !!tokenList && !tokenList.includes(tokenInfo.canisterId) ? "none" : "grid",
+        ...wrapperSx,
+      }}
       borderBottom={`1px solid ${theme.palette.border.level1}`}
     >
       <BodyCell>
@@ -113,7 +110,6 @@ function UserTokenBalance({
 
 export default function SwapScanValuation() {
   const { t } = useTranslation();
-  const classes = useStyles();
   const theme = useTheme();
   const { principal } = useParsedQueryString() as { principal: string };
   const navigate = useNavigate();
@@ -310,11 +306,7 @@ export default function SwapScanValuation() {
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
           <Box sx={{ minWidth: "840px" }}>
-            <Header
-              className={classes.wrapper}
-              borderBottom={`1px solid ${theme.palette.border.level1}`}
-              sx={{ display: "grid" }}
-            >
+            <Header borderBottom={`1px solid ${theme.palette.border.level1}`} sx={{ display: "grid", ...wrapperSx }}>
               <HeaderCell>{t("common.token")}</HeaderCell>
 
               <HeaderCell field="usdValue">{t("common.value")}</HeaderCell>

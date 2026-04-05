@@ -1,28 +1,29 @@
 import { Flex } from "../Grid";
-import { Box, makeStyles, type Theme } from "../Mui";
+import { Box, styled, type Theme } from "../Mui";
 
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    loadingContainer: {
-      position: "relative",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      minHeight: "300px",
-      overflow: "hidden",
-    },
-    mask: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: theme.palette.loading.background,
-      opacity: 0.3,
-    },
-  };
+const LoadingContainer = styled(Flex)({
+  position: "relative",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  minHeight: "300px",
+  overflow: "hidden",
 });
+
+const Mask = styled(Box)(({ theme, mask }: { mask: boolean; theme: Theme }) =>
+  mask
+    ? {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        background: theme.palette.loading.background,
+        opacity: 0.3,
+      }
+    : {},
+);
 
 export interface ImageLoadingProps {
   loading?: boolean;
@@ -30,12 +31,10 @@ export interface ImageLoadingProps {
 }
 
 export function ImageLoading({ loading = true, mask = false }: ImageLoadingProps) {
-  const classes = useStyles();
-
   return loading ? (
-    <Flex fullWidth className={classes.loadingContainer} justify="center" align="center">
-      <Box className={mask ? classes.mask : ""} />
+    <LoadingContainer fullWidth justify="center" align="center">
+      <Mask mask={mask} />
       <img style={{ zIndex: 2 }} width="80px" height="80px" src="/images/loading.png" alt="" />
-    </Flex>
+    </LoadingContainer>
   ) : null;
 }

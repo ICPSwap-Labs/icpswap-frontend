@@ -45,7 +45,7 @@ declare module "*.webp" {
 }
 
 declare module "*.svg" {
-  import * as React from "react";
+  import type * as React from "react";
 
   export const ReactComponent: React.FunctionComponent<React.SVGProps<SVGSVGElement> & { title?: string }>;
 
@@ -113,44 +113,6 @@ interface Window {
       };
     };
   };
-}
-
-declare module "@mui/material/styles" {
-  interface Theme {
-    direction: string;
-    palette: any;
-    typography: any;
-    components: any;
-    themeOption: any;
-    colors: any;
-    fontSize: any;
-    customization: any;
-    radius: number;
-    breakpoints: any;
-    spacing: (sp: number) => string;
-    shadows: string[];
-    transitions: any;
-    textPrimary: string;
-  }
-
-  interface ThemeOptions {
-    direction?: string;
-    palette?: any;
-    typography?: any;
-    components?: any;
-    themeOption?: any;
-    colors?: any;
-    fontSize?: any;
-    customization?: any;
-    radius?: number;
-    breakpoints?: any;
-  }
-
-  function createTheme(themeOptions: ThemeOptions): Theme;
-
-  function ThemeProvider<T = DefaultTheme>(props: ThemeProviderProps<T>): React.ReactElement<ThemeProviderProps<T>>;
-
-  function styled(args: ayn): any;
 }
 
 declare type Nullable<T> = T | null;

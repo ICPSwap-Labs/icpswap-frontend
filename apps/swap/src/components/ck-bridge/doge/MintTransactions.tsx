@@ -3,8 +3,9 @@ import { BridgeChainName } from "@icpswap/constants";
 import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { isUndefinedOrNull, toHexString } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
 import { ALink, MainCard, NoData } from "components/index";
-import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { DOGE_MINT_CONFIRMATIONS } from "constants/chain-key";
 import { useDogeBlockConfirmations, useUserDogeKnownUtxos } from "hooks/ck-bridge/doge";
 import { useCallback, useMemo } from "react";
@@ -12,17 +13,6 @@ import { RotateCcw } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { parseDogeAmount } from "utils/chain-key";
 import { dogeBlockExplorer, dogeTransactionExplorer } from "utils/chain-key/doge";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
 
 interface TransactionProps {
   transaction: DogeUtxo;
@@ -32,7 +22,6 @@ interface TransactionProps {
 function Transaction({ transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
 
   const confirmations = useDogeBlockConfirmations(transaction.height);
 
@@ -52,17 +41,6 @@ function Transaction({ transaction }: TransactionProps) {
       }}
     >
       <Flex vertical gap="12px 0" align="flex-start">
-        {/* <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>{t("common.time")}</Typography>
-          <Typography color="text.primary">
-            {transaction.status.block_time ? (
-              <>{dayjs(Number(transaction.status.block_time) * 1000).format("YYYY-MM-DD HH:mm:ss")}</>
-            ) : (
-              <>--</>
-            )}
-          </Typography>
-        </Flex> */}
-
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.height")}</Typography>
           <Typography color="text.primary" component="div">
@@ -83,42 +61,12 @@ function Transaction({ transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             <ALink link={dogeTransactionExplorer(tx)} color="secondary" textDecorationColor="secondary" align="right">
               {tx}
             </ALink>
           </Typography>
         </Flex>
-
-        {/* <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>{t("common.from")}</Typography>
-          <Typography className={classes.txLink} component="div">
-            <ALink
-              link={dogeAddressExplorer(transaction.vin[0]?.prevout.scriptpubkey_address)}
-              color="secondary"
-              textDecorationColor="secondary"
-              align="right"
-            >
-              {transaction.vin[0]?.prevout.scriptpubkey_address}
-            </ALink>
-          </Typography>
-        </Flex> */}
-
-        {/* <Flex fullWidth justify="space-between" align="flex-start">
-          <Typography>{t("common.to")}</Typography>
-          <Typography className={classes.txLink} component="div">
-            {address ? (
-              <ALink
-                link={dogeAddressExplorer(address)}
-                color="secondary"
-                textDecorationColor="secondary"
-                align="right"
-              >
-                {address}
-              </ALink>
-            ) : null}
-          </Typography>
-        </Flex> */}
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.amount")}</Typography>

@@ -2,8 +2,9 @@ import { BridgeChainName } from "@icpswap/constants";
 import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
 import { ALink, MainCard, NoData } from "components/index";
-import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { BITCOIN_CONFIRMATIONS, BITCOIN_MINT_REFRESH } from "constants/chain-key";
 import dayjs from "dayjs";
 import { useBitcoinConfirmations, useBtcMintTransactions } from "hooks/ck-bridge/index";
@@ -14,17 +15,6 @@ import type { BitcoinTransaction } from "types/ckBTC";
 import { bitcoinAddressExplorer, bitcoinBlockExplorer, bitcoinTransactionExplorer } from "utils/chain-key/bitcoin";
 import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
 
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
-
 interface TransactionProps {
   transaction: BitcoinTransaction;
   address: string | Null;
@@ -33,7 +23,6 @@ interface TransactionProps {
 function Transaction({ transaction, address }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
 
   const confirmations = useBitcoinConfirmations(transaction.status.block_height);
 
@@ -78,7 +67,7 @@ function Transaction({ transaction, address }: TransactionProps) {
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             <ALink
               link={bitcoinTransactionExplorer(transaction.txid)}
               color="secondary"
@@ -92,7 +81,7 @@ function Transaction({ transaction, address }: TransactionProps) {
 
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.from")}</Typography>
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             <ALink
               link={bitcoinAddressExplorer(transaction.vin[0]?.prevout.scriptpubkey_address)}
               color="secondary"
@@ -106,7 +95,7 @@ function Transaction({ transaction, address }: TransactionProps) {
 
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.to")}</Typography>
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             {address ? (
               <ALink
                 link={bitcoinAddressExplorer(address)}

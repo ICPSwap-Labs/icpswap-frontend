@@ -1,26 +1,5 @@
 import { Flex } from "../Grid";
-import { Box, CircularProgress, makeStyles, type Theme } from "../Mui";
-
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    loadingContainer: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      overflow: "hidden",
-    },
-    mask: {
-      position: "absolute",
-      left: 0,
-      width: "100%",
-      height: "100%",
-      background: theme.palette.loading.background,
-      opacity: 0.7,
-    },
-  };
-});
+import { Box, CircularProgress, useTheme } from "../Mui";
 
 interface LoadingProps {
   loading: boolean;
@@ -29,13 +8,30 @@ interface LoadingProps {
 }
 
 export function Loading({ loading, circularSize = 40, maskBorderRadius }: LoadingProps) {
-  const classes = useStyles();
+  const theme = useTheme();
 
   return loading ? (
-    <Flex className={classes.loadingContainer} fullWidth justify="center" align="center">
+    <Flex
+      sx={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        overflow: "hidden",
+      }}
+      fullWidth
+      justify="center"
+      align="center"
+    >
       <Box
-        className={classes.mask}
         sx={{
+          position: "absolute",
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: theme.palette.loading.background,
+          opacity: 0.7,
           ...(maskBorderRadius ? { borderRadius: maskBorderRadius } : {}),
         }}
       />

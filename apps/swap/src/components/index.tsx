@@ -5,7 +5,6 @@ export {
   Flex,
   ImageLoading,
   Link,
-  ListLoading,
   Loading,
   LoadingRow,
   MainCard,

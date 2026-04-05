@@ -4,7 +4,7 @@ import { cycleValueFormat, pageArgsFormat, timestampFormat } from "@icpswap/util
 import CanSVG from "assets/images/nft/CanSVG";
 import ExplorerLink from "components/ExternalLink/Explorer";
 import { MainCard, NoData, TextButton, Wrapper } from "components/index";
-import { Box, Button, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { Box, Button, Grid, Typography, useTheme } from "components/Mui";
 import { useCanisterCycles, useCanisterUserNFTCount, useUserCanisterList } from "hooks/nft/useNFTCalls";
 import { useMediaQueryMD } from "hooks/theme";
 import { useState } from "react";
@@ -12,31 +12,14 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "store/auth/hooks";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  container: {
-    height: "300px",
-    [theme.breakpoints.down("md")]: {
-      height: "225px",
-    },
-  },
-  title: {
-    color: "#fff",
-    fontSize: "32px",
-    lineHeight: "44px",
-    margin: "0",
-    [theme.breakpoints.down("md")]: {
-      fontSize: "24px",
-    },
-  },
-  wrapper: {
-    display: "grid",
-    gridTemplateColumns: "repeat(6,1fr)",
-  },
-}));
+const wrapperSx = {
+  display: "grid",
+  gridTemplateColumns: "repeat(6,1fr)",
+};
 
 export function Title() {
   const { t } = useTranslation();
-  const classes = useStyles();
+  const theme = useTheme();
   const navigate = useNavigate();
   const matchesMd = useMediaQueryMD();
 
@@ -45,10 +28,30 @@ export function Title() {
   };
 
   return (
-    <Grid className={classes.container} container alignItems="center">
+    <Grid
+      sx={{
+        height: "300px",
+        [theme.breakpoints.down("md")]: {
+          height: "225px",
+        },
+      }}
+      container
+      alignItems="center"
+    >
       <Grid item xs>
         <Box>
-          <Typography className={classes.title} fontWeight="700">
+          <Typography
+            sx={{
+              color: "#fff",
+              fontSize: "32px",
+              lineHeight: "44px",
+              margin: "0",
+              [theme.breakpoints.down("md")]: {
+                fontSize: "24px",
+              },
+            }}
+            fontWeight="700"
+          >
             {t("nft.create.canister.to.mint")}
           </Typography>
         </Box>
@@ -82,14 +85,13 @@ export function NFTCanisterListItem({
   onDetailsClick: (canister: NFTControllerInfo) => void;
   onMintNFTClick: (canister: NFTControllerInfo) => void;
 }) {
-  const classes = useStyles();
   const { t } = useTranslation();
   const { data: cycles } = useCanisterCycles(canister.cid);
   const account = useAccount();
   const { data: count } = useCanisterUserNFTCount(canister.cid, account);
 
   return (
-    <TableRow className={classes.wrapper}>
+    <TableRow sx={wrapperSx}>
       <BodyCell>{canister.name}</BodyCell>
       <BodyCell>{timestampFormat(canister.createTime)}</BodyCell>
       <ExplorerLink label={canister.cid} value={canister.cid} />
@@ -109,7 +111,6 @@ export default function NFTCanisterList() {
   const { t } = useTranslation();
   const account = useAccount();
   const navigate = useNavigate();
-  const classes = useStyles();
 
   const [page, setPage] = useState(1);
 
@@ -135,7 +136,7 @@ export default function NFTCanisterList() {
           </Box>
           <Box sx={{ width: "100%", overflow: "auto" }}>
             <Box sx={{ width: "100%", minWidth: "960px" }}>
-              <Header className={classes.wrapper}>
+              <Header sx={wrapperSx}>
                 <HeaderCell>{t("common.name")}</HeaderCell>
                 <HeaderCell>{t("common.time")}</HeaderCell>
                 <HeaderCell>{t("common.canister.id")}</HeaderCell>

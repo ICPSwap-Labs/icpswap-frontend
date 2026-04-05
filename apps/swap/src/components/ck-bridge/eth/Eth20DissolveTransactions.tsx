@@ -1,23 +1,13 @@
 import { ckETH } from "@icpswap/tokens";
 import { Flex } from "@icpswap/ui";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
 import { ALink, MainCard, NoData } from "components/index";
-import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { EXPLORER_TX_LINK } from "constants/ckERC20";
 import { useTranslation } from "react-i18next";
 import { useEthDissolveTxs, useEthTxResponse } from "store/web3/hooks";
 import type { DissolveTx } from "types/ckETH";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
 
 interface TransactionProps {
   transaction: DissolveTx;
@@ -26,7 +16,6 @@ interface TransactionProps {
 function Transaction({ transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
   const txResponse = useEthTxResponse(transaction.hash);
 
   return (
@@ -54,7 +43,7 @@ function Transaction({ transaction }: TransactionProps) {
 
           <Typography color="text.primary" component="div">
             {transaction.hash ? (
-              <Typography className={classes.txLink} component="div">
+              <Typography sx={txLinkTypographySx} component="div">
                 <ALink
                   link={`${EXPLORER_TX_LINK}/${transaction.hash}`}
                   color="secondary"
