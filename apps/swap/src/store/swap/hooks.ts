@@ -13,7 +13,6 @@ import { useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipal } from "store/auth/hooks";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import store from "store/index";
 import { useSlippageToleranceToPercent } from "store/swap/cache/hooks";
 import type { SwapFinalMetadata } from "types/swap";
 import { inputNumberCheck, isUseTransfer, tryParseAmount } from "utils/index";
@@ -26,7 +25,6 @@ import {
   updateAllSwapPools,
   updatePoolCanisterIds,
   updateSwapFinalMetadata,
-  updateSwapOutAmount,
 } from "./actions";
 
 export function useSwapHandlers() {
@@ -119,14 +117,18 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     600,
   );
 
-  const Trade = useBestTrade(
-    __inputToken,
-    __outputToken,
-    !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue,
-  );
+  const __typedValue = useMemo(() => {
+    return !typedValue || typedValue === "0" || debouncedTypedValue !== typedValue ? undefined : debouncedTypedValue;
+  }, [typedValue, debouncedTypedValue]);
 
-  const pool = Trade?.pool;
-  const poolId = Trade?.pool?.id;
+  const Trade = useBestTrade(__inputToken, __outputToken, __typedValue);
+
+  const { pool, poolId } = useMemo(() => {
+    const pool = Trade?.pool;
+    const poolId = pool?.id;
+
+    return { pool, poolId };
+  }, [Trade]);
 
   // Force to use token from pool, the token standard is using from pool metadata
   const inputToken = useMemo(() => {
@@ -147,9 +149,15 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     sub,
   });
 
-  const inputTokenUnusedBalance = BigInt(0);
-  const outputTokenUnusedBalance = BigInt(0);
+  // For swap, the unused balance is always 0,
+  // because the balance in sub account is always used for swap,
+  // and the balance in main account is always used for fee, so there is no unused balance.
+  const inputTokenUnusedBalance = useMemo(() => BigInt(0), []);
+  const outputTokenUnusedBalance = useMemo(() => BigInt(0), []);
 
+  // Reset balance if principal changed,
+  // to avoid the case that user switch to another account which has no balance,
+  // but the old balance is still displayed because the new balance is loading.
   const inputTokenSubBalance = useMemo(() => {
     if (!principal) return undefined;
     return __inputTokenSubBalance;
@@ -162,7 +170,6 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
 
   const allowanceTokenId = useMemo(() => {
     if (!inputToken) return undefined;
-
     return isUseTransfer(inputToken) ? undefined : inputToken.address;
   }, [inputToken]);
 
@@ -219,7 +226,6 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     trade: Trade?.trade,
     state: Trade?.state ?? TradeState.INVALID,
     available: Trade?.available,
-    routes: Trade?.routes,
     noLiquidity: Trade?.noLiquidity,
     currencyBalances,
     userSlippageTolerance,
@@ -288,25 +294,6 @@ export function usePoolCanisterIdManager(
   );
 
   return useMemo(() => [poolId, updatePoolCanisterId], [poolId, updatePoolCanisterId]);
-}
-
-export function useSwapOutAmount() {
-  return useAppSelector((state) => state.swap.swapOutAmount);
-}
-
-export function getSwapOutAmount(key: string) {
-  return store.getState().swap.swapOutAmount[key];
-}
-
-export function useUpdateSwapOutAmount() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (key: string, amount: bigint | undefined) => {
-      dispatch(updateSwapOutAmount({ key, value: amount }));
-    },
-    [dispatch],
-  );
 }
 
 export function useUpdateAllSwapPools() {

@@ -1,32 +1,24 @@
 import { TradeType } from "@icpswap/constants";
 import { CurrencyAmount, type Route, type Token, Trade } from "@icpswap/swap-sdk";
-import { formatTokenAmount, numberToString } from "@icpswap/utils";
+import { formatTokenAmount, isUndefinedOrNull, numberToString } from "@icpswap/utils";
 import { BigNumber } from "bignumber.js";
 import { useAllRoutes } from "hooks/swap/useAllRoutes";
 import { useQuoteExactInput, useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { useMemo } from "react";
 import { tryParseAmount } from "utils/swap";
 
-export enum TradeState {
-  LOADING = "LOADING",
-  INVALID = "INVALID",
-  NO_ROUTE_FOUND = "NO_ROUTE_FOUND",
-  VALID = "VALID",
-  SYNCING = "SYNCING",
-  NOT_CHECK = "NOT_CHECK",
+interface UseQuoteResultArgs {
+  inputToken: Token | undefined;
+  outputToken: Token | undefined;
+  value: string | undefined;
 }
 
-export function useBestTrade(
-  inputToken: Token | undefined,
-  outputToken: Token | undefined,
-  typedValue: string | undefined,
-) {
-  const actualSwapValue = typedValue;
-
-  // reload when typeValue is changed
+export const useQuoteResult = ({ inputToken, outputToken, value }: UseQuoteResultArgs) => {
   const { routes, loading: routesLoading, checked, noLiquidity } = useAllRoutes(inputToken, outputToken);
 
-  const zeroForOne = inputToken && outputToken ? inputToken.sortsBefore(outputToken) : undefined;
+  const zeroForOne = useMemo(() => {
+    return inputToken && outputToken ? inputToken.sortsBefore(outputToken) : undefined;
+  }, [inputToken, outputToken]);
 
   const pool = useMemo(() => {
     if (!routes) return undefined;
@@ -34,7 +26,7 @@ export function useBestTrade(
   }, [routes]);
 
   const params = useMemo(() => {
-    if (!actualSwapValue || zeroForOne === undefined || !pool) return undefined;
+    if (!value || zeroForOne === undefined || !pool) return undefined;
 
     const route = routes
       .sort((a, b) => {
@@ -47,9 +39,7 @@ export function useBestTrade(
         const outputToken = route.output.wrapped;
 
         // A transaction fee need be subtracted if then token use icrc_transfer to deposit token in v3.6
-        const quoteAmount = !actualSwapValue
-          ? "0"
-          : numberToString(formatTokenAmount(actualSwapValue, inputToken.decimals));
+        const quoteAmount = !value ? "0" : numberToString(formatTokenAmount(value, inputToken.decimals));
 
         return {
           pool: pool.id,
@@ -67,26 +57,48 @@ export function useBestTrade(
       amountIn: route[0].amountIn,
       zeroForOne,
     });
-  }, [routes, pool, actualSwapValue, zeroForOne]);
+  }, [routes, pool, value, zeroForOne]);
+
+  const { isLoading: quoteLoading, data: quotesResult } = useQuoteExactInput(params);
+
+  return useMemo(() => {
+    return {
+      quotesResult: quotesResult ? [{ amountOut: `0x${new BigNumber(String(quotesResult)).toString(16)}` }] : [],
+      quoteLoading,
+      routesLoading,
+      checked,
+      noLiquidity,
+      routes,
+      pool,
+    };
+  }, [quoteLoading, quotesResult, routesLoading, checked, noLiquidity, routes, pool]);
+};
+
+export enum TradeState {
+  LOADING = "LOADING",
+  INVALID = "INVALID",
+  NO_ROUTE_FOUND = "NO_ROUTE_FOUND",
+  VALID = "VALID",
+  SYNCING = "SYNCING",
+  NOT_CHECK = "NOT_CHECK",
+}
+
+export function useBestTrade(inputToken: Token | undefined, outputToken: Token | undefined, value: string | undefined) {
+  const { quotesResult, quoteLoading, routesLoading, checked, noLiquidity, routes, pool } = useQuoteResult({
+    inputToken,
+    outputToken,
+    value: value,
+  });
 
   const available = useSwapPoolAvailable(pool?.id);
 
-  const { isLoading: exactInputLoading, data: _quotesResults } = useQuoteExactInput(params);
-
-  const quotesResults = useMemo(() => {
-    if (_quotesResults) {
-      return [{ amountOut: `0x${new BigNumber(String(_quotesResults)).toString(16)}` }];
-    }
-    return [];
-  }, [_quotesResults]);
-
   return useMemo(() => {
     if (
-      !inputToken ||
-      !outputToken ||
+      isUndefinedOrNull(inputToken) ||
+      isUndefinedOrNull(outputToken) ||
       inputToken.equals(outputToken) ||
-      !actualSwapValue ||
-      new BigNumber(actualSwapValue).isEqualTo(0)
+      isUndefinedOrNull(value) ||
+      new BigNumber(value).isEqualTo(0)
     ) {
       return {
         state: TradeState.INVALID,
@@ -97,7 +109,7 @@ export function useBestTrade(
       };
     }
 
-    if (routesLoading || exactInputLoading) {
+    if (routesLoading || quoteLoading) {
       return {
         state: TradeState.LOADING,
         trade: null,
@@ -107,7 +119,7 @@ export function useBestTrade(
       };
     }
 
-    const { bestRoute, amountOut } = quotesResults.reduce(
+    const { bestRoute, amountOut } = quotesResult.reduce(
       (currentBest: { bestRoute: Route<Token, Token> | null; amountOut: string | null }, { amountOut }, i) => {
         if (!amountOut) return currentBest;
 
@@ -132,7 +144,7 @@ export function useBestTrade(
       },
     );
 
-    const inputAmount = tryParseAmount(actualSwapValue, inputToken);
+    const inputAmount = tryParseAmount(value, inputToken);
 
     if (!bestRoute || !amountOut || !inputAmount) {
       return {
@@ -160,14 +172,14 @@ export function useBestTrade(
   }, [
     inputToken,
     outputToken,
-    actualSwapValue,
-    quotesResults,
+    value,
+    quotesResult,
     routes,
     routesLoading,
     available,
     checked,
     pool,
     noLiquidity,
-    exactInputLoading,
+    quoteLoading,
   ]);
 }

@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 import { useStepContentManager } from "store/steps/hooks";
 import { useSlippageManager } from "store/swap/cache/hooks";
-import { useSwapFinalMetadataManager, useUpdateSwapOutAmount } from "store/swap/hooks";
+import { useSwapFinalMetadataManager } from "store/swap/hooks";
 import type { OpenExternalTip } from "types/index";
 import { isUseTransfer } from "utils/token/index";
 
@@ -94,7 +94,6 @@ export function useSwapCalls() {
   const approve = useSwapApprove();
   const transfer = useSwapTransfer();
 
-  const updateSwapOutAmount = useUpdateSwapOutAmount();
   const { callback: swapFinalMetadataCallback } = useSwapFinalMetadataManager();
 
   const [openTip] = useTips();
@@ -137,8 +136,6 @@ export function useSwapCalls() {
             const pool = route.pools[0];
             const poolId = pool.id;
 
-            updateSwapOutAmount(stepKey, undefined);
-
             // Amount that user input
             // Now the swap amount is the amount that user input
             const userInputAmount = actualSwapAmount;
@@ -180,7 +177,7 @@ export function useSwapCalls() {
             const swap = async () => {
               if (!principal || !actualSwapAmount || !amountOut) return false;
 
-              const { status, message, data } = isUseTransfer(inputToken)
+              const { status, message } = isUseTransfer(inputToken)
                 ? await depositAndSwap(poolId, {
                     zeroForOne: inputToken.address < outputToken.address,
                     amountIn: actualSwapAmount,
@@ -207,7 +204,6 @@ export function useSwapCalls() {
                   openTip(getLocaleMessage(message), MessageTypes.error);
                 }
               } else {
-                updateSwapOutAmount(stepKey, data);
                 swapFinalMetadataCallback({
                   outputAmount: formatTokenAmount(outputAmount.toExact(), outputToken.decimals).toString(),
                   inputAmount: actualSwapAmount,
@@ -234,16 +230,7 @@ export function useSwapCalls() {
 
       return calls;
     },
-    [
-      principal,
-      approve,
-      slippageTolerance,
-      initialAndUpdateSwapStep,
-      openTip,
-      swapFinalMetadataCallback,
-      transfer,
-      updateSwapOutAmount,
-    ],
+    [principal, approve, slippageTolerance, initialAndUpdateSwapStep, openTip, swapFinalMetadataCallback, transfer],
   );
 }
 

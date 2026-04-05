@@ -1,4 +1,4 @@
-import type { AddressOverview, Null } from "@icpswap/types";
+import type { Null, UserAssetResponse } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount, isUndefinedOrNull, numToPercent } from "@icpswap/utils";
 import { Box, Typography } from "components/Mui";
@@ -21,7 +21,7 @@ enum Labels {
 }
 
 interface DistributionProps {
-  addressOverview: AddressOverview | Null;
+  addressOverview: UserAssetResponse | Null;
 }
 
 export function Distribution({ addressOverview }: DistributionProps) {

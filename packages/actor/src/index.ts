@@ -1,7 +1,6 @@
 export * from "./ActorName";
 export * from "./actor";
 export * from "./icp";
-export * from "./info";
 export * from "./nft";
 export * from "./other";
 export * from "./sns";

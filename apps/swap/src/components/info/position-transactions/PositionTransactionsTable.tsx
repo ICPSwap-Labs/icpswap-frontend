@@ -1,6 +1,5 @@
 import { usePositionTransactions } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
-import { pageArgsFormat } from "@icpswap/utils";
 import { useEffect, useMemo, useState } from "react";
 
 import { PositionTransactionsTableUI } from "./PositionTransactionsTableUI";
@@ -19,11 +18,15 @@ export function PositionTransactionsTable({
   empty,
 }: PositionTransactionsTableProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
   const poolIds = useMemo(() => (poolId ? [poolId] : []), [poolId]);
 
-  const { isLoading: loading, data: result } = usePositionTransactions(poolIds, principal, offset, pagination.pageSize);
+  const { isLoading: loading, data: result } = usePositionTransactions(
+    poolIds,
+    principal,
+    pagination.pageNum,
+    pagination.pageSize,
+  );
 
   const transactions = result?.content;
   const totalElements = result?.totalElements;

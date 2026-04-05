@@ -1,5 +1,5 @@
 import { Flex, Modal } from "@icpswap/ui";
-import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, toEndTimeOfDay, toStartTimeOfDay } from "@icpswap/utils";
+import { BigNumber, getLocalDayEndMs, getLocalDayStartMs, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker, type DatePickerProps } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -49,17 +49,17 @@ export function TimeRangeSelector({ open, startTime, endTime, onConfirm, onClose
 
   const handleConfirm = useCallback(() => {
     if (nonUndefinedOrNull(innerStartTime) && nonUndefinedOrNull(innerEndTime)) {
-      onConfirm(toStartTimeOfDay(innerStartTime), toEndTimeOfDay(innerEndTime));
+      onConfirm(getLocalDayStartMs(innerStartTime), getLocalDayEndMs(innerEndTime));
     }
   }, [innerStartTime, innerEndTime, onConfirm]);
 
   const maxEndTime = useMemo(() => {
     const now = Date.now();
 
-    if (isUndefinedOrNull(innerStartTime)) return dayjs(toEndTimeOfDay(now));
-    if (new BigNumber(innerStartTime + MAX_RANGE_TIMESTAMP).isGreaterThan(now)) return dayjs(toEndTimeOfDay(now));
+    if (isUndefinedOrNull(innerStartTime)) return dayjs(getLocalDayEndMs(now));
+    if (new BigNumber(innerStartTime + MAX_RANGE_TIMESTAMP).isGreaterThan(now)) return dayjs(getLocalDayEndMs(now));
 
-    return dayjs(toEndTimeOfDay(innerStartTime + MAX_RANGE_TIMESTAMP));
+    return dayjs(getLocalDayEndMs(innerStartTime + MAX_RANGE_TIMESTAMP));
   }, [innerStartTime]);
 
   return (

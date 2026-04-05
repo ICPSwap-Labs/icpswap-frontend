@@ -4,13 +4,12 @@ import { ICP } from "@icpswap/tokens";
 import type { Null, PoolMetadata } from "@icpswap/types";
 import { isUndefinedOrNull, nonUndefinedOrNull, numberToString } from "@icpswap/utils";
 import { NETWORK, network } from "constants/index";
+import { getMultiPoolsMetadata } from "hooks/swap/usePoolsMetadata";
 import { getPool_update_call } from "hooks/swap/v3Calls";
 import { getTokenInfo } from "hooks/token/calls";
 import { getTokensFromInfos, useToken } from "hooks/useCurrency";
 import { useEffect, useMemo, useState } from "react";
 import { PoolState, type TokenInfo } from "types/index";
-
-import { getMultiPoolsMetadata } from "./usePoolsMetadata";
 
 const POOL_METADATA_UPDATE_INTERVAL = 60000;
 

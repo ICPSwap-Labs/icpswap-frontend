@@ -13,4 +13,3 @@ export * from "./Steps";
 export * from "./SwapInputWrapper";
 export * from "./TransactionsForSimpleMode";
 export * from "./UserLimitPanel";
-export * from "./WithdrawTokens";

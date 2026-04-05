@@ -24,15 +24,15 @@ import { useToken } from "hooks/useCurrency";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useAppDispatch, useAppSelector } from "store/hooks";
+import { useAppDispatch } from "store/hooks";
 import store from "store/index";
 import { useSwapState } from "store/swap/hooks";
 import { inputNumberCheck, isUseTransfer, tryParseAmount } from "utils/index";
 
-import { updatePlaceOrderPositionId, updateSwapOutAmount } from "./actions";
+import { updatePlaceOrderPositionId } from "./actions";
 
 export interface UseSwapInfoArgs {
-  refresh?: number | boolean;
+  refresh?: number;
 }
 
 export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
@@ -414,25 +414,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     minSettableTick,
     atLimitedTick,
   };
-}
-
-export function useSwapOutAmount() {
-  return useAppSelector((state) => state.swap.swapOutAmount);
-}
-
-export function getSwapOutAmount(key: string) {
-  return store.getState().swap.swapOutAmount[key];
-}
-
-export function useUpdateSwapOutAmount() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (key: string, amount: bigint | undefined) => {
-      dispatch(updateSwapOutAmount({ key, value: amount }));
-    },
-    [dispatch],
-  );
 }
 
 export function getPlaceOrderPositionId() {

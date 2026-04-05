@@ -17,8 +17,6 @@ export type PoolCanisterRecord = { key: string; id: string };
 
 export const updatePoolCanisterIds = createAction<PoolCanisterRecord>("swapCache/updatePoolCanisterIds");
 
-export const updateSwapOutAmount = createAction<{ key: string; value: bigint | undefined }>("swap/updateSwapOutAmount");
-
 export const updateAllSwapPools = createAction<SwapPoolData[]>("swap/updateAllSwapPools");
 
 export const updateSwapFinalMetadata = createAction<SwapFinalMetadata>("swap/updateSwapFinalMetadata");

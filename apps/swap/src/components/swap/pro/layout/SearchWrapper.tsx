@@ -1,8 +1,8 @@
 import { FilledTextField } from "components/index";
 import { Box, InputAdornment } from "components/Mui";
+import { TokenSearch } from "components/swap/pro/layout/TokenSearch";
 import { useState } from "react";
 import { Search } from "react-feather";
-import { TokenSearch } from "./TokenSearch";
 
 export function SearchWrapper() {
   const [searchOpen, setSearchOpen] = useState(false);

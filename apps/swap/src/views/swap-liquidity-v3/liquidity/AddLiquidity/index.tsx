@@ -140,7 +140,11 @@ export default function AddLiquidity() {
 
   const isValid = !errorMessage && !invalidRange;
 
-  const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks;
+  const { tickLower, tickUpper } = useMemo(() => {
+    const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks;
+
+    return { tickLower, tickUpper };
+  }, [ticks]);
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks;
 
   const formattedAmounts = {
@@ -349,7 +353,7 @@ export default function AddLiquidity() {
   const isDepositAmountDisabled = useMemo(
     () =>
       invalidRange || tickLower === undefined || tickUpper === undefined || (noLiquidity && !startPrice) || poolLoading,
-    [invalidRange, startPrice, noLiquidity, poolLoading],
+    [invalidRange, startPrice, noLiquidity, poolLoading, tickLower, tickUpper],
   );
 
   const handleTokenToggle = () => {

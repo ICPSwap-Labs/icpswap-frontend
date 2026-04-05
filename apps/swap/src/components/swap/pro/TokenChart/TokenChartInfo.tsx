@@ -1,17 +1,17 @@
-import type { InfoTokenRealTimeDataResponse, TokenListMetadata } from "@icpswap/types";
+import type { Token } from "@icpswap/swap-sdk";
+import type { InfoTokenRealTimeDataResponse, Null, TokenListMetadata } from "@icpswap/types";
 import { MediaLinkIcon, Proportion } from "@icpswap/ui";
 import { formatDollarTokenPrice } from "@icpswap/utils";
 import { Copy } from "components/Copy/icon";
 import { Link, TokenImage } from "components/index";
 import { Box, Button, Typography, useTheme } from "components/Mui";
 import { PriceAlertsIcon } from "components/PriceAlerts";
-import { useSwapStore } from "components/swap/index";
 import { useSwapProStore } from "components/swap/pro";
+import { TokenChartsViewSelector } from "components/swap/pro/TokenChart/TokenChartsViewSelector";
 import { TokenListIdentifying } from "components/TokenListIdentifying";
 import { useMediaQuerySM } from "hooks/theme";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { TokenChartsViewSelector } from "views/swap-pro/TokenChart/TokenChartsViewSelector";
 
 interface MediasProps {
   mediaLinks: undefined | { k: string; v: string }[];
@@ -52,13 +52,14 @@ function Medias({ mediaLinks }: MediasProps) {
 export interface TokenChartInfoProps {
   infoToken: InfoTokenRealTimeDataResponse | undefined;
   tokenListInfo: TokenListMetadata | undefined;
+  inputToken: Token | Null;
+  outputToken: Token | Null;
 }
 
-export default function TokenChartInfo({ infoToken, tokenListInfo }: TokenChartInfoProps) {
+export function TokenChartInfo({ infoToken, tokenListInfo, inputToken, outputToken }: TokenChartInfoProps) {
   const { t } = useTranslation();
   const matchDownSM = useMediaQuerySM();
   const { token } = useSwapProStore();
-  const { inputToken, outputToken } = useSwapStore();
 
   const tokenId = useMemo(() => {
     return token?.address;

@@ -1,5 +1,5 @@
 import { ICP } from "@icpswap/tokens";
-import type { AddressOverview, Null } from "@icpswap/types";
+import type { Null, UserAssetResponse } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { EstimatedBalanceUI } from "components/Wallet/assets/EstimatedBalanceUI";
 import { useUSDPrice } from "hooks/index";
@@ -7,7 +7,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface DistributionEstimatedBalanceProps {
-  addressOverview: AddressOverview | Null;
+  addressOverview: UserAssetResponse | Null;
   onRefresh?: () => void;
 }
 

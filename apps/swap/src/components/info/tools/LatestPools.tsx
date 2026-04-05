@@ -1,5 +1,5 @@
 import { useLatestPools, usePoolAPR } from "@icpswap/hooks";
-import type { LatestPool } from "@icpswap/types";
+import type { InfoPoolRealTimeDataResponse } from "@icpswap/types";
 import { APRPanel, BodyCell, Flex, Header, HeaderCell, Link, LoadingRow, NoData, TableRow } from "@icpswap/ui";
 import { formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { TimestampCell, TokenImage } from "components/index";
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 interface PoolRowProps {
-  pool: LatestPool;
+  pool: InfoPoolRealTimeDataResponse;
   className?: string;
 }
 

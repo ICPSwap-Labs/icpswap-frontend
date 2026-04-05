@@ -1,6 +1,6 @@
 /* tslint:disable */
 /* eslint-disable */
-// Generated using typescript-generator version 3.2.1263 on 2025-07-05 12:13:43.
+// Generated using typescript-generator version 3.2.1263 on 2026-04-03 20:09:10.
 
 export interface InfoResult<T> extends Serializable {
   code: number;
@@ -86,6 +86,7 @@ export interface InfoPoolRealTimeDataResponse extends Serializable {
   priceHigh7D: string;
   priceLow30D: string;
   priceHigh30D: string;
+  createTime: number;
 }
 
 export interface InfoPoolResponse extends Serializable {
@@ -99,6 +100,77 @@ export interface InfoPoolResponse extends Serializable {
   token1Symbol: string;
   token0Fee: string;
   token1Fee: string;
+}
+
+export interface InfoPositionDataResponse extends Serializable {
+  poolId: string;
+  positionId: string;
+  snapshotTime: number;
+  dayId: number;
+  token0Amount: string;
+  token1Amount: string;
+  token0USDPrice: string;
+  token1USDPrice: string;
+  value: string;
+  accountId: string;
+}
+
+export interface InfoPositionTopData extends Serializable {
+  poolTvlUSD: string;
+  totalPositionSize: number;
+  positionList: InfoPositionDataResponse[];
+}
+
+export interface InfoSwapRecordResponse extends Serializable {
+  recordKind: string;
+  action: string;
+  from: string;
+  to: string;
+  recipient: string;
+  sender: string;
+  timestamp: number;
+  txId: number;
+  poolId: string;
+  poolFee: number;
+  positionId: number;
+  sqrtPrice: string;
+  tick: string;
+  tickLimit: string;
+  liquidityChange: string;
+  liquidityTotal: string;
+  token0Id: string;
+  token0Standard: string;
+  token0Symbol: string;
+  token0Decimals: number;
+  token0ChangeAmount: string;
+  token0InAmount: string;
+  token0Price: string;
+  token0Fee: string;
+  token1Id: string;
+  token1Standard: string;
+  token1Symbol: string;
+  token1Decimals: number;
+  token1ChangeAmount: string;
+  token1InAmount: string;
+  token1Price: string;
+  token1Fee: string;
+  amountToken0: string;
+  amountToken1: string;
+  amountUsd: string;
+}
+
+export interface InfoTokenChartResponse extends Serializable {
+  tokenLedgerId: string;
+  tokenName: string;
+  tokenSymbol: string;
+  price: string;
+  priceChange24H: string;
+  fdv: string;
+  marketCap: string;
+  tvlUSD: string;
+  volumeUSD24H: string;
+  holder: string;
+  rank: string;
 }
 
 export interface InfoTokenDataResponse extends Serializable {
@@ -274,7 +346,6 @@ export interface PriceRecommend extends Serializable {
 
 export interface TokenResponse extends Serializable {
   ledgerId: string;
-  standards: string;
   name: string;
   symbol: string;
   logo: string;
@@ -282,7 +353,9 @@ export interface TokenResponse extends Serializable {
   decimals: number;
   mintingAccount: string;
   totalSupply: string;
+  liquidity: string;
   price: string;
+  priceChange24: string;
   priceICP: string;
   marketCap: string;
   fullyDilutedMarketCap: string;
@@ -294,6 +367,16 @@ export interface TokenResponse extends Serializable {
   lockedAmount: string;
   marketAmount: string;
   transactionAmount: string;
+  createTime: number;
+}
+
+export interface UserAssetResponse extends Serializable {
+  tokenList: UserWalletResponse;
+  tokenValue: string;
+  limitOrderValue: string;
+  positionValue: string;
+  stakeValue: string;
+  farmValue: string;
 }
 
 export interface UserWalletResponse extends Serializable {
@@ -302,9 +385,26 @@ export interface UserWalletResponse extends Serializable {
   tokens: TokenBalance[];
 }
 
+export interface ValueCheckResponse {
+  principal: string;
+  poolId: string;
+  tokenId: string;
+  deposit: string;
+  withdraw: string;
+  buy: string;
+  sell: string;
+  claim: string;
+  addLiq: string;
+  removeLiq: string;
+  subaccountBalance: string;
+  userPoolBalance: string;
+}
+
+// biome-ignore lint: ignore
 export type Serializable = {};
 
 export interface TokenBalance {
   token: string;
+  amount: number;
   balance: number;
 }

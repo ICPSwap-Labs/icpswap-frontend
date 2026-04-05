@@ -1,5 +1,5 @@
 import { DropDownMenu, Flex } from "@icpswap/ui";
-import { BigNumber, nonUndefinedOrNull, toEndTimeOfDay, toStartTimeOfDay } from "@icpswap/utils";
+import { BigNumber, getLocalDayEndMs, getLocalDayStartMs, nonUndefinedOrNull } from "@icpswap/utils";
 import { Box, Typography, useTheme } from "components/Mui";
 import { TimeRangeSelector } from "components/TimeRange/TimeRangeSelector";
 import dayjs from "dayjs";
@@ -79,10 +79,10 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
   // Set default startTime/endTime
   useEffect(() => {
     const now = Date.now();
-    const endTime = toEndTimeOfDay(now);
+    const endTime = getLocalDayEndMs(now);
 
     setEndTime(endTime);
-    setStartTime(toStartTimeOfDay(new BigNumber(endTime).minus(180 * 24 * 3600 * 1000).toString()));
+    setStartTime(getLocalDayStartMs(new BigNumber(endTime).minus(180 * 24 * 3600 * 1000).toString()));
   }, []);
 
   const handleRangeDateChange = useCallback(

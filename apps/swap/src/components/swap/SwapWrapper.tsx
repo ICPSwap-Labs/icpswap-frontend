@@ -60,8 +60,8 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     inputError: swapInputError,
     parsedAmount,
     trade,
+    pool,
     poolId,
-    routes,
     state: swapState,
     currencyBalances,
     userSlippageTolerance,
@@ -95,17 +95,16 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
 
   // Set pool for Swap store
   useEffect(() => {
-    const pool = routes[0]?.pools[0];
     setSelectedPool(pool);
 
     if (pool) {
       setCachedPool(pool);
     }
 
-    if (pool?.id) {
-      setPoolId(pool.id);
+    if (poolId) {
+      setPoolId(poolId);
     }
-  }, [routes, setSelectedPool, setCachedPool, setPoolId]);
+  }, [pool, poolId, setSelectedPool, setCachedPool, setPoolId]);
 
   // Set token for Swap store
   useEffect(() => {

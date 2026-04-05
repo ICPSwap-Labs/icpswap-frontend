@@ -1,29 +1,20 @@
-import type { PositionTransaction } from "@icpswap/types";
+import type { InfoSwapRecordResponse } from "@icpswap/types";
 import { BodyCell, Flex, TableRow, TextButton } from "@icpswap/ui";
 import { shorten } from "@icpswap/utils";
 import { Copy, TokenImage } from "components/index";
 import { useTheme } from "components/Mui";
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface PositionTransactionsRowProps {
-  transaction: PositionTransaction;
+  transaction: InfoSwapRecordResponse;
   wrapperClassName?: string;
 }
 
 export function PositionTransactionsRow({ transaction, wrapperClassName }: PositionTransactionsRowProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-
-  const positionId = useMemo(() => {
-    if ("transferPosition" in transaction.action) {
-      return transaction.action.transferPosition;
-    }
-
-    return null;
-  }, [transaction]);
 
   const [, token0] = useToken(transaction.token0Id);
   const [, token1] = useToken(transaction.token1Id);
@@ -40,7 +31,7 @@ export function PositionTransactionsRow({ transaction, wrapperClassName }: Posit
         {transaction.token0Symbol}/{transaction.token1Symbol}
       </BodyCell>
 
-      <BodyCell sx={{ justifyContent: "flex-end" }}>{positionId ? positionId.toString() : "--"}</BodyCell>
+      <BodyCell sx={{ justifyContent: "flex-end" }}>{transaction.positionId.toString()}</BodyCell>
 
       <BodyCell sx={{ justifyContent: "flex-end" }}>
         <Copy content={transaction.from}>{shorten(transaction.from)}</Copy>
@@ -52,7 +43,7 @@ export function PositionTransactionsRow({ transaction, wrapperClassName }: Posit
 
       <BodyCell sx={{ justifyContent: "flex-end" }}>
         <TextButton
-          to={`/liquidity/position/${positionId}/${transaction.poolId}`}
+          to={`/liquidity/position/${transaction.positionId}/${transaction.poolId}`}
           sx={{
             fontSize: "16px",
             "@media(max-width: 640px)": {

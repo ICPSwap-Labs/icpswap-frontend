@@ -162,8 +162,7 @@ export function BitcoinStyleDissolveUI({
           </Box>
 
           <Typography>
-            {withdrawalFee ? parseTokenAmount(withdrawalFee, token.decimals).toFormat() : "--"}
-            {token.symbol}
+            {withdrawalFee ? parseTokenAmount(withdrawalFee, token.decimals).toFormat() : "--"} {token.symbol}
           </Typography>
         </Flex>
       </Box>

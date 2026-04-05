@@ -1,4 +1,4 @@
-import type { LimitTransaction, Null } from "@icpswap/types";
+import type { InfoSwapRecordResponse, Null } from "@icpswap/types";
 import { Header, HeaderCell, LoadingRow } from "@icpswap/ui";
 import { Box, makeStyles, type Theme } from "components/Mui";
 import { Tab } from "constants/index";
@@ -27,7 +27,7 @@ export interface HistoryTableProUIProps {
   wrapperClassName?: string;
   poolId: string | Null;
   loading: boolean;
-  limitTransactions: LimitTransaction[] | Null;
+  limitTransactions: InfoSwapRecordResponse[] | Null;
   unusedBalance: { balance0: bigint; balance1: bigint } | Null;
 }
 

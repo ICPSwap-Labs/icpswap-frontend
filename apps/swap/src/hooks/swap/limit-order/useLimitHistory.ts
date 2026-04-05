@@ -1,11 +1,11 @@
 import { tickToPrice } from "@icpswap/swap-sdk";
-import type { LimitTransaction } from "@icpswap/types";
+import type { InfoSwapRecordResponse } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { useToken } from "hooks/index";
 import { useMemo } from "react";
 
 export interface UseLimitHistoryProps {
-  transaction: LimitTransaction;
+  transaction: InfoSwapRecordResponse;
 }
 
 export function useLimitHistory({ transaction }: UseLimitHistoryProps) {

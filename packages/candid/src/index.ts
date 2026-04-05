@@ -2,7 +2,6 @@ export * from "./chainKeyToken";
 export * from "./dip20";
 export * from "./icp";
 export * from "./icrc";
-export * from "./info";
 export * from "./nft";
 export * from "./other";
 export * from "./sns";

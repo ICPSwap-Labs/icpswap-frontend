@@ -5,16 +5,14 @@ import { Flex, Tooltip } from "@icpswap/ui";
 import { BigNumber, formatAmount, formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
-import { useSwapStore } from "components/swap/index";
 import { SwapProCardWrapper } from "components/swap/pro";
+import { LiquidityLocks } from "components/swap/pro/LiquidityLocks";
 import { TokenPoolPrice } from "components/TokenPoolPrice";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import type React from "react";
 import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowUpRight } from "react-feather";
 import { useTranslation } from "react-i18next";
-
-import { LiquidityLocks } from "./LiquidityLocks";
 
 interface TokenTvlProps {
   token: Token | Null;
@@ -82,24 +80,27 @@ interface TvlValue {
   tvl1: string | Null;
 }
 
-export default function TokenUI() {
+interface TokenTvlAndLiquidityLocksProps {
+  inputToken: Token | Null;
+  outputToken: Token | Null;
+  poolId: string | Null;
+}
+
+export function TokenTvlAndLiquidityLocks({ inputToken, outputToken, poolId }: TokenTvlAndLiquidityLocksProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const { poolId, inputToken, outputToken } = useSwapStore();
 
-  const [token0, setToken0] = useState<Token | Null>(null);
-  const [token1, setToken1] = useState<Token | Null>(null);
-
-  useEffect(() => {
+  const { token0, token1 } = useMemo(() => {
     if (inputToken && outputToken) {
       const sorted = inputToken.sortsBefore(outputToken);
 
       const token0 = sorted ? inputToken : outputToken;
       const token1 = sorted ? outputToken : inputToken;
 
-      setToken0(token0);
-      setToken1(token1);
+      return { token0, token1 };
     }
+
+    return { token0: null, token1: null };
   }, [inputToken, outputToken]);
 
   const infoToken0 = useInfoToken(token0?.address);

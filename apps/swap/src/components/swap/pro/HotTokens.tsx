@@ -203,20 +203,6 @@ export default function HotTokens() {
           </Box>
         </Box>
       </Box>
-
-      {/* <Box
-        sx={{
-          width: "60px",
-          borderRadius: "50px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Typography color="text.primary">
-          <Trans>Tokens</Trans>
-        </Typography>
-      </Box> */}
     </Box>
   ) : null;
 }

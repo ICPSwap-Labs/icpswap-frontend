@@ -2,9 +2,8 @@ import { Flex } from "@icpswap/ui";
 import Background from "components/Background";
 import { GlobalTips } from "components/Layout/GlobalTips";
 import { Box, CssBaseline, makeStyles, type Theme, useTheme } from "components/Mui";
+import Header from "components/swap/pro/layout/Header";
 import type React from "react";
-
-import Header from "./Header";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

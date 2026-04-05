@@ -25,7 +25,8 @@ export const toUnixTimestamp = (timestamp: string | number) => {
   return parseInt(String(Number(timestamp) / 1000), 10);
 };
 
-export const toStartTimeOfDay = (timestamp: string | number) => {
+/** Milliseconds at 00:00:00 local time for the calendar day of `timestamp`. */
+export const getLocalDayStartMs = (timestamp: string | number) => {
   const date = new Date(Number(timestamp));
 
   const year = date.getFullYear();
@@ -35,7 +36,8 @@ export const toStartTimeOfDay = (timestamp: string | number) => {
   return new Date(`${year}-${mouth}-${day}T00:00:00`).getTime();
 };
 
-export const toEndTimeOfDay = (timestamp: string | number) => {
+/** Milliseconds at 23:59:59 local time for the calendar day of `timestamp`. */
+export const getLocalDayEndMs = (timestamp: string | number) => {
   const date = new Date(Number(timestamp));
 
   const year = date.getFullYear();
@@ -43,4 +45,15 @@ export const toEndTimeOfDay = (timestamp: string | number) => {
   const day = toDoubleNumber(date.getDate());
 
   return new Date(`${year}-${mouth}-${day}T23:59:59`).getTime();
+};
+
+/** Millisecond `{ startTime, endTime }` for the last `days` days, ending at `end` (default: now). */
+export const getTimeRangeForPastDays = (days: number, end?: number) => {
+  const now = end ?? Date.now();
+  const start = now - days * 24 * 60 * 60 * 1000;
+
+  return {
+    start,
+    end: now,
+  };
 };

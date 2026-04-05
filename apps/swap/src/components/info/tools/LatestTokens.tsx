@@ -1,5 +1,5 @@
 import { useLatestTokens } from "@icpswap/hooks";
-import type { LatestToken } from "@icpswap/types";
+import type { TokenResponse } from "@icpswap/types";
 import { BodyCell, Flex, Header, HeaderCell, Link, LoadingRow, NoData, Proportion, TableRow } from "@icpswap/ui";
 import { formatAmount, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { TimestampCell, TokenImage } from "components/index";
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 interface TokenRowProps {
-  token: LatestToken;
+  token: TokenResponse;
   className?: string;
 }
 

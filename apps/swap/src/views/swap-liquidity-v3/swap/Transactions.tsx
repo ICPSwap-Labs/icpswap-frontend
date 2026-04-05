@@ -1,7 +1,7 @@
 import { useUserSwapTransactions } from "@icpswap/hooks";
 import type { InfoTransactionResponse } from "@icpswap/types";
 import { Link, SwapTransactionPriceTip } from "@icpswap/ui";
-import { BigNumber, enumToString } from "@icpswap/utils";
+import { BigNumber, enumToString, getTimeRangeForPastDays } from "@icpswap/utils";
 import { LoadingRow, NoData, TokenImage } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
 import { SwapTransactionType } from "components/swap/SwapTransactionType";
@@ -89,12 +89,8 @@ export function SwapTransactions() {
   const principal = useAccountPrincipalString();
   const theme = useTheme();
 
-  const { startTime, endTime } = useMemo(() => {
-    const now = Date.now();
-    const startTime = new BigNumber(now).minus(180 * 24 * 3600 * 1000).toNumber();
-    const endTime = now;
-
-    return { startTime, endTime };
+  const { start, end } = useMemo(() => {
+    return getTimeRangeForPastDays(180);
   }, []);
 
   const { data: result, isLoading: loading } = useUserSwapTransactions({
@@ -102,8 +98,8 @@ export function SwapTransactions() {
     poolId: undefined,
     page: 1,
     limit: 100,
-    startTime,
-    endTime,
+    startTime: start,
+    endTime: end,
   });
 
   const transactions = result?.content;

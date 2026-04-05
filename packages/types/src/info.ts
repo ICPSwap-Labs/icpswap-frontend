@@ -1,5 +1,3 @@
-export type { PositionTransaction } from "@icpswap/candid";
-
 export type AllPoolsTVL = Array<[string, number]>;
 
 export type AllTokensTVL = Array<[string, number]>;

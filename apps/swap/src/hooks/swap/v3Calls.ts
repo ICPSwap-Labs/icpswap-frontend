@@ -271,17 +271,15 @@ export async function getSwapPoolAvailable(canisterId: string) {
 }
 
 export function useSwapPoolAvailable(canisterId: string | undefined) {
-  const [available, setAvailable] = useState(true);
-
-  useEffect(() => {
-    const call = async () => {
-      if (!canisterId) return;
-      const available = await getSwapPoolAvailable(canisterId);
-      setAvailable(!!available);
-    };
-
-    call();
-  }, [canisterId]);
+  const { data: available } = useQuery({
+    queryKey: ["useSwapPoolAvailable", canisterId],
+    queryFn: async () => {
+      if (!canisterId) return true;
+      const result = await getSwapPoolAvailable(canisterId);
+      return isUndefinedOrNull(result) ? true : result;
+    },
+    enabled: !!canisterId,
+  });
 
   return useMemo(() => available, [available]);
 }

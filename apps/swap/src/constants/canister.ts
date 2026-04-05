@@ -41,13 +41,9 @@ export const CANISTER_NAMES = {
   SingleSmartChef: "SingleSmartChef",
   SwapStaker: "SwapStaker",
   FileActor: "File",
-  SwapRecord: "BaseDataStructure",
-  SwapGraphPool: "Pools",
+
   TokenList: "TokenList",
 
-  V3SwapFactory: "SwapFactory",
-  V3SwapPool: "SwapPool",
-  V3SwapNFT: "SwapNFT",
   PassCodeManager: "PassCodeManager",
 
   ClaimStorage: "ClaimStorage",

@@ -1,4 +1,4 @@
-import type { LimitTransaction } from "@icpswap/types";
+import type { InfoSwapRecordResponse } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { BigNumber, formatAmount, formatTokenPrice } from "@icpswap/utils";
 import { TokenImage } from "components/index";
@@ -9,7 +9,7 @@ import { useLimitHistory } from "hooks/swap/limit-order/useLimitHistory";
 import { useCallback, useState } from "react";
 
 export interface HistoryRowProps {
-  transaction: LimitTransaction;
+  transaction: InfoSwapRecordResponse;
   wrapperClasses?: string;
 }
 
@@ -40,7 +40,7 @@ export function HistoryRow({ transaction, wrapperClasses }: HistoryRowProps) {
     >
       <Flex>
         <Typography sx={{ fontSize: "16px", color: "text.primary" }}>
-          {dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm")}
+          {dayjs(Number(transaction.timestamp * 1000)).format("YYYY-MM-DD HH:mm")}
         </Typography>
       </Flex>
 

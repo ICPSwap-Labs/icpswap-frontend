@@ -19,23 +19,12 @@ const useStyles = makeStyles(() => {
 
 export function HistoryList() {
   const classes = useStyles();
-
   const principal = useAccountPrincipal();
 
-  const start_time = useMemo(() => {
-    const now = parseInt(String(Date.now() / 1000), 10);
-    return now - 60 * 24 * 3600;
-  }, []);
-
-  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions(
-    principal?.toString(),
-    start_time,
-    0,
-    100,
-  );
+  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions(principal?.toString(), 1, 100);
 
   const limitTransactions = useMemo(() => {
-    return limitTransactionsResult?.records;
+    return limitTransactionsResult?.content;
   }, [limitTransactionsResult]);
 
   const scrollToTop = useScrollToTop();

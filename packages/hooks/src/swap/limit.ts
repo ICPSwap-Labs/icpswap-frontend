@@ -1,7 +1,21 @@
 import { Principal } from "@icp-sdk/core/principal";
-import { limitTransaction, swapPool } from "@icpswap/actor";
-import type { LimitOrder, LimitOrderKey, LimitOrderValue, LimitTransactionResult, Null } from "@icpswap/types";
-import { isAvailablePageArgs, isUndefinedOrNull, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { swapPool } from "@icpswap/actor";
+import type {
+  IcpSwapAPIPageResult,
+  InfoSwapRecordResponse,
+  LimitOrder,
+  LimitOrderKey,
+  LimitOrderValue,
+  Null,
+} from "@icpswap/types";
+import {
+  getTimeRangeForPastDays,
+  icpswap_fetch_get,
+  isAvailablePageArgs,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
+  resultFormat,
+} from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function placeOrder(canisterId: string, positionId: bigint, tickLimit: bigint) {
@@ -81,28 +95,38 @@ export function usePoolLimitAvailableState(
   });
 }
 
-export async function getUserLimitTransactions(principal: string, start: number, offset: number, limit: number) {
-  const result = await (await limitTransaction()).get(principal, BigInt(start), BigInt(offset), BigInt(limit));
-
-  return resultFormat<LimitTransactionResult>(result).data;
+interface GetUserLimitTransactionsProps {
+  principal: string;
+  page: number;
+  limit: number;
+  begin: number;
+  end: number;
 }
 
+export async function getUserLimitTransactions({ principal, page, limit, begin, end }: GetUserLimitTransactionsProps) {
+  return (
+    await icpswap_fetch_get<IcpSwapAPIPageResult<InfoSwapRecordResponse>>(
+      `/info/record/limitOrder/list?principal=${principal}&page=${page}&limit=${limit}&begin=${begin}&end=${end}`,
+    )
+  ).data;
+}
+
+// Default to 180 days history
 export function useUserLimitTransactions(
   principal: string | undefined,
-  start: number | Null,
   offset: number,
   limit: number,
   refresh?: number,
-): UseQueryResult<LimitTransactionResult | undefined, Error> {
-  const enabled = nonUndefinedOrNull(start) && nonUndefinedOrNull(principal) && isAvailablePageArgs(offset, limit);
+): UseQueryResult<IcpSwapAPIPageResult<InfoSwapRecordResponse> | undefined, Error> {
+  const enabled = nonUndefinedOrNull(principal) && isAvailablePageArgs(offset, limit);
   return useQuery({
-    queryKey: ["useUserLimitTransactions", start, principal, offset, limit, refresh],
+    queryKey: ["useUserLimitTransactions", principal, offset, limit, refresh],
     queryFn: async () => {
-      if (nonUndefinedOrNull(start) && nonUndefinedOrNull(principal) && isAvailablePageArgs(offset, limit)) {
-        return await getUserLimitTransactions(principal, start, offset, limit);
-      }
+      if (isUndefinedOrNull(principal)) return undefined;
 
-      return undefined;
+      const { start, end } = getTimeRangeForPastDays(180 - 1);
+
+      return await getUserLimitTransactions({ principal, page: offset, limit, begin: start, end });
     },
     enabled,
   });

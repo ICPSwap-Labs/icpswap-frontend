@@ -29,7 +29,7 @@ export function useUserUnUsedBalance(
     return pools?.map((pool) => pool.canisterId.toString());
   }, [pools]);
 
-  // When tokenId or targetPools is changed, update the index, and the _fetch would be abort if index is not match
+  // biome-ignore lint: When tokenId or targetPools is changed, update the index, and the _fetch would be abort if index is not match
   useEffect(() => {
     unused_fetch_index++;
   }, [tokenId, targetPools]);

@@ -3,13 +3,13 @@ import { ButtonChip } from "components/ButtonChip";
 import { FilledTextField } from "components/index";
 import ProfileSection from "components/Layout/Header/ProfileSection";
 import { Box, Grid, InputAdornment } from "components/Mui";
+import { ReactComponent as MobileSearchIcon } from "components/swap/pro/layout/mobile-search.svg";
+import { ReactComponent as ProLogo } from "components/swap/pro/layout/pro-logo.svg";
+import { TokenSearch } from "components/swap/pro/layout/TokenSearch";
 import { useMediaQueryMD } from "hooks/theme";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ReactComponent as MobileSearchIcon } from "./mobile-search.svg";
-import { ReactComponent as ProLogo } from "./pro-logo.svg";
-import { TokenSearch } from "./TokenSearch";
 
 export default function Header() {
   const { t } = useTranslation();

@@ -6,7 +6,7 @@ export interface SwapStoreProps {
   poolId: string | Null;
   setPoolId: (poolId: string) => void;
   selectedPool: Pool | Null;
-  setSelectedPool: (pool: Pool) => void;
+  setSelectedPool: (pool: Pool | Null) => void;
   cachedPool: Pool | Null;
   setCachedPool: (pool: Pool) => void;
   inputToken: Token | Null;
@@ -27,7 +27,7 @@ export const useSwapStore = create<SwapStoreProps>((set) => ({
   setPoolId: (poolId: string) => set(() => ({ poolId })),
   // The current active pool, maybe pool is undefined, because the two tokens has not created a pool
   selectedPool: undefined,
-  setSelectedPool: (pool: Pool) => set(() => ({ selectedPool: pool })),
+  setSelectedPool: (pool: Pool | Null) => set(() => ({ selectedPool: pool })),
   // The pool that
   cachedPool: undefined,
   setCachedPool: (pool: Pool) => set(() => ({ cachedPool: pool })),

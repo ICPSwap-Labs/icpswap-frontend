@@ -6,23 +6,23 @@ import { ChartView } from "@icpswap/ui";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { Box } from "components/Mui";
 import { PoolTokensInformation, useSwapProStore } from "components/swap/pro";
+import HotTokens from "components/swap/pro//HotTokens";
+import { SearchWrapper } from "components/swap/pro//layout/SearchWrapper";
+import { TokenChartWrapper } from "components/swap/pro//TokenChart";
+import Transactions from "components/swap/pro//Transactions";
+import Swap from "components/swap/pro/Swap";
+import { TokenChartInfo } from "components/swap/pro/TokenChart/TokenChartInfo";
+import { TokenTvlAndLiquidityLocks } from "components/swap/pro/TokenTvlAndLiquidityLocks";
 import { useSwapStore } from "components/swap/store";
 import { useMediaQuerySM } from "hooks/theme";
 import { useEffect, useState } from "react";
 import { useFetchGlobalDefaultChartType } from "store/global/hooks";
 import { getChartView } from "utils/swap/chartType";
-import HotTokens from "./HotTokens";
-import { SearchWrapper } from "./layout/SearchWrapper";
-import Swap from "./Swap";
-import TokenTvlAndLiquidityLocks from "./Token";
-import { TokenChartWrapper } from "./TokenChart";
-import TokenChartInfo from "./TokenChart/Token";
-import Transactions from "./Transactions";
 
 export function SwapProContextWrapper() {
   const matchDownSM = useMediaQuerySM();
 
-  const { inputToken, outputToken } = useSwapStore();
+  const { inputToken, outputToken, poolId } = useSwapStore();
   const { token, setToken, setChartView } = useSwapProStore();
 
   const [infoToken, setInfoToken] = useState<InfoTokenRealTimeDataResponse | undefined>(undefined);
@@ -105,9 +105,16 @@ export function SwapProContextWrapper() {
           >
             <Swap />
 
-            {matchDownSM ? <TokenChartInfo infoToken={infoToken} tokenListInfo={tokenListInfo} /> : null}
+            {matchDownSM ? (
+              <TokenChartInfo
+                infoToken={infoToken}
+                tokenListInfo={tokenListInfo}
+                inputToken={inputToken}
+                outputToken={outputToken}
+              />
+            ) : null}
 
-            <TokenTvlAndLiquidityLocks />
+            <TokenTvlAndLiquidityLocks poolId={poolId} inputToken={inputToken} outputToken={outputToken} />
 
             <PoolTokensInformation />
           </Box>
@@ -124,7 +131,12 @@ export function SwapProContextWrapper() {
               },
             }}
           >
-            <TokenChartWrapper infoToken={infoToken} tokenListInfo={tokenListInfo} />
+            <TokenChartWrapper
+              infoToken={infoToken}
+              tokenListInfo={tokenListInfo}
+              inputToken={inputToken}
+              outputToken={outputToken}
+            />
             <Transactions />
           </Box>
         </Box>
