@@ -1,6 +1,7 @@
 import type { Null } from "@icpswap/types";
 import qs from "qs";
 
+/** Updates or removes one query key in a `?query` string (see {@link locationMultipleSearchReplace}). */
 export function locationSearchReplace(search: string, key: string, value: string | Null) {
   return locationMultipleSearchReplace(search, [{ key, value }]);
 }
@@ -10,6 +11,7 @@ interface Params {
   value: string | Null;
 }
 
+/** Merges multiple query keys into `search`; removes keys whose value is falsy. */
 export function locationMultipleSearchReplace(search: string, params: Params[]) {
   const __search = search.replace("?", "");
   const parsedSearch = qs.parse(__search);

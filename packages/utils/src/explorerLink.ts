@@ -1,5 +1,8 @@
 import { principalToAccount } from "./principal";
 
+/**
+ * Internet Computer dashboard URL for an account (long hex) or canister id (short principal text).
+ */
 export function icDashboardExplorerLink(address: string) {
   if (address.length > 27) {
     const account = principalToAccount(address);

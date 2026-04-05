@@ -1,3 +1,4 @@
+/** Parses a hex string (optional `0x` prefix) into an array of byte values. */
 export const hexToBytes = (hex: string): number[] => {
   let new_hex = hex;
 
@@ -14,10 +15,15 @@ export const hexToBytes = (hex: string): number[] => {
   return bytes;
 };
 
+/** Encodes bytes as a contiguous lowercase hex string (two digits per byte). */
 export const toHexString = (bytes: Uint8Array | number[]): string => {
   return [...bytes].reduce((str, byte) => str + byte.toString(16).padStart(2, "0"), "");
 };
 
+/**
+ * Parses a subaccount hex string into 32 bytes, left-padding with `.` (0x2e) when shorter than 64 hex chars.
+ * Strips an optional `0x` prefix from the input.
+ */
 export const subaccountHexToBytes = (hex: string): number[] => {
   let new_hex = hex;
 
@@ -41,6 +47,7 @@ export const subaccountHexToBytes = (hex: string): number[] => {
   return bytes;
 };
 
+/** Converts a subaccount hex string to a 32-byte `Uint8Array` via {@link subaccountHexToBytes}. */
 export const subAccountToUint8Array = (hex: string): Uint8Array => {
   return Uint8Array.from(subaccountHexToBytes(hex));
 };

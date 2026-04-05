@@ -4,6 +4,9 @@ import BigNumber from "bignumber.js";
 import { isUndefinedOrNull } from "./isUndefinedOrNull";
 import { parseTokenAmount } from "./tokenAmount";
 
+/**
+ * Normalizes a transaction type for display: passes through strings; for objects, returns the first key name.
+ */
 export function transactionsTypeFormat(type: any): string {
   if (typeof type === "string") return type;
   if (typeof type === "object") {
@@ -14,6 +17,7 @@ export function transactionsTypeFormat(type: any): string {
   return type;
 }
 
+/** Opens a new window and writes an `<img>` whose `src` is the given base64 data URL. */
 export function openBase64ImageInNewWindow(base64String: string) {
   const image = new Image();
   image.src = base64String;
@@ -22,6 +26,9 @@ export function openBase64ImageInNewWindow(base64String: string) {
   win?.document.write(image.outerHTML);
 }
 
+/**
+ * Formats a cycle amount (12 decimals) for display, optionally omitting the `T` unit suffix.
+ */
 export function cycleValueFormat(value: NumberType | Null, noUnit?: boolean): string {
   if (value === 0 || isUndefinedOrNull(value)) return noUnit ? `0` : `0 T`;
 
@@ -30,28 +37,34 @@ export function cycleValueFormat(value: NumberType | Null, noUnit?: boolean): st
 
 export type User = { principal: Principal } | { address: string };
 
+/** Type guard: user is identified by an ICP `Principal`. */
 export function isPrincipalUser(user: User): user is { principal: Principal } {
   if ("principal" in user) return true;
   return false;
 }
 
+/** Type guard: user is identified by an account address string. */
 export function isAddressUser(user: User): user is { address: string } {
   if ("address" in user) return true;
   return false;
 }
 
+/** UTF-8 encodes a string into bytes. */
 export function stringToArrayBuffer(string: string): Uint8Array {
   return new TextEncoder().encode(string);
 }
 
+/** Decodes UTF-8 bytes into a string. */
 export function arrayBufferToString(arrayBuffer: Uint8Array): string {
   return new TextDecoder("utf-8").decode(arrayBuffer);
 }
 
+/** Converts each byte to two lowercase hex digits (no `0x` prefix). */
 export function arrayBufferToHex(arrayBuffer: Uint8Array) {
   return Array.from([...arrayBuffer], (byte) => `0${(byte & 0xff).toString(16)}`.slice(-2)).join("");
 }
 
+/** Parses a hex string (optional `0x` prefix) into a `Uint8Array`. */
 export function arrayBufferFromHex(hex: string) {
   let __hex = hex;
 
@@ -62,6 +75,7 @@ export function arrayBufferFromHex(hex: string) {
   return Uint8Array.from(bytes);
 }
 
+/** Returns the principal or address string for a {@link User}. */
 export function valueofUser(user: User) {
   if (isPrincipalUser(user)) {
     return user.principal;
@@ -69,6 +83,7 @@ export function valueofUser(user: User) {
   return user.address;
 }
 
+/** Splits `arr` into chunks of at most `length` items; returns `[arr]` if `length` is not smaller than `arr.length`. */
 export function splitArr<T>(arr: T[], length: number) {
   const total_length = arr.length;
 
@@ -86,6 +101,7 @@ export function splitArr<T>(arr: T[], length: number) {
   return result;
 }
 
+/** Pads single-digit numbers with a leading `0` for display (e.g. month/day). */
 export function toDoubleNumber(val: number | string) {
   const __val = Number(val);
 

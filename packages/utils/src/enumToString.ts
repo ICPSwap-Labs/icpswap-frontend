@@ -1,3 +1,6 @@
+/**
+ * Stringifies enum-like values: returns strings as-is; for objects, the first own key name; otherwise coerces to string.
+ */
 export function enumToString(type: any): string {
   if (typeof type === "string") return type;
 

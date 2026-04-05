@@ -2,18 +2,24 @@ import { ResultStatus, type StatusResult } from "@icpswap/types";
 import isObject from "lodash/isObject";
 import { isUndefinedOrNull } from "./isUndefinedOrNull";
 
+/** True if `key` denotes an error variant (`ERROR` or `"Err"`). */
 export function isResultErrKey(key: string) {
   return key === ResultStatus.ERROR || key === "Err";
 }
 
+/** True if `key` denotes a success variant (`OK` or `"Ok"`). */
 export function isResultOkKey(key: string) {
   return key === ResultStatus.OK || key === "Ok";
 }
 
+/** True if `key` is either an ok or err result key. */
 export function isResultKey(key: string) {
   return isResultErrKey(key) || isResultOkKey(key);
 }
 
+/**
+ * Normalizes canister/API-style `{ Ok: T }` / `{ Err: ... }` (or status enums) into {@link StatusResult}.
+ */
 export function resultFormat<T>(result: any): StatusResult<T> {
   if (isUndefinedOrNull(result)) {
     return {
