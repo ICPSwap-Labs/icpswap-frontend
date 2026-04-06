@@ -72,18 +72,19 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
 
     return positions.reduce(
       (prev: Array<{ poolId: string; positionIds: bigint[] }>, curr: UserPositionByList) => {
-        const existIndex = prev.findIndex(({ poolId }) => poolId === curr.poolId);
+        const index = prev.findIndex(({ poolId }) => poolId === curr.poolId);
 
-        if (existIndex === -1)
-          return [prev.slice(), { poolId: curr.poolId, positionIds: [curr.position.id] }] as Array<{
+        if (index === -1) {
+          return prev.concat([{ poolId: curr.poolId, positionIds: [curr.position.id] }] as Array<{
             poolId: string;
             positionIds: bigint[];
-          }>;
+          }>);
+        }
 
-        const existData = prev[existIndex];
+        const existData = prev[index];
         const existNewData = { poolId: existData.poolId, positionIds: [...existData.positionIds, curr.position.id] };
 
-        prev.splice(existIndex, 1, existNewData);
+        prev.splice(index, 1, existNewData);
 
         return prev;
       },
