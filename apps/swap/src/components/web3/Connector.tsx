@@ -1,6 +1,6 @@
 import { Button } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
 import { useCallback } from "react";
-import { isMobile } from "react-device-detect";
 import { useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 
@@ -10,6 +10,7 @@ export interface Web3ButtonConnectorProps {
 
 export function Web3ButtonConnector() {
   const { connect } = useConnect();
+  const isMobile = useIsMobile();
 
   const handleConnect = useCallback(async () => {
     if (isMobile) return;
@@ -19,7 +20,7 @@ export function Web3ButtonConnector() {
     } catch (error) {
       console.error(`web3-react connection error: ${error}`);
     }
-  }, [connect]);
+  }, [connect, isMobile]);
 
   return (
     <Button sx={{ maxWidth: "100%" }} variant="contained" onClick={handleConnect} disabled={isMobile}>

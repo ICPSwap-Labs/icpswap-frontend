@@ -1,11 +1,10 @@
 import { Loading } from "@icpswap/ui";
 import Identity, { type IdentityRef, type SubmitLoadingProps } from "components/Identity";
 import { Grid, makeStyles, TextField, type Theme, Typography, useTheme } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
 import useFileUpload from "hooks/useNFTUpload";
 import { forwardRef, type Ref, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { isMobile } from "react-device-detect";
 import { getFileType } from "utils/type";
-
 import CloudUploadIcon from "./UploadCloudIcon";
 
 const useStyles = makeStyles(() => {
@@ -86,6 +85,7 @@ const Upload = forwardRef(
     });
 
     const identityRef = useRef<IdentityRef>(null);
+    const isMobile = useIsMobile();
 
     const {
       loading: uploadLoading,

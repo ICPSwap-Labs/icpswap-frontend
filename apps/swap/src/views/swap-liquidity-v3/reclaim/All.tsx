@@ -1,8 +1,8 @@
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
 import { LoadingRow, NoData, Tooltip } from "components/index";
 import { Box, Checkbox, Typography } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
 import { useMemo, useState } from "react";
-import { isMobile } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useHideUnavailableClaimManager } from "store/customization/hooks";
@@ -22,6 +22,7 @@ export function ReclaimAll() {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
 
+  const isMobile = useIsMobile();
   const { loading, balances } = useUserSwapPoolBalances({ principal });
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);

@@ -1,7 +1,7 @@
 import { Breadcrumbs, TabPanel, Tooltip, Wrapper } from "components/index";
 import { Box, Typography } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
 import { useEffect } from "react";
-import { isMobile } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ReclaimAll } from "./All";
@@ -30,6 +30,7 @@ export default function SwapReclaim() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (location.search === "") {

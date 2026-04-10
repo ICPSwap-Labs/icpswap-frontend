@@ -204,9 +204,6 @@ importers:
       '@ethersproject/abi':
         specifier: ^5.7.0
         version: 5.7.0
-      '@ethersproject/abstract-provider':
-        specifier: ^5.7.0
-        version: 5.7.0
       '@ethersproject/address':
         specifier: ^5.7.0
         version: 5.7.0
@@ -363,9 +360,6 @@ importers:
       react-countdown:
         specifier: ^2.3.6
         version: 2.3.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
-      react-device-detect:
-        specifier: ^1.17.0
-        version: 1.17.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react-feather:
         specifier: ^2.0.10
         version: 2.0.10(react@18.2.0)
@@ -8194,12 +8188,6 @@ packages:
       react: '>= 15'
       react-dom: '>= 15'
 
-  react-device-detect@1.17.0:
-    resolution: {integrity: sha512-bBblIStwpHmoS281JFIVqeimcN3LhpoP5YKDWzxQdBIUP8S2xPvHDgizLDhUq2ScguLfVPmwfF5y268EEQR60w==}
-    peerDependencies:
-      react: '>= 0.14.0 < 18.0.0'
-      react-dom: '>= 0.14.0 < 18.0.0'
-
   react-devtools-core@5.3.2:
     resolution: {integrity: sha512-crr9HkVrDiJ0A4zot89oS0Cgv0Oa4OG1Em4jit3P3ZxZSKPMYyMjfwMqgcJna9o625g8oN87rBm8SWWrSTBZxg==}
 
@@ -9313,10 +9301,6 @@ packages:
   typical@5.2.0:
     resolution: {integrity: sha512-dvdQgNDNJo+8B2uBQoqdb11eUCE1JQXhvjC/CZtgvZseVd5TYMXnq0+vuUemXbd/Se29cTaUuPX3YIc2xgbvIg==}
     engines: {node: '>=8'}
-
-  ua-parser-js@0.7.39:
-    resolution: {integrity: sha512-IZ6acm6RhQHNibSt7+c09hhvsKy9WUr4DVbeq9U8o71qxyYtJpQeDxQnMrVqnIFMLcQjHO0I9wgfO2vIahht4w==}
-    hasBin: true
 
   ufo@1.6.3:
     resolution: {integrity: sha512-yDJTmhydvl5lJzBmy/hyOAA0d+aqCBuwl818haVdYCRrWV84o7YyeVm4QlVHStqNrrJSTb6jKuFAVqAFsr+K3Q==}
@@ -19799,12 +19783,6 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
 
-  react-device-detect@1.17.0(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      ua-parser-js: 0.7.39
-
   react-devtools-core@5.3.2(bufferutil@4.0.8):
     dependencies:
       shell-quote: 1.8.1
@@ -21073,8 +21051,6 @@ snapshots:
   typical@4.0.0: {}
 
   typical@5.2.0: {}
-
-  ua-parser-js@0.7.39: {}
 
   ufo@1.6.3: {}
 

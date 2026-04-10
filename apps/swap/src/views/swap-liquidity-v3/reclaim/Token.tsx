@@ -2,8 +2,8 @@ import { useParsedQueryString, useUserSwapPoolBalances } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { LoadingRow, NoData, SelectToken } from "components/index";
 import { Box, Checkbox, Typography } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
 import { useEffect, useMemo, useState } from "react";
-import { isMobile } from "react-device-detect";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -25,6 +25,7 @@ export function ReclaimWithToken() {
   const principal = useAccountPrincipalString();
   const navigate = useNavigate();
   const { tokenId: tokenIdFromUrl } = useParsedQueryString() as { tokenId: string };
+  const isMobile = useIsMobile();
 
   const [tokenId, setTokenId] = useState<string | undefined>(undefined);
 
