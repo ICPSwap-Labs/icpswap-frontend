@@ -56,6 +56,9 @@ importers:
       dayjs:
         specifier: ^1.11.10
         version: 1.11.13
+      i18next:
+        specifier: 23.10.0
+        version: 23.10.0
       jotai:
         specifier: ^2.15.0
         version: 2.15.0(@babel/core@7.29.0)(@babel/template@7.28.6)(@types/react@18.2.0)(react@18.2.0)
@@ -74,6 +77,9 @@ importers:
       react-dom:
         specifier: 18.2.0
         version: 18.2.0(react@18.2.0)
+      react-i18next:
+        specifier: 14.1.0
+        version: 14.1.0(i18next@23.10.0)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.2(@babel/core@7.29.0)(@babel/preset-env@7.26.0(@babel/core@7.29.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)
       react-redux:
         specifier: 8.0.5
         version: 8.0.5(@types/react-dom@18.2.0)(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.2(@babel/core@7.29.0)(@babel/preset-env@7.26.0(@babel/core@7.29.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)(redux@4.2.1)
@@ -330,9 +336,6 @@ importers:
       highcharts:
         specifier: 12.4.0
         version: 12.4.0
-      i18next:
-        specifier: 23.10.0
-        version: 23.10.0
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.1
@@ -366,9 +369,6 @@ importers:
       react-helmet:
         specifier: ^6.1.0
         version: 6.1.0(react@18.2.0)
-      react-i18next:
-        specifier: 14.1.0
-        version: 14.1.0(i18next@23.10.0)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.2(@babel/core@7.29.0)(@babel/preset-env@7.26.0(@babel/core@7.29.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)
       react-infinite-scroll-component:
         specifier: ^6.1.0
         version: 6.1.0(react@18.2.0)
@@ -605,9 +605,6 @@ importers:
       '@icpswap/utils':
         specifier: workspace:*
         version: link:../utils
-      i18next:
-        specifier: 23.10.0
-        version: 23.10.0
       lightweight-charts:
         specifier: 3.8.0
         version: 3.8.0
@@ -617,9 +614,6 @@ importers:
       react-feather:
         specifier: ^2.0.8
         version: 2.0.10(react@18.2.0)
-      react-i18next:
-        specifier: 14.1.0
-        version: 14.1.0(i18next@23.10.0)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.2(@babel/core@7.29.0)(@babel/preset-env@7.26.0(@babel/core@7.29.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)
       react-is:
         specifier: 18.2.0
         version: 18.2.0
@@ -10236,7 +10230,7 @@ snapshots:
       '@babel/types': 7.29.0
       '@jridgewell/remapping': 2.3.5
       convert-source-map: 2.0.0
-      debug: 4.3.7(supports-color@7.2.0)
+      debug: 4.3.7
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -10311,7 +10305,7 @@ snapshots:
       '@babel/core': 7.29.0
       '@babel/helper-compilation-targets': 7.28.6
       '@babel/helper-plugin-utils': 7.28.6
-      debug: 4.3.7(supports-color@7.2.0)
+      debug: 4.3.7
       lodash.debounce: 4.0.8
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -10511,7 +10505,7 @@ snapshots:
   '@babel/plugin-syntax-async-generators@7.8.4(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-bigint@7.8.3(@babel/core@7.26.0)':
     dependencies:
@@ -10521,7 +10515,7 @@ snapshots:
   '@babel/plugin-syntax-bigint@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@7.26.0)':
     dependencies:
@@ -10531,7 +10525,7 @@ snapshots:
   '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-class-static-block@7.14.5(@babel/core@7.26.0)':
     dependencies:
@@ -10541,7 +10535,7 @@ snapshots:
   '@babel/plugin-syntax-class-static-block@7.14.5(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-dynamic-import@7.8.3(@babel/core@7.29.0)':
     dependencies:
@@ -10571,7 +10565,7 @@ snapshots:
   '@babel/plugin-syntax-import-attributes@7.26.0(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@7.26.0)':
     dependencies:
@@ -10581,7 +10575,7 @@ snapshots:
   '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@7.26.0)':
     dependencies:
@@ -10591,7 +10585,7 @@ snapshots:
   '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-jsx@7.25.9(@babel/core@7.26.0)':
     dependencies:
@@ -10601,7 +10595,7 @@ snapshots:
   '@babel/plugin-syntax-jsx@7.25.9(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-logical-assignment-operators@7.10.4(@babel/core@7.26.0)':
     dependencies:
@@ -10611,7 +10605,7 @@ snapshots:
   '@babel/plugin-syntax-logical-assignment-operators@7.10.4(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@7.26.0)':
     dependencies:
@@ -10621,7 +10615,7 @@ snapshots:
   '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@7.26.0)':
     dependencies:
@@ -10631,7 +10625,7 @@ snapshots:
   '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@7.26.0)':
     dependencies:
@@ -10641,7 +10635,7 @@ snapshots:
   '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@7.26.0)':
     dependencies:
@@ -10651,7 +10645,7 @@ snapshots:
   '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-optional-chaining@7.8.3(@babel/core@7.26.0)':
     dependencies:
@@ -10681,7 +10675,7 @@ snapshots:
   '@babel/plugin-syntax-top-level-await@7.14.5(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-typescript@7.25.9(@babel/core@7.26.0)':
     dependencies:
@@ -10691,7 +10685,7 @@ snapshots:
   '@babel/plugin-syntax-typescript@7.25.9(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.25.9
+      '@babel/helper-plugin-utils': 7.28.6
 
   '@babel/plugin-syntax-unicode-sets-regex@7.18.6(@babel/core@7.29.0)':
     dependencies:
@@ -11227,7 +11221,7 @@ snapshots:
       '@babel/parser': 7.29.2
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
-      debug: 4.3.7(supports-color@7.2.0)
+      debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
 
@@ -13504,7 +13498,7 @@ snapshots:
       chrome-launcher: 0.15.2
       chromium-edge-launcher: 0.2.0
       connect: 3.7.0
-      debug: 2.6.9(supports-color@7.2.0)
+      debug: 2.6.9
       nullthrows: 1.1.1
       open: 7.4.2
       selfsigned: 2.4.1
@@ -14117,24 +14111,24 @@ snapshots:
 
   '@types/babel__core@7.20.5':
     dependencies:
-      '@babel/parser': 7.26.2
-      '@babel/types': 7.26.0
+      '@babel/parser': 7.29.2
+      '@babel/types': 7.29.0
       '@types/babel__generator': 7.6.8
       '@types/babel__template': 7.4.4
       '@types/babel__traverse': 7.20.6
 
   '@types/babel__generator@7.6.8':
     dependencies:
-      '@babel/types': 7.26.0
+      '@babel/types': 7.29.0
 
   '@types/babel__template@7.4.4':
     dependencies:
-      '@babel/parser': 7.26.2
-      '@babel/types': 7.26.0
+      '@babel/parser': 7.29.2
+      '@babel/types': 7.29.0
 
   '@types/babel__traverse@7.20.6':
     dependencies:
-      '@babel/types': 7.26.0
+      '@babel/types': 7.29.0
 
   '@types/big.js@4.0.5': {}
 
@@ -15898,7 +15892,7 @@ snapshots:
 
   connect@3.7.0:
     dependencies:
-      debug: 2.6.9(supports-color@7.2.0)
+      debug: 2.6.9
       finalhandler: 1.1.2
       parseurl: 1.3.3
       utils-merge: 1.0.1
@@ -16430,6 +16424,10 @@ snapshots:
 
   dayjs@1.11.13: {}
 
+  debug@2.6.9:
+    dependencies:
+      ms: 2.0.0
+
   debug@2.6.9(supports-color@7.2.0):
     dependencies:
       ms: 2.0.0
@@ -16441,6 +16439,10 @@ snapshots:
       ms: 2.1.3
     optionalDependencies:
       supports-color: 7.2.0
+
+  debug@4.3.7:
+    dependencies:
+      ms: 2.1.3
 
   debug@4.3.7(supports-color@7.2.0):
     dependencies:
@@ -17245,7 +17247,7 @@ snapshots:
 
   finalhandler@1.1.2:
     dependencies:
-      debug: 2.6.9(supports-color@7.2.0)
+      debug: 2.6.9
       encodeurl: 1.0.2
       escape-html: 1.0.3
       on-finished: 2.3.0
@@ -18690,7 +18692,7 @@ snapshots:
 
   lighthouse-logger@1.4.2:
     dependencies:
-      debug: 2.6.9(supports-color@7.2.0)
+      debug: 2.6.9
       marky: 1.2.5
     transitivePeerDependencies:
       - supports-color
@@ -18946,7 +18948,7 @@ snapshots:
   metro-file-map@0.81.0:
     dependencies:
       anymatch: 3.1.3
-      debug: 2.6.9(supports-color@7.2.0)
+      debug: 2.6.9
       fb-watchman: 2.0.2
       flow-enums-runtime: 0.0.6
       graceful-fs: 4.2.11
@@ -19046,7 +19048,7 @@ snapshots:
       chalk: 4.1.2
       ci-info: 2.0.0
       connect: 3.7.0
-      debug: 2.6.9(supports-color@7.2.0)
+      debug: 2.6.9
       denodeify: 1.2.1
       error-stack-parser: 2.1.4
       flow-enums-runtime: 0.0.6
@@ -19644,7 +19646,7 @@ snapshots:
     dependencies:
       '@jest/schemas': 29.6.3
       ansi-styles: 5.2.0
-      react-is: 18.3.1
+      react-is: 18.2.0
 
   process-nextick-args@1.0.7: {}
 
@@ -20352,7 +20354,7 @@ snapshots:
 
   send@0.19.0:
     dependencies:
-      debug: 2.6.9(supports-color@7.2.0)
+      debug: 2.6.9
       depd: 2.0.0
       destroy: 1.2.0
       encodeurl: 1.0.2

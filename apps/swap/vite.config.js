@@ -21,9 +21,10 @@ export default defineConfig(() => {
             framework: ["react", "react-router-dom", "react-dom"],
             utils: ["bignumber.js", "dayjs", "lodash", "jsbi"],
             recharts: ["recharts"],
-            metamask_sdk: ["@fort-major/msq-client", "wagmi"],
             ui: ["@mui/material", "@mui/lab", "@mui/base", "@mui/icons-material", "@mui/styles", "react-feather"],
             web3: [
+              "@fort-major/msq-client",
+              "wagmi",
               "web3",
               "@ethersproject/abi",
               "@ethersproject/address",
