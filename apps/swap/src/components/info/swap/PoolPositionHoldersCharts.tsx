@@ -3,9 +3,9 @@ import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, shorten } from "@icpswap/utils";
 import { PieChartTitle } from "components/info/swap/PieChart/PieChartTitle";
+import { useEchartsPieChart } from "components/info/tokens/EchartsPie";
 import { Box, Typography } from "components/Mui";
-import * as Highcharts from "highcharts";
-import { useEffect, useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
 
@@ -66,74 +66,21 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
     return [...top20Holders, otherAccounts];
   }, [result]);
 
-  useEffect(() => {
-    if (charts?.length) {
-      // @ts-expect-error
-      // The TypeScript compilation shows errors, but the code functions correctly.
-      // These errors can be safely ignored, as the official Highcharts documentation uses the same approach.
-      Highcharts.chart("highcharts-id", {
-        title: undefined,
-        credits: false,
-        chart: {
-          type: "pie",
-          backgroundColor: "#212946",
-          plotBackgroundColor: null,
-          plotBorderWidth: null,
-          plotShadow: false,
-        },
-        tooltip: {
-          valueSuffix: "%",
-          backgroundColor: "rgba(33, 41, 70, 0.70)",
-          borderRadius: 8,
-          borderColor: "rgba(73, 88, 142, 0.70)",
-          borderWidth: 2,
-          style: {
-            color: "#ffffff",
-          },
-          headerFormat: " ",
-          pointFormat: "AID: {point.aid}<br/>{series.name}: <b>{point.percentage:.2f}%</b>",
-        },
-        accessibility: {
-          point: {
-            valueSuffix: "%",
-          },
-        },
-        plotOptions: {
-          pie: {
-            allowPointSelect: true,
-            cursor: "pointer",
-            dataLabels: {
-              enabled: true,
-              format: '<span style="font-size: 1em">{point.name}',
-              style: {
-                color: "#ffffff",
-                fontWeight: 400,
-                fontFamily: "Poppins",
-                fontSize: "12px",
-              },
-            },
-            borderRadius: 0,
-          },
-        },
-        series: [
-          {
-            name: "Percentage",
-            colorByPoint: true,
-            data: charts.map((element) => {
-              const aid = element.address;
-              const name = element.address === OTHER_ACCOUNTS ? "Other accounts" : shorten(aid, 4);
-
-              return {
-                name,
-                y: new BigNumber(element.percent).toNumber(),
-                aid,
-              };
-            }),
-          },
-        ],
-      });
-    }
+  const pieRef = useRef<HTMLDivElement | null>(null);
+  const pieData = useMemo(() => {
+    if (!charts?.length) return [];
+    return charts.map((element) => {
+      const aid = element.address;
+      const name = element.address === OTHER_ACCOUNTS ? "Other accounts" : shorten(aid, 4);
+      return {
+        name,
+        value: new BigNumber(element.percent).toNumber(),
+        aid,
+      };
+    });
   }, [charts]);
+
+  useEchartsPieChart({ containerRef: pieRef, seriesName: "Percentage", data: pieData });
 
   return (
     <Box sx={{ width: "100%", padding: "0 25px" }}>
@@ -178,7 +125,7 @@ export function PoolPositionHoldersCharts({ poolId, poolName }: PoolPositionHold
                   <div />
                 </LoadingRow>
               ) : (
-                <Box id="highcharts-id" />
+                <Box ref={pieRef} sx={{ width: "100%", height: "100%", minHeight: 360 }} />
               )}
             </Flex>
           </Box>

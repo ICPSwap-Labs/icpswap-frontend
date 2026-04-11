@@ -3,10 +3,10 @@ import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { PieChartTitle } from "components/info/swap/PieChart/PieChartTitle";
-import { useInitialHighcharts } from "components/info/tokens/Highcharts";
+import { mapTokenHolderChartsToPieData, useEchartsPieChart } from "components/info/tokens/EchartsPie";
 import { Box, Typography } from "components/Mui";
 import { useToken } from "hooks/index";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
 
@@ -68,7 +68,9 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
     return [...top100Holders, otherAccounts];
   }, [result, top100HoldPercent, top100HoldAmount, totalSupply]);
 
-  useInitialHighcharts({ id: "highcharts-id", charts });
+  const pieRef = useRef<HTMLDivElement | null>(null);
+  const pieData = useMemo(() => mapTokenHolderChartsToPieData(charts), [charts]);
+  useEchartsPieChart({ containerRef: pieRef, seriesName: "Tokens", data: pieData });
 
   return (
     <Box sx={{ width: "100%", padding: "0 25px" }}>
@@ -112,7 +114,7 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
                   <div />
                 </LoadingRow>
               ) : (
-                <Box id="highcharts-id" />
+                <Box ref={pieRef} sx={{ width: "100%", height: "100%", minHeight: 460 }} />
               )}
             </Flex>
           </Box>
