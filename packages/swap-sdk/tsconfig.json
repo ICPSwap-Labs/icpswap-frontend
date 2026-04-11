@@ -1,6 +1,6 @@
 {
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", ".turbo"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "lib": ["ES6", "DOM", "es2020"],
     "module": "esnext",

@@ -1,6 +1,6 @@
 {
   "include": ["src/**/*", "../../apps/swap/src/components/CollapseText.tsx"],
-  "exclude": ["node_modules", "dist", ".turbo"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "jsx": "react-jsx",
     "lib": ["ES6", "DOM"],

@@ -1,6 +1,6 @@
 {
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", ".turbo"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "declaration": true,
     "target": "esnext",
@@ -11,6 +11,7 @@
     "moduleResolution": "bundler",
     "module": "esnext",
     "skipLibCheck": true,
+    "rootDir": "./src",
     "outDir": "./dist"
   }
 }
