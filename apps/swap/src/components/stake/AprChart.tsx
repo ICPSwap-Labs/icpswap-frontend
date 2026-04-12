@@ -1,13 +1,11 @@
 import { useStakeAprChartData } from "@icpswap/hooks";
-import { Flex, Tooltip as Tip } from "@icpswap/ui";
+import { Flex, LineChartAlt, Tooltip as Tip } from "@icpswap/ui";
 import { BigNumber } from "@icpswap/utils";
 import { MainCard } from "components/index";
-import { Box, Typography, useTheme } from "components/Mui";
+import { Box, Typography } from "components/Mui";
 import dayjs from "dayjs";
-import { darken } from "polished";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Area, AreaChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 
 const DAYJS_FORMAT = "MMM D, YYYY HH:mm:ss";
 
@@ -17,10 +15,8 @@ export interface FarmAprChartsProps {
 
 export function AprChart({ canisterId }: FarmAprChartsProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
-
-  const [value, setValue] = useState<null | number>(null);
-  const [label, setLabel] = useState<null | string>(null);
+  const [value, setValue] = useState<undefined | number>(undefined);
+  const [label, setLabel] = useState<undefined | string>(undefined);
 
   const { start_time, end_time } = useMemo(() => {
     const now = parseInt(String(Date.now() / 1000), 10);
@@ -39,12 +35,10 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
   const { data: aprCharts } = useStakeAprChartData(canisterId, start_time, end_time);
 
   const chartData = useMemo(() => {
-    if (!aprCharts || aprCharts.length === 0) return undefined;
+    if (!aprCharts || aprCharts.length === 0) return [];
 
-    return aprCharts.map((e) => ({ time: e.time.toString(), value: e.apr * 100 }));
+    return aprCharts.map((e) => ({ time: Number(e.time * BigInt(1000)), value: e.apr * 100 }));
   }, [aprCharts]);
-
-  const color = "#5669dc";
 
   const defaultAprData = useMemo(() => {
     if (!chartData || chartData.length === 0) return {};
@@ -102,9 +96,9 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
             }}
           >
             {label
-              ? `${dayjs(Number(label) * 1000).format(DAYJS_FORMAT)}`
+              ? label
               : aprCharts
-                ? `${defaultAprData?.time ? dayjs(Number(defaultAprData.time) * 1000).format(DAYJS_FORMAT) : "--"}`
+                ? `${defaultAprData?.time ? dayjs(Number(defaultAprData.time)).format(DAYJS_FORMAT) : "--"}`
                 : "--"}
           </Typography>
         </Box>
@@ -121,50 +115,15 @@ export function AprChart({ canisterId }: FarmAprChartsProps) {
               },
             }}
           >
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart
-                width={422}
-                height={240}
-                data={chartData}
-                margin={{
-                  right: 20,
-                }}
-                onMouseLeave={() => {
-                  setLabel(null);
-                  setValue(null);
-                }}
-              >
-                <defs>
-                  <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={darken(0.36, color)} stopOpacity={0.5} />
-                    <stop offset="100%" stopColor={color} stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <YAxis
-                  dataKey="value"
-                  axisLine={false}
-                  tickLine={false}
-                  minTickGap={10}
-                  tick={{ fill: theme.palette.text.secondary, fontSize: "12px" }}
-                />
-                <Tooltip
-                  cursor={{ stroke: "#8572FF" }}
-                  contentStyle={{ display: "none" }}
-                  formatter={(value: number, _name: string, props) => {
-                    if (props?.payload?.time) {
-                      setLabel(props.payload.time);
-                    }
-
-                    if (props?.payload?.value) {
-                      setValue(props.payload.value);
-                    }
-
-                    return value;
-                  }}
-                />
-                <Area dataKey="value" type="monotone" stroke={color} fill="url(#gradient)" strokeWidth={2} />
-              </AreaChart>
-            </ResponsiveContainer>
+            <LineChartAlt
+              data={chartData}
+              showYAxis
+              height={240}
+              minHeight={332}
+              setValue={setValue}
+              setLabel={setLabel}
+              tipFormat={DAYJS_FORMAT}
+            />
           </Box>
         </Box>
       </MainCard>

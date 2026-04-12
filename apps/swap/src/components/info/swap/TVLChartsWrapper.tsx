@@ -69,8 +69,6 @@ export function TVLChartsWrapper({ globalCharts, globalProtocol }: TVLChartsWrap
           data={formattedTvlData}
           height={220}
           minHeight={332}
-          value={liquidityHover}
-          label={leftLabel}
           setValue={setLiquidityHover}
           setLabel={setLeftLabel}
           topLeft={

@@ -1,11 +1,10 @@
 import { usePoolAverageAPRs, usePositionAPRChartData } from "@icpswap/hooks";
 import { ChartTimeEnum, type Null } from "@icpswap/types";
-import { ChartAPRLabel, Flex, ImageLoading, LineChartAlt } from "@icpswap/ui";
+import { Flex, ImageLoading, LineChartAlt } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, numToPercent } from "@icpswap/utils";
 import { Box, Typography, useTheme } from "components/Mui";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
-import { ReferenceLine } from "recharts";
 
 const CHART_HEIGHT = 240;
 
@@ -102,24 +101,18 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
                 showYAxis
                 yTickFormatter={(val: string) => numToPercent(val)}
                 tipFormat="MMM D, YYYY HH:mm:ss"
-                extraNode={
-                  nonUndefinedOrNull(averageApr) && nonUndefinedOrNull(lineY) ? (
-                    <ReferenceLine
-                      stroke={theme.colors.apr}
-                      y={lineY}
-                      label={
-                        // @ts-expect-error The props 'viewBox' is inject by recharts
-                        <ChartAPRLabel
-                          apr={
-                            new BigNumber(averageApr).isLessThan(1)
-                              ? numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 4)
-                              : numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 2)
-                          }
-                        />
+                markLine={
+                  nonUndefinedOrNull(averageApr) && nonUndefinedOrNull(lineY)
+                    ? {
+                        y: lineY,
+                        color: theme.colors.apr,
+                        labelText: `Avg ${
+                          new BigNumber(averageApr).isLessThan(1)
+                            ? numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 4)
+                            : numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 2)
+                        }`,
                       }
-                      strokeDasharray="5 4"
-                    />
-                  ) : null
+                    : undefined
                 }
               />
             ) : (

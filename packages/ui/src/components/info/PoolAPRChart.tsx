@@ -4,12 +4,10 @@ import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import { useEffect, useMemo, useState } from "react";
-import { ReferenceLine } from "recharts";
+import { useMemo, useState } from "react";
 import { LineChartAlt } from "../LineChart/alt";
 import { ImageLoading } from "../Loading";
 import { Box, Typography, useTheme } from "../Mui";
-import { ChartAPRLabel } from "./ChartAPRLabel";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -25,16 +23,19 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
   const theme = useTheme();
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
-  const [time, setTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
 
   const { data: poolChartData, isLoading } = usePoolAPRChartData(poolId);
   const { data: averageAprResult } = usePoolAverageAPRs(poolId);
+
+  const time = useMemo(() => {
+    return __time ? __time : ChartTimeEnum["7D"];
+  }, [__time]);
 
   const formattedChartData = useMemo(() => {
     if (poolChartData) {
       return [...poolChartData].reverse().map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          time: Number(data.snapshotTime),
           value: Number(data.apr),
         };
       });
@@ -72,10 +73,6 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
 
     return diff.minus(averageApr).dividedBy(diff).multipliedBy(parseInt(height, 10)).toString();
   }, [formattedChartData, averageApr, height]);
-
-  useEffect(() => {
-    setTime(__time);
-  }, [__time]);
 
   const averageAprSvgY = useMemo(() => {
     return new BigNumber(averageApr).isLessThan(1)
@@ -122,24 +119,18 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
                 setLabel={setValueLabel}
                 minHeight={parseInt(height, 10)}
                 setValue={setLatestValue}
-                value={latestValue}
-                label={valueLabel}
                 showXAxis={false}
                 showYAxis
                 yTickFormatter={(val: string) => `${new BigNumber(val).toFixed(2)}%`}
                 tipFormat="MMM D, YYYY HH:mm:ss"
-                extraNode={
-                  averageAprSvgHeight && averageApr ? (
-                    <ReferenceLine
-                      stroke={theme.colors.apr}
-                      y={averageAprSvgY}
-                      label={
-                        // @ts-expect-error
-                        <ChartAPRLabel apr={`${new BigNumber(averageApr).toFixed(2)}%`} />
+                markLine={
+                  averageAprSvgHeight && averageApr
+                    ? {
+                        y: averageAprSvgY,
+                        color: theme.colors.apr,
+                        labelText: `Avg ${new BigNumber(averageApr).toFixed(2)}%`,
                       }
-                      strokeDasharray="5 4"
-                    />
-                  ) : null
+                    : undefined
                 }
               />
             ) : (

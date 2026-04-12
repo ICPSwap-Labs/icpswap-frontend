@@ -73,6 +73,7 @@
     "bignumber.js": "^9.0.1",
     "copy-to-clipboard": "^3.2.0",
     "dayjs": "^1.11.10",
+    "echarts": "^6.0.0",
     "i18next": "23.10.0",
     "jotai": "^2.15.0",
     "jsbi": "^4.3.0",

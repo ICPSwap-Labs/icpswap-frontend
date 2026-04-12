@@ -28,7 +28,6 @@
     "lightweight-charts": "3.8.0",
     "polished": "^3.3.2",
     "react-feather": "^2.0.8",
-    "react-is": "18.2.0",
-    "recharts": "3.0.2"
+    "react-is": "18.2.0"
   }
 }

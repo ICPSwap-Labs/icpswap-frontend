@@ -13,6 +13,9 @@ export default defineConfig(() => {
     server: {
       port: "3000",
     },
+    optimizeDeps: {
+      include: ["echarts"],
+    },
     build: {
       outDir: "build",
       rollupOptions: {
@@ -20,7 +23,6 @@ export default defineConfig(() => {
           manualChunks: {
             framework: ["react", "react-router-dom", "react-dom"],
             utils: ["bignumber.js", "dayjs", "lodash", "jsbi"],
-            recharts: ["recharts"],
             ui: ["@mui/material", "@mui/lab", "@mui/base", "@mui/icons-material", "@mui/styles", "react-feather"],
             web3: [
               "@fort-major/msq-client",
@@ -40,6 +42,7 @@ export default defineConfig(() => {
               "@astrox/sdk-web",
               "@astrox/sdk-webview",
             ],
+            charts: ["recharts", "echarts", "lightweight-charts"],
           },
         },
       },

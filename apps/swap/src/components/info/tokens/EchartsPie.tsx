@@ -1,7 +1,6 @@
 import { getTextualAddress } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNullOrEmpty, principalToAccount, shorten } from "@icpswap/utils";
-import { echarts } from "components/echarts";
-import type { ECharts } from "echarts/core";
+import { type ECharts, echarts } from "components/echarts";
 import { type RefObject, useEffect } from "react";
 
 export interface TokenHolderChartInput {

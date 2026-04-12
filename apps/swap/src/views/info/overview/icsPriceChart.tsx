@@ -1,10 +1,9 @@
 import { useTokenCharts } from "@icpswap/hooks";
 import { ICS } from "@icpswap/tokens";
 import { BigNumber, formatDollarAmount, toUnixTimestamp } from "@icpswap/utils";
-import { echarts } from "components/echarts";
+import { type ECharts, echarts } from "components/echarts";
 import { Box, useTheme } from "components/Mui";
 import dayjs from "dayjs";
-import type { ECharts } from "echarts/core";
 import { useMediaQueryMD } from "hooks/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
 
@@ -146,6 +145,7 @@ export function ICSPriceChart() {
               type: "line",
               smooth: true,
               showSymbol: false,
+              symbolSize: 10,
               lineStyle: { width: 3, color: LINE_COLOR },
               areaStyle: {
                 color: {

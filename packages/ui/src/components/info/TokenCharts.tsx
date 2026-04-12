@@ -147,7 +147,7 @@ export const TokenCharts = forwardRef(
     const formattedTvlData = useMemo(() => {
       return tokenCharts.map((data) => {
         return {
-          time: dayjs(Number(data.beginTime)).format("YYYY-MM-DD HH:mm:ss"),
+          time: Number(data.beginTime),
           value: data.tvlUSD,
         };
       });

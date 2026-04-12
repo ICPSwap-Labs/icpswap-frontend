@@ -21,7 +21,7 @@ export function PoolTvlChart({ chartsData, loading, noData, height = "340px" }: 
   const formattedData = useMemo(() => {
     return chartsData.map((data) => {
       return {
-        time: dayjs(Number(data.beginTime)).format("YYYY-MM-DD HH:mm:ss"),
+        time: Number(data.beginTime),
         value: Number(data.tvlUSD),
       };
     });
