@@ -1,12 +1,11 @@
 import { mockALinkAndOpen } from "@icpswap/utils";
-import { ReactComponent as ArrowDownIcon } from "assets/images/arrow-down.svg";
 import { ReactComponent as Logo } from "assets/images/logo1.svg";
+import { MOBILE_MAX_NUMBER, type Route, routeKey, routes } from "components/Layout/Navbar/config";
+import { Routes } from "components/Layout/Navbar/mobile/Routes";
 import { Box, Collapse } from "components/Mui";
 import { useMemo, useState } from "react";
-import { XCircle } from "react-feather";
+import { ChevronDown, XCircle } from "react-feather";
 import { useNavigate } from "react-router-dom";
-import { MOBILE_MAX_NUMBER, type Route, routeKey, routes } from "../config";
-import { Routes } from "./Routes";
 
 export interface MobileNavbarProps {
   onClose?: () => void;
@@ -77,7 +76,7 @@ export default function MobileNavbar({ onClose }: MobileNavbarProps) {
                 <Box sx={{ width: "5px", height: "5px", borderRadius: "50%", background: "#fff" }} />
                 <Box sx={{ width: "5px", height: "5px", borderRadius: "50%", background: "#fff" }} />
               </Box>
-              <ArrowDownIcon />
+              <ChevronDown color="#8492C4" strokeWidth={1} />
             </Box>
 
             <Collapse in={exceedOpen}>

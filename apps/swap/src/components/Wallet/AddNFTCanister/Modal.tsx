@@ -1,6 +1,5 @@
 import type { NFTControllerInfo } from "@icpswap/types";
 import { Flex, Header, HeaderCell, LoadingRow, TableRow } from "@icpswap/ui";
-import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
 import { FilledTextField, NoData } from "components/index";
 import { Avatar, Box, Button, InputAdornment, makeStyles, Typography, useTheme } from "components/Mui";
 import { AddIcon, HorizontalRuleIcon } from "components/MuiIcon";
@@ -9,6 +8,7 @@ import { OFFICIAL_CANISTER_IDS } from "constants/index";
 import { useCanisterLogo, useNFTCanisterList } from "hooks/nft/useNFTCalls";
 import { useMediaQuerySM } from "hooks/theme";
 import { useMemo, useState } from "react";
+import { Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useSelectedCanistersManager } from "store/nft/hooks";
 import { isICPSwapOfficial } from "utils";
@@ -131,7 +131,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon />
+                  <Search />
                 </InputAdornment>
               ),
             },

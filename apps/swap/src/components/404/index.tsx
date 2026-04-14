@@ -1,5 +1,4 @@
 import { Flex } from "@icpswap/ui";
-import { ReactComponent as BoundaryErrorImage } from "assets/images/boundary-error.svg";
 import { Box, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
@@ -10,7 +9,7 @@ export default function PageNotFound() {
     <Box sx={{ width: "100%", height: "calc(100vh - 280px)" }}>
       <Flex align="center" justify="center" sx={{ width: "100%", height: "100%" }}>
         <Box>
-          <BoundaryErrorImage />
+          <img src="/images/boundary-error.svg" alt="" />
           <Typography color="text.primary" align="center" sx={{ marginTop: "20px" }}>
             {t("common.page.not.found")}
           </Typography>

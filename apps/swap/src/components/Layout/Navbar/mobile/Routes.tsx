@@ -1,6 +1,6 @@
-import { ReactComponent as ArrowDownIcon } from "assets/images/arrow-down.svg";
 import { Box, Collapse, Typography } from "components/Mui";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { ChevronDown } from "react-feather";
 import { useLocation } from "react-router-dom";
 
 import { type Route, routeKey } from "../config";
@@ -15,19 +15,22 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
   const pathName = location.pathname;
   const [collapseKey, setCollapseKey] = useState<string | undefined>(undefined);
 
-  const handleRouteClick = (route: Route) => {
-    if (route.subMenus) {
-      if (collapseKey === routeKey(route.key)) {
-        setCollapseKey(undefined);
-      } else {
-        setCollapseKey(routeKey(route.key));
+  const handleRouteClick = useCallback(
+    (route: Route) => {
+      if (route.subMenus) {
+        if (collapseKey === routeKey(route.key)) {
+          setCollapseKey(undefined);
+        } else {
+          setCollapseKey(routeKey(route.key));
+        }
+
+        return;
       }
 
-      return;
-    }
-
-    onRouteClick(route);
-  };
+      onRouteClick(route);
+    },
+    [onRouteClick, collapseKey],
+  );
 
   const isActive = (route: Route) => {
     return pathName === route?.path;
@@ -53,7 +56,7 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
                 {route.name}
               </Typography>
 
-              {route.subMenus ? <ArrowDownIcon /> : null}
+              {route.subMenus ? <ChevronDown color="#8492C4" strokeWidth={1} /> : null}
             </Box>
 
             <Collapse in={collapseKey === routeKey(route.key)}>

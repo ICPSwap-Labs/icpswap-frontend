@@ -1,6 +1,5 @@
 import { Flex } from "@icpswap/ui";
 import * as Sentry from "@sentry/react";
-import { ReactComponent as BoundaryErrorImage } from "assets/images/boundary-error.svg";
 import { Layout } from "components/Layout/index";
 import { Box, Typography, useTheme } from "components/Mui";
 import copy from "copy-to-clipboard";
@@ -38,7 +37,7 @@ function Fallback({ error, eventId }: FallbackProps) {
               {i18n.t("error.boundary.oops")}
             </Typography>
 
-            <BoundaryErrorImage />
+            <img src="/images/boundary-error.svg" alt="" />
 
             <Box
               sx={{
@@ -91,7 +90,6 @@ export interface ErrorBoundaryProps {
 
 export default function ErrorBoundary({ children }: ErrorBoundaryProps) {
   return (
-    // @ts-expect-error
     <Sentry.ErrorBoundary fallback={({ error, eventId }) => <Fallback error={error} eventId={eventId} />}>
       {children}
     </Sentry.ErrorBoundary>

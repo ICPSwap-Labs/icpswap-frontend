@@ -3,14 +3,13 @@ import { ICP } from "@icpswap/tokens";
 import type { IcpSwapAPITokenInfo, InfoTokenRealTimeDataResponse, Null } from "@icpswap/types";
 import { NoData, Proportion } from "@icpswap/ui";
 import { BigNumber, formatDollarTokenPrice, isValidPrincipal, nonUndefinedOrNull, shortenString } from "@icpswap/utils";
-import { ReactComponent as SearchIcon } from "assets/icons/Search.svg";
-import { ReactComponent as TokenListIcon } from "assets/icons/token-list.svg";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
 import { FilledTextField, TokenImage } from "components/index";
 import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
 import { useMediaQuerySM } from "hooks/theme";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Search } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useGlobalTokenList, useStateSwapAllTokens } from "store/global/hooks";
@@ -76,7 +75,7 @@ function SearchItem({ tokenInfo, infoAllTokens, onTokenClick, inTokenList }: Sea
         >
           ({shortenString(tokenInfo.name, 12)})
         </Typography>
-        {inTokenList ? <TokenListIcon /> : null}
+        {inTokenList ? <img src="/images/swap-pro/token-list.svg" alt="" /> : null}
       </Box>
 
       <Typography
@@ -231,7 +230,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
                     input: {
                       startAdornment: (
                         <InputAdornment position="start">
-                          <SearchIcon />
+                          <Search size={12} />
                         </InputAdornment>
                       ),
                     },
