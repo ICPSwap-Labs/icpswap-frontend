@@ -1,6 +1,6 @@
 import { BridgeChainType } from "@icpswap/constants";
 import type { Token } from "@icpswap/swap-sdk";
-import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import {
   BigNumber,
   formatAmount,
@@ -16,7 +16,7 @@ import { useToken } from "hooks/index";
 import { useMediaQuerySM } from "hooks/theme";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { useERC20Balance, useETHBalance } from "hooks/web3/index";
+import { useETHBalance } from "hooks/web3/index";
 import { useCallback, useEffect, useMemo } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 
@@ -175,8 +175,9 @@ interface SelectorTokenForErc20TokenProps {
   hidden?: boolean;
   chain: BridgeChainType;
   token: Token | Null;
-  minterInfo: ChainKeyETHMinterInfo | Null;
   priceUSD: number | undefined;
+  balance?: BigNumber;
+  balancesLoading?: boolean;
 }
 
 function SelectorTokenForErc20Token({
@@ -184,25 +185,14 @@ function SelectorTokenForErc20Token({
   onClick,
   hidden,
   chain,
-  minterInfo,
   priceUSD,
+  balance,
+  balancesLoading,
 }: SelectorTokenForErc20TokenProps) {
-  const ChainKeyETHMinterInfo = useMemo(() => {
-    if (!token) return undefined;
-
-    const ChainKeyETHMinterInfo = minterInfo?.supported_ckerc20_tokens[0]?.find(
-      (minterInfo) => minterInfo.ledger_canister_id.toString() === token.address,
-    );
-
-    return ChainKeyETHMinterInfo;
-  }, [minterInfo, token]);
-
-  const { result: balance, loading } = useERC20Balance(ChainKeyETHMinterInfo?.erc20_contract_address);
-
   return (
     <SelectorTokenUI
       token={token}
-      loading={loading}
+      loading={!!balancesLoading}
       hidden={hidden}
       onClick={onClick}
       chain={chain}
@@ -269,8 +259,9 @@ export interface SelectorTokenProps {
   searchWord?: string;
   hidden?: boolean;
   chain: BridgeChainType;
-  minterInfo: ChainKeyETHMinterInfo | Null;
   updateTokenHide: (tokenId: string, hidden: boolean) => void;
+  erc20Balance?: BigNumber;
+  erc20BalanceLoading?: boolean;
 }
 
 export function SelectorToken({
@@ -279,8 +270,9 @@ export function SelectorToken({
   searchWord,
   hidden,
   chain,
-  minterInfo,
   updateTokenHide,
+  erc20Balance,
+  erc20BalanceLoading,
 }: SelectorTokenProps) {
   const [, token] = useToken(tokenId);
 
@@ -310,8 +302,9 @@ export function SelectorToken({
       onClick={onClick}
       chain={chain}
       token={token}
-      minterInfo={minterInfo}
       priceUSD={priceUSD}
+      balance={erc20Balance}
+      balancesLoading={erc20BalanceLoading}
     />
   ) : chain === BridgeChainType.doge ? (
     <TokenSelectorNoneBalance hidden={isHidden} onClick={onClick} chain={chain} token={token} priceUSD={priceUSD} />

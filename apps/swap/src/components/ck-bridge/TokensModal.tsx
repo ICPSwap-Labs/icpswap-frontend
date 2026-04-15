@@ -2,6 +2,7 @@ import { BridgeChainType } from "@icpswap/constants";
 import { useChainKeyMinterInfo, useDebouncedChangeHandler } from "@icpswap/hooks";
 import type { Token } from "@icpswap/swap-sdk";
 import { Modal } from "@icpswap/ui";
+import type { BigNumber } from "@icpswap/utils";
 import { SelectorToken } from "components/ck-bridge/SelectorToken";
 import { getBridgeChainByTokenId } from "components/ck-bridge/utils";
 import { FilledTextField, NoData } from "components/index";
@@ -9,6 +10,7 @@ import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
 import { MINTER_CANISTER_ID } from "constants/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
 import { useMediaQuerySM } from "hooks/theme";
+import { useERC20Balances } from "hooks/web3";
 import { useCallback, useMemo, useState } from "react";
 import { Search as SearchIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
@@ -32,6 +34,32 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
   const { data: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   const allBridgeTokens = useAllBridgeTokens(minterInfo);
+  const erc20ContractAddresses = useMemo(() => {
+    if (!allBridgeTokens.length) return [];
+
+    return allBridgeTokens.map((tokenId) => {
+      const tokenMinterInfo = minterInfo?.supported_ckerc20_tokens[0]?.find(
+        (info) => info.ledger_canister_id.toString() === tokenId,
+      );
+
+      return tokenMinterInfo?.erc20_contract_address;
+    });
+  }, [allBridgeTokens, minterInfo]);
+
+  const { result: erc20BalancesResult, loading: erc20BalancesLoading } = useERC20Balances(erc20ContractAddresses);
+
+  const erc20BalancesByTokenId = useMemo(() => {
+    return allBridgeTokens.reduce(
+      (acc, tokenId, index) => {
+        const item = erc20BalancesResult[index];
+        if (item?.success) {
+          acc[tokenId] = item.balance;
+        }
+        return acc;
+      },
+      {} as Record<string, BigNumber | undefined>,
+    );
+  }, [allBridgeTokens, erc20BalancesResult]);
 
   const handleTokenClick = useCallback(
     (token: Token, chain: BridgeChainType) => {
@@ -129,8 +157,9 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
                   onClick={handleTokenClick}
                   searchWord={searchKeyword}
                   chain={getBridgeChainByTokenId(tokenId)}
-                  minterInfo={minterInfo}
                   updateTokenHide={handleUpdateTokenIsHidden}
+                  erc20Balance={erc20BalancesByTokenId[tokenId]}
+                  erc20BalanceLoading={erc20BalancesLoading}
                 />
 
                 <SelectorToken
@@ -138,8 +167,9 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
                   onClick={handleTokenClick}
                   searchWord={searchKeyword}
                   chain={BridgeChainType.icp}
-                  minterInfo={minterInfo}
                   updateTokenHide={handleUpdateTokenIsHidden}
+                  erc20Balance={erc20BalancesByTokenId[tokenId]}
+                  erc20BalanceLoading={erc20BalancesLoading}
                 />
               </Box>
             ))}

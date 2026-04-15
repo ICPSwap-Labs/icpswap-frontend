@@ -5,6 +5,8 @@ export * from "./useCurrentBlockTimestamp";
 export * from "./useERC20Allowance";
 export * from "./useERC20Approve";
 export * from "./useERC20Balance";
+export * from "./useERC20Balances";
 export * from "./useETHBalance";
+export * from "./useMultiCall";
 export * from "./useTokenFromNetwork";
 export * from "./useWeb3CallsData";
