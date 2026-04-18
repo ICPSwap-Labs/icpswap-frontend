@@ -291,9 +291,6 @@ importers:
       '@reduxjs/toolkit':
         specifier: ^1.9.7
         version: 1.9.7(react-redux@8.0.5(@types/react-dom@18.2.0)(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react-native@0.76.2(@babel/core@7.29.0)(@babel/preset-env@7.26.0(@babel/core@7.29.0))(@types/react@18.2.0)(bufferutil@4.0.8)(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react@18.2.0)
-      '@sentry/browser':
-        specifier: 7.119.1
-        version: 7.119.1
       '@sentry/react':
         specifier: 7.80.0
         version: 7.80.0(react@18.2.0)
@@ -467,11 +464,7 @@ importers:
         specifier: ^13.13.5
         version: 13.13.52
 
-  packages/constants:
-    dependencies:
-      '@icpswap/types':
-        specifier: workspace:*
-        version: link:../types
+  packages/constants: {}
 
   packages/hooks:
     dependencies:
@@ -502,9 +495,6 @@ importers:
       '@tanstack/react-query':
         specifier: 5.28.14
         version: 5.28.14(react@18.2.0)
-      bignumber.js:
-        specifier: ^9.0.1
-        version: 9.1.2
     devDependencies:
       '@types/node':
         specifier: ^13.13.5
@@ -612,18 +602,12 @@ importers:
       '@icpswap/vitest-config':
         specifier: workspace:*
         version: link:../vitest-config
-      big.js:
-        specifier: ^6.1.1
-        version: 6.2.2
       decimal.js-light:
         specifier: ^2.5.1
         version: 2.5.1
       idb:
         specifier: 8.0.0
         version: 8.0.0
-      numbro:
-        specifier: ^2.5.0
-        version: 2.5.0
       toformat:
         specifier: ^2.0.0
         version: 2.0.0
@@ -3729,40 +3713,16 @@ packages:
   '@scure/bip39@1.6.0':
     resolution: {integrity: sha512-+lF0BbLiJNwVlev4eKelw1WWLaiKXw7sSl8T6FvBlWkdX+94aGJ4o8XjUdlyhTCjd8c+B3KT3JfS8P0bLRNU6A==}
 
-  '@sentry-internal/feedback@7.119.1':
-    resolution: {integrity: sha512-EPyW6EKZmhKpw/OQUPRkTynXecZdYl4uhZwdZuGqnGMAzswPOgQvFrkwsOuPYvoMfXqCH7YuRqyJrox3uBOrTA==}
-    engines: {node: '>=12'}
-
-  '@sentry-internal/replay-canvas@7.119.1':
-    resolution: {integrity: sha512-O/lrzENbMhP/UDr7LwmfOWTjD9PLNmdaCF408Wx8SDuj7Iwc+VasGfHg7fPH4Pdr4nJON6oh+UqoV4IoG05u+A==}
-    engines: {node: '>=12'}
-
-  '@sentry-internal/tracing@7.119.1':
-    resolution: {integrity: sha512-cI0YraPd6qBwvUA3wQdPGTy8PzAoK0NZiaTN1LM3IczdPegehWOaEG5GVTnpGnTsmBAzn1xnBXNBhgiU4dgcrQ==}
-    engines: {node: '>=8'}
-
   '@sentry-internal/tracing@7.80.0':
     resolution: {integrity: sha512-P1Ab9gamHLsbH9D82i1HY8xfq9dP8runvc4g50AAd6OXRKaJ45f2KGRZUmnMEVqBQ7YoPYp2LFMkrhNYbcZEoQ==}
-    engines: {node: '>=8'}
-
-  '@sentry/browser@7.119.1':
-    resolution: {integrity: sha512-aMwAnFU4iAPeLyZvqmOQaEDHt/Dkf8rpgYeJ0OEi50dmP6AjG+KIAMCXU7CYCCQDn70ITJo8QD5+KzCoZPYz0A==}
     engines: {node: '>=8'}
 
   '@sentry/browser@7.80.0':
     resolution: {integrity: sha512-Ngwjc+yyf/aH5q7iQM1LeDNlhM1Ilt4ZLUogTghZR/guwNWmCtk3OHcjOLz7fxBBj9wGFUc2pHPyeYM6bQhrEw==}
     engines: {node: '>=8'}
 
-  '@sentry/core@7.119.1':
-    resolution: {integrity: sha512-YUNnH7O7paVd+UmpArWCPH4Phlb5LwrkWVqzFWqL3xPyCcTSof2RL8UmvpkTjgYJjJ+NDfq5mPFkqv3aOEn5Sw==}
-    engines: {node: '>=8'}
-
   '@sentry/core@7.80.0':
     resolution: {integrity: sha512-nJiiymdTSEyI035/rdD3VOq6FlOZ2wWLR5bit9LK8a3rzHU3UXkwScvEo6zYgs0Xp1sC0yu1S9+0BEiYkmi29A==}
-    engines: {node: '>=8'}
-
-  '@sentry/integrations@7.119.1':
-    resolution: {integrity: sha512-CGmLEPnaBqbUleVqrmGYjRjf5/OwjUXo57I9t0KKWViq81mWnYhaUhRZWFNoCNQHns+3+GPCOMvl0zlawt+evw==}
     engines: {node: '>=8'}
 
   '@sentry/react@7.80.0':
@@ -3771,24 +3731,12 @@ packages:
     peerDependencies:
       react: 15.x || 16.x || 17.x || 18.x
 
-  '@sentry/replay@7.119.1':
-    resolution: {integrity: sha512-4da+ruMEipuAZf35Ybt2StBdV1S+oJbSVccGpnl9w6RoeQoloT4ztR6ML3UcFDTXeTPT1FnHWDCyOfST0O7XMw==}
-    engines: {node: '>=12'}
-
   '@sentry/replay@7.80.0':
     resolution: {integrity: sha512-wWnpuJq3OaDLp1LutE4oxWXnau04fvwuzBjuaFvOXOV+pB/kn+pDPuVOC5+FH/RMRZ5ftwX5+dF6fojfcLVGCg==}
     engines: {node: '>=12'}
 
-  '@sentry/types@7.119.1':
-    resolution: {integrity: sha512-4G2mcZNnYzK3pa2PuTq+M2GcwBRY/yy1rF+HfZU+LAPZr98nzq2X3+mJHNJoobeHRkvVh7YZMPi4ogXiIS5VNQ==}
-    engines: {node: '>=8'}
-
   '@sentry/types@7.80.0':
     resolution: {integrity: sha512-4bpMO+2jWiWLDa8zbTASWWNLWe6yhjfPsa7/6VH5y9x1NGtL8oRbqUsTgsvjF3nmeHEMkHQsC8NHPaQ/ibFmZQ==}
-    engines: {node: '>=8'}
-
-  '@sentry/utils@7.119.1':
-    resolution: {integrity: sha512-ju/Cvyeu/vkfC5/XBV30UNet5kLEicZmXSyuLwZu95hEbL+foPdxN+re7pCI/eNqfe3B2vz7lvz5afLVOlQ2Hg==}
     engines: {node: '>=8'}
 
   '@sentry/utils@7.80.0':
@@ -6811,9 +6759,6 @@ packages:
     engines: {node: '>=16.x'}
     hasBin: true
 
-  immediate@3.0.6:
-    resolution: {integrity: sha512-XXOFtyqDjNDAQxVfYxuF7g9Il/IbWmmlQg2MYKOH8ExIT1qg6xc4zyS3HaEEATgs1btfzxq15ciUiY7gjSXRGQ==}
-
   immer@10.1.1:
     resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
 
@@ -7550,9 +7495,6 @@ packages:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
 
-  lie@3.1.1:
-    resolution: {integrity: sha512-RiNhHysUjhrDQntfYSfY4MU24coXXdEOgw9WGcKHNeEwffDYbF//u87M1EWaMGzuFoSbqW0C9C6lEEhDOAswfw==}
-
   lighthouse-logger@1.4.2:
     resolution: {integrity: sha512-gPWxznF6TKmUHrOQjlVo2UbaL2EJ71mb2CCeRs/2qBpi4L/g4LUVc9+3lKQ6DTUZwJswfM7ainGrLO1+fOqa2g==}
 
@@ -7600,9 +7542,6 @@ packages:
 
   lit@2.8.0:
     resolution: {integrity: sha512-4Sc3OFX9QHOJaHbmTMk28SYgVxLN3ePDjg7hofEft2zWlehFL3LiAuapWc4U/kYwMYJSh2hTCPZ6/LIC7ii0MA==}
-
-  localforage@1.10.0:
-    resolution: {integrity: sha512-14/H1aX7hzBBmmh7sGPd+AOMkkIrHM3Z1PAyGgZigA1H1p5O5ANnMyWzvpAETtG68/dC4pC0ncy3+PPGzXZHPg==}
 
   locate-path@3.0.0:
     resolution: {integrity: sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==}
@@ -7998,9 +7937,6 @@ packages:
   number-is-nan@1.0.1:
     resolution: {integrity: sha512-4jbtZXNAsfZbAHiiqjLPBiCl16dES1zI4Hpzzxw61Tk+loF+sBDBKx1ICKKKwIqQ7M0mFn1TmkN7euSncWgHiQ==}
     engines: {node: '>=0.10.0'}
-
-  numbro@2.5.0:
-    resolution: {integrity: sha512-xDcctDimhzko/e+y+Q2/8i3qNC9Svw1QgOkSkQoO0kIPI473tR9QRbo2KP88Ty9p8WbPy+3OpTaAIzehtuHq+A==}
 
   nwsapi@2.2.13:
     resolution: {integrity: sha512-cTGB9ptp9dY9A5VbMSe7fQBcl/tt22Vcqdq8+eN93rblOuE0aCFu4aZ2vMwct/2t+lFnosm8RkQW1I0Omb1UtQ==}
@@ -10558,7 +10494,7 @@ snapshots:
       '@babel/types': 7.29.0
       '@jridgewell/remapping': 2.3.5
       convert-source-map: 2.0.0
-      debug: 4.3.7
+      debug: 4.3.7(supports-color@7.2.0)
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -10633,7 +10569,7 @@ snapshots:
       '@babel/core': 7.29.0
       '@babel/helper-compilation-targets': 7.28.6
       '@babel/helper-plugin-utils': 7.28.6
-      debug: 4.3.7
+      debug: 4.3.7(supports-color@7.2.0)
       lodash.debounce: 4.0.8
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -11465,7 +11401,7 @@ snapshots:
       '@babel/parser': 7.29.2
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
-      debug: 4.3.7
+      debug: 4.3.7(supports-color@7.2.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -13927,7 +13863,7 @@ snapshots:
       chrome-launcher: 0.15.2
       chromium-edge-launcher: 0.2.0
       connect: 3.7.0
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       nullthrows: 1.1.1
       open: 7.4.2
       selfsigned: 2.4.1
@@ -14159,41 +14095,11 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
 
-  '@sentry-internal/feedback@7.119.1':
-    dependencies:
-      '@sentry/core': 7.119.1
-      '@sentry/types': 7.119.1
-      '@sentry/utils': 7.119.1
-
-  '@sentry-internal/replay-canvas@7.119.1':
-    dependencies:
-      '@sentry/core': 7.119.1
-      '@sentry/replay': 7.119.1
-      '@sentry/types': 7.119.1
-      '@sentry/utils': 7.119.1
-
-  '@sentry-internal/tracing@7.119.1':
-    dependencies:
-      '@sentry/core': 7.119.1
-      '@sentry/types': 7.119.1
-      '@sentry/utils': 7.119.1
-
   '@sentry-internal/tracing@7.80.0':
     dependencies:
       '@sentry/core': 7.80.0
       '@sentry/types': 7.80.0
       '@sentry/utils': 7.80.0
-
-  '@sentry/browser@7.119.1':
-    dependencies:
-      '@sentry-internal/feedback': 7.119.1
-      '@sentry-internal/replay-canvas': 7.119.1
-      '@sentry-internal/tracing': 7.119.1
-      '@sentry/core': 7.119.1
-      '@sentry/integrations': 7.119.1
-      '@sentry/replay': 7.119.1
-      '@sentry/types': 7.119.1
-      '@sentry/utils': 7.119.1
 
   '@sentry/browser@7.80.0':
     dependencies:
@@ -14203,22 +14109,10 @@ snapshots:
       '@sentry/types': 7.80.0
       '@sentry/utils': 7.80.0
 
-  '@sentry/core@7.119.1':
-    dependencies:
-      '@sentry/types': 7.119.1
-      '@sentry/utils': 7.119.1
-
   '@sentry/core@7.80.0':
     dependencies:
       '@sentry/types': 7.80.0
       '@sentry/utils': 7.80.0
-
-  '@sentry/integrations@7.119.1':
-    dependencies:
-      '@sentry/core': 7.119.1
-      '@sentry/types': 7.119.1
-      '@sentry/utils': 7.119.1
-      localforage: 1.10.0
 
   '@sentry/react@7.80.0(react@18.2.0)':
     dependencies:
@@ -14228,13 +14122,6 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       react: 18.2.0
 
-  '@sentry/replay@7.119.1':
-    dependencies:
-      '@sentry-internal/tracing': 7.119.1
-      '@sentry/core': 7.119.1
-      '@sentry/types': 7.119.1
-      '@sentry/utils': 7.119.1
-
   '@sentry/replay@7.80.0':
     dependencies:
       '@sentry-internal/tracing': 7.80.0
@@ -14242,13 +14129,7 @@ snapshots:
       '@sentry/types': 7.80.0
       '@sentry/utils': 7.80.0
 
-  '@sentry/types@7.119.1': {}
-
   '@sentry/types@7.80.0': {}
-
-  '@sentry/utils@7.119.1':
-    dependencies:
-      '@sentry/types': 7.119.1
 
   '@sentry/utils@7.80.0':
     dependencies:
@@ -16321,7 +16202,7 @@ snapshots:
 
   connect@3.7.0:
     dependencies:
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       finalhandler: 1.1.2
       parseurl: 1.3.3
       utils-merge: 1.0.1
@@ -16852,10 +16733,6 @@ snapshots:
       '@babel/runtime': 7.25.0
 
   dayjs@1.11.13: {}
-
-  debug@2.6.9:
-    dependencies:
-      ms: 2.0.0
 
   debug@2.6.9(supports-color@7.2.0):
     dependencies:
@@ -17719,7 +17596,7 @@ snapshots:
 
   finalhandler@1.1.2:
     dependencies:
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       encodeurl: 1.0.2
       escape-html: 1.0.3
       on-finished: 2.3.0
@@ -18196,8 +18073,6 @@ snapshots:
   image-size@1.1.1:
     dependencies:
       queue: 6.0.2
-
-  immediate@3.0.6: {}
 
   immer@10.1.1: {}
 
@@ -19178,13 +19053,9 @@ snapshots:
       prelude-ls: 1.2.1
       type-check: 0.4.0
 
-  lie@3.1.1:
-    dependencies:
-      immediate: 3.0.6
-
   lighthouse-logger@1.4.2:
     dependencies:
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       marky: 1.2.5
     transitivePeerDependencies:
       - supports-color
@@ -19252,10 +19123,6 @@ snapshots:
       '@lit/reactive-element': 1.6.3
       lit-element: 3.3.3
       lit-html: 2.8.0
-
-  localforage@1.10.0:
-    dependencies:
-      lie: 3.1.1
 
   locate-path@3.0.0:
     dependencies:
@@ -19418,7 +19285,7 @@ snapshots:
   metro-file-map@0.81.0:
     dependencies:
       anymatch: 3.1.3
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       fb-watchman: 2.0.2
       flow-enums-runtime: 0.0.6
       graceful-fs: 4.2.11
@@ -19518,7 +19385,7 @@ snapshots:
       chalk: 4.1.2
       ci-info: 2.0.0
       connect: 3.7.0
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       denodeify: 1.2.1
       error-stack-parser: 2.1.4
       flow-enums-runtime: 0.0.6
@@ -19747,10 +19614,6 @@ snapshots:
   nullthrows@1.1.1: {}
 
   number-is-nan@1.0.1: {}
-
-  numbro@2.5.0:
-    dependencies:
-      bignumber.js: 9.1.2
 
   nwsapi@2.2.13:
     optional: true
@@ -20905,7 +20768,7 @@ snapshots:
 
   send@0.19.0:
     dependencies:
-      debug: 2.6.9
+      debug: 2.6.9(supports-color@7.2.0)
       depd: 2.0.0
       destroy: 1.2.0
       encodeurl: 1.0.2

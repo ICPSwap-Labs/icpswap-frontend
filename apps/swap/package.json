@@ -62,7 +62,6 @@
     "@nfid/identitykit": "1.0.7",
     "@noble/hashes": "^1.8.0",
     "@reduxjs/toolkit": "^1.9.7",
-    "@sentry/browser": "7.119.1",
     "@sentry/react": "7.80.0",
     "@sentry/types": "7.80.0",
     "@slide-computer/signer": "^3.14.0",
