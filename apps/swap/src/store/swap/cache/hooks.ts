@@ -199,7 +199,6 @@ export function useInitialUserPositionPools() {
 
   const { data: positionPools, isLoading: loading } = useUserPositionPools(account);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     if (positionPools) {
       const allPoolIds = [...new Set([...storeUserPositionPools, ...positionPools])];
@@ -208,6 +207,7 @@ export function useInitialUserPositionPools() {
     } else if (loading === false) {
       setInitialLoading(false);
     }
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [positionPools, updateStoreUserPositionPools, loading, JSON.stringify(storeUserPositionPools)]);
 
   return {

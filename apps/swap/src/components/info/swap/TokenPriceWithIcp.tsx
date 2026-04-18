@@ -5,7 +5,7 @@ import type { Null } from "@icpswap/types";
 import { BigNumber, nonUndefinedOrNull, toSignificant } from "@icpswap/utils";
 import { TokenImage } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
-import { uesTokenPairWithIcp } from "hooks/swap/useTokenPairWithIcp";
+import { useTokenPairWithIcp } from "hooks/swap/useTokenPairWithIcp";
 import { useMemo } from "react";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
@@ -40,7 +40,7 @@ export function TokenPrice({ token0, token1Symbol, price }: TokenPriceProps) {
 export function InfoTokenPrices({ tokenInfo }: { tokenInfo: Token | undefined }) {
   const theme = useTheme();
 
-  const poolId = uesTokenPairWithIcp({ tokenId: tokenInfo?.address });
+  const poolId = useTokenPairWithIcp({ tokenId: tokenInfo?.address });
   const { data: pool } = useInfoPool(poolId);
 
   const icpPrice = useMemo(() => {

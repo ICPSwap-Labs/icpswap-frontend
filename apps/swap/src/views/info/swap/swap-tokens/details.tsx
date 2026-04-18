@@ -23,7 +23,7 @@ import { TokenHoldersCharts } from "components/info/tokens/TokenHoldersCharts";
 import { Box, Button, Typography, useTheme } from "components/Mui";
 import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
 import copyToClipboard from "copy-to-clipboard";
-import { uesTokenPairWithIcp, useToken } from "hooks/index";
+import { useTokenPairWithIcp, useToken } from "hooks/index";
 import { useMediaQuery640 } from "hooks/theme";
 import { TIP_SUCCESS, useTips } from "hooks/useTips";
 import i18n from "i18n/index";
@@ -114,7 +114,7 @@ export default function TokenDetails() {
     }
   }, [token, defaultChartType, canisterId]);
 
-  const tokenPairWithIcp = uesTokenPairWithIcp({ tokenId: canisterId });
+  const tokenPairWithIcp = useTokenPairWithIcp({ tokenId: canisterId });
 
   return (
     <InfoWrapper>

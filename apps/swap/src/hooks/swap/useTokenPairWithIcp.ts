@@ -6,7 +6,7 @@ interface UesTokenPairWithIcpProps {
   tokenId: string | Null;
 }
 
-export function uesTokenPairWithIcp({ tokenId }: UesTokenPairWithIcpProps) {
+export function useTokenPairWithIcp({ tokenId }: UesTokenPairWithIcpProps) {
   const [poolId, setPoolId] = useState<string | undefined>();
 
   useEffect(() => {

@@ -60,7 +60,7 @@ export default function LazyImage(props: LazyImageProps) {
         props.onLoad(e);
       }
     },
-    [props.onLoad],
+    [props],
   );
 
   const handleImageError = useCallback(
@@ -73,7 +73,7 @@ export default function LazyImage(props: LazyImageProps) {
         }
       }
     },
-    [props.src, props.onError],
+    [props],
   );
 
   const {

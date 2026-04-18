@@ -67,7 +67,7 @@ export function TokenPriceChart({ token }: TVChartContainerProps) {
     return () => {
       if (tvWidget) tvWidget.remove();
     };
-  }, [token]);
+  }, [token, chartContainerRef]);
 
   return <Box ref={chartContainerRef} className="TVChartContainer" sx={{ width: "100%", height: "450px" }} />;
 }

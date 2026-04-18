@@ -276,7 +276,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
       const category = originKeyExtractor(current.anchorOrigin);
       const existingOfCategory = acc[category] || [];
       return {
-        // biome-ignore lint: ignore
+        // oxlint-disable-next-line oxc/no-accumulating-spread -- object spread in reduce
         ...acc,
         [category]: [...existingOfCategory, current],
       };

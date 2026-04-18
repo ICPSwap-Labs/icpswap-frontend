@@ -15,6 +15,6 @@ export default function useEventCallback(fn) {
     ref.current = fn;
   });
 
-  // biome-ignore lint: ignore
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- stable callback via ref; empty deps intentional
   return React.useCallback((...args) => (0, ref.current)(...args), []);
 }

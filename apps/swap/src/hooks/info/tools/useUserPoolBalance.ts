@@ -23,7 +23,7 @@ export function useUserUnDepositBalance(
     }
   }, [balances, pools]);
 
-  // biome-ignore lint: refetch dependencies
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- refetch dependencies
   useEffect(() => {
     const _fetch = async (pool: SwapPoolData) => {
       const sub = principalToSubaccount(principal!);
@@ -99,7 +99,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
     return pools?.map((pool) => pool.canisterId.toString());
   }, [pools]);
 
-  // biome-ignore lint: refetch dependencies
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- refetch dependencies
   useEffect(() => {
     const _fetch = async (poolId: string) => {
       getUserUnusedBalance(poolId, Principal.fromText(principal!))
@@ -136,7 +136,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
       setLoading(true);
       call();
     }
-  }, [poolIds, reload, principal]);
+  }, [poolIds, reload, principal, pools]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     pools,

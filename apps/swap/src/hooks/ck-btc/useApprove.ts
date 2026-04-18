@@ -17,7 +17,9 @@ export interface ApproveArgs {
 
 export async function approve({ spender, amount, expected_allowance, spenderSub }: ApproveArgs) {
   return resultFormat<bigint>(
-    await (await ckBtcActor(true)).icrc2_approve({
+    await (
+      await ckBtcActor(true)
+    ).icrc2_approve({
       fee: [],
       memo: [],
       from_subaccount: [],
@@ -64,6 +66,6 @@ export function useApprove() {
         message: "No need to approve",
       } as StatusResult<bigint>;
     },
-    [allowance],
+    [allowance, spender],
   );
 }

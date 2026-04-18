@@ -14,7 +14,7 @@ interface SwapTransactionsProps {
   endTime: number | undefined;
 }
 
-export function __SwapTransactions({ pair, principal, startTime, endTime }: SwapTransactionsProps) {
+export function SwapTransactions({ pair, principal, startTime, endTime }: SwapTransactionsProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
@@ -53,4 +53,4 @@ export function __SwapTransactions({ pair, principal, startTime, endTime }: Swap
   );
 }
 
-export const SwapTransactionsDownload = memo(__SwapTransactions);
+export const SwapTransactionsDownload = memo(SwapTransactions);

@@ -52,7 +52,6 @@ export function useMultiPoolsMetadata(poolKeys: [Token | undefined, Token | unde
   const [pools, setPools] = useState<(PoolResult | Null)[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     async function call() {
       if (poolKeys?.length) {
@@ -66,6 +65,7 @@ export function useMultiPoolsMetadata(poolKeys: [Token | undefined, Token | unde
     }
 
     call();
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(poolKeys)]);
 
   return useMemo(

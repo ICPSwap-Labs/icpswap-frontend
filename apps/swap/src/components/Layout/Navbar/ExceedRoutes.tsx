@@ -96,7 +96,7 @@ export function ExceedRoutes({ routes, onMenuClick }: ExceedRoutesProps) {
         anchor={ref?.current}
         onClickAway={handleClose}
         onMenuClick={handleMenuClick}
-        routes={routes.filter((_route, index) => index > MAX_NUMBER || index === MAX_NUMBER)}
+        routes={routes.filter((_route, index) => index >= MAX_NUMBER)}
       />
     </Grid>
   );

@@ -235,7 +235,7 @@ export function useMintInfo(
       [Bound.LOWER]: feeAmount && tickLower === tickSpaceLimits.LOWER,
       [Bound.UPPER]: feeAmount && tickUpper === tickSpaceLimits.UPPER,
     }),
-    [tickSpaceLimits, feeAmount],
+    [tickSpaceLimits, feeAmount, tickLower, tickUpper],
   );
 
   const ticksAtLimit = useMemo(() => {
@@ -301,7 +301,17 @@ export function useMintInfo(
     }
 
     return undefined;
-  }, [independentAmount, outOfRange, dependentField, tokenB, tokenA, poolForPosition, invalidRange]);
+  }, [
+    independentAmount,
+    outOfRange,
+    dependentField,
+    tokenB,
+    tokenA,
+    poolForPosition,
+    invalidRange,
+    tickUpper,
+    tickLower,
+  ]);
 
   const parsedAmounts = useMemo(() => {
     return {
@@ -322,14 +332,14 @@ export function useMintInfo(
     invalidRange ||
     Boolean(
       (deposit0Disabled && poolForPosition && tokenA && poolForPosition.token0.equals(tokenA)) ||
-        (deposit1Disabled && poolForPosition && tokenA && poolForPosition.token1.equals(tokenA)),
+      (deposit1Disabled && poolForPosition && tokenA && poolForPosition.token1.equals(tokenA)),
     );
 
   const depositBDisabled =
     invalidRange ||
     Boolean(
       (deposit0Disabled && poolForPosition && tokenB && poolForPosition.token0.equals(tokenB)) ||
-        (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB)),
+      (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB)),
     );
 
   const position = useMemo(() => {
@@ -363,7 +373,17 @@ export function useMintInfo(
     }
 
     return undefined;
-  }, [parsedAmounts, poolForPosition, tokenA, tokenB, deposit0Disabled, deposit1Disabled, invalidRange]);
+  }, [
+    parsedAmounts,
+    poolForPosition,
+    tokenA,
+    tokenB,
+    deposit0Disabled,
+    deposit1Disabled,
+    invalidRange,
+    tickUpper,
+    tickLower,
+  ]);
 
   const { data: tokenAAllowance } = useAllowance({
     canisterId: tokenA?.address,
@@ -406,7 +426,7 @@ export function useMintInfo(
   const atMaxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
-        // biome-ignore lint: ignore
+        // oxlint-disable-next-line oxc/no-accumulating-spread -- object spread in reduce
         ...accumulator,
         [field]:
           maxAmounts[field] && parsedAmounts[field] ? maxAmounts[field]?.equalTo(parsedAmounts[field] ?? "0") : false,
@@ -507,6 +527,8 @@ export function useMintInfo(
     tokenB,
     noLiquidity,
     t,
+    currencyBAmount,
+    currencyAAmount,
   ]);
 
   return {

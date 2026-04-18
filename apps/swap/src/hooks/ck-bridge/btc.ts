@@ -70,7 +70,7 @@ export function useBtcUnconfirmedDissolveHashes() {
       .map((tx) => tx.txid) as string[];
   }, [dissolveTxs, allBitcoinTxResponse, block, principal]);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   return useMemo(() => unconfirmedHashes, [JSON.stringify(unconfirmedHashes)]);
 }
 
@@ -213,7 +213,7 @@ export function useBitcoinUnFinalizedMintHashes() {
       .map((tx) => tx.txid);
   }, [mintTransactions, block]);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   return useMemo(() => unFinalizedHashes, [JSON.stringify(unFinalizedHashes)]);
 }
 

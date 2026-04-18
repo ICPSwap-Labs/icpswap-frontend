@@ -61,7 +61,7 @@ export interface SelectTokenProps {
   defaultPanel?: ReactNode;
 }
 
-const __SelectToken = ({
+const SelectTokenComponent = ({
   value: tokenId,
   onTokenChange,
   border,
@@ -150,4 +150,4 @@ const __SelectToken = ({
   );
 };
 
-export const SelectToken = memo(__SelectToken);
+export const SelectToken = memo(SelectTokenComponent);

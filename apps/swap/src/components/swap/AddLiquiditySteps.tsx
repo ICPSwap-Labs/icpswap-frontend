@@ -82,7 +82,11 @@ export function getAddLiquidityStepDetails({
         },
         { label: i18n.t("common.canister.id"), value: token0.address },
       ],
-      errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+      errorActions: [
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
+      ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
@@ -101,7 +105,11 @@ export function getAddLiquidityStepDetails({
         },
         { label: i18n.t("common.canister.id"), value: token1.address },
       ],
-      errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+      errorActions: [
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
+      ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
@@ -151,7 +159,11 @@ export function getAddLiquidityStepDetails({
             { label: i18n.t`Recipient canister ID`, value: PassCodeManagerId },
             { label: i18n.t("common.amount"), value: `${pcmAmount.toFormat()} ${pcmToken.symbol}` },
           ],
-          errorActions: [<TextButton onClick={handleReclaimPCMBalance}>{i18n.t("common.reclaim")}</TextButton>],
+          errorActions: [
+            <TextButton key="reclaim" onClick={handleReclaimPCMBalance}>
+              {i18n.t("common.reclaim")}
+            </TextButton>,
+          ],
           errorMessage: i18n.t("common.check.balance.tips"),
         });
       }

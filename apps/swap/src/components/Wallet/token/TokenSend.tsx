@@ -30,7 +30,7 @@ import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 
-function usePrincipalStandard(tokenId: string, standard: string) {
+function getPrincipalStandard(tokenId: string, standard: string) {
   return (standard.includes("DIP20") || standard.includes("ICRC")) && tokenId !== ICP.address;
 }
 
@@ -147,7 +147,7 @@ export function TokenSend() {
     )
       return t("wallet.send.enter.address.amount");
 
-    if (usePrincipalStandard(token.address, token.standard)) {
+    if (getPrincipalStandard(token.address, token.standard)) {
       if (!isValidPrincipal(address)) return t("common.invalid.principal.id");
     } else if (!isValidAccount(address) && !isValidPrincipal(address)) {
       return t("wallet.send.error.invalid.principal.account");

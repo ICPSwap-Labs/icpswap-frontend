@@ -6,7 +6,7 @@ import { Box, Typography, useTheme } from "components/Mui";
 import { useSwapProStore } from "components/swap/pro";
 import { useSwapStore } from "components/swap/store";
 import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
-import { uesTokenPairWithIcp, useToken } from "hooks/index";
+import { useTokenPairWithIcp, useToken } from "hooks/index";
 import { useEffect, useRef, useState } from "react";
 import { Trans } from "react-i18next";
 
@@ -32,7 +32,7 @@ export function TokenCharts() {
 
   const [, priceToken] = useToken(priceTokenId);
 
-  const tokenPairWithIcp = uesTokenPairWithIcp({ tokenId: priceToken?.address });
+  const tokenPairWithIcp = useTokenPairWithIcp({ tokenId: priceToken?.address });
 
   return (
     <Box

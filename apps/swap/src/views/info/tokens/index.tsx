@@ -2,14 +2,14 @@ import { useTokensFromAPI } from "@icpswap/hooks";
 import { MainCard } from "@icpswap/ui";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { InfoWrapper } from "components/index";
-import { Tokens } from "components/info/tokens/index";
+import { Tokens as TokensComponent } from "components/info/tokens/index";
 import { TokensTreeMap, TreeMapColorsLabel } from "components/info/tokens/TreeMap";
 import { Box, Typography } from "components/Mui";
 import { useTokensManager } from "hooks/info/tokens/index";
 import { memo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
-function __Tokens() {
+function Tokens() {
   const { t } = useTranslation();
   const [, setTokens] = useTokensManager();
   const { data: tokens } = useTokensFromAPI();
@@ -31,10 +31,10 @@ function __Tokens() {
       </Box>
 
       <MainCard>
-        <Tokens />
+        <TokensComponent />
       </MainCard>
     </InfoWrapper>
   );
 }
 
-export default memo(__Tokens);
+export default memo(Tokens);

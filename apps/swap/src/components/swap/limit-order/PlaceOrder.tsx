@@ -147,7 +147,7 @@ export const PlaceOrder = forwardRef(
 
         navigate(`${prePath}${search}`);
       },
-      [location.search, navigate, ui],
+      [location.search, navigate, ui, outputTokenId],
     );
 
     const handleTokenBChange = useCallback(
@@ -169,7 +169,7 @@ export const PlaceOrder = forwardRef(
 
         navigate(`${prePath}${search}`);
       },
-      [location, navigate, ui],
+      [location, navigate, ui, inputTokenId],
     );
 
     const handleInput = useCallback(
@@ -308,7 +308,7 @@ export const PlaceOrder = forwardRef(
         limitPriceRef?.current?.resetInverted();
         limitPriceRef?.current?.setDefaultPrice();
       }
-    }, [ui, navigate, location, handleInput, onSwitchTokens, setOrderPrice]);
+    }, [ui, navigate, location, handleInput, onSwitchTokens, setOrderPrice, outputTokenId, inputTokenId]);
 
     useImperativeHandle(
       ref,

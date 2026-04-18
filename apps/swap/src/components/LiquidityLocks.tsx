@@ -101,7 +101,6 @@ export function LiquidityLocks({ pool, poolId }: LiquidityLocksProps) {
     return "0";
   }, [locksValue, allLiquidityLocks, poolTvlValue]);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   const sortedLiquidityLocks = useMemo(() => {
     if (isUndefinedOrNull(allLiquidityLocks)) return undefined;
     if (isUndefinedOrNull(locksValue)) return allLiquidityLocks;
@@ -119,6 +118,7 @@ export function LiquidityLocks({ pool, poolId }: LiquidityLocksProps) {
 
       return 0;
     });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(allLiquidityLocks), JSON.stringify(locksValue)]);
 
   return (

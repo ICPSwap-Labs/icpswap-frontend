@@ -35,12 +35,12 @@ export type Values = {
   amount: string;
 };
 
-function usePrincipalStandard(tokenId: string, standard: string) {
+function getPrincipalStandard(tokenId: string, standard: string) {
   return (standard.includes("DIP20") || standard.includes("ICRC")) && tokenId !== ICP.address;
 }
 
-function useAccountStandard(tokenId: string, standard: string) {
-  return !usePrincipalStandard(tokenId, standard);
+function getAccountStandard(tokenId: string, standard: string) {
+  return !getPrincipalStandard(tokenId, standard);
 }
 
 export interface TransferModalProps {
@@ -82,7 +82,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
   const getErrorMessage = () => {
     if (!values.to) return t("wallet.transfer.enter.to");
 
-    if (usePrincipalStandard(token.address, token.standard)) {
+    if (getPrincipalStandard(token.address, token.standard)) {
       try {
         Principal.fromText(values.to);
       } catch (_error) {
@@ -143,9 +143,9 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
 
   const addressHelpText = () => {
     if (
-      (usePrincipalStandard(token.address, token.standard) && principalString === values.to) ||
-      (useAccountStandard(token.address, token.standard) && account === values.to) ||
-      (useAccountStandard(token.address, token.standard) &&
+      (getPrincipalStandard(token.address, token.standard) && principalString === values.to) ||
+      (getAccountStandard(token.address, token.standard) && account === values.to) ||
+      (getAccountStandard(token.address, token.standard) &&
         isValidPrincipal(values.to) &&
         principalString === values.to)
     ) {
@@ -170,7 +170,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
         <FilledTextField
           value={values.to}
           placeholder={
-            usePrincipalStandard(token.address, token.standard)
+            getPrincipalStandard(token.address, token.standard)
               ? t`Enter the principal ID`
               : t("wallet.transfer.enter.account.principal")
           }

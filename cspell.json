@@ -44,7 +44,6 @@
     "wagmi",
     "utxo",
     "utxos",
-    "dogecoin",
-    "biomejs"
+    "dogecoin"
   ]
 }

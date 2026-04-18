@@ -109,7 +109,7 @@ export function SwapInputWrapper({
     setUSDValueChange(USDChange);
   }, [setUSDValueChange, USDChange]);
 
-  // biome-ignore lint: should add inputTokenId and outputTokenId on dependencies
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- should add inputTokenId and outputTokenId on dependencies
   const handleSwitchTokens = useCallback(() => {
     const prePath = ui === "pro" ? "/swap/pro" : "/swap";
     const path = `${prePath}?input=${outputTokenId}&output=${inputTokenId}${

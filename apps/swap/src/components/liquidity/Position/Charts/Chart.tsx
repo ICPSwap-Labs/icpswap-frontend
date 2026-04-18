@@ -74,7 +74,7 @@ export function Chart({
     return scales;
   }, [current, zoomLevels.initialMin, zoomLevels.initialMax, innerWidth, series, innerHeight, zoom]);
 
-  // biome-ignore lint: reset zoom as necessary
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- reset zoom as necessary
   useEffect(() => {
     setZoom(null);
   }, [zoomLevels]);

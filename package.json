@@ -11,8 +11,10 @@
     "build:packages": "nx run-many -t build --exclude=@icpswap/swap --skip-nx-cache",
     "clean": "nx run-many -t clean && rm -rf node_modules .nx",
     "prepare": "node ./scripts/prepare.cjs",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
+    "lint": "oxlint -c .oxlintrc.json .",
+    "lint:fix": "oxlint -c .oxlintrc.json . --fix",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
     "test": "nx run-many -t test --exclude=@icpswap/swap"
   },
   "resolutions": {
@@ -25,7 +27,6 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.8",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@nx/js": "^22.6.5",
@@ -50,11 +51,13 @@
     "eslint-plugin-unused-imports": "^4.3.0",
     "lefthook": "^2.1.5",
     "nx": "22.6.5",
+    "oxfmt": "^0.45.0",
+    "oxlint": "^1.60.0",
     "prettier": "3.0.3",
     "vite": "7.3.1",
-    "vite-plugin-biome": "^1.2.0",
     "vite-plugin-commonjs": "0.10.4",
     "vite-plugin-node-polyfills": "0.24.0",
+    "vite-plugin-oxlint": "^2.0.1",
     "vite-plugin-svgr": "4.3.0",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "^4.0.18"

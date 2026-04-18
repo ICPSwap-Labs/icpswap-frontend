@@ -31,7 +31,7 @@ export function useIsAllowedCallback(): (spender: string, tokenIndex: number) =>
           spender === _spender && tokenIndex === _tokenIndex,
       )[0];
     },
-    [userAllowance.filter],
+    [userAllowance],
   );
 }
 

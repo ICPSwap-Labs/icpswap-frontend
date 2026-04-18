@@ -117,7 +117,7 @@ export interface TransitionProps extends Partial<TransitionHandlerProps> {
 
 export type ClassNameMap<ClassKey extends string = string> = Record<ClassKey, string>;
 
-// biome-ignore lint: @typescript-eslint/no-empty-interface
+// oxlint-disable-next-line @typescript-eslint/no-empty-interface -- whitelisted variant keys
 type VariantOverrides = {};
 
 type VariantMap = GetWhitelistedVariants<BaseVariant, VariantOverrides>;

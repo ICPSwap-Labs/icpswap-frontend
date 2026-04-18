@@ -250,7 +250,7 @@ export const Brush = ({
           </clipPath>
         </defs>
 
-        {/* biome-ignore lint: will host the d3 brush */}
+        {/* oxlint-disable-next-line react/self-closing-comp -- svg group hosts d3 brush */}
         <g
           ref={brushRef}
           clipPath={`url(#${id}-brush-clip)`}

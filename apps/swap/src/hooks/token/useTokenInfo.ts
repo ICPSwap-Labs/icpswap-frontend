@@ -145,7 +145,6 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
     }));
   }, []);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     let mounted = true;
 
@@ -163,6 +162,7 @@ export function useTokensInfo(tokenIds: (string | undefined | null)[]): [TokenIn
     return () => {
       mounted = false;
     };
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(tokenIds), fetch_token_info]);
 
   return useMemo(() => {

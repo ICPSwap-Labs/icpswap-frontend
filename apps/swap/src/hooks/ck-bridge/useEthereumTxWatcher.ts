@@ -31,7 +31,6 @@ export function useEthereumTxWatcher() {
     return [...ethDissolveHashes, ...ethUnFinalizedMintHashes, ...erc20DissolveHashes, ...erc20MintHashes];
   }, [ethDissolveHashes, ethUnFinalizedMintHashes, erc20DissolveHashes, erc20MintHashes]);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   const callback = useCallback(async () => {
     if (ethereumHashes.length === 0 || isUndefinedOrNull(principal) || isUndefinedOrNull(publicClient)) return;
 
@@ -46,6 +45,7 @@ export function useEthereumTxWatcher() {
         updateEthereumTxResponse(hash, transaction);
       }
     }
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(ethereumHashes), principal]);
 
   useInterval({ callback, interval: INTERVAL_TIME });

@@ -46,7 +46,7 @@ export function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps
   const poolChartsData = useMemo(() => {
     if (isUndefinedOrNull(poolChartsResult)) return [];
     return poolChartsResult.content ? [...poolChartsResult.content].reverse() : [];
-  }, [poolChartsResult?.content, poolChartsResult]);
+  }, [poolChartsResult]);
 
   return (
     <MainCard

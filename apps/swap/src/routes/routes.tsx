@@ -8,7 +8,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 
 import { routeConfigs } from "./config";
 
-export function routes() {
+export function LayoutWithRoutes() {
   const location = useLocation();
 
   const { data: __maintenancePages } = useSettingMaintenance();

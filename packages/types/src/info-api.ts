@@ -400,7 +400,7 @@ export interface ValueCheckResponse {
   userPoolBalance: string;
 }
 
-// biome-ignore lint: ignore
+// oxlint-disable-next-line @typescript-eslint/no-empty-object-type -- serializable marker type
 export type Serializable = {};
 
 export interface TokenBalance {

@@ -11,7 +11,7 @@ export function useIntervalUserFarmInfo(canisterId: string | undefined, user: st
   return useIntervalFetch(call, force);
 }
 
-export function userIntervalFarmTVL(canisterId: string | undefined, force?: number) {
+export function useIntervalFarmTVL(canisterId: string | undefined, force?: number) {
   const call = useCallback(async () => {
     if (!canisterId) return undefined;
     return await getFarmTVL(canisterId);

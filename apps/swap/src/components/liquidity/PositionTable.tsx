@@ -36,9 +36,9 @@ export function PositionTable({
     setPagination({ pageNum: page, pageSize: 10 });
   };
 
-  // biome-ignore lint: Reset pagination when pool or principal change
   useEffect(() => {
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- Reset pagination when pool or principal change
   }, [poolId, principal]);
 
   const { data: allLimitOrdersResult } = useLimitOrders(poolId);

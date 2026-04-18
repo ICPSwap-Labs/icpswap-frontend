@@ -1,4 +1,4 @@
-import { makeStyles, Switch, type SwitchProps, type Theme } from "components/Mui";
+import { makeStyles, Switch as MuiSwitch, type SwitchProps, type Theme } from "components/Mui";
 
 const useStyles = makeStyles((theme: Theme) => {
   const trackBorder =
@@ -53,11 +53,11 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-export default function _Switch(props: SwitchProps) {
+export default function Switch(props: SwitchProps) {
   const classes = useStyles();
 
   return (
-    <Switch
+    <MuiSwitch
       focusVisibleClassName={classes.focusVisible}
       disableRipple
       classes={{

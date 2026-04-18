@@ -34,7 +34,7 @@ export function usePendingRewards(refresh?: number | boolean) {
     stake_pending_reward_fetch_index++;
   }, []);
 
-  // biome-ignore lint: reload dependencies
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- reload dependencies
   useEffect(() => {
     const fetch = async (pool: StakingPoolControllerPoolInfo, principal: Principal, fetch_index: number) => {
       try {

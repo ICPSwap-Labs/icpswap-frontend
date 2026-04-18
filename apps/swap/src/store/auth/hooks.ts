@@ -135,7 +135,7 @@ export function useInitialConnect() {
   const [loading, setLoading] = useState(true);
 
   // TODO
-  // biome-ignore lint: ignore
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- initial connect effect; deps intentionally narrow
   useEffect(() => {
     async function call() {
       const connector = getConnector();
@@ -188,7 +188,7 @@ export function useIdentityKitInitialConnect() {
   const [loading, setLoading] = useState(true);
 
   // TODO
-  // biome-ignore lint: ignore
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- initial connect effect; deps intentionally narrow
   useEffect(() => {
     async function call() {
       const connector = getConnector();
@@ -227,7 +227,7 @@ export function useIdentityKitInitialConnect() {
     }
 
     call();
-  }, [connectManager, isInitializing, user, agent, dispatch]);
+  }, [isInitializing, user, agent, dispatch]);
 
   return useMemo(
     () => ({

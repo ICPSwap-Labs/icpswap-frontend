@@ -120,7 +120,7 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>((props, ref) =>
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
-      {/* biome-ignore lint: ignore */}
+      {/* oxlint-disable-next-line react/jsx-props-no-spreading -- merge upstream SnackbarProps */}
       <div
         ref={ref}
         {...SnackbarProps}

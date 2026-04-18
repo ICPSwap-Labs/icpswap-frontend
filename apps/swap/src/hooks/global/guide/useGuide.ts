@@ -30,7 +30,7 @@ export function useShowGuideModalManager(guideName: string, selfGuideShow = true
     return !isRead && open && isConnected && selfGuideShow;
   }, [isConnected, open, isRead, selfGuideShow]);
 
-  // biome-ignore lint: reset open state on route change for re-showing the guide modal if user close it manually
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- reset open state on route change for re-showing the guide modal if user close it manually
   useEffect(() => {
     setOpen(true);
   }, [location.pathname]);

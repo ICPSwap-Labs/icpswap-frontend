@@ -18,7 +18,6 @@ export function useEthDissolveTxWatcher() {
   const [openTip] = useSuccessTip();
   const { t } = useTranslation();
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   const callback = useCallback(async () => {
     if (txs?.length && nonUndefinedOrNull(principal)) {
       for (let i = 0; i < txs.length; i++) {
@@ -35,7 +34,7 @@ export function useEthDissolveTxWatcher() {
           updateEthDissolveTx(principal, block_index, res, undefined);
         }
       }
-    }
+    } // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(txs), principal, openTip]);
 
   useInterval({ callback, interval: INTERVAL });

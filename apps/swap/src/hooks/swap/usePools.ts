@@ -32,7 +32,6 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
   const [pools, setPools] = useState<{ [key: string]: TypePoolsState | null }>({});
   const [loading, setLoading] = useState(false);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   const sortedPoolKeys: PoolKey[] = useMemo(() => {
     return poolKeys.map(([token0, token1, fee]) => {
       if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(fee))
@@ -43,9 +42,9 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 
       return [__token0, __token1, fee];
     });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(poolKeys)]);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   useEffect(() => {
     async function call() {
       if (sortedPoolKeys && sortedPoolKeys.length > 0) {
@@ -113,10 +112,11 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
     }
 
     call();
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(sortedPoolKeys), withoutVerify]);
 
   // Interval update pool's metadata
-  // biome-ignore lint: stringify array dependency to stop hook loop
+
   useEffect(() => {
     let timer: number | null = null;
 
@@ -156,9 +156,9 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
         timer = null;
       }
     };
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(pools)]);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     return sortedPoolKeys.map((poolKey, index) => {
       const [token0, token1, fee] = poolKey;
@@ -230,6 +230,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
         return [PoolState.NOT_EXISTS, null];
       }
     });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(pools), loading, JSON.stringify(sortedPoolKeys)]);
 }
 

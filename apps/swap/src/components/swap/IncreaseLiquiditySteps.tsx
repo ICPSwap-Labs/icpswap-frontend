@@ -72,7 +72,11 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim: __handleRec
         },
         { label: i18n.t("common.canister.id"), value: position.pool.token0.address },
       ],
-      errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+      errorActions: [
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
+      ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
@@ -95,7 +99,11 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim: __handleRec
         },
         { label: i18n.t("common.canister.id"), value: position.pool.token1.address },
       ],
-      errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+      errorActions: [
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
+      ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
     {
@@ -108,7 +116,11 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim: __handleRec
         { label: symbol0, value: amount0Value },
         { label: symbol1, value: amount1Value },
       ],
-      errorActions: [<TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>],
+      errorActions: [
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
+      ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
   ] as StepContents[];

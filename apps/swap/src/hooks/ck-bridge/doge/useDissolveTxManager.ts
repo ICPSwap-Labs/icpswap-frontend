@@ -66,13 +66,13 @@ export function useDogeDissolveTx(hash: string | undefined) {
 export function useDogeUnFinalizedDissolveTxs() {
   const dissolveTxs = useDogeDissolveTxs();
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     if (isUndefinedOrNull(dissolveTxs)) return undefined;
 
     return dissolveTxs.filter((tx) => {
       return !isDogeDissolveEnded(tx.state);
     });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(dissolveTxs)]);
 }
 

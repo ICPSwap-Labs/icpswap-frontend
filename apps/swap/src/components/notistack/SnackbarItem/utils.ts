@@ -45,7 +45,7 @@ export const keepSnackbarClassKeys = (
   return (
     (Object.keys(classes) as ContainerClassKey[])
       .filter((key) => !containerClasses[key])
-      // biome-ignore lint: ignore
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- object spread in reduce
       .reduce((obj, key) => ({ ...obj, [key]: classes[key] }), {})
   );
 };

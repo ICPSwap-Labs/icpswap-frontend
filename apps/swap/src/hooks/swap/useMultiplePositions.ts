@@ -16,7 +16,6 @@ export interface UseMultiplePositionProps {
 }
 
 export function useMultiplePositions(args: UseMultiplePositionProps[]) {
-  // biome-ignore lint: stringify array dependency to stop hook loop
   const { tokenIds } = useMemo(() => {
     const tokenIds: string[] = [];
 
@@ -33,11 +32,11 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
     });
 
     return { tokenIds };
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(args)]);
 
   const tokens = useTokens(tokenIds);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   const poolKeys = useMemo(() => {
     return args.map(({ metadata }) => {
       if (!metadata) return [undefined, undefined, undefined] as PoolKey;
@@ -52,11 +51,11 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
 
       return [tokenA ? tokenA[1] : undefined, tokenB ? tokenB[1] : undefined, Number(metadata.fee)] as PoolKey;
     });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(args), tokens]);
 
   const pools = usePools(poolKeys);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     const positions = args.map((arg, index) => {
       const infos = arg.positionInfos;
@@ -77,5 +76,6 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
     });
 
     return positions;
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(args), pools]);
 }

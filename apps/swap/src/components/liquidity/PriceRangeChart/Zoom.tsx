@@ -110,7 +110,7 @@ export default function Zoom({ svg, setZoom, width, height, resetBrush, zoomLeve
     select(svg as Element).call(zoomBehavior.current);
   }, [height, width, setZoom, svg, zoomLevels, zoomLevels.max, zoomLevels.min]);
 
-  // biome-ignore lint: reset zoom to initial on zoomLevel change
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- reset zoom to initial on zoomLevel change
   useEffect(() => {
     zoomInitial();
   }, [zoomInitial, zoomLevels]);

@@ -84,7 +84,7 @@ export interface UnderLineTabListProps {
   activeTabValue?: string;
 }
 
-function __UnderLineTabList({ tabs, onChange, activeTabValue }: UnderLineTabListProps) {
+function UnderLineTabListCF({ tabs, onChange, activeTabValue }: UnderLineTabListProps) {
   const tabListRef = useRef(null);
 
   const [activeTab, setActiveTab] = useState<string>(tabs[0].value);
@@ -136,4 +136,4 @@ function __UnderLineTabList({ tabs, onChange, activeTabValue }: UnderLineTabList
   );
 }
 
-export const UnderLineTabList = memo(__UnderLineTabList);
+export const UnderLineTabList = memo(UnderLineTabListCF);

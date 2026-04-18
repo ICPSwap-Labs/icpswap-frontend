@@ -96,7 +96,7 @@ export default function SnackbarItem(props: SnackbarItemProps) {
     ["onEnter", "onEntered", "onExit", "onExited"] as (keyof TransitionHandlerProps)[]
   ).reduce(
     (acc, cbName) => ({
-      // biome-ignore lint: ignore
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- object spread in reduce
       ...acc,
       [cbName]: createChainedFunction([props.snack[cbName], props[cbName]]),
     }),

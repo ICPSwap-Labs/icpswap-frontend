@@ -145,7 +145,7 @@ export function InfoNavBar() {
 
             <MenuWrapper open={open} anchor={ref?.current} placement="bottom-start" onClickAway={handleClose}>
               {routes.map((route, index) =>
-                index > RoutesNumber || index === RoutesNumber ? (
+                index >= RoutesNumber ? (
                   <Link key={route.path ?? index} to={route.path} link={route.link}>
                     <MenuItem value={route} label={route.name} onMenuClick={() => handleMenuClick(route)} />
                   </Link>

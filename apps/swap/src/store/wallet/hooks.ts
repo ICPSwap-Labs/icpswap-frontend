@@ -119,10 +119,10 @@ export function useBitcoinDissolveTxs() {
   const allDissolveTxs = useAppSelector((state) => state.wallet.bitcoinDissolveTxs);
   const principal = useAccountPrincipalString();
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(principal)) return undefined;
     return allDissolveTxs.filter((tx) => tx.principal === principal);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [principal, JSON.stringify(allDissolveTxs)]);
 }
 

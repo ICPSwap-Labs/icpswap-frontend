@@ -185,7 +185,7 @@ export function SetDissolveDelay({
     neuron_max_age_percentage,
     aging_since_timestamp_seconds,
     neuron_max_dissolve_seconds,
-    neuron_stake.toString,
+    neuron_stake,
   ]);
 
   const votingPowerPercentage = useMemo(() => {

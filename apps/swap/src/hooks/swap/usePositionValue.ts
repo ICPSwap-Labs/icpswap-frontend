@@ -14,7 +14,6 @@ export function useMultiPoolPositionsValue(args: UseMultiPositionsValueProps[]) 
 
   const positions = useMultiplePositions(args);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     if (!allTokenInfos || !positions) return undefined;
     if (allTokenInfos.length === 0 || positions.length === 0) return undefined;
@@ -38,6 +37,7 @@ export function useMultiPoolPositionsValue(args: UseMultiPositionsValueProps[]) 
     });
 
     return vals;
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(positions), allTokenInfos]);
 }
 
@@ -60,7 +60,6 @@ export function useMultiPoolPositionsTotalValue(args: UseMultiPoolPositionsTotal
 
   const positions = useMultiplePositions(args);
 
-  // biome-ignore lint: stringify array dependency to stop hook loop
   return useMemo(() => {
     if (!allTokenInfos || !positions) return undefined;
     if (allTokenInfos.length === 0 || positions.length === 0) return undefined;
@@ -84,6 +83,7 @@ export function useMultiPoolPositionsTotalValue(args: UseMultiPoolPositionsTotal
     });
 
     return totalValue?.toString();
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(positions), allTokenInfos]);
 }
 

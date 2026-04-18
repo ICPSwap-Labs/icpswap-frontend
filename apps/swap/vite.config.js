@@ -1,9 +1,15 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
-import biome from "vite-plugin-biome";
+import oxlint from "vite-plugin-oxlint";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(__dirname, "../..");
 
 export default defineConfig(() => {
   return {
@@ -90,13 +96,12 @@ export default defineConfig(() => {
           return transformed === code ? null : transformed;
         },
       },
-      biome({
-        check: {
-          enabled: true,
-          target: "src/**/*",
-          severity: "error",
-        },
-        format: { enabled: false },
+      oxlint({
+        path: path.join(__dirname, "src"),
+        configFile: path.join(repoRoot, ".oxlintrc.json"),
+        failOnError: false,
+        failOnWarning: false,
+        lintOnStart: true,
       }),
     ],
   };

@@ -36,5 +36,5 @@ export function formatTickPrice(
     return placeholder;
   }
 
-  return formatTokenPrice(price?.toFixed(100));
+  return formatTokenPrice(price?.toFixed(20));
 }
