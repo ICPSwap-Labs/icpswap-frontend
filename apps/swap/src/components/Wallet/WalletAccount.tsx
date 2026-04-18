@@ -102,7 +102,6 @@ export default function WalletAccount() {
   const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";
 
   const handleRefreshBalance = () => {
-    setRefreshTotalBalance();
     setRefreshCounter();
     openSuccessTip("Refresh Success");
   };

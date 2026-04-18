@@ -8,7 +8,6 @@ import type {
 import { GridAutoRows, ImageLoading, LineChartAlt, MainCard, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { Box, Typography } from "components/Mui";
-import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -38,7 +37,7 @@ export function TVLChartsWrapper({ globalCharts, globalProtocol }: TVLChartsWrap
     if (!reversedGlobalCharts) return undefined;
 
     return reversedGlobalCharts.map((data) => ({
-      time: dayjs(data.snapshotTime).format("YYYY-MM-DD"),
+      time: data.snapshotTime,
       value:
         data.snapshotTime.toString() === "1686787200"
           ? 3694463

@@ -8,7 +8,7 @@ import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 export interface SwapInputLabelProps {
   type: "from" | "to";
   currency: Token | undefined;
-  refreshBalance?: boolean;
+  refreshBalance?: number;
 }
 
 export default function SwapInputLabel({ type, currency, refreshBalance }: SwapInputLabelProps) {

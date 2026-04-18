@@ -21,7 +21,7 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
     if (positionChartData) {
       return positionChartData.map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          time: data.snapshotTime,
           value: data.fees,
         };
       });

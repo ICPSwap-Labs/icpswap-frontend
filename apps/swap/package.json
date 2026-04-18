@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "node ./scripts/env.cjs dev ic && vite",
     "dev:local": "node ./scripts/env.cjs dev local && vite dev",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
     "build": "CI=false && node ./scripts/env.cjs pro ic && vite build",
     "preview": "vite preview",
     "analyze": "CI=false node ./scripts/env.cjs pro ic && vite build",
@@ -74,6 +75,7 @@
     "d3": "7.0.0",
     "dompurify": "^3.2.6",
     "ethers": "^5.7.2",
+    "i18next-resources-to-backend": "^1.2.1",
     "ic-stoic-identity": "6.0.0",
     "marked": "^9.1.0",
     "ms": "2.1.3",

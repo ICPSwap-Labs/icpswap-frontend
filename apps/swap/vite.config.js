@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
+import checker from "vite-plugin-checker";
 import oxlint from "vite-plugin-oxlint";
 import svgr from "vite-plugin-svgr";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -56,6 +57,13 @@ export default defineConfig(() => {
     plugins: [
       analyzer({ analyzerMode: "static" }),
       react(),
+      checker({
+        typescript: {
+          root: __dirname,
+          tsconfigPath: "tsconfig.json",
+        },
+        terminal: true,
+      }),
       tsconfigPaths(),
       svgr({
         svgrOptions: {

@@ -1,14 +1,12 @@
 import type { NFTTokenMetadata, Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { V3SwapNFTCanisterId } from "constants/canister";
 import v2Ids from "constants/swap-v2-ids.json";
 import { usePositionNFTSvg } from "hooks/swap/useNFTSvg";
 import { useMemo } from "react";
 
 export function useIsPositionNFT(metadata: NFTTokenMetadata | Null): boolean {
   if (isUndefinedOrNull(metadata)) return false;
-
-  return metadata.cId === V3SwapNFTCanisterId;
+  return true;
 }
 
 export function useIsV2PositionNFT(metadata: NFTTokenMetadata | Null): boolean {
@@ -21,10 +19,7 @@ export function useNFTSvg(metadata: NFTTokenMetadata | Null) {
   const isV2PositionNFT = useIsV2PositionNFT(metadata);
   const isPositionNFT = useIsPositionNFT(metadata);
 
-  const positionNFTSvg = usePositionNFTSvg(
-    isPositionNFT || isV2PositionNFT ? metadata?.tokenId : undefined,
-    isV2PositionNFT ? "v2" : "v3",
-  );
+  const positionNFTSvg = usePositionNFTSvg(isPositionNFT || isV2PositionNFT ? metadata?.tokenId : undefined);
 
   return useMemo(
     () => ({

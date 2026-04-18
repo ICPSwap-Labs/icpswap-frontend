@@ -60,7 +60,6 @@ export const SwapNFTCanisterId = getCanisterId(CANISTER_NAMES.SwapNFTCanister);
 export const NFTCanisterController = getCanisterId(CANISTER_NAMES.NFTCanisterController);
 export const ClaimStorageId = getCanisterId(CANISTER_NAMES.ClaimStorage);
 export const NFTTradeTokenCanisterId = WICPCanisterId;
-export const V3SwapNFTCanisterId = getCanisterId(CANISTER_NAMES.V3SwapNFT);
 export const FarmControllerId = getCanisterId(CANISTER_NAMES.FarmController);
 export const PassCodeManagerId = getCanisterId(CANISTER_NAMES.PassCodeManager);
 

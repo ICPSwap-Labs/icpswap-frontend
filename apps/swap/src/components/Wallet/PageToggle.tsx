@@ -1,21 +1,21 @@
 import { Box, Typography } from "components/Mui";
-import { useWalletStore } from "components/Wallet/store";
+import { useWalletStore, Page } from "components/Wallet/store";
 import i18n from "i18n/index";
 import { useMemo } from "react";
 
 type Item = {
   name: string;
-  pageName: "token" | "nft";
+  pageName: Page;
 };
 
 const DISPLAY_ITEMS: Item[] = [
   {
     name: i18n.t("common.token"),
-    pageName: "token",
+    pageName: Page.token,
   },
   {
     name: i18n.t("common.nft"),
-    pageName: "nft",
+    pageName: Page.nft,
   },
 ];
 

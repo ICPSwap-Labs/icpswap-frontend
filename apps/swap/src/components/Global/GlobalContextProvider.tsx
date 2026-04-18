@@ -1,4 +1,3 @@
-import type { Null, PublicTokenOverview } from "@icpswap/types";
 import { GlobalContext } from "hooks/useGlobalContext";
 import { useInitialTokenStandard } from "hooks/useInitialTokenStandard";
 import { type ReactNode, useCallback, useState } from "react";
@@ -9,7 +8,6 @@ interface GlobalUpdaterProviderProps {
 
 export function GlobalContextProvider({ children }: GlobalUpdaterProviderProps) {
   const [refreshTriggers, setRefreshTriggers] = useState<{ [key: string]: number }>({});
-  const [infoAllTokens, setInfoAllTokens] = useState<PublicTokenOverview[] | Null>(null);
 
   const { AllPools } = useInitialTokenStandard();
 
@@ -23,8 +21,6 @@ export function GlobalContextProvider({ children }: GlobalUpdaterProviderProps) 
         AllPools,
         refreshTriggers,
         setRefreshTriggers: handleRefreshTriggers,
-        infoAllTokens,
-        setInfoAllTokens,
       }}
     >
       {children}

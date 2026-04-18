@@ -57,60 +57,68 @@ export function PoolVolumeChart({
 
   const latestData = formattedData.length > 0 ? formattedData[formattedData.length - 1] : null;
 
-  return loading ? (
-    <Box
-      sx={{
-        width: "100%",
-        height,
-      }}
-    >
-      <ImageLoading loading />
-    </Box>
-  ) : formattedData && formattedData.length > 0 ? (
-    <Box sx={{ height: "100%" }}>
-      <Box>
-        {latestData ? (
-          <>
-            <Typography
-              color="text.primary"
-              fontSize="24px"
-              fontWeight={500}
-              sx={{
-                height: "30px",
-              }}
-            >
-              {latestValue
-                ? formatDollarAmount(latestValue)
-                : (formatDollarAmount(defaultValue) ?? formatDollarAmount(latestData.value))}
-            </Typography>
+  return (
+    <>
+      {loading ? (
+        <Box
+          sx={{
+            width: "100%",
+            height,
+          }}
+        >
+          <ImageLoading loading />
+        </Box>
+      ) : formattedData && formattedData.length > 0 ? (
+        <Box sx={{ height: "100%" }}>
+          <Box>
+            {latestData ? (
+              <>
+                <Typography
+                  color="text.primary"
+                  fontSize="24px"
+                  fontWeight={500}
+                  sx={{
+                    height: "30px",
+                  }}
+                >
+                  {latestValue
+                    ? formatDollarAmount(latestValue)
+                    : (formatDollarAmount(defaultValue) ?? formatDollarAmount(latestData.value))}
+                </Typography>
 
-            <Typography
-              color="text.primary"
-              fontWeight={500}
-              sx={{
-                height: "20px",
-              }}
-              fontSize="12px"
-            >
-              {label ?? ""}
-            </Typography>
-          </>
-        ) : null}
-      </Box>
+                <Typography
+                  color="text.primary"
+                  fontWeight={500}
+                  sx={{
+                    height: "20px",
+                  }}
+                  fontSize="12px"
+                >
+                  {label ?? ""}
+                </Typography>
+              </>
+            ) : null}
+          </Box>
 
-      <BarChartAlt
-        data={formattedData}
-        minHeight={parseInt(height, 10)}
-        setValue={setLatestValue}
-        setLabel={setLabel}
-        value={latestValue}
-        label={label}
-        activeWindow={
-          volumeWindow === VolumeWindow.daily ? "daily" : volumeWindow === VolumeWindow.monthly ? "monthly" : "weekly"
-        }
-      />
-    </Box>
-  ) : noData ? (
-    noData
-  ) : null;
+          <BarChartAlt
+            data={formattedData}
+            minHeight={parseInt(height, 10)}
+            setValue={setLatestValue}
+            setLabel={setLabel}
+            value={latestValue}
+            label={label}
+            activeWindow={
+              volumeWindow === VolumeWindow.daily
+                ? "daily"
+                : volumeWindow === VolumeWindow.monthly
+                  ? "monthly"
+                  : "weekly"
+            }
+          />
+        </Box>
+      ) : noData ? (
+        noData
+      ) : null}
+    </>
+  );
 }

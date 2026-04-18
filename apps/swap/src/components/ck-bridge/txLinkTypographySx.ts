@@ -1,4 +1,4 @@
-import type { SxProps, Theme } from "@mui/material/styles";
+import { TypographyProps } from "components/Mui";
 
 /** Shared typography styles for long tx/address links in ck-bridge transaction cards. */
 export const txLinkTypographySx = {
@@ -8,4 +8,4 @@ export const txLinkTypographySx = {
   textAlign: "right",
   lineHeight: "16px",
   "@media(max-width:640px)": { width: "220px" },
-} satisfies SxProps<Theme>;
+} satisfies TypographyProps["sx"];

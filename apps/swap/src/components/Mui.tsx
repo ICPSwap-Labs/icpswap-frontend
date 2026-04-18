@@ -56,6 +56,7 @@ interface Theme {
   shadows: string[];
   transitions: any;
   textPrimary: string;
+  applyStyles: any;
 }
 
 export function useTheme() {

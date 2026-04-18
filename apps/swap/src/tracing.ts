@@ -1,4 +1,3 @@
-import { BrowserTracing } from "@sentry/browser";
 import * as Sentry from "@sentry/react";
 import type { ClientOptions, ErrorEvent } from "@sentry/types";
 import { getEnvName, isSentryEnabled } from "utils/env";
@@ -49,7 +48,7 @@ Sentry.init({
   tracesSampleRate: Number(import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   beforeSend,
   integrations: [
-    new BrowserTracing({
+    new Sentry.BrowserTracing({
       startTransactionOnLocationChange: false,
       startTransactionOnPageLoad: true,
     }),
