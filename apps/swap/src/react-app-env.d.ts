@@ -113,6 +113,9 @@ interface Window {
       };
     };
   };
+  /** Google Analytics / gtag.js queue (see initGtag.ts) */
+  dataLayer?: unknown[];
+  gtag?: (...args: unknown[]) => void;
 }
 
 declare type Nullable<T> = T | null;

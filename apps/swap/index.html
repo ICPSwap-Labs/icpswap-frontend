@@ -34,8 +34,9 @@
 
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
   <meta name="referrer" content="origin" />
+  <!-- style-src still needs 'unsafe-inline': MUI/Emotion injects runtime &lt;style&gt; tags -->
   <meta http-equiv="Content-Security-Policy" content="
-    script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' icp0.io sns-api.internetcomputer.org www.googletagmanager.com;
+    script-src 'self' 'wasm-unsafe-eval' icp0.io sns-api.internetcomputer.org www.googletagmanager.com;
     object-src 'none';
     img-src 'self' data: https:;
     style-src 'self' 'unsafe-inline' fonts.googleapis.com;
@@ -43,38 +44,16 @@
     "
   >
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GOOGLE_TAG_MANAGER_ID%"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    // biome-ignore lint: ignore
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '%VITE_GOOGLE_TAG_MANAGER_ID%');
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
     rel="stylesheet"
-    media="print"
-    onload="this.media='all'" />
-  <noscript><link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-    rel="stylesheet" /></noscript>
+  />
 </head>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-  <!--
-          This HTML file is a template.
-          If you open it directly in the browser, you will see an empty page.
-
-          You can add webfonts, meta tags, or analytics to this file.
-          The build step will place the bundled scripts into the <body> tag.
-
-          To begin the development, run `npm start` or `yarn start`.
-          To create a production bundle, use `npm run build` or `yarn build`.
-        -->
   <script type="module" src="/src/index.jsx" ></script>
 </body>
 

@@ -8,6 +8,9 @@ import { AppWithProvider } from "./Provider";
 import * as serviceWorker from "./serviceWorker";
 import store, { persistor } from "./store/index";
 import "./assets/css/global.css";
+import { initGtag } from "./initGtag";
+
+initGtag();
 
 // Defer Sentry init to after first paint to avoid blocking initial load
 if (typeof requestIdleCallback !== "undefined") {
