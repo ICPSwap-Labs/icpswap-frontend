@@ -140,17 +140,19 @@ export function BitcoinStyleMintUI({
             </Box>
           </Box>
 
-          <Box
-            sx={{
-              padding: "10px",
-              display: "flex",
-              justifyContent: "center",
-              borderRadius: "8px",
-              background: "#ffffff",
-            }}
-          >
-            <QRCode width={120} height={120} value={address ?? ""} />
-          </Box>
+          {address ? (
+            <Box
+              sx={{
+                padding: "10px",
+                display: "flex",
+                justifyContent: "center",
+                borderRadius: "8px",
+                background: "#ffffff",
+              }}
+            >
+              <QRCode width={120} height={120} value={address} />
+            </Box>
+          ) : null}
         </Flex>
       </Box>
 

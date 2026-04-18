@@ -3,7 +3,6 @@ import {
   cleanDogeDissolveTxs,
   deleteTaggedTokens,
   updateBitcoinDissolveTxs,
-  updateCK_BTCAddresses,
   updateDogeDissolveTxs,
   updateHideSmallBalance,
   updateHideZeroNFT,
@@ -31,12 +30,6 @@ export default createReducer(initialState, (builder) => {
       return {
         ...state,
         taggedTokens: newTaggedTokens,
-      };
-    })
-    .addCase(updateCK_BTCAddresses, (state, { payload }) => {
-      state.ckBTCAddresses = {
-        ...state.ckBTCAddresses,
-        [`${payload.principal}_${payload.type}`]: payload.address,
       };
     })
     .addCase(updateBitcoinDissolveTxs, (state, { payload }) => {

@@ -1,4 +1,3 @@
-import type { Principal } from "@icp-sdk/core/principal";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import { useBitcoinBlockNumber } from "hooks/ck-bridge";
@@ -8,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
   deleteTaggedTokens,
   updateBitcoinDissolveTxs,
-  updateCK_BTCAddresses,
   updateHideSmallBalance,
   updateHideZeroNFT,
   updateRemovedWalletDefaultTokens,
@@ -101,44 +99,6 @@ export function useTaggedTokenManager() {
   return useMemo(
     () => ({ taggedTokens, updateTaggedTokens, deleteTaggedTokens }),
     [taggedTokens, updateTaggedTokens, deleteTaggedTokens],
-  );
-}
-
-export function useUserBTCDepositAddress(principal: string | undefined) {
-  return useAppSelector((state) => state.wallet.ckBTCAddresses)[`${principal}_deposit`];
-}
-
-export function useUserBTCWithdrawAddress(principal: string | undefined) {
-  const address = useAppSelector((state) => state.wallet.ckBTCAddresses)[`${principal}_withdraw`];
-  if (!address) return undefined;
-  const { owner, subaccount } = JSON.parse(address) as { owner: string; subaccount: number[] | undefined };
-
-  return {
-    owner,
-    subaccount: subaccount && subaccount.length > 0 ? [Uint8Array.from(subaccount)] : [],
-  };
-}
-
-export function useUpdateUserBTCDepositAddress() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (principal: string, address: string) => {
-      dispatch(updateCK_BTCAddresses({ principal, address, type: "deposit" }));
-    },
-    [dispatch],
-  );
-}
-
-export function useUpdateUserBTCWithdrawAddress() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (principal: string, owner: Principal, subaccount: Uint8Array[] | []) => {
-      const address = JSON.stringify({ owner: owner.toString(), subaccount: [...(subaccount[0] ?? [])] });
-      dispatch(updateCK_BTCAddresses({ principal, address, type: "withdraw" }));
-    },
-    [dispatch],
   );
 }
 

@@ -4,7 +4,6 @@ import { SortBalanceEnum, type WalletSortType } from "types/index";
 
 export interface WalletState {
   taggedTokens: string[];
-  ckBTCAddresses: { [key: string]: string };
   bitcoinDissolveTxs: BitcoinTx[];
   sort: WalletSortType;
   sortBalance: SortBalanceEnum;
@@ -16,7 +15,6 @@ export interface WalletState {
 }
 
 export const initialState: WalletState = {
-  ckBTCAddresses: {},
   bitcoinDissolveTxs: [],
   taggedTokens: [],
   sort: "High",

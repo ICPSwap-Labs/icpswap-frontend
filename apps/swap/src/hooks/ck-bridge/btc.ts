@@ -1,20 +1,13 @@
 import { Principal } from "@icp-sdk/core/principal";
 import { ckBtcMinter } from "@icpswap/actor";
-import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { BITCOIN_MINT_REFRESH } from "constants/chain-key";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
 import { atom, useAtom, useAtomValue } from "jotai";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
-import {
-  useBitcoinDissolveTxs,
-  useUpdateUserBTCDepositAddress,
-  useUpdateUserBTCWithdrawAddress,
-  useUserBTCDepositAddress,
-  useUserBTCWithdrawAddress,
-} from "store/wallet/hooks";
+import { useBitcoinDissolveTxs } from "store/wallet/hooks";
 import { useBitcoinAllTxResponse } from "store/web3/hooks";
 import type { BitcoinTransaction, BitcoinTxResponse } from "types/ckBTC";
 import {
@@ -83,42 +76,23 @@ export function useBtcUnconfirmedDissolveHashes() {
 
 export function useBtcDepositAddress(subaccount?: Uint8Array) {
   const principal = useAccountPrincipalString();
+  const subaccountKey = subaccount?.length ? [...subaccount].join(",") : "";
 
-  const [address, setAddress] = useState<Null | string>(null);
-  const [loading, setLoading] = useState(false);
-
-  const storeUserDepositAddress = useUserBTCDepositAddress(principal);
-  const updateUserBTCAddress = useUpdateUserBTCDepositAddress();
-
-  useEffect(() => {
-    async function call() {
-      if (!principal) return;
-      if (storeUserDepositAddress) {
-        setAddress(storeUserDepositAddress);
-        return;
-      }
-
-      setLoading(true);
-
-      const address = resultFormat<string>(
+  const { data: address, isPending: loading } = useQuery({
+    queryKey: ["btcDepositAddress", principal, subaccountKey],
+    queryFn: async () => {
+      if (!principal) return null;
+      return resultFormat<string>(
         await (await ckBtcMinter(true)).get_btc_address({
           owner: optionalArg(Principal.fromText(principal)),
           subaccount: optionalArg<Uint8Array>(subaccount),
         }),
       ).data;
+    },
+    enabled: !!principal,
+  });
 
-      if (address && principal) {
-        updateUserBTCAddress(principal, address);
-      }
-
-      setAddress(address);
-      setLoading(false);
-    }
-
-    call();
-  }, [principal, subaccount, storeUserDepositAddress, updateUserBTCAddress]);
-
-  return useMemo(() => ({ result: address, loading }), [address, loading]);
+  return useMemo(() => ({ result: address ?? null, loading }), [address, loading]);
 }
 
 export function useRefreshBtcBalanceCallback() {
@@ -135,21 +109,15 @@ export function useBtcWithdrawAddress(): UseQueryResult<
   Error
 > {
   const principal = useAccountPrincipalString();
-  const storeAddress = useUserBTCWithdrawAddress(principal);
-  const updateUserWithdrawAddress = useUpdateUserBTCWithdrawAddress();
 
   return useQuery({
-    queryKey: ["useBtcWithdrawAddress", storeAddress?.owner, principal],
+    queryKey: ["useBtcWithdrawAddress", principal],
     queryFn: async () => {
       if (!principal) return undefined;
 
       const address = resultFormat<{ owner: Principal; subaccount: [] | Uint8Array[] }>(
         await (await ckBtcMinter(true)).get_withdrawal_account(),
       ).data;
-
-      if (address) {
-        updateUserWithdrawAddress(principal, address.owner, address.subaccount);
-      }
 
       return address;
     },

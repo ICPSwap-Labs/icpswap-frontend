@@ -1,6 +1,6 @@
 import { createAction } from "@reduxjs/toolkit";
 import type { DogeDissolveTx } from "types/chain-key";
-import type { BitcoinTx, BTCAddressType } from "types/ckBTC";
+import type { BitcoinTx } from "types/ckBTC";
 import type { SortBalanceEnum, WalletSortType } from "types/index";
 
 export const updateTaggedTokens = createAction<string[]>("wallet/updateTaggedTokens");
@@ -10,12 +10,6 @@ export const deleteTaggedTokens = createAction<string[]>("wallet/deleteTaggedTok
 export const updateWalletSortType = createAction<WalletSortType>("wallet/updateWalletSortType");
 
 export const updateSortBalance = createAction<SortBalanceEnum>("wallet/updateSortBalance");
-
-export const updateCK_BTCAddresses = createAction<{
-  principal: string;
-  address: string;
-  type: BTCAddressType;
-}>("wallet/updateCK_BTCAddresses");
 
 export const updateHideSmallBalance = createAction<boolean>("wallet/updateHideSmallBalance");
 
