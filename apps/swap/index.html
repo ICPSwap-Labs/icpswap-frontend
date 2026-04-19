@@ -1,60 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <title>ICPSwap</title>
+    <link rel="icon" href="/favicon.png?v=0" />
+    <!-- Meta Tags-->
+    <meta charset="utf-8" />
+    <meta name="theme-color" content="#0B132F" />
+    <meta name="title" content="ICPSwap" />
+    <meta name="description" content="ICPSwap" />
+    <meta name="keywords" content="ICP ICPSwap ICS dfinity Dfinity DFX dfx" />
+    <meta name="author" content="CodedThemes" />
 
-<head>
-  <title>ICPSwap</title>
-  <link rel="icon" href="/favicon.png?v=0" />
-  <!-- Meta Tags-->
-  <meta charset="utf-8" />
-  <meta name="theme-color" content="#0B132F" />
-  <meta name="title" content="ICPSwap" />
-  <meta name="description" content="ICPSwap" />
-  <meta name="keywords" content="ICP ICPSwap ICS dfinity Dfinity DFX dfx" />
-  <meta name="author" content="CodedThemes" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://app.icpswap.com" />
+    <meta property="og:title" content="ICPSwap - ICP" />
+    <meta property="og:description" content="The Hub of Future Decentralized Finance on Internet Computer" />
+    <meta property="og:image" content="https://app.icpswap.com/og_image.png" />
 
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://app.icpswap.com" />
-  <meta property="og:title" content="ICPSwap - ICP" />
-  <meta property="og:description" content="The Hub of Future Decentralized Finance on Internet Computer" />
-  <meta property="og:image" content="https://app.icpswap.com/og_image.png" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
+    <meta http-equiv="expires" content="0" />
 
-  <meta http-equiv="pragma" content="no-cache"> 
-  <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
-  <meta http-equiv="expires" content="0" />
+    <!-- iOS meta tags and icons -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="#2296f3" />
+    <meta name="apple-mobile-web-app-title" content="ICPSwap" />
+    <link rel="apple-touch-icon" href="/favicon.png?v=0" />
 
-  <!-- iOS meta tags and icons -->
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="#2296f3">
-  <meta name="apple-mobile-web-app-title" content="ICPSwap">
-  <link rel="apple-touch-icon" href="/favicon.png?v=0">
-
-  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=0">
-  <meta name="referrer" content="origin" />
-  <!-- style-src still needs 'unsafe-inline': MUI/Emotion injects runtime &lt;style&gt; tags -->
-  <meta http-equiv="Content-Security-Policy" content="
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=0" />
+    <meta name="referrer" content="origin" />
+    <!-- style-src still needs 'unsafe-inline': MUI/Emotion injects runtime &lt;style&gt; tags -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
     script-src 'self' 'wasm-unsafe-eval' icp0.io sns-api.internetcomputer.org www.googletagmanager.com;
     object-src 'none';
     img-src 'self' data: https:;
-    style-src 'self' 'unsafe-inline' fonts.googleapis.com;
+    font-src 'self';
+    style-src 'self' 'unsafe-inline';
     child-src https: blob:
     "
-  >
+    />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-    rel="stylesheet"
-  />
-</head>
+    <link rel="preload" href="/fonts/poppins.css" as="style" />
+    <link rel="stylesheet" href="/fonts/poppins.css" />
+  </head>
 
-<body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
-  <script type="module" src="/src/index.jsx" ></script>
-</body>
-
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/index.jsx"></script>
+  </body>
 </html>
