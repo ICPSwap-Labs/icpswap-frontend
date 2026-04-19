@@ -40,14 +40,12 @@
     script-src 'self' 'wasm-unsafe-eval' icp0.io sns-api.internetcomputer.org www.googletagmanager.com;
     object-src 'none';
     img-src 'self' data: https:;
-    font-src 'self';
-    style-src 'self' 'unsafe-inline';
+    style-src 'self' 'unsafe-inline' fonts.googleapis.com;
     child-src https: blob:
     "
     />
 
-    <link rel="preload" href="/fonts/poppins.css" as="style" />
-    <link rel="stylesheet" href="/fonts/poppins.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
 
   <body>
