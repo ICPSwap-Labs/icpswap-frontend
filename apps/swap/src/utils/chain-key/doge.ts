@@ -42,8 +42,8 @@ function base58Decode(input: string): Uint8Array | null {
 export function isValidDogeAddress(address: string): boolean {
   if (!address || typeof address !== "string") return false;
   const trimmed = address.trim();
-  if (trimmed.length < 33 || trimmed.length > 34) return false;
-  if (trimmed[0] !== "D" && trimmed[0] !== "9") return false;
+  if (trimmed.length !== 34) return false;
+  if (!["D", "9", "A"].includes(trimmed[0])) return false;
 
   const decoded = base58Decode(trimmed);
   if (!decoded || decoded.length !== 25) return false;
