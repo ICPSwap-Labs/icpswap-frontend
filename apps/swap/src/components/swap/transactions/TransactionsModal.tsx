@@ -67,15 +67,27 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
           </Typography>
           <Typography sx={{ fontSize: "12px" }}>{dayjs(Number(transaction.txTime)).format(DAYJS_FORMAT)}</Typography>
         </Box>
-        <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, margin: "8px 0 0 0" }}>
-          {enumToString(transaction.actionType) === "swap" ? (
+        <Typography
+          color="text.primary"
+          sx={{ fontSize: "16px", fontWeight: 500, margin: "8px 0 0 0", display: "flex", alignItems: "center" }}
+          component="div"
+        >
+          {enumToString(transaction.actionType) === "Swap" ? (
             <>
-              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> to{" "}
+              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} />
+              &nbsp;
+              <Typography
+                sx={{ fontSize: "16px", fontWeight: 500, position: "relative", top: "-1px", color: "text.primary" }}
+              >
+                →
+              </Typography>
+              &nbsp;
               {token1Amount} <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
             </>
           ) : (
             <>
-              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> and{" "}
+              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} />
+              &nbsp;+&nbsp;
               {token1Amount} <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
             </>
           )}

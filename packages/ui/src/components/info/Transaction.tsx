@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import { useMemo } from "react";
 import { Copy } from "react-feather";
 import { Link } from "../Link";
-import { type BoxProps, useTheme } from "../Mui";
+import { type BoxProps, Typography, useTheme } from "../Mui";
 import { SwapTransactionPriceTip } from "../SwapTransactionPriceTip";
 import { BodyCell, TableRow } from "../Table";
 import { ValueLabel } from "./ValueLabel";
@@ -16,6 +16,14 @@ const DOUBLE_TX_VALUE_TYPES: string[] = [
   API_SWAP_TRANSACTIONS_TYPES.MINT,
   API_SWAP_TRANSACTIONS_TYPES.COLLECT,
 ];
+
+function ForArrow() {
+  return (
+    <Typography sx={{ fontSize: "16px", fontWeight: 500, position: "relative", top: "-1px", color: "text.primary" }}>
+      →
+    </Typography>
+  );
+}
 
 function OverflowTokenSymbolBodyCell({ symbol }: { symbol: string }) {
   return (
@@ -42,7 +50,9 @@ export function ActionTypeFormat(transaction: InfoTransactionResponse) {
         <BodyCell>
           Swap&nbsp;
           <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
-          &nbsp;for&nbsp;
+          &nbsp;
+          <ForArrow />
+          &nbsp;
           <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
         </BodyCell>
       );
@@ -54,7 +64,7 @@ export function ActionTypeFormat(transaction: InfoTransactionResponse) {
         <BodyCell>
           Add&nbsp;
           <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
-          &nbsp;and&nbsp;
+          &nbsp;+&nbsp;
           <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
         </BodyCell>
       );
@@ -63,7 +73,7 @@ export function ActionTypeFormat(transaction: InfoTransactionResponse) {
         <BodyCell>
           Remove&nbsp;
           <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
-          &nbsp;and&nbsp;
+          &nbsp;+&nbsp;
           <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
         </BodyCell>
       );
@@ -72,7 +82,7 @@ export function ActionTypeFormat(transaction: InfoTransactionResponse) {
         <BodyCell>
           Collect&nbsp;
           <OverflowTokenSymbolBodyCell symbol={transaction.token0Symbol} />
-          &nbsp;and&nbsp;
+          &nbsp;+&nbsp;
           <OverflowTokenSymbolBodyCell symbol={transaction.token1Symbol} />
         </BodyCell>
       );
