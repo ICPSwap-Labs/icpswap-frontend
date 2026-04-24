@@ -1,7 +1,7 @@
 import { useUserSwapTransactions } from "@icpswap/hooks";
 import type { InfoTransactionResponse } from "@icpswap/types";
 import { Link, Modal, SwapTransactionPriceTip } from "@icpswap/ui";
-import { BigNumber, enumToString } from "@icpswap/utils";
+import { BigNumber, enumToString, formatAmount } from "@icpswap/utils";
 import { LoadingRow, TokenImage } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
 import { SwapTransactionType } from "components/swap/SwapTransactionType";
@@ -22,15 +22,15 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
   const theme = useTheme();
 
   const token0Amount = useMemo(() => {
-    return new BigNumber(transaction.token0AmountIn).isEqualTo(0)
-      ? transaction.token0AmountOut
-      : transaction.token0AmountIn;
+    return formatAmount(
+      new BigNumber(transaction.token0AmountIn).isEqualTo(0) ? transaction.token0AmountOut : transaction.token0AmountIn,
+    );
   }, [transaction]);
 
   const token1Amount = useMemo(() => {
-    return new BigNumber(transaction.token1AmountIn).isEqualTo(0)
-      ? transaction.token1AmountOut
-      : transaction.token1AmountIn;
+    return formatAmount(
+      new BigNumber(transaction.token1AmountIn).isEqualTo(0) ? transaction.token1AmountOut : transaction.token1AmountIn,
+    );
   }, [transaction]);
 
   const symbol0 = transaction.token0Symbol;
@@ -74,7 +74,8 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
         >
           {enumToString(transaction.actionType) === "Swap" ? (
             <>
-              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} />
+              {token0Amount}&nbsp;
+              <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} />
               &nbsp;
               <Typography
                 sx={{ fontSize: "16px", fontWeight: 500, position: "relative", top: "-1px", color: "text.primary" }}
@@ -82,13 +83,16 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
                 →
               </Typography>
               &nbsp;
-              {token1Amount} <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+              {token1Amount}&nbsp;
+              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
             </>
           ) : (
             <>
-              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} />
+              {token0Amount}&nbsp;
+              <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} />
               &nbsp;+&nbsp;
-              {token1Amount} <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+              {token1Amount}&nbsp;
+              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
             </>
           )}
         </Typography>
