@@ -22,7 +22,7 @@ export interface Web3State {
   erc20DissolveDetails: {
     [withdrawal_id: string]: WithdrawalDetail;
   };
-  erc20DissolveCompletedTxs: string[];
+  erc20DissolveUnCompletedTxs: string[];
   bitcoinFinalizedTxs: string[];
 }
 
@@ -34,6 +34,6 @@ export const initialState: Web3State = {
   bitcoinTxResponse: {},
   ethereumFinalizedHashes: [],
   erc20DissolveDetails: {},
-  erc20DissolveCompletedTxs: [],
+  erc20DissolveUnCompletedTxs: [],
   bitcoinFinalizedTxs: [],
 };

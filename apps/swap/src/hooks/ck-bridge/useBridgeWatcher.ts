@@ -3,7 +3,6 @@ import { useBitcoinDissolveTxWatcher } from "hooks/ck-bridge/bitcoin/useBitcoinD
 import { useFetchBitcoinBlockNumber } from "hooks/ck-bridge/btc";
 import { useDogeDissolveTxWatcher } from "hooks/ck-bridge/doge";
 import { useFetchDogeBlockNumber } from "hooks/ck-bridge/doge/useBlockNumber";
-import { useErc20DissolveTxWatcher } from "hooks/ck-bridge/useErc20DissolveTxWatcher";
 import { useEthDissolveTxWatcher } from "hooks/ck-bridge/useEthDissolveTxWatcher";
 import { useEthereumTxTips, useEthereumTxWatcher } from "hooks/ck-bridge/useEthereumTxWatcher";
 import { useGlobalMinterInfo } from "hooks/ck-bridge/useGlobalMinterInfo";
@@ -15,7 +14,6 @@ export function useBridgeWatcher() {
   useEthDissolveTxWatcher();
   useEthereumTxWatcher();
   useEthereumTxTips();
-  useErc20DissolveTxWatcher();
 
   useBitcoinDissolveTxWatcher();
   useBitcoinMintTxWatcher();

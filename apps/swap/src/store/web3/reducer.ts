@@ -4,13 +4,14 @@ import {
   cleanEthereumFinalizedHashes,
   updateBitcoinFinalizedHashes,
   updateBitcoinTxResponse,
-  updateErc20DissolveCompletedTxs,
+  updateErc20DissolveUnCompletedTxs,
   updateErc20DissolveStatus,
   updateErc20TX,
   updateEthDissolveTX,
   updateEthereumFinalizedHashes,
   updateEthereumTxResponse,
   updateEthMintTx,
+  clearErc20DissolveUnCompletedTxs,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -69,8 +70,16 @@ export default createReducer(initialState, (builder) => {
     .addCase(updateErc20DissolveStatus, (state, { payload }) => {
       state.erc20DissolveDetails[payload.withdrawal_id.toString()] = payload;
     })
-    .addCase(updateErc20DissolveCompletedTxs, (state, { payload }) => {
-      state.erc20DissolveCompletedTxs = [...new Set([...state.erc20DissolveCompletedTxs, ...payload])];
+    .addCase(updateErc20DissolveUnCompletedTxs, (state, { payload }) => {
+      if (payload.type === "delete") {
+        state.erc20DissolveUnCompletedTxs = state.erc20DissolveUnCompletedTxs.filter((id) => id !== payload.id);
+        return;
+      }
+
+      state.erc20DissolveUnCompletedTxs = [...new Set([...state.erc20DissolveUnCompletedTxs, payload.id])];
+    })
+    .addCase(clearErc20DissolveUnCompletedTxs, (state) => {
+      state.erc20DissolveUnCompletedTxs = [];
     })
     .addCase(updateBitcoinFinalizedHashes, (state, { payload }) => {
       state.bitcoinFinalizedTxs = [...new Set([...state.bitcoinFinalizedTxs, ...payload])];

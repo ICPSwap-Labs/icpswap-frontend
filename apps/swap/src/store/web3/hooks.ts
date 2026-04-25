@@ -10,13 +10,14 @@ import {
   cleanEthereumFinalizedHashes,
   updateBitcoinFinalizedHashes,
   updateBitcoinTxResponse,
-  updateErc20DissolveCompletedTxs,
+  updateErc20DissolveUnCompletedTxs,
   updateErc20DissolveStatus,
   updateErc20TX,
   updateEthDissolveTX,
   updateEthereumFinalizedHashes,
   updateEthereumTxResponse,
   updateEthMintTx,
+  clearErc20DissolveUnCompletedTxs,
 } from "store/web3/actions";
 import type { BitcoinTxResponse } from "types/ckBTC";
 import type { EthTransaction, RetrieveEthStatus, TxFinalizedStatus, TxState } from "types/ckETH";
@@ -375,16 +376,27 @@ export function useErc20DissolveDetailsManager() {
   );
 }
 
-export function useErc20DissolveCompletedTxsManager(): [Array<string>, (completedTxs: string[]) => void] {
+export function useErc20DissolveUnCompletedTxsManager(): [
+  Array<string>,
+  (withdrawal_id: string, type: "add" | "delete") => void,
+  () => void,
+] {
   const dispatch = useAppDispatch();
-  const erc20DissolveCompletedTxs = useAppSelector((state) => state.web3.erc20DissolveCompletedTxs);
+  const erc20DissolveUnCompletedTxs = useAppSelector((state) => state.web3.erc20DissolveUnCompletedTxs);
 
   const callback = useCallback(
-    (withdrawal_id: string[]) => {
-      dispatch(updateErc20DissolveCompletedTxs(withdrawal_id));
+    (withdrawal_id: string, type: "add" | "delete") => {
+      dispatch(updateErc20DissolveUnCompletedTxs({ id: withdrawal_id, type }));
     },
     [dispatch],
   );
 
-  return useMemo(() => [erc20DissolveCompletedTxs, callback], [erc20DissolveCompletedTxs, callback]);
+  const clearUnCompletedTxs = useCallback(() => {
+    dispatch(clearErc20DissolveUnCompletedTxs());
+  }, [dispatch]);
+
+  return useMemo(
+    () => [erc20DissolveUnCompletedTxs, callback, clearUnCompletedTxs],
+    [erc20DissolveUnCompletedTxs, callback, clearUnCompletedTxs],
+  );
 }

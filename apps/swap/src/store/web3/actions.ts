@@ -27,7 +27,11 @@ export const cleanEthereumFinalizedHashes = createAction<void>("web3/cleanEthere
 
 export const updateErc20DissolveStatus = createAction<WithdrawalDetail>("web3/updateErc20DissolveStatus");
 
-export const updateErc20DissolveCompletedTxs = createAction<string[]>("web3/updateErc20DissolveCompletedTxs");
+export const updateErc20DissolveUnCompletedTxs = createAction<{ id: string; type: "add" | "delete" }>(
+  "web3/updateErc20DissolveCompletedTxs",
+);
+
+export const clearErc20DissolveUnCompletedTxs = createAction<void>("web3/clearErc20DissolveUnCompletedTxs");
 
 export const updateBitcoinFinalizedHashes = createAction<string[]>("web3/updateBitcoinFinalizedHashes");
 
