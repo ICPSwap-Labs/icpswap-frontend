@@ -1,5 +1,4 @@
-import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal, AccountIdentifier, SubAccount } from "@icpswap/dfinity";
 
 import { isSubAccount } from "./ic";
 import { isValidPrincipal } from "./isValidPrincipal";

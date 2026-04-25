@@ -1,5 +1,4 @@
-import { Actor, type HttpAgent } from "@icp-sdk/core/agent";
-import type { IDL } from "@icp-sdk/core/candid";
+import { IDL, Actor, HttpAgent } from "@icpswap/dfinity";
 
 export interface CreateBaseActorProps {
   canisterId: string;
@@ -24,6 +23,7 @@ export async function createBaseActor<T>({
     });
   }
 
+  //@ts-ignore
   return Actor.createActor<T>(interfaceFactory, {
     agent: agent,
     canisterId,

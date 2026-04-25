@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { tokenClaimController, tokenClaimStorage } from "@icpswap/actor";
 import type { ClaimEventInfo, ClaimQuota, ClaimTransaction, PaginationResult, StatusResult } from "@icpswap/types";
 import { isAvailablePageArgs, nonUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
@@ -117,7 +117,9 @@ export async function getClaimEventTransactions(
   limit: number,
 ): Promise<PaginationResult<ClaimTransaction> | undefined> {
   return resultFormat<PaginationResult<ClaimTransaction>>(
-    await (await tokenClaimController()).findEventRecords(
+    await (
+      await tokenClaimController()
+    ).findEventRecords(
       id,
       state === undefined ? [] : optionalArg<bigint>(BigInt(state)),
       BigInt(offset),
@@ -149,7 +151,9 @@ export async function getUserClaimEventTransactions(
   limit: number,
 ): Promise<PaginationResult<ClaimTransaction> | undefined> {
   return resultFormat<PaginationResult<ClaimTransaction>>(
-    await (await tokenClaimController()).findUserEventRecords(
+    await (
+      await tokenClaimController()
+    ).findUserEventRecords(
       Principal.fromText(user),
       id === undefined ? [] : optionalArg<string>(id),
       state === undefined ? [] : optionalArg<bigint>(BigInt(state)),

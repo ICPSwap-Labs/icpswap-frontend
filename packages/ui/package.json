@@ -25,6 +25,7 @@
     "@icpswap/swap-sdk": "workspace:*",
     "@icpswap/types": "workspace:*",
     "@icpswap/utils": "workspace:*",
+    "@icpswap/dfinity": "workspace:*",
     "lightweight-charts": "3.8.0",
     "polished": "^3.3.2",
     "react-feather": "^2.0.8",

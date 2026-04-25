@@ -1,5 +1,4 @@
-import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal, AccountIdentifier, SubAccount } from "@icpswap/dfinity";
 import { CurrencyAmount, type Token } from "@icpswap/swap-sdk";
 import { icpAdapter, TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter";
 import { ICP } from "@icpswap/tokens";

@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { ckBtcActor } from "@icpswap/actor";
 import { ckBTC_MINTER_ID } from "@icpswap/constants";
 import type { StatusResult } from "@icpswap/types";

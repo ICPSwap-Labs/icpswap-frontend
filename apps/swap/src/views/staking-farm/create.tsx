@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { createV3Farm, useSwapPoolMetadata } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { ResultStatus } from "@icpswap/types";

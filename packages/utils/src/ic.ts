@@ -1,4 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { SubAccount } from "@icpswap/dfinity";
 
 /** False when `sub` is an `Error`; true for `SubAccount`, `undefined`, or other non-error values. */
 export function isOkSubAccount(sub: SubAccount | Error | undefined): sub is SubAccount | undefined {

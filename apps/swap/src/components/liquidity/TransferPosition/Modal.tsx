@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { swapPool } from "@icpswap/actor";
 import {
   CurrencyAmount,
@@ -405,11 +405,9 @@ export function TransferPositionModal({
     const loadingKey = openLoadingTip(t("liquidity.transferring.loading.tips", { id: positionId }));
 
     const { status, message } = resultFormat<boolean>(
-      await (await swapPool(poolId, true)).transferPosition(
-        userPrincipal,
-        Principal.fromText(principal),
-        BigInt(positionId),
-      ),
+      await (
+        await swapPool(poolId, true)
+      ).transferPosition(userPrincipal, Principal.fromText(principal), BigInt(positionId)),
     );
 
     if (status === ResultStatus.OK) {

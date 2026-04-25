@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { type TOKEN_STANDARD, tokenAdapter } from "@icpswap/token-adapter";
 import type { NumberType, StatusResult } from "@icpswap/types";
 import { nonUndefinedOrNull } from "@icpswap/utils";

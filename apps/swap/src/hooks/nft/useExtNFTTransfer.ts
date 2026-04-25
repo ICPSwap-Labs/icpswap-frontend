@@ -1,10 +1,12 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { ext_nft } from "@icpswap/actor";
 import { isValidPrincipal, resultFormat } from "@icpswap/utils";
 
 export async function extNFTTransfer(canister: string, to: string, from: string, nftId: string) {
   return resultFormat<bigint>(
-    await (await ext_nft(canister, true)).transfer({
+    await (
+      await ext_nft(canister, true)
+    ).transfer({
       to: isValidPrincipal(to) ? { principal: Principal.fromText(to) } : { address: to },
       token: nftId,
       notify: false,

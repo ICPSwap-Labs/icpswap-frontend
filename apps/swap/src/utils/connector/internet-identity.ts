@@ -1,6 +1,4 @@
-import { AuthClient } from "@icp-sdk/auth/client";
-import type { Identity } from "@icp-sdk/core/agent";
-import { Actor, type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
+import { Actor, type ActorSubclass, HttpAgent, Identity, AuthClient } from "@icpswap/dfinity";
 import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 
 const iiExpireTime = 7 * 24 * 3600; // seconds

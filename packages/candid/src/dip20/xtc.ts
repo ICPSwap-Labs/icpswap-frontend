@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 export type BurnError =
   | { InsufficientBalance: null }
   | { InvalidTokenContract: null }

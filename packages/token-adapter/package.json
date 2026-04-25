@@ -19,6 +19,7 @@
     "@icpswap/types": "workspace:*",
     "@icpswap/actor": "workspace:*",
     "@icpswap/utils": "workspace:*",
-    "@icpswap/candid": "workspace:*"
+    "@icpswap/candid": "workspace:*",
+    "@icpswap/dfinity": "workspace:*"
   }
 }

@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { HotKeysPermissions } from "@icpswap/constants";
 import { neuronAddPermissions, neuronRemovePermissions } from "@icpswap/hooks";
 import type { Neuron, NeuronPermission } from "@icpswap/types";

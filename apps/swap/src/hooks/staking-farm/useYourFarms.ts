@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { getUserFarms } from "@icpswap/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";

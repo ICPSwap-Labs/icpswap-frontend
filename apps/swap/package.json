@@ -58,6 +58,7 @@
     "@icpswap/ui": "workspace:*",
     "@icpswap/utils": "workspace:*",
     "@icpswap/vitest-config": "workspace:*",
+    "@icpswap/dfinity": "workspace:*",
     "@mui/x-date-pickers": "8.8.0",
     "@nfid/identitykit": "1.0.7",
     "@noble/hashes": "^1.8.0",

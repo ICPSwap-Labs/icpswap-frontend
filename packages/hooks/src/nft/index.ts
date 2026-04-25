@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { NFT_V1, NFTCanister, NFTCanisterController, NFTTradeCanister, NFTTradeStat } from "@icpswap/actor";
 import type {
   NFTCanisterInfo,
@@ -146,7 +146,9 @@ export async function getUserNFTs({
   account: string | Principal;
 }) {
   return resultFormat<PaginationResult<NFTTokenMetadata>>(
-    await (await NFTCanister(canisterId)).findTokenList(
+    await (
+      await NFTCanister(canisterId)
+    ).findTokenList(
       isPrincipal(account) ? { principal: account } : { address: account },
       BigInt(offset),
       BigInt(limit),
@@ -312,7 +314,9 @@ export async function getNFTTradeTransactions({
   desc,
 }: NFTTradeTransactionsArgs) {
   return resultFormat<PaginationResult<TradeTransaction>>(
-    await (await NFTTradeCanister()).findTxPage(
+    await (
+      await NFTTradeCanister()
+    ).findTxPage(
       optionalArg<string>(canisterId),
       optionalArg<string>(name),
       optionalArg<number>(Number(tokenIndex)),
@@ -374,7 +378,9 @@ export async function getUserNFTTradeTransactions({
   desc,
 }: NFTUserTradeTransactionsArgs) {
   return resultFormat<PaginationResult<TradeTransaction>>(
-    await (await NFTTradeCanister()).findUserTxPage(
+    await (
+      await NFTTradeCanister()
+    ).findUserTxPage(
       account,
       optionalArg<string>(canisterId),
       optionalArg<string>(name),

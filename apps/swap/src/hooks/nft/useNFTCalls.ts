@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { NFTCanister, NFTCanisterController, swapNFT } from "@icpswap/actor";
 import type {
   NFTBatchMintArgs,
@@ -65,7 +65,9 @@ export function useMintNFTCallback(): (canisterId: string, params: NFTBatchMintA
     }
 
     return resultFormat<bigint>(
-      await (await NFTCanister(canisterId, true)).mint({
+      await (
+        await NFTCanister(canisterId, true)
+      ).mint({
         ...params,
       }),
     );
@@ -118,11 +120,9 @@ export function useUserNFTTransactions(
       if (!canisterId || !principal || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<NFTTransaction>>(
-        await (await NFTCanister(canisterId)).findTokenTxRecord(
-          { principal: Principal.fromText(principal) },
-          BigInt(offset),
-          BigInt(limit),
-        ),
+        await (
+          await NFTCanister(canisterId)
+        ).findTokenTxRecord({ principal: Principal.fromText(principal) }, BigInt(offset), BigInt(limit)),
       ).data;
     },
     enabled: !!canisterId && !!principal && isAvailablePageArgs(offset, limit),
@@ -245,7 +245,9 @@ export function useCanisterLogo(canisterId: string): UseQueryResult<string | und
 }
 export async function getCanisterNFTs(canisterId: string, address: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<NFTTokenMetadata>>(
-    await (await NFTCanister(canisterId)).findTokenList(
+    await (
+      await NFTCanister(canisterId)
+    ).findTokenList(
       isValidPrincipal(address) ? { principal: Principal.fromText(address) } : { address },
       BigInt(offset),
       BigInt(limit),

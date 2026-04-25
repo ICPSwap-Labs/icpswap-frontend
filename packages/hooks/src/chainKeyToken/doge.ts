@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { dogeMinter } from "@icpswap/actor";
 import type { DogeUtxo, RetrieveDogeStatus } from "@icpswap/candid";
 import type { Null } from "@icpswap/types";
@@ -6,7 +6,9 @@ import { isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getDogeAddress(principal: string) {
-  const result = await (await dogeMinter()).get_doge_address({
+  const result = await (
+    await dogeMinter()
+  ).get_doge_address({
     owner: optionalArg(Principal.fromText(principal)),
     subaccount: optionalArg(null),
   });
@@ -25,14 +27,18 @@ export function useDogeAddress(principal: string | Null) {
 }
 
 export async function updateDogeBalance(principal: string) {
-  return await (await dogeMinter(true)).update_balance({
+  return await (
+    await dogeMinter(true)
+  ).update_balance({
     owner: optionalArg(Principal.fromText(principal)),
     subaccount: optionalArg(null),
   });
 }
 
 export async function getDogeKnownUtxos(principal: string): Promise<Array<DogeUtxo> | undefined> {
-  const res = await (await dogeMinter()).get_known_utxos({
+  const res = await (
+    await dogeMinter()
+  ).get_known_utxos({
     owner: optionalArg(Principal.fromText(principal)),
     subaccount: optionalArg(null),
   });
@@ -83,7 +89,9 @@ export async function retrieveDogeWithApproval({
   amount: number | string | bigint;
   from_subaccount?: Uint8Array | number[];
 }) {
-  const result = await (await dogeMinter(true)).retrieve_doge_with_approval({
+  const result = await (
+    await dogeMinter(true)
+  ).retrieve_doge_with_approval({
     address,
     amount: BigInt(amount),
     from_subaccount: optionalArg(from_subaccount),

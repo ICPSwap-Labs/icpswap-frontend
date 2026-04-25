@@ -17,6 +17,7 @@
     "@types/node": "^13.13.5",
     "@icpswap/candid": "workspace:*",
     "@icpswap/constants": "workspace:*",
-    "@icpswap/types": "workspace:*"
+    "@icpswap/types": "workspace:*",
+    "@icpswap/dfinity": "workspace:*"
   }
 }

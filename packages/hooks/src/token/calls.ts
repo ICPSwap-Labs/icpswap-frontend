@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import type { ActorIdentity, StatusResult } from "@icpswap/types";
 import { isPrincipal, nonUndefinedOrNull } from "@icpswap/utils";

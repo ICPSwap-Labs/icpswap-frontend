@@ -1,5 +1,5 @@
-import type { ActorMethod } from "@icp-sdk/core/agent";
-import type { Principal } from "@icp-sdk/core/principal";
+import type { ActorMethod } from "@icpswap/dfinity";
+import type { Principal } from "@icpswap/dfinity";
 
 export type AuthzChangeOp = { Authorize: { add_self: boolean } } | { Deauthorize: null };
 export interface CanisterCallError {

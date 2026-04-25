@@ -1,4 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { SubAccount } from "@icpswap/dfinity";
 import { swapPool } from "@icpswap/actor";
 import { getTokenBalance, useSwapPools } from "@icpswap/hooks";
 import { resultFormat } from "@icpswap/utils";
@@ -62,7 +62,9 @@ export function useUserMisTransferredTokens({ tokenId }: useUserMisTransferredTo
 
 export async function withdrawMisTransferredToken(poolId: string, tokenId: string, standard: string) {
   return resultFormat<bigint>(
-    await (await swapPool(poolId, true)).withdrawMistransferBalance({
+    await (
+      await swapPool(poolId, true)
+    ).withdrawMistransferBalance({
       address: tokenId,
       standard,
     }),

@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { actor } from "@icpswap/actor";
 import type { ActorIdentity } from "@icpswap/types";
 import { isPrincipal, resultFormat } from "@icpswap/utils";

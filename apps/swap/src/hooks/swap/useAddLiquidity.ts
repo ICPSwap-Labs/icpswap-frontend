@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { getPassCode, requestPassCode } from "@icpswap/hooks";
 import type { Position, Token } from "@icpswap/swap-sdk";
 import type { Null, PCMMetadata, TOKEN_STANDARD } from "@icpswap/types";

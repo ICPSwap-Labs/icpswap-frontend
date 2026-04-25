@@ -16,6 +16,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@icpswap/candid": "workspace:*"
+    "@icpswap/candid": "workspace:*",
+    "@icpswap/dfinity": "workspace:*"
   }
 }

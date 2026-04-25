@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { liquidityLocks } from "@icpswap/actor";
 import type { Pool, Position } from "@icpswap/swap-sdk";
 import type { Null, UserPositionInfoWithId } from "@icpswap/types";
@@ -39,9 +39,9 @@ export function useLiquidityLockIds(tokenIds: string[] | Null): UseQueryResult<
           ledger_id: Principal;
         }>
       >(
-        await (await liquidityLocks()).getPrincipalAliasByLedgers(
-          tokenIds.map((tokenId) => Principal.fromText(tokenId)),
-        ),
+        await (
+          await liquidityLocks()
+        ).getPrincipalAliasByLedgers(tokenIds.map((tokenId) => Principal.fromText(tokenId))),
       ).data;
     },
     enabled: !!tokenIds,

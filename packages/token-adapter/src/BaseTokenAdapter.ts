@@ -1,4 +1,4 @@
-import type { ActorSubclass } from "@icp-sdk/core/agent";
+import type { ActorSubclass } from "@icpswap/dfinity";
 import type { ActorIdentity, PaginationResult, StatusResult } from "@icpswap/types";
 import type { BigNumber } from "bignumber.js";
 import type {

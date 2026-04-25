@@ -1,4 +1,4 @@
-import { Actor, type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
+import { Actor, type ActorSubclass, HttpAgent } from "@icpswap/dfinity";
 import { StoicIdentity } from "ic-stoic-identity";
 import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 

@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { swapPool } from "@icpswap/actor";
 import {
   _getSwapPoolAllBalance,
@@ -32,7 +32,9 @@ export async function getPool_update_call(token0: string, token1: string, fee: F
   const sortedToken = sortToken(token0, token1);
 
   return resultFormat<SwapPoolData>(
-    await (await swapFactory_update_call()).getPool({
+    await (
+      await swapFactory_update_call()
+    ).getPool({
       fee: BigInt(fee),
       token0: getSwapTokenArgs(sortedToken.token0),
       token1: getSwapTokenArgs(sortedToken.token1),

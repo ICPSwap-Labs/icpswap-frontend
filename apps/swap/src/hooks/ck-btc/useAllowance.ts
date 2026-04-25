@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { ckBtcActor } from "@icpswap/actor";
 import { optionalArg, resultFormat } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
@@ -11,7 +11,9 @@ export interface AllowanceArgs {
 }
 
 export async function allowance({ spender, spenderSub, owner, ownerSub }: AllowanceArgs) {
-  const result = await (await ckBtcActor(true)).icrc2_allowance({
+  const result = await (
+    await ckBtcActor(true)
+  ).icrc2_allowance({
     account: { owner, subaccount: optionalArg<number[]>(ownerSub) },
     spender: { owner: spender, subaccount: optionalArg<number[]>(spenderSub) },
   });

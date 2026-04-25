@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { getFarmsByFilter } from "@icpswap/hooks";
 import type { FarmState } from "@icpswap/types";
 import { useEffect, useMemo, useState } from "react";

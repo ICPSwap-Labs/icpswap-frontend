@@ -1,4 +1,4 @@
-import type { ActorMethod } from "@icp-sdk/core/agent";
+import type { ActorMethod } from "@icpswap/dfinity";
 
 export type BoolResult = { ok: boolean } | { err: string };
 export interface Config {

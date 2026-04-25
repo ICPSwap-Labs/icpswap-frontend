@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
 import { isValidPrincipal } from "@icpswap/utils";
 import { useEffect, useMemo, useState } from "react";

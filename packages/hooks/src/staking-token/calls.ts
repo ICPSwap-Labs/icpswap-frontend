@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { stakingPool, stakingPoolController } from "@icpswap/actor";
 import type {
   CreateStakingPoolArgs,
@@ -21,11 +21,9 @@ export async function createStakingPool(args: CreateStakingPoolArgs) {
 
 export async function getStakingPools(state: bigint | undefined, offset: number, limit: number) {
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
-    await (await stakingPoolController()).findStakingPoolPage(
-      optionalArg<bigint>(state),
-      BigInt(offset),
-      BigInt(limit),
-    ),
+    await (
+      await stakingPoolController()
+    ).findStakingPoolPage(optionalArg<bigint>(state), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -54,7 +52,9 @@ export interface GetStakePoolsProps {
 
 export async function getStakePools({ state, offset, limit, rewardTokenId, stakeTokenId }: GetStakePoolsProps) {
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
-    await (await stakingPoolController()).findStakingPoolPageV2(
+    await (
+      await stakingPoolController()
+    ).findStakingPoolPageV2(
       optionalArg<bigint>(state),
       BigInt(offset),
       BigInt(limit),
@@ -226,11 +226,9 @@ export async function getStakingPoolTransactions(
   limit: number,
 ) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
-    await (await stakingPool(canisterId)).findStakingRecordPage(
-      optionalArg<Principal>(principal),
-      BigInt(offset),
-      BigInt(limit),
-    ),
+    await (
+      await stakingPool(canisterId)
+    ).findStakingRecordPage(optionalArg<Principal>(principal), BigInt(offset), BigInt(limit)),
   ).data;
 }
 
@@ -258,11 +256,9 @@ export async function getStakingPoolClaimTransactions(
   limit: number,
 ) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
-    await (await stakingPool(canisterId)).findRewardRecordPage(
-      optionalArg<Principal>(principal),
-      BigInt(offset),
-      BigInt(limit),
-    ),
+    await (
+      await stakingPool(canisterId)
+    ).findRewardRecordPage(optionalArg<Principal>(principal), BigInt(offset), BigInt(limit)),
   ).data;
 }
 

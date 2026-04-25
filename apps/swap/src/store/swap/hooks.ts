@@ -1,4 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { SubAccount } from "@icpswap/dfinity";
 import { useDebounce, useDebouncedChangeHandler, useParsedQueryString } from "@icpswap/hooks";
 import type { SwapPoolData } from "@icpswap/types";
 import { formatTokenAmount, isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";

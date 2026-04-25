@@ -1,5 +1,4 @@
-import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal, AccountIdentifier, SubAccount } from "@icpswap/dfinity";
 import { useTokenBalance } from "@icpswap/hooks";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
 import { Flex, MaxButton } from "@icpswap/ui";
@@ -72,7 +71,9 @@ export default function TopUpCanister({
         });
 
         if (blockHeight) {
-          await (await ledgerService(true)).notify_dfx({
+          await (
+            await ledgerService(true)
+          ).notify_dfx({
             to_canister: Principal.fromText(CYCLES_MINTING_CANISTER_ID),
             block_height: blockHeight,
             max_fee: { e8s: BigInt(0.0001 * 10 ** 8) },

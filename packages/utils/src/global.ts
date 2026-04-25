@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import type { Null, NumberType } from "@icpswap/types";
 import BigNumber from "bignumber.js";
 import { isUndefinedOrNull } from "./isUndefinedOrNull";

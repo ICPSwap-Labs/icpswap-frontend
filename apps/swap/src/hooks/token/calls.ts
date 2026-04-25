@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { icpAdapter, tokenAdapter } from "@icpswap/token-adapter";
 import { ICP } from "@icpswap/tokens";
 import { ResultStatus, type StatusResult, TOKEN_STANDARD } from "@icpswap/types";

@@ -1,5 +1,4 @@
-import { decodeIcrcAccount, encodeIcrcAccount } from "@icp-sdk/canisters/ledger/icrc";
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal, decodeIcrcAccount, encodeIcrcAccount } from "@icpswap/dfinity";
 import { NONE_SUB_HEX } from "@icpswap/constants";
 import { isValidAccount, nonUndefinedOrNull, shorten, subAccountToUint8Array, toHexString } from "@icpswap/utils";
 import { useMemo } from "react";

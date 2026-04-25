@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { ckBtcMinter } from "@icpswap/actor";
 import { isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
@@ -83,7 +83,9 @@ export function useBtcDepositAddress(subaccount?: Uint8Array) {
     queryFn: async () => {
       if (!principal) return null;
       return resultFormat<string>(
-        await (await ckBtcMinter(true)).get_btc_address({
+        await (
+          await ckBtcMinter(true)
+        ).get_btc_address({
           owner: optionalArg(Principal.fromText(principal)),
           subaccount: optionalArg<Uint8Array>(subaccount),
         }),
@@ -97,7 +99,9 @@ export function useBtcDepositAddress(subaccount?: Uint8Array) {
 
 export function useRefreshBtcBalanceCallback() {
   return useCallback(async (principal: string, subaccount?: Uint8Array) => {
-    return await (await ckBtcMinter(true)).update_balance({
+    return await (
+      await ckBtcMinter(true)
+    ).update_balance({
       owner: optionalArg<Principal>(Principal.fromText(principal)),
       subaccount: optionalArg<Uint8Array>(subaccount),
     });

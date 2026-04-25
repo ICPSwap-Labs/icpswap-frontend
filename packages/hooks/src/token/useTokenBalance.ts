@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { tokenAdapter } from "@icpswap/token-adapter";
 import { isPrincipal, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";

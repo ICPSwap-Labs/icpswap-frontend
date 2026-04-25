@@ -1,5 +1,4 @@
-import type { ActorSubclass } from "@icp-sdk/core/agent";
-import type { IDL } from "@icp-sdk/core/candid";
+import type { ActorSubclass, IDL } from "@icpswap/dfinity";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { getDelegationIds } from "constants/connector";
 import { host } from "constants/server";

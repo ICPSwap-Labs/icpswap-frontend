@@ -1,5 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { Principal } from "@icp-sdk/core/principal";
+import { SubAccount, Principal } from "@icpswap/dfinity";
 import { nonUndefinedOrNull } from "@icpswap/utils";
 import { useQuery } from "@tanstack/react-query";
 import { getTokenBalance } from "hooks/token/useTokenBalance";

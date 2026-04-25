@@ -1,4 +1,4 @@
-import type { ActorMethod } from "@icp-sdk/core/agent";
+import type { ActorMethod } from "@icpswap/dfinity";
 
 export interface Asset {
   class: AssetClass;

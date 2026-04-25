@@ -1,5 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { Principal } from "@icp-sdk/core/principal";
+import { SubAccount, Principal } from "@icpswap/dfinity";
 import { getTokenBalance, getUserUnusedBalance, getUserWithdrawQueue } from "@icpswap/hooks";
 import type { Pool } from "@icpswap/swap-sdk";
 import type { Null, SwapPoolData, UserSwapPoolsBalance, UserWithdrawQueueInfo } from "@icpswap/types";

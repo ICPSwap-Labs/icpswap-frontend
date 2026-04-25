@@ -1,6 +1,6 @@
 import { IC as AuthClient } from "@astrox/sdk-web";
 import { AstroXWebViewHandler } from "@astrox/sdk-webview";
-import type { ActorSubclass } from "@icp-sdk/core/agent";
+import type { ActorSubclass } from "@icpswap/dfinity";
 import { Connector } from "@icpswap/actor";
 import type { ConnectorAbstract, CreateActorArgs, WalletConnectorConfig } from "./connectors";
 
@@ -144,9 +144,9 @@ export class MeConnector implements ConnectorAbstract {
 
   async createActor<Service>({ canisterId, interfaceFactory }: CreateActorArgs): Promise<ActorSubclass<Service>> {
     if (isMeWebview()) {
-      // @ts-expect-error
       return await astrox.createActor<Service>(canisterId, interfaceFactory);
     }
+
     // @ts-expect-error
     return await this.client?.createActor<Service>(interfaceFactory, canisterId);
   }

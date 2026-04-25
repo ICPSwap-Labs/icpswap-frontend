@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { actor } from "@icpswap/actor";
 import { ic_host } from "@icpswap/constants";
 import { isPrincipal, principalToAccount } from "@icpswap/utils";
@@ -134,8 +134,6 @@ export function useInitialConnect() {
 
   const [loading, setLoading] = useState(true);
 
-  // TODO
-  // oxlint-disable-next-line react-hooks/exhaustive-deps -- initial connect effect; deps intentionally narrow
   useEffect(() => {
     async function call() {
       const connector = getConnector();

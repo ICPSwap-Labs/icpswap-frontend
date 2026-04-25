@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { farmIndex } from "@icpswap/actor";
 import type { FarmRewardInfo, FarmState, FarmStatusArgs } from "@icpswap/types";
 import { optionalArg, resultFormat } from "@icpswap/utils";
@@ -24,9 +24,9 @@ export function useFarmRewardInfo(
 }
 
 export async function getFarmRewardInfos(state: FarmState | undefined) {
-  const result = await (await farmIndex()).getFarmRewardTokenInfos(
-    optionalArg<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined),
-  );
+  const result = await (
+    await farmIndex()
+  ).getFarmRewardTokenInfos(optionalArg<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined));
 
   return resultFormat<Array<[Principal, FarmRewardInfo]>>(result).data;
 }

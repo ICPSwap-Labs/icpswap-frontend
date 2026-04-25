@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { TextButton } from "components/index";
 import { Avatar, Box } from "components/Mui";

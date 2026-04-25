@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 export type AccountIdentifier = string;
 export type AccountIdentifier__1 = string;
 export type AccountIdentifier__2 = string;

@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { stakeIndex } from "@icpswap/actor";
 import type { PaginationResult, StakeAprInfo, StakeIndexPoolInfo, StakeUserStakeInfo } from "@icpswap/types";
 import { isAvailablePageArgs, isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
@@ -12,7 +12,9 @@ export async function getUserStakePools(
   rewardTokenId?: string | undefined | null,
 ) {
   return resultFormat<PaginationResult<StakeIndexPoolInfo>>(
-    await (await stakeIndex()).queryPool(
+    await (
+      await stakeIndex()
+    ).queryPool(
       Principal.fromText(principal),
       BigInt(offset),
       BigInt(limit),

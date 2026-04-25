@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { getStakingTokenUserInfo, useStakingPools } from "@icpswap/hooks";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { nonUndefinedOrNull } from "@icpswap/utils";

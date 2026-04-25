@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { swapPool } from "@icpswap/actor";
 import type {
   IcpSwapAPIPageResult,
@@ -20,7 +20,9 @@ import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function placeOrder(canisterId: string, positionId: bigint, tickLimit: bigint) {
   return resultFormat<boolean>(
-    await (await swapPool(canisterId, true)).addLimitOrder({
+    await (
+      await swapPool(canisterId, true)
+    ).addLimitOrder({
       positionId,
       tickLimit,
     }),

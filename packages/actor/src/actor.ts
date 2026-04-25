@@ -1,5 +1,4 @@
-import { type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
-import { IDL } from "@icp-sdk/core/candid";
+import { HttpAgent, type ActorSubclass, IDL } from "@icpswap/dfinity";
 import { ic_host } from "@icpswap/constants";
 import type { ActorIdentity } from "@icpswap/types";
 import isObject from "lodash/isObject";
@@ -96,6 +95,7 @@ export class Actor {
 
     if (identity) {
       try {
+        // @ts-ignore
         actor = await window.icConnector.createActor<T>({
           canisterId: id,
           interfaceFactory: idlFactory,
@@ -107,6 +107,7 @@ export class Actor {
       actor = await createBaseActor<T>({
         canisterId: id,
         interfaceFactory: idlFactory,
+        // @ts-ignore
         agent: this.AnonymousAgent(__host),
         fetchRootKey: __host !== ic_host,
       });

@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import type { IcpSwapAPITokenInfo } from "@icpswap/types";
 import { Select } from "@icpswap/ui";
 import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";

@@ -1,4 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { SubAccount } from "@icpswap/dfinity";
 import { useTokenBalance, useUserUnusedBalance } from "@icpswap/hooks";
 import type { Position } from "@icpswap/swap-sdk";
 import type { LimitOrder } from "@icpswap/types";

@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { chainKeyETHMinter } from "@icpswap/actor";
 import type {
   ChainKeyETHMinterInfo,
@@ -22,7 +22,9 @@ export async function withdrawErc20Token({ minter_id, ledger_id, recipient, amou
     ckerc20_block_index: bigint;
     cketh_block_index: bigint;
   }>(
-    await (await chainKeyETHMinter(minter_id, true)).withdraw_erc20({
+    await (
+      await chainKeyETHMinter(minter_id, true)
+    ).withdraw_erc20({
       recipient,
       amount,
       ckerc20_ledger_id: ledger_id,
@@ -118,7 +120,9 @@ export async function withdraw_eth(minter_id: string, recipient: string, amount:
   return resultFormat<{
     block_index: bigint;
   }>(
-    await (await chainKeyETHMinter(minter_id, true)).withdraw_eth({
+    await (
+      await chainKeyETHMinter(minter_id, true)
+    ).withdraw_eth({
       recipient,
       amount,
       from_subaccount: [],

@@ -1,4 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { SubAccount } from "@icpswap/dfinity";
 import { useUserUnusedBalance } from "@icpswap/hooks";
 import type { Token } from "@icpswap/swap-sdk";
 import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";

@@ -1,5 +1,5 @@
-import { Actor, type ActorSubclass, type Agent, HttpAgent } from "@icp-sdk/core/agent";
-import type { IDL } from "@icp-sdk/core/candid";
+import { Actor, type ActorSubclass, Agent, HttpAgent } from "@icpswap/dfinity";
+import type { IDL } from "@icpswap/dfinity";
 import { ic_host } from "@icpswap/constants";
 
 export type CreateActorArgs = {

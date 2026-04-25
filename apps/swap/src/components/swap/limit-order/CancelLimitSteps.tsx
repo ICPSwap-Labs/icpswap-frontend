@@ -1,4 +1,4 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { type Position, type Token, tickToPrice } from "@icpswap/swap-sdk";
 import type { LimitOrder } from "@icpswap/types";
 import { formatTokenPrice } from "@icpswap/utils";

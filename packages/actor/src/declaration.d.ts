@@ -1,5 +1,4 @@
-import { HttpAgent, ActorSubclass } from "@icp-sdk/core/agent";
-import { IDL } from "@icp-sdk/core/candid";
+import { HttpAgent, ActorSubclass, IDL } from "@icpswap/dfinity";
 
 declare module "toformat";
 

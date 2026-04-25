@@ -15,5 +15,8 @@
   },
   "devDependencies": {
     "@types/node": "^13.13.5"
+  },
+  "dependencies": {
+    "@icpswap/dfinity": "workspace:*"
   }
 }

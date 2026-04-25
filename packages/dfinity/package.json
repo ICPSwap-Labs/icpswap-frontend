@@ -1,0 +1,20 @@
+{
+  "name": "@icpswap/dfinity",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./dist/index.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --pretty --noEmit",
+    "clean": "rm -rf node_modules && rm -rf dist",
+    "dev": "tsc --watch",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@noble/hashes": "^1.8.0"
+  }
+}

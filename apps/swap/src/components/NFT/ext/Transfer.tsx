@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { ext_nft } from "@icpswap/actor";
 import { useLoadingCallData } from "@icpswap/hooks";
 import type { EXTCollection, ExtNft } from "@icpswap/types";
@@ -75,7 +75,9 @@ export function NFTTransfer({ image, collection, open, onClose, nft, index, onTr
       if (!principal || !to) return;
 
       const result = resultFormat<bigint>(
-        await (await ext_nft(nft.canister, true)).transfer({
+        await (
+          await ext_nft(nft.canister, true)
+        ).transfer({
           to: to && isValidPrincipal(to) ? { principal: Principal.fromText(to) } : { address: to },
           token: nft.id,
           notify: false,

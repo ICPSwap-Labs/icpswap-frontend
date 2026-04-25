@@ -1,4 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { SubAccount } from "@icpswap/dfinity";
 import type { Token } from "@icpswap/swap-sdk";
 import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";

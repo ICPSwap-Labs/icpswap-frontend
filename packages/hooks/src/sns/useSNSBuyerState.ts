@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { sns_swap } from "@icpswap/actor";
 import type { GetBuyerStateResponse, RefreshBuyerTokensResponse } from "@icpswap/types";
 import { optionalArg, resultFormat } from "@icpswap/utils";
@@ -6,7 +6,9 @@ import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getSNSBuyerState(swap_id: string, principal: string) {
   return resultFormat<GetBuyerStateResponse>(
-    await (await sns_swap(swap_id)).get_buyer_state({
+    await (
+      await sns_swap(swap_id)
+    ).get_buyer_state({
       principal_id: optionalArg<Principal>(Principal.fromText(principal)),
     }),
   ).data;
@@ -29,7 +31,9 @@ export function useSNSBuyerState(
 
 export async function refreshSNSBuyerTokens(swap_id: string, buyer: string, confirmation_text?: string) {
   return resultFormat<RefreshBuyerTokensResponse>(
-    await (await sns_swap(swap_id, true)).refresh_buyer_tokens({
+    await (
+      await sns_swap(swap_id, true)
+    ).refresh_buyer_tokens({
       buyer,
       confirmation_text: optionalArg<string>(confirmation_text),
     }),

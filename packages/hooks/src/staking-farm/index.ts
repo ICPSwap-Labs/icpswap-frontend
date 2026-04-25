@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { farm, farmController, farmIndex } from "@icpswap/actor";
 import { AnonymousPrincipal } from "@icpswap/constants";
 import type {
@@ -192,9 +192,9 @@ export function useAllFarms(reload?: boolean | number): UseQueryResult<Principal
 
 export async function getFarmsByState(state: FarmState | undefined) {
   return resultFormat<Array<Principal>>(
-    await (await farmIndex()).getFarms(
-      optionalArg<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined),
-    ),
+    await (
+      await farmIndex()
+    ).getFarms(optionalArg<FarmStatusArgs>(state ? ({ [state]: null } as FarmStatusArgs) : undefined)),
   ).data;
 }
 
@@ -368,7 +368,9 @@ export interface GetFarmsByFilterArgs {
 
 export async function getFarmsByFilter({ state, pair, token, user }: GetFarmsByFilterArgs) {
   return resultFormat<Array<Principal>>(
-    await (await farmIndex()).getFarmsByConditions({
+    await (
+      await farmIndex()
+    ).getFarmsByConditions({
       status: state
         ? optionalArg<FarmStatusArgs[]>(
             state === "FINISHED"

@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { passCodeManager } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
@@ -36,11 +36,9 @@ export async function withdrawPCMBalance(amount: bigint, fee: bigint | number) {
 }
 
 export async function destroyPassCode(token0: string, token1: string, fee: bigint) {
-  const result = await (await passCodeManager(true)).destoryPasscode(
-    Principal.fromText(token0),
-    Principal.fromText(token1),
-    fee,
-  );
+  const result = await (
+    await passCodeManager(true)
+  ).destoryPasscode(Principal.fromText(token0), Principal.fromText(token1), fee);
 
   return resultFormat<string>(result);
 }

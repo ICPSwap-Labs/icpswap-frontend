@@ -1,4 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { SubAccount } from "@icpswap/dfinity";
 import { useDebounce, useUserUnusedBalance } from "@icpswap/hooks";
 import {
   availableTick,

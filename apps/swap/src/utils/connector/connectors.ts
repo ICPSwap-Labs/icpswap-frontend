@@ -1,5 +1,5 @@
-import type { ActorSubclass } from "@icp-sdk/core/agent";
-import type { IDL } from "@icp-sdk/core/candid";
+import type { ActorSubclass } from "@icpswap/dfinity";
+import type { IDL } from "@icpswap/dfinity";
 import { Connector } from "@icpswap/actor";
 
 export type CreateActorArgs = {

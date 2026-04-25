@@ -1,6 +1,5 @@
 import { uint8ArrayToBigInt } from "@dfinity/utils";
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { memoToNeuronSubaccount } from "@icp-sdk/canisters/nns";
+import { SubAccount, memoToNeuronSubaccount } from "@icpswap/dfinity";
 import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
 import type { Token } from "@icpswap/swap-sdk";
 import type { NervousSystemParameters } from "@icpswap/types";

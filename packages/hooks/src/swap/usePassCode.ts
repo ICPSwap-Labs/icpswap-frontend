@@ -1,4 +1,4 @@
-import { Principal } from "@icp-sdk/core/principal";
+import { Principal } from "@icpswap/dfinity";
 import { swapFactory } from "@icpswap/actor";
 import type { PassCode } from "@icpswap/candid";
 import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";

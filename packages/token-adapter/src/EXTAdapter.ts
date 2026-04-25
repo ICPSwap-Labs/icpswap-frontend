@@ -1,4 +1,4 @@
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { SubAccount } from "@icpswap/dfinity";
 import { ext } from "@icpswap/actor";
 import type { EXTToken, TokenUser } from "@icpswap/candid";
 import { type PaginationResult, ResultStatus } from "@icpswap/types";
@@ -37,7 +37,9 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
     }
 
     return resultFormat<bigint>(
-      await (await this.actor(canisterId)).balance({
+      await (
+        await this.actor(canisterId)
+      ).balance({
         token: params.token,
         user: { address },
       }),
@@ -52,7 +54,9 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
     const subaccount = params.subaccount ? SubAccount.fromBytes(Uint8Array.from(params.subaccount)) : undefined;
 
     return resultFormat<bigint>(
-      await (await this.actor(canisterId, identity)).transfer({
+      await (
+        await this.actor(canisterId, identity)
+      ).transfer({
         token: params.token ?? "",
         to: params.to.principal
           ? params.subaccount
@@ -88,7 +92,9 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
 
   public async transactions({ canisterId, params }: TransactionRequest) {
     return resultFormat<PaginationResult<Transaction>>(
-      await (await this.actor(canisterId)).transactions({
+      await (
+        await this.actor(canisterId)
+      ).transactions({
         hash: optionalArg<string>(params.hash),
         user: optionalArg<TokenUser>(params.user?.address ? { address: params.user.address } : undefined),
         offset: optionalArg<bigint>(params.offset ? BigInt(params.offset) : null),
@@ -100,7 +106,9 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
 
   public async approve({ canisterId, params, identity }: ApproveRequest) {
     return resultFormat<boolean>(
-      await (await this.actor(canisterId, identity)).approve({
+      await (
+        await this.actor(canisterId, identity)
+      ).approve({
         subaccount: params.subaccount ? [Array.from(params.subaccount)] : [],
         spender: params.spender,
         allowance: BigInt(Number.MAX_VALUE),
@@ -112,7 +120,9 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
     if (!params.owner.address && !params.owner.principal) throw Error("no owner address or principal");
 
     return resultFormat<bigint>(
-      await (await this.actor(canisterId)).allowance({
+      await (
+        await this.actor(canisterId)
+      ).allowance({
         owner: params.owner.address ? { address: params.owner.address } : { principal: params.owner.principal! },
         subaccount: params.subaccount ? [Array.from(params.subaccount)] : [],
         spender: params.spender,

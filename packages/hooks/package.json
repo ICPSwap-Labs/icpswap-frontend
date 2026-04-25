@@ -28,6 +28,7 @@
     "@icpswap/tokens": "workspace:*",
     "@icpswap/types": "workspace:*",
     "@icpswap/utils": "workspace:*",
+    "@icpswap/dfinity": "workspace:*",
     "@tanstack/react-query": "5.28.14"
   }
 }

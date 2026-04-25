@@ -1,5 +1,6 @@
-import type { Principal } from "@icp-sdk/core/principal";
+import type { Principal } from "@icpswap/dfinity";
 import { useEffect, useMemo, useState } from "react";
+
 import { getPromisesAwait } from "../usePromisesAwait";
 import { getTokenBalance } from "./useTokenBalance";
 

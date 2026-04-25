@@ -1,4 +1,4 @@
-import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { AccountIdentifier, SubAccount } from "@icpswap/dfinity";
 import type { ICRCTransaction } from "@icpswap/candid";
 import { enumToString, isOkSubAccount } from "@icpswap/utils";
 import type { Transaction as TokenTransaction } from "./types";

@@ -1,5 +1,5 @@
-import type { ActorMethod } from "@icp-sdk/core/agent";
-import type { IDL } from "@icp-sdk/core/candid";
+import type { ActorMethod } from "@icpswap/dfinity";
+import type { IDL } from "@icpswap/dfinity";
 
 export interface AddressBook {
   id: bigint;

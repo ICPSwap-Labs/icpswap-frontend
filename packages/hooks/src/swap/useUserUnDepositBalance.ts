@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 
-import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
-import { Principal } from "@icp-sdk/core/principal";
+import { SubAccount } from "@icpswap/dfinity";
+import { Principal } from "@icpswap/dfinity";
 import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
 import { useEffect, useMemo, useState } from "react";
 
