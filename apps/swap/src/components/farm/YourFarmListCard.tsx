@@ -31,7 +31,7 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
   const theme = useTheme() as Theme;
   const navigate = useNavigate();
 
-  const { data: userFarmInfo } = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
+  const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
   const { data: farmInitArgs } = useFarmInitArgs(farmId);
   const { data: userAllPositions } = useSwapUserPositions(userFarmInfo?.pool.toString(), principal?.toString());
   const [, token0] = useToken(userFarmInfo?.poolToken0.address);

@@ -7,6 +7,8 @@ import { useTranslation } from "react-i18next";
 import { DogeDissolveTxState } from "types/chain-key";
 import { dogeDissolveState, getDogeHashFromStatus, isDogeDissolveEnded } from "utils/chain-key";
 
+const INTERVAL = 10_000; // 10 seconds
+
 export function useDogeDissolveTxWatcher() {
   const [openTip] = useSuccessTip();
   const txs = useDogeUnFinalizedDissolveTxs();
@@ -39,5 +41,5 @@ export function useDogeDissolveTxWatcher() {
     }
   }, [txs, dissolveTxManager, openTip, t]);
 
-  useInterval({ callback, interval: 10_000 });
+  useInterval({ callback, interval: INTERVAL });
 }

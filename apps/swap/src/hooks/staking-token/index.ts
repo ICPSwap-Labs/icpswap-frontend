@@ -8,7 +8,7 @@ import {
   usePaginationAllData,
 } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { type Null, ResultStatus, type StakingPoolInfo, type StakingPoolUserInfo } from "@icpswap/types";
+import { ResultStatus, type StakingPoolInfo, type StakingPoolUserInfo } from "@icpswap/types";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { useQuery } from "@tanstack/react-query";
 import { getTokenBalance } from "hooks/token/useTokenBalance";
@@ -86,7 +86,7 @@ export function useUserUnusedTokens(reload?: number) {
 export function useIntervalUserPoolInfo(
   poolId: string | undefined,
   principal: Principal | undefined,
-  refresh?: number | Null,
+  refresh?: number,
 ) {
   const callback = useCallback(async () => {
     if (!poolId || !principal) return;

@@ -15,7 +15,7 @@ export function useUserTvlValue({ farmId, token0, token1 }: UseUserTvlProps) {
   const principal = useAccountPrincipalString();
   const infoAllTokens = useInfoAllTokens();
 
-  const { data: userTvl } = useIntervalFarmUserTVL(farmId, principal);
+  const userTvl = useIntervalFarmUserTVL(farmId, principal);
 
   const userTvlValue = useMemo(() => {
     if (!userTvl || !token0 || !token1 || !infoAllTokens || infoAllTokens.length === 0) return undefined;

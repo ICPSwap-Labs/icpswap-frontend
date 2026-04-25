@@ -1,6 +1,6 @@
 import { useStakePoolStatInfo } from "@icpswap/hooks";
 import type { Token } from "@icpswap/swap-sdk";
-import type { Null, StakingPoolInfo } from "@icpswap/types";
+import type { StakingPoolInfo } from "@icpswap/types";
 import { formatAmount, formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { Flex, MainCard, Tooltip } from "components/index";
 import { Box, Typography, useTheme } from "components/Mui";
@@ -18,7 +18,7 @@ export interface StakeMainProps {
   poolInfo: StakingPoolInfo | undefined;
   stakeToken: Token | undefined;
   rewardToken: Token | undefined;
-  refreshTrigger: number | Null;
+  refreshTrigger?: number;
   handleRefresh: () => void;
 }
 
@@ -40,7 +40,7 @@ export function MainContent({
     refresh: refreshTrigger,
   });
 
-  const { data: userPoolInfo } = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
+  const userPoolInfo = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
   const { data: stakeStatInfo } = useStakePoolStatInfo(poolId);
 
   const rewardTokenPrice = useUSDPrice(rewardToken);

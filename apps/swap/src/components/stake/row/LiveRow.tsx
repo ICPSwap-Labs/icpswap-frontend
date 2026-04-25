@@ -32,7 +32,7 @@ export function LiveRow({ poolInfo, wrapperSx, filterState, your, showState }: L
   const navigate = useNavigate();
 
   const [stakingPoolInfo] = useIntervalStakingPoolInfo(poolInfo.canisterId.toString());
-  const { data: userStakingInfo } = useIntervalUserPoolInfo(poolInfo.canisterId.toString(), principal);
+  const userStakingInfo = useIntervalUserPoolInfo(poolInfo.canisterId.toString(), principal);
 
   const handelToDetails = useCallback(() => {
     navigate(`/stake/details/${poolInfo.canisterId.toString()}`);

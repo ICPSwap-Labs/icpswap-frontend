@@ -34,7 +34,7 @@ export function YourPoolListCard({ poolInfo, wrapperSx, showState }: FarmListCar
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
   const [stakingPoolInfo] = useIntervalStakingPoolInfo(poolInfo.canisterId.toString());
-  const { data: userPoolInfo } = useIntervalUserPoolInfo(poolInfo.canisterId.toString(), principal);
+  const userPoolInfo = useIntervalUserPoolInfo(poolInfo.canisterId.toString(), principal);
 
   const state = useStakingPoolState(poolInfo);
 

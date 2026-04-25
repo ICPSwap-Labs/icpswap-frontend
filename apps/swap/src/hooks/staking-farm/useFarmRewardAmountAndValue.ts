@@ -16,7 +16,7 @@ export interface FarmMainProps {
 export function useFarmUserRewardAmountAndValue({ farmId, positionIds, farmInitArgs, rewardToken }: FarmMainProps) {
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
-  const { data: __userRewardAmount } = useIntervalUserRewardInfo(farmId, positionIds);
+  const __userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
 
   const userRewardAmount = useMemo(() => {
     if (!farmInitArgs || __userRewardAmount === undefined || !rewardToken) return undefined;
