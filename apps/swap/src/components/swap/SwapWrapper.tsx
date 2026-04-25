@@ -120,7 +120,6 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     [independentField, parsedAmount, trade],
   );
 
-  // oxlint-disable-next-line react-hooks/exhaustive-deps -- This callback need 'outputTokenId' to dependencies
   const handleTokenAChange = useCallback(
     (token: Token) => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap";
@@ -134,8 +133,6 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     [navigate, ui, outputTokenId],
   );
 
-  // TODO: find out why react-hooks/exhaustive-deps reports 'more dependencies than necessary'
-  // oxlint-disable-next-line react-hooks/exhaustive-deps -- This callback need 'inputTokenId' to dependencies
   const handleTokenBChange = useCallback(
     (token: Token) => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap";

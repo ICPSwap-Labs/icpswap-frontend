@@ -3,8 +3,15 @@ import { getTokenBalance, getUserUnusedBalance, getUserWithdrawQueue } from "@ic
 import type { Pool } from "@icpswap/swap-sdk";
 import type { Null, SwapPoolData, UserSwapPoolsBalance, UserWithdrawQueueInfo } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { Connector } from "constants/wallet";
 import { useEffect, useMemo, useState } from "react";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAccountPrincipalString, useConnector } from "store/auth/hooks";
+
+const DEFAULT_WITHDRAW_QUEUE_RESULT = {
+  token0TotalAmount: BigInt(0),
+  items: [],
+  token1TotalAmount: BigInt(0),
+};
 
 export function useUnusedBalanceAndWithdrawQueue(pool: Pool | Null, refresh?: number | boolean) {
   const principal = useAccountPrincipalString();
@@ -13,7 +20,8 @@ export function useUnusedBalanceAndWithdrawQueue(pool: Pool | Null, refresh?: nu
     undefined,
   );
 
-  // oxlint-disable-next-line react-hooks/exhaustive-deps -- reload dependencies
+  const connector = useConnector();
+
   useEffect(() => {
     async function call() {
       if (isUndefinedOrNull(principal) || isUndefinedOrNull(pool)) return;
@@ -34,6 +42,9 @@ export function useUnusedBalanceAndWithdrawQueue(pool: Pool | Null, refresh?: nu
       } as SwapPoolData;
 
       const get_withdraw_queue = async () => {
+        // Disable withdraw queue for Oisy wallet, as it currently has some issues with the queue data fetching,
+        // which causes a bad user experience. We can enable it again after Oisy fixed the issue.
+        if (!connector || connector === Connector.Oisy) return DEFAULT_WITHDRAW_QUEUE_RESULT;
         return await getUserWithdrawQueue(pool.id);
       };
 
@@ -92,7 +103,7 @@ export function useUnusedBalanceAndWithdrawQueue(pool: Pool | Null, refresh?: nu
     }
 
     call();
-  }, [principal, pool, refresh]);
+  }, [principal, pool, refresh, connector]);
 
   return useMemo(() => ({ loading, result }), [loading, result]);
 }
