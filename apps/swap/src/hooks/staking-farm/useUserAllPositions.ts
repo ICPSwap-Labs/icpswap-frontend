@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useState } from "react";
-import BigNumber from "bignumber.js";
 import {
-  useUserPositionPools,
-  useLiveFarmsByPoolIds,
-  getSwapUserPositions,
-  getSwapPoolMeta,
   getFarmInitArgs,
+  getSwapPoolMeta,
+  getSwapUserPositions,
+  useLiveFarmsByPoolIds,
+  useUserPositionPools,
 } from "@icpswap/hooks";
-import { useAccount, useAccountPrincipal } from "store/auth/hooks";
-import { UserPositionInfoWithId, PoolMetadata, InitFarmArgs } from "@icpswap/types";
+import type { InitFarmArgs, PoolMetadata, UserPositionInfoWithId } from "@icpswap/types";
+import BigNumber from "bignumber.js";
 import { useMultiPoolPositionsTotalValue } from "hooks/swap/index";
+import { useEffect, useMemo, useState } from "react";
+import { useAccount, useAccountPrincipal } from "store/auth/hooks";
 
 export function useFarmUserAllPositions() {
   const account = useAccount();
@@ -24,8 +24,8 @@ export function useFarmUserAllPositions() {
       }[]
   >(null);
 
-  const { result: userPositionsPools } = useUserPositionPools(account);
-  const { result: farms } = useLiveFarmsByPoolIds(userPositionsPools);
+  const { data: userPositionsPools } = useUserPositionPools(account);
+  const { data: farms } = useLiveFarmsByPoolIds(userPositionsPools);
 
   useEffect(() => {
     async function call() {
@@ -51,7 +51,7 @@ export function useFarmUserAllPositions() {
                 return farms.find((farm) => farm[1].toString() === farmId && farm[0].toString() === poolId);
               });
 
-              if (farmInitArgs && farmInitArgs[0].priceInsideLimit) {
+              if (farmInitArgs?.[0].priceInsideLimit) {
                 // Filter the invalid position and in range position
                 return {
                   metadata,

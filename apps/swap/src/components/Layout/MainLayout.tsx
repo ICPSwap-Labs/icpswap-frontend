@@ -1,17 +1,17 @@
-import React, { useState, useMemo } from "react";
-import { makeStyles, Box, Theme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { useLocation } from "react-router-dom";
 import Background from "components/Background";
+import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
+import { Box, makeStyles, type Theme } from "components/Mui";
 import { WalletIndex } from "components/Wallet/WalletIndex";
 import { useMediaQuery640 } from "hooks/theme";
-import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
-
-import V3Event from "./V3Event";
+import type React from "react";
+import { useMemo, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Ads } from "./ads/Ad";
+import { GlobalTips } from "./GlobalTips";
 import Header from "./Header";
 import { SubnetState } from "./SubnetState";
-import { GlobalTips } from "./GlobalTips";
-import { Ads } from "./ads/Ad";
+import V3Event from "./V3Event";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

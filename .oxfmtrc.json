@@ -1,0 +1,20 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 120,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/charting_library/**",
+    "**/public/charting_library/**",
+    "**/abis/**",
+    "**/*.did.ts",
+    "**/build/**",
+    "**/dist/**",
+    ".nx/**",
+    "pnpm-lock.yaml"
+  ]
+}

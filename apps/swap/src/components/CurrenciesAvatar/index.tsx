@@ -1,4 +1,4 @@
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import { Box } from "components/Mui";
 

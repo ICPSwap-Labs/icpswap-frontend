@@ -1,12 +1,11 @@
-import { useState, useCallback, memo, useEffect, useMemo } from "react";
-import { Button, CircularProgress } from "components/Mui";
-import { Flex, Tooltip } from "@icpswap/ui";
-import { useDownloadSwapTransactions } from "hooks/info/swap/index";
-import { useTranslation } from "react-i18next";
-import { Null } from "@icpswap/types";
-import { isUndefinedOrNull, mockALinkAndOpen } from "@icpswap/utils";
 import { getDownloadSwapTransactionsLink } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { Flex, Tooltip } from "@icpswap/ui";
+import { isUndefinedOrNull, mockALinkAndOpen } from "@icpswap/utils";
+import { Button, CircularProgress } from "components/Mui";
+import { memo, useCallback, useMemo, useState } from "react";
 import { Download } from "react-feather";
+import { useTranslation } from "react-i18next";
 
 interface SwapTransactionsProps {
   pair: string;
@@ -15,11 +14,9 @@ interface SwapTransactionsProps {
   endTime: number | undefined;
 }
 
-export function __SwapTransactions({ pair, principal, startTime, endTime }: SwapTransactionsProps) {
+export function SwapTransactions({ pair, principal, startTime, endTime }: SwapTransactionsProps) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
-
-  const { download, abort } = useDownloadSwapTransactions();
 
   const handleDownload = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(startTime) || isUndefinedOrNull(endTime)) return;
@@ -35,12 +32,7 @@ export function __SwapTransactions({ pair, principal, startTime, endTime }: Swap
     mockALinkAndOpen(link, "download-swap-transactions");
 
     setLoading(false);
-  }, [download, principal, pair, startTime, endTime]);
-
-  // If principal and pair is changed, abort the elder calls
-  useEffect(() => {
-    abort(true);
-  }, [principal, pair]);
+  }, [principal, pair, startTime, endTime]);
 
   const disabled = useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(startTime) || isUndefinedOrNull(endTime)) return true;
@@ -61,4 +53,4 @@ export function __SwapTransactions({ pair, principal, startTime, endTime }: Swap
   );
 }
 
-export const SwapTransactionsDownload = memo(__SwapTransactions);
+export const SwapTransactionsDownload = memo(SwapTransactions);

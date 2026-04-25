@@ -1,10 +1,9 @@
-import { useState, memo, useCallback, useEffect } from "react";
 import { ClickAwayListener } from "@mui/base";
+import { memo, useCallback, useEffect, useState } from "react";
 import { Search } from "react-feather";
-
-import { MenuProps } from "./types";
-import { useTheme, Box, Checkbox, Popper, TextField, InputAdornment, BoxProps } from "../Mui";
+import { Box, type BoxProps, Checkbox, InputAdornment, Popper, TextField, useTheme } from "../Mui";
 import { NoData } from "../NoData";
+import type { MenuProps } from "./types";
 
 type MenuFilter = (menu: MenuProps, search: string | undefined) => boolean;
 
@@ -61,7 +60,7 @@ export const MenuItemNode = memo(
   }: MenuItemNodeProps) => {
     useEffect(() => {
       setFilteredTokens((prev) => ({ ...prev, [menu.value]: isFiltered }));
-    }, [isFiltered, menu]);
+    }, [isFiltered, menu, setFilteredTokens]);
 
     return customLabel ? (
       <Box onClick={() => onClick(menu)} sx={{ ...(isFiltered ? { display: "none" } : {}) }}>
@@ -79,7 +78,7 @@ export const MenuItemNode = memo(
           <Box sx={{ margin: "0 5px 0 0" }}>
             <Checkbox
               sx={{ padding: 0 }}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+              onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                 onCheckboxChange(checked, menu.value)
               }
               checked={value?.includes(menu.value)}
@@ -120,7 +119,7 @@ const MenuNode = memo(
     return (
       <>
         {menus.map((menu) => {
-          const isFiltered = menuFilter && menuFilter(menu, search);
+          const isFiltered = menuFilter?.(menu, search);
 
           return (
             <MenuItemNode
@@ -197,7 +196,7 @@ export const __DropDownMenu = ({
       const oldSelected = value ? [...value] : [];
 
       if (value?.includes(menu.value)) {
-        const index = oldSelected.findIndex((item) => item === menu.value);
+        const index = oldSelected.indexOf(menu.value);
 
         if (index !== -1) {
           oldSelected.splice(index, 1);
@@ -219,7 +218,7 @@ export const __DropDownMenu = ({
           const newSelected = [...oldSelected, selectedValue];
           onChange(newSelected);
         } else {
-          const index = oldSelected.findIndex((item) => item === selectedValue);
+          const index = oldSelected.indexOf(selectedValue);
 
           if (index !== -1) {
             oldSelected.splice(index, 1);

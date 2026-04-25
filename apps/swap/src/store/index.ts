@@ -1,32 +1,31 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { AnyAction, combineReducers } from "redux";
-import { persistStore, persistReducer } from "redux-persist";
+import { type AnyAction, combineReducers } from "redux";
+import { persistReducer, persistStore } from "redux-persist";
+import type { PersistState } from "redux-persist/es/types";
+import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
 import storage from "redux-persist/lib/storage";
 import sessionStorage from "redux-persist/lib/storage/session";
-import autoMergeLevel2 from "redux-persist/lib/stateReconciler/autoMergeLevel2";
-import { PersistState } from "redux-persist/es/types";
+import type { AuthState } from "./auth/states";
+import type { CallState } from "./call/states";
+import type { CustomizationState } from "./customization/states";
+import type { GlobalState } from "./global/states";
+import type { LoadingState } from "./loadingReducer";
+import type { NFTTradeState } from "./NFTTrade/states";
+import type { NFTState } from "./nft/states";
+import type { PriceAlertsState } from "./price-alerts/states";
 import allReducer, { sessionReducer } from "./reducer";
-
-import { AuthState } from "./auth/states";
-import { SessionState } from "./session/states";
-import { GlobalState } from "./global/states";
-import { NFTTradeState } from "./NFTTrade/states";
-import { LoadingState } from "./loadingReducer";
-import { NFTState } from "./nft/states";
-import { WalletState } from "./wallet/states";
-import { CustomizationState } from "./customization/states";
-import { SwapBurnState } from "./swap/burn/state";
-import { SwapLiquidityState } from "./swap/liquidity/state";
-import { SwapCacheState } from "./swap/cache/state";
-import { SwapState } from "./swap/state";
-import { TokenCacheState } from "./token/cache/states";
-import { CallState } from "./call/states";
-import { StepsState } from "./steps/state";
-import { Web3State } from "./web3/states";
-import { SnsState } from "./sns/states";
-import { LimitOrderState } from "./swap/limit-order/state";
-import { TransactionsState } from "./transactions/reducer";
-import { PriceAlertsState } from "./price-alerts/states";
+import type { SessionState } from "./session/states";
+import type { SnsState } from "./sns/states";
+import type { StepsState } from "./steps/state";
+import type { SwapBurnState } from "./swap/burn/state";
+import type { SwapCacheState } from "./swap/cache/state";
+import type { LimitOrderState } from "./swap/limit-order/state";
+import type { SwapLiquidityState } from "./swap/liquidity/state";
+import type { SwapState } from "./swap/state";
+import type { TokenCacheState } from "./token/cache/states";
+import type { TransactionsState } from "./transactions/reducer";
+import type { WalletState } from "./wallet/states";
+import type { Web3State } from "./web3/states";
 
 interface PersistPartial {
   _persist: PersistState;
@@ -127,7 +126,7 @@ const rootReducer = combineReducers({
   session: persistReducer<SessionState, AnyAction>(SessionPersistConfig, sessionReducer),
 });
 
-// @ts-ignore
+// @ts-expect-error
 const PersistReducer = persistReducer<AllState, AnyAction>(rootPersistConfig, rootReducer);
 
 const store = configureStore({

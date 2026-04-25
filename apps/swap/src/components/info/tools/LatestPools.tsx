@@ -1,13 +1,12 @@
-import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
+import { useLatestPools, usePoolAPR } from "@icpswap/hooks";
+import type { InfoPoolRealTimeDataResponse } from "@icpswap/types";
+import { APRPanel, BodyCell, Flex, Header, HeaderCell, Link, LoadingRow, NoData, TableRow } from "@icpswap/ui";
 import { formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, Flex, LoadingRow, NoData, BodyCell, TableRow, APRPanel, Link } from "@icpswap/ui";
+import { TimestampCell, TokenImage } from "components/index";
 import { ToolsWrapper } from "components/info/tools/index";
-import { useTranslation } from "react-i18next";
-import { useLatestPools } from "@icpswap/hooks";
-import { LatestPool } from "@icpswap/types";
-import { TokenImage, TimestampCell } from "components/index";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { generateLogoUrl } from "hooks/token/useTokenLogo";
-import { usePoolAPR } from "@icpswap/hooks";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 interface PoolRowProps {
-  pool: LatestPool;
+  pool: InfoPoolRealTimeDataResponse;
   className?: string;
 }
 

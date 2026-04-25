@@ -1,49 +1,23 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Typography, TextField, Chip, makeStyles, Theme, useTheme } from "components/Mui";
-import { Add as AddIcon, Remove as RemoveIcon } from "@mui/icons-material";
-import { Token } from "@icpswap/swap-sdk";
-import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
-import { isDarkTheme } from "utils/index";
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex, NumberTextField } from "components/index";
+import { Chip, styled, TextField, type Theme, Typography, useTheme } from "components/Mui";
+import { AddIcon, RemoveIcon } from "components/MuiIcon";
+import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
 import i18n from "i18n/index";
+import type React from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { isDarkTheme } from "utils/index";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
-const usePriceRangeInputStyle = makeStyles((theme: Theme) => {
-  return {
-    inputContainer: {
-      border: theme.palette.border.gray200,
-      borderRadius: "12px",
-    },
-    input: {
-      "& input": {
-        fontSize: "20px!important",
-        fontWeight: 700,
-        textAlign: "center",
-        height: "28px",
-        padding: "0 0",
-        [theme.breakpoints.down("sm")]: {
-          fontSize: "12px",
-        },
-      },
-      "& input::placeholder": {
-        fontSize: "20px",
-        fontWeight: 700,
-        [theme.breakpoints.down("sm")]: {
-          fontSize: "12px",
-        },
-      },
-    },
-    chip: {
-      width: "28px",
-      height: "28px",
-      borderRadius: "8px",
-      "& .MuiSvgIcon-root": {
-        marginLeft: "17px",
-        color: isDarkTheme(theme) ? "#e0e0e0" : theme.colors.darkLevel1,
-      },
-    },
-  };
-});
+const StyledChip = styled(Chip)(({ theme }: { theme: Theme }) => ({
+  width: "28px",
+  height: "28px",
+  borderRadius: "8px",
+  "& .MuiSvgIcon-root": {
+    marginLeft: "17px",
+    color: isDarkTheme(theme) ? "#e0e0e0" : theme.colors.darkLevel1,
+  },
+}));
 
 export interface PriceRangeSelectorProps {
   label: React.ReactChild;
@@ -71,7 +45,6 @@ export function PriceRangeSelector({
   quoteCurrency,
 }: PriceRangeSelectorProps) {
   const theme = useTheme();
-  const classes = usePriceRangeInputStyle();
 
   const [localValue, setLocalValue] = useState("");
   const [useLocalValue, setUseLocalValue] = useState(false);
@@ -103,6 +76,28 @@ export function PriceRangeSelector({
     onRangeInput(decrement());
   }, [decrement, onRangeInput]);
 
+  const inputSx = useMemo(() => {
+    return {
+      "& input": {
+        fontSize: "20px!important",
+        fontWeight: 700,
+        textAlign: "center",
+        height: "28px",
+        padding: "0 0",
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "12px",
+        },
+      },
+      "& input::placeholder": {
+        fontSize: "20px",
+        fontWeight: 700,
+        [theme.breakpoints.down("sm")]: {
+          fontSize: "12px",
+        },
+      },
+    };
+  }, [theme.breakpoints]);
+
   return (
     <Flex
       fullWidth
@@ -121,18 +116,13 @@ export function PriceRangeSelector({
       </Typography>
 
       <Flex fullWidth gap="0 5px">
-        <Chip
-          className={classes.chip}
-          icon={<RemoveIcon />}
-          onClick={handleDecreasePrice}
-          disabled={decrementDisabled}
-        />
+        <StyledChip icon={<RemoveIcon />} onClick={handleDecreasePrice} disabled={decrementDisabled} />
         <Flex sx={{ flex: 1 }}>
           {isUpperFullRange ? (
             <TextField
               fullWidth
               value={localValue}
-              className={classes.input}
+              sx={inputSx}
               placeholder="0.0"
               variant="standard"
               slotProps={{
@@ -148,7 +138,7 @@ export function PriceRangeSelector({
             <NumberTextField
               fullWidth
               value={localValue}
-              className={classes.input}
+              sx={inputSx}
               placeholder="0.0"
               variant="standard"
               numericProps={{
@@ -163,7 +153,7 @@ export function PriceRangeSelector({
             />
           )}
         </Flex>
-        <Chip className={classes.chip} icon={<AddIcon />} onClick={handleIncreasePrice} disabled={incrementDisabled} />
+        <StyledChip icon={<AddIcon />} onClick={handleIncreasePrice} disabled={incrementDisabled} />
       </Flex>
 
       <Typography

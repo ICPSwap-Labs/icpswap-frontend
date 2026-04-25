@@ -1,26 +1,26 @@
-import { useCallback, useRef, useContext } from "react";
+import { parseTokenAmount } from "@icpswap/utils";
+import { Flex, MainCard } from "components/index";
 import { Box } from "components/Mui";
-import { MainCard, Flex } from "components/index";
 import {
-  SwapWrapper,
-  type SwapWrapperRef,
-  SwapUIWrapper,
   CreatePool,
-  SwapTabPanels,
-  TABS,
   SwapProEntry,
   SwapSettings,
-  SwapContext,
+  SwapTabPanels,
   SwapTransactions,
+  SwapUIWrapper,
+  SwapWrapper,
+  type SwapWrapperRef,
+  TABS,
+  useSwapStore,
 } from "components/swap/index";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
-import { useWalletIsConnected } from "store/auth/hooks";
-import { SWAP_RECLAIM_REFRESH } from "constants/index";
-import { parseTokenAmount } from "@icpswap/utils";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
+import { SWAP_RECLAIM_REFRESH } from "constants/index";
+import { useCallback, useRef } from "react";
+import { useWalletIsConnected } from "store/auth/hooks";
 
 export function SwapContextWrapper() {
-  const { cachedPool, inputToken, outputToken, noLiquidity } = useContext(SwapContext);
+  const { inputToken, outputToken, noLiquidity, selectedPool } = useSwapStore();
 
   const isConnected = useWalletIsConnected();
 
@@ -31,7 +31,7 @@ export function SwapContextWrapper() {
       if (!inputToken) return;
       swapWrapperRef.current?.setInputAmount(parseTokenAmount(tokenAmount, inputToken.decimals).toString());
     },
-    [swapWrapperRef, inputToken],
+    [inputToken],
   );
 
   return (
@@ -90,13 +90,13 @@ export function SwapContextWrapper() {
               }}
             >
               <ReclaimTokensInPool
-                pool={cachedPool}
+                pool={selectedPool}
                 refreshKey={SWAP_RECLAIM_REFRESH}
                 onInputTokenClick={handleInputTokenClick}
                 inputToken={inputToken}
               />
 
-              {cachedPool ? <ToReclaim poolId={cachedPool.id} /> : null}
+              {selectedPool ? <ToReclaim poolId={selectedPool.id} /> : null}
             </Flex>
           ) : null}
 

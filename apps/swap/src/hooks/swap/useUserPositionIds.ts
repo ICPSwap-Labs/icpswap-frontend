@@ -1,8 +1,7 @@
-import { Principal } from "@dfinity/principal";
-import { resultFormat } from "@icpswap/utils";
+import { Principal } from "@icp-sdk/core/principal";
 import { swapPool } from "@icpswap/actor";
-import { useCallsData } from "@icpswap/hooks";
-import { useCallback } from "react";
+import { resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getUserPositionIds(canisterId: string, principal: string) {
   return resultFormat<Array<bigint>>(
@@ -10,11 +9,16 @@ export async function getUserPositionIds(canisterId: string, principal: string) 
   ).data;
 }
 
-export function useUserPositionIds(canisterId: string | undefined, principal: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserPositionIds(
+  canisterId: string | undefined,
+  principal: string | undefined,
+): UseQueryResult<bigint[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserPositionIds", canisterId, principal],
+    queryFn: async () => {
       if (!canisterId || !principal) return undefined;
       return await getUserPositionIds(canisterId, principal);
-    }, [canisterId, principal]),
-  );
+    },
+    enabled: !!canisterId && !!principal,
+  });
 }

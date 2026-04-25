@@ -1,25 +1,21 @@
 import { getSwapUserPositions } from "@icpswap/hooks";
-import { useEffect, useMemo, useState } from "react";
-import { useStoreUserPositionPools } from "store/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { UserPositionByList } from "types/swap";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useStoreUserPositionPools } from "store/hooks";
+import type { UserPositionByList } from "types/swap";
 
 export function useUserAllPositionsByPoolIds(poolIds: string[] | undefined, refresh?: number) {
-  const [loading, setLoading] = useState(false);
-  const [positions, setPositions] = useState<UserPositionByList[] | undefined>(undefined);
-
   const principal = useAccountPrincipal();
 
-  useEffect(() => {
-    async function call() {
+  const { isLoading, data } = useQuery({
+    queryKey: ["userAllPositionsByPoolIds", poolIds, principal, refresh],
+    queryFn: async () => {
       if (isUndefinedOrNull(poolIds) || poolIds.length === 0 || isUndefinedOrNull(principal)) {
-        setPositions([]);
-        return;
+        return [];
       }
-
-      setLoading(true);
 
       const allPositions = await Promise.all(
         poolIds.map(async (poolId: string) => {
@@ -37,14 +33,11 @@ export function useUserAllPositionsByPoolIds(poolIds: string[] | undefined, refr
         return prev.concat(__positions);
       }, [] as UserPositionByList[]);
 
-      setPositions(positions);
-      setLoading(false);
-    }
+      return positions;
+    },
+  });
 
-    call();
-  }, [poolIds, principal, refresh]);
-
-  return useMemo(() => ({ loading, result: positions }), [positions, loading]);
+  return useMemo(() => ({ loading: isLoading, result: data }), [data, isLoading]);
 }
 
 export function useUserAllPositions(refresh?: number) {

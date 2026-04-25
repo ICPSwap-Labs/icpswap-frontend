@@ -65,6 +65,8 @@ typings/
 .next
 
 .turbo
+.nx/cache
+.nx/workspace-data
 
 # nuxt.js build output
 .nuxt

@@ -1,4 +1,4 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { NoData, TextButton } from "@icpswap/ui";
 import { Trans } from "react-i18next";
 import { stringifyBackPath } from "utils/index";

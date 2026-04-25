@@ -1,19 +1,20 @@
-import React, { useMemo, useState } from "react";
-import { Button, Typography, Box, InputAdornment, CircularProgress } from "components/Mui";
-import { parseTokenAmount, formatTokenAmount, uint8ArrayToBigInt, formatDollarAmount, BigNumber } from "@icpswap/utils";
+import { uint8ArrayToBigInt } from "@dfinity/utils";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { memoToNeuronSubaccount } from "@icp-sdk/canisters/nns";
 import { claimOrRefreshNeuronFromAccount } from "@icpswap/hooks";
-import { tokenTransfer } from "hooks/token/calls";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
+import type { Token } from "@icpswap/swap-sdk";
 import type { NervousSystemParameters } from "@icpswap/types";
-import { Modal, NumberFilledTextField, MaxButton } from "components/index";
-import { useTokenBalance } from "hooks/token";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
-import randomBytes from "randombytes";
-import { buildNeuronStakeSubAccount } from "utils/sns/neurons";
+import { BigNumber, formatDollarAmount, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
+import { MaxButton, Modal, NumberFilledTextField } from "components/index";
+import { Box, Button, CircularProgress, InputAdornment, Typography } from "components/Mui";
 import { useUSDPriceById } from "hooks/index";
-import { Token } from "@icpswap/swap-sdk";
+import { useTokenBalance } from "hooks/token";
+import { tokenTransfer } from "hooks/token/calls";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface StakeProps {
   onStakeSuccess?: () => void;
@@ -32,7 +33,7 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
   const tokenUSDPrice = useUSDPriceById(token?.address);
-  const { result: balance } = useTokenBalance(token?.address, principal);
+  const { result: balance } = useTokenBalance({ tokenId: token?.address, account: principal });
 
   const { neuron_minimum_stake_e8s } = useMemo(() => {
     if (!neuronSystemParameters) return {};
@@ -53,8 +54,9 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
     setLoading(true);
     openFullscreenLoading();
 
-    const nonceBytes = new Uint8Array(randomBytes(8));
-    const subaccount = buildNeuronStakeSubAccount(nonceBytes, principal);
+    const nonceBytes = crypto.getRandomValues(new Uint8Array(8));
+    const nonceBigint = uint8ArrayToBigInt(nonceBytes);
+    const subaccount = memoToNeuronSubaccount({ controller: principal, memo: nonceBigint });
 
     const { message, status } = await tokenTransfer({
       canisterId: token.address,
@@ -67,8 +69,7 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
 
     if (status === "ok") {
       const refreshSub = SubAccount.fromPrincipal(principal);
-      const memo = uint8ArrayToBigInt(nonceBytes);
-      const { status, message, data } = await claimOrRefreshNeuronFromAccount(governance_id, principal, memo, [
+      const { status, message, data } = await claimOrRefreshNeuronFromAccount(governance_id, principal, nonceBigint, [
         ...refreshSub.toUint8Array(),
       ]);
 
@@ -149,19 +150,15 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
           />
 
           <Typography>
-            {token && balance && tokenUSDPrice ? (
-              <>
-                {t("common.balance.colon.amount", {
+            {token && balance && tokenUSDPrice
+              ? t("common.balance.colon.amount", {
                   amount: `${new BigNumber(
                     parseTokenAmount(balance, token.decimals).toFixed(token.decimals > 8 ? 8 : token.decimals),
                   ).toFormat()} ${token.symbol} (${formatDollarAmount(
                     parseTokenAmount(balance, token.decimals).multipliedBy(tokenUSDPrice).toString(),
                   )})`,
-                })}
-              </>
-            ) : (
-              "--"
-            )}
+                })
+              : "--"}
           </Typography>
 
           <Typography>

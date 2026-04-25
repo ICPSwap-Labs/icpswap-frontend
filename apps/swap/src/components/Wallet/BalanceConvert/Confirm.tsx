@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from "react";
+import { ICP } from "@icpswap/tokens";
 import {
   BigNumber,
   formatAmount,
@@ -7,17 +7,17 @@ import {
   nonUndefinedOrNull,
   parseTokenAmount,
 } from "@icpswap/utils";
-import { Confirm } from "components/Wallet/Confirm";
-import { useTranslation } from "react-i18next";
-import { useConvertCallback } from "hooks/wallet/useConvertCallback";
-import { useUSDPrice } from "hooks/index";
 import { Box, Typography } from "components/Mui";
-import { ICP } from "@icpswap/tokens";
-import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
+import { useBalanceConvertStore } from "components/Wallet/BalanceConvert/store";
+import { Confirm } from "components/Wallet/Confirm";
+import { useUSDPrice } from "hooks/index";
+import { useConvertCallback } from "hooks/wallet/useConvertCallback";
+import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export function ConvertToIcpConfirm() {
   const { t } = useTranslation();
-  const { tokensConvertToSwap, setTokensConvertToIcp, convertLoading } = useBalanceConvertContext();
+  const { tokensConvertToSwap, setTokensConvertToIcp, convertLoading } = useBalanceConvertStore();
   const icpPrice = useUSDPrice(ICP);
   const { callback: convertTokensToIcp } = useConvertCallback();
 

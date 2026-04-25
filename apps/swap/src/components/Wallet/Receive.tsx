@@ -1,9 +1,9 @@
-import { useRef } from "react";
+import Copy, { type CopyRef } from "components/Copy";
 import { Grid, Typography } from "components/Mui";
-import { useTranslation } from "react-i18next";
-import QRCode from "components/qrcode";
 import Modal from "components/modal/index";
-import Copy, { CopyRef } from "components/Copy";
+import QRCode from "components/qrcode";
+import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface ReceiveModalProps {
   open: boolean;

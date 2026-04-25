@@ -1,6 +1,6 @@
-import { useMemo } from "react";
 import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { useTokenFromActiveNetwork } from "hooks/web3/useTokenFromNetwork";
+import { useMemo } from "react";
 
 export function useERC20Token(tokenAddress: string | undefined) {
   return useTokenFromActiveNetwork(tokenAddress);

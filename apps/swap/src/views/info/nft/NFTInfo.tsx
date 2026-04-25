@@ -1,11 +1,11 @@
-import { FC, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Typography, Grid, Box } from "components/Mui";
-import { InfoWrapper, Breadcrumbs } from "components/index";
-import { NFTInfo, NFTActivity, NFTTransactions } from "components/info/nft";
 import { MainCard } from "@icpswap/ui";
+import { Breadcrumbs, InfoWrapper } from "components/index";
+import { NFTActivity, NFTInfo, NFTTransactions } from "components/info/nft";
+import { Box, Grid, Typography } from "components/Mui";
 import i18n from "i18n/index";
+import { type FC, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 export type Tab = {
   key: string;
@@ -35,34 +35,32 @@ export default function NFTView() {
 
   return (
     <InfoWrapper>
-      <>
-        <Breadcrumbs prevLabel={t("nft.list")} prevLink="/info-nfts" currentLabel={t("nft.details")} />
+      <Breadcrumbs prevLabel={t("nft.list")} prevLink="/info-nfts" currentLabel={t("nft.details")} />
 
-        <NFTInfo isView canisterId={canisterId} tokenId={Number(tokenId)} />
+      <NFTInfo isView canisterId={canisterId} tokenId={Number(tokenId)} />
 
-        <Box mt="24px">
-          <MainCard level={3}>
-            <Grid container spacing={3}>
-              {TabList.map((item) => (
-                <Grid item key={item.key}>
-                  <Typography
-                    color={item.key === tab.key ? "textPrimary" : "textSecondary"}
-                    onClick={() => onTabChange(item)}
-                    sx={{
-                      cursor: "pointer",
-                      fontSize: "20px",
-                      fontWeight: "500",
-                    }}
-                  >
-                    {item.value}
-                  </Typography>
-                </Grid>
-              ))}
-            </Grid>
-            <Box mt={3}>{displayedComponent()}</Box>
-          </MainCard>
-        </Box>
-      </>
+      <Box mt="24px">
+        <MainCard level={3}>
+          <Grid container spacing={3}>
+            {TabList.map((item) => (
+              <Grid item key={item.key}>
+                <Typography
+                  color={item.key === tab.key ? "textPrimary" : "textSecondary"}
+                  onClick={() => onTabChange(item)}
+                  sx={{
+                    cursor: "pointer",
+                    fontSize: "20px",
+                    fontWeight: "500",
+                  }}
+                >
+                  {item.value}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+          <Box mt={3}>{displayedComponent()}</Box>
+        </MainCard>
+      </Box>
     </InfoWrapper>
   );
 }

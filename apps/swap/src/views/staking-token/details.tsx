@@ -1,22 +1,22 @@
-import { useState, useContext } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
-import { MainCard, Flex, TabPanel, type Tab } from "components/index";
-import { useToken } from "hooks/useCurrency";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { useParams } from "react-router-dom";
 import { Breadcrumbs } from "@icpswap/ui";
+import { Flex, MainCard, type Tab, TabPanel } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import {
-  StakingTokenImages,
+  AprChart,
   MainContent,
-  StakeDetails,
   Reclaim,
   ReclaimContext,
-  AprChart,
+  StakeDetails,
+  StakingTokenImages,
 } from "components/stake/index";
-import { useIntervalStakingPoolInfo } from "hooks/staking-token";
-import { useRefreshTriggerManager } from "hooks/index";
 import { State } from "components/stake/State";
+import { useRefreshTriggerManager } from "hooks/index";
+import { useIntervalStakingPoolInfo } from "hooks/staking-token";
+import { useToken } from "hooks/useCurrency";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 function ReclaimTab() {
   const { t } = useTranslation();

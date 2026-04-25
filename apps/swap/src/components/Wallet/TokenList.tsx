@@ -1,24 +1,22 @@
-import { useMemo } from "react";
-import { Box } from "components/Mui";
-import TokenListTable from "components/Wallet/TokenListTable";
-import TokenListHeader from "components/Wallet/TokenListHeader";
-import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
-import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
-import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
-import { useGlobalTokenList } from "store/global/hooks";
-import { BigNumber } from "@icpswap/utils";
-import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { ckSepoliaETHTokenInfo, ckSepoliaUSDCTokenInfo } from "@icpswap/tokens";
+import { BigNumber } from "@icpswap/utils";
+import { Box } from "components/Mui";
+import TokenListHeader from "components/Wallet/TokenListHeader";
+import TokenListTable from "components/Wallet/TokenListTable";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { MINTER_CANISTER_ID } from "constants/ckERC20";
+import { chain } from "constants/web3";
+import { useMemo } from "react";
+import { useTaggedTokenManager, useWalletSortManager } from "store/wallet/hooks";
 
 export default function WalletTokenList() {
   const { taggedTokens } = useTaggedTokenManager();
-  const { allTokenUSDMap, noUSDTokens } = useWalletTokenContext();
+  const { allTokenUSDMap, noUSDTokens } = useWalletTokenStore();
   const { sort } = useWalletSortManager();
 
-  const globalTokenList = useGlobalTokenList();
-  const { result: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
+  const { data: chainKeyMinterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   const tokens = useMemo(() => {
     const tokenIds = [
@@ -26,7 +24,7 @@ export default function WalletTokenList() {
     ];
 
     return [...new Set([...tokenIds, ...taggedTokens])];
-  }, [taggedTokens, globalTokenList]);
+  }, [taggedTokens]);
 
   const sortedTokens = useMemo(() => {
     if (Object.keys(allTokenUSDMap).length + noUSDTokens.length < tokens.length) return tokens;
@@ -46,22 +44,20 @@ export default function WalletTokenList() {
   }, [tokens, allTokenUSDMap, noUSDTokens, sort]);
 
   return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px 0",
-          overflow: "auto hidden",
-          "@media(max-width: 640px)": {
-            gap: "16px 0",
-          },
-        }}
-      >
-        <TokenListHeader />
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "24px 0",
+        overflow: "auto hidden",
+        "@media(max-width: 640px)": {
+          gap: "16px 0",
+        },
+      }}
+    >
+      <TokenListHeader />
 
-        <TokenListTable tokens={sortedTokens} chainKeyMinterInfo={chainKeyMinterInfo} />
-      </Box>
-    </>
+      <TokenListTable tokens={sortedTokens} chainKeyMinterInfo={chainKeyMinterInfo} />
+    </Box>
   );
 }

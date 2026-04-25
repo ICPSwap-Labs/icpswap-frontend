@@ -1,7 +1,8 @@
-import React, { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { Grid, Typography } from "components/Mui";
+import type React from "react";
+import { useCallback } from "react";
 import { ArrowLeft } from "react-feather";
+import { useNavigate } from "react-router-dom";
 
 export interface HeaderTabProps {
   showArrow?: boolean;

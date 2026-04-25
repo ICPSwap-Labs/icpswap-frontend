@@ -1,14 +1,14 @@
-import { Typography, BoxProps, useTheme } from "components/Mui";
-import { Flex, Tooltip, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
-import { usePositionsTotalValue } from "hooks/swap/index";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { useSwapPoolMetadata, useSwapUserPositions } from "@icpswap/hooks";
+import type { FarmInfo, FarmState, InitFarmArgs, Null } from "@icpswap/types";
+import { BodyCell, Flex, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount } from "@icpswap/utils";
-import { useSwapUserPositions, useSwapPoolMetadata } from "@icpswap/hooks";
-import type { FarmInfo, Null, FarmState, InitFarmArgs } from "@icpswap/types";
+import { type BoxProps, Typography, useTheme } from "components/Mui";
 import dayjs from "dayjs";
-import { FilterState } from "types/staking-farm";
+import { usePositionsTotalValue } from "hooks/swap/index";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import type { FilterState } from "types/staking-farm";
 
 const DAYJS_FORMAT0 = "MMMM D, YYYY";
 const DAYJS_FORMAT1 = "h:mm A";
@@ -31,8 +31,8 @@ export function AvailableCell({ initArgs, state, farmInfo }: AvailableCellProps)
 
   const poolId = farmInfo?.pool.toString();
 
-  const { result: userAllPositions } = useSwapUserPositions(poolId, principal?.toString());
-  const { result: poolMetadata } = useSwapPoolMetadata(poolId);
+  const { data: userAllPositions } = useSwapUserPositions(poolId, principal?.toString());
+  const { data: poolMetadata } = useSwapPoolMetadata(poolId);
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !initArgs || !poolMetadata) return undefined;
@@ -47,7 +47,7 @@ export function AvailableCell({ initArgs, state, farmInfo }: AvailableCellProps)
         const outOfRange = poolMetadata.tick < position.tickLower || poolMetadata.tick >= position.tickUpper;
         return !outOfRange;
       });
-  }, [userAllPositions, initArgs, poolMetadata, state]);
+  }, [userAllPositions, initArgs, poolMetadata]);
 
   const allAvailablePositionValue = usePositionsTotalValue({
     metadata: poolMetadata,
@@ -56,34 +56,32 @@ export function AvailableCell({ initArgs, state, farmInfo }: AvailableCellProps)
 
   return (
     <Flex gap="0 4px" justify="flex-end" className="row-item">
-      <>
-        <BodyCell>{allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}</BodyCell>
-        {userAvailablePositions ? (
-          <Typography
-            fontSize={12}
-            fontWeight={500}
-            color="text.primary"
-            sx={{
-              width: "fit-content",
-              background: theme.palette.background.level4,
-              padding: "2px 8px",
-              borderRadius: "44px",
-            }}
-          >
-            {userAvailablePositions.length}
-          </Typography>
-        ) : null}
+      <BodyCell>{allAvailablePositionValue ? formatDollarAmount(allAvailablePositionValue) : "--"}</BodyCell>
+      {userAvailablePositions ? (
+        <Typography
+          fontSize={12}
+          fontWeight={500}
+          color="text.primary"
+          sx={{
+            width: "fit-content",
+            background: theme.palette.background.level4,
+            padding: "2px 8px",
+            borderRadius: "44px",
+          }}
+        >
+          {userAvailablePositions.length}
+        </Typography>
+      ) : null}
 
-        {state === "NOT_STARTED" && farmInfo ? (
-          <Tooltip
-            tips={t("farm.not_start.descriptions", {
-              liveTime0: dayjs(Number(farmInfo.startTime) * 1000).format(DAYJS_FORMAT0),
-              liveTime1: dayjs(Number(farmInfo.startTime) * 1000).format(DAYJS_FORMAT1),
-            })}
-            iconSize="14px"
-          />
-        ) : null}
-      </>
+      {state === "NOT_STARTED" && farmInfo ? (
+        <Tooltip
+          tips={t("farm.not_start.descriptions", {
+            liveTime0: dayjs(Number(farmInfo.startTime) * 1000).format(DAYJS_FORMAT0),
+            liveTime1: dayjs(Number(farmInfo.startTime) * 1000).format(DAYJS_FORMAT1),
+          })}
+          iconSize="14px"
+        />
+      ) : null}
     </Flex>
   );
 }

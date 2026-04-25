@@ -1,31 +1,23 @@
-import { useCallback, useMemo } from "react";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { BitcoinTx } from "types/ckBTC";
-import { Principal } from "@dfinity/principal";
-import { SortBalanceEnum, WalletSortType } from "types/index";
-import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
-import {
-  updateTaggedTokens,
-  deleteTaggedTokens,
-  updateCK_BTCAddresses,
-  updateBitcoinDissolveTxs,
-  updateWalletSortType,
-  updateSortBalance,
-  updateHideSmallBalance,
-  updateRemovedWalletDefaultTokens,
-  updateHideZeroNFT,
-  updateSortedTokens,
-} from "store/wallet/actions";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
 import { useBitcoinBlockNumber } from "hooks/ck-bridge";
+import { useCallback, useMemo } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import {
+  deleteTaggedTokens,
+  updateBitcoinDissolveTxs,
+  updateHideSmallBalance,
+  updateHideZeroNFT,
+  updateRemovedWalletDefaultTokens,
+  updateSortBalance,
+  updateSortedTokens,
+  updateTaggedTokens,
+  updateWalletSortType,
+} from "store/wallet/actions";
+import type { BitcoinTx } from "types/ckBTC";
+import type { SortBalanceEnum, WalletSortType } from "types/index";
 import { isBitcoinDissolveEnded } from "utils/web3/ck-bridge";
-
-export function toHexString(byteArray: number[]) {
-  return Array.from(byteArray, (byte) => {
-    return `0${(byte & 0xff).toString(16)}`.slice(-2);
-  }).join("");
-}
 
 export function useRemovedWalletDefaultTokens() {
   return useAppSelector((state) => state.wallet.removedWalletDefaultTokens);
@@ -50,7 +42,7 @@ export function useDisplayedTokensInWallet() {
 
   return useMemo(() => {
     return DISPLAY_IN_WALLET_BY_DEFAULT.filter((tokenId) => !removedWalletDefaultTokens.includes(tokenId));
-  }, [removedWalletDefaultTokens, DISPLAY_IN_WALLET_BY_DEFAULT]);
+  }, [removedWalletDefaultTokens]);
 }
 
 export function useTaggedTokens() {
@@ -76,7 +68,7 @@ export function useUpdateTaggedTokenCallback() {
         }
       });
     },
-    [dispatch],
+    [dispatch, removedWalletDefaultTokens],
   );
 }
 
@@ -94,7 +86,7 @@ export function useDeleteTaggedTokenCallback() {
         }
       });
     },
-    [dispatch],
+    [dispatch, removedWalletDefaultTokens],
   );
 }
 
@@ -107,44 +99,6 @@ export function useTaggedTokenManager() {
   return useMemo(
     () => ({ taggedTokens, updateTaggedTokens, deleteTaggedTokens }),
     [taggedTokens, updateTaggedTokens, deleteTaggedTokens],
-  );
-}
-
-export function useUserBTCDepositAddress(principal: string | undefined) {
-  return useAppSelector((state) => state.wallet.ckBTCAddresses)[`${principal}_deposit`];
-}
-
-export function useUserBTCWithdrawAddress(principal: string | undefined) {
-  const address = useAppSelector((state) => state.wallet.ckBTCAddresses)[`${principal}_withdraw`];
-  if (!address) return undefined;
-  const { owner, subaccount } = JSON.parse(address) as { owner: string; subaccount: number[] | undefined };
-
-  return {
-    owner,
-    subaccount: subaccount && subaccount.length > 0 ? [Uint8Array.from(subaccount)] : [],
-  };
-}
-
-export function useUpdateUserBTCDepositAddress() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (principal: string, address: string) => {
-      dispatch(updateCK_BTCAddresses({ principal, address, type: "deposit" }));
-    },
-    [dispatch],
-  );
-}
-
-export function useUpdateUserBTCWithdrawAddress() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (principal: string, owner: Principal, subaccount: Uint8Array[] | []) => {
-      const address = JSON.stringify({ owner: owner.toString(), subaccount: [...(subaccount[0] ?? [])] });
-      dispatch(updateCK_BTCAddresses({ principal, address, type: "withdraw" }));
-    },
-    [dispatch],
   );
 }
 
@@ -168,7 +122,8 @@ export function useBitcoinDissolveTxs() {
   return useMemo(() => {
     if (isUndefinedOrNull(allDissolveTxs) || isUndefinedOrNull(principal)) return undefined;
     return allDissolveTxs.filter((tx) => tx.principal === principal);
-  }, [principal, allDissolveTxs]);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
+  }, [principal, JSON.stringify(allDissolveTxs)]);
 }
 
 export function useBitcoinDissolveTx(hash: string | undefined) {
@@ -238,7 +193,7 @@ export function useHideSmallBalanceManager(): [boolean, (hidden: boolean) => voi
     (hidden: boolean) => {
       dispatch(updateHideSmallBalance(hidden));
     },
-    [dispatch, updateHideSmallBalance],
+    [dispatch],
   );
 
   return useMemo(() => [hideSmallBalance, callback], [hideSmallBalance, callback]);

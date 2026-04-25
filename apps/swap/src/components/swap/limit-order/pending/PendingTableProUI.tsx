@@ -1,17 +1,16 @@
-import { useCallback } from "react";
-import { Box, Theme, makeStyles } from "components/Mui";
+import type { LimitOrder, Null } from "@icpswap/types";
 import { Header, HeaderCell, LoadingRow } from "@icpswap/ui";
-import { usePoolByPoolId } from "hooks/swap/usePools";
-import { LimitOrder, Null } from "@icpswap/types";
-import { useRefreshTriggerManager } from "hooks/index";
-import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
-import { useTranslation } from "react-i18next";
-import { useScrollToTop } from "hooks/useScrollToTop";
-import { useNavigate } from "react-router-dom";
+import { Box, makeStyles, type Theme } from "components/Mui";
 import { Tab } from "constants/index";
-
-import { PendingRowPro } from "./PendingRowPro";
+import { SWAP_LIMIT_REFRESH_KEY } from "constants/limit";
+import { useRefreshTriggerManager } from "hooks/index";
+import { usePoolByPoolId } from "hooks/swap/usePools";
+import { useScrollToTop } from "hooks/useScrollToTop";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { LimitTransactionsEmpty } from "../Empty";
+import { PendingRowPro } from "./PendingRowPro";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -51,7 +50,7 @@ export function PendingTableProUI({
   const handleCancelSuccess = useCallback(() => {
     setLimitOrdersRefreshTrigger();
     setRefreshTrigger();
-  }, [setLimitOrdersRefreshTrigger]);
+  }, [setLimitOrdersRefreshTrigger, setRefreshTrigger]);
 
   const scrollToTop = useScrollToTop();
 
@@ -61,51 +60,49 @@ export function PendingTableProUI({
   }, [scrollToTop, navigate]);
 
   return (
-    <>
-      <Box sx={{ width: "100%", overflow: "auto" }}>
-        <Box sx={{ minWidth: "1096px" }}>
-          <Header className={wrapperClassName ?? classes.wrapper}>
-            <HeaderCell>{t("common.time")}</HeaderCell>
-            <HeaderCell>{t("common.you.pay")}</HeaderCell>
-            <HeaderCell>{t("common.you.receive")}</HeaderCell>
-            <HeaderCell align="right">Limit/Current price</HeaderCell>
-            <HeaderCell align="right">{t("common.filled")}</HeaderCell>
-            <HeaderCell align="right">&nbsp;</HeaderCell>
-          </Header>
+    <Box sx={{ width: "100%", overflow: "auto" }}>
+      <Box sx={{ minWidth: "1096px" }}>
+        <Header className={wrapperClassName ?? classes.wrapper}>
+          <HeaderCell>{t("common.time")}</HeaderCell>
+          <HeaderCell>{t("common.you.pay")}</HeaderCell>
+          <HeaderCell>{t("common.you.receive")}</HeaderCell>
+          <HeaderCell align="right">Limit/Current price</HeaderCell>
+          <HeaderCell align="right">{t("common.filled")}</HeaderCell>
+          <HeaderCell align="right">&nbsp;</HeaderCell>
+        </Header>
 
-          {!loading
-            ? limitOrders?.map((ele, index) => (
-                <PendingRowPro
-                  key={index}
-                  limitOrder={ele}
-                  pool={pool}
-                  wrapperClassName={wrapperClassName ?? classes.wrapper}
-                  noBorder={index === limitOrders.length - 1}
-                  onCancelSuccess={handleCancelSuccess}
-                />
-              ))
-            : null}
+        {!loading
+          ? limitOrders?.map((ele, index) => (
+              <PendingRowPro
+                key={index}
+                limitOrder={ele}
+                pool={pool}
+                wrapperClassName={wrapperClassName ?? classes.wrapper}
+                noBorder={index === limitOrders.length - 1}
+                onCancelSuccess={handleCancelSuccess}
+              />
+            ))
+          : null}
 
-          {(limitOrders ?? []).length === 0 && !loading ? <LimitTransactionsEmpty onClick={handleToLimit} /> : null}
+        {(limitOrders ?? []).length === 0 && !loading ? <LimitTransactionsEmpty onClick={handleToLimit} /> : null}
 
-          {loading ? (
-            <Box sx={{ padding: "24px" }}>
-              <LoadingRow>
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-                <div />
-              </LoadingRow>
-            </Box>
-          ) : null}
-        </Box>
+        {loading ? (
+          <Box sx={{ padding: "24px" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        ) : null}
       </Box>
-    </>
+    </Box>
   );
 }

@@ -1,17 +1,4 @@
-import { Box, Grid, Typography, makeStyles } from "components/Mui";
-
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      position: "relative",
-      width: "100%",
-      height: "100%",
-      padding: "20px",
-      background: "linear-gradient(137.79deg, #7584D7 2.02%, #443D99 98.56%)",
-      borderRadius: "12px",
-    },
-  };
-});
+import { Box, Grid, Typography } from "components/Mui";
 
 function CanisterIcon() {
   return (
@@ -77,10 +64,20 @@ function CanisterIcon() {
 }
 
 export default function FileImage({ fileType }: { fileType: string }) {
-  const classes = useStyles();
-
   return (
-    <Grid container alignItems="center" justifyContent="center" className={classes.wrapper}>
+    <Grid
+      container
+      alignItems="center"
+      justifyContent="center"
+      sx={{
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        padding: "20px",
+        background: "linear-gradient(137.79deg, #7584D7 2.02%, #443D99 98.56%)",
+        borderRadius: "12px",
+      }}
+    >
       <Box
         sx={{
           position: "absolute",

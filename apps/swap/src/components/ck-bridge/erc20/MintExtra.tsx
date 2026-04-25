@@ -1,7 +1,7 @@
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { BigNumber, parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { type BigNumber, parseTokenAmount, shorten, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import Copy from "components/Copy";
 import { Box, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";

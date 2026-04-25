@@ -1,31 +1,38 @@
-import { useCallback, useMemo, useState } from "react";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { SWAP_FIELD } from "constants/swap";
-import { useToken } from "hooks/useCurrency";
-import { tryParseAmount, inputNumberCheck, isUseTransfer } from "utils/index";
-import { TradeState, useBestTrade } from "hooks/swap/useTrade";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { getTokenInsufficient, TokenInsufficient } from "hooks/swap/index";
-import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
-import store from "store/index";
-import { useUserUnusedBalance, useDebounce } from "@icpswap/hooks";
-import { formatTokenAmount, isUndefinedOrNull, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
-import { SubAccount } from "@dfinity/ledger-icp";
-import { useAllowance } from "hooks/token";
-import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
-import { Null } from "@icpswap/types";
-import { usePlaceOrderPosition } from "hooks/swap/limit-order";
-import { Token, CurrencyAmount, TICK_SPACINGS, nearestUsableTick, availableTick, TickMath } from "@icpswap/swap-sdk";
-import { useSwapState } from "store/swap/hooks";
-import { MIN_LIMIT_ORDER_VALUE } from "constants/limit";
-import { useUSDPriceById } from "hooks/index";
-import { useTranslation } from "react-i18next";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { useDebounce, useUserUnusedBalance } from "@icpswap/hooks";
+import {
+  availableTick,
+  CurrencyAmount,
+  nearestUsableTick,
+  TICK_SPACINGS,
+  TickMath,
+  type Token,
+} from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { SAFE_DECIMALS_LENGTH } from "constants/index";
+import { MIN_LIMIT_ORDER_VALUE } from "constants/limit";
+import { SWAP_FIELD } from "constants/swap";
+import { useUSDPriceById } from "hooks/index";
+import { getTokenInsufficient, TokenInsufficient } from "hooks/swap/index";
+import { usePlaceOrderPosition } from "hooks/swap/limit-order";
+import { useAllBalanceMaxSpend } from "hooks/swap/useMaxAmountSpend";
+import { TradeState, useBestTrade } from "hooks/swap/useTrade";
+import { useAllowance } from "hooks/token";
+import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
+import { useToken } from "hooks/useCurrency";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useAppDispatch } from "store/hooks";
+import store from "store/index";
+import { useSwapState } from "store/swap/hooks";
+import { inputNumberCheck, isUseTransfer, tryParseAmount } from "utils/index";
 
-import { updateSwapOutAmount, updatePlaceOrderPositionId } from "./actions";
+import { updatePlaceOrderPositionId } from "./actions";
 
 export interface UseSwapInfoArgs {
-  refresh?: number | boolean;
+  refresh?: number;
 }
 
 export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
@@ -121,7 +128,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     }
 
     return undefined;
-  }, [isExactIn, independentFieldAmount, orderPrice, __inputToken, __outputToken]);
+  }, [isExactIn, independentFieldAmount, orderPrice, inputToken, outputToken]);
 
   const parsedAmounts = useMemo(
     () =>
@@ -129,7 +136,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
         [independentField]: independentFieldAmount,
         [dependentField]: dependentFieldAmount,
       }) as { INPUT: CurrencyAmount<Token> | undefined; OUTPUT: CurrencyAmount<Token> | undefined },
-    [independentField, independentFieldAmount],
+    [independentField, independentFieldAmount, dependentField, dependentFieldAmount],
   );
 
   const isInputTokenSorted = useMemo(() => {
@@ -209,8 +216,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const minSettableTick = useMemo(() => {
     if (nonUndefinedOrNull(minUseableTick) && pool) {
       return isInputTokenSorted
-        ? minUseableTick - parseInt(String(TICK_SPACINGS[pool.fee] / 2)) + 1
-        : minUseableTick + parseInt(String(TICK_SPACINGS[pool.fee] / 2)) - 1;
+        ? minUseableTick - parseInt(String(TICK_SPACINGS[pool.fee] / 2), 10) + 1
+        : minUseableTick + parseInt(String(TICK_SPACINGS[pool.fee] / 2), 10) - 1;
     }
   }, [minUseableTick, pool, isInputTokenSorted]);
 
@@ -224,8 +231,18 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
 
   // DIP20 not support subaccount balance
   // So useTokenBalance is 0 by default if standard is DIP20
-  const { result: __inputTokenSubBalance } = useTokenBalance(inputToken?.address, poolId, refresh, sub);
-  const { result: __outputTokenSubBalance } = useTokenBalance(outputToken?.address, poolId, refresh, sub);
+  const { result: __inputTokenSubBalance } = useTokenBalance({
+    tokenId: inputToken?.address,
+    account: poolId,
+    refresh,
+    sub,
+  });
+  const { result: __outputTokenSubBalance } = useTokenBalance({
+    tokenId: outputToken?.address,
+    account: poolId,
+    refresh,
+    sub,
+  });
 
   // Make balance is undefined if user logout
   const inputTokenSubBalance = useMemo(() => {
@@ -236,9 +253,9 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const outputTokenSubBalance = useMemo(() => {
     if (!principal) return undefined;
     return __outputTokenSubBalance;
-  }, [__outputTokenSubBalance]);
+  }, [__outputTokenSubBalance, principal]);
 
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
+  const { data: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
   const { inputTokenUnusedBalance, outputTokenUnusedBalance } = useMemo(() => {
     if (!pool || !unusedBalance || !inputToken) return {};
 
@@ -256,7 +273,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     return isUseTransfer(inputToken) ? undefined : inputToken.address;
   }, [inputToken]);
 
-  const { result: allowance } = useAllowance({
+  const { data: allowance } = useAllowance({
     canisterId: allowanceTokenId,
     owner: principal?.toString(),
     spender: poolId,
@@ -331,7 +348,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   }, [
     parsedAmounts,
     inputSwapAmount,
-    independentFieldAmount,
     inputTokenSubBalance,
     inputTokenUnusedBalance,
     Trade,
@@ -346,6 +362,8 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     minSettableTick,
     tickError,
     inputCurrencyPrice,
+    outputToken,
+    t,
   ]);
 
   const inputTokenBalance = formatTokenAmount(
@@ -396,25 +414,6 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     minSettableTick,
     atLimitedTick,
   };
-}
-
-export function useSwapOutAmount() {
-  return useAppSelector((state) => state.swap.swapOutAmount);
-}
-
-export function getSwapOutAmount(key: string) {
-  return store.getState().swap.swapOutAmount[key];
-}
-
-export function useUpdateSwapOutAmount() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (key: string, amount: bigint | undefined) => {
-      dispatch(updateSwapOutAmount({ key, value: amount }));
-    },
-    [dispatch],
-  );
 }
 
 export function getPlaceOrderPositionId() {

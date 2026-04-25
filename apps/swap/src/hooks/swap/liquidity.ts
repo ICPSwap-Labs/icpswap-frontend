@@ -1,14 +1,14 @@
-import { useCallback } from "react";
-import { Position, Token, Percent } from "@icpswap/swap-sdk";
-import { decreaseLiquidity } from "hooks/swap/v3Calls";
-import { useErrorTip } from "hooks/useTips";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { getLocaleMessage } from "i18n/service";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
+import { type Percent, Position, type Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { getDecreaseLiquiditySteps } from "components/swap/DecreaseLiquiditySteps";
-import { useStepContentManager } from "store/steps/hooks";
+import { decreaseLiquidity } from "hooks/swap/v3Calls";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { useErrorTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Null } from "@icpswap/types";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useStepContentManager } from "store/steps/hooks";
 
 interface DecreaseLiquidityCallsArgs {
   position: Position | undefined;
@@ -21,32 +21,35 @@ function useDecreaseLiquidityCalls() {
   const principal = useAccountPrincipal();
   const [openErrorTip] = useErrorTip();
 
-  return useCallback(({ position, liquidityToRemove, poolId, positionId }: DecreaseLiquidityCallsArgs) => {
-    const __decreaseLiquidity = async () => {
-      if (!position || !liquidityToRemove || !principal || !poolId || !positionId) return false;
+  return useCallback(
+    ({ position, liquidityToRemove, poolId, positionId }: DecreaseLiquidityCallsArgs) => {
+      const __decreaseLiquidity = async () => {
+        if (!position || !liquidityToRemove || !principal || !poolId || !positionId) return false;
 
-      const partialPosition = new Position({
-        pool: position.pool,
-        liquidity: liquidityToRemove.multiply(position.liquidity).quotient,
-        tickLower: position.tickLower,
-        tickUpper: position.tickUpper,
-      });
+        const partialPosition = new Position({
+          pool: position.pool,
+          liquidity: liquidityToRemove.multiply(position.liquidity).quotient,
+          tickLower: position.tickLower,
+          tickUpper: position.tickUpper,
+        });
 
-      const { status, message } = await decreaseLiquidity(poolId, {
-        positionId,
-        liquidity: partialPosition.liquidity.toString(),
-      });
+        const { status, message } = await decreaseLiquidity(poolId, {
+          positionId,
+          liquidity: partialPosition.liquidity.toString(),
+        });
 
-      if (status === "err") {
-        openErrorTip(`${getLocaleMessage(message)}.`);
-        return false;
-      }
+        if (status === "err") {
+          openErrorTip(`${getLocaleMessage(message)}.`);
+          return false;
+        }
 
-      return true;
-    };
+        return true;
+      };
 
-    return [__decreaseLiquidity];
-  }, []);
+      return [__decreaseLiquidity];
+    },
+    [openErrorTip, principal],
+  );
 }
 
 export interface DecreaseLiquidityCallbackProps {
@@ -99,6 +102,8 @@ export function useDecreaseLiquidityCallback({
 
     return { call, reset, retry, key };
   }, [
+    t,
+    getCalls,
     getStepCalls,
     stepContentManage,
     position,

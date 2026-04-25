@@ -1,14 +1,14 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useCallback, useMemo } from "react";
-import { Box, Typography, Button, Checkbox, CircularProgress } from "components/Mui";
-import { Flex, LoadingRow, NoData } from "components/index";
-import { useTranslation } from "react-i18next";
-import { useWalletContext, WalletManagerPage, ConvertToIcp } from "components/Wallet/context";
-import { BigNumber, formatAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
-import { useSmallBalanceTokens, SmallBalanceResult } from "hooks/wallet/useSmallBalanceTokens";
-import { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { ICP } from "@icpswap/tokens";
-import { useBalanceConvertContext } from "components/Wallet/BalanceConvert/context";
+import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
+import { BigNumber, formatAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { Flex, LoadingRow, NoData } from "components/index";
+import { Box, Button, Checkbox, CircularProgress, Typography } from "components/Mui";
+import { useBalanceConvertStore } from "components/Wallet/BalanceConvert/store";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { type ConvertToIcp, useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { type SmallBalanceResult, useSmallBalanceTokens } from "hooks/wallet/useSmallBalanceTokens";
+import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 const GREATER_THAN_BALANCE_WOULD_BE_FILTERED = 5;
 
@@ -24,39 +24,37 @@ interface SmallBalanceRowProps {
 function SmallBalanceRow({ amount, icpAmount, infoToken, checked, onCheckedChange }: SmallBalanceRowProps) {
   const handleTokenCheck = useCallback(() => {
     onCheckedChange(!checked, infoToken.tokenLedgerId);
-  }, [checked, onCheckedChange]);
+  }, [checked, onCheckedChange, infoToken.tokenLedgerId]);
 
   return (
-    <>
-      <Flex justify="space-between" fullWidth sx={{ cursor: "pointer" }} onClick={handleTokenCheck}>
-        <Flex gap="0 8px">
-          <Checkbox checked={checked} />
-          <Typography color="text.primary">{infoToken.tokenSymbol}</Typography>
-        </Flex>
-
-        <Box>
-          <Typography color="text.primary" align="right">
-            {formatAmount(amount.toString())}
-          </Typography>
-          <Typography sx={{ margin: "6px 0 0 0", fontSize: "12px" }} align="right">
-            ≈{formatAmount(parseTokenAmount(icpAmount, ICP.decimals).toString())} ICP
-          </Typography>
-        </Box>
+    <Flex justify="space-between" fullWidth sx={{ cursor: "pointer" }} onClick={handleTokenCheck}>
+      <Flex gap="0 8px">
+        <Checkbox checked={checked} />
+        <Typography color="text.primary">{infoToken.tokenSymbol}</Typography>
       </Flex>
-    </>
+
+      <Box>
+        <Typography color="text.primary" align="right">
+          {formatAmount(amount.toString())}
+        </Typography>
+        <Typography sx={{ margin: "6px 0 0 0", fontSize: "12px" }} align="right">
+          ≈{formatAmount(parseTokenAmount(icpAmount, ICP.decimals).toString())} ICP
+        </Typography>
+      </Box>
+    </Flex>
   );
 }
 
 export function BalanceConvert() {
   const { t } = useTranslation();
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
   const {
     setTokensConvertToIcp,
     convertLoading,
     convertedTokenIds,
     checkedConvertTokenIds,
     setCheckedConvertTokenIds,
-  } = useBalanceConvertContext();
+  } = useBalanceConvertStore();
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.Index);
@@ -126,7 +124,7 @@ export function BalanceConvert() {
 
       if (checkedConvertTokenIds.includes(tokenId)) {
         const __checkedTokenIds = [...checkedConvertTokenIds];
-        const index = __checkedTokenIds.findIndex((checkedId) => checkedId === tokenId);
+        const index = __checkedTokenIds.indexOf(tokenId);
 
         if (index !== -1) {
           __checkedTokenIds.splice(index, 1);

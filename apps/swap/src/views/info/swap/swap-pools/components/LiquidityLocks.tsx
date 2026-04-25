@@ -1,9 +1,9 @@
-import { Typography, Box, Popper, ClickAwayListener } from "components/Mui";
-import { LiquidityLocks } from "components/LiquidityLocks";
-import { usePoolByPoolId } from "hooks/swap/usePools";
 import { Flex } from "@icpswap/ui";
-import { Unlock } from "react-feather";
+import { LiquidityLocks } from "components/LiquidityLocks";
+import { Box, ClickAwayListener, Popper, Typography } from "components/Mui";
+import { usePoolByPoolId } from "hooks/swap/usePools";
 import { useCallback, useRef, useState } from "react";
+import { Unlock } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 export interface LiquidityLocksWrapperProps {
@@ -20,11 +20,11 @@ export function LiquidityLocksWrapper({ poolId }: LiquidityLocksWrapperProps) {
 
   const handleMouseEnter = useCallback(() => {
     setPopper(true);
-  }, [setPopper]);
+  }, []);
 
   const handleMouseLeave = useCallback(() => {
     setPopper(false);
-  }, [setPopper]);
+  }, []);
 
   return (
     <Box ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} sx={{ cursor: "pointer" }}>

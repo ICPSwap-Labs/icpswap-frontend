@@ -1,11 +1,11 @@
-import { useState, useMemo, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Grid, Typography, makeStyles, Theme } from "components/Mui";
-import { useMarketplaceRecommendCanisters } from "hooks/nft/tradeData";
-import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import type { NFTControllerInfo } from "@icpswap/types";
 import CarouselArrow from "assets/images/nft/CarouselArrow";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { useMarketplaceRecommendCanisters } from "hooks/nft/tradeData";
+import { useCanisterMetadata } from "hooks/nft/useNFTCalls";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 import CollectionAvatar from "../CollectionAvatar";
 
@@ -163,7 +163,7 @@ export function ViewAllArrow() {
 
 export function Collection({ collection }: { collection: NFTControllerInfo }) {
   const classes = useStyles();
-  const { result: metadata } = useCanisterMetadata(collection.cid);
+  const { data: metadata } = useCanisterMetadata(collection.cid);
 
   return (
     <Box className={`${classes.collection} collection`}>
@@ -195,21 +195,20 @@ export default function MarketCarousel() {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { result } = useMarketplaceRecommendCanisters(0, 100);
+  const { data: result } = useMarketplaceRecommendCanisters(0, 100);
 
   const collections = useMemo(() => {
-    if (result && result.content) return result.content;
-    return [];
+    return result?.content ?? [];
   }, [result]);
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [initialIndex, setInitialIndex] = useState(false);
+  const [initialIndex] = useState(false);
 
   useEffect(() => {
     if (!initialIndex && collections.length) {
-      setActiveIndex(parseInt(String(collections.length / 2 + 1)) - 1);
+      setActiveIndex(parseInt(String(collections.length / 2 + 1), 10) - 1);
     }
-  }, [initialIndex, setActiveIndex, setInitialIndex, collections]);
+  }, [initialIndex, collections]);
 
   const handleLeftArrowClick = () => {
     if (activeIndex - 1 < 0) {
@@ -245,7 +244,7 @@ export default function MarketCarousel() {
     }
 
     return [activeIndex - 2, activeIndex - 1, activeIndex, activeIndex + 1, activeIndex + 2];
-  }, [activeIndex]);
+  }, [activeIndex, collections]);
 
   const handleCollectionClick = (collection: NFTControllerInfo) => {
     navigate(`/marketplace/NFT/${collection.cid}`);

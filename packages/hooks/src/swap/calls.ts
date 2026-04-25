@@ -1,31 +1,32 @@
-import { useCallback } from "react";
-import { swapFactory, swapPool, swapNFT, swapPosition } from "@icpswap/actor";
+import { Principal } from "@icp-sdk/core/principal";
+import { swapFactory, swapNFT, swapPool, swapPosition } from "@icpswap/actor";
 import type {
-  SwapPoolData,
-  TickLiquidityInfo,
-  PoolMetadata,
-  GetPoolArgs,
-  CreatePoolArgs,
-  MintArgs,
-  UserPositionInfo,
-  DecreaseLiquidityArgs,
-  IncreaseLiquidityArgs,
-  SwapArgs,
-  ClaimArgs,
-  NFTTokenMetadata,
-  UserPositionInfoWithTokenAmount,
-  UserPositionInfoWithId,
-  PositionInfoWithId,
-  TickInfoWithId,
   ActorIdentity,
-  PaginationResult,
-  Null,
+  ClaimArgs,
+  CreatePoolArgs,
+  DecreaseLiquidityArgs,
   DepositAndSwapArgs,
+  GetPoolArgs,
+  IncreaseLiquidityArgs,
+  MintArgs,
+  NFTTokenMetadata,
+  Null,
+  PaginationResult,
+  PoolMetadata,
+  PositionInfoWithId,
+  SwapArgs,
+  SwapPoolData,
+  TickInfoWithId,
+  TickLiquidityInfo,
+  UserPositionInfo,
+  UserPositionInfoWithId,
+  UserPositionInfoWithTokenAmount,
 } from "@icpswap/types";
-import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
+import { isAvailablePageArgs, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
 
-import { useCallsData, getPaginationAllData, usePaginationAllData, getPaginationAllDataLimit } from "../useCallData";
+import { getPaginationAllData, getPaginationAllDataLimit, usePaginationAllData } from "../useCallData";
 
 export async function createSwapPool(args: CreatePoolArgs) {
   return resultFormat<SwapPoolData>(await (await swapFactory(true)).createPool(args));
@@ -35,38 +36,43 @@ export async function getSwapPool(args: GetPoolArgs) {
   return resultFormat<SwapPoolData>(await (await swapFactory()).getPool(args)).data;
 }
 
-export function useSwapPool(args: GetPoolArgs | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapPool(args: GetPoolArgs | undefined): UseQueryResult<SwapPoolData | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPool", args],
+    queryFn: async () => {
       if (!args) return undefined;
       return await getSwapPool(args);
-    }, [args]),
-  );
+    },
+    enabled: !!args,
+  });
 }
 
 export async function getSwapPools() {
   return resultFormat<SwapPoolData[]>(await (await swapFactory()).getPools()).data;
 }
 
-export function useSwapPools() {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapPools(): UseQueryResult<SwapPoolData[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPools"],
+    queryFn: async () => {
       return await getSwapPools();
-    }, []),
-  );
+    },
+  });
 }
 
 export async function getSwapPoolMetadata(canisterId: string) {
   return resultFormat<PoolMetadata>(await (await swapPool(canisterId)).metadata()).data;
 }
 
-export function useSwapPoolMetadata(canisterId: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapPoolMetadata(canisterId: string | Null): UseQueryResult<PoolMetadata | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPoolMetadata", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getSwapPoolMetadata(canisterId);
-    }, [canisterId]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getSwapTickInfos(canisterId: string, offset: number, limit: number) {
@@ -83,13 +89,18 @@ export async function getSwapPoolAllTickInfos(poolId: string, limit = 500) {
   return await getPaginationAllData<TickLiquidityInfo>(callback, limit);
 }
 
-export function useLiquidityTickInfos(canisterId: string | undefined, limit?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useLiquidityTickInfos(
+  canisterId: string | undefined,
+  limit?: number,
+): UseQueryResult<TickLiquidityInfo[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useLiquidityTickInfos", canisterId, limit],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getSwapPoolAllTickInfos(canisterId, limit);
-    }, [canisterId, limit]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function deposit(canisterId: string, token: string, amount: bigint, fee: bigint) {
@@ -146,27 +157,37 @@ export async function getUserUnusedBalance(canisterId: string, user: Principal) 
   ).data;
 }
 
-export function useUserUnusedBalance(canisterId: string | Null, user: Principal | Null, refresh?: number | boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserUnusedBalance(
+  canisterId: string | Null,
+  user: Principal | Null,
+  refresh?: number | boolean,
+): UseQueryResult<{ balance0: bigint; balance1: bigint } | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserUnusedBalance", canisterId, user?.toString(), refresh],
+    queryFn: async () => {
       if (!canisterId || !user) return undefined;
       return await getUserUnusedBalance(canisterId, user);
-    }, [canisterId, user]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId && !!user,
+  });
 }
 
 export async function getSwapPosition(canisterId: string, tokenId: bigint) {
   return resultFormat<UserPositionInfo>(await (await swapPool(canisterId)).getUserPosition(tokenId)).data;
 }
 
-export function useSwapPosition(canisterId: string | undefined, positionId: bigint | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapPosition(
+  canisterId: string | undefined,
+  positionId: bigint | undefined,
+): UseQueryResult<UserPositionInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPosition", canisterId, positionId?.toString()],
+    queryFn: async () => {
       if (!canisterId || (!positionId && positionId !== BigInt(0))) return undefined;
-      return await getSwapPosition(canisterId, positionId);
-    }, [canisterId, positionId]),
-  );
+      return await getSwapPosition(canisterId, positionId!);
+    },
+    enabled: !!canisterId && (positionId !== undefined || positionId === BigInt(0)),
+  });
 }
 
 export async function getPositionFee(canisterId: string, positionId: bigint) {
@@ -179,14 +200,15 @@ export function usePositionFee(
   canisterId: string | undefined,
   positionId: bigint | undefined,
   refresh?: number | boolean,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<{ tokensOwed0: bigint; tokensOwed1: bigint } | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePositionFee", canisterId, positionId?.toString(), refresh],
+    queryFn: async () => {
       if (!canisterId || (!positionId && positionId === BigInt(0))) return undefined;
-      return await getPositionFee(canisterId, positionId);
-    }, [canisterId, positionId]),
-    refresh,
-  );
+      return await getPositionFee(canisterId, positionId!);
+    },
+    enabled: !!canisterId && positionId !== undefined,
+  });
 }
 
 export async function getPositionsFee(canisterId: string, positionIds: bigint[]) {
@@ -201,14 +223,23 @@ export function usePositionsFee(
   canisterId: string | undefined,
   positionIds: bigint[] | undefined,
   refresh?: number | boolean,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<
+  | {
+      tokenIncome: Array<[bigint, { tokensOwed0: bigint; tokensOwed1: bigint }]>;
+      totalTokensOwed0: bigint;
+      totalTokensOwed1: bigint;
+    }
+  | undefined,
+  Error
+> {
+  return useQuery({
+    queryKey: ["usePositionsFee", canisterId, positionIds, refresh],
+    queryFn: async () => {
       if (!canisterId || !positionIds || positionIds.length === 0) return undefined;
       return await getPositionsFee(canisterId, positionIds);
-    }, [canisterId, positionIds]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId && !!positionIds && positionIds.length > 0,
+  });
 }
 
 export type SwapPoolAllBalance = [Principal, { balance0: bigint; balance1: bigint }];
@@ -219,13 +250,19 @@ export async function getSwapPoolAllBalance(canisterId: string, offset: number, 
   ).data;
 }
 
-export function useSwapPoolAllBalance(canisterId: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapPoolAllBalance(
+  canisterId: string | undefined,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<SwapPoolAllBalance> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPoolAllBalance", canisterId, offset, limit],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getSwapPoolAllBalance(canisterId, offset, limit);
-    }, [canisterId, offset, limit]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function _getSwapPoolAllBalance(poolId: string, limit = 1000) {
@@ -236,13 +273,18 @@ export async function _getSwapPoolAllBalance(poolId: string, limit = 1000) {
   return await getPaginationAllData<SwapPoolAllBalance>(callback, limit);
 }
 
-export function _useSwapPoolAllBalance(canisterId: string | undefined, limit?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function _useSwapPoolAllBalance(
+  canisterId: string | undefined,
+  limit?: number,
+): UseQueryResult<SwapPoolAllBalance[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["_useSwapPoolAllBalance", canisterId, limit],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await _getSwapPoolAllBalance(canisterId, limit);
-    }, [canisterId, limit]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 /*   swap nft */
@@ -253,13 +295,19 @@ export async function getUserSwapNFTs(principal: string, offset: number, limit: 
   ).data;
 }
 
-export function useUserSwapNFTs(principal: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserSwapNFTs(
+  principal: string | undefined,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<NFTTokenMetadata> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserSwapNFTs", principal, offset, limit],
+    queryFn: async () => {
       if (!principal || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getUserSwapNFTs(principal, offset, limit);
-    }, [principal, offset, limit]),
-  );
+    },
+    enabled: !!principal && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export function useUserAllNFTs(principal: string | undefined) {
@@ -279,27 +327,36 @@ export async function getSwapNFTTokenURI(tokenId: bigint | number) {
   return JSON.parse(data ?? "") as { image: string; [key: string]: any };
 }
 
-export function useSwapNFTTokenURI(tokenId: bigint | number | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapNFTTokenURI(
+  tokenId: bigint | number | undefined,
+): UseQueryResult<{ image: string; [key: string]: any } | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapNFTTokenURI", tokenId],
+    queryFn: async () => {
       if (tokenId === undefined) return undefined;
       return await getSwapNFTTokenURI(tokenId);
-    }, [tokenId]),
-  );
+    },
+    enabled: tokenId !== undefined,
+  });
 }
 
 export async function getPositionNFTId(poolId: string, positionId: string) {
   return resultFormat<number>(await (await swapNFT()).getTokenId(poolId, positionId)).data;
 }
 
-export function usePositionNFTId(poolId: string | undefined, positionId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function usePositionNFTId(
+  poolId: string | undefined,
+  positionId: string | undefined,
+): UseQueryResult<number | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePositionNFTId", poolId, positionId],
+    queryFn: async () => {
       if (poolId === undefined || positionId === undefined) return undefined;
 
       return await getPositionNFTId(poolId, positionId);
-    }, [poolId, positionId]),
-  );
+    },
+    enabled: poolId !== undefined && positionId !== undefined,
+  });
 }
 
 /*   swap nft */
@@ -314,13 +371,19 @@ export async function getSwapUserPositionWithAmount(canisterId: string, offset: 
   ).data;
 }
 
-export function useSwapUserPositionWithAmount(canisterId: string | Null, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapUserPositionWithAmount(
+  canisterId: string | Null,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<UserPositionInfoWithTokenAmount> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapUserPositionWithAmount", canisterId, offset, limit],
+    queryFn: async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getSwapUserPositionWithAmount(canisterId, offset, limit);
-    }, [canisterId, offset, limit]),
-  );
+    },
+    enabled: !!canisterId && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getSwapPositions(canisterId: string, offset: number, limit: number) {
@@ -329,13 +392,19 @@ export async function getSwapPositions(canisterId: string, offset: number, limit
   ).data;
 }
 
-export function useSwapPositions(canisterId: string | Null, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapPositions(
+  canisterId: string | Null,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<UserPositionInfoWithId> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPositions", canisterId, offset, limit],
+    queryFn: async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getSwapPositions(canisterId, offset, limit);
-    }, [canisterId, offset, limit]),
-  );
+    },
+    enabled: !!canisterId && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getSwapAllUserPositions(poolId: string, limit = 2000) {
@@ -346,13 +415,18 @@ export async function getSwapAllUserPositions(poolId: string, limit = 2000) {
   return await getPaginationAllData<UserPositionInfoWithId>(callback, limit);
 }
 
-export function useSwapAllUserPositions(canisterId: string | undefined, limit?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapAllUserPositions(
+  canisterId: string | undefined,
+  limit?: number,
+): UseQueryResult<UserPositionInfoWithId[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapAllUserPositions", canisterId, limit],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getSwapAllUserPositions(canisterId, limit);
-    }, [canisterId, limit]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getSwapPoolPositions(canisterId: string, offset: number, limit: number) {
@@ -361,13 +435,19 @@ export async function getSwapPoolPositions(canisterId: string, offset: number, l
   ).data;
 }
 
-export function useSwapPoolPositions(canisterId: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapPoolPositions(
+  canisterId: string | undefined,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<PositionInfoWithId> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPoolPositions", canisterId, offset, limit],
+    queryFn: async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getSwapPoolPositions(canisterId, offset, limit);
-    }, [canisterId, offset, limit]),
-  );
+    },
+    enabled: !!canisterId && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getSwapPoolAllPositions(poolId: string, limit = 1000) {
@@ -378,13 +458,18 @@ export async function getSwapPoolAllPositions(poolId: string, limit = 1000) {
   return await getPaginationAllData<PositionInfoWithId>(callback, limit);
 }
 
-export function useSwapPoolAllPositions(canisterId: string | undefined, limit?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapPoolAllPositions(
+  canisterId: string | undefined,
+  limit?: number,
+): UseQueryResult<PositionInfoWithId[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPoolAllPositions", canisterId, limit],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getSwapPoolAllPositions(canisterId, limit);
-    }, [canisterId, limit]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getSwapTicks(canisterId: string, offset: number, limit: number) {
@@ -400,26 +485,35 @@ export async function getSwapAllTicks(canisterId: string, limit = 1000) {
   return await getPaginationAllDataLimit<TickInfoWithId>(callback, limit);
 }
 
-export function useSwapAllTicks(canisterId: string | undefined, limit?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapAllTicks(
+  canisterId: string | undefined,
+  limit?: number,
+): UseQueryResult<TickInfoWithId[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapAllTicks", canisterId, limit],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getSwapAllTicks(canisterId, limit);
-    }, [canisterId, limit]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getSwapCyclesInfo(canisterId: string) {
   return resultFormat<{ balance: bigint; available: bigint }>(await (await swapPool(canisterId)).getCycleInfo()).data;
 }
 
-export function useSwapCyclesInfo(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapCyclesInfo(
+  canisterId: string | undefined,
+): UseQueryResult<{ balance: bigint; available: bigint } | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapCyclesInfo", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getSwapCyclesInfo(canisterId);
-    }, [canisterId]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getSwapTokenAmountState(canisterId: string) {
@@ -431,13 +525,24 @@ export async function getSwapTokenAmountState(canisterId: string) {
   }>(await (await swapPool(canisterId)).getTokenAmountState()).data;
 }
 
-export function useSwapTokenAmountState(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapTokenAmountState(canisterId: string | undefined): UseQueryResult<
+  | {
+      swapFee0Repurchase: bigint;
+      token0Amount: bigint;
+      token1Amount: bigint;
+      swapFee1Repurchase: bigint;
+    }
+  | undefined,
+  Error
+> {
+  return useQuery({
+    queryKey: ["useSwapTokenAmountState", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getSwapTokenAmountState(canisterId);
-    }, [canisterId]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 /*  swap records */
@@ -451,13 +556,15 @@ export async function getUserPositionsPools(account: string) {
   return resultFormat<string[]>(await (await swapPosition()).getUserPools(account)).data;
 }
 
-export function useUserPositionPools(account: string | undefined | null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserPositionPools(account: string | undefined | null): UseQueryResult<string[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserPositionPools", account],
+    queryFn: async () => {
       if (!account) return undefined;
       return await getUserPositionsPools(account);
-    }, [account]),
-  );
+    },
+    enabled: !!account,
+  });
 }
 
 export async function getSwapUserPositions(poolId: string, principal: string) {
@@ -466,14 +573,19 @@ export async function getSwapUserPositions(poolId: string, principal: string) {
   ).data;
 }
 
-export function useSwapUserPositions(poolId: string | Null, principal: string | Null, refresh?: boolean | number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useSwapUserPositions(
+  poolId: string | Null,
+  principal: string | Null,
+  refresh?: boolean | number,
+): UseQueryResult<UserPositionInfoWithId[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapUserPositions", poolId, principal, refresh],
+    queryFn: async () => {
       if (!principal || !poolId) return undefined;
       return await getSwapUserPositions(poolId, principal);
-    }, [principal, poolId]),
-    refresh,
-  );
+    },
+    enabled: !!principal && !!poolId,
+  });
 }
 
 export async function approvePosition(poolId: string, spender: string, index: number | bigint) {
@@ -490,14 +602,15 @@ export function useSwapPositionOwner(
   poolId: string | undefined,
   positionIndex: number | bigint | undefined,
   refresh?: number,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<string | undefined, Error> {
+  return useQuery({
+    queryKey: ["useSwapPositionOwner", poolId, positionIndex, refresh],
+    queryFn: async () => {
       if (!poolId || positionIndex === undefined) return undefined;
       return await getSwapPositionOwner(poolId, positionIndex);
-    }, [positionIndex, poolId]),
-    refresh,
-  );
+    },
+    enabled: !!poolId && positionIndex !== undefined,
+  });
 }
 
 /* swap positions */

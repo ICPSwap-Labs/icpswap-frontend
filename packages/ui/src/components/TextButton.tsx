@@ -1,9 +1,8 @@
-import React, { ReactNode, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { mockALinkAndOpen } from "@icpswap/utils";
-
-import { Typography, Box } from "./Mui";
+import { type ReactNode, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "./Link";
+import { Box, Typography } from "./Mui";
 
 export interface ALinkProps {
   children: ReactNode;
@@ -36,10 +35,10 @@ export function ALink({
           textDecorationColor === "primary"
             ? "rgb(134, 114, 255)"
             : textDecorationColor === "secondary"
-            ? "rgb(86, 105, 220)"
-            : textDecorationColor === "text.primary"
-            ? "#ffffff"
-            : "#8492c4",
+              ? "rgb(86, 105, 220)"
+              : textDecorationColor === "text.primary"
+                ? "#ffffff"
+                : "#8492c4",
         color,
         textAlign: align,
       }}
@@ -117,7 +116,7 @@ export function TextButton({
     if (to) {
       navigate(to);
     }
-  }, [link, to, onClick, disabled]);
+  }, [link, to, onClick, disabled, navigate]);
 
   return (
     <Typography

@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { useTheme } from "components/Mui";
-import { useNavigate } from "react-router-dom";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useTheme } from "components/Mui";
 import { Tab } from "constants/index";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 
 export interface SwapProEntryProps {
   inputToken: Token | Null;

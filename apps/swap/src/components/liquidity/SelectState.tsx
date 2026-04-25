@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { Select } from "components/Select/ForToken";
 import { Typography } from "components/Mui";
-import { PositionFilterState } from "types/swap";
+import { Select } from "components/Select/ForToken";
 import i18n from "i18n/index";
+import { useEffect, useState } from "react";
+import { PositionFilterState } from "types/swap";
 
 const menus: { label: string; value: string }[] = [
   { label: i18n.t("common.default"), value: PositionFilterState.Default },

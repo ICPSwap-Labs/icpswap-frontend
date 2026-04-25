@@ -1,26 +1,26 @@
-import { useMemo } from "react";
-import { Typography, Box } from "components/Mui";
+import { Box, Typography } from "components/Mui";
+import { useWalletStore, Page } from "components/Wallet/store";
 import i18n from "i18n/index";
-import { useWalletContext } from "components/Wallet/context";
+import { useMemo } from "react";
 
 type Item = {
   name: string;
-  pageName: "token" | "nft";
+  pageName: Page;
 };
 
 const DISPLAY_ITEMS: Item[] = [
   {
     name: i18n.t("common.token"),
-    pageName: "token",
+    pageName: Page.token,
   },
   {
     name: i18n.t("common.nft"),
-    pageName: "nft",
+    pageName: Page.nft,
   },
 ];
 
 export default function WalletPageToggle() {
-  const { page, setPage } = useWalletContext();
+  const { page, setPage } = useWalletStore();
 
   const currentDisplay = useMemo(() => {
     return DISPLAY_ITEMS.filter((item) => item.pageName === page)[0].pageName;

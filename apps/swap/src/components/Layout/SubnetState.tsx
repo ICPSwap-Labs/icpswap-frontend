@@ -1,11 +1,11 @@
-import { useTheme, Box, Typography, BoxProps } from "components/Mui";
+import { useNodeMachinesOfSubnet, useSubnetBlockRate } from "@icpswap/hooks";
 import { Flex, Link } from "@icpswap/ui";
-import { useSubnetBlockRate, useNodeMachinesOfSubnet } from "@icpswap/hooks";
-import { useMemo } from "react";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { ArrowUpRight } from "react-feather";
-import { ICPSwapSubnet, ICPSwapStableBlockRate } from "constants/index";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
 import { NetworkStateIcon } from "components/NetworkStateIcon";
+import { ICPSwapStableBlockRate, ICPSwapSubnet } from "constants/index";
+import { useMemo } from "react";
+import { ArrowUpRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 export interface SubnetStateProps {
@@ -17,8 +17,8 @@ export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { result: nodeMachines } = useNodeMachinesOfSubnet({ subnet: ICPSwapSubnet });
-  const { result: subnet } = useSubnetBlockRate({ subnet: ICPSwapSubnet });
+  const { data: nodeMachines } = useNodeMachinesOfSubnet({ subnet: ICPSwapSubnet });
+  const { data: subnet } = useSubnetBlockRate({ subnet: ICPSwapSubnet });
 
   const totalNodeMachines = useMemo(() => {
     if (isUndefinedOrNull(nodeMachines)) return null;
@@ -36,12 +36,12 @@ export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
     return rate.isGreaterThan(0.8)
       ? 4
       : rate.isGreaterThan(0.6)
-      ? 3
-      : rate.isGreaterThan(0.4)
-      ? 2
-      : rate.isGreaterThan(0.2)
-      ? 1
-      : 0;
+        ? 3
+        : rate.isGreaterThan(0.4)
+          ? 2
+          : rate.isGreaterThan(0.2)
+            ? 1
+            : 0;
   }, [subnet]);
 
   return (

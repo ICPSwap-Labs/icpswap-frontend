@@ -1,6 +1,4 @@
-import { useCallback } from "react";
-import { useCallsData } from "@icpswap/hooks";
-import type { CallResult } from "@icpswap/types";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export interface CanisterInfo {
   canister_id: string;
@@ -9,14 +7,16 @@ export interface CanisterInfo {
   subnet_id: string;
 }
 
-export function useCanisterInfo(canisterId: string): CallResult<CanisterInfo> {
-  return useCallsData(
-    useCallback(async () => {
+export function useCanisterInfo(canisterId: string): UseQueryResult<CanisterInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useCanisterInfo", canisterId],
+    queryFn: async () => {
       const fetch_result = await fetch(`https://ic-api.internetcomputer.org/api/v3/canisters/${canisterId}`).catch(
         () => undefined,
       );
       if (!fetch_result) return undefined;
       return await fetch_result.json();
-    }, []),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }

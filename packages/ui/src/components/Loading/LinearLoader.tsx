@@ -1,41 +1,39 @@
-import { makeStyles, Theme, LinearProgress, Typography } from "../Mui";
+import { LinearProgress, styled, Typography } from "../Mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: "100%",
-    height: "100%",
+const Root = styled("div")({
+  width: "100%",
+  height: "100%",
+});
+
+const Loader = styled("div")({
+  position: "fixed",
+  top: 0,
+  left: 0,
+  zIndex: 1301,
+  width: "100%",
+  "& > * + *": {
+    marginTop: 16,
   },
-  loader: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    zIndex: 1301,
-    width: "100%",
-    "& > * + *": {
-      marginTop: theme.spacing(2),
-    },
-  },
-  image: {
-    padding: "120px 0 0 0",
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-}));
+});
+
+const ImageBox = styled("div")({
+  padding: "120px 0 0 0",
+  width: "100%",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+});
 
 export function LinearLoader() {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <div className={classes.loader}>
+    <Root>
+      <Loader>
         <LinearProgress color="primary" />
-      </div>
-      <div className={classes.image}>
+      </Loader>
+      <ImageBox>
         <img src="/images/loading-page.gif" alt="loading" width="200px" height="200px" />
         <Typography sx={{ color: "text.primary", fontSize: "16px" }}>Loading… Please wait.</Typography>
-      </div>
-    </div>
+      </ImageBox>
+    </Root>
   );
 }

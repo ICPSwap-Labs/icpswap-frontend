@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
-import { Box } from "components/Mui";
 import { ValueLabelMenus } from "components/info/ValueLabelMenus";
+import { Box } from "components/Mui";
+import { useRef, useState } from "react";
 import { HelpCircle } from "react-feather";
 
 export function ValueLabelTooltip() {

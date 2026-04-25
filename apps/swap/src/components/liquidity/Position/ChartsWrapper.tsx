@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useTheme, Box } from "components/Mui";
-import { MainCard } from "components/index";
-import { Position } from "@icpswap/swap-sdk";
-import { SmallTabButton, SmallTabsButtonWrapper } from "@icpswap/ui";
+import type { Position } from "@icpswap/swap-sdk";
 import { ChartTimeEnum } from "@icpswap/types";
+import { SmallTabButton, SmallTabsButtonWrapper } from "@icpswap/ui";
+import { MainCard } from "components/index";
+import { Box, useTheme } from "components/Mui";
 import i18n from "i18n/index";
+import { useState } from "react";
 
-import { LiquidityCharts, PositionValueChart, PositionFeesChart, PositionAPRChart } from "./Charts";
+import { LiquidityCharts, PositionAPRChart, PositionFeesChart, PositionValueChart } from "./Charts";
 
 enum Charts {
   PriceRange = "Price Range",

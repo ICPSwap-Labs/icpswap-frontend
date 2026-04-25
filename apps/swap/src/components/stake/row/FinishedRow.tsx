@@ -1,20 +1,20 @@
-import { Box, BoxProps, useTheme } from "components/Mui";
-import { useCallback } from "react";
-import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useNavigate } from "react-router-dom";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { Box, type BoxProps, useTheme } from "components/Mui";
 import { useIntervalStakingPoolInfo, useIntervalUserPoolInfo } from "hooks/staking-token/index";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 import { FilterState } from "types/staking-token";
 import {
-  StakeTokenCell,
-  RewardTokenCell,
-  StateCell,
-  UserRewardsCell,
-  TotalRewardsCell,
-  UserStakedCell,
-  TotalStakedCell,
-  FinishedAvailableCell,
   AprCell,
+  FinishedAvailableCell,
+  RewardTokenCell,
+  StakeTokenCell,
+  StateCell,
+  TotalRewardsCell,
+  TotalStakedCell,
+  UserRewardsCell,
+  UserStakedCell,
 } from "./cell/index";
 
 interface FinishedRowProps {
@@ -31,7 +31,7 @@ export function FinishedRow({ poolInfo, wrapperSx, filterState, your, showState 
   const navigate = useNavigate();
 
   const [stakingPoolInfo] = useIntervalStakingPoolInfo(poolInfo.canisterId.toString());
-  const userStakingInfo = useIntervalUserPoolInfo(poolInfo.canisterId.toString(), principal);
+  const { data: userStakingInfo } = useIntervalUserPoolInfo(poolInfo.canisterId.toString(), principal);
 
   const handelToDetails = useCallback(() => {
     navigate(`/stake/details/${poolInfo.canisterId.toString()}`);

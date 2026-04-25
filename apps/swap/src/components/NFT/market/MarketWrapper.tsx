@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Grid, Box, Typography, TextField, InputAdornment, useTheme, useMediaQuery, makeStyles } from "components/Mui";
-import { MainCard, FilledTextField, Wrapper } from "components/index";
-import { IconSearch } from "@tabler/icons";
-import debounce from "lodash/debounce";
 import { useParsedQueryString } from "@icpswap/hooks";
+import { FilledTextField, MainCard, Wrapper } from "components/index";
+import { Box, Grid, InputAdornment, makeStyles, TextField, Typography, useMediaQuery } from "components/Mui";
+import { useMediaQuerySM } from "hooks/theme";
 import i18n from "i18n/index";
+import debounce from "lodash/debounce";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 import NFTMarketplace from "./NFTMarket";
@@ -92,9 +94,8 @@ export default function MarketWrapper({
 }: MarketWrapperProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const theme = useTheme();
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const matchDown1120 = useMediaQuery("@media(max-width:1120px)");
 
   const [sortBy, setSortBy] = useState<string | null>("time");
@@ -102,7 +103,7 @@ export default function MarketWrapper({
 
   useEffect(() => {
     setSortBy(defaultSortBy);
-  }, [defaultSortBy, setSortBy]);
+  }, [defaultSortBy]);
 
   const { canisterId } = useParsedQueryString() as { canisterId: string };
 
@@ -169,7 +170,7 @@ export default function MarketWrapper({
                         input: {
                           startAdornment: (
                             <InputAdornment position="start">
-                              <IconSearch stroke={1.5} size="1rem" />
+                              <SearchIcon size={14} />
                             </InputAdornment>
                           ),
                         },

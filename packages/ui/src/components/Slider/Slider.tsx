@@ -1,6 +1,6 @@
-import { BigNumber, nonUndefinedOrNull, isUndefinedOrNull, percentToNum, numToPercent } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull, numToPercent, percentToNum } from "@icpswap/utils";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { Flex } from "../Grid/Flex";
 import { Image } from "../Image/index";
@@ -72,8 +72,8 @@ export function Slider({ percent, onChange, labelLeft, labelRight }: SliderProps
         const position = new BigNumber(percentToNum(__position)).isGreaterThan(1)
           ? "100%"
           : new BigNumber(percentToNum(__position)).isLessThan(0)
-          ? "0%"
-          : __position;
+            ? "0%"
+            : __position;
 
         MouseDownX = screenX;
         onChange(position);

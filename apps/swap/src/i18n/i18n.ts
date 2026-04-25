@@ -2,8 +2,8 @@
 import i18n from "i18next";
 
 // note: not using isInterface here for tree shaking
-if (!process.env.REACT_APP_IS_INTERFACE) {
-  require("./i18n-setup");
+if (!import.meta.env.VITE_IS_INTERFACE) {
+  await import("./i18n-setup");
 }
 
 export { changeLanguage } from "./changeLanguage";

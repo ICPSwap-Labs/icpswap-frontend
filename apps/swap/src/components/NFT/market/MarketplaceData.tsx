@@ -1,4 +1,4 @@
-import { Grid, Typography, makeStyles } from "components/Mui";
+import { Grid, makeStyles, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {

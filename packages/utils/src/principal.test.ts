@@ -1,16 +1,16 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockFromText = vi.fn();
 const mockToHex = vi.fn();
 const mockFromPrincipal = vi.fn();
 
-vi.mock("@dfinity/principal", () => ({
+vi.mock("@icp-sdk/core/principal", () => ({
   Principal: {
     fromText: mockFromText,
   },
 }));
 
-vi.mock("@dfinity/ledger-icp", () => ({
+vi.mock("@icp-sdk/canisters/ledger/icp", () => ({
   AccountIdentifier: {
     fromPrincipal: vi.fn().mockReturnValue({ toHex: mockToHex }),
   },

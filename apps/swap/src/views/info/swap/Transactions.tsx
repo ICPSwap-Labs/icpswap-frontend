@@ -1,23 +1,23 @@
-import { Box, Typography } from "components/Mui";
-import { useState, useMemo } from "react";
-import { Transactions } from "components/info/index";
-import { useTokensFromList, useSwapTransactions } from "@icpswap/hooks";
+import { useSwapTransactions, useTokensFromList } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { MainCard, OnlyTokenList } from "@icpswap/ui";
+import { Transactions } from "components/info/index";
+import { Box, Typography } from "components/Mui";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function AllTransactions() {
   const { t } = useTranslation();
   const [checked, setChecked] = useState(true);
 
-  const { result, loading } = useSwapTransactions({ page: 1, limit: 500 });
+  const { data: result, isLoading: loading } = useSwapTransactions({ page: 1, limit: 500 });
   const transactions = result?.content;
 
   const handleCheckChange = (checked: boolean) => {
     setChecked(checked);
   };
 
-  const { result: tokenList } = useTokensFromList();
+  const { data: tokenList } = useTokensFromList();
 
   const showedTokens = useMemo(() => {
     if (!tokenList || !checked) return undefined;

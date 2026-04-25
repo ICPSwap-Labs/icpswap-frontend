@@ -1,8 +1,8 @@
-import { Box, Typography, Button } from "components/Mui";
+import { Flex, NoData } from "@icpswap/ui";
 import { MainCard, Wrapper } from "components/index";
-import { NoData, Flex } from "@icpswap/ui";
-import { useConnectManager } from "store/auth/hooks";
+import { Box, Button, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
+import { useConnectManager } from "store/auth/hooks";
 
 export default function ConnectWallet() {
   const { showConnector } = useConnectManager();

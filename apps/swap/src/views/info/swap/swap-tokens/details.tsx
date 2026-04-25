@@ -1,41 +1,41 @@
-import { Typography, Box, Button, useTheme } from "components/Mui";
-import { useParams } from "react-router-dom";
-import { InfoWrapper, Breadcrumbs, TextButton, TokenImage, MainCard, ImportToNns } from "components/index";
-import { BigNumber, formatDollarAmount, formatDollarTokenPrice, nonUndefinedOrNull } from "@icpswap/utils";
-import { useParsedQueryString, useInfoToken } from "@icpswap/hooks";
+import { useInfoToken, useParsedQueryString } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
+import type { Null } from "@icpswap/types";
 import {
+  type ChartButton,
+  ChartView,
+  ChartViewSelector,
+  Flex,
   GridAutoRows,
+  Link,
   Proportion,
   TokenCharts,
-  Flex,
-  ChartView,
-  TokenChartsRef,
-  ChartViewSelector,
-  ChartButton,
-  Link,
+  type TokenChartsRef,
 } from "@icpswap/ui";
-import { TokenTransactions, TokenPools } from "components/info/swap";
-import { Copy } from "react-feather";
-import copyToClipboard from "copy-to-clipboard";
-import { swapLink, addLiquidityLink } from "utils/info/link";
-import { useTips, TIP_SUCCESS } from "hooks/useTips";
-import { TokenInfo } from "types/token";
-import { useState, useEffect, useRef } from "react";
-import { Null } from "@icpswap/types";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice, nonUndefinedOrNull } from "@icpswap/utils";
 import { TokenPriceChart } from "components/Charts/TokenPriceChart";
-import { useToken, uesTokenPairWithIcp } from "hooks/index";
-import { Token } from "@icpswap/swap-sdk";
-import { Holders } from "components/info/tokens";
-import { ICP } from "@icpswap/tokens";
-import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
-import i18n from "i18n/index";
-import { useTranslation, Trans } from "react-i18next";
-import { useMediaQuery640 } from "hooks/theme";
-import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
+import { Breadcrumbs, ImportToNns, InfoWrapper, MainCard, TextButton, TokenImage } from "components/index";
+import { TokenPools, TokenTransactions } from "components/info/swap";
 import { InfoTokenPrices } from "components/info/swap/TokenPriceWithIcp";
-import { useFetchGlobalDefaultChartType } from "store/global/hooks";
-import { getChartView } from "utils/swap/chartType";
+import { Holders } from "components/info/tokens";
 import { TokenHoldersCharts } from "components/info/tokens/TokenHoldersCharts";
+import { Box, Button, Typography, useTheme } from "components/Mui";
+import { TRADING_VIEW_DESCRIPTIONS } from "constants/index";
+import copyToClipboard from "copy-to-clipboard";
+import { useTokenPairWithIcp, useToken } from "hooks/index";
+import { useMediaQuery640 } from "hooks/theme";
+import { TIP_SUCCESS, useTips } from "hooks/useTips";
+import i18n from "i18n/index";
+import { useEffect, useRef, useState } from "react";
+import { Copy } from "react-feather";
+import { Trans, useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { useFetchGlobalDefaultChartType } from "store/global/hooks";
+import type { TokenInfo } from "types/token";
+import { addLiquidityLink, swapLink } from "utils/info/link";
+import { getChartView } from "utils/swap/chartType";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 enum TabValue {
   Transactions = "Transactions",
@@ -95,7 +95,7 @@ export default function TokenDetails() {
     if (chartView && tokenChartsRef.current) {
       tokenChartsRef.current.setView(chartView);
     }
-  }, [chartView, tokenChartsRef]);
+  }, [chartView]);
 
   // Make Price chart first if token is icp
   useEffect(() => {
@@ -114,7 +114,7 @@ export default function TokenDetails() {
     }
   }, [token, defaultChartType, canisterId]);
 
-  const tokenPairWithIcp = uesTokenPairWithIcp({ tokenId: canisterId });
+  const tokenPairWithIcp = useTokenPairWithIcp({ tokenId: canisterId });
 
   return (
     <InfoWrapper>

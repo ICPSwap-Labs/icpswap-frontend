@@ -1,18 +1,18 @@
-import { useCallback, useMemo } from "react";
-import { Typography, Button, CircularProgress, Box } from "components/Mui";
+import { usePCMMetadata, useUserPCMBalance } from "@icpswap/hooks";
 import { Flex, Tooltip } from "@icpswap/ui";
-import { useAccountPrincipal } from "store/auth/hooks";
 import {
-  toSignificantWithGroupSeparator,
-  parseTokenAmount,
-  nonUndefinedOrNull,
-  isUndefinedOrNull,
   BigNumber,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { useUserPCMBalance, usePCMMetadata } from "@icpswap/hooks";
-import { useWithdrawPCMBalanceCallback, useUserPassCodes, WithdrawPCMBalanceArgs } from "hooks/swap/index";
-import { useRefreshTrigger, useGlobalContext, useToken } from "hooks/index";
+import { Box, Button, CircularProgress, Typography } from "components/Mui";
+import { useGlobalContext, useRefreshTrigger, useToken } from "hooks/index";
+import { useUserPassCodes, useWithdrawPCMBalanceCallback, type WithdrawPCMBalanceArgs } from "hooks/swap/index";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 const TRIGGER_KEY = "UNUSED_PCM_BALANCE";
 
@@ -26,10 +26,10 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
   const { setRefreshTriggers } = useGlobalContext();
   const refreshTrigger = useRefreshTrigger(TRIGGER_KEY);
 
-  const { result: unusedPCMBalance } = useUserPCMBalance(principal, refreshTrigger);
-  const { result: pcmMetadata } = usePCMMetadata();
+  const { data: unusedPCMBalance } = useUserPCMBalance(principal, refreshTrigger);
+  const { data: pcmMetadata } = usePCMMetadata();
   const [, pcmToken] = useToken(pcmMetadata?.tokenCid.toString());
-  const { result: passCodes } = useUserPassCodes(refreshTrigger);
+  const { data: passCodes } = useUserPassCodes(refreshTrigger);
 
   const { callback: withdrawPCMBalance, loading: withdrawPCMBalanceLoading } = useWithdrawPCMBalanceCallback();
 
@@ -63,7 +63,7 @@ export function UnusedPCMBalance({ className }: UnusedPCMBalanceProps) {
     await withdrawPCMBalance(args);
 
     setRefreshTriggers(TRIGGER_KEY);
-  }, [unusedPCMBalance, pcmToken, pcmMetadata, passCodes]);
+  }, [unusedPCMBalance, pcmToken, pcmMetadata, passCodes, setRefreshTriggers, withdrawPCMBalance]);
 
   const totalTokenAmount = useMemo(() => {
     if (

@@ -1,3 +1,3 @@
-export * from "./Select";
-export * from "./Panel";
 export * from "./DropDownMenu";
+export * from "./Panel";
+export * from "./Select";

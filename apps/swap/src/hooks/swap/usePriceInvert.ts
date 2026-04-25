@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { Position } from "@icpswap/swap-sdk";
+import type { Position } from "@icpswap/swap-sdk";
 import { Bound } from "constants/swap";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { useMemo } from "react";
 
 export function useTicksAtLimitInvert({ position, inverted }: { position: Position; inverted?: boolean }) {
   const { tickLower, tickUpper } = position || {};

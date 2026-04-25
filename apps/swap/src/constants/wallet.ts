@@ -1,4 +1,4 @@
-import { ICP, ICS, ckUSDC, ckBTC, ckETH } from "@icpswap/tokens";
+import { ckBTC, ckETH, ckUSDC, ICP, ICS } from "@icpswap/tokens";
 import { Connector } from "constants/wallet";
 
 export const DISPLAY_IN_WALLET_BY_DEFAULT = [ICP.address, ICS.address, ckUSDC.address, ckBTC.address, ckETH.address];
@@ -68,3 +68,5 @@ export const TOKEN_ASSETS_REFRESH = "TOKEN_ASSETS_REFRESH";
 export const WALLET_DRAWER_WIDTH = 382;
 
 export const WALLET_TOKEN_SELECTOR_REFRESH = "WALLET_TOKEN_SELECTOR_REFRESH";
+
+export const WALLET_TOKEN_BALANCE_REFRESH = "WALLET_TOKEN_BALANCE_REFRESH";

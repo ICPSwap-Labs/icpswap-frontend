@@ -1,5 +1,5 @@
-import { useMemo } from "react";
 import { urlStringParse } from "@icpswap/utils";
+import { useMemo } from "react";
 
 import { useParsedQueryString } from "./useParsedQueryString";
 

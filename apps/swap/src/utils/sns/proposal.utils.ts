@@ -1,6 +1,6 @@
-import type { ProposalData } from "@icpswap/types";
-import { nowInSeconds, BigNumber } from "@icpswap/utils";
 import { SnsProposalDecisionStatus } from "@icpswap/constants";
+import type { ProposalData } from "@icpswap/types";
+import { BigNumber, nowInSeconds } from "@icpswap/utils";
 import i18n from "i18n/index";
 
 const PROPOSAL_TYPES = [
@@ -127,7 +127,7 @@ export const snsRewardStatus = ({
 };
 
 export function getProposalStatus(proposal: ProposalData) {
-  const now = new Date().getTime();
+  const now = Date.now();
 
   if (!proposal.decided_timestamp_seconds || new BigNumber(proposal.decided_timestamp_seconds.toString()).gt(now)) {
     return SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN;

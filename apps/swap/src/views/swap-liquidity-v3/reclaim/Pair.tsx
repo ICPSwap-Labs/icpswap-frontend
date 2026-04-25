@@ -1,12 +1,12 @@
-import { useState, useMemo, useEffect } from "react";
-import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow } from "components/index";
-import { useUserSwapUnusedBalanceByPoolId, useParsedQueryString } from "@icpswap/hooks";
-import { useHideUnavailableClaimManager } from "store/customization/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useParsedQueryString, useUserSwapUnusedBalanceByPoolId } from "@icpswap/hooks";
+import { LoadingRow, NoData } from "components/index";
+import { Box, Checkbox, Typography } from "components/Mui";
 import { SelectPair } from "components/Select/SelectPair";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useHideUnavailableClaimManager } from "store/customization/hooks";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -27,7 +27,7 @@ export function ReclaimWithPair() {
 
   const [poolId, setPoolId] = useState<string | undefined>();
 
-  const { pools, loading, balances } = useUserSwapUnusedBalanceByPoolId(principal, poolId);
+  const { loading, balances } = useUserSwapUnusedBalanceByPoolId(principal, poolId);
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
 
@@ -37,7 +37,7 @@ export function ReclaimWithPair() {
     return balances
       .filter((balance) => balance.balance0 !== BigInt(0) || balance.balance1 !== BigInt(0))
       .reduce((prev, curr) => {
-        const arr = [...prev];
+        const arr = prev.slice();
         const poolId = curr.canisterId.toString();
 
         if (curr.balance0 !== BigInt(0))
@@ -61,7 +61,7 @@ export function ReclaimWithPair() {
 
         return arr;
       }, [] as Balance[]);
-  }, [pools, balances]);
+  }, [balances]);
 
   const totalClaimedNumbers = useMemo(() => {
     return _balances.length;
@@ -154,7 +154,7 @@ export function ReclaimWithPair() {
           >
             <Checkbox
               checked={hideUnavailableClaim}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+              onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
                 updateHideUnavailableClaim(checked);
               }}
             />

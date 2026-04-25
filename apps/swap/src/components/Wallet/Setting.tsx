@@ -1,13 +1,13 @@
-import { Box, useTheme, Typography } from "components/Mui";
+import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useCallback, useRef, useState } from "react";
-import { Flex, MenuWrapper, MenuItem } from "@icpswap/ui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 
 export function Setting() {
   const ref = useRef(null);
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
 
   const handleMouseEnter = () => {
     setOpen(true);

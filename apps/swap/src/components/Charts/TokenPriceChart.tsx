@@ -1,13 +1,18 @@
 /* eslint-disable import/named */
 /* eslint-disable new-cap */
 
-import { useEffect, useRef } from "react";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Box } from "components/Mui";
+import { useEffect, useRef } from "react";
 import { Datafeed, SUPPORTED_RESOLUTIONS } from "utils/charting_library/datafeed";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
 
-import { widget, ChartingLibraryWidgetOptions, ResolutionString, IChartingLibraryWidget } from "./charting_library";
+import {
+  type ChartingLibraryWidgetOptions,
+  type IChartingLibraryWidget,
+  type ResolutionString,
+  widget,
+} from "./charting_library";
 
 export interface ChartContainerProps {
   symbol: ChartingLibraryWidgetOptions["symbol"];
@@ -62,7 +67,7 @@ export function TokenPriceChart({ token }: TVChartContainerProps) {
     return () => {
       if (tvWidget) tvWidget.remove();
     };
-  }, [token]);
+  }, [token, chartContainerRef]);
 
   return <Box ref={chartContainerRef} className="TVChartContainer" sx={{ width: "100%", height: "450px" }} />;
 }

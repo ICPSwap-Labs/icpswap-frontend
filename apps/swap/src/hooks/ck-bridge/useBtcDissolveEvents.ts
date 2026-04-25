@@ -1,8 +1,9 @@
-import { useMemo } from "react";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { BitcoinTransactionEvent } from "types/web3";
-import { useBTCDissolveUnFinalizedTxs } from "store/wallet/hooks";
+import { BridgeChainType, BridgeType } from "@icpswap/constants/dist/constants";
 import { ckBTC } from "@icpswap/tokens";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useMemo } from "react";
+import { useBTCDissolveUnFinalizedTxs } from "store/wallet/hooks";
+import type { BitcoinTransactionEvent } from "types/web3";
 
 export function useBtcDissolveEvents() {
   const btcDissolveTxs = useBTCDissolveUnFinalizedTxs();
@@ -14,8 +15,8 @@ export function useBtcDissolveEvents() {
       return {
         hash: tx.txid,
         amount: tx.value,
-        type: "dissolve",
-        chain: "btc",
+        type: BridgeType.dissolve,
+        chain: BridgeChainType.btc,
         token: ckBTC.address,
       };
     });

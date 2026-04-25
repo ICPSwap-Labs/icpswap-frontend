@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import type { Position } from "@icpswap/swap-sdk";
 import { BigNumber, isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
-import { Position } from "@icpswap/swap-sdk";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 
 export interface usePositionFeesValueProps {
   position: Position | undefined;

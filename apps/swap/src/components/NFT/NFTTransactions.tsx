@@ -1,14 +1,14 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { makeStyles, Box } from "components/Mui";
-import Copy from "components/Copy";
-import { useNFTTransaction } from "hooks/nft/useNFTCalls";
-import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
-import { encodeTokenIdentifier } from "utils/index";
 import type { NFTTransaction as NFTTransactionType, PaginationResult } from "@icpswap/types";
-import upperFirst from "lodash/upperFirst";
+import { BodyCell, Header, HeaderCell, ImageLoading, Pagination, TableRow } from "@icpswap/ui";
+import { arrayBufferToString, enumToString, pageArgsFormat, shorten, timestampFormat } from "@icpswap/utils";
+import Copy from "components/Copy";
 import { NoData } from "components/index";
+import { Box, makeStyles } from "components/Mui";
+import { useNFTTransaction } from "hooks/nft/useNFTCalls";
+import upperFirst from "lodash/upperFirst";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, HeaderCell, BodyCell, TableRow, ImageLoading, Pagination } from "@icpswap/ui";
+import { encodeTokenIdentifier } from "utils/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -33,7 +33,7 @@ export default function NFTTransaction({
   const [pageNum, setPageNum] = useState(1);
   const [offset, limit] = pageArgsFormat(pageNum, 10);
 
-  const { result, loading } = useNFTTransaction(
+  const { data: result, isLoading: loading } = useNFTTransaction(
     canisterId,
     encodeTokenIdentifier(canisterId, tokenId),
     offset,
@@ -43,19 +43,16 @@ export default function NFTTransaction({
 
   useEffect(() => {
     setPageNum(1);
-  }, [reload, setPageNum]);
+  }, []);
 
   const { content: list, totalElements } = useMemo(
     () => result ?? ({ totalElements: 0, content: [], offset: 0, limit: 10 } as PaginationResult<NFTTransactionType>),
     [result],
   );
 
-  const onPageChange = useCallback(
-    (page: number) => {
-      setPageNum(page);
-    },
-    [setPageNum],
-  );
+  const onPageChange = useCallback((page: number) => {
+    setPageNum(page);
+  }, []);
 
   return (
     <>
@@ -69,25 +66,23 @@ export default function NFTTransaction({
             <HeaderCell>{t("common.memo")}</HeaderCell>
           </Header>
 
-          <>
-            {list.map((row, index) => (
-              <TableRow key={`${Number(row.tokenId)}_${index}`} className={classes.wrapper}>
-                <BodyCell>{timestampFormat(row.time)}</BodyCell>
+          {list.map((row, index) => (
+            <TableRow key={`${Number(row.tokenId)}_${index}`} className={classes.wrapper}>
+              <BodyCell>{timestampFormat(row.time)}</BodyCell>
 
-                <BodyCell>{upperFirst(enumToString(row.txType))}</BodyCell>
+              <BodyCell>{upperFirst(enumToString(row.txType))}</BodyCell>
 
-                <BodyCell>
-                  <Copy content={row.from}>{shorten(row.from, 6)}</Copy>
-                </BodyCell>
+              <BodyCell>
+                <Copy content={row.from}>{shorten(row.from, 6)}</Copy>
+              </BodyCell>
 
-                <Copy content={row.to}>
-                  <BodyCell>{shorten(row.to, 6)}</BodyCell>
-                </Copy>
+              <Copy content={row.to}>
+                <BodyCell>{shorten(row.to, 6)}</BodyCell>
+              </Copy>
 
-                <BodyCell>{row.memo[0] ? arrayBufferToString(Uint8Array.from(row.memo[0])) : ""}</BodyCell>
-              </TableRow>
-            ))}
-          </>
+              <BodyCell>{row.memo[0] ? arrayBufferToString(Uint8Array.from(row.memo[0])) : ""}</BodyCell>
+            </TableRow>
+          ))}
         </Box>
         {list.length === 0 && !loading ? <NoData /> : null}
         <ImageLoading loading={loading} />

@@ -1,10 +1,9 @@
-import { useCallback } from "react";
-import { isPrincipal } from "@icpswap/utils";
+import { Principal } from "@icp-sdk/core/principal";
 import { tokenAdapter } from "@icpswap/token-adapter";
-import { Principal } from "@dfinity/principal";
 import type { ActorIdentity, StatusResult } from "@icpswap/types";
-
-import { useCallsData } from "../useCallData";
+import { isPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
 
 export interface getTokenTransactionProps {
   canisterId: string;
@@ -32,25 +31,19 @@ export async function getTokenSupply(canisterId: string) {
   return (await tokenAdapter.supply({ canisterId: canisterId! })).data;
 }
 
-export function useTokenSupply(canisterId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useTokenSupply(canisterId: string | undefined): UseQueryResult<bigint, Error> {
+  return useQuery({
+    queryKey: ["tokenSupply", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getTokenSupply(canisterId!);
-    }, [canisterId]),
-    reload,
-  );
+    },
+    enabled: nonUndefinedOrNull(canisterId),
+  });
 }
 
 export async function getTokenMetadata(canisterId: string) {
   return (await tokenAdapter.metadata({ canisterId })).data;
-}
-
-export function useTokenMetadata(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => await getTokenMetadata(canisterId!), [canisterId]),
-    !!canisterId,
-  );
 }
 
 export interface Allowance {
@@ -130,11 +123,17 @@ export async function getTokenMintingAccount(canisterId: string) {
   return (await tokenAdapter.getMintingAccount({ canisterId })).data;
 }
 
-export function useTokenMintingAccount(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId) return undefined;
-      return await getTokenMintingAccount(canisterId);
-    }, [canisterId]),
-  );
+export function useTokenMintingAccount(canisterId: string | undefined): UseQueryResult<
+  {
+    owner: string;
+    sub: number[];
+  },
+  Error
+> {
+  const call = useCallback(async () => {
+    if (!canisterId) return undefined;
+    return await getTokenMintingAccount(canisterId);
+  }, [canisterId]);
+
+  return useQuery({ queryKey: ["tokenMinter", canisterId], queryFn: call, enabled: nonUndefinedOrNull(canisterId) });
 }

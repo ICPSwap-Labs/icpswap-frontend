@@ -1,10 +1,11 @@
-import React, { useState, useRef, ReactNode } from "react";
-import { ChevronDown } from "react-feather";
-import CloseIcon from "@mui/icons-material/Close";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import CloseIcon from "@mui/icons-material/Close";
+import type React from "react";
+import { type ReactNode, useRef, useState } from "react";
+import { ChevronDown } from "react-feather";
 
-import { makeStyles, Theme, Typography, Box } from "../Mui";
-import { MenuProps } from "./types";
+import { Box, makeStyles, type Theme, Typography } from "../Mui";
+import type { MenuProps } from "./types";
 
 interface StyleProps {
   contained: boolean;
@@ -122,9 +123,9 @@ export function SelectPanel({
 
       <Box sx={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between" }}>
         <Box>
-          {nonUndefinedOrNull(value) || (panel && panel(menu)) ? (
+          {nonUndefinedOrNull(value) || panel?.(menu) ? (
             <Typography color={valueColor ?? "text.primary"} component="div">
-              {panel ? panel(menu) : menu?.selectLabel ?? menu?.label}
+              {panel ? panel(menu) : (menu?.selectLabel ?? menu?.label)}
             </Typography>
           ) : (
             <Typography color="#4f5a7f">{placeholder}</Typography>

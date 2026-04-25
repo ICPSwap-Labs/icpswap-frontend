@@ -4,20 +4,10 @@ export enum ActorName {
   SwapNFTCanister = "SwapNFT",
   Position = "PositionIndex",
   PassCodeManager = "PassCodeManager",
-  LimitTransaction = "LimitTransaction",
 
-  SwapGraphRecord = "BaseDataStructure",
-  SwapGraphPool = "Pools",
-  SwapGraphToken = "Token",
-  SwapTicket = "Ticket",
-  GraphICP = "ICPPrice",
-  TVL = "TVL",
-
+  WICP = "wicp",
   TokenList = "TokenList",
   AllTokenOfSwap = "AllTokenOfSwap",
-
-  Token = "token",
-  WICP = "wicp",
 
   FarmController = "FarmController",
   Farm = "Farm",
@@ -29,11 +19,6 @@ export enum ActorName {
   NFTTradeCanister = "V3TradeCanister",
   NFTTradeStat = "V3TradeStat",
 
-  LaunchpadCanister = "LaunchpadCanister",
-  LaunchpadController = "LaunchpadController",
-  LaunchpadManager = "LaunchpadManager",
-  LaunchpadStorage = "LaunchpadStorage",
-
   ClaimController = "ClaimController",
   ClaimStorage = "ClaimStorage",
 
@@ -43,16 +28,7 @@ export enum ActorName {
 
   StakingTokenController = "StakingTokenController",
   TokenPool = "TokenPool",
-  TokenPoolStorage = "TokenPoolStorage",
   StakeIndex = "StakeIndex",
-
-  V1TokenPoolController = "V1TokenPoolController",
-  V1TokenPool = "V1TokenPool",
-  V1TokenPoolStorage = "V1TokenPoolStorage",
-
-  GlobalIndex = "GlobalIndex",
-  NodeIndex = "NodeIndex",
-  BaseIndex = "BaseIndex",
 
   LiquidityLocks = "LiquidityLocks",
 

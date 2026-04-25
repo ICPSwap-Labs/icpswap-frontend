@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { LoginState } from "./states";
+import type { LoginState } from "./states";
 
 export const login = createAction<LoginState>("auth/login");
 

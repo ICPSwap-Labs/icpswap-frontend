@@ -1,4 +1,4 @@
-import { SNS_WASM_SERVICE, SNS_WASM_INTERFACE_FACTORY } from "@icpswap/candid";
+import { SNS_WASM_INTERFACE_FACTORY, type SNS_WASM_SERVICE } from "@icpswap/candid";
 import { actor } from "../actor";
 
 export const sns_wasm = async () =>

@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-constructor */
-import { openDB, IDBPDatabase, deleteDB } from "idb";
+import { deleteDB, type IDBPDatabase, openDB } from "idb";
 
 type Database = IDBPDatabase<unknown>;
 type IDBValidKey = string | number | Date | BufferSource | IDBValidKey[];
@@ -15,7 +15,7 @@ function isLessThanCurrentVersion(err: string) {
 
 const _openDbStore = async (dbName: string, storeName: string, version: number) => {
   return await openDB(dbName, version, {
-    upgrade: (database, oldVersion, newVersion, transaction) => {
+    upgrade: (database, oldVersion, _newVersion, transaction) => {
       if (oldVersion === 0) {
         database.createObjectStore(storeName);
       }

@@ -2,22 +2,23 @@ import { deletePriceAlertEmail, sendPriceAlertEmail, verifyPriceAlertEmail } fro
 import { ResultStatus } from "@icpswap/types";
 import { FilledTextField, Modal, TextButton } from "@icpswap/ui";
 import { isUndefinedOrNull, isUndefinedOrNullOrEmpty, validateEmail } from "@icpswap/utils";
-import { Box, Button, Typography, InputAdornment, CircularProgress } from "components/Mui";
+import { Box, Button, CircularProgress, InputAdornment, Typography } from "components/Mui";
+import { useResetEmailManager } from "components/PriceAlerts/state";
 import { PRICE_ALERTS_MODAL_WIDTH } from "constants/price-alerts";
 import { TIP_ERROR, TIP_SUCCESS, useTips } from "hooks/index";
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useEmailSecondManger, useShowGetCodeManager } from "store/price-alerts/hooks";
-import { useAlertsRefetchManager, useResetEmailManager } from "components/PriceAlerts/state";
 
 interface EmailSettingProps {
   open: boolean;
   onClose?: () => void;
   onVerifySuccess?: () => void;
+  refetch?: () => void;
 }
 
-export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingProps) {
+export function EmailSetting({ open, onClose, onVerifySuccess, refetch }: EmailSettingProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
@@ -28,7 +29,6 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
   const [showGetCode, setShowGetCode] = useShowGetCodeManager();
   const [second] = useEmailSecondManger();
   const [isResetEmail] = useResetEmailManager();
-  const [alertQueryResult] = useAlertsRefetchManager();
 
   const handleGetCode = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(email)) return;
@@ -42,21 +42,15 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
     } else {
       openTip(message ?? t("price.alerts.email.send.failed"), TIP_ERROR);
     }
-  }, [setShowGetCode, email, principal]);
+  }, [setShowGetCode, email, principal, t, openTip]);
 
-  const handleSetEmail = useCallback(
-    (email: string) => {
-      setEmail(email);
-    },
-    [setEmail],
-  );
+  const handleSetEmail = useCallback((email: string) => {
+    setEmail(email);
+  }, []);
 
-  const handleSetCode = useCallback(
-    (code: string) => {
-      setCode(code);
-    },
-    [setCode],
-  );
+  const handleSetCode = useCallback((code: string) => {
+    setCode(code);
+  }, []);
 
   const handleVerifyEmail = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(email) || isUndefinedOrNull(code)) return;
@@ -70,7 +64,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
       // And refetch alerts
       if (isResetEmail) {
         await deletePriceAlertEmail();
-        if (alertQueryResult?.refetch) alertQueryResult.refetch();
+        refetch?.();
       }
 
       openTip(t("price.alerts.email.verify.success"), TIP_SUCCESS);
@@ -82,7 +76,7 @@ export function EmailSetting({ open, onClose, onVerifySuccess }: EmailSettingPro
     }
 
     setVerifyLoading(false);
-  }, [principal, email, code, onClose, onVerifySuccess, isResetEmail, alertQueryResult]);
+  }, [principal, email, code, onClose, onVerifySuccess, isResetEmail, refetch, openTip, t]);
 
   const disableGetCode = useMemo(() => {
     if (isUndefinedOrNull(email)) return true;

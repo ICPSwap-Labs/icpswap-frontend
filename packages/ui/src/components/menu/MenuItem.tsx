@@ -1,7 +1,6 @@
-import { ReactNode } from "react";
-
-import { useTheme, Typography, BoxProps } from "../Mui";
+import type { ReactNode } from "react";
 import { Flex } from "../Grid/Flex";
+import { type BoxProps, Typography, useTheme } from "../Mui";
 
 export interface MenuItemProps {
   onMenuClick?: (value: any) => void;
@@ -62,7 +61,7 @@ export function MenuItem({
             color: "text.primary",
           },
           "& .nav-bar-label": {
-            color: disabled ? "text.secondary" : labelColor ?? "text.primary",
+            color: disabled ? "text.secondary" : (labelColor ?? "text.primary"),
           },
         },
         borderTopLeftRadius: isFirst ? "12px" : "0",

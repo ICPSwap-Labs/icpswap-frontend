@@ -1,6 +1,6 @@
-import type { ActorSubclass } from "@dfinity/agent";
-import { AstroXWebViewHandler } from "@astrox/sdk-webview";
 import { IC as AuthClient } from "@astrox/sdk-web";
+import { AstroXWebViewHandler } from "@astrox/sdk-webview";
+import type { ActorSubclass } from "@icp-sdk/core/agent";
 import { Connector } from "@icpswap/actor";
 import type { ConnectorAbstract, CreateActorArgs, WalletConnectorConfig } from "./connectors";
 
@@ -123,7 +123,7 @@ export class MeConnector implements ConnectorAbstract {
       });
 
       if (client) {
-        window.localStorage.setItem("me-expire-time", (new Date().getTime() + MeExpireTime * 1000).toString());
+        window.localStorage.setItem("me-expire-time", (Date.now() + MeExpireTime * 1000).toString());
         this.identity = client.identity;
         this.principal = this.identity?.getPrincipal().toString();
       }
@@ -144,10 +144,10 @@ export class MeConnector implements ConnectorAbstract {
 
   async createActor<Service>({ canisterId, interfaceFactory }: CreateActorArgs): Promise<ActorSubclass<Service>> {
     if (isMeWebview()) {
-      // @ts-ignore
+      // @ts-expect-error
       return await astrox.createActor<Service>(canisterId, interfaceFactory);
     }
-    // @ts-ignore
+    // @ts-expect-error
     return await this.client?.createActor<Service>(interfaceFactory, canisterId);
   }
 
@@ -155,6 +155,6 @@ export class MeConnector implements ConnectorAbstract {
     if (isMeWebview()) return false;
     const meExpireTime = window.localStorage.getItem("me-expire-time");
     if (!meExpireTime) return true;
-    return new Date().getTime() >= Number(meExpireTime);
+    return Date.now() >= Number(meExpireTime);
   }
 }

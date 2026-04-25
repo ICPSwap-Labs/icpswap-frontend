@@ -1,19 +1,27 @@
-import { useCallback } from "react";
+import { Principal } from "@icp-sdk/core/principal";
 import { passCodeManager } from "@icpswap/actor";
 import { resultFormat } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
-import { useCallsData } from "../useCallData";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
-export function usePCMMetadata() {
-  return useCallsData(
-    useCallback(async () => {
+export function usePCMMetadata(): UseQueryResult<
+  | {
+      passcodePrice: bigint;
+      tokenCid: Principal;
+      factoryCid: Principal;
+    }
+  | undefined,
+  Error
+> {
+  return useQuery({
+    queryKey: ["usePCMMetadata"],
+    queryFn: async () => {
       return resultFormat<{
         passcodePrice: bigint;
         tokenCid: Principal;
         factoryCid: Principal;
       }>(await (await passCodeManager()).metadata()).data;
-    }, []),
-  );
+    },
+  });
 }
 
 export async function requestPassCode(token0: Principal, token1: Principal, fee: bigint) {
@@ -28,19 +36,25 @@ export async function withdrawPCMBalance(amount: bigint, fee: bigint | number) {
 }
 
 export async function destroyPassCode(token0: string, token1: string, fee: bigint) {
-  const result = await (
-    await passCodeManager(true)
-  ).destoryPasscode(Principal.fromText(token0), Principal.fromText(token1), fee);
+  const result = await (await passCodeManager(true)).destoryPasscode(
+    Principal.fromText(token0),
+    Principal.fromText(token1),
+    fee,
+  );
 
   return resultFormat<string>(result);
 }
 
-export function useUserPCMBalance(principal: Principal | undefined, reload?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserPCMBalance(
+  principal: Principal | undefined,
+  reload?: number,
+): UseQueryResult<bigint | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserPCMBalance", principal?.toString(), reload],
+    queryFn: async () => {
       if (!principal) return undefined;
       return resultFormat<bigint>(await (await passCodeManager()).balanceOf(principal)).data;
-    }, [principal]),
-    reload,
-  );
+    },
+    enabled: !!principal,
+  });
 }

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Box, Button, Typography, CircularProgress } from "components/Mui";
-import { TokenImage, Flex, Modal, NoData } from "components/index";
-import { useToken } from "hooks/useCurrency";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { farmWithdraw, useFarmUserRewards } from "@icpswap/hooks";
+import { type FarmInfo, ResultStatus } from "@icpswap/types";
 import { parseTokenAmount } from "@icpswap/utils";
-import { useFarmUserRewards, farmWithdraw } from "@icpswap/hooks";
-import { FarmInfo, ResultStatus } from "@icpswap/types";
-import { useTips, MessageTypes } from "hooks/useTips";
+import { Flex, Modal, NoData, TokenImage } from "components/index";
+import { Box, Button, CircularProgress, Typography } from "components/Mui";
+import { useToken } from "hooks/useCurrency";
+import { MessageTypes, useTips } from "hooks/useTips";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface ReclaimProps {
   farmId: string;
@@ -25,7 +25,7 @@ export function Reclaim({ farmId, farmInfo }: ReclaimProps) {
 
   const [, rewardToken] = useToken(farmInfo?.rewardToken.address);
 
-  const { result: unclaimedRewards } = useFarmUserRewards(farmId, principal, refreshRewardsTrigger);
+  const { data: unclaimedRewards } = useFarmUserRewards(farmId, principal, refreshRewardsTrigger);
 
   const handleReclaim = async () => {
     if (withdrawLoading) return;

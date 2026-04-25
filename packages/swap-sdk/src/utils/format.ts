@@ -1,7 +1,7 @@
-import JSBI from "jsbi";
 import { formatTokenPrice } from "@icpswap/utils";
+import JSBI from "jsbi";
 
-import { Price, Token, CurrencyAmount, Fraction } from "../core";
+import { type CurrencyAmount, Fraction, type Price, type Token } from "../core";
 
 export function formatCurrencyAmount(amount: CurrencyAmount<Token> | undefined, sigFigs: number) {
   if (!amount) return "--";
@@ -36,5 +36,5 @@ export function formatTickPrice(
     return placeholder;
   }
 
-  return formatTokenPrice(price?.toFixed(100));
+  return formatTokenPrice(price?.toFixed(20));
 }

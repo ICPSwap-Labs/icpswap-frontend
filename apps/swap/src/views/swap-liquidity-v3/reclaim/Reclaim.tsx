@@ -1,13 +1,12 @@
-import { Typography, Box } from "components/Mui";
-import { Wrapper, Breadcrumbs, TabPanel, Tooltip } from "components/index";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Breadcrumbs, TabPanel, Tooltip, Wrapper } from "components/index";
+import { Box, Typography } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { isMobile } from "react-device-detect";
-
+import { useLocation, useNavigate } from "react-router-dom";
+import { ReclaimAll } from "./All";
 import { ReclaimWithPair } from "./Pair";
 import { ReclaimWithToken } from "./Token";
-import { ReclaimAll } from "./All";
 
 const Tabs = [
   {
@@ -31,6 +30,7 @@ export default function SwapReclaim() {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (location.search === "") {
@@ -53,11 +53,9 @@ export default function SwapReclaim() {
               <Tooltip
                 maxWidth="calc(100% - 60px)"
                 tips={
-                  <>
-                    <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
-                      {t("swap.reclaim.descriptions")}
-                    </Typography>
-                  </>
+                  <Typography color="#111936" sx={{ fontSize: "12px", lineHeight: "18px" }}>
+                    {t("swap.reclaim.descriptions")}
+                  </Typography>
                 }
               />
             ) : null}

@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import type { Position } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
-import { Position } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
+import { useMemo } from "react";
 
 import { useInfoAllTokens } from "../info";
 

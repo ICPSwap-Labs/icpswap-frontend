@@ -8,7 +8,7 @@ export const hostMap = {
   [NETWORK.IC]: "https://icp0.io",
 };
 
-export const network = process.env.REACT_APP_IC_NETWORK as NETWORK;
+export const network = import.meta.env.VITE_IC_NETWORK as NETWORK;
 
 export const isIC: boolean = network === NETWORK.IC;
 export const isLocal: boolean = network === NETWORK.LOCAL;

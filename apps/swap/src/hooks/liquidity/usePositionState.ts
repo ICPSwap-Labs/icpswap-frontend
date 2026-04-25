@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import type { Position } from "@icpswap/swap-sdk";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Position } from "@icpswap/swap-sdk";
+import { useMemo } from "react";
 import { PositionState } from "utils/swap/index";
 
 export function usePositionState(position: Position | undefined) {
@@ -44,5 +44,5 @@ export function usePositionState(position: Position | undefined) {
     }
 
     return state;
-  }, [pool, tickUpper, tickUpper]);
+  }, [pool, tickUpper, position, tickLower]);
 }

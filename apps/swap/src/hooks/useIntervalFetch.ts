@@ -1,36 +1,21 @@
-import { Null } from "@icpswap/types";
-import { useState, useEffect, useMemo } from "react";
+import type { Null } from "@icpswap/types";
+import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useQuery } from "@tanstack/react-query";
 
 export function useIntervalFetch<T>(
   call: (() => Promise<T | undefined>) | undefined,
-  force: boolean | number | Null = false,
-  interval = 5000,
+  refresh?: number | Null,
+  interval = 5_000,
 ) {
-  const [data, setData] = useState<T | undefined>(undefined);
-  const [tick, setTick] = useState<number>(0);
-
-  useEffect(() => {
-    async function _call() {
+  return useQuery({
+    queryKey: ["intervalFetch", call, interval, refresh],
+    queryFn: async () => {
       if (call) {
         const result = await call();
-        setData(result);
+        return result;
       }
-    }
-
-    _call();
-  }, [tick, call, force]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (call) {
-        setTick((prevState) => prevState + 1);
-      }
-    }, interval);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [interval, call]);
-
-  return useMemo(() => data, [data]);
+    },
+    refetchInterval: interval,
+    enabled: nonUndefinedOrNull(call),
+  });
 }

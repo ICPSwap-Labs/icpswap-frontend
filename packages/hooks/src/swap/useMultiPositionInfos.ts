@@ -1,7 +1,7 @@
+import type { Null, UserPositionInfo, UserPositionInfoWithId } from "@icpswap/types";
 import { useEffect, useMemo, useState } from "react";
-import { type UserPositionInfoWithId, type UserPositionInfo, Null } from "@icpswap/types";
 
-import { getSwapUserPositions, getSwapPosition } from "./calls";
+import { getSwapPosition, getSwapUserPositions } from "./calls";
 
 export interface useMultiPositionInfosResults {
   loading: boolean;

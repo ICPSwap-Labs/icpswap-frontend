@@ -1,27 +1,12 @@
-import { useTheme, Typography, Box, makeStyles, Theme, CircularProgress } from "components/Mui";
-import { useCallback, useState } from "react";
-import { getTokenStandard } from "hooks/token/index";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { useUpdateTokenStandard } from "store/token/cache/hooks";
-import { registerTokens } from "@icpswap/token-adapter";
-import { useTranslation } from "react-i18next";
 import { syncServerTokenInfo } from "@icpswap/hooks";
+import { registerTokens } from "@icpswap/token-adapter";
 import { TOKEN_STANDARD } from "@icpswap/types";
-
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    button: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "140px",
-      height: "40px",
-      borderRadius: "8px",
-      background: theme.palette.background.level1,
-      cursor: "pointer",
-    },
-  };
-});
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { Box, CircularProgress, Typography, useTheme } from "components/Mui";
+import { getTokenStandard } from "hooks/token/index";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useUpdateTokenStandard } from "store/token/cache/hooks";
 
 export interface ImportTokenTipProps {
   onOk: () => void;
@@ -32,7 +17,6 @@ export interface ImportTokenTipProps {
 export function ImportTokenTip({ canisterId, onOk }: ImportTokenTipProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
   const updateTokenStandard = useUpdateTokenStandard();
 
   const [noStandard, setNoStandard] = useState(false);
@@ -55,7 +39,7 @@ export function ImportTokenTip({ canisterId, onOk }: ImportTokenTipProps) {
       onOk();
     }
     setLoading(false);
-  }, [canisterId, updateTokenStandard, loading]);
+  }, [canisterId, updateTokenStandard, loading, onOk]);
 
   return (
     <Box
@@ -77,7 +61,19 @@ export function ImportTokenTip({ canisterId, onOk }: ImportTokenTipProps) {
       ) : null}
 
       <Box mt="16px" sx={{ display: "flex", justifyContent: "center", gap: "0 20px" }}>
-        <Box className={classes.button} onClick={handleImport}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "140px",
+            height: "40px",
+            borderRadius: "8px",
+            background: theme.palette.background.level1,
+            cursor: "pointer",
+          }}
+          onClick={handleImport}
+        >
           <Typography color="text.primary" fontWeight={500}>
             {t("common.yes")}
           </Typography>

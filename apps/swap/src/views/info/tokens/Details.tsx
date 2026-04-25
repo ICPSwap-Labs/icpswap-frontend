@@ -1,35 +1,35 @@
-import { Typography, Box, Button } from "components/Mui";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useParams } from "react-router-dom";
-import { useToken } from "hooks/index";
-import { InfoWrapper, MainCard, TokenImage, Link, ImportToNns } from "components/index";
-import Copy, { CopyRef } from "components/Copy";
-import { LinkButtons } from "components/info/tokens";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { useICPPrice } from "store/global/hooks";
 import {
-  parseTokenAmount,
-  BigNumber,
-  formatDollarTokenPrice,
-  formatAmount,
-  nonUndefinedOrNull,
-  formatDollarAmount,
-  explorerLink,
-  formatIcpAmount,
-} from "@icpswap/utils";
-import {
-  useTokenListTokenInfo,
-  useParsedQueryString,
   useInfoToken,
+  useParsedQueryString,
   useTokenAnalysis,
+  useTokenListTokenInfo,
   useTokenSupply,
 } from "@icpswap/hooks";
-import { useCanisterInfo } from "hooks/useInternetComputerCalls";
-import { Flex, Proportion, TextButton, BreadcrumbsV1 } from "@icpswap/ui";
-import { useUpdateTokenStandard, useTokenStandardIsRegistered } from "store/token/cache/hooks";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { BreadcrumbsV1, Flex, Proportion, TextButton } from "@icpswap/ui";
+import {
+  BigNumber,
+  formatAmount,
+  formatDollarAmount,
+  formatDollarTokenPrice,
+  formatIcpAmount,
+  icDashboardExplorerLink,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+} from "@icpswap/utils";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import { useTranslation } from "react-i18next";
+import Copy, { type CopyRef } from "components/Copy";
+import { ImportToNns, InfoWrapper, Link, MainCard, TokenImage } from "components/index";
+import { LinkButtons } from "components/info/tokens";
+import { Box, Button, Typography } from "components/Mui";
 import { BuyTokenButton } from "components/swap";
+import { useToken } from "hooks/index";
+import { useCanisterInfo } from "hooks/useInternetComputerCalls";
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { useICPPrice } from "store/global/hooks";
+import { useTokenStandardIsRegistered, useUpdateTokenStandard } from "store/token/cache/hooks";
 
 export function TokenDetail() {
   const { t } = useTranslation();
@@ -41,10 +41,10 @@ export function TokenDetail() {
   const [, token] = useToken(canisterId);
 
   const icpPrice = useICPPrice();
-  const { result: tokenSupply } = useTokenSupply(canisterId);
-  const { result: tokenAnalysis } = useTokenAnalysis(canisterId);
-  const { result: canisterInfo } = useCanisterInfo(canisterId);
-  const { result: tokenListInfo } = useTokenListTokenInfo(canisterId);
+  const { data: tokenSupply } = useTokenSupply(canisterId);
+  const { data: tokenAnalysis } = useTokenAnalysis(canisterId);
+  const { data: canisterInfo } = useCanisterInfo(canisterId);
+  const { data: tokenListInfo } = useTokenListTokenInfo(canisterId);
 
   const marketCap = useMemo(() => {
     if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(infoToken)) {
@@ -112,7 +112,7 @@ export function TokenDetail() {
 
   const handleCopy = useCallback(() => {
     if (copyRef) copyRef.current?.copy();
-  }, [copyRef]);
+  }, []);
 
   return (
     <InfoWrapper>
@@ -304,7 +304,7 @@ export function TokenDetail() {
                 <Typography>{t("common.canister.id")}</Typography>
 
                 <Flex gap="0 8px">
-                  <Link link={explorerLink(canisterId)}>
+                  <Link link={icDashboardExplorerLink(canisterId)}>
                     <Typography sx={{ color: "text.theme-primary", fontSize: "16px" }}>{canisterId}</Typography>
                   </Link>
                   <CopyIcon color="#ffffff" onClick={handleCopy} style={{ cursor: "pointer" }} />
@@ -316,7 +316,7 @@ export function TokenDetail() {
               <Flex vertical align="flex-start" gap="8px 0">
                 <Typography>{t("common.controllers")}</Typography>
                 <Flex vertical gap="8px 0" align="flex-start">
-                  {canisterInfo && canisterInfo.controllers
+                  {canisterInfo?.controllers
                     ? canisterInfo.controllers.map((element) => {
                         return (
                           <Typography key={element} sx={{ color: "text.primary", fontSize: "16px" }}>
@@ -386,7 +386,7 @@ export default function Details() {
     if (standard) {
       updateTokenStandard([{ canisterId, standard }]);
     }
-  }, [standard, canisterId]);
+  }, [standard, canisterId, updateTokenStandard]);
 
   const tokenStandardIsRegistered = useTokenStandardIsRegistered(canisterId);
 

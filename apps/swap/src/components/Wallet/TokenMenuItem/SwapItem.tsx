@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { useTheme } from "components/Mui";
-import { MenuItem } from "@icpswap/ui";
 import { ckUSDC, ICP } from "@icpswap/tokens";
+import { MenuItem } from "@icpswap/ui";
+import { useTheme } from "components/Mui";
+import { useWalletStore } from "components/Wallet/store";
+import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { useWalletContext } from "components/Wallet/context";
 
 interface SwapItemProps {
   tokenId: string;
@@ -12,7 +12,7 @@ interface SwapItemProps {
 export function SwapItem({ tokenId }: SwapItemProps) {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { setOpen } = useWalletContext();
+  const { setOpen } = useWalletStore();
 
   const handleSwap = useCallback(() => {
     if (tokenId === ICP.address) {
@@ -21,7 +21,7 @@ export function SwapItem({ tokenId }: SwapItemProps) {
       navigate(`/swap?input=${tokenId}&output=${ICP.address}`);
     }
     setOpen(false);
-  }, [tokenId]);
+  }, [tokenId, navigate, setOpen]);
 
   return (
     <MenuItem

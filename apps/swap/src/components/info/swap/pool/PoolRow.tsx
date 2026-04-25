@@ -1,9 +1,9 @@
-import { Box } from "components/Mui";
-import { TokenImage } from "components/index";
-import { useToken } from "hooks/index";
-import { BodyCell, TableRow, FeeTierPercentLabel, APRPanel, Flex, Link } from "@icpswap/ui";
+import { APRPanel, BodyCell, FeeTierPercentLabel, Flex, Link, TableRow } from "@icpswap/ui";
 import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
-import { PoolInfoWithApr } from "types/info";
+import { TokenImage } from "components/index";
+import { Box } from "components/Mui";
+import { useToken } from "hooks/index";
+import type { PoolInfoWithApr } from "types/info";
 
 interface PoolRowProps {
   poolInfo: PoolInfoWithApr;

@@ -1,12 +1,12 @@
-import { useMemo } from "react";
 import { usePositionFee } from "@icpswap/hooks";
+import { useMemo } from "react";
 
 export function usePositionFees(
   canisterId: string | undefined,
   positionId: bigint | string | undefined | number,
   refresh?: number | boolean,
 ) {
-  const { result } = usePositionFee(canisterId, positionId ? BigInt(positionId) : undefined, refresh);
+  const { data: result } = usePositionFee(canisterId, positionId ? BigInt(positionId) : undefined, refresh);
 
   return useMemo(() => {
     return {

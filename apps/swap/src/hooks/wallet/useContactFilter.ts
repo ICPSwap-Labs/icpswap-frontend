@@ -1,6 +1,6 @@
-import { useMemo } from "react";
 import type { AddressBook as AddressBookType } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { useMemo } from "react";
 
 interface UseContactFilterProps {
   search: string | undefined;

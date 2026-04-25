@@ -1,6 +1,6 @@
 import { StepDetails } from "components/Steps/Details";
-import { useOpenedSteps, useStepDetails } from "store/steps/hooks";
 import { SwapStepDetails } from "components/Steps/SwapDetails";
+import { useOpenedSteps, useStepDetails } from "store/steps/hooks";
 
 function StepItem({ step }: { step: string }) {
   const { activeStep, errorStep, content, onClose, title, description, type } = useStepDetails(step);

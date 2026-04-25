@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { Box, useMediaQuery, Drawer } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import DensityMediumIcon from "@mui/icons-material/DensityMedium";
-import LogoSection from "components/LogoSection";
+import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
+import ProfileSection from "components/Layout/Header/ProfileSection";
 import Navbar from "components/Layout/Navbar";
 import MobileNavbar from "components/Layout/Navbar/mobile/Navbar";
-import ProfileSection from "components/Layout/Header/ProfileSection";
-import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
+import LogoSection from "components/LogoSection";
+import { Box, Drawer, useMediaQuery } from "components/Mui";
+import { DensityMediumIcon } from "components/MuiIcon";
 import { useMediaQuery640 } from "hooks/theme";
+import { useState } from "react";
 
 export default function Header() {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(false);

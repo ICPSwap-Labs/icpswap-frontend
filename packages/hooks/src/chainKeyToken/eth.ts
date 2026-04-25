@@ -1,17 +1,14 @@
-import { useCallback } from "react";
-import { resultFormat } from "@icpswap/utils";
+import type { Principal } from "@icp-sdk/core/principal";
 import { chainKeyETHMinter } from "@icpswap/actor";
 import type {
-  WithdrawalSearchParameter,
-  WithdrawalDetail,
   ChainKeyETHMinterInfo,
   Eip1559TransactionPrice,
   Null,
+  WithdrawalDetail,
+  WithdrawalSearchParameter,
 } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
-
-import { useCallsData } from "../useCallData";
-import { useInterval } from "../useInterval";
+import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export interface WithdrawErc20TokenArgs {
   ledger_id: Principal;
@@ -25,9 +22,7 @@ export async function withdrawErc20Token({ minter_id, ledger_id, recipient, amou
     ckerc20_block_index: bigint;
     cketh_block_index: bigint;
   }>(
-    await (
-      await chainKeyETHMinter(minter_id, true)
-    ).withdraw_erc20({
+    await (await chainKeyETHMinter(minter_id, true)).withdraw_erc20({
       recipient,
       amount,
       ckerc20_ledger_id: ledger_id,
@@ -49,39 +44,55 @@ export async function withdrawErc20TokenStatus({ minter_id, params }: WithdrawEr
 export interface UseWithdrawErc20TokenStatusArgs {
   params: WithdrawalSearchParameter | undefined;
   minter_id: string;
-  refresh?: boolean | number;
+  refresh?: number;
+  refetchInterval?: number;
 }
 
-export function useWithdrawErc20TokenStatus({ minter_id, params, refresh }: UseWithdrawErc20TokenStatusArgs) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!params) return undefined;
+export function useWithdrawErc20TokenStatus({
+  minter_id,
+  params,
+  refetchInterval,
+  refresh,
+}: UseWithdrawErc20TokenStatusArgs): UseQueryResult<WithdrawalDetail[], Error> {
+  return useQuery({
+    queryKey: ["withdrawErc20TokenStatus", minter_id, params, refresh],
+    queryFn: async () => {
       return await withdrawErc20TokenStatus({ minter_id, params });
-    }, [minter_id, params]),
-    refresh,
-  );
+    },
+    enabled: nonUndefinedOrNull(params),
+    refetchInterval,
+  });
 }
 
 export async function getChainKeyMinterInfo(minter_id: string) {
-  return resultFormat<ChainKeyETHMinterInfo>(await (await chainKeyETHMinter(minter_id)).get_minter_info()).data;
+  const actor = await chainKeyETHMinter(minter_id);
+  const result = await actor.get_minter_info();
+  return resultFormat<ChainKeyETHMinterInfo>(result).data;
 }
 
-export function useChainKeyMinterInfo(minter_id: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useChainKeyMinterInfo(
+  minter_id: string | Null,
+): UseQueryResult<ChainKeyETHMinterInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useChainKeyMinterInfo", minter_id],
+    queryFn: async () => {
       if (!minter_id) return undefined;
       return await getChainKeyMinterInfo(minter_id);
-    }, [minter_id]),
-  );
+    },
+    enabled: !!minter_id,
+  });
 }
 
-export function useIntervalChainKeyMinterInfo(minter_id: string | Null) {
-  const callback = useCallback(async () => {
-    if (!minter_id) return undefined;
-    return await getChainKeyMinterInfo(minter_id);
-  }, [minter_id]);
-
-  return useInterval<ChainKeyETHMinterInfo | undefined>(callback);
+export function useIntervalChainKeyMinterInfo(minter_id: string | Null): UseQueryResult<ChainKeyETHMinterInfo, Error> {
+  return useQuery({
+    queryKey: ["chainKeyMinterInfo", minter_id],
+    queryFn: async () => {
+      if (!minter_id) return undefined;
+      return await getChainKeyMinterInfo(minter_id);
+    },
+    enabled: nonUndefinedOrNull(minter_id),
+    refetchInterval: 5_000,
+  });
 }
 
 export async function getChainKeyTransactionPrice(minter_id: string) {
@@ -90,22 +101,24 @@ export async function getChainKeyTransactionPrice(minter_id: string) {
   ).data;
 }
 
-export function useChainKeyTransactionPrice(minter_id: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useChainKeyTransactionPrice(
+  minter_id: string | undefined,
+): UseQueryResult<Eip1559TransactionPrice | undefined, Error> {
+  return useQuery({
+    queryKey: ["useChainKeyTransactionPrice", minter_id],
+    queryFn: async () => {
       if (!minter_id) return undefined;
       return await getChainKeyTransactionPrice(minter_id);
-    }, [minter_id]),
-  );
+    },
+    enabled: !!minter_id,
+  });
 }
 
 export async function withdraw_eth(minter_id: string, recipient: string, amount: bigint) {
   return resultFormat<{
     block_index: bigint;
   }>(
-    await (
-      await chainKeyETHMinter(minter_id, true)
-    ).withdraw_eth({
+    await (await chainKeyETHMinter(minter_id, true)).withdraw_eth({
       recipient,
       amount,
       from_subaccount: [],

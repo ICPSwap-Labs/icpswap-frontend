@@ -1,17 +1,17 @@
-import { Box, BoxProps, useTheme } from "components/Mui";
-import { Link, BodyCell, Flex } from "@icpswap/ui";
 import type { FarmInfo, InitFarmArgs, Null } from "@icpswap/types";
-import { FilterState } from "types/staking-farm";
+import { BodyCell, Flex, Link } from "@icpswap/ui";
 import {
-  TotalStakedCell,
-  UserStakedCell,
-  UserRewardsCell,
   AvgAprCell,
   PoolCell,
-  TotalRewardsCell,
-  StateCell,
   RewardTokenCell,
+  StateCell,
+  TotalRewardsCell,
+  TotalStakedCell,
+  UserRewardsCell,
+  UserStakedCell,
 } from "components/farm/row/cell/index";
+import { Box, type BoxProps, useTheme } from "components/Mui";
+import { FilterState } from "types/staking-farm";
 
 export interface FinishedFarmRowUIProps {
   farmInfo: FarmInfo;
@@ -66,9 +66,7 @@ export function FinishedFarmRowUI({
 
         {filterState === FilterState.ALL ? (
           <Flex gap="0 4px" justify="flex-end" className="row-item">
-            <>
-              <BodyCell>$0.00</BodyCell>
-            </>
+            <BodyCell>$0.00</BodyCell>
           </Flex>
         ) : null}
 

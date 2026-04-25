@@ -1,7 +1,7 @@
-import { Box, Typography } from "components/Mui";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { WaringIcon } from "assets/icons/WaringIcon";
-import { Null } from "@icpswap/types";
+import { Box, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export interface LimitSupportedProps {

@@ -1,15 +1,15 @@
-import { useCallback } from "react";
-import { Position } from "@icpswap/swap-sdk";
 import { removeOrder } from "@icpswap/hooks";
-import { useErrorTip, useSuccessTip } from "hooks/useTips";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { getLocaleMessage } from "i18n/service";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
+import type { Position } from "@icpswap/swap-sdk";
+import type { LimitOrder } from "@icpswap/types";
 import { getCancelLimitSteps } from "components/swap/limit-order/CancelLimitSteps";
-import { useStepContentManager } from "store/steps/hooks";
-import { OpenExternalTip } from "types/index";
-import { LimitOrder } from "@icpswap/types";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { useErrorTip, useSuccessTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useStepContentManager } from "store/steps/hooks";
+import type { OpenExternalTip } from "types/index";
 
 interface CancelLimitCallsArgs {
   position: Position;
@@ -26,24 +26,27 @@ function useCancelLimitCalls() {
   const [openErrorTip] = useErrorTip();
   const [openSuccessTip] = useSuccessTip();
 
-  return useCallback(({ poolId, positionId, refresh }: CancelLimitCallsArgs) => {
-    const __removeOrder = async () => {
-      const { status, message } = await removeOrder(poolId, positionId);
+  return useCallback(
+    ({ poolId, positionId, refresh }: CancelLimitCallsArgs) => {
+      const __removeOrder = async () => {
+        const { status, message } = await removeOrder(poolId, positionId);
 
-      if (status === "err") {
-        openErrorTip(`${getLocaleMessage(message)}.`);
-        return false;
-      }
+        if (status === "err") {
+          openErrorTip(`${getLocaleMessage(message)}.`);
+          return false;
+        }
 
-      openSuccessTip(t("swap.limit.cancel.success"));
+        openSuccessTip(t("swap.limit.cancel.success"));
 
-      if (refresh) refresh();
+        if (refresh) refresh();
 
-      return true;
-    };
+        return true;
+      };
 
-    return [__removeOrder];
-  }, []);
+      return [__removeOrder];
+    },
+    [openErrorTip, openSuccessTip, t],
+  );
 }
 
 export interface CancelLimitCallbackProps {
@@ -93,6 +96,6 @@ export function useCancelLimitCallback() {
 
       return { call, reset, retry, key };
     },
-    [getStepCalls, stepContentManage],
+    [getStepCalls, stepContentManage, getCalls, principal, t],
   );
 }

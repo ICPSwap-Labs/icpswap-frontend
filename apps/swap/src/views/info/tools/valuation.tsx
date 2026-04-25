@@ -1,46 +1,42 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { InfoWrapper, FilledTextField, TokenImage } from "components/index";
-import { makeStyles, Box, Typography, Link, useTheme } from "components/Mui";
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { TokenBalanceState, useParsedQueryString, useTokensBalance, useTokensFromList } from "@icpswap/hooks";
+import { ICP } from "@icpswap/tokens";
 import {
-  isValidPrincipal,
-  toSignificant,
-  parseTokenAmount,
-  BigNumber,
-  explorerLink,
-  locationSearchReplace,
-} from "@icpswap/utils";
-import { useTokensBalance, useTokensFromList, useParsedQueryString, TokenBalanceState } from "@icpswap/hooks";
-import {
-  MainCard,
+  BodyCell,
+  BreadcrumbsV1,
   Header,
   HeaderCell,
-  TableRow,
-  BodyCell,
   LoadingRow,
-  OnlyTokenList,
+  MainCard,
   NoData,
-  BreadcrumbsV1,
+  OnlyTokenList,
+  TableRow,
 } from "@icpswap/ui";
-import { ICP } from "@icpswap/tokens";
-import { getAllTokens } from "store/allTokens";
+import {
+  BigNumber,
+  icDashboardExplorerLink,
+  isValidPrincipal,
+  locationSearchReplace,
+  parseTokenAmount,
+  toSignificant,
+} from "@icpswap/utils";
+import { FilledTextField, InfoWrapper, TokenImage } from "components/index";
+import { Box, Link, Typography, useTheme } from "components/Mui";
 import { useTokensInfo } from "hooks/token";
-import { TokenInfo } from "types/token";
 import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getAllTokens } from "store/allTokens";
+import type { TokenInfo } from "types/token";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      gap: "1em",
-      alignItems: "center",
-      gridTemplateColumns: "1fr repeat(3, 1fr)",
-      "@media screen and (max-width: 780px)": {
-        gridTemplateColumns: "1fr repeat(3, 1fr)",
-      },
-    },
-  };
-});
+const wrapperSx = {
+  gap: "1em",
+  alignItems: "center",
+  gridTemplateColumns: "1fr repeat(3, 1fr)",
+  "@media screen and (max-width: 780px)": {
+    gridTemplateColumns: "1fr repeat(3, 1fr)",
+  },
+};
 
 interface UserTokenBalanceProps {
   balance: bigint | undefined;
@@ -58,7 +54,6 @@ function UserTokenBalance({
   onUpdateUSDValues,
 }: UserTokenBalanceProps) {
   const theme = useTheme();
-  const classes = useStyles();
   const tokenUSDPrice = useUSDPriceById(tokenInfo.canisterId);
 
   useEffect(() => {
@@ -68,12 +63,14 @@ function UserTokenBalance({
         new BigNumber(tokenUSDPrice).multipliedBy(parseTokenAmount(balance, tokenInfo.decimals)).toString(),
       );
     }
-  }, [tokenInfo, tokenUSDPrice, balance]);
+  }, [tokenInfo, tokenUSDPrice, balance, onUpdateUSDValues]);
 
   return (
     <TableRow
-      className={classes.wrapper}
-      sx={{ display: displayTokenInList && !!tokenList && !tokenList.includes(tokenInfo.canisterId) ? "none" : "grid" }}
+      sx={{
+        display: displayTokenInList && !!tokenList && !tokenList.includes(tokenInfo.canisterId) ? "none" : "grid",
+        ...wrapperSx,
+      }}
       borderBottom={`1px solid ${theme.palette.border.level1}`}
     >
       <BodyCell>
@@ -103,7 +100,7 @@ function UserTokenBalance({
       <BodyCell>{tokenUSDPrice ? `$${toSignificant(tokenUSDPrice, 6, { groupSeparator: "," })}` : "--"}</BodyCell>
 
       <BodyCell>
-        <Link href={explorerLink(tokenInfo.canisterId)} target="_blank">
+        <Link href={icDashboardExplorerLink(tokenInfo.canisterId)} target="_blank">
           {tokenInfo.canisterId}
         </Link>
       </BodyCell>
@@ -113,7 +110,6 @@ function UserTokenBalance({
 
 export default function SwapScanValuation() {
   const { t } = useTranslation();
-  const classes = useStyles();
   const theme = useTheme();
   const { principal } = useParsedQueryString() as { principal: string };
   const navigate = useNavigate();
@@ -159,7 +155,7 @@ export default function SwapScanValuation() {
 
   const loading = useMemo(() => {
     return !!allTokensBalance.find((e) => e.state === TokenBalanceState.LOADING);
-  }, [allTokensBalance, allTokenIds]);
+  }, [allTokensBalance]);
 
   useEffect(() => {
     if (!allTokensInfo || !allTokensBalance) return;
@@ -176,13 +172,13 @@ export default function SwapScanValuation() {
         }));
       }
     });
-  }, [address, allTokensBalance, allTokensInfo]);
+  }, [allTokensBalance, allTokenIds, allTokensInfo]);
 
   const handleCheckChange = (checked: boolean) => {
     setChecked(checked);
   };
 
-  const { result: allTokensInList } = useTokensFromList();
+  const { data: allTokensInList } = useTokensFromList();
   const tokenList = useMemo(() => {
     const tokenIds = allTokensInList?.map((e) => e.canisterId) ?? [];
     tokenIds.push(ICP.address);
@@ -310,11 +306,7 @@ export default function SwapScanValuation() {
 
         <Box sx={{ width: "100%", overflow: "auto hidden" }}>
           <Box sx={{ minWidth: "840px" }}>
-            <Header
-              className={classes.wrapper}
-              borderBottom={`1px solid ${theme.palette.border.level1}`}
-              sx={{ display: "grid" }}
-            >
+            <Header borderBottom={`1px solid ${theme.palette.border.level1}`} sx={{ display: "grid", ...wrapperSx }}>
               <HeaderCell>{t("common.token")}</HeaderCell>
 
               <HeaderCell field="usdValue">{t("common.value")}</HeaderCell>

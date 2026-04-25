@@ -1,17 +1,17 @@
-import { useState, useMemo } from "react";
-import { Button, Typography, Avatar, InputAdornment, useTheme, useMediaQuery, Box, makeStyles } from "components/Mui";
-import { Header, HeaderCell, TableRow, Flex, LoadingRow } from "@icpswap/ui";
-import AddIcon from "@mui/icons-material/Add";
-import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
-import Modal from "components/modal/index";
-import { IconSearch } from "@tabler/icons";
-import { useSelectedCanistersManager } from "store/nft/hooks";
-import { useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
-import { OFFICIAL_CANISTER_IDS } from "constants/index";
-import { isICPSwapOfficial } from "utils";
 import type { NFTControllerInfo } from "@icpswap/types";
-import { NoData, FilledTextField } from "components/index";
+import { Flex, Header, HeaderCell, LoadingRow, TableRow } from "@icpswap/ui";
+import { FilledTextField, NoData } from "components/index";
+import { Avatar, Box, Button, InputAdornment, makeStyles, Typography, useTheme } from "components/Mui";
+import { AddIcon, HorizontalRuleIcon } from "components/MuiIcon";
+import Modal from "components/modal/index";
+import { OFFICIAL_CANISTER_IDS } from "constants/index";
+import { useCanisterLogo, useNFTCanisterList } from "hooks/nft/useNFTCalls";
+import { useMediaQuerySM } from "hooks/theme";
+import { useMemo, useState } from "react";
+import { Search } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { useSelectedCanistersManager } from "store/nft/hooks";
+import { isICPSwapOfficial } from "utils";
 
 const useStyles = makeStyles(() => {
   return {
@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => {
 export function CollectionInfoItem({ data }: { data: NFTControllerInfo }) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const { result: logo } = useCanisterLogo(data.cid);
+  const { data: logo } = useCanisterLogo(data.cid);
 
   const [userSelectedCanisters, setUserSelectedCanisters, deleteUserSelectedCanister] = useSelectedCanistersManager();
 
@@ -96,10 +96,10 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
   const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [searchValue, setSearchValue] = useState("");
 
-  const { result, loading } = useNFTCanisterList(0, 1000);
+  const { data: result, isLoading: loading } = useNFTCanisterList(0, 1000);
   const { content } = result ?? { content: [] as NFTControllerInfo[] };
 
   const list = useMemo(() => {
@@ -131,7 +131,7 @@ export default function AddNFTCanisterModal({ open, onClose }: { open: boolean; 
             input: {
               startAdornment: (
                 <InputAdornment position="start">
-                  <IconSearch stroke={1.5} size="1rem" />
+                  <Search />
                 </InputAdornment>
               ),
             },

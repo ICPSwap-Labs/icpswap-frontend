@@ -1,7 +1,7 @@
 import { BodyCell, Tooltip } from "@icpswap/ui";
+import { DAYJS_FORMAT } from "constants/index";
 import dayjs from "dayjs";
 import { useAbbreviatedTimeString } from "hooks/utils/time";
-import { DAYJS_FORMAT } from "constants/index";
 
 /**
  * Renders a table cell that shows an abbreviated relative time (e.g. "2h ago")

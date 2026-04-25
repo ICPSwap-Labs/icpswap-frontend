@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from "react";
+import { useInfoToken } from "@icpswap/hooks";
 import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { BigNumber, isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { useToken } from "hooks/index";
-import { useInfoToken } from "@icpswap/hooks";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useEffect, useMemo } from "react";
 
 interface UseTokenDataManagerProps {
   tokenId: string;
@@ -13,7 +13,7 @@ interface UseTokenDataManagerProps {
 
 export function useTokenDataManager({ tokenId, tokenBalance, balanceLoading }: UseTokenDataManagerProps) {
   const [, token] = useToken(tokenId);
-  const { setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletTokenContext();
+  const { setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletTokenStore();
 
   const infoTokenAddress = useMemo(() => {
     if (tokenId === WRAPPED_ICP.address) return ICP.address;
@@ -46,7 +46,7 @@ export function useTokenDataManager({ tokenId, tokenBalance, balanceLoading }: U
         parseTokenAmount(tokenBalance, token.decimals).multipliedBy(priceBeforeChange),
       );
     }
-  }, [tokenBalance, infoToken, token, tokenPrice]);
+  }, [tokenBalance, infoToken, token, setTotalUSDBeforeChange, setTotalValue]);
 
   useEffect(() => {
     if (
@@ -59,7 +59,7 @@ export function useTokenDataManager({ tokenId, tokenBalance, balanceLoading }: U
     ) {
       setNoUSDTokens(token.address);
     }
-  }, [token, tokenBalance, balanceLoading, infoToken]);
+  }, [token, tokenBalance, balanceLoading, infoToken, setNoUSDTokens]);
 
   return useMemo(
     () => ({

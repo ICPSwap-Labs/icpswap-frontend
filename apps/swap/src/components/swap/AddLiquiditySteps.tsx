@@ -1,13 +1,13 @@
-import { Box, Avatar } from "components/Mui";
-import { parseTokenAmount } from "@icpswap/utils";
-import { Position, Token } from "@icpswap/swap-sdk";
-import { TextButton } from "components/index";
-import { toFormat } from "utils/index";
-import { isUseTransfer } from "utils/token/index";
-import { StepContents, StepContent } from "types/step";
+import type { Position, Token } from "@icpswap/swap-sdk";
 import type { PCMMetadata } from "@icpswap/types";
+import { parseTokenAmount } from "@icpswap/utils";
+import { TextButton } from "components/index";
+import { Avatar, Box } from "components/Mui";
 import { PassCodeManagerId } from "constants/canister";
 import i18n from "i18n/index";
+import type { StepContent, StepContents } from "types/step";
+import { toFormat } from "utils/index";
+import { isUseTransfer } from "utils/token/index";
 
 export interface GetAddLiquidityStepDetails {
   noLiquidity: boolean;
@@ -83,9 +83,9 @@ export function getAddLiquidityStepDetails({
         { label: i18n.t("common.canister.id"), value: token0.address },
       ],
       errorActions: [
-        <>
-          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
-        </>,
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
       ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
@@ -106,9 +106,9 @@ export function getAddLiquidityStepDetails({
         { label: i18n.t("common.canister.id"), value: token1.address },
       ],
       errorActions: [
-        <>
-          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
-        </>,
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
       ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
@@ -160,9 +160,9 @@ export function getAddLiquidityStepDetails({
             { label: i18n.t("common.amount"), value: `${pcmAmount.toFormat()} ${pcmToken.symbol}` },
           ],
           errorActions: [
-            <>
-              <TextButton onClick={handleReclaimPCMBalance}>{i18n.t("common.reclaim")}</TextButton>
-            </>,
+            <TextButton key="reclaim" onClick={handleReclaimPCMBalance}>
+              {i18n.t("common.reclaim")}
+            </TextButton>,
           ],
           errorMessage: i18n.t("common.check.balance.tips"),
         });

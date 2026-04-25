@@ -1,5 +1,5 @@
 import JSBI from "jsbi";
-import { BigintIsh, sqrt } from "../core";
+import { type BigintIsh, sqrt } from "../core";
 
 /**
  * Returns the sqrt ratio as a Q64.96 corresponding to a given ratio of amount1 and amount0
@@ -8,10 +8,7 @@ import { BigintIsh, sqrt } from "../core";
  * @returns The sqrt ratio
  */
 
-export function encodeSqrtRatioX96(
-  amount1: BigintIsh,
-  amount0: BigintIsh
-): JSBI {
+export function encodeSqrtRatioX96(amount1: BigintIsh, amount0: BigintIsh): JSBI {
   const numerator = JSBI.leftShift(JSBI.BigInt(amount1), JSBI.BigInt(192));
   const denominator = JSBI.BigInt(amount0);
   const ratioX192 = JSBI.divide(numerator, denominator);

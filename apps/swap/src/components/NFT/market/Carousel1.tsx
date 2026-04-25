@@ -1,7 +1,7 @@
+import CollectionBg from "assets/images/nft/collection_bg.jpg";
+import { Box, Button, makeStyles, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Typography, makeStyles } from "components/Mui";
-import CollectionBg from "assets/images/nft/collection_bg.jpg";
 
 const useStyles = makeStyles(() => {
   return {

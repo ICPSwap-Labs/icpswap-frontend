@@ -1,25 +1,24 @@
-import { useState, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { Typography, Grid, Box, InputAdornment } from "components/Mui";
-import { MainCard, Breadcrumbs, AuthButton } from "components/index";
-import Upload, { UploadRef } from "components/NFT/Upload";
-import { WRAPPED_ICP_TOKEN_INFO, SOCIAL_LINKS, NFTCanisterController, NFTTradeTokenCanisterId } from "constants/index";
-import { createCanister, setCanisterLogo, useNFTMintInfo, setCanisterLogoInController } from "hooks/nft/useNFTCalls";
-import { useErrorTip } from "hooks/useTips";
-import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
-import { useSelectedCanistersManager } from "store/nft/hooks";
-import FilledTextField, { FilledTextFiledMenus, FilledTextFieldLabel } from "components/Input/FilledTextField";
-import { CanisterCreateDetails } from "types/index";
-import { MuiSlider } from "components/Slider/MuiSlider/Marks";
-import AddIcon from "@mui/icons-material/Add";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { BigNumber, parseTokenAmount, isValidUrl, numberToString, isUndefinedOrNull } from "@icpswap/utils";
-import { useApprove } from "hooks/token/useApprove";
-import { useAccount } from "store/auth/hooks";
-import { getLocaleMessage } from "i18n/service";
-import { CardContent1120 } from "components/Layout/CardContent1120";
-import { useTranslation } from "react-i18next";
 import { useLoadingCallData } from "@icpswap/hooks";
+import { BigNumber, isUndefinedOrNull, isValidUrl, numberToString, parseTokenAmount } from "@icpswap/utils";
+import FilledTextField, { FilledTextFieldLabel, type FilledTextFiledMenus } from "components/Input/FilledTextField";
+import { AuthButton, Breadcrumbs, MainCard } from "components/index";
+import { CardContent1120 } from "components/Layout/CardContent1120";
+import { Box, Grid, InputAdornment, Typography } from "components/Mui";
+import { AddIcon, HighlightOffIcon } from "components/MuiIcon";
+import CanisterCreateConfirm from "components/NFT/CanisterCreateConfirm";
+import Upload, { type UploadRef } from "components/NFT/Upload";
+import { MuiSlider } from "components/Slider/MuiSlider/Marks";
+import { NFTCanisterController, NFTTradeTokenCanisterId, SOCIAL_LINKS, WRAPPED_ICP } from "constants/index";
+import { createCanister, setCanisterLogo, setCanisterLogoInController, useNFTMintInfo } from "hooks/nft/useNFTCalls";
+import { useApprove } from "hooks/token/useApprove";
+import { useErrorTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccount } from "store/auth/hooks";
+import { useSelectedCanistersManager } from "store/nft/hooks";
+import type { CanisterCreateDetails } from "types/index";
 
 export default function NFTCanisterCreate() {
   const { t } = useTranslation();
@@ -35,7 +34,7 @@ export default function NFTCanisterCreate() {
   const [file, setFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string>("");
 
-  const { result: NFTMintInfo } = useNFTMintInfo();
+  const { data: NFTMintInfo } = useNFTMintInfo();
 
   const onFieldChange = (value: string, field: string) => {
     setValues({
@@ -78,7 +77,7 @@ export default function NFTCanisterCreate() {
         canisterId: NFTTradeTokenCanisterId,
         spender: NFTCanisterController,
         account,
-        value: numberToString(parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals)),
+        value: numberToString(parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP.decimals)),
       });
 
       if (approveStatus === "err") {
@@ -95,9 +94,11 @@ export default function NFTCanisterCreate() {
         linkMap: (values.socialMediaLinks ?? []).reduce(
           (previousValue, currentValue) => {
             if (currentValue.label && currentValue.value) {
-              return [...previousValue, { k: currentValue.label, v: currentValue.value }];
+              const newValue = previousValue.slice();
+              newValue.push({ k: currentValue.label, v: currentValue.value });
+              return newValue;
             }
-            return [...previousValue];
+            return previousValue.slice();
           },
           [] as { k: string; v: string }[],
         ),
@@ -119,7 +120,7 @@ export default function NFTCanisterCreate() {
       } else {
         openErrorTip(getLocaleMessage(message) ?? t`Failed to create NFT collection`);
       }
-    }, [values, NFTMintInfo]),
+    }, [values, NFTMintInfo, account, approve, navigate, openErrorTip, setSelectedCanisters, t]),
   );
 
   const handleSocialMediaAdd = () => {
@@ -166,9 +167,9 @@ export default function NFTCanisterCreate() {
 
   const getErrorMsg = (values: CanisterCreateDetails) => {
     if (!values.name) return t("nft.enter.collection.name");
-    if (values.name && values.name.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection name`;
+    if (values.name?.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection name`;
     if (!values.minter) return t`Enter the creator`;
-    if (values.minter && values.minter.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection creator`;
+    if (values.minter?.toLocaleLowerCase().includes("icpswap")) return t`Invalid collection creator`;
     if (!values.introduction) return t`Enter the description`;
     if ((values.socialMediaLinks ?? []).length > 0) {
       for (let i = 0; i < values.socialMediaLinks.length; i++) {
@@ -416,7 +417,7 @@ export default function NFTCanisterCreate() {
               <Box mt="30px">
                 <MuiSlider
                   value={Number(values.royalties ?? 0)}
-                  onChange={(event: any, value: string) => onFieldChange(value, "royalties")}
+                  onChange={(_event: any, value: string) => onFieldChange(value, "royalties")}
                   size="small"
                   min={0}
                   max={20}
@@ -428,8 +429,8 @@ export default function NFTCanisterCreate() {
 
             <Box mt={4}>
               <Typography variant="h3" align="center" color="textPrimary">
-                Pay: {parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber()}{" "}
-                {WRAPPED_ICP_TOKEN_INFO.symbol}
+                Pay: {parseTokenAmount((NFTMintInfo ?? [])[0] ?? 0, WRAPPED_ICP.decimals).toNumber()}{" "}
+                {WRAPPED_ICP.symbol}
               </Typography>
               <AuthButton
                 fullWidth

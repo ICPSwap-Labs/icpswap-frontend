@@ -1,13 +1,13 @@
-import { useMemo } from "react";
-import { Typography, Box } from "components/Mui";
-import { InfoWrapper, MainCard } from "components/index";
 import { useNodeInfoAllPools } from "@icpswap/hooks";
+import { InfoWrapper, MainCard } from "components/index";
 import { Pools } from "components/info/swap";
+import { Box, Typography } from "components/Mui";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function SwapPools() {
   const { t } = useTranslation();
-  const { result: pools, loading } = useNodeInfoAllPools();
+  const { data: pools, isLoading: loading } = useNodeInfoAllPools();
 
   const _pools = useMemo(() => {
     return pools?.filter((pool) => pool.poolFee === 3000);

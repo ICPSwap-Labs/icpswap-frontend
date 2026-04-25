@@ -1,23 +1,23 @@
-import { useMemo, useState } from "react";
-import { Box, Typography, Button, useTheme } from "components/Mui";
-import { MainCard, Flex, Tooltip, Link } from "components/index";
-import { useFarmTvlValue, useUserTvlValue, useFarmUserRewardAmountAndValue } from "hooks/staking-farm";
-import { usePositionsTotalValue, usePositionsValue } from "hooks/swap/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import {
-  useFarmUserPositions,
   useFarmInitArgs,
-  useSwapUserPositions,
-  useSwapPoolMetadata,
   useFarmState,
+  useFarmUserPositions,
+  useSwapPoolMetadata,
+  useSwapUserPositions,
 } from "@icpswap/hooks";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { useFarmApr, useUserApr } from "hooks/staking-farm/useFarmApr";
+import type { Token } from "@icpswap/swap-sdk";
+import type { FarmInfo, FarmRewardMetadata } from "@icpswap/types";
+import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { FarmPositionCard } from "components/farm/index";
-import { FarmInfo, FarmRewardMetadata } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import { Flex, Link, MainCard, Tooltip } from "components/index";
+import { Box, Button, Typography, useTheme } from "components/Mui";
+import { useFarmTvlValue, useFarmUserRewardAmountAndValue, useUserTvlValue } from "hooks/staking-farm";
+import { useFarmApr, useUserApr } from "hooks/staking-farm/useFarmApr";
+import { usePositionsTotalValue, usePositionsValue } from "hooks/swap/index";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import { AllPositions } from "./AllPositions";
 
@@ -37,14 +37,14 @@ export function FarmMain({ farmId, farmInfo, token0, token1, rewardToken, reward
   const [viewAll, setViewAll] = useState(false);
   const [refreshRewardsTrigger, setRefreshRewardsTrigger] = useState(0);
 
-  const { result: farmInitArgs } = useFarmInitArgs(farmId);
-  const { result: userAllPositions } = useSwapUserPositions(
+  const { data: farmInitArgs } = useFarmInitArgs(farmId);
+  const { data: userAllPositions } = useSwapUserPositions(
     farmInfo?.pool.toString(),
     principal?.toString(),
     refreshRewardsTrigger,
   );
-  const { result: deposits } = useFarmUserPositions(farmId, principal?.toString(), refreshRewardsTrigger);
-  const { result: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
+  const { data: deposits } = useFarmUserPositions(farmId, principal?.toString(), refreshRewardsTrigger);
+  const { data: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
 
   const state = useFarmState(farmInfo);
 

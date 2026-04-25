@@ -1,4 +1,4 @@
-import { Button, Typography, CircularProgress, useTheme } from "components/Mui";
+import { Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export default function ViewMore({ loading, onClick }: { loading: boolean; onClick: () => void }) {

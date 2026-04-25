@@ -1,18 +1,19 @@
-import { useState, useMemo, useCallback } from "react";
-import { Box, Typography, InputAdornment, useTheme, useMediaQuery, makeStyles, Theme } from "components/Mui";
-import { useTaggedTokenManager } from "store/wallet/hooks";
-import { ImportToken } from "components/ImportToken/index";
-import { Modal, FilledTextField, NoData, Flex } from "components/index";
-import { useGlobalTokenList } from "store/global/hooks";
-import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
-import { useStateSnsAllTokensInfo } from "store/sns/hooks";
-import { isValidPrincipal, classNames } from "@icpswap/utils";
-import { Search as SearchIcon } from "react-feather";
-import { TokenListMetadata } from "types/token-list";
-import { TokenItem } from "components/CurrencySelector/TokenItem";
 import { useDebouncedChangeHandler } from "@icpswap/hooks";
+import { classNames, isValidPrincipal } from "@icpswap/utils";
+import { TokenItem } from "components/CurrencySelector/TokenItem";
+import { ImportToken } from "components/ImportToken/index";
+import { FilledTextField, Flex, Modal, NoData } from "components/index";
+import { Box, InputAdornment, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/wallet";
+import { useMediaQuerySM } from "hooks/theme";
 import i18n from "i18n/index";
+import { useCallback, useMemo, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { useGlobalTokenList } from "store/global/hooks";
+import { useStateSnsAllTokensInfo } from "store/sns/hooks";
+import { useTaggedTokenManager } from "store/wallet/hooks";
+import type { TokenListMetadata } from "types/token-list";
 import { getNnsRootId, tokenEqualToNnsLedger } from "utils/sns/utils";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -76,7 +77,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
   const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [importTokenCanceled, setImportTokenCanceled] = useState<boolean>(false);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [panel, setPanel] = useState<Panel>("SNS");
@@ -89,7 +90,7 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
 
   const yourTokens: string[] = useMemo(() => {
     return [...new Set(DISPLAY_IN_WALLET_BY_DEFAULT.map((e) => e).concat(taggedTokens))];
-  }, [DISPLAY_IN_WALLET_BY_DEFAULT, taggedTokens]);
+  }, [taggedTokens]);
 
   const { snsTokens, noneSnsTokens } = useMemo(() => {
     if (!snsAllTokensInfo) return {};
@@ -150,12 +151,9 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
     return false;
   }, [searchKeyword, yourTokens, noneSnsTokens, snsTokens]);
 
-  const handleTokenHidden = useCallback(
-    (canisterId: string, hidden: boolean) => {
-      setCanisterStates((prevState) => ({ ...prevState, [canisterId]: hidden }));
-    },
-    [setCanisterStates],
-  );
+  const handleTokenHidden = useCallback((canisterId: string, hidden: boolean) => {
+    setCanisterStates((prevState) => ({ ...prevState, [canisterId]: hidden }));
+  }, []);
 
   const allTokenCanisterIds = useMemo(() => {
     return [...new Set([...(snsTokens ?? []), ...(noneSnsTokens ?? [])])];
@@ -167,136 +165,134 @@ export default function AddTokenModal({ open, onClose }: { open: boolean; onClos
   }, [canisterStates, allTokenCanisterIds, showImportToken]);
 
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={onClose}
-        title={t("wallet.add.tokens")}
-        dialogProps={{
-          sx: {
-            "& .MuiPaper-root": {
-              width: "570px",
-              maxWidth: "570px",
-            },
-            "& .MuiDialog-paper": {
-              padding: "0",
-            },
-            "& .MuiDialogContent-root": {
-              padding: "0",
-            },
+    <Modal
+      open={open}
+      onClose={onClose}
+      title={t("wallet.add.tokens")}
+      dialogProps={{
+        sx: {
+          "& .MuiPaper-root": {
+            width: "570px",
+            maxWidth: "570px",
           },
+          "& .MuiDialog-paper": {
+            padding: "0",
+          },
+          "& .MuiDialogContent-root": {
+            padding: "0",
+          },
+        },
+      }}
+      background={theme.palette.background.level2}
+    >
+      <Box
+        sx={{
+          position: "relative",
         }}
-        background={theme.palette.background.level2}
       >
+        <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "8px 0 0 0" }}>
+          <Typography sx={{ fontSize: "12px", lineHeight: "1.15rem" }}>
+            {t("common.disclaimer.descriptions")}
+          </Typography>
+        </Box>
+
         <Box
           sx={{
             position: "relative",
+            margin: "8px 0 0 0",
+            padding: matchDownSM ? "0 16px" : "0 24px",
           }}
         >
-          <Box sx={{ padding: matchDownSM ? "0 16px" : "0 24px", margin: "8px 0 0 0" }}>
-            <Typography sx={{ fontSize: "12px", lineHeight: "1.15rem" }}>
-              {t("common.disclaimer.descriptions")}
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              position: "relative",
-              margin: "8px 0 0 0",
-              padding: matchDownSM ? "0 16px" : "0 24px",
-            }}
-          >
-            <FilledTextField
-              contained
-              borderRadius="8px"
-              background={theme.palette.background.level1}
-              placeholderSize="14px"
-              fullWidth
-              placeholder={t`Search name or canister ID`}
-              textFieldProps={{
-                slotProps: {
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon color={theme.palette.text.secondary} size="14px" />
-                      </InputAdornment>
-                    ),
-                    maxLength: 50,
-                  },
+          <FilledTextField
+            contained
+            borderRadius="8px"
+            background={theme.palette.background.level1}
+            placeholderSize="14px"
+            fullWidth
+            placeholder={t`Search name or canister ID`}
+            textFieldProps={{
+              slotProps: {
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color={theme.palette.text.secondary} size="14px" />
+                    </InputAdornment>
+                  ),
+                  maxLength: 50,
                 },
-              }}
-              onChange={debouncedSearch}
-            />
+              },
+            }}
+            onChange={debouncedSearch}
+          />
+        </Box>
+
+        <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
+
+        <Box sx={{ height: "370px", overflow: "hidden auto" }}>
+          {noData && !isTokenImported ? <NoData /> : null}
+
+          {isTokenImported ? (
+            <Box sx={{ margin: "24px 0 0 0" }}>
+              <Flex justify="center" fullWidth>
+                <Icon />
+              </Flex>
+              <Typography
+                fontSize="16px"
+                fontWeight={500}
+                align="center"
+                sx={{ margin: "16px 0 0 0" }}
+                color="text.primary"
+              >
+                {t("wallet.token.added")}
+              </Typography>
+            </Box>
+          ) : null}
+
+          {showImportToken && !importTokenCanceled ? (
+            <Box className={classes.wrapper}>
+              <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
+            </Box>
+          ) : null}
+
+          <Box>
+            {searchKeyword !== "" ? null : (
+              <Box sx={{ display: "flex", gap: "0 32px" }} className={classes.wrapper}>
+                {Panels.map((__panel) => (
+                  <Typography
+                    key={__panel.value}
+                    className={classNames([classes.panel, panel === __panel.value ? "active" : ""])}
+                    onClick={() => setPanel(__panel.value)}
+                  >
+                    {__panel.label}
+                  </Typography>
+                ))}
+              </Box>
+            )}
           </Box>
 
-          <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
+          <Box mt={searchKeyword ? "0px" : "16px"}>
+            {snsTokens?.map((tokenId) => (
+              <TokenItem
+                key={tokenId}
+                canisterId={tokenId}
+                searchWord={searchKeyword}
+                hidden={panel === "Others" && !searchKeyword}
+                onTokenHide={handleTokenHidden}
+              />
+            ))}
 
-          <Box sx={{ height: "370px", overflow: "hidden auto" }}>
-            {noData && !isTokenImported ? <NoData /> : null}
-
-            {isTokenImported ? (
-              <Box sx={{ margin: "24px 0 0 0" }}>
-                <Flex justify="center" fullWidth>
-                  <Icon />
-                </Flex>
-                <Typography
-                  fontSize="16px"
-                  fontWeight={500}
-                  align="center"
-                  sx={{ margin: "16px 0 0 0" }}
-                  color="text.primary"
-                >
-                  {t("wallet.token.added")}
-                </Typography>
-              </Box>
-            ) : null}
-
-            {showImportToken && !importTokenCanceled ? (
-              <Box className={classes.wrapper}>
-                <ImportToken canisterId={searchKeyword} onCancel={() => setImportTokenCanceled(true)} />
-              </Box>
-            ) : null}
-
-            <Box>
-              {searchKeyword !== "" ? null : (
-                <Box sx={{ display: "flex", gap: "0 32px" }} className={classes.wrapper}>
-                  {Panels.map((__panel) => (
-                    <Typography
-                      key={__panel.value}
-                      className={classNames([classes.panel, panel === __panel.value ? "active" : ""])}
-                      onClick={() => setPanel(__panel.value)}
-                    >
-                      {__panel.label}
-                    </Typography>
-                  ))}
-                </Box>
-              )}
-            </Box>
-
-            <Box mt={searchKeyword ? "0px" : "16px"}>
-              {snsTokens?.map((tokenId) => (
-                <TokenItem
-                  key={tokenId}
-                  canisterId={tokenId}
-                  searchWord={searchKeyword}
-                  hidden={panel === "Others" && !searchKeyword}
-                  onTokenHide={handleTokenHidden}
-                />
-              ))}
-
-              {noneSnsTokens?.map((tokenId) => (
-                <TokenItem
-                  key={tokenId}
-                  canisterId={tokenId}
-                  searchWord={searchKeyword}
-                  hidden={panel === "SNS" && !searchKeyword}
-                  onTokenHide={handleTokenHidden}
-                />
-              ))}
-            </Box>
+            {noneSnsTokens?.map((tokenId) => (
+              <TokenItem
+                key={tokenId}
+                canisterId={tokenId}
+                searchWord={searchKeyword}
+                hidden={panel === "SNS" && !searchKeyword}
+                onTokenHide={handleTokenHidden}
+              />
+            ))}
           </Box>
         </Box>
-      </Modal>
-    </>
+      </Box>
+    </Modal>
   );
 }

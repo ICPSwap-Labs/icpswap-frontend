@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Box, makeStyles } from "components/Mui";
-import { Wrapper, Breadcrumbs, MainCard, ImageLoading, NoData } from "components/index";
 import { useUserClaimEventTransactions } from "@icpswap/hooks";
-import { ClaimTransaction } from "@icpswap/types";
+import type { ClaimTransaction } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, Pagination, TableRow } from "@icpswap/ui";
+import { pageArgsFormat, parseTokenAmount, timestampFormat } from "@icpswap/utils";
+import { Breadcrumbs, ImageLoading, MainCard, NoData, Wrapper } from "components/index";
+import { Box, makeStyles } from "components/Mui";
 import { useToken } from "hooks/index";
-import { timestampFormat, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { HeaderCell, Header, BodyCell, TableRow, Pagination } from "@icpswap/ui";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   return {
@@ -47,7 +47,7 @@ export default function TokenClaimTransactions() {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: PAGE_SIZE });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result: userClaimTransaction, loading } = useUserClaimEventTransactions(
+  const { data: userClaimTransaction, isLoading } = useUserClaimEventTransactions(
     user,
     undefined,
     1,
@@ -79,11 +79,11 @@ export default function TokenClaimTransactions() {
               <TokenClaimTransaction key={`${String(transaction.claimEventId)}_${index}`} transaction={transaction} />
             ))}
 
-            {!loading && (userClaimTransaction?.content ?? []).length === 0 ? (
+            {!isLoading && (userClaimTransaction?.content ?? []).length === 0 ? (
               <NoData tip={t("claim.transactions.empty")} />
             ) : null}
 
-            {loading ? (
+            {isLoading ? (
               <Box
                 sx={{
                   position: "absolute",
@@ -96,7 +96,7 @@ export default function TokenClaimTransactions() {
                   height: "100%",
                 }}
               >
-                <ImageLoading mask loading={loading} />
+                <ImageLoading mask loading={isLoading} />
               </Box>
             ) : null}
 

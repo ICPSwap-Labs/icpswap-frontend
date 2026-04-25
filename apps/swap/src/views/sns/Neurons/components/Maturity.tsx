@@ -1,15 +1,15 @@
-import { Box, Typography, Checkbox } from "components/Mui";
-import { autoStakeMaturity, disburseNeuronMaturity } from "@icpswap/hooks";
-import { Flex, ConfirmModal } from "@icpswap/ui";
-import { Neuron } from "@icpswap/types";
-import { useMemo, useState } from "react";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { BigNumber, formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
 import { secondsToDuration } from "@dfinity/utils";
 import { SnsNeuronPermissionType } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
+import { autoStakeMaturity, disburseNeuronMaturity } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Neuron } from "@icpswap/types";
+import { ConfirmModal, Flex } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Box, Checkbox, Typography } from "components/Mui";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
 import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { DisburseMaturity } from "./DisburseMaturity";
 import { StakeMaturity } from "./StakeMaturity";
@@ -168,8 +168,7 @@ export function Maturity({ neuron, token, governance_id, neuron_id, onMaturitySu
               if (!finalize_disbursement_timestamp_seconds) return null;
 
               const seconds =
-                finalize_disbursement_timestamp_seconds -
-                BigInt(parseInt((new Date().getTime() / 1000).toString(), 10));
+                finalize_disbursement_timestamp_seconds - BigInt(parseInt((Date.now() / 1000).toString(), 10));
 
               const amount = token ? parseTokenAmount(e.amount_e8s, token.decimals).toString() : undefined;
 

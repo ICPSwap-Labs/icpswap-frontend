@@ -1,16 +1,16 @@
-import { useMemo, useContext, useEffect, useCallback } from "react";
-import { Box, useTheme } from "components/Mui";
-import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { useSwapState, useSwapHandlers } from "store/swap/hooks";
-import { BigNumber } from "@icpswap/utils";
-import { SWAP_FIELD } from "constants/swap";
-import { UseCurrencyState } from "hooks/useCurrency";
-import { SwapContext } from "components/swap/index";
-import { Image } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
-import { useNavigate } from "react-router-dom";
-import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
 import { useParsedQueryString } from "@icpswap/hooks";
+import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Image } from "@icpswap/ui";
+import { BigNumber } from "@icpswap/utils";
+import { Box, useTheme } from "components/Mui";
+import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
+import { useSwapStore } from "components/swap/store";
+import { SWAP_FIELD } from "constants/swap";
+import type { UseCurrencyState } from "hooks/useCurrency";
+import { useCallback, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSwapState } from "store/swap/hooks";
 
 export interface SwapInputWrapperProps {
   onInput: (value: string, type: "input" | "output") => void;
@@ -70,16 +70,18 @@ export function SwapInputWrapper({
     [SWAP_FIELD.INPUT]: inputTokenId,
     [SWAP_FIELD.OUTPUT]: outputTokenId,
   } = useSwapState();
-  const { setUSDValueChange } = useContext(SwapContext);
-  const { onSwitchTokens } = useSwapHandlers();
+  const { setUSDValueChange } = useSwapStore();
   const { tab: swapProTab } = useParsedQueryString() as { tab: string };
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
 
-  const formattedAmounts = {
-    [independentField]: typedValue,
-    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6),
-  };
+  const formattedAmounts = useMemo(
+    () => ({
+      [independentField]: typedValue,
+      [dependentField]: parsedAmounts[dependentField]?.toSignificant(6),
+    }),
+    [independentField, typedValue, dependentField, parsedAmounts],
+  );
 
   const inputBalanceUSDValue = useMemo(() => {
     const amount = formattedAmounts[SWAP_FIELD.INPUT];
@@ -107,15 +109,15 @@ export function SwapInputWrapper({
     setUSDValueChange(USDChange);
   }, [setUSDValueChange, USDChange]);
 
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- should add inputTokenId and outputTokenId on dependencies
   const handleSwitchTokens = useCallback(() => {
     const prePath = ui === "pro" ? "/swap/pro" : "/swap";
-    navigate(
-      `${prePath}?input=${outputTokenId}&output=${inputTokenId}${
-        ui === "pro" && !!swapProTab ? `&tab=${swapProTab}` : ""
-      }`,
-    );
-    onSwitchTokens();
-  }, [onSwitchTokens, inputTokenId, outputTokenId, swapProTab]);
+    const path = `${prePath}?input=${outputTokenId}&output=${inputTokenId}${
+      ui === "pro" && !!swapProTab ? `&tab=${swapProTab}` : ""
+    }`;
+
+    navigate(path);
+  }, [swapProTab, navigate, ui, outputTokenId, inputTokenId]);
 
   return (
     <Box>

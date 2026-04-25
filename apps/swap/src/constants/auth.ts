@@ -1,5 +1,5 @@
+import { InternetIdentity, NFIDW, Plug } from "@nfid/identitykit";
 import { Connector } from "constants/wallet";
-import { NFIDW, Plug, InternetIdentity } from "@nfid/identitykit";
 
 export const IdentityKitConnector = [Connector.NFID];
 

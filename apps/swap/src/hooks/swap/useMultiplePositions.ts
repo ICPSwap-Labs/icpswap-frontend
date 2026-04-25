@@ -1,8 +1,8 @@
-import { useMemo } from "react";
 import { Position } from "@icpswap/swap-sdk";
-import { usePools, type PoolKey } from "hooks/swap/usePools";
-import { useTokens } from "hooks/useCurrency";
 import type { PoolMetadata } from "@icpswap/types";
+import { type PoolKey, usePools } from "hooks/swap/usePools";
+import { useTokens } from "hooks/useCurrency";
+import { useMemo } from "react";
 
 export interface PositionInfo {
   liquidity: bigint;
@@ -32,6 +32,7 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
     });
 
     return { tokenIds };
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(args)]);
 
   const tokens = useTokens(tokenIds);
@@ -50,6 +51,7 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
 
       return [tokenA ? tokenA[1] : undefined, tokenB ? tokenB[1] : undefined, Number(metadata.fee)] as PoolKey;
     });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(args), tokens]);
 
   const pools = usePools(poolKeys);
@@ -74,5 +76,6 @@ export function useMultiplePositions(args: UseMultiplePositionProps[]) {
     });
 
     return positions;
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(args), pools]);
 }

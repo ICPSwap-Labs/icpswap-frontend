@@ -1,6 +1,6 @@
+import type { TransferPositionInfo } from "@icpswap/types";
 import { shorten } from "@icpswap/utils";
-import { TransferPositionInfo } from "@icpswap/types";
-import { SwapTransactionResult, SWAP_TRANSACTIONS_FAILED_STATUS } from "utils/transaction/constant";
+import { SWAP_TRANSACTIONS_FAILED_STATUS, type SwapTransactionResult } from "utils/transaction/constant";
 
 export async function swapTransactionTransferPositionFormat(
   info: TransferPositionInfo,

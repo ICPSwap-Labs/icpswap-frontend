@@ -1,20 +1,28 @@
-import { useState, useMemo, useEffect, useCallback, forwardRef, Ref, useImperativeHandle, ReactNode } from "react";
-import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
-import { useTransformedVolumeData, useTokenCharts } from "@icpswap/hooks";
-import type { Null, InfoTokenDataResponse } from "@icpswap/types";
 import { VolumeWindow } from "@icpswap/constants";
+import { useTokenCharts, useTransformedVolumeData } from "@icpswap/hooks";
+import type { InfoTokenDataResponse, Null } from "@icpswap/types";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice } from "@icpswap/utils";
 import dayjs from "dayjs";
-
-import { Typography, Box, BoxProps } from "../Mui";
-import { LineChartAlt } from "../LineChart/alt";
+import {
+  forwardRef,
+  type ReactNode,
+  type Ref,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from "react";
 import { BarChartAlt } from "../BarChart/alt";
-import { SwapAnalyticLoading } from "./Loading";
-import { ChartDateButtons } from "./ChartDateButton";
-import { ChartView } from "./types";
-import { Flex } from "../Grid/Flex";
-import { MainCard } from "../MainCard";
 import { DexTools } from "../DexTools";
+import { Flex } from "../Grid/Flex";
+import { LineChartAlt } from "../LineChart/alt";
+import { MainCard } from "../MainCard";
+import { Box, type BoxProps, Typography } from "../Mui";
 import { Select } from "../Select";
+import { ChartDateButtons } from "./ChartDateButton";
+import { SwapAnalyticLoading } from "./Loading";
+import { ChartView } from "./types";
 
 export interface ChartButton {
   label: string;
@@ -40,7 +48,7 @@ function volumeDataFormatter(data: InfoTokenDataResponse[]) {
 
     if (next) {
       const diff = next.beginTime - curr.beginTime;
-      const days = parseInt((Number(diff) / (3600 * 24 * 1000)).toString());
+      const days = parseInt((Number(diff) / (3600 * 24 * 1000)).toString(), 10);
 
       if (days === 1) {
         newData.push({ volumeUSD: new BigNumber(curr.volumeUSD).toNumber(), timestamp: curr.beginTime });
@@ -60,9 +68,9 @@ function volumeDataFormatter(data: InfoTokenDataResponse[]) {
     }
   }
 
-  const now = new Date().getTime();
+  const now = Date.now();
   const endTime = oldData[oldData.length - 1].beginTime;
-  const days = parseInt(((now - Number(endTime) * 1000) / (1000 * 3600 * 24)).toString());
+  const days = parseInt(((now - Number(endTime) * 1000) / (1000 * 3600 * 24)).toString(), 10);
 
   // Fill the latest data to today
   for (let i = 1; i <= days; i++) {
@@ -120,7 +128,7 @@ export const TokenCharts = forwardRef(
     const [latestValue, setLatestValue] = useState<number | undefined>();
     const [volumeWindow, setVolumeWindow] = useState<VolumeWindow>(VolumeWindow.daily);
 
-    const { result: tokenChartsResult, loading } = useTokenCharts({
+    const { data: tokenChartsResult, isLoading } = useTokenCharts({
       tokenId: canisterId,
       level: "d1",
       page: 1,
@@ -139,7 +147,7 @@ export const TokenCharts = forwardRef(
     const formattedTvlData = useMemo(() => {
       return tokenCharts.map((data) => {
         return {
-          time: dayjs(Number(data.beginTime)).format("YYYY-MM-DD HH:mm:ss"),
+          time: Number(data.beginTime),
           value: data.tvlUSD,
         };
       });
@@ -201,7 +209,7 @@ export const TokenCharts = forwardRef(
         }}
         padding="0"
       >
-        <SwapAnalyticLoading loading={loading} />
+        <SwapAnalyticLoading loading={isLoading} />
 
         <Flex
           fullWidth
@@ -214,10 +222,10 @@ export const TokenCharts = forwardRef(
               chartView === ChartView.PRICE && priceChart
                 ? "none"
                 : chartView === ChartView.DexTools
-                ? showTopIfDexScreen
-                  ? "flex"
-                  : "none"
-                : "flex",
+                  ? showTopIfDexScreen
+                    ? "flex"
+                    : "none"
+                  : "flex",
           }}
         >
           <Box>
@@ -244,15 +252,15 @@ export const TokenCharts = forwardRef(
                 ? chartView === ChartView.TRANSACTIONS
                   ? latestValue
                   : chartView === ChartView.PRICE
-                  ? formatDollarTokenPrice(latestValue)
-                  : formatDollarAmount(latestValue)
+                    ? formatDollarTokenPrice(latestValue)
+                    : formatDollarAmount(latestValue)
                 : chartView === ChartView.VOL
-                ? volume
-                  ? formatDollarAmount(volume)
-                  : formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
-                : chartView === ChartView.TVL
-                ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
-                : "--"}
+                  ? volume
+                    ? formatDollarAmount(volume)
+                    : formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                  : chartView === ChartView.TVL
+                    ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
+                    : "--"}
             </Typography>
 
             <Typography
@@ -335,8 +343,8 @@ export const TokenCharts = forwardRef(
                   volumeWindow === VolumeWindow.daily
                     ? "daily"
                     : volumeWindow === VolumeWindow.monthly
-                    ? "monthly"
-                    : "weekly"
+                      ? "monthly"
+                      : "weekly"
                 }
               />
             ) : (

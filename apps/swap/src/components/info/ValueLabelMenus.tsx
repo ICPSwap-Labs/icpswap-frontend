@@ -1,4 +1,4 @@
-import { Flex, MenuWrapper, MenuItem, Fish, Dolphin, Whale, FishValue, DolphinValue, WhaleValue } from "@icpswap/ui";
+import { Dolphin, DolphinValue, Fish, FishValue, Flex, MenuItem, MenuWrapper, Whale, WhaleValue } from "@icpswap/ui";
 import { formatDollarAmount } from "@icpswap/utils";
 import { Typography, useTheme } from "components/Mui";
 

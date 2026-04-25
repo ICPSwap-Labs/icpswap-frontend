@@ -1,13 +1,12 @@
+import type { NFTTokenMetadata } from "@icpswap/types";
 import { MainCard } from "components/index";
-import { Grid, Typography, Box, makeStyles, useTheme, Theme } from "components/Mui";
-import { isDarkTheme } from "utils";
+import { Box, Grid, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import NFTAvatar from "components/NFT/NFTAvatar";
 import { useNFTOrderInfo } from "hooks/nft/trade";
 import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
-import type { NFTTokenMetadata } from "@icpswap/types";
-import NFTAvatar from "components/NFT/NFTAvatar";
-
-import WICPPriceFormat from "./WICPPriceFormat";
+import { isDarkTheme } from "utils";
 import OnSaleLabel from "./OnSaleLabel";
+import WICPPriceFormat from "./WICPPriceFormat";
 
 const useStyles = makeStyles((theme: Theme) => {
   const isDark = isDarkTheme(theme);
@@ -46,7 +45,7 @@ export default function NFTCard({ nft, onCardClick, showDetails = true }: NFTCar
   const isDarkTheme = theme.customization.mode === "dark";
 
   const metadata = useNFTByMetadata(nft);
-  const { result: _order } = useNFTOrderInfo(nft.cId, nft.tokenId);
+  const { data: _order } = useNFTOrderInfo(nft.cId, nft.tokenId);
 
   const isOnSale = !!_order;
 

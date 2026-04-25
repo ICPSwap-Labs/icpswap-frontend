@@ -1,15 +1,15 @@
-import { useState, useMemo, useEffect } from "react";
-import { Typography, Box, Grid, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
-import { NoData, LoadingRow, Wrapper, Breadcrumbs, Tooltip } from "components/index";
-import { parseTokenAmount } from "@icpswap/utils";
-import { useToken } from "hooks/index";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { useHideUnavailableClaimManager } from "store/customization/hooks";
-import { useUserPCMBalance, usePassCode, usePCMMetadata, destroyPassCode, withdrawPCMBalance } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { destroyPassCode, usePassCode, usePCMMetadata, useUserPCMBalance, withdrawPCMBalance } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { type PassCode, type PCMMetadata, ResultStatus } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import { parseTokenAmount } from "@icpswap/utils";
+import { Breadcrumbs, LoadingRow, NoData, Tooltip, Wrapper } from "components/index";
+import { Avatar, Box, Button, CircularProgress, Grid, Typography, useTheme } from "components/Mui";
+import { useToken } from "hooks/index";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useHideUnavailableClaimManager } from "store/customization/hooks";
 
 type ClaimedKey = string | number;
 
@@ -57,7 +57,7 @@ export function BalanceItem({
     if (unavailableClaim === true) {
       updateUnavailableKeys(claimedKey);
     }
-  }, [unavailableClaim, claimedKey]);
+  }, [unavailableClaim, claimedKey, updateUnavailableKeys]);
 
   const handleClaim = async () => {
     if (loading || unavailableClaim || !metadata) return;
@@ -232,9 +232,9 @@ export default function PCMBalanceReclaim() {
 
   const principal = useAccountPrincipal();
 
-  const { result: unusedBalance, loading: unUsedLoading } = useUserPCMBalance(principal);
-  const { result: passCodes, loading: passLoading } = usePassCode(principal?.toString());
-  const { result: pcmMetadata, loading: metadataLoading } = usePCMMetadata();
+  const { data: unusedBalance, isLoading: unUsedLoading } = useUserPCMBalance(principal);
+  const { data: passCodes, isLoading: passLoading } = usePassCode(principal?.toString());
+  const { data: pcmMetadata, isLoading: metadataLoading } = usePCMMetadata();
 
   const totalClaimedNumbers = useMemo(() => {
     return (passCodes?.length ?? 0) + (unusedBalance ? 1 : 0);

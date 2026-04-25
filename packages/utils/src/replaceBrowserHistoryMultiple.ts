@@ -1,5 +1,9 @@
 import { isUndefinedOrNull } from "./isUndefinedOrNull";
 
+/**
+ * Updates the current URL query string in-place via `history.replaceState` and dispatches `popstate#urlChange`.
+ * Nullish values remove their keys.
+ */
 export const replaceBrowserHistoryMultiple = (params: { [key: string]: string | number | null | undefined }) => {
   const url = new URL(window.location.href);
 

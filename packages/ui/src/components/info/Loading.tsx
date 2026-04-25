@@ -1,5 +1,3 @@
-import LoadingImage from "assets/images/loading.png";
-
 import { Box, useTheme } from "../Mui";
 
 export function SwapAnalyticLoading({ loading }: { loading: boolean }) {
@@ -20,7 +18,7 @@ export function SwapAnalyticLoading({ loading }: { loading: boolean }) {
         zIndex: 100,
       }}
     >
-      <img width="80px" height="80px" src={LoadingImage} alt="" />
+      <img width="80px" height="80px" src="/images/loading.png" alt="" />
     </Box>
   ) : null;
 }

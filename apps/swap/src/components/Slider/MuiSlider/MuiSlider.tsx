@@ -1,4 +1,4 @@
-import { Slider, Tooltip, tooltipClasses, SliderProps, styled, makeStyles, Theme } from "components/Mui";
+import { makeStyles, Slider, type SliderProps, styled, type Theme, Tooltip, tooltipClasses } from "components/Mui";
 import { isDarkTheme } from "utils";
 
 const marks = [{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { value: 100 }];

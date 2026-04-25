@@ -1,5 +1,5 @@
+import { type Pool, Position } from "@icpswap/swap-sdk";
 import { useMemo } from "react";
-import { Pool, Position } from "@icpswap/swap-sdk";
 
 interface PositionInfo {
   liquidity: bigint;

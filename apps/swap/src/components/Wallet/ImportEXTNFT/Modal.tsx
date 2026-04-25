@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import Modal from "components/modal/index";
-import type { EXTCollection } from "@icpswap/types";
 import { NFT_STANDARDS } from "@icpswap/constants";
-import { FilledTextField } from "components/index";
 import { useEXTAllCollections } from "@icpswap/hooks";
-import { Button, Box } from "components/Mui";
+import type { EXTCollection } from "@icpswap/types";
 import { isValidPrincipal } from "@icpswap/utils";
-import { useEXTManager } from "store/nft/hooks";
+import { FilledTextField } from "components/index";
+import { Box, Button } from "components/Mui";
+import Modal from "components/modal/index";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useEXTManager } from "store/nft/hooks";
 
 export const Standards = [{ label: "EXT", value: NFT_STANDARDS.EXT }];
 
@@ -49,7 +49,7 @@ export function ImportNFTCanisterModal({ open, onClose }: { open: boolean; onClo
   const [values, setValues] = useState<Value>({ standard: NFT_STANDARDS.EXT } as Value);
   const [riskWarning, setRiskWarning] = useState(false);
 
-  const { result: extAllCollections } = useEXTAllCollections();
+  const { data: extAllCollections } = useEXTAllCollections();
 
   const { nfts, importNFT } = useEXTManager();
 

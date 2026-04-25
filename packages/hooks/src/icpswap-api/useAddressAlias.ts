@@ -1,8 +1,6 @@
-import { useCallback } from "react";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
-
-import { useCallsData } from "../useCallData";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 interface UseAddressAliasProps {
   principal?: string | Null;
@@ -10,9 +8,15 @@ interface UseAddressAliasProps {
   accountTextual?: string | Null;
 }
 
-export function useAddressAlias({ principal, account, accountTextual }: UseAddressAliasProps) {
-  return useCallsData(
-    useCallback(async () => {
+export function useAddressAlias({
+  principal,
+  account,
+  accountTextual,
+}: UseAddressAliasProps): UseQueryResult<string | undefined, Error> {
+  const hasInput = !isUndefinedOrNull(principal) || !isUndefinedOrNull(account) || !isUndefinedOrNull(accountTextual);
+  return useQuery({
+    queryKey: ["useAddressAlias", principal, account, accountTextual],
+    queryFn: async () => {
       if (isUndefinedOrNull(principal) && isUndefinedOrNull(account) && isUndefinedOrNull(accountTextual))
         return undefined;
 
@@ -25,8 +29,9 @@ export function useAddressAlias({ principal, account, accountTextual }: UseAddre
       if (isUndefinedOrNull(result)) return undefined;
 
       return result.data;
-    }, [principal, account, accountTextual]),
-  );
+    },
+    enabled: hasInput,
+  });
 }
 
 export interface GetAddressesAliasProps {
@@ -43,11 +48,17 @@ export async function getAddressesAlias({ principals, accounts }: GetAddressesAl
   return result.data;
 }
 
-export function useAddressesAlias({ principals, accounts }: GetAddressesAliasProps) {
-  return useCallsData(
-    useCallback(async () => {
+export function useAddressesAlias({
+  principals,
+  accounts,
+}: GetAddressesAliasProps): UseQueryResult<{ [key: string]: string } | undefined, Error> {
+  const hasInput = !isUndefinedOrNull(principals) || !isUndefinedOrNull(accounts);
+  return useQuery({
+    queryKey: ["useAddressesAlias", principals, accounts],
+    queryFn: async () => {
       if (isUndefinedOrNull(principals) && isUndefinedOrNull(accounts)) return undefined;
       return await getAddressesAlias({ principals, accounts });
-    }, [principals, accounts]),
-  );
+    },
+    enabled: hasInput,
+  });
 }

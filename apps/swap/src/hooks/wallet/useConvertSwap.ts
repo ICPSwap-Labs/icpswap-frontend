@@ -1,15 +1,15 @@
-import { Null, ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
-import { useCallback } from "react";
 import { depositAndSwap, depositFromAndSwap } from "@icpswap/hooks";
-import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
-import { useSwapApprove, useSwapTransfer, getTokenActualTransferRawAmount } from "hooks/swap/index";
-import { getLocaleMessage } from "i18n/service";
-import { MessageTypes, TIP_SUCCESS, useTips } from "hooks/useTips";
-import { isUseTransfer } from "utils/token/index";
-import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
-import { allowance } from "hooks/token";
+import type { Token } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
+import { type Null, ResultStatus, type TOKEN_STANDARD } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { getTokenActualTransferRawAmount, useSwapApprove, useSwapTransfer } from "hooks/swap/index";
+import { allowance } from "hooks/token";
+import { MessageTypes, TIP_SUCCESS, useTips } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback } from "react";
+import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
+import { isUseTransfer } from "utils/token/index";
 
 export interface UseTransferOrApproveProps {
   amount: string;
@@ -45,7 +45,7 @@ export function useTransferOrApprove() {
         standard: token.standard as TOKEN_STANDARD,
       });
     },
-    [principal],
+    [principal, approve, transfer],
   );
 }
 
@@ -74,8 +74,8 @@ export function useSwapCallback() {
       const actualSwapAmount = isUseTransfer(token)
         ? new BigNumber(amount).minus(token.transFee * 2).toString()
         : new BigNumber(amount).isLessThanOrEqualTo((inputAllowance ?? BigInt(0)).toString())
-        ? new BigNumber(amount).minus(token.transFee * 1).toString()
-        : new BigNumber(amount).minus(token.transFee * 2).toString();
+          ? new BigNumber(amount).minus(token.transFee * 1).toString()
+          : new BigNumber(amount).minus(token.transFee * 2).toString();
 
       const { status, message } = isUseTransfer(token)
         ? await depositAndSwap(poolId, {
@@ -105,7 +105,7 @@ export function useSwapCallback() {
 
       return swapOk;
     },
-    [principal],
+    [principal, openTip],
   );
 }
 
@@ -137,6 +137,6 @@ export function useConvertSwap() {
 
       return await swap({ amount: balance, inputAllowance, poolId, token });
     },
-    [principal, approveOrTransfer],
+    [principal, approveOrTransfer, swap],
   );
 }

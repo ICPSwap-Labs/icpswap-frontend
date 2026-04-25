@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { useToken } from "hooks/useCurrency";
 import { useSnsTokenInfoByGovernance } from "hooks/sns/useSnsTokenInfoByGovernance";
+import { useToken } from "hooks/useCurrency";
+import { useMemo } from "react";
 
 export function useLiquidityLocksImage(name: string | undefined, principalId: string | undefined) {
   const governanceId = useMemo(() => {
@@ -37,5 +37,5 @@ export function useLiquidityLocksImage(name: string | undefined, principalId: st
     }
 
     return token?.logo;
-  }, [token, tokenId, name, principalId]);
+  }, [token, tokenId, name]);
 }

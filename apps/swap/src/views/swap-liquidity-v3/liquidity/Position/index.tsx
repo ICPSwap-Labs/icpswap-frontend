@@ -1,22 +1,22 @@
-import { useParams } from "react-router-dom";
-import { LoadingRow, Flex, FeeTierPercentLabel } from "@icpswap/ui";
-import { principalToAccount } from "@icpswap/utils";
 import { useSwapPositionOwner } from "@icpswap/hooks";
-import { PoolTokensPrice } from "components/swap/PoolTokensPrice";
-import { Box } from "components/Mui";
-import { Wrapper, Breadcrumbs, TokenImage, AuthButton } from "components/index";
-import { usePosition } from "hooks/swap/usePosition";
-import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
-import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
+import { FeeTierPercentLabel, Flex, LoadingRow } from "@icpswap/ui";
+import { principalToAccount } from "@icpswap/utils";
+import { AuthButton, Breadcrumbs, TokenImage, Wrapper } from "components/index";
 import { InfoPool } from "components/liquidity/index";
-import { PositionInfo, UncollectedFees, PositionValue, ChartsWrapper } from "components/liquidity/Position/index";
+import { ChartsWrapper, PositionInfo, PositionValue, UncollectedFees } from "components/liquidity/Position/index";
+import { Box } from "components/Mui";
 import { BuyTokenButton } from "components/swap/index";
-import { useMemo } from "react";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { PoolTokensPrice } from "components/swap/PoolTokensPrice";
+import { TokenPairName } from "components/TokenPairName";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { useRefreshTriggerManager } from "hooks/index";
+import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
+import { usePosition } from "hooks/swap/usePosition";
+import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { TokenPairName } from "components/TokenPairName";
+import { useParams } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export default function PositionDetails() {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ export default function PositionDetails() {
   const { positionId, pool: poolId } = useParams() as { positionId: string; pool: string };
   const [refreshTrigger] = useRefreshTriggerManager(LIQUIDITY_OWNER_REFRESH_KEY);
 
-  const { result: positionDetails } = usePositionDetailsFromId(poolId, positionId);
+  const { data: positionDetails } = usePositionDetailsFromId(poolId, positionId);
   const { position } = usePosition({
     poolId,
     tickLower: positionDetails?.tickLower,
@@ -38,7 +38,7 @@ export default function PositionDetails() {
 
   const loadAddLiquidity = useLoadAddLiquidityCallback({ token0, token1 });
 
-  const { result: owner } = useSwapPositionOwner(position?.pool.id, BigInt(positionId), refreshTrigger);
+  const { data: owner } = useSwapPositionOwner(position?.pool.id, BigInt(positionId), refreshTrigger);
 
   const isOwner = useMemo(() => {
     if (!owner || !principal) return false;

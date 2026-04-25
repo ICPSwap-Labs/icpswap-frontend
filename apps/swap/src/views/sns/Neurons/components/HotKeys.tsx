@@ -1,16 +1,16 @@
-import { Modal } from "@icpswap/ui";
-import { FilledTextField } from "components/index";
-import { Button, Box, Typography } from "components/Mui";
-import { useMemo, useState } from "react";
-import { isValidPrincipal, shorten } from "@icpswap/utils";
-import { neuronAddPermissions, neuronRemovePermissions } from "@icpswap/hooks";
+import { Principal } from "@icp-sdk/core/principal";
 import { HotKeysPermissions } from "@icpswap/constants";
+import { neuronAddPermissions, neuronRemovePermissions } from "@icpswap/hooks";
 import type { Neuron, NeuronPermission } from "@icpswap/types";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Principal } from "@dfinity/principal";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { Modal } from "@icpswap/ui";
+import { isValidPrincipal, shorten } from "@icpswap/utils";
+import { FilledTextField } from "components/index";
+import { Box, Button, Typography } from "components/Mui";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import { useMemo, useState } from "react";
 import { X } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface HotKeysProps {
   governance_id: string | undefined;

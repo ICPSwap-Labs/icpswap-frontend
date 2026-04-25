@@ -1,9 +1,9 @@
-import { Token, Position } from "@icpswap/swap-sdk";
-import { useCallback } from "react";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
-import { OpenExternalTip } from "types/index";
-import { useStepManager } from "hooks/swap/limit-order/useStepManager";
+import type { Position, Token } from "@icpswap/swap-sdk";
 import { usePlaceOrderCalls } from "hooks/swap/limit-order/usePlaceOrderCalls";
+import { useStepManager } from "hooks/swap/limit-order/useStepManager";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { useCallback } from "react";
+import type { OpenExternalTip } from "types/index";
 
 export interface PlaceOrderCallbackArgs {
   position: Position;

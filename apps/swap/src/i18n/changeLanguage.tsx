@@ -1,6 +1,6 @@
 import i18n from "i18next";
 
-import { Locale } from "./constants";
+import type { Locale } from "./constants";
 
 let changingTo = "";
 export async function changeLanguage(locale: Locale): Promise<void> {

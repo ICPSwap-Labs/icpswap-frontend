@@ -1,13 +1,12 @@
+import { useLoadingCallData } from "@icpswap/hooks";
+import { type NFTTokenMetadata, type Null, ResultStatus } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { Button } from "components/Mui";
 import { cancel } from "hooks/nft/trade";
-import { ResultStatus } from "types/index";
-import { useSuccessTip, useErrorTip } from "hooks/useTips";
+import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
-import type { NFTTokenMetadata, Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { useLoadingCallData } from "@icpswap/hooks";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function NFTInfo({
   metadata,
@@ -32,7 +31,7 @@ export default function NFTInfo({
         openSuccessTip(t("common.cancelled.success"));
         if (onRevokeSuccess) onRevokeSuccess();
       }
-    }, [metadata]),
+    }, [metadata, onRevokeSuccess, openErrorTip, openSuccessTip, t]),
   );
 
   return (

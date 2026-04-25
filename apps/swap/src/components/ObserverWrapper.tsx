@@ -1,6 +1,7 @@
-import { Null } from "@icpswap/types";
-import { Box, BoxProps } from "components/Mui";
-import React, { useEffect, useRef, useState } from "react";
+import type { Null } from "@icpswap/types";
+import { Box, type BoxProps } from "components/Mui";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface ObserverWrapperProps {
   children: React.ReactNode;
@@ -58,7 +59,7 @@ export function ObserverWrapper({
         observer.disconnect();
       }
     };
-  }, []);
+  }, [scrollInViewport, scrollOutViewport]);
 
   return (
     <Box ref={eleRef} className={`${beforeClass} ${inViewport ? afterClass : ""}`} sx={props?.sx}>

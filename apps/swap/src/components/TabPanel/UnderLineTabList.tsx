@@ -1,7 +1,7 @@
-import { useState, ReactNode, useCallback, useRef, useEffect, memo } from "react";
-import { Box, useTheme, Typography } from "components/Mui";
-import { Null } from "@icpswap/types";
 import { useSetTimeoutCall } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { Box, Typography, useTheme } from "components/Mui";
+import { memo, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 export interface UnderLineTab {
   value: string;
@@ -84,7 +84,7 @@ export interface UnderLineTabListProps {
   activeTabValue?: string;
 }
 
-function __UnderLineTabList({ tabs, onChange, activeTabValue }: UnderLineTabListProps) {
+function UnderLineTabListCF({ tabs, onChange, activeTabValue }: UnderLineTabListProps) {
   const tabListRef = useRef(null);
 
   const [activeTab, setActiveTab] = useState<string>(tabs[0].value);
@@ -96,7 +96,7 @@ function __UnderLineTabList({ tabs, onChange, activeTabValue }: UnderLineTabList
       setActiveTab(tab.value);
       if (onChange) onChange(tab);
     },
-    [setActiveTab, onChange],
+    [onChange],
   );
 
   useEffect(() => {
@@ -113,7 +113,7 @@ function __UnderLineTabList({ tabs, onChange, activeTabValue }: UnderLineTabList
       const dom = tabListRef.current as HTMLElement;
       const activeIndex = tabs.findIndex((tab) => tab.value === activeTab);
 
-      const activeTabElement = Array.from(dom.children).find((child, index) => index === activeIndex) as
+      const activeTabElement = Array.from(dom.children).find((_child, index) => index === activeIndex) as
         | HTMLElement
         | undefined;
 
@@ -123,7 +123,7 @@ function __UnderLineTabList({ tabs, onChange, activeTabValue }: UnderLineTabList
         setActiveTabLeft(activeTabElement.offsetLeft);
       }
     }
-  }, [tabs, tabListRef, activeTab, tabListRef.current]);
+  }, [tabs, activeTab]);
 
   return (
     <Box ref={tabListRef} sx={{ position: "relative", display: "flex", gap: "0 20px" }}>
@@ -136,4 +136,4 @@ function __UnderLineTabList({ tabs, onChange, activeTabValue }: UnderLineTabList
   );
 }
 
-export const UnderLineTabList = memo(__UnderLineTabList);
+export const UnderLineTabList = memo(UnderLineTabListCF);

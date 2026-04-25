@@ -1,7 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateCallResult, updateCallIndex, updateCallKeys } from "./actions";
+import { updateCallIndex, updateCallKeys, updateCallResult } from "./actions";
 import { initialState } from "./states";
-
 
 export default createReducer(initialState, (builder) => {
   builder

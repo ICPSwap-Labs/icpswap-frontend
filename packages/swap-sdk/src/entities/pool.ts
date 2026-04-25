@@ -1,14 +1,14 @@
 import JSBI from "jsbi";
 import invariant from "tiny-invariant";
-import { BigintIsh, Price, Token, CurrencyAmount } from "../core";
-import { FeeAmount, TICK_SPACINGS } from "../constants";
+import { type FeeAmount, TICK_SPACINGS } from "../constants";
+import { type BigintIsh, CurrencyAmount, Price, type Token } from "../core";
 import { NEGATIVE_ONE, ONE, Q192, ZERO } from "../internalConstants";
 import { computePoolAddress } from "../utils/computePoolAddress";
 import { LiquidityMath } from "../utils/liquidityMath";
 import { SwapMath } from "../utils/swapMath";
 import { TickMath } from "../utils/tickMath";
-import { Tick, TickConstructorArgs } from "./tick";
-import { NoTickDataProvider, TickDataProvider } from "./tickDataProvider";
+import type { Tick, TickConstructorArgs } from "./tick";
+import { NoTickDataProvider, type TickDataProvider } from "./tickDataProvider";
 import { TickListDataProvider } from "./tickListDataProvider";
 
 interface StepComputations {

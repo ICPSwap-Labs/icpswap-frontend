@@ -1,15 +1,15 @@
-import { useMemo, useCallback, useEffect, useState } from "react";
-import { NumberType, ResultStatus } from "@icpswap/types";
-import { parseTokenAmount, formatTokenAmount, BigNumber } from "@icpswap/utils";
-import { Token, FeeAmount } from "@icpswap/swap-sdk";
-import { getPoolCanisterId } from "hooks/swap/v3Calls";
-import { getSwapPosition, depositFrom, deposit } from "@icpswap/hooks";
-import { usePoolCanisterIdManager } from "store/swap/hooks";
-import { PositionDetail } from "types/swap";
+import { deposit, depositFrom, getSwapPosition } from "@icpswap/hooks";
+import type { FeeAmount, Token } from "@icpswap/swap-sdk";
 import type { SwapNFTTokenMetadata, TOKEN_STANDARD } from "@icpswap/types";
+import { type NumberType, ResultStatus } from "@icpswap/types";
+import { BigNumber, formatTokenAmount, parseTokenAmount } from "@icpswap/utils";
+import { getPoolCanisterId } from "hooks/swap/v3Calls";
 import { useErrorTip } from "hooks/useTips";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePoolCanisterIdManager } from "store/swap/hooks";
+import type { OpenExternalTip } from "types/index";
+import type { PositionDetail } from "types/swap";
 import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
-import { OpenExternalTip } from "types/index";
 
 // Now the amount that user input is the final amount swap/add/increase
 // Amount is the value that the subaccount balance when use transfer, 1 token fees should be added on the amount
@@ -76,7 +76,7 @@ export function usePoolCanisterId(
     };
 
     call();
-  }, [id, token0CanisterId, token1CanisterId, fee, key]);
+  }, [id, token0CanisterId, token1CanisterId, fee, key, updatePoolCanisterId]);
 
   return useMemo(() => id, [id]);
 }
@@ -174,61 +174,64 @@ export interface UseSwapDepositArgs {
 export function useSwapDeposit() {
   const [openErrorTip] = useErrorTip();
 
-  return useCallback(async ({ token, amount, poolId, openExternalTip, standard }: UseSwapDepositArgs) => {
-    const useTransfer = isUseTransferByStandard(standard);
+  return useCallback(
+    async ({ token, amount, poolId, openExternalTip, standard }: UseSwapDepositArgs) => {
+      const useTransfer = isUseTransferByStandard(standard);
 
-    let status: ResultStatus = ResultStatus.ERROR;
-    let message = "";
+      let status: ResultStatus = ResultStatus.ERROR;
+      let message = "";
 
-    if (useTransfer) {
-      const { status: _status, message: _message } = await deposit(
-        poolId,
-        token.address,
-        BigInt(amount),
-        BigInt(token.transFee),
-      );
-      status = _status;
-      message = _message;
-    } else {
-      const { status: _status, message: _message } = await depositFrom(
-        poolId,
-        token.address,
-        BigInt(amount),
-        BigInt(token.transFee),
-      );
-      status = _status;
-      message = _message;
-    }
-
-    if (status === "err") {
-      if (openExternalTip) {
-        openExternalTip({ message });
+      if (useTransfer) {
+        const { status: _status, message: _message } = await deposit(
+          poolId,
+          token.address,
+          BigInt(amount),
+          BigInt(token.transFee),
+        );
+        status = _status;
+        message = _message;
       } else {
-        openErrorTip(`Failed to deposit ${token.symbol}: ${message}.`);
+        const { status: _status, message: _message } = await depositFrom(
+          poolId,
+          token.address,
+          BigInt(amount),
+          BigInt(token.transFee),
+        );
+        status = _status;
+        message = _message;
       }
 
-      return false;
-    }
+      if (status === "err") {
+        if (openExternalTip) {
+          openExternalTip({ message });
+        } else {
+          openErrorTip(`Failed to deposit ${token.symbol}: ${message}.`);
+        }
 
-    return true;
-  }, []);
+        return false;
+      }
+
+      return true;
+    },
+    [openErrorTip],
+  );
 }
 
-export * from "./useSwapTokenTransfer";
-export * from "./useSwapApprove";
-export * from "./usePositionValue";
-export * from "./useWithdrawPCMBalance";
-export * from "./useSortedPositions";
-export * from "./useTokenInsufficient";
-export * from "./useSwapPositions";
-export * from "./usePCMBalances";
-export * from "./useSwapTokenFeeCost";
+export * from "./swap";
 export * from "./useLiquidityLocksImage";
 export * from "./useMaxAmountSpend";
-export * from "./useSwapWithdraw";
-export * from "./usePositionFees";
-export * from "./usePosition";
-export * from "./usePools";
-export * from "./useTokenPairWithIcp";
 export * from "./useMultiplePositionsFee";
-export * from "./swap";
+export * from "./usePCMBalances";
+export * from "./usePools";
+export * from "./usePosition";
+export * from "./usePositionFees";
+export * from "./usePositionValue";
+export * from "./useSortedPositions";
+export * from "./useSwapApprove";
+export * from "./useSwapPositions";
+export * from "./useSwapTokenFeeCost";
+export * from "./useSwapTokenTransfer";
+export * from "./useSwapWithdraw";
+export * from "./useTokenInsufficient";
+export * from "./useTokenPairWithIcp";
+export * from "./useWithdrawPCMBalance";

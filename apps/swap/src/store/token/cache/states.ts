@@ -1,4 +1,4 @@
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
 
 export interface TokenCacheState {
   standards: { [canisterId: string]: TOKEN_STANDARD };

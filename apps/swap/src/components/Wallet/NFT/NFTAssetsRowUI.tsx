@@ -1,6 +1,6 @@
-import { Box, useTheme, Typography, Avatar } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { Avatar, Box, Typography, useTheme } from "components/Mui";
 
 export interface NFTAssetsRowUIProps {
   logo: string | undefined;

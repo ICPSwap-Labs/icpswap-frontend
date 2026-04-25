@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
-import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow, Tooltip } from "components/index";
 import { useUserSwapPoolBalances } from "@icpswap/hooks";
-import { useHideUnavailableClaimManager } from "store/customization/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { isMobile } from "react-device-detect";
+import { LoadingRow, NoData, Tooltip } from "components/index";
+import { Box, Checkbox, Typography } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useHideUnavailableClaimManager } from "store/customization/hooks";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -22,6 +22,7 @@ export function ReclaimAll() {
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
 
+  const isMobile = useIsMobile();
   const { loading, balances } = useUserSwapPoolBalances({ principal });
   const [unavailableClaimKeys, setUnavailableClaimKeys] = useState<number[]>([]);
   const [claimedKeys, setClaimedKeys] = useState<number[]>([]);
@@ -32,7 +33,7 @@ export function ReclaimAll() {
     return balances
       .filter((balance) => balance.balance0 !== BigInt(0) || balance.balance1 !== BigInt(0))
       .reduce((prev, curr) => {
-        const arr = [...prev];
+        const arr = prev.slice();
         const poolId = curr.canisterId.toString();
 
         if (curr.balance0 !== BigInt(0))
@@ -133,7 +134,7 @@ export function ReclaimAll() {
           >
             <Checkbox
               checked={hideUnavailableClaim}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+              onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
                 updateHideUnavailableClaim(checked);
               }}
             />

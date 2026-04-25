@@ -1,14 +1,14 @@
-import { Box, Typography, useTheme } from "components/Mui";
 import { useSwapSaleParameters } from "@icpswap/hooks";
-import { useMemo } from "react";
-import { Flex, LoadingRow, Wrapper } from "components/index";
 import type { NnsTokenInfo } from "@icpswap/types";
 import AvatarImage from "components/Image/Avatar";
-import dayjs from "dayjs";
-import { useNavigate } from "react-router-dom";
+import { Flex, LoadingRow, Wrapper } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { Tabs } from "components/sns/Tab";
-import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
+import dayjs from "dayjs";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useFetchSnsAllTokensInfo } from "store/sns/hooks";
 import { isNnsAdopted, isNnsCommitted, isNnsOpen, isNnsPending, nnsTokenLogo } from "utils/sns/utils";
 
 interface LaunchpadProps {
@@ -27,7 +27,7 @@ function Launchpad({ sns }: LaunchpadProps) {
     };
   }, [sns]);
 
-  const { result: saleParameters } = useSwapSaleParameters(swap_id);
+  const { data: saleParameters } = useSwapSaleParameters(swap_id);
 
   const deadline = useMemo(() => {
     if (!saleParameters) return undefined;
@@ -74,8 +74,8 @@ function Launchpad({ sns }: LaunchpadProps) {
           {isNnsCommitted(sns)
             ? t("common.complete")
             : deadline !== undefined
-            ? dayjs(Number(deadline)).format("YYYY-MM-DD HH:mm:ss")
-            : "--"}
+              ? dayjs(Number(deadline)).format("YYYY-MM-DD HH:mm:ss")
+              : "--"}
         </Typography>
       </Box>
     </Box>
@@ -130,7 +130,9 @@ export default function LaunchpadList() {
               },
             }}
           >
-            {openedLaunches?.map((sns) => <Launchpad key={sns.list_sns_canisters.root} sns={sns} />)}
+            {openedLaunches?.map((sns) => (
+              <Launchpad key={sns.list_sns_canisters.root} sns={sns} />
+            ))}
           </Box>
         ) : (
           <Typography>No Launches</Typography>
@@ -168,7 +170,9 @@ export default function LaunchpadList() {
                 },
               }}
             >
-              {upcomingLaunches?.map((sns) => <Launchpad key={sns.list_sns_canisters.root} sns={sns} />)}
+              {upcomingLaunches?.map((sns) => (
+                <Launchpad key={sns.list_sns_canisters.root} sns={sns} />
+              ))}
             </Box>
           ) : (
             <Typography>No Upcoming Launches</Typography>
@@ -206,7 +210,9 @@ export default function LaunchpadList() {
               },
             }}
           >
-            {completedLaunches?.map((sns) => <Launchpad key={sns.list_sns_canisters.root} sns={sns} />)}
+            {completedLaunches?.map((sns) => (
+              <Launchpad key={sns.list_sns_canisters.root} sns={sns} />
+            ))}
           </Box>
         ) : (
           <LoadingRow>

@@ -1,10 +1,9 @@
-import { Box, BoxProps, useTheme } from "components/Mui";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { Box, type BoxProps, useTheme } from "components/Mui";
+import { EmptyCell } from "components/stake/row/cell";
 import { useCallback } from "react";
-import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useNavigate } from "react-router-dom";
 import { FilterState } from "types/staking-token";
-
-import { EmptyCell } from "components/stake/row/cell";
 
 interface EmptyRowProps {
   wrapperSx?: BoxProps["sx"];

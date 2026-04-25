@@ -1,16 +1,16 @@
-import { useMemo, useState } from "react";
-import { Typography, Box } from "components/Mui";
-import { useParams } from "react-router-dom";
-import NFTList from "components/NFT/NFTList";
-import CollectionUserTransactions from "components/NFT/CollectionUserTransactions";
-import CanisterHeader from "components/NFT/CanisterHeader";
-import { useCanisterMetadata, useCanisterCycles, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
-import { MainCard, Breadcrumbs, Wrapper } from "components/index";
-import { useAccount } from "store/auth/hooks";
 import type { NFTControllerInfo } from "@icpswap/types";
-import { useEXTManager } from "store/nft/hooks";
+import { Breadcrumbs, MainCard, Wrapper } from "components/index";
+import { Box, Typography } from "components/Mui";
+import CanisterHeader from "components/NFT/CanisterHeader";
+import CollectionUserTransactions from "components/NFT/CollectionUserTransactions";
+import NFTList from "components/NFT/NFTList";
+import { useCanisterCycles, useCanisterMetadata, useCanisterUserNFTCount } from "hooks/nft/useNFTCalls";
 import i18n from "i18n/index";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { useAccount } from "store/auth/hooks";
+import { useEXTManager } from "store/nft/hooks";
 
 import { ExtNftCollectionDetail } from "./ExtCanisterDetails";
 
@@ -29,9 +29,9 @@ function ICPSwapNFT() {
   const { t } = useTranslation();
   const { id: canisterId } = useParams() as { id: string };
   const account = useAccount();
-  const { result: metadata, loading } = useCanisterMetadata(canisterId);
-  const { result: cycles } = useCanisterCycles(canisterId);
-  const { result: count } = useCanisterUserNFTCount(canisterId, account);
+  const { data: metadata, isLoading: loading } = useCanisterMetadata(canisterId);
+  const { data: cycles } = useCanisterCycles(canisterId);
+  const { data: count } = useCanisterUserNFTCount(canisterId, account);
 
   const [pageKey, setPageKey] = useState(Pages[0].key);
 

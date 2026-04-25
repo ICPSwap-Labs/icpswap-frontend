@@ -1,8 +1,8 @@
-import { OneStepSwapInfo } from "@icpswap/types";
-import { swapTransactionWithdrawFormat } from "utils/transaction/withdraw";
+import type { OneStepSwapInfo } from "@icpswap/types";
+import { SWAP_TRANSACTIONS_FAILED_STATUS, type SwapTransactionResult } from "utils/transaction/constant";
 import { swapTransactionDepositFormat } from "utils/transaction/deposit";
 import { swapTransactionSwapFormat } from "utils/transaction/swap";
-import { SwapTransactionResult, SWAP_TRANSACTIONS_FAILED_STATUS } from "utils/transaction/constant";
+import { swapTransactionWithdrawFormat } from "utils/transaction/withdraw";
 
 export async function swapTransactionOneStepSwapFormat(info: OneStepSwapInfo): Promise<SwapTransactionResult> {
   const __status = info.status;

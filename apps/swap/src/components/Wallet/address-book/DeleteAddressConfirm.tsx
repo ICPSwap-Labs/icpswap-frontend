@@ -1,23 +1,23 @@
-import { useCallback } from "react";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Confirm } from "components/Wallet/Confirm";
-import { useTranslation } from "react-i18next";
 import { deleteAddressBook } from "@icpswap/hooks";
-import { useRefreshTriggerManager } from "hooks/index";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
+import { Confirm } from "components/Wallet/Confirm";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { ADDRESS_BOOK_REFRESH } from "constants/wallet";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useRefreshTriggerManager } from "hooks/index";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 export function DeleteAddressConfirm() {
   const { t } = useTranslation();
   const [, setRefreshTrigger] = useRefreshTriggerManager(ADDRESS_BOOK_REFRESH);
-  const { pages, setPages } = useWalletContext();
+  const { pages, setPages } = useWalletStore();
   const {
     deleteAddressBook: addressBook,
     setDeleteAddressBook,
     deleteAddressBookLoading,
     setDeleteAddressBookLoading,
-  } = useWalletAddressBookContext();
+  } = useWalletAddressBookStore();
 
   const handleCancel = useCallback(() => {
     setDeleteAddressBook(undefined);
@@ -34,7 +34,15 @@ export function DeleteAddressConfirm() {
     if (pages[0] === WalletManagerPage.EditAddress) {
       setPages(WalletManagerPage.AddressBook);
     }
-  }, [addressBook, deleteAddressBookLoading, setRefreshTrigger, pages, setPages]);
+  }, [
+    addressBook,
+    deleteAddressBookLoading,
+    setRefreshTrigger,
+    pages,
+    setPages,
+    setDeleteAddressBook,
+    setDeleteAddressBookLoading,
+  ]);
 
   return (
     <Confirm

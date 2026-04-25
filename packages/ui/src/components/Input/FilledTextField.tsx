@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import type React from "react";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 
-import { TextField, Typography, Box, Menu, Grid, MenuItem, Theme, makeStyles, TextFieldProps } from "../Mui";
+import { Box, Grid, Menu, MenuItem, makeStyles, TextField, type TextFieldProps, type Theme, Typography } from "../Mui";
 import { NoData } from "../NoData";
 
 interface UseStylesProps {
@@ -21,18 +22,18 @@ const useStyles = ({ contained, background, fullHeight, multiline, borderRadius,
         display: label && contained ? "block" : "flex",
         alignItems: "center",
         border: contained
-          ? border ?? theme.palette.border.normal
+          ? (border ?? theme.palette.border.normal)
           : border === true
-          ? theme.palette.border.normal
-          : border === "border0"
-          ? theme.palette.border.border0
-          : "none",
+            ? theme.palette.border.normal
+            : border === "border0"
+              ? theme.palette.border.border0
+              : "none",
         background: background
           ? background === "level3"
             ? theme.palette.background.level3
             : background === "level1"
-            ? theme.palette.background.level1
-            : background
+              ? theme.palette.background.level1
+              : background
           : theme.palette.background.level4,
         borderRadius,
         padding: contained ? `7px 12px` : "3px 12px",
@@ -128,7 +129,7 @@ function Value({ select, value, menus = [], helperText }: ValueProps) {
         }}
         color="textPrimary"
       >
-        {select ? menus.filter((menu) => menu.value === value)[0]?.label ?? value : value}
+        {select ? (menus.filter((menu) => menu.value === value)[0]?.label ?? value) : value}
       </Typography>
       {helperText ? (
         <Typography
@@ -188,9 +189,9 @@ function UIFilledTextField(
     }
   };
 
-  const focus = () => {
+  const focus = useCallback(() => {
     inputRef?.current?.focus();
-  };
+  }, []);
 
   useImperativeHandle(
     ref,
@@ -227,71 +228,69 @@ function UIFilledTextField(
         }}
         onClick={handleOuterBoxClick}
       >
-        <>
-          {contained && <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} />}
-          <Grid container alignItems="center" sx={{ flex: 1 }}>
-            <Grid item xs>
-              {!select ? (
-                <TextField
-                  sx={{
-                    "& input.MuiInputBase-input": {
-                      lineHeight: "1.15rem",
-                      fontSize: props.fontSize ?? "16px",
-                      "&.Mui-disabled": disabledTextColor
-                        ? {
-                            WebkitTextFillColor: disabledTextColor,
-                          }
-                        : {},
-                    },
-                    "& textarea": {
-                      lineHeight: "1.15rem",
-                      fontSize: props.fontSize ?? "16px",
-                    },
-                    "& input::placeholder": {
-                      fontSize: props.placeholderSize ?? "16px",
-                    },
-                    "& textarea::placeholder": {
-                      fontSize: props.placeholderSize ?? "16px",
-                    },
-                  }}
-                  inputRef={inputRef}
-                  {...props}
-                  variant="standard"
-                  onChange={({ target: { value } }) => onChange && onChange(value)}
-                  value={value}
-                  multiline={multiline}
-                  slotProps={{
-                    ...textFieldProps?.slotProps,
-                    input: {
-                      disableUnderline: true,
-                      autoComplete: "off",
-                      ...textFieldProps?.slotProps?.input,
-                    },
-                  }}
-                  fullWidth
-                  disabled={disabled}
-                  helperText={helperText}
-                  onFocus={onFocus}
-                  autoComplete="off"
-                />
-              ) : value ? (
-                <Value menus={menus} value={value} helperText={helperText} select={select} />
-              ) : (
-                <Typography
-                  sx={{
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                  color="#c5c5c5"
-                >
-                  {props.placeholder}
-                </Typography>
-              )}
-            </Grid>
-            {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
+        {contained && <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} />}
+        <Grid container alignItems="center" sx={{ flex: 1 }}>
+          <Grid item xs>
+            {!select ? (
+              <TextField
+                sx={{
+                  "& input.MuiInputBase-input": {
+                    lineHeight: "1.15rem",
+                    fontSize: props.fontSize ?? "16px",
+                    "&.Mui-disabled": disabledTextColor
+                      ? {
+                          WebkitTextFillColor: disabledTextColor,
+                        }
+                      : {},
+                  },
+                  "& textarea": {
+                    lineHeight: "1.15rem",
+                    fontSize: props.fontSize ?? "16px",
+                  },
+                  "& input::placeholder": {
+                    fontSize: props.placeholderSize ?? "16px",
+                  },
+                  "& textarea::placeholder": {
+                    fontSize: props.placeholderSize ?? "16px",
+                  },
+                }}
+                inputRef={inputRef}
+                {...props}
+                variant="standard"
+                onChange={({ target: { value } }) => onChange?.(value)}
+                value={value}
+                multiline={multiline}
+                slotProps={{
+                  ...textFieldProps?.slotProps,
+                  input: {
+                    disableUnderline: true,
+                    autoComplete: "off",
+                    ...textFieldProps?.slotProps?.input,
+                  },
+                }}
+                fullWidth
+                disabled={disabled}
+                helperText={helperText}
+                onFocus={onFocus}
+                autoComplete="off"
+              />
+            ) : value ? (
+              <Value menus={menus} value={value} helperText={helperText} select={select} />
+            ) : (
+              <Typography
+                sx={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                color="#c5c5c5"
+              >
+                {props.placeholder}
+              </Typography>
+            )}
           </Grid>
-        </>
+          {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
+        </Grid>
       </Box>
 
       {Boolean(anchorEl) && (

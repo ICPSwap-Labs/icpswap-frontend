@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-import { useCallback } from "react";
-import { PaginationResult } from "types/global";
+
+import type { PaginationResult } from "@icpswap/types";
 import { pageArgsFormat, sleep } from "@icpswap/utils";
+import { useCallback } from "react";
 
 export function usePaginationAllDataCallback<T>(
   callback: (offset: number, limit: number) => Promise<PaginationResult<T> | undefined>,
@@ -36,7 +37,8 @@ export function usePaginationAllDataCallback<T>(
       onSuccess(initialList);
     } else if (Number(totalElements) !== 0) {
       const num = Number(totalElements) % limit;
-      const totalPage = num === 0 ? Number(totalElements) / limit : parseInt(String(Number(totalElements) / limit)) + 1;
+      const totalPage =
+        num === 0 ? Number(totalElements) / limit : parseInt(String(Number(totalElements) / limit), 10) + 1;
 
       const _list: { [k: string]: T[] } = {
         0: initialList,
@@ -137,7 +139,9 @@ export async function getPaginationAllData<T>(
   const _result = await fetch(0, 1);
   const totalElements = Number(_result?.totalElements ?? 0);
   const totalPage =
-    totalElements % limit === 0 ? parseInt(String(totalElements / limit)) : parseInt(String(totalElements / limit)) + 1;
+    totalElements % limit === 0
+      ? parseInt(String(totalElements / limit), 10)
+      : parseInt(String(totalElements / limit), 10) + 1;
 
   const promise: Promise<PaginationResult<T> | undefined>[] = [];
 

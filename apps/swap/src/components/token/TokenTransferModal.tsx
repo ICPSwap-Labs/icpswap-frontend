@@ -1,26 +1,26 @@
-import React, { useState, useMemo } from "react";
-import { Button, Typography, Box, InputAdornment, makeStyles, Theme, CircularProgress } from "components/Mui";
+import { Principal } from "@icp-sdk/core/principal";
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
+import { Flex, MaxButton } from "@icpswap/ui";
 import {
-  parseTokenAmount,
+  BigNumber,
   formatTokenAmount,
   isValidAccount,
   isValidPrincipal,
+  parseTokenAmount,
   toSignificantWithGroupSeparator,
-  BigNumber,
 } from "@icpswap/utils";
-import { MessageTypes, useFullscreenLoading, useTips } from "hooks/useTips";
+import { FilledTextField, Modal, NumberFilledTextField } from "components/index";
+import { Box, Button, CircularProgress, InputAdornment, makeStyles, type Theme, Typography } from "components/Mui";
 import { tokenTransfer } from "hooks/token/calls";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { getLocaleMessage } from "i18n/service";
-import { useAccountPrincipalString, useAccount, useAccountPrincipal } from "store/auth/hooks";
-import { Modal, FilledTextField, NumberFilledTextField } from "components/index";
-import { Principal } from "@dfinity/principal";
+import { MessageTypes, useFullscreenLoading, useTips } from "hooks/useTips";
 import { useUSDPriceById } from "hooks/useUSDPrice";
-import { ICP, WRAPPED_ICP } from "@icpswap/tokens";
-import { MaxButton, Flex } from "@icpswap/ui";
-import { Token } from "@icpswap/swap-sdk";
+import { getLocaleMessage } from "i18n/service";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useAccount, useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -35,12 +35,12 @@ export type Values = {
   amount: string;
 };
 
-function usePrincipalStandard(tokenId: string, standard: string) {
+function getPrincipalStandard(tokenId: string, standard: string) {
   return (standard.includes("DIP20") || standard.includes("ICRC")) && tokenId !== ICP.address;
 }
 
-function useAccountStandard(tokenId: string, standard: string) {
-  return !usePrincipalStandard(tokenId, standard);
+function getAccountStandard(tokenId: string, standard: string) {
+  return !getPrincipalStandard(tokenId, standard);
 }
 
 export interface TransferModalProps {
@@ -60,9 +60,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
   const [openTip] = useTips();
   const [openFullLoading, closeFullLoading] = useFullscreenLoading();
 
-  const { refreshTotalBalance, setRefreshTotalBalance } = useWalletTokenContext();
-
-  const { result: balance } = useTokenBalance(token.address, principal);
+  const { result: balance } = useTokenBalance({ tokenId: token.address, account: principal });
   const tokenUSDPrice = useUSDPriceById(token.address);
 
   const [loading, setLoading] = useState(false);
@@ -84,10 +82,10 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
   const getErrorMessage = () => {
     if (!values.to) return t("wallet.transfer.enter.to");
 
-    if (usePrincipalStandard(token.address, token.standard)) {
+    if (getPrincipalStandard(token.address, token.standard)) {
       try {
         Principal.fromText(values.to);
-      } catch (error) {
+      } catch (_error) {
         return t`Invalid principal ID`;
       }
     } else if (!isValidAccount(values.to) && !isValidPrincipal(values.to)) return t`Invalid account ID or principal ID`;
@@ -127,9 +125,6 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
         openTip(t`Transferred successfully`, MessageTypes.success);
         setValues(initialValues);
         if (onTransferSuccess) onTransferSuccess();
-        if (token.address.toString() === ICP.address || token.address.toString() === WRAPPED_ICP.address) {
-          if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
-        }
       } else {
         openTip(getLocaleMessage(message) ?? t`Failed to transfer`, MessageTypes.error);
       }
@@ -148,9 +143,9 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
 
   const addressHelpText = () => {
     if (
-      (usePrincipalStandard(token.address, token.standard) && principalString === values.to) ||
-      (useAccountStandard(token.address, token.standard) && account === values.to) ||
-      (useAccountStandard(token.address, token.standard) &&
+      (getPrincipalStandard(token.address, token.standard) && principalString === values.to) ||
+      (getAccountStandard(token.address, token.standard) && account === values.to) ||
+      (getAccountStandard(token.address, token.standard) &&
         isValidPrincipal(values.to) &&
         principalString === values.to)
     ) {
@@ -175,7 +170,7 @@ export function TokenTransferModal({ open, onClose, onTransferSuccess, token, tr
         <FilledTextField
           value={values.to}
           placeholder={
-            usePrincipalStandard(token.address, token.standard)
+            getPrincipalStandard(token.address, token.standard)
               ? t`Enter the principal ID`
               : t("wallet.transfer.enter.account.principal")
           }

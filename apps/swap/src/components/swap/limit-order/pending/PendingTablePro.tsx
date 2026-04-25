@@ -1,8 +1,8 @@
-import { Null } from "@icpswap/types";
 import { useUserLimitOrders } from "@icpswap/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useRefreshTriggerManager } from "hooks/index";
+import type { Null } from "@icpswap/types";
 import { USER_LIMIT_ORDERS_KEY } from "constants/limit";
+import { useRefreshTriggerManager } from "hooks/index";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 import { PendingTableProUI } from "./PendingTableProUI";
 
@@ -16,7 +16,7 @@ export function PendingTablePro({ poolId, wrapperClassName }: LimitOrdersTablePr
 
   const [refreshTrigger, setLimitOrdersRefreshTrigger] = useRefreshTriggerManager(USER_LIMIT_ORDERS_KEY);
 
-  const { result: userLimitOrders, loading } = useUserLimitOrders(poolId, principal, refreshTrigger);
+  const { data: userLimitOrders, isLoading: loading } = useUserLimitOrders(poolId, principal, refreshTrigger);
 
   return (
     <PendingTableProUI

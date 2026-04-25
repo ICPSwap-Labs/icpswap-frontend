@@ -1,29 +1,29 @@
-import { useCallback } from "react";
-import { Position } from "@icpswap/swap-sdk";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { getLocaleMessage } from "i18n/service";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
+import type { Position } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/types";
+import { BigNumber } from "@icpswap/utils";
 import { getIncreaseLiquiditySteps } from "components/swap/IncreaseLiquiditySteps";
-import { useStepContentManager } from "store/steps/hooks";
 import {
+  getTokenActualDepositRawAmount,
+  getTokenActualTransferRawAmount,
+  getTokenInsufficient,
+  noApproveByTokenInsufficient,
+  noDepositByTokenInsufficient,
+  noTransferByTokenInsufficient,
   useSwapApprove,
   useSwapDeposit,
   useSwapTransfer,
-  getTokenInsufficient,
-  noApproveByTokenInsufficient,
-  getTokenActualTransferRawAmount,
-  getTokenActualDepositRawAmount,
-  noTransferByTokenInsufficient,
-  noDepositByTokenInsufficient,
 } from "hooks/swap/index";
-import { isUseTransfer } from "utils/token/index";
-import { useSuccessTip } from "hooks/useTips";
-import { increaseLiquidity } from "hooks/swap/v3Calls";
-import { ExternalTipArgs, OpenExternalTip } from "types/index";
-import { TOKEN_STANDARD } from "@icpswap/types";
-import { BigNumber } from "@icpswap/utils";
-import { useTranslation } from "react-i18next";
 import { useStepsToReclaimCallback } from "hooks/swap/useStepsToReclaimCallback";
+import { increaseLiquidity } from "hooks/swap/v3Calls";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { useSuccessTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useStepContentManager } from "store/steps/hooks";
+import type { ExternalTipArgs, OpenExternalTip } from "types/index";
+import { isUseTransfer } from "utils/token/index";
 
 export interface IncreaseLiquidityArgs {
   positionId: string;
@@ -206,7 +206,7 @@ export function useIncreaseLiquidityCalls() {
         _increaseLiquidity,
       ];
     },
-    [principal],
+    [principal, approve, deposit, transfer, openSuccessTip, t],
   );
 }
 
@@ -220,17 +220,20 @@ function useInitialAddLiquiditySteps() {
 
   const stepsToReclaimCallback = useStepsToReclaimCallback();
 
-  return useCallback((key: string, { position }: InitialAddLiquidityStepsArgs) => {
-    const content = getIncreaseLiquiditySteps({
-      position,
-      handleReclaim: stepsToReclaimCallback,
-    });
+  return useCallback(
+    (key: string, { position }: InitialAddLiquidityStepsArgs) => {
+      const content = getIncreaseLiquiditySteps({
+        position,
+        handleReclaim: stepsToReclaimCallback,
+      });
 
-    stepContentManage(String(key), {
-      content,
-      title: t("swap.add.liquidity.details"),
-    });
-  }, []);
+      stepContentManage(String(key), {
+        content,
+        title: t("swap.add.liquidity.details"),
+      });
+    },
+    [stepContentManage, t, stepsToReclaimCallback],
+  );
 }
 
 export interface IncreaseLiquidityCallProps {

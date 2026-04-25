@@ -1,28 +1,34 @@
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { BridgeChainType, BridgeType } from "@icpswap/constants";
 import type { RetrieveBtcStatus } from "@icpswap/types";
-import { BITCOIN_CONFIRMATIONS } from "constants/ckBTC";
-import { BitcoinTransaction, BitcoinTxResponse, BitcoinTxState } from "types/ckBTC";
-import {
-  EthereumTransactionEvent,
-  Erc20DissolveTransactionEvent,
-  BridgeTransactionEvent,
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { BITCOIN_CONFIRMATIONS } from "constants/chain-key";
+import type { BitcoinTransaction, BitcoinTxResponse, BitcoinTxState } from "types/ckBTC";
+import type {
   BitcoinTransactionEvent,
+  BridgeTransactionEvent,
+  DogeTransactionEvent,
+  Erc20DissolveTransactionEvent,
+  EthereumTransactionEvent,
 } from "types/web3";
 
 export function isEthTransactionEvent(event: BridgeTransactionEvent): event is EthereumTransactionEvent {
-  return event.chain === "eth";
+  return event.chain === BridgeChainType.eth;
 }
 
 export function isErc20DissolveTransactionEvent(event: BridgeTransactionEvent): event is Erc20DissolveTransactionEvent {
-  return event.chain === "erc20" && event.type === "dissolve";
+  return event.chain === BridgeChainType.erc20 && event.type === BridgeType.dissolve;
 }
 
 export function isErc20MintTransactionEvent(event: BridgeTransactionEvent): event is EthereumTransactionEvent {
-  return event.chain === "erc20" && event.type === "mint";
+  return event.chain === BridgeChainType.erc20 && event.type === BridgeType.mint;
 }
 
 export function isBtcTransactionEvent(event: BridgeTransactionEvent): event is BitcoinTransactionEvent {
-  return event.chain === "btc";
+  return event.chain === BridgeChainType.btc;
+}
+
+export function isDogeTransactionEvent(event: BridgeTransactionEvent): event is DogeTransactionEvent {
+  return event.chain === BridgeChainType.doge;
 }
 
 export function isBTCDissolveConfirmed(status: RetrieveBtcStatus) {
@@ -98,6 +104,6 @@ export function bitcoinBytesToHexString(byteArray: number[]) {
   }).join("");
 }
 
-export function getBitcoinTxFromStatus(status: RetrieveBtcStatus | undefined) {
+export function getBitcoinTxFromStatus(status: RetrieveBtcStatus | undefined): Uint8Array | number[] | undefined {
   return status ? Object.values(status)[0]?.txid : undefined;
 }

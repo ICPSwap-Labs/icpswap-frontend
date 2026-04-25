@@ -1,11 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { Principal } from "@icp-sdk/core/principal";
 import { liquidityLocks } from "@icpswap/actor";
-import { Principal } from "@dfinity/principal";
+import type { Pool, Position } from "@icpswap/swap-sdk";
+import type { Null, UserPositionInfoWithId } from "@icpswap/types";
 import { isUndefinedOrNull, nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
-import { Pool, Position } from "@icpswap/swap-sdk";
-import { Null, type UserPositionInfoWithId } from "@icpswap/types";
-
-import { useCallsData } from "./useCallData";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
 import { useMultiPositionInfos, useMultiPositionInfosByIds } from "./swap/useMultiPositionInfos";
 import { getSinglePoolMultiPositions } from "./swap/useSinglePoolMultiPositions";
 
@@ -17,9 +16,19 @@ export function getPoolLockedPositionIds(poolId: string) {
   return undefined;
 }
 
-export function useLiquidityLockIds(tokenIds: string[] | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useLiquidityLockIds(tokenIds: string[] | Null): UseQueryResult<
+  | Array<{
+      is_public: boolean;
+      alias: [] | [string];
+      governance_id: [] | [Principal];
+      ledger_id: Principal;
+    }>
+  | undefined,
+  Error
+> {
+  return useQuery({
+    queryKey: ["useLiquidityLockIds", tokenIds],
+    queryFn: async () => {
       if (!tokenIds) return undefined;
 
       return resultFormat<
@@ -30,12 +39,13 @@ export function useLiquidityLockIds(tokenIds: string[] | Null) {
           ledger_id: Principal;
         }>
       >(
-        await (
-          await liquidityLocks()
-        ).getPrincipalAliasByLedgers(tokenIds.map((tokenId) => Principal.fromText(tokenId))),
+        await (await liquidityLocks()).getPrincipalAliasByLedgers(
+          tokenIds.map((tokenId) => Principal.fromText(tokenId)),
+        ),
       ).data;
-    }, [tokenIds]),
-  );
+    },
+    enabled: !!tokenIds,
+  });
 }
 
 export function useExtraBlackHoleLiquidityLocks(pool: Pool | Null): Position[] | Null {
@@ -75,8 +85,8 @@ export function useExtraBlackHolePositionInfos(poolId: string | Null) {
   return useMemo(() => {
     if (!positions) return null;
 
-    return positions.map((e, index) => (e ? ({ ...e, id: positionIds[index] } as UserPositionInfoWithId) : null));
-  }, [positions]);
+    return positions.map((e, index) => (e ? ({ ...e, id: positionIds![index] } as UserPositionInfoWithId) : null));
+  }, [positions, positionIds]);
 }
 
 export function useAllLiquidityLocks(
@@ -90,12 +100,12 @@ export function useAllLiquidityLocks(
   const [loading, setLoading] = useState(true);
   const [result, setResult] = useState<null | Array<[UserPositionInfoWithId[], string, string]>>(null);
 
-  const { result: lockIds } = useLiquidityLockIds(tokenIds);
+  const { data: lockIds } = useLiquidityLockIds(tokenIds);
 
   const ledgerIds = useMemo(() => {
     if (!lockIds) return undefined;
     return lockIds.map(({ governance_id, ledger_id, alias }) => {
-      if (alias[0] && alias[0].includes("Governance")) return governance_id[0]?.toString();
+      if (alias[0]?.includes("Governance")) return governance_id[0]?.toString();
       return ledger_id.toString();
     });
   }, [lockIds]);
@@ -120,7 +130,7 @@ export function useAllLiquidityLocks(
             if (!lockId) return undefined;
             const alias = lockIds[index].alias[0];
             if (isUndefinedOrNull(positionInfos) || isUndefinedOrNull(positionInfos)) return undefined;
-            return [positionInfos, ledgerIds[index], alias] as [UserPositionInfoWithId[], string, string];
+            return [positionInfos, ledgerIds![index], alias] as [UserPositionInfoWithId[], string, string];
           })
           .filter((element) => nonUndefinedOrNull(element));
 

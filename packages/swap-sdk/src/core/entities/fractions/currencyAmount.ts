@@ -1,11 +1,10 @@
-import invariant from "tiny-invariant";
-import JSBI from "jsbi";
 import _Big from "big.js";
+import JSBI from "jsbi";
+import invariant from "tiny-invariant";
 import toFormat from "toformat";
-
-import { Token } from "../token";
+import { type BigintIsh, MaxUint256, Rounding } from "../../constants";
+import type { Token } from "../token";
 import { Fraction } from "./fraction";
-import { BigintIsh, Rounding, MaxUint256 } from "../../constants";
 
 const Big = toFormat(_Big);
 

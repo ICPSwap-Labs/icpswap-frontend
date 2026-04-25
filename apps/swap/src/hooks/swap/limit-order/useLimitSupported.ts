@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
-import { Null, ResultStatus } from "@icpswap/types";
 import { swapPool } from "@icpswap/actor";
+import { type Null, ResultStatus } from "@icpswap/types";
+import { nonUndefinedOrNull, resultFormat } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export interface UseLimitSupportedProps {
   canisterId: string | Null;

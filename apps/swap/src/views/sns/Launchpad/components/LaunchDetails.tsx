@@ -1,11 +1,11 @@
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
+import type { SNSSwapInitArgs, SwapSaleParameters } from "@icpswap/types";
+import { parseTokenAmount } from "@icpswap/utils";
 import { Box, useTheme } from "components/Mui";
-import { useMemo } from "react";
-import type { SwapSaleParameters, SNSSwapInitArgs } from "@icpswap/types";
 import dayjs from "dayjs";
 import { useTokenSupply } from "hooks/token/calls";
-import { parseTokenAmount } from "@icpswap/utils";
-import { ICP } from "@icpswap/tokens";
-import { Token } from "@icpswap/swap-sdk";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ItemDisplay } from "./ItemDisplay";
@@ -22,7 +22,7 @@ export function LaunchDetail({ ledger_id, token, swapInitArgs, saleParameters }:
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const { result: total_supply } = useTokenSupply(ledger_id);
+  const { data: total_supply } = useTokenSupply(ledger_id);
 
   const restricted_countries = useMemo(() => {
     if (!swapInitArgs) return undefined;

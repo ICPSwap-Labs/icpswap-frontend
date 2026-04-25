@@ -1,18 +1,16 @@
-import { ActorIdentity } from "@icpswap/types";
 import {
-  SwapFactory,
-  SwapFactoryInterfaceFactory,
-  SwapNFT,
-  SwapNFTInterfaceFactory,
-  SwapPool,
-  SwapPoolInterfaceFactory,
-  TICKET_SERVICE,
-  TicketInterfaceFactory,
-  PositionIndex,
+  type PositionIndex,
   PositionIndexInterfaceFactory,
+  type SwapFactory,
+  SwapFactoryInterfaceFactory,
+  type SwapNFT,
+  SwapNFTInterfaceFactory,
+  type SwapPool,
+  SwapPoolInterfaceFactory,
 } from "@icpswap/candid";
-import { actor } from "../actor";
+import type { ActorIdentity } from "@icpswap/types";
 import { ActorName } from "../ActorName";
+import { actor } from "../actor";
 
 export const swapNFT = (identity?: ActorIdentity) =>
   actor.create<SwapNFT>({
@@ -33,12 +31,6 @@ export const swapPool = (canisterId: string, identity?: ActorIdentity) =>
     identity,
     canisterId,
     idlFactory: SwapPoolInterfaceFactory,
-  });
-
-export const swapTicket = () =>
-  actor.create<TICKET_SERVICE>({
-    actorName: ActorName.SwapTicket,
-    idlFactory: TicketInterfaceFactory,
   });
 
 export const swapPosition = (identity?: ActorIdentity) =>

@@ -1,10 +1,10 @@
 /* eslint-disable react/no-danger */
 
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import type { marked as markedTypes, Renderer } from "marked";
 import { useEffect, useState } from "react";
 import { sanitize } from "utils/html";
-import { Null } from "@icpswap/types";
 
 import "./markdown.css";
 
@@ -17,7 +17,7 @@ export const targetBlankLinkRenderer = (
 ): string =>
   `<a${href === null || href === undefined ? "" : ` target="_blank" rel="noopener noreferrer" href="${href}"`}${
     title === null || title === undefined ? "" : ` title="${title}"`
-  }>${text.length === 0 ? href ?? title : text}</a>`;
+  }>${text.length === 0 ? (href ?? title) : text}</a>`;
 
 /**
  * Based on https://github.com/markedjs/marked/blob/master/src/Renderer.js#L186
@@ -63,11 +63,8 @@ export const htmlRenderer = (html: string): string => (/<img\s+[^>]*>/gi.test(ht
 const proposalSummaryRenderer = (marked: Marked): Renderer => {
   const renderer = new marked.Renderer();
 
-  // @ts-ignore
   renderer.link = targetBlankLinkRenderer;
-  // @ts-ignore
   renderer.image = imageToLinkRenderer;
-  // @ts-ignore
   renderer.html = htmlRenderer;
 
   return renderer;

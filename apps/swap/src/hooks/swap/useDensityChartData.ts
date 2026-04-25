@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { usePoolActiveLiquidity } from "hooks/swap/usePoolTickData";
-import { Token, FeeAmount } from "@icpswap/swap-sdk";
+import type { FeeAmount, Token } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
+import { usePoolActiveLiquidity } from "hooks/swap/usePoolTickData";
+import { useMemo } from "react";
 
 export interface UseDensityChartDataArgs {
   currencyA: Token | undefined;
@@ -48,5 +48,5 @@ export function useDensityChartData({ currencyA, currencyB, feeAmount }: UseDens
       isError,
       formattedData: !isLoading && !isUninitialized ? formatData : undefined,
     };
-  }, [isLoading, isUninitialized, isError, formatData]);
+  }, [isLoading, isUninitialized, isError, formatData, data]);
 }

@@ -1,10 +1,10 @@
-import { Box, Avatar } from "components/Mui";
-import { Position } from "@icpswap/swap-sdk";
+import type { Position } from "@icpswap/swap-sdk";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { isUseTransfer } from "utils/token/index";
-import { StepContents } from "types/step";
 import { TextButton } from "components/index";
+import { Avatar, Box } from "components/Mui";
 import i18n from "i18n/index";
+import type { StepContents } from "types/step";
+import { isUseTransfer } from "utils/token/index";
 
 export interface IncreaseLiquidityStepsProps {
   position: Position;
@@ -73,9 +73,9 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim: __handleRec
         { label: i18n.t("common.canister.id"), value: position.pool.token0.address },
       ],
       errorActions: [
-        <>
-          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
-        </>,
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
       ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
@@ -100,9 +100,9 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim: __handleRec
         { label: i18n.t("common.canister.id"), value: position.pool.token1.address },
       ],
       errorActions: [
-        <>
-          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
-        </>,
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
       ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },
@@ -117,9 +117,9 @@ export function getIncreaseLiquiditySteps({ position, handleReclaim: __handleRec
         { label: symbol1, value: amount1Value },
       ],
       errorActions: [
-        <>
-          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
-        </>,
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
       ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },

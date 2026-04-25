@@ -1,6 +1,6 @@
-import { useCallback } from "react";
-import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { useInterval } from "@icpswap/hooks";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { useCallback } from "react";
 import { getStakingTokenPoolState } from "utils/staking";
 
 export interface UseCalcPoolStateArgs {
@@ -12,5 +12,5 @@ export function useCalcPoolState({ pool }: UseCalcPoolStateArgs) {
     return getStakingTokenPoolState(pool);
   }, [pool]);
 
-  return useInterval(callback, undefined, 1000);
+  return useInterval({ callback, interval: 1_000 });
 }

@@ -1,6 +1,6 @@
 import JSBI from "jsbi";
 import invariant from "tiny-invariant";
-import { Tick } from "../entities/tick";
+import type { Tick } from "../entities/tick";
 import { ZERO } from "../internalConstants";
 import { isSorted } from "./isSorted";
 
@@ -22,16 +22,16 @@ export abstract class TickList {
     // ensure ticks are spaced appropriately
     invariant(
       ticks.every(({ index }) => Math.abs(index) % tickSpacing === 0),
-      "TICK_SPACING"
+      "TICK_SPACING",
     );
 
     // ensure tick liquidity deltas sum to 0
     invariant(
       JSBI.equal(
         ticks.reduce((accumulator, { liquidityNet }) => JSBI.add(accumulator, liquidityNet), ZERO),
-        ZERO
+        ZERO,
       ),
-      "ZERO_NET"
+      "ZERO_NET",
     );
 
     invariant(isSorted(ticks, tickComparator), "SORTED");
@@ -102,7 +102,7 @@ export abstract class TickList {
     ticks: readonly Tick[],
     tick: number,
     lte: boolean,
-    tickSpacing: number
+    tickSpacing: number,
   ): [number, boolean] {
     const compressed = Math.floor(tick / tickSpacing); // matches rounding in the code
 

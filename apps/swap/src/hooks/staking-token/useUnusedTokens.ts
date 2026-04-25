@@ -1,22 +1,16 @@
-import { useMemo, useState, useEffect } from "react";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { Principal } from "@dfinity/principal";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { Principal } from "@icp-sdk/core/principal";
+import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useQuery } from "@tanstack/react-query";
 import { getTokenBalance } from "hooks/token/useTokenBalance";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { useAccountPrincipal } from "store/auth/hooks";
 
-export function useUserUnusedTokenByPool(
-  poolId: string | undefined,
-  stakingTokenId: string | undefined,
-  reload?: boolean | number,
-) {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<{ balance: bigint | undefined; poolId: string; stakingTokenId: string } | null>(
-    null,
-  );
+export function useUserUnusedTokenByPool(poolId: string | undefined, stakingTokenId: string | undefined) {
   const principal = useAccountPrincipal();
 
-  useEffect(() => {
-    const call = async () => {
+  return useQuery({
+    queryKey: ["userUnusedTokenByPool", poolId, stakingTokenId, principal],
+    queryFn: async () => {
       if (poolId && principal && stakingTokenId) {
         const result = await getTokenBalance(
           stakingTokenId,
@@ -24,22 +18,13 @@ export function useUserUnusedTokenByPool(
           SubAccount.fromPrincipal(principal).toUint8Array(),
         );
 
-        setData({
+        return {
           balance: result.data,
           poolId,
           stakingTokenId,
-        });
-        setLoading(false);
+        };
       }
-    };
-
-    call();
-  }, [poolId, principal, reload, stakingTokenId]);
-
-  return useMemo(() => {
-    return {
-      loading,
-      result: data,
-    };
-  }, [loading, data]);
+    },
+    enabled: nonUndefinedOrNull(poolId) && nonUndefinedOrNull(principal) && nonUndefinedOrNull(stakingTokenId),
+  });
 }

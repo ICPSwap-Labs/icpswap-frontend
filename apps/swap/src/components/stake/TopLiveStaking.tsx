@@ -1,19 +1,19 @@
-import { Typography, Box } from "components/Mui";
-import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
-import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { StakingTokenImages } from "components/stake/StakingTokenImage";
-import { useToken } from "hooks/useCurrency";
 import { useStakingPools } from "@icpswap/hooks";
+import { type StakingPoolControllerPoolInfo, StakingState } from "@icpswap/types";
+import { Flex, LoadingRow, MainCard, NoData } from "@icpswap/ui";
+import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Box, Typography } from "components/Mui";
+import { StakingTokenImages } from "components/stake/StakingTokenImage";
 import { useIntervalStakingPoolInfo } from "hooks/staking-token/index";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { StakingState, type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { getStateValue } from "utils/stake/index";
 import { useApr } from "hooks/staking-token/useApr";
 import { useTokenBalance } from "hooks/token";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { useToken } from "hooks/useCurrency";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { getStateValue } from "utils/stake/index";
 
 interface TopLiveCardProps {
   pool: StakingPoolControllerPoolInfo;
@@ -30,7 +30,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
   const stakeTokenPrice = useUSDPrice(stakeToken);
 
   const [poolInfo] = useIntervalStakingPoolInfo(pool?.canisterId.toString());
-  const { result: stakeTokenBalance } = useTokenBalance(pool.stakingToken.address, principal?.toString());
+  const { result: stakeTokenBalance } = useTokenBalance({ tokenId: stakeToken?.address, account: principal });
 
   const totalStakedValue = useMemo(() => {
     if (!stakeTokenPrice || !stakeToken || !poolInfo) return undefined;
@@ -164,7 +164,7 @@ function TopLiveCard({ pool }: TopLiveCardProps) {
 
 export function TopLiveStaking() {
   const { t } = useTranslation();
-  const { result: allLivePools, loading } = useStakingPools(getStateValue(StakingState.LIVE), 0, 100);
+  const { data: allLivePools, isLoading: loading } = useStakingPools(getStateValue(StakingState.LIVE), 0, 100);
 
   const topLivePools = useMemo(() => {
     if (!allLivePools) return undefined;
@@ -203,7 +203,9 @@ export function TopLiveStaking() {
               },
             }}
           >
-            {topLivePools?.map((pool) => <TopLiveCard key={pool.canisterId.toString()} pool={pool} />)}
+            {topLivePools?.map((pool) => (
+              <TopLiveCard key={pool.canisterId.toString()} pool={pool} />
+            ))}
           </Box>
         )}
       </Box>

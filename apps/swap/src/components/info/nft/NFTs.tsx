@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Grid, Typography, Box, Avatar, makeStyles } from "components/Mui";
 import { useNFTs } from "@icpswap/hooks";
-import { Header, HeaderCell, TableRow, BodyCell, LoadingRow, Pagination, NoData, TextButton } from "@icpswap/ui";
-import { shorten, pageArgsFormat } from "@icpswap/utils";
-import { type NFTTokenMetadata } from "@icpswap/types";
+import type { NFTTokenMetadata } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, LoadingRow, NoData, Pagination, TableRow, TextButton } from "@icpswap/ui";
+import { pageArgsFormat, shorten } from "@icpswap/utils";
+import { Avatar, Box, Grid, makeStyles, Typography } from "components/Mui";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
@@ -48,7 +48,7 @@ export function NFTs({ canisterId }: { canisterId: string }) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useNFTs({ canisterId, offset, limit: pagination.pageSize });
+  const { data: result, isLoading: loading } = useNFTs({ canisterId, offset, limit: pagination.pageSize });
   const { content: NFTList, totalElements } = result ?? { totalElements: 0, content: [] as NFTTokenMetadata[] };
 
   const handlePageChange = (page: number) => {

@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
-import { useStakePools, useInfoAllTokens } from "@icpswap/hooks";
+import { useInfoAllTokens, useStakePools } from "@icpswap/hooks";
 import { StakingState } from "@icpswap/types";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
-import { getStateValue } from "utils/stake/index";
-import { getTokenBalance } from "hooks/token/useTokenBalance";
 import { useTokensInfo } from "hooks/token";
+import { getTokenBalance } from "hooks/token/useTokenBalance";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { getStateValue } from "utils/stake/index";
 
 export function useUserAvailableTokensValue() {
   const principal = useAccountPrincipal();
@@ -15,7 +15,7 @@ export function useUserAvailableTokensValue() {
 
   const infoAllTokens = useInfoAllTokens();
 
-  const { result: pools } = useStakePools({ state: getStateValue(StakingState.LIVE), offset: 0, limit: 10000 });
+  const { data: pools } = useStakePools({ state: getStateValue(StakingState.LIVE), offset: 0, limit: 10000 });
 
   const allAvailableStakeTokens = useMemo(() => {
     if (!pools) return [];
@@ -54,7 +54,7 @@ export function useUserAvailableTokensValue() {
     }
 
     call();
-  }, [allAvailableStakeTokens, setAvailableTokens, allTokensInfo, principal, infoAllTokens]);
+  }, [allAvailableStakeTokens, allTokensInfo, principal, infoAllTokens]);
 
   return useMemo(
     () => ({

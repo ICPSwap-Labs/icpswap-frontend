@@ -1,5 +1,5 @@
-import React from "react";
 import { CircularProgress } from "components/Mui";
+import type React from "react";
 
 function SvgIcon(props: any) {
   return (

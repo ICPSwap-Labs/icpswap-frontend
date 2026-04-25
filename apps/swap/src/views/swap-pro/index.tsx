@@ -1,10 +1,5 @@
-import { SwapContextProvider } from "components/swap/index";
-import { SwapProContextWrapper } from "./ContextWrapper";
+import { SwapProContextWrapper } from "components/swap/pro/ContextWrapper";
 
 export default function SwapPro() {
-  return (
-    <SwapContextProvider>
-      <SwapProContextWrapper />
-    </SwapContextProvider>
-  );
+  return <SwapProContextWrapper />;
 }

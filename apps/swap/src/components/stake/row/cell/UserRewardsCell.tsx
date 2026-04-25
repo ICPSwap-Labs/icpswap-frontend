@@ -1,8 +1,8 @@
-import { Typography } from "components/Mui";
-import { Flex, BodyCell } from "@icpswap/ui";
-import { Null, type StakingPoolControllerPoolInfo, type StakingPoolUserInfo } from "@icpswap/types";
-import { useToken } from "hooks/useCurrency";
+import type { Null, StakingPoolControllerPoolInfo, StakingPoolUserInfo } from "@icpswap/types";
+import { BodyCell, Flex } from "@icpswap/ui";
 import { formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Typography } from "components/Mui";
+import { useToken } from "hooks/useCurrency";
 import { useUSDPrice } from "hooks/useUSDPrice";
 
 interface UserRewardsCellProps {

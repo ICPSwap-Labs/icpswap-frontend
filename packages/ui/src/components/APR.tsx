@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { BoxProps, Typography, TypographyProps, Box, useTheme } from "./Mui";
+import type { ReactNode } from "react";
+import { Box, type BoxProps, Typography, type TypographyProps, useTheme } from "./Mui";
 import { Tooltip } from "./Tooltip";
 
 export interface APRProps {

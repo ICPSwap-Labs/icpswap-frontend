@@ -1,4 +1,4 @@
-import { InternalSnack } from "../types";
+import type { InternalSnack } from "../types";
 
 export const breakpoints = {
   downXs: "@media (max-width:599.95px)",

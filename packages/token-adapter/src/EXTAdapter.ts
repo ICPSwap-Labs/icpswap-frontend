@@ -1,42 +1,25 @@
-import { resultFormat, optionalArg, principalToAccount, isOkSubAccount, isBigIntMemo } from "@icpswap/utils";
-import { SubAccount } from "@dfinity/ledger-icp";
-import { PaginationResult, ResultStatus } from "@icpswap/types";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { ext } from "@icpswap/actor";
-import { EXTToken, TokenUser } from "@icpswap/candid";
-import { TokenHolder, Transaction, Metadata } from "./types";
+import type { EXTToken, TokenUser } from "@icpswap/candid";
+import { type PaginationResult, ResultStatus } from "@icpswap/types";
+import { isBigIntMemo, isOkSubAccount, optionalArg, principalToAccount, resultFormat } from "@icpswap/utils";
 import {
+  type ActualReceivedByTransferRequest,
+  type AllowanceRequest,
+  type ApproveRequest,
+  type BalanceRequest,
   BaseTokenAdapter,
-  HoldersRequest,
-  TotalHoldersRequest,
-  SupplyRequest,
-  BalanceRequest,
-  TransferRequest,
-  SetFeeRequest,
-  SetFeeToRequest,
-  TransactionRequest,
-  ApproveRequest,
-  AllowanceRequest,
-  MetadataRequest,
-  ActualReceivedByTransferRequest,
-  BaseTokenResult,
+  type BaseTokenResult,
+  type MetadataRequest,
+  type SetFeeRequest,
+  type SetFeeToRequest,
+  type SupplyRequest,
+  type TransactionRequest,
+  type TransferRequest,
 } from "./BaseTokenAdapter";
+import type { Metadata, Transaction } from "./types";
 
 export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
-  public async holders({ canisterId, params }: HoldersRequest) {
-    return resultFormat<PaginationResult<TokenHolder>>(
-      await (
-        await this.actor(canisterId)
-      ).holders({
-        offset: [params.offset],
-        limit: [params.limit],
-      }),
-    );
-  }
-
-  public async totalHolders({ canisterId }: TotalHoldersRequest) {
-    return resultFormat<bigint>(await (await this.actor(canisterId)).totalHolders());
-  }
-
   public async supply({ canisterId }: SupplyRequest) {
     return resultFormat<bigint>(await (await this.actor(canisterId)).supply());
   }
@@ -54,9 +37,7 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
     }
 
     return resultFormat<bigint>(
-      await (
-        await this.actor(canisterId)
-      ).balance({
+      await (await this.actor(canisterId)).balance({
         token: params.token,
         user: { address },
       }),
@@ -71,9 +52,7 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
     const subaccount = params.subaccount ? SubAccount.fromBytes(Uint8Array.from(params.subaccount)) : undefined;
 
     return resultFormat<bigint>(
-      await (
-        await this.actor(canisterId, identity)
-      ).transfer({
+      await (await this.actor(canisterId, identity)).transfer({
         token: params.token ?? "",
         to: params.to.principal
           ? params.subaccount
@@ -109,9 +88,7 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
 
   public async transactions({ canisterId, params }: TransactionRequest) {
     return resultFormat<PaginationResult<Transaction>>(
-      await (
-        await this.actor(canisterId)
-      ).transactions({
+      await (await this.actor(canisterId)).transactions({
         hash: optionalArg<string>(params.hash),
         user: optionalArg<TokenUser>(params.user?.address ? { address: params.user.address } : undefined),
         offset: optionalArg<bigint>(params.offset ? BigInt(params.offset) : null),
@@ -123,9 +100,7 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
 
   public async approve({ canisterId, params, identity }: ApproveRequest) {
     return resultFormat<boolean>(
-      await (
-        await this.actor(canisterId, identity)
-      ).approve({
+      await (await this.actor(canisterId, identity)).approve({
         subaccount: params.subaccount ? [Array.from(params.subaccount)] : [],
         spender: params.spender,
         allowance: BigInt(Number.MAX_VALUE),
@@ -137,9 +112,7 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
     if (!params.owner.address && !params.owner.principal) throw Error("no owner address or principal");
 
     return resultFormat<bigint>(
-      await (
-        await this.actor(canisterId)
-      ).allowance({
+      await (await this.actor(canisterId)).allowance({
         owner: params.owner.address ? { address: params.owner.address } : { principal: params.owner.principal! },
         subaccount: params.subaccount ? [Array.from(params.subaccount)] : [],
         spender: params.spender,
@@ -148,19 +121,15 @@ export class EXTTokenAdapter extends BaseTokenAdapter<EXTToken> {
   }
 
   public async metadata({ canisterId }: MetadataRequest) {
-    const metadata = resultFormat<{
-      fungible: Metadata;
-    }>(await (await this.actor(canisterId)).metadata()).data?.fungible;
-    const logo = resultFormat<string>(await (await this.actor(canisterId)).logo()).data;
-    const fee = resultFormat<bigint>(await (await this.actor(canisterId)).getFee()).data;
+    const extActor = await this.actor(canisterId);
+    const [metadataRes, logoRes, feeRes] = await Promise.all([extActor.metadata(), extActor.logo(), extActor.getFee()]);
+    const metadata = resultFormat<{ fungible: Metadata }>(metadataRes).data?.fungible;
+    const logo = resultFormat<string>(logoRes).data;
+    const fee = resultFormat<bigint>(feeRes).data;
 
     return {
       status: ResultStatus.OK,
-      data: {
-        ...metadata,
-        logo,
-        fee,
-      } as Metadata,
+      data: { ...metadata, logo, fee } as Metadata,
       message: "",
     };
   }

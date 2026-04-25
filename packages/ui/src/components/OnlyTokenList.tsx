@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import { Tooltip } from "./Tooltip";
 import { Box, Checkbox, Typography } from "./Mui";
+import { Tooltip } from "./Tooltip";
 
 export interface OnlyTokenListProps {
   onChange?: (checked: boolean) => void;
@@ -36,7 +35,7 @@ export function OnlyTokenList({ checked: _checked, onChange }: OnlyTokenListProp
         <Checkbox
           sx={{ "&.MuiCheckbox-root": { padding: 0 } }}
           size="small"
-          onChange={(event: any, checked: boolean) => handleCheckboxChange(checked)}
+          onChange={(_event: any, checked: boolean) => handleCheckboxChange(checked)}
           checked={checked}
         />
 

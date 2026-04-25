@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { useErrorTip } from "hooks/useTips";
-import { Connector, IdentityKitConnector } from "constants/index";
-import { useConnectManager } from "store/auth/hooks";
 import { Flex } from "@icpswap/ui";
-import { isSafari } from "utils/index";
-import { WalletConnector } from "utils/connector";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { Connector, IdentityKitConnector } from "constants/index";
+import { useErrorTip } from "hooks/useTips";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useConnectManager } from "store/auth/hooks";
+import { WalletConnector } from "utils/connector";
+import { isSafari } from "utils/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -62,7 +62,7 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
     if (isSafari()) {
       call();
     }
-  }, []);
+  }, [value]);
 
   const handleConnect = async () => {
     if (disabled) return;

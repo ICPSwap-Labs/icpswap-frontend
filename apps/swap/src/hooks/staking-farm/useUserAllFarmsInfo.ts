@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
 import { getUserFarmInfo } from "@icpswap/hooks";
-import { type FarmInfoWithId } from "@icpswap/types";
+import type { FarmInfoWithId } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 import { useYourFarms } from "./useYourFarms";

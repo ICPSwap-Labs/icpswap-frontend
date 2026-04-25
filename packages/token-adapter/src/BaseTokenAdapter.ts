@@ -1,16 +1,16 @@
-import { BigNumber } from "bignumber.js";
-import { ActorIdentity, StatusResult, PaginationResult } from "@icpswap/types";
-import { ActorSubclass } from "@dfinity/agent";
-import {
-  TokenHolder,
+import type { ActorSubclass } from "@icp-sdk/core/agent";
+import type { ActorIdentity, PaginationResult, StatusResult } from "@icpswap/types";
+import type { BigNumber } from "bignumber.js";
+import type {
   BalanceRequest as _BalanceRequest,
-  TokenTransferRequest as _TransferRequest,
   SetFeeToRequest as _SetFeeToRequest,
   TransactionRequest as _TransactionRequest,
-  Transaction,
+  TokenTransferRequest as _TransferRequest,
+  Metadata,
   TokenAllowanceRequest,
   TokenApproveRequest,
-  Metadata,
+  TokenHolder,
+  Transaction,
 } from "./types";
 
 export type BaseTokenRequestNoParams = {
@@ -82,10 +82,6 @@ export abstract class BaseTokenAdapter<T> {
   constructor({ actor }: { actor: (canister?: string, identity?: ActorIdentity) => Promise<ActorSubclass<T>> }) {
     this.actor = actor;
   }
-
-  public abstract totalHolders({ canisterId }: TotalHoldersRequest): TotalHoldersResult;
-
-  public abstract holders({ canisterId, params }: HoldersRequest): HoldersResult;
 
   public abstract supply({ canisterId }: SupplyRequest): SupplyResult;
 

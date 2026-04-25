@@ -1,13 +1,13 @@
-import { useState, useMemo, useEffect } from "react";
-import { Typography, Box, Checkbox } from "components/Mui";
-import { NoData, LoadingRow, SelectToken } from "components/index";
-import { useUserSwapPoolBalances, useParsedQueryString } from "@icpswap/hooks";
-import { useHideUnavailableClaimManager } from "store/customization/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useParsedQueryString, useUserSwapPoolBalances } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { isMobile } from "react-device-detect";
-import { useNavigate } from "react-router-dom";
+import { LoadingRow, NoData, SelectToken } from "components/index";
+import { Box, Checkbox, Typography } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useHideUnavailableClaimManager } from "store/customization/hooks";
 
 import { ReclaimItems } from "./components/ReclaimItem";
 
@@ -25,6 +25,7 @@ export function ReclaimWithToken() {
   const principal = useAccountPrincipalString();
   const navigate = useNavigate();
   const { tokenId: tokenIdFromUrl } = useParsedQueryString() as { tokenId: string };
+  const isMobile = useIsMobile();
 
   const [tokenId, setTokenId] = useState<string | undefined>(undefined);
 
@@ -38,7 +39,7 @@ export function ReclaimWithToken() {
     return balances
       .filter((balance) => balance.balance0 !== BigInt(0) || balance.balance1 !== BigInt(0))
       .reduce((prev, curr) => {
-        const arr = [...prev];
+        const arr = prev.slice();
         const poolId = curr.canisterId.toString();
 
         if (curr.balance0 !== BigInt(0))
@@ -153,7 +154,7 @@ export function ReclaimWithToken() {
           >
             <Checkbox
               checked={hideUnavailableClaim}
-              onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+              onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
                 updateHideUnavailableClaim(checked);
               }}
             />

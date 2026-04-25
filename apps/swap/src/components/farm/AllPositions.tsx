@@ -1,8 +1,8 @@
-import { Box, Typography, Button } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import type { FarmInfo, InitFarmArgs, UserPositionInfoWithId } from "@icpswap/types";
 import { Modal } from "@icpswap/ui";
 import { FarmPositionCard } from "components/farm/index";
-import type { FarmInfo, InitFarmArgs, UserPositionInfoWithId } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import { Box, Button, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export interface AllPositionsProps {

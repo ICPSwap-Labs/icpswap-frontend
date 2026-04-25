@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
 import { useNeuronSystemFunctions } from "@icpswap/hooks";
-import { Box, Checkbox, Typography } from "components/Mui";
 import { Modal } from "@icpswap/ui";
+import { Box, Checkbox, Typography } from "components/Mui";
+import { useEffect, useMemo, useState } from "react";
 import { Filter } from "react-feather";
 import { useTranslation } from "react-i18next";
 
@@ -16,11 +16,11 @@ export function SelectNeuronFuncs({ governance_id, onConfirm }: SelectNeuronFunc
   const [filterFuncIds, setFilterFuncIds] = useState<bigint[]>([]);
   const [selectedFuncIds, setSelectedFuncIds] = useState<bigint[]>([]);
 
-  const { result } = useNeuronSystemFunctions(governance_id);
+  const { data } = useNeuronSystemFunctions(governance_id);
 
   const functions = useMemo(() => {
-    return result?.functions.filter((e) => e.name !== "All non-critical topics");
-  }, [result]);
+    return data?.functions.filter((e) => e.name !== "All non-critical topics");
+  }, [data]);
 
   useEffect(() => {
     if (functions) {
@@ -106,7 +106,7 @@ export function SelectNeuronFuncs({ governance_id, onConfirm }: SelectNeuronFunc
               <Typography>{func.name}</Typography>
               <Checkbox
                 checked={selectedFuncIds.includes(func.id)}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+                onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                   handleCheckboxChange(checked, func.id)
                 }
               />

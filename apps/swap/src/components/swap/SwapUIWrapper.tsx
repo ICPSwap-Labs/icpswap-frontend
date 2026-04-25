@@ -1,7 +1,7 @@
-import { Box, Typography, Grid } from "components/Mui";
-import { Wrapper, TabPanel } from "components/index";
-import React from "react";
+import { TabPanel, Wrapper } from "components/index";
+import { Box, Grid, Typography } from "components/Mui";
 import i18n from "i18n/index";
+import type React from "react";
 
 function LinkIcon() {
   return (

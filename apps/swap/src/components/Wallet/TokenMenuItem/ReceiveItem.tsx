@@ -1,8 +1,8 @@
-import { useCallback } from "react";
-import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useTheme } from "components/Mui";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { useCallback } from "react";
 
 interface TokenReceiveItemProps {
   tokenId: string;
@@ -10,13 +10,13 @@ interface TokenReceiveItemProps {
 
 export function TokenReceiveItem({ tokenId }: TokenReceiveItemProps) {
   const theme = useTheme();
-  const { setPages } = useWalletContext();
-  const { setTokenReceiveId } = useWalletTokenContext();
+  const { setPages } = useWalletStore();
+  const { setTokenReceiveId } = useWalletTokenStore();
 
   const handleReceive = useCallback(() => {
     setPages(WalletManagerPage.Receive, false);
     setTokenReceiveId(tokenId);
-  }, [setPages, tokenId]);
+  }, [setPages, tokenId, setTokenReceiveId]);
 
   return (
     <MenuItem

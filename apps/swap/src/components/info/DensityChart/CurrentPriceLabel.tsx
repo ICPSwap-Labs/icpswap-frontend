@@ -1,10 +1,10 @@
+import type { Token } from "@icpswap/swap-sdk";
 import { GridAutoRows, GridRowFixed } from "@icpswap/ui";
-import { Typography, Box, useTheme } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
 import { toSignificant } from "@icpswap/utils";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
-import { ChartEntry } from "./type";
+import type { ChartEntry } from "./type";
 
 interface LabelProps {
   x: number;

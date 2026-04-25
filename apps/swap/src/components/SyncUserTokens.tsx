@@ -1,7 +1,7 @@
-import { Typography, CircularProgress } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
+import { CircularProgress, Typography } from "components/Mui";
 import { useSyncYourTokensHandler } from "hooks/wallet/useSyncYourTokens";
+import { useTranslation } from "react-i18next";
 
 export function SyncUserTokens() {
   const { t } = useTranslation();

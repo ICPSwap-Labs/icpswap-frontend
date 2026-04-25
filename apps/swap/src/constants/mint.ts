@@ -1,4 +1,4 @@
-import { Percent, BigintIsh } from "@icpswap/swap-sdk";
+import { type BigintIsh, Percent } from "@icpswap/swap-sdk";
 
 export enum Bound {
   LOWER = "LOWER",

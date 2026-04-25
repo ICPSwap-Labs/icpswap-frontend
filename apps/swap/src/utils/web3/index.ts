@@ -1,8 +1,8 @@
 import { getAddress } from "@ethersproject/address";
-import { BigNumber as Big } from "@ethersproject/bignumber";
+import type { BigNumber as Big } from "@ethersproject/bignumber";
 import { AddressZero } from "@ethersproject/constants";
 import { Contract } from "@ethersproject/contracts";
-import { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
+import type { JsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import { BigNumber } from "@icpswap/utils";
 
 // returns the checksummed address if the address is valid, otherwise returns false
@@ -54,7 +54,7 @@ export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
 }
 
-export function toHexString(amount: string | number, decimals = 18): string {
+export function numberToHexNumber(amount: string | number, decimals = 18): string {
   return `0x0${new BigNumber(amount).multipliedBy(10 ** decimals).toString(16)}`;
 }
 

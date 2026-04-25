@@ -1,24 +1,22 @@
-import React, { ReactNode } from "react";
+import type React from "react";
+import type { ReactNode } from "react";
 import { XCircle } from "react-feather";
 import { isElement } from "react-is";
 
 import {
-  makeStyles,
-  useTheme,
+  Box,
   Button,
   Dialog,
-  DialogTitle,
   DialogContent,
+  DialogTitle,
+  makeStyles,
+  type Theme,
   Typography,
   useMediaQuery,
-  Theme,
-  Box,
+  useTheme,
 } from "../Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  titleContainer: {
-    position: "relative",
-  },
   title: {
     fontSize: "20px",
     fontWeight: 700,
@@ -28,13 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     "&.warning": {
       color: "#D3625B",
     },
-  },
-  detailItem: {
-    marginBottom: "24px",
-  },
-  value: {
-    textAlign: "right",
-    wordBreak: "break-all",
   },
   closeButton: {
     position: "absolute",

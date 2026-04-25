@@ -1,7 +1,7 @@
+import { shorten } from "@icpswap/utils";
+import VerifyImage from "assets/images/nft/verify.svg";
 import { Box, Grid, Typography } from "components/Mui";
 import { isICPSwapOfficial } from "utils/index";
-import VerifyImage from "assets/images/nft/verify.svg";
-import { shorten } from "@icpswap/utils";
 
 export interface VerifyNFTProps {
   minter: string | undefined;

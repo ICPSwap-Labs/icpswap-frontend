@@ -1,24 +1,24 @@
-import { useState, useCallback, useMemo } from "react";
-import { ckBridgeChain } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import type { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { InputWrapper } from "components/ck-bridge";
-import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useAccount } from "wagmi";
-import { useActiveChain } from "hooks/web3/index";
-import { chainIdToNetwork, chain } from "constants/web3";
-import { useMintCallback } from "hooks/ck-eth/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
-import { useTranslation } from "react-i18next";
-import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { InputWrapper } from "components/ck-bridge";
 import { MintExtraContent } from "components/ck-bridge/eth/MintExtra";
 import { Web3WalletWrapper } from "components/ck-bridge/Web3WalletWrapper";
+import { chain, chainIdToNetwork } from "constants/web3";
+import { useEthBalance, useIcpTokenBalance } from "hooks/ck-bridge/index";
+import { useMintCallback } from "hooks/ck-eth/index";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { useActiveChain } from "hooks/web3/index";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useAccount } from "wagmi";
 
 export interface EthMintProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
+  bridgeChain: BridgeChainType;
   minterInfo?: ChainKeyETHMinterInfo | Null;
 }
 
@@ -31,8 +31,8 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
 
   const [amount, setAmount] = useState<string | undefined>(undefined);
 
-  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
-  const ethBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.eth, minterInfo });
+  const tokenBalance = useIcpTokenBalance({ token });
+  const ethBalance = useEthBalance();
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
@@ -48,21 +48,21 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
     if (response) {
       setAmount("");
     }
-  }, [mint_call, amount, setAmount]);
+  }, [mint_call, amount, principal]);
 
   const mint_error = useMemo(() => {
     if (!!chainId && chain !== chainId) return `Please switch to ${chainIdToNetwork[chain]}`;
     if (!amount || new BigNumber(amount).isEqualTo(0)) return t("ck.enter.transfer.amount");
-    if (ethBalance && ethBalance.isLessThan(amount)) return t("common.error.insufficient.balance");
+    if (ethBalance?.isLessThan(amount)) return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [chainId, chain, amount, ethBalance]);
+  }, [chainId, amount, ethBalance, t]);
 
   const handleMax = useCallback(() => {
     if (ethBalance) {
       setAmount(parseTokenAmount(ethBalance, token.decimals).toString());
     }
-  }, [token, tokenBalance, ethBalance, setAmount]);
+  }, [token, ethBalance]);
 
   return (
     <>
@@ -71,7 +71,7 @@ export function EthMint({ token, bridgeChain, minterInfo }: EthMintProps) {
       <InputWrapper
         value={amount}
         token={token}
-        chain={bridgeChain}
+        bridgeCurrentChain={bridgeChain}
         balance={ethBalance}
         onInput={(value: string) => setAmount(value)}
         onMax={handleMax}

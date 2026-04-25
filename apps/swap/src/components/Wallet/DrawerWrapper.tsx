@@ -1,8 +1,8 @@
-import { ReactNode, useCallback } from "react";
-import { Box, BoxProps, Typography } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { Box, type BoxProps, Typography } from "components/Mui";
+import { useWalletStore, type WalletManagerPage } from "components/Wallet/store";
 import { WALLET_DRAWER_WIDTH } from "constants/wallet";
+import { type ReactNode, useCallback } from "react";
 
 interface DrawerWrapperProps {
   padding?: string;
@@ -31,7 +31,7 @@ export function DrawerWrapper({
   prevPage,
   wrapperSX,
 }: DrawerWrapperProps) {
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
 
   const handlePrev = useCallback(() => {
     if (prevPage) {

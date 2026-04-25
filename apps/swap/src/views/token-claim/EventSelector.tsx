@@ -1,5 +1,5 @@
-import { FilledTextField } from "components/index";
 import { useClaimEvents } from "@icpswap/hooks";
+import { FilledTextField } from "components/index";
 import { useTranslation } from "react-i18next";
 
 export default function EventSelector({
@@ -10,7 +10,7 @@ export default function EventSelector({
   onChange?: (eventId: string) => void;
 }) {
   const { t } = useTranslation();
-  const { result: claimEvents } = useClaimEvents(0, 10000);
+  const { data: claimEvents } = useClaimEvents(0, 10000);
 
   const menus = claimEvents?.content.map((ele) => {
     return {

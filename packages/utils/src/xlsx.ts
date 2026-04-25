@@ -1,5 +1,6 @@
 import { utils, writeFile } from "xlsx";
 
+/** Writes one worksheet of JSON rows to `{fileName}.xlsx`. */
 export function writeFileOneSheet(data: any[], fileName: string, sheetName = "Sheet") {
   const sheet = utils.json_to_sheet(data);
 
@@ -13,6 +14,7 @@ export type MultipleSheetArgs = {
   sheetName: string;
 };
 
+/** Writes multiple worksheets to a single `{fileName}.xlsx` file. */
 export function writeFileMultipleSheet(data: MultipleSheetArgs[], fileName: string) {
   const wb = utils.book_new();
 

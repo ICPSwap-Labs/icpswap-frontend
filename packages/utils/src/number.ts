@@ -1,8 +1,8 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 
 import { BigNumber } from "./bignumber";
-import { toSignificant, toSignificantWithGroupSeparator } from "./toSignificant";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "./isUndefinedOrNull";
+import { toSignificant, toSignificantWithGroupSeparator } from "./toSignificant";
 
 function removeUselessZeroes(number: string) {
   const regexp = /(?:\.0*|(\.\d+?)0+)$/;
@@ -38,7 +38,7 @@ export interface FormatDollarAmountOptions {
   dollarDigits?: number;
 }
 
-// using a currency library here in case we want to add more in future
+/** Formats a USD amount: fixed decimals below `max`, compact notation above, `"<$min"` when tiny. */
 export const formatDollarAmount = (num: number | string | undefined, options?: FormatDollarAmountOptions) => {
   const { digits = 2, min = 0.01, max = 1000, dollarDigits = 2 } = options ?? {};
 
@@ -67,7 +67,7 @@ export interface FormatDollarTokenPriceOptions {
   decimalTrailingZero?: number;
 }
 
-// using a currency library here in case we want to add more in future
+/** Formats a token USD price with rules for very small values (exponent-style trailing zeros) and thresholds. */
 export const formatDollarTokenPrice = (num: number | string | Null, options?: FormatDollarTokenPriceOptions) => {
   const { digits = 3, min, decimalTrailingZero = 3 } = options ?? {};
 
@@ -101,7 +101,7 @@ export interface FormatAmountOptions {
   isInteger?: boolean;
 }
 
-// using a currency library here in case we want to add more in future
+/** Formats a generic numeric amount for UI (compact above `max`, thresholds, optional `BigNumber.toFormat`). */
 export const formatAmount = (num: number | string | Null, options?: FormatAmountOptions) => {
   const {
     digits = 5,
@@ -142,7 +142,7 @@ export interface FormatTokenPriceProps {
   max?: number;
 }
 
-// using a currency library here in case we want to add more in future
+/** Formats a token price (non-USD) with distinct rules for values below 1 and large values. */
 export function formatTokenPrice(num: number | string | Null, options?: FormatTokenPriceProps) {
   const { digits = 6, min = 0.00001, digitsIfLessThanOne = 5, max = 1000000 } = options ?? {};
 
@@ -170,7 +170,7 @@ export interface FormatIcpAmountOptions {
   max?: number;
 }
 
-// using a currency library here in case we want to add more in future
+/** Formats an ICP amount for display (similar to dollar formatting but ICP-specific defaults). */
 export const formatIcpAmount = (num: number | string | Null, options?: FormatIcpAmountOptions) => {
   const { digits = 2, min = 0.01, max = 1000 } = options ?? {};
 
@@ -193,7 +193,7 @@ export const formatIcpAmount = (num: number | string | Null, options?: FormatIcp
   }).format(Number(num));
 };
 
-// Format the number of liquidity token amount
+/** Formats a liquidity position amount with trimmed trailing zeros after `toFormat`. */
 export function formatLiquidityAmount(num: number | string | Null) {
   if (isUndefinedOrNull(num)) return "-";
   if (new BigNumber(num).isEqualTo(0)) return "0.00";
@@ -209,10 +209,12 @@ export function formatLiquidityAmount(num: number | string | Null) {
   return __num.replace(regexp, "$1");
 }
 
+/** Parses a percent string (e.g. `"12%"`) to a fractional number (0–1 scale). */
 export function percentToNum(val: string) {
   return new BigNumber(val.replace("%", "")).dividedBy(100).toNumber();
 }
 
+/** Converts a fractional value (0–1) to a percent string, with optional fixed decimal places. */
 export function numToPercent(num: string | number | BigNumber, digits?: number) {
   return digits || digits === 0
     ? `${new BigNumber(num).multipliedBy(100).toFixed(digits)}%`

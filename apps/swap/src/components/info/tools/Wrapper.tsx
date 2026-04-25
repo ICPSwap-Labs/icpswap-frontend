@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
 import { MainCard } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
+import type { ReactNode } from "react";
 
 interface ToolsWrapperProps {
   title?: ReactNode;

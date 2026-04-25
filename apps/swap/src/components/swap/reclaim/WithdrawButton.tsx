@@ -1,11 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
-import { CircularProgress } from "components/Mui";
+import type { Pool, Token } from "@icpswap/swap-sdk";
 import type { UserSwapPoolsBalance, UserWithdrawQueueInfo } from "@icpswap/types";
 import { Flex, TextButton } from "@icpswap/ui";
-import { Pool, Token } from "@icpswap/swap-sdk";
-import { useReclaim } from "hooks/swap/useReclaim";
-import { useTranslation } from "react-i18next";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { CircularProgress } from "components/Mui";
+import { useReclaim } from "hooks/swap/useReclaim";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface WithdrawButtonProps {
   token: Token | undefined;
@@ -57,7 +57,7 @@ export function WithdrawButton({
     );
 
     setLoading(false);
-  }, [__balances, loading, token, pool]);
+  }, [__balances, loading, token, pool, onReclaimSuccess, reclaim]);
 
   const disabled = useMemo(() => {
     if (isUndefinedOrNull(token)) return true;

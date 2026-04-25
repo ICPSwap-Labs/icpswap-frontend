@@ -1,10 +1,10 @@
 /* eslint-disable no-extend-native */
 
+import type { Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import JSBI from "jsbi";
-import { Null } from "@icpswap/types";
-import { isUndefinedOrNull, BigNumber } from "@icpswap/utils";
 
-// @ts-ignore  hijack bigint
+// @ts-expect-error  hijack bigint
 BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };
@@ -50,18 +50,12 @@ export type CountingTime = {
   sec: string | number;
 };
 
-export function toDoubleNumber(string: number | string) {
-  const newString = String(string);
-
-  if (newString.length < 2) {
-    return `0${newString}`;
-  }
-
-  return string;
+export function toDoubleNumber(value: number | string) {
+  return String(value).padStart(2, "0");
 }
 
 export function counter(time: string | number | Date): CountingTime {
-  const now = new Date().getTime();
+  const now = Date.now();
   const end = new Date(time).getTime();
 
   const diff = end - now;
@@ -74,9 +68,9 @@ export function counter(time: string | number | Date): CountingTime {
     };
   }
 
-  const sec = parseInt(String((diff / 1000) % 60));
-  const min = parseInt(String((diff / (60 * 1000)) % 60));
-  const hour = parseInt(String(diff / (60 * 60 * 1000)));
+  const sec = parseInt(String((diff / 1000) % 60), 10);
+  const min = parseInt(String((diff / (60 * 1000)) % 60), 10);
+  const hour = parseInt(String(diff / (60 * 60 * 1000)), 10);
 
   return {
     hour: toDoubleNumber(hour),
@@ -108,7 +102,7 @@ export function parseBackPath(path: string) {
   return window.atob(path);
 }
 
-export * from "./type";
 export * from "./nft";
 export * from "./swap";
 export * from "./token";
+export * from "./type";

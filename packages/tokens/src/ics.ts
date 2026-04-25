@@ -1,6 +1,6 @@
-import { Token } from "@icpswap/swap-sdk";
-import { TokenInfo, TOKEN_STANDARD } from "@icpswap/types";
 import { ICS_CANISTER_ID } from "@icpswap/constants";
+import { Token } from "@icpswap/swap-sdk";
+import { TOKEN_STANDARD, type TokenInfo } from "@icpswap/types";
 
 export const ICS_TOKEN_INFO: TokenInfo = {
   symbol: "ICS",

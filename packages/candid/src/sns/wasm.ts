@@ -1,5 +1,5 @@
-import type { Principal } from "@dfinity/principal";
-import type { ActorMethod } from "@dfinity/agent";
+import type { ActorMethod } from "@icp-sdk/core/agent";
+import type { Principal } from "@icp-sdk/core/principal";
 
 export interface AddWasmRequest {
   hash: Uint8Array | number[];
@@ -66,13 +66,9 @@ export interface GetDeployedSnsByProposalIdRequest {
   proposal_id: bigint;
 }
 export interface GetDeployedSnsByProposalIdResponse {
-  get_deployed_sns_by_proposal_id_result:
-    | []
-    | [GetDeployedSnsByProposalIdResult];
+  get_deployed_sns_by_proposal_id_result: [] | [GetDeployedSnsByProposalIdResult];
 }
-export type GetDeployedSnsByProposalIdResult =
-  | { Error: SnsWasmError }
-  | { DeployedSns: DeployedSns };
+export type GetDeployedSnsByProposalIdResult = { Error: SnsWasmError } | { DeployedSns: DeployedSns };
 export interface GetNextSnsVersionRequest {
   governance_canister_id: [] | [Principal];
   current_version: [] | [SnsVersion];
@@ -142,9 +138,7 @@ export interface NeuronsFundParticipationConstraints {
   coefficient_intervals: Array<LinearScalingCoefficient>;
   max_neurons_fund_participation_icp_e8s: [] | [bigint];
   min_direct_participation_threshold_icp_e8s: [] | [bigint];
-  ideal_matched_participation_function:
-    | []
-    | [IdealMatchedParticipationFunction];
+  ideal_matched_participation_function: [] | [IdealMatchedParticipationFunction];
 }
 export interface PrettySnsVersion {
   archive_wasm_hash: string;
@@ -169,9 +163,7 @@ export interface SnsInitPayload {
   nns_proposal_id: [] | [bigint];
   neurons_fund_participation: [] | [boolean];
   min_participant_icp_e8s: [] | [bigint];
-  neuron_basket_construction_parameters:
-    | []
-    | [NeuronBasketConstructionParameters];
+  neuron_basket_construction_parameters: [] | [NeuronBasketConstructionParameters];
   fallback_controller_principal_ids: Array<string>;
   token_symbol: [] | [string];
   final_reward_rate_basis_points: [] | [bigint];
@@ -191,9 +183,7 @@ export interface SnsInitPayload {
   wait_for_quiet_deadline_increase_seconds: [] | [bigint];
   transaction_fee_e8s: [] | [bigint];
   dapp_canisters: [] | [DappCanisters];
-  neurons_fund_participation_constraints:
-    | []
-    | [NeuronsFundParticipationConstraints];
+  neurons_fund_participation_constraints: [] | [NeuronsFundParticipationConstraints];
   neurons_fund_participants: [] | [NeuronsFundParticipants];
   max_age_bonus_percentage: [] | [bigint];
   initial_token_distribution: [] | [InitialTokenDistribution];
@@ -259,32 +249,14 @@ export interface _SERVICE {
   add_wasm: ActorMethod<[AddWasmRequest], AddWasmResponse>;
   deploy_new_sns: ActorMethod<[DeployNewSnsRequest], DeployNewSnsResponse>;
   get_allowed_principals: ActorMethod<[{}], GetAllowedPrincipalsResponse>;
-  get_deployed_sns_by_proposal_id: ActorMethod<
-    [GetDeployedSnsByProposalIdRequest],
-    GetDeployedSnsByProposalIdResponse
-  >;
+  get_deployed_sns_by_proposal_id: ActorMethod<[GetDeployedSnsByProposalIdRequest], GetDeployedSnsByProposalIdResponse>;
   get_latest_sns_version_pretty: ActorMethod<[null], Array<[string, string]>>;
-  get_next_sns_version: ActorMethod<
-    [GetNextSnsVersionRequest],
-    GetNextSnsVersionResponse
-  >;
+  get_next_sns_version: ActorMethod<[GetNextSnsVersionRequest], GetNextSnsVersionResponse>;
   get_sns_subnet_ids: ActorMethod<[{}], GetSnsSubnetIdsResponse>;
   get_wasm: ActorMethod<[GetWasmRequest], GetWasmResponse>;
-  insert_upgrade_path_entries: ActorMethod<
-    [InsertUpgradePathEntriesRequest],
-    InsertUpgradePathEntriesResponse
-  >;
+  insert_upgrade_path_entries: ActorMethod<[InsertUpgradePathEntriesRequest], InsertUpgradePathEntriesResponse>;
   list_deployed_snses: ActorMethod<[{}], ListDeployedSnsesResponse>;
-  list_upgrade_steps: ActorMethod<
-    [ListUpgradeStepsRequest],
-    ListUpgradeStepsResponse
-  >;
-  update_allowed_principals: ActorMethod<
-    [UpdateAllowedPrincipalsRequest],
-    UpdateAllowedPrincipalsResponse
-  >;
-  update_sns_subnet_list: ActorMethod<
-    [UpdateSnsSubnetListRequest],
-    UpdateSnsSubnetListResponse
-  >;
+  list_upgrade_steps: ActorMethod<[ListUpgradeStepsRequest], ListUpgradeStepsResponse>;
+  update_allowed_principals: ActorMethod<[UpdateAllowedPrincipalsRequest], UpdateAllowedPrincipalsResponse>;
+  update_sns_subnet_list: ActorMethod<[UpdateSnsSubnetListRequest], UpdateSnsSubnetListResponse>;
 }

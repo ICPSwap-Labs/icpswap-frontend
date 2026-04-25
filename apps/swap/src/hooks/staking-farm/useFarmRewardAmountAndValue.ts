@@ -1,9 +1,9 @@
-import { useMemo } from "react";
+import type { Token } from "@icpswap/swap-sdk";
+import type { InitFarmArgs } from "@icpswap/types";
+import { BigNumber, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useIntervalUserRewardInfo } from "hooks/staking-farm";
-import { parseTokenAmount, BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 import { useUSDPrice } from "hooks/useUSDPrice";
-import { InitFarmArgs } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import { useMemo } from "react";
 
 export interface FarmMainProps {
   farmId: string | undefined;
@@ -16,7 +16,7 @@ export interface FarmMainProps {
 export function useFarmUserRewardAmountAndValue({ farmId, positionIds, farmInitArgs, rewardToken }: FarmMainProps) {
   const rewardTokenPrice = useUSDPrice(rewardToken);
 
-  const __userRewardAmount = useIntervalUserRewardInfo(farmId, positionIds);
+  const { data: __userRewardAmount } = useIntervalUserRewardInfo(farmId, positionIds);
 
   const userRewardAmount = useMemo(() => {
     if (!farmInitArgs || __userRewardAmount === undefined || !rewardToken) return undefined;

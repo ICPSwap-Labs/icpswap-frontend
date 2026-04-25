@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
-import { isErc20Finalized } from "utils/web3/dissolve";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
 import { useSuccessTip } from "hooks/useTips";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useErc20DissolveCompletedTxsManager } from "store/web3/hooks";
+import { isErc20Finalized } from "utils/web3/dissolve";
 
 export function useErc20DissolveTxWatcher() {
   const { result: erc20DissolveTxs } = useErc20DissolveTxs();
@@ -29,5 +29,5 @@ export function useErc20DissolveTxWatcher() {
     }
 
     call();
-  }, [erc20DissolveTxs, erc20DissolveCompletedTxs]);
+  }, [erc20DissolveTxs, erc20DissolveCompletedTxs, erc20DissolveCompletedTxsManager, openTip, t]);
 }

@@ -1,10 +1,10 @@
-import { memo, useMemo, useCallback } from "react";
-import { Token, Pool } from "@icpswap/swap-sdk";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
-import { RangeButton } from "components/liquidity/RangeButton";
 import { useLiquidityChartPriceRange } from "@icpswap/hooks";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { RangeButton } from "components/liquidity/RangeButton";
+import { memo, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface AutoPriceRangeButtonProps {
   onLeftRangeInput: (value: string) => void;
@@ -30,7 +30,7 @@ export const AutoPriceRangeButton = memo(
 
     const isSorted = baseCurrency && quoteCurrency && baseCurrency.sortsBefore(quoteCurrency);
 
-    const { result: __chartPriceRange } = useLiquidityChartPriceRange(pool?.id);
+    const { data: __chartPriceRange } = useLiquidityChartPriceRange(pool?.id);
 
     const chartPriceRange = useMemo(() => {
       if (!__chartPriceRange) return undefined;
@@ -49,7 +49,7 @@ export const AutoPriceRangeButton = memo(
 
       onLeftRangeInput(chartPriceRange.min);
       onRightRangeInput(chartPriceRange.max);
-    }, [chartPriceRange]);
+    }, [chartPriceRange, onLeftRangeInput, onRightRangeInput, setRangeValue]);
 
     return (
       <RangeButton key="Auto" text={t("common.auto")} value="Auto" onClick={handleAutoRange} active={rangeValue} />

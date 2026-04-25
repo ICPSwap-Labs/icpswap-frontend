@@ -1,13 +1,13 @@
-import { useMemo } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
 import { useTokenHolders } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { toFormat } from "utils/index";
-import { useInitialHighcharts } from "./Highcharts";
+import { mapTokenHolderChartsToPieData, useEchartsPieChart } from "./EchartsPie";
 
 const OTHER_ACCOUNTS = "Other accounts";
 
@@ -19,7 +19,7 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const [, token] = useToken(tokenId);
-  const { result } = useTokenHolders(tokenId, 1, 100);
+  const { data: result } = useTokenHolders(tokenId, 1, 100);
 
   const { top100HoldAmount, totalHolders, top100HoldPercent, totalSupply } = useMemo(() => {
     if (isUndefinedOrNull(result)) return {};
@@ -70,7 +70,9 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
     return [...top100Holders, otherAccounts];
   }, [result, top100HoldPercent, top100HoldAmount, totalSupply]);
 
-  useInitialHighcharts({ id: "highcharts-id", charts });
+  const pieRef = useRef<HTMLDivElement | null>(null);
+  const pieData = useMemo(() => mapTokenHolderChartsToPieData(charts), [charts]);
+  useEchartsPieChart({ containerRef: pieRef, seriesName: "Tokens", data: pieData });
 
   return (
     <Box sx={{ width: "100%", padding: "0 25px" }}>
@@ -133,7 +135,7 @@ export function TokenHoldersCharts({ tokenId }: TokenHoldersChartsProps) {
                   <div />
                 </LoadingRow>
               ) : (
-                <Box id="highcharts-id" />
+                <Box ref={pieRef} sx={{ width: "100%", height: "100%", minHeight: 360 }} />
               )}
             </Flex>
           </Box>

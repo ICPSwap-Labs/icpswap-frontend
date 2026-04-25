@@ -1,27 +1,33 @@
-import { useMemo, useState } from "react";
-import { Typography, Box, useMediaQuery, Button, useTheme } from "components/Mui";
-import { useParams } from "react-router-dom";
-import { formatDollarAmount, formatAmount, explorerLink, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { MainCard, TextButton, TokenImage, Breadcrumbs, InfoWrapper, TokenPoolPrice } from "components/index";
-import { usePoolAPR, useInfoPool } from "@icpswap/hooks";
-import { GridAutoRows, Proportion, FeeTierPercentLabel, Flex, Link } from "@icpswap/ui";
-import { PoolTransactions } from "components/info/swap";
-import { swapLinkOfPool, addLiquidityLink } from "utils/info/link";
+import { useInfoPool, usePoolAPR } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { ICP_TOKEN_INFO } from "@icpswap/tokens";
-import { Copy } from "react-feather";
-import copyToClipboard from "copy-to-clipboard";
-import { useTips, TIP_SUCCESS } from "hooks/useTips";
-import { PositionTable } from "components/liquidity/PositionTable";
-import { useToken } from "hooks/index";
-import { useTranslation } from "react-i18next";
-import { Token } from "@icpswap/swap-sdk";
-import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
-import { TokenSymbol } from "components/TokenSymbol";
-import { getFee24HFromVolume24H } from "hooks/info/useFee24h";
+import { FeeTierPercentLabel, Flex, GridAutoRows, Link, Proportion } from "@icpswap/ui";
+import {
+  BigNumber,
+  formatAmount,
+  formatDollarAmount,
+  icDashboardExplorerLink,
+  isUndefinedOrNull,
+} from "@icpswap/utils";
+import { Breadcrumbs, InfoWrapper, MainCard, TextButton, TokenImage, TokenPoolPrice } from "components/index";
+import { PoolTransactions } from "components/info/swap";
 import { PoolPositionHoldersCharts } from "components/info/swap/PoolPositionHoldersCharts";
-
-import { PoolChart } from "./components/PoolChart";
+import { PositionTable } from "components/liquidity/PositionTable";
+import { Box, Button, Typography, useTheme } from "components/Mui";
+import { TokenSymbol } from "components/TokenSymbol";
+import copyToClipboard from "copy-to-clipboard";
+import { useToken } from "hooks/index";
+import { getFee24HFromVolume24H } from "hooks/info/useFee24h";
+import { usePoolTokenBalanceTvl } from "hooks/info/usePoolTokenBalanceTvl";
+import { useMediaQueryMD } from "hooks/theme";
+import { TIP_SUCCESS, useTips } from "hooks/useTips";
+import { useMemo, useState } from "react";
+import { Copy } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import { addLiquidityLink, swapLinkOfPool } from "utils/info/link";
 import { LiquidityLocksWrapper } from "./components/LiquidityLocks";
+import { PoolChart } from "./components/PoolChart";
 
 interface PoolTokenTvlProps {
   token: Token | undefined;
@@ -69,13 +75,13 @@ export default function SwapPoolDetails() {
 
   const [tab, setTab] = useState<TabValue>(TabValue.Transactions);
 
-  const { result: pool } = useInfoPool(canisterId);
+  const { data: pool } = useInfoPool(canisterId);
   const [, token0] = useToken(pool?.token0LedgerId);
   const [, token1] = useToken(pool?.token1LedgerId);
 
   const { poolTvlUSD, token0TvlUSD, token1TvlUSD, token0Balance, token1Balance } = usePoolTokenBalanceTvl({ pool });
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const handleCopy = () => {
     copyToClipboard(canisterId);
@@ -116,7 +122,7 @@ export default function SwapPoolDetails() {
 
           <Box sx={{ "@media (max-width: 640px)": { margin: "6px 0 0 0" } }}>
             <Flex gap="0 4px">
-              <TextButton link={explorerLink(canisterId)}>{canisterId}</TextButton>
+              <TextButton link={icDashboardExplorerLink(canisterId)}>{canisterId}</TextButton>
               <Copy size="14px" style={{ cursor: "pointer" }} onClick={handleCopy} />
             </Flex>
           </Box>

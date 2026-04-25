@@ -1,9 +1,8 @@
-import { Principal } from "@dfinity/principal";
-import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
-import { useCallback } from "react";
-import { useCallsData } from "@icpswap/hooks";
+import { Principal } from "@icp-sdk/core/principal";
 import { tokenAdapter } from "@icpswap/token-adapter";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
+import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export interface AllowanceArgs {
   canisterId: string;
@@ -36,9 +35,17 @@ export interface useAllowanceArgs {
   refresh?: number;
 }
 
-export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub, refresh }: useAllowanceArgs) {
-  return useCallsData(
-    useCallback(async () => {
+export function useAllowance({
+  canisterId,
+  spender,
+  spenderSub,
+  owner,
+  ownerSub,
+  refresh,
+}: useAllowanceArgs): UseQueryResult<bigint | undefined, Error> {
+  return useQuery({
+    queryKey: ["useAllowance", canisterId, spender, spenderSub, owner, ownerSub, refresh],
+    queryFn: async () => {
       if (isUndefinedOrNull(spender) || isUndefinedOrNull(owner) || isUndefinedOrNull(canisterId)) return undefined;
 
       return await allowance({
@@ -48,7 +55,7 @@ export function useAllowance({ canisterId, spender, spenderSub, owner, ownerSub,
         ownerSub,
         canisterId,
       });
-    }, [spender, spenderSub, owner, ownerSub, canisterId]),
-    refresh,
-  );
+    },
+    enabled: !isUndefinedOrNull(spender) && !isUndefinedOrNull(owner) && !isUndefinedOrNull(canisterId),
+  });
 }

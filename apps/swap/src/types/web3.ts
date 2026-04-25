@@ -1,3 +1,5 @@
+import type { BridgeChainType, BridgeType } from "@icpswap/constants";
+
 export type TX = {
   hash: string;
   from: string;
@@ -10,15 +12,11 @@ export type TX = {
   tokenSymbol: string;
 };
 
-export type BridgeChain = "eth" | "btc" | "erc20";
-
-export type BridgeType = "mint" | "dissolve";
-
 export type EthereumTransactionEvent = {
   hash: string | undefined;
   amount: string;
   type: BridgeType;
-  chain: BridgeChain;
+  chain: BridgeChainType;
   token: string;
 };
 
@@ -26,7 +24,7 @@ export type Erc20DissolveTransactionEvent = {
   hash: string | undefined;
   amount: string;
   type: BridgeType;
-  chain: BridgeChain;
+  chain: BridgeChainType;
   token_symbol: string;
   withdrawal_id: string;
 };
@@ -35,10 +33,22 @@ export type BitcoinTransactionEvent = {
   hash: string | undefined;
   amount: string;
   type: BridgeType;
-  chain: BridgeChain;
+  chain: BridgeChainType;
   token: string;
 };
 
-export type BridgeTransactionEvent = Erc20DissolveTransactionEvent | EthereumTransactionEvent | BitcoinTransactionEvent;
+export type DogeTransactionEvent = {
+  hash: string | undefined;
+  amount: string;
+  type: BridgeType;
+  chain: BridgeChainType;
+  token: string;
+};
+
+export type BridgeTransactionEvent =
+  | Erc20DissolveTransactionEvent
+  | EthereumTransactionEvent
+  | BitcoinTransactionEvent
+  | DogeTransactionEvent;
 
 export type Erc20DissolveStatus = "TxFinalized" | "TxSent" | "TxCreated" | "Pending";

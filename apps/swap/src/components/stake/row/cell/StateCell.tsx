@@ -1,6 +1,6 @@
-import { Typography } from "components/Mui";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { Typography } from "components/Mui";
 import { State } from "components/stake/State";
 
 interface StateCellProps {

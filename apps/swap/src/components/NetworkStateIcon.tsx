@@ -1,6 +1,6 @@
-import { useTheme, Box } from "components/Mui";
 import { Flex } from "@icpswap/ui";
 import { BigNumber } from "@icpswap/utils";
+import { Box, useTheme } from "components/Mui";
 
 const levels = [0, 1, 2, 3, 4];
 
@@ -19,14 +19,14 @@ export function NetworkStateIcon({ level, height = "11px" }: NetworkStateIconPro
           key={element}
           sx={{
             width: "2px",
-            height: `${new BigNumber(index + 1).dividedBy(levels.length).multipliedBy(parseInt(height)).toNumber()}px`,
+            height: `${new BigNumber(index + 1).dividedBy(levels.length).multipliedBy(parseInt(height, 10)).toNumber()}px`,
             background:
               element <= level
                 ? level >= 3
                   ? "#54C081"
                   : level <= 1
-                  ? "#D3625B"
-                  : "#F7B231"
+                    ? "#D3625B"
+                    : "#F7B231"
                 : theme.palette.background.level4,
             borderRadius: "30px",
           }}

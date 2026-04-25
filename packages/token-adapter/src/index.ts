@@ -1,25 +1,23 @@
-import { ActorIdentity, Override } from "@icpswap/types";
-import {
-  HoldersRequest,
-  TotalHoldersRequest,
-  SupplyRequest,
+import type { ActorIdentity, Override } from "@icpswap/types";
+import type {
+  ActualReceivedByTransferRequest,
+  AllowanceRequest,
+  ApproveRequest,
   BalanceRequest,
-  TransferRequest,
+  MetadataRequest,
   SetFeeRequest,
   SetFeeToRequest,
+  SupplyRequest,
   TransactionRequest,
-  ApproveRequest,
-  AllowanceRequest,
-  MetadataRequest,
-  ActualReceivedByTransferRequest,
+  TransferRequest,
 } from "./BaseTokenAdapter";
-import { EXTAdapter, EXTTokenAdapter } from "./EXTAdapter";
-import { DIP20Adapter, DIP20TokenAdapter } from "./DIP20Adapter";
-import { DIP20WICPAdapter, DIP20WICPTokenAdapter } from "./DIP20WICPAdapter";
-import { DIP20XTCAdapter, DIP20XTCTokenAdapter } from "./DIP20XTCAdapter";
-import { icrc1Adapter, ICRC1Adapter } from "./ICRC1";
-import { icrc2Adapter, ICRC2Adapter } from "./ICRC2";
-import { icpAdapter, ICPAdapter } from "./ICP";
+import { DIP20Adapter, type DIP20TokenAdapter } from "./DIP20Adapter";
+import { DIP20WICPAdapter, type DIP20WICPTokenAdapter } from "./DIP20WICPAdapter";
+import { DIP20XTCAdapter, type DIP20XTCTokenAdapter } from "./DIP20XTCAdapter";
+import { EXTAdapter, type EXTTokenAdapter } from "./EXTAdapter";
+import { ICPAdapter, icpAdapter } from "./ICP";
+import { ICRC1Adapter, icrc1Adapter } from "./ICRC1";
+import { ICRC2Adapter, icrc2Adapter } from "./ICRC2";
 import { TOKEN_STANDARD } from "./types";
 
 export type AdapterRequest<T> = T;
@@ -28,31 +26,21 @@ export type AdapterIdentityRequest<T> = Override<T, { identity: ActorIdentity }>
 
 export type RegisterProps = { canisterId: string; standard: TOKEN_STANDARD }[];
 
+export type TokenAdapterInstance =
+  | DIP20XTCTokenAdapter
+  | DIP20WICPTokenAdapter
+  | DIP20TokenAdapter
+  | EXTTokenAdapter
+  | ICRC1Adapter
+  | ICRC2Adapter
+  | ICPAdapter;
+
 export class TokenAdapter {
   public canisterAdapters = new Map<string, TOKEN_STANDARD>();
 
-  public adapters = new Map<
-    TOKEN_STANDARD,
-    | DIP20XTCTokenAdapter
-    | DIP20WICPTokenAdapter
-    | DIP20TokenAdapter
-    | EXTTokenAdapter
-    | ICRC1Adapter
-    | ICRC2Adapter
-    | ICPAdapter
-  >();
+  public adapters = new Map<TOKEN_STANDARD, TokenAdapterInstance>();
 
-  public initialAdapter(
-    name: TOKEN_STANDARD,
-    adapter:
-      | DIP20XTCTokenAdapter
-      | DIP20WICPTokenAdapter
-      | DIP20TokenAdapter
-      | EXTTokenAdapter
-      | ICRC1Adapter
-      | ICRC2Adapter
-      | ICPAdapter,
-  ) {
+  public initialAdapter(name: TOKEN_STANDARD, adapter: TokenAdapterInstance) {
     if (this.adapters.get(name)) throw Error("This adapter is already initialed");
     this.adapters.set(name, adapter);
   }
@@ -67,118 +55,59 @@ export class TokenAdapter {
     return this.canisterAdapters;
   }
 
-  public getAdapter(canisterId: string) {
-    let standard = this.canisterAdapters.get(canisterId);
-    if (!standard) {
-      console.error(`Can't not found adapter ===> ${canisterId}`);
-      standard = TOKEN_STANDARD.EXT;
-    }
+  public getAdapter(canisterId: string): TokenAdapterInstance {
+    const standard = this.canisterAdapters.get(canisterId) ?? TOKEN_STANDARD.ICRC1;
     return this.getAdapterByName(standard);
   }
 
-  public getAdapterByName(adapterName: TOKEN_STANDARD | undefined) {
-    if (!adapterName || !this.adapters.get(adapterName)) throw Error(`Can't not found adapter ${adapterName}`);
-    return this.adapters.get(adapterName);
-  }
-
-  public async totalHolders({ canisterId }: AdapterRequest<TotalHoldersRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.totalHolders({ canisterId });
-  }
-
-  public async holders({ params, canisterId }: AdapterRequest<HoldersRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.holders({
-      canisterId,
-      params,
-    });
+  public getAdapterByName(adapterName: TOKEN_STANDARD | undefined): TokenAdapterInstance {
+    const adapter = adapterName ? this.adapters.get(adapterName) : undefined;
+    if (!adapter) throw Error(`Can't not found adapter ${adapterName}`);
+    return adapter;
   }
 
   public async supply({ canisterId }: AdapterRequest<SupplyRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.supply({
-      canisterId,
-    });
+    return this.getAdapter(canisterId).supply({ canisterId });
   }
 
   public async balance({ canisterId, params }: AdapterRequest<BalanceRequest>) {
-    const adapter = this.getAdapter(canisterId);
-
-    return await adapter!.balance({
-      canisterId,
-      params,
-    });
+    return this.getAdapter(canisterId).balance({ canisterId, params });
   }
 
   public async transfer({ canisterId, params, identity }: AdapterIdentityRequest<TransferRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.transfer({
-      canisterId,
-      params,
-      identity,
-    });
+    return this.getAdapter(canisterId).transfer({ canisterId, params, identity });
   }
 
   public async setFee({ canisterId, identity, params }: AdapterIdentityRequest<SetFeeRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.setFee({
-      canisterId,
-      identity,
-      params,
-    });
+    return this.getAdapter(canisterId).setFee({ canisterId, identity, params });
   }
 
   public async setFeeTo({ canisterId, identity, params }: AdapterIdentityRequest<SetFeeToRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.setFeeTo({
-      canisterId,
-      identity,
-      params,
-    });
+    return this.getAdapter(canisterId).setFeeTo({ canisterId, identity, params });
   }
 
   public async transactions({ canisterId, params }: AdapterRequest<TransactionRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.transactions({
-      canisterId,
-      params,
-    });
+    return this.getAdapter(canisterId).transactions({ canisterId, params });
   }
 
   public async approve({ canisterId, identity, params }: AdapterRequest<ApproveRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.approve({
-      canisterId,
-      params,
-      identity,
-    });
+    return this.getAdapter(canisterId).approve({ canisterId, params, identity });
   }
 
   public async allowance({ canisterId, params }: AdapterRequest<AllowanceRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.allowance({
-      canisterId,
-      params,
-    });
+    return this.getAdapter(canisterId).allowance({ canisterId, params });
   }
 
   public async metadata({ canisterId }: AdapterRequest<MetadataRequest>) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.metadata({
-      canisterId,
-    });
+    return this.getAdapter(canisterId).metadata({ canisterId });
   }
 
   public actualReceivedByTransfer(request: ActualReceivedByTransferRequest) {
-    const adapter = this.getAdapter(request.canisterId);
-    return adapter!.actualReceivedByTransfer(request);
+    return this.getAdapter(request.canisterId).actualReceivedByTransfer(request);
   }
 
   public async getMintingAccount({ canisterId }: { canisterId: string }) {
-    const adapter = this.getAdapter(canisterId);
-    return await adapter!.getMintingAccount({
-      canisterId,
-    });
+    return this.getAdapter(canisterId).getMintingAccount({ canisterId });
   }
 }
 
@@ -196,19 +125,18 @@ tokenAdapter.initialAdapter(TOKEN_STANDARD.ICRC1, icrc1Adapter);
 tokenAdapter.initialAdapter(TOKEN_STANDARD.ICRC2, icrc2Adapter);
 tokenAdapter.initialAdapter(TOKEN_STANDARD.ICP, icpAdapter);
 
-export {
-  EXTAdapter,
-  DIP20Adapter,
-  DIP20XTCAdapter,
-  DIP20WICPAdapter,
-  ICRC1Adapter,
-  ICRC2Adapter,
-  icrc1Adapter,
-  icrc2Adapter,
-  icpAdapter,
-  ICPAdapter,
-  TOKEN_STANDARD,
-};
-
 export * from "./token-standard-verification";
 export * from "./utils";
+export {
+  DIP20Adapter,
+  DIP20WICPAdapter,
+  DIP20XTCAdapter,
+  EXTAdapter,
+  ICPAdapter,
+  ICRC1Adapter,
+  ICRC2Adapter,
+  icpAdapter,
+  icrc1Adapter,
+  icrc2Adapter,
+  TOKEN_STANDARD,
+};

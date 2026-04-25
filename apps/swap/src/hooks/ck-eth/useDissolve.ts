@@ -1,15 +1,15 @@
-import { useApprove } from "hooks/token";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { MINTER_ID } from "constants/ckETH";
-import { ckETH } from "@icpswap/tokens";
-import { useState, useCallback, useMemo } from "react";
-import { formatTokenAmount, numberToString } from "@icpswap/utils";
-import { ResultStatus } from "@icpswap/types";
 import { withdraw_eth } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ckETH } from "@icpswap/tokens";
+import { ResultStatus } from "@icpswap/types";
+import { formatTokenAmount, numberToString } from "@icpswap/utils";
+import { MINTER_ID } from "constants/ckETH";
+import { useApprove } from "hooks/token";
 import { MessageTypes, useTips } from "hooks/useTips";
-import { useUpdateEthDissolveTx } from "store/web3/hooks";
-import { Token } from "@icpswap/swap-sdk";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useUpdateEthDissolveTx } from "store/web3/hooks";
 
 export function useDissolveCallback() {
   const { t } = useTranslation();
@@ -60,7 +60,7 @@ export function useDissolveCallback() {
 
       return withdraw_status === ResultStatus.OK;
     },
-    [approve, updateUserTx],
+    [approve, updateUserTx, openTip, principal, t],
   );
 
   return useMemo(

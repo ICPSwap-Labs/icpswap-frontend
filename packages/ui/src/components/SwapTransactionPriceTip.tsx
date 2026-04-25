@@ -1,6 +1,6 @@
 import { formatDollarTokenPrice } from "@icpswap/utils";
 
-import { Typography, Box, useTheme, Tooltip, TypographyProps } from "./Mui";
+import { Box, Tooltip, Typography, type TypographyProps, useTheme } from "./Mui";
 
 export interface SwapTransactionPriceTipProps {
   price: number | string;

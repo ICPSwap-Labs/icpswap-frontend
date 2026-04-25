@@ -1,15 +1,15 @@
-import { useState, useMemo } from "react";
-import { Button, Box, CircularProgress, Typography } from "components/Mui";
-import { Flex } from "@icpswap/ui";
-import { useTips } from "hooks/useTips";
-import { getLocaleMessage } from "i18n/service";
-import { Modal } from "components/index";
-import { type FarmInfo, ResultStatus, InitFarmArgs } from "@icpswap/types";
 import { farmUnstake, farmWithdraw } from "@icpswap/hooks";
-import { Position, Token } from "@icpswap/swap-sdk";
-import { useUSDPrice } from "hooks/useUSDPrice";
+import type { Position, Token } from "@icpswap/swap-sdk";
+import { type FarmInfo, type InitFarmArgs, ResultStatus } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Modal } from "components/index";
+import { Box, Button, CircularProgress, Typography } from "components/Mui";
 import { useIntervalUserRewardInfo } from "hooks/staking-farm";
+import { useTips } from "hooks/useTips";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { getLocaleMessage } from "i18n/service";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { PositionCard } from "./PositionCard1";
@@ -41,7 +41,7 @@ export function Unstake({
 
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const __userRewardAmount = useIntervalUserRewardInfo(farmId, [positionId]);
+  const { data: __userRewardAmount } = useIntervalUserRewardInfo(farmId, [positionId]);
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
 

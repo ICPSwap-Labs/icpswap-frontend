@@ -1,16 +1,14 @@
-import { useCallback } from "react";
 import { setting } from "@icpswap/actor";
-import { useCallsData } from "../useCallData";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getGlobalSettingTokens() {
   const result = await (await setting()).get_default_tokens();
   return result;
 }
 
-export function useGlobalSettingTokens() {
-  return useCallsData(
-    useCallback(async () => {
-      return await getGlobalSettingTokens();
-    }, []),
-  );
+export function useGlobalSettingTokens(): UseQueryResult<Awaited<ReturnType<typeof getGlobalSettingTokens>>, Error> {
+  return useQuery({
+    queryKey: ["useGlobalSettingTokens"],
+    queryFn: () => getGlobalSettingTokens(),
+  });
 }

@@ -1,62 +1,41 @@
-import React, { useState, useMemo } from "react";
-import { Typography, Grid, Chip, Button, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
-import { CurrenciesAvatar } from "components/CurrenciesAvatar";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound } from "constants/swap";
-import { DEFAULT_PERCENT_SYMBOL, CurrencyAmountFormatDecimals } from "constants/index";
-import { feeAmountToPercentage, PositionState } from "utils/swap/index";
-import { usePositionFees } from "hooks/swap/usePositionFees";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { Principal } from "@icp-sdk/core/principal";
+import { swapPool } from "@icpswap/actor";
 import {
-  numberToString,
+  CurrencyAmount,
+  formatTickPrice,
+  getPriceOrderingFromPositionForUI,
+  type Position,
+  useInverter,
+} from "@icpswap/swap-sdk";
+import { ResultStatus } from "@icpswap/types";
+import { Modal } from "@icpswap/ui";
+import {
   BigNumber,
-  resultFormat,
   formatDollarAmount,
   isValidPrincipal,
+  numberToString,
+  resultFormat,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { swapPool } from "@icpswap/actor";
-import { ResultStatus } from "@icpswap/types";
-import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { isDarkTheme } from "utils/index";
-import { useSuccessTip, useLoadingTip, useErrorTip } from "hooks/useTips";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { FilledTextField, Loading } from "components/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { isElement } from "react-is";
-import { Principal } from "@dfinity/principal";
+import { Box, Button, Chip, Grid, Typography, useTheme } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { PositionRangeState } from "components/swap/index";
+import { CurrencyAmountFormatDecimals, DEFAULT_PERCENT_SYMBOL } from "constants/index";
+import { Bound } from "constants/swap";
+import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { usePositionFees } from "hooks/swap/usePositionFees";
+import { useMediaQueryMD, useMediaQuerySM } from "hooks/theme";
+import { useErrorTip, useLoadingTip, useSuccessTip } from "hooks/useTips";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import type React from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal } from "@icpswap/ui";
-
-const useStyle = makeStyles((theme: Theme) => ({
-  positionContainer: {
-    position: "relative",
-    backgroundColor: theme.palette.background.level3,
-    borderRadius: `${theme.radius}px`,
-    border: theme.palette.border.gray200,
-    padding: "24px 20px",
-    marginTop: "16px",
-    cursor: "pointer",
-    overflow: "hidden",
-    "&:first-child": {
-      marginTop: "0",
-    },
-    [theme.breakpoints.down("md")]: {
-      padding: "16px 10px",
-    },
-  },
-  detailContainer: {
-    backgroundColor: theme.palette.background.level3,
-    borderRadius: `${theme.radius}px`,
-    border: theme.palette.border.gray200,
-    padding: "20px",
-    [theme.breakpoints.down("md")]: {
-      padding: "10px",
-    },
-  },
-}));
+import { isElement } from "react-is";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { isDarkTheme } from "utils/index";
+import { feeAmountToPercentage, type PositionState } from "utils/swap/index";
 
 export interface PositionDetailItemProps {
   label: React.ReactChild;
@@ -66,8 +45,7 @@ export interface PositionDetailItemProps {
 }
 
 export function PositionDetailItem({ label, value, convert, onConvertClick }: PositionDetailItemProps) {
-  const theme = useTheme() as Theme;
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   return (
     <Grid container alignItems="center">
@@ -112,8 +90,8 @@ export function PositionDetails({
   token1USDPrice,
   onPrincipalChange,
 }: PositionDetailsProps) {
+  const theme = useTheme();
   const { t } = useTranslation();
-  const classes = useStyle();
 
   const { pool, tickLower, tickUpper } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -161,154 +139,163 @@ export function PositionDetails({
   }, [feeAmount1, token1]);
 
   return (
-    <>
-      <Box
-        className={classes.detailContainer}
-        sx={{ display: show ? "flex" : "none", margin: "8px 0 0 0", gap: "20px 0", flexDirection: "column" }}
-      >
-        <PositionDetailItem label={t("common.position.id")} value={positionId.toString()} />
-        <PositionDetailItem
-          label={t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
-          value={
-            !position
-              ? "--"
-              : inverted
+    <Box
+      sx={{
+        display: show ? "flex" : "none",
+        margin: "8px 0 0 0",
+        gap: "20px 0",
+        flexDirection: "column",
+        backgroundColor: theme.palette.background.level3,
+        borderRadius: `${theme.radius}px`,
+        border: theme.palette.border.gray200,
+        padding: "20px",
+        [theme.breakpoints.down("md")]: {
+          padding: "10px",
+        },
+      }}
+    >
+      <PositionDetailItem label={t("common.position.id")} value={positionId.toString()} />
+      <PositionDetailItem
+        label={t("common.amount.with.symbol", { symbol: currencyQuote?.symbol })}
+        value={
+          !position
+            ? "--"
+            : inverted
               ? toSignificantWithGroupSeparator(
                   position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
                 )
               : toSignificantWithGroupSeparator(
                   position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
                 )
-          }
-        />
-        <PositionDetailItem
-          label={t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
-          value={
-            !position
-              ? "--"
-              : inverted
+        }
+      />
+      <PositionDetailItem
+        label={t("common.amount.with.symbol", { symbol: currencyBase?.symbol })}
+        value={
+          !position
+            ? "--"
+            : inverted
               ? toSignificantWithGroupSeparator(
                   position.amount1.toFixed(CurrencyAmountFormatDecimals(position?.amount1.currency.decimals)),
                 )
               : toSignificantWithGroupSeparator(
                   position.amount0.toFixed(CurrencyAmountFormatDecimals(position?.amount0.currency.decimals)),
                 )
-          }
-        />
-        <PositionDetailItem
-          label={t("common.current.price")}
-          value={
-            !!token1 && !!token0 && pool
-              ? inverted
-                ? `${pool.priceOf(token1).toSignificant(6, { groupSeparator: "," })} ${pairName}`
-                : `${pool.priceOf(token0).toSignificant(6, { groupSeparator: "," })} ${pairName}`
-              : "--"
-          }
-          convert
-          onConvertClick={() => setManuallyInverted(!manuallyInverted)}
-        />
-        <PositionDetailItem
-          label={t("common.price.range")}
-          value={
-            <Box>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
-                {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
-              </Typography>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {pairName}
-              </Typography>
-            </Box>
-          }
-          convert
-          onConvertClick={() => setManuallyInverted(!manuallyInverted)}
-        />
-        <PositionDetailItem
-          label={t("common.uncollected.fees")}
-          value={
-            <Box>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
-                  ? `${toSignificantWithGroupSeparator(
-                      new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toString(),
-                    )} ${token0?.symbol}`
-                  : "--"}
-              </Typography>
-              <Typography
-                color="text.primary"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
-                  ? `and ${toSignificantWithGroupSeparator(
-                      new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toString(),
-                    )} ${token1?.symbol}`
-                  : "--"}
-              </Typography>
-              <Typography
-                mt="5px"
-                align="right"
-                sx={{
-                  "@media(max-width: 640px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
-                {currencyFeeAmount0 !== undefined &&
-                currencyFeeAmount1 !== undefined &&
-                !!token0USDPrice &&
-                !!token1USDPrice
-                  ? formatDollarAmount(
-                      new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0)
-                        .multipliedBy(token0USDPrice)
-                        .plus(
-                          new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).multipliedBy(
-                            token1USDPrice,
-                          ),
-                        )
-                        .toString(),
-                    )
-                  : "--"}
-              </Typography>
-            </Box>
-          }
-        />
+        }
+      />
+      <PositionDetailItem
+        label={t("common.current.price")}
+        value={
+          !!token1 && !!token0 && pool
+            ? inverted
+              ? `${pool.priceOf(token1).toSignificant(6, { groupSeparator: "," })} ${pairName}`
+              : `${pool.priceOf(token0).toSignificant(6, { groupSeparator: "," })} ${pairName}`
+            : "--"
+        }
+        convert
+        onConvertClick={() => setManuallyInverted(!manuallyInverted)}
+      />
+      <PositionDetailItem
+        label={t("common.price.range")}
+        value={
+          <Box>
+            <Typography
+              color="text.primary"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {formatTickPrice(priceLower, tickAtLimit, Bound.LOWER)} -
+              {formatTickPrice(priceUpper, tickAtLimit, Bound.UPPER)}
+            </Typography>
+            <Typography
+              color="text.primary"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {pairName}
+            </Typography>
+          </Box>
+        }
+        convert
+        onConvertClick={() => setManuallyInverted(!manuallyInverted)}
+      />
+      <PositionDetailItem
+        label={t("common.uncollected.fees")}
+        value={
+          <Box>
+            <Typography
+              color="text.primary"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
+                ? `${toSignificantWithGroupSeparator(
+                    new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0).toString(),
+                  )} ${token0?.symbol}`
+                : "--"}
+            </Typography>
+            <Typography
+              color="text.primary"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {currencyFeeAmount0 !== undefined || currencyFeeAmount1 !== undefined
+                ? `and ${toSignificantWithGroupSeparator(
+                    new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).toString(),
+                  )} ${token1?.symbol}`
+                : "--"}
+            </Typography>
+            <Typography
+              mt="5px"
+              align="right"
+              sx={{
+                "@media(max-width: 640px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
+              {currencyFeeAmount0 !== undefined &&
+              currencyFeeAmount1 !== undefined &&
+              !!token0USDPrice &&
+              !!token1USDPrice
+                ? formatDollarAmount(
+                    new BigNumber(currencyFeeAmount0 ? currencyFeeAmount0.toExact() : 0)
+                      .multipliedBy(token0USDPrice)
+                      .plus(
+                        new BigNumber(currencyFeeAmount1 ? currencyFeeAmount1.toExact() : 0).multipliedBy(
+                          token1USDPrice,
+                        ),
+                      )
+                      .toString(),
+                  )
+                : "--"}
+            </Typography>
+          </Box>
+        }
+      />
 
-        <Box>
-          <Typography sx={{ margin: "0  0 10px 0" }}>{t("common.transfer.to")}</Typography>
+      <Box>
+        <Typography sx={{ margin: "0  0 10px 0" }}>{t("common.transfer.to")}</Typography>
 
-          <FilledTextField multiline placeholder="Enter the principal ID" onChange={onPrincipalChange} />
-        </Box>
+        <FilledTextField multiline placeholder="Enter the principal ID" onChange={onPrincipalChange} />
       </Box>
-    </>
+    </Box>
   );
 }
 
@@ -334,8 +321,7 @@ export function TransferPosition({
   state,
 }: TransferPositionProps) {
   const { t } = useTranslation();
-  const classes = useStyle();
-  const theme = useTheme() as Theme;
+  const theme = useTheme();
 
   const userPrincipal = useAccountPrincipal();
 
@@ -346,7 +332,7 @@ export function TransferPosition({
   const [openErrorTip] = useErrorTip();
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const { pool } = position || {};
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -397,9 +383,11 @@ export function TransferPosition({
     const loadingKey = openLoadingTip(t("liquidity.transferring.loading.tips", { id: positionId }));
 
     const { status, message } = resultFormat<boolean>(
-      await (
-        await swapPool(poolId, true)
-      ).transferPosition(userPrincipal, Principal.fromText(principal), BigInt(positionId)),
+      await (await swapPool(poolId, true)).transferPosition(
+        userPrincipal,
+        Principal.fromText(principal),
+        BigInt(positionId),
+      ),
     );
 
     if (status === ResultStatus.OK) {
@@ -421,7 +409,25 @@ export function TransferPosition({
 
   return (
     <Modal open={open} title={t`Transfer position`} onClose={onClose} background="level1">
-      <Grid className={classes.positionContainer} container>
+      <Grid
+        sx={{
+          position: "relative",
+          backgroundColor: theme.palette.background.level3,
+          borderRadius: `${theme.radius}px`,
+          border: theme.palette.border.gray200,
+          padding: "24px 20px",
+          marginTop: "16px",
+          cursor: "pointer",
+          overflow: "hidden",
+          "&:first-child": {
+            marginTop: "0",
+          },
+          [theme.breakpoints.down("md")]: {
+            padding: "16px 10px",
+          },
+        }}
+        container
+      >
         {!position && <Loading loading={!position} circularSize={28} />}
 
         <Grid item xs>

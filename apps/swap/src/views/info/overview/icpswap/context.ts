@@ -1,4 +1,4 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { createContext } from "react";
 
 interface ICPSwapContext {

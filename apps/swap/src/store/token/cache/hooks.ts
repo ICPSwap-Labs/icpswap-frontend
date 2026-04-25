@@ -1,10 +1,10 @@
+import { registerTokens, tokenAdapter } from "@icpswap/token-adapter";
+import { ICP } from "@icpswap/tokens";
+import type { Null } from "@icpswap/types";
+import { TOKEN_STANDARD } from "constants/tokens";
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import store from "store/index";
-import { TOKEN_STANDARD } from "constants/tokens";
-import { ICP } from "@icpswap/tokens";
-import { registerTokens, tokenAdapter } from "@icpswap/token-adapter";
-import { Null } from "@icpswap/types";
 
 import { updateTokenStandards } from "./actions";
 
@@ -77,7 +77,7 @@ export function useAllTokenIds() {
 
 export function useTokenStandardIsRegistered(canisterId: string) {
   const standards = tokenAdapter.getAll();
-  const canisterIds = [...standards.keys()];
+  const canisterIds = useMemo(() => [...standards.keys()], [standards]);
 
   return useMemo(() => {
     if (canisterId === "ICP" || canisterId === "aaaaa-aa") return true;

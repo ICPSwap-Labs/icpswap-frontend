@@ -1,27 +1,27 @@
-import { FC, useMemo, useRef, useState } from "react";
-import {
-  Grid,
-  Box,
-  MenuList,
-  MenuItem,
-  Popper,
-  useMediaQuery,
-  makeStyles,
-  useTheme,
-  Theme,
-  ClickAwayListener,
-} from "components/Mui";
 import { mockALinkAndOpen } from "@icpswap/utils";
+import {
+  Box,
+  ClickAwayListener,
+  Grid,
+  MenuItem,
+  MenuList,
+  makeStyles,
+  Popper,
+  type Theme,
+  useTheme,
+} from "components/Mui";
+import { useMediaQueryMD } from "hooks/theme";
+import { type FC, useMemo, useRef, useState } from "react";
 import DiscordIcon from "./Discord";
-import TwitterIcon from "./Twitter";
-import TelegramIcon from "./Telegram";
 import DistriktIcon from "./Distrikt";
 import DscvrIcon from "./Dscvr";
+import GithubIcon from "./Github";
 import InstagramIcon from "./Instagram";
 import MediumIcon from "./Medium";
-import WebsiteIcon from "./Website";
 import OtherIcon from "./Other";
-import GithubIcon from "./Github";
+import TelegramIcon from "./Telegram";
+import TwitterIcon from "./Twitter";
+import WebsiteIcon from "./Website";
 
 const LINKS_MAX_NUMBER = 5;
 
@@ -120,9 +120,8 @@ export type Link = { k: string; v: string };
 
 export function LinkIcon({ k }: { k: string }) {
   const Icon = Icons[k];
-  const theme = useTheme() as Theme;
 
-  const matchDownMd = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMd = useMediaQueryMD();
 
   return Icon ? <Icon width={matchDownMd ? 24 : 28} /> : null;
 }

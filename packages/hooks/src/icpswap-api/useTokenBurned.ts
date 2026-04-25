@@ -1,14 +1,14 @@
-import { useCallback } from "react";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { icpswap_fetch_post } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
-import { useCallsData } from "../useCallData";
-
-export function useTokenBurned(tokenId: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useTokenBurned(tokenId: string | Null): UseQueryResult<string | undefined, Error> {
+  return useQuery({
+    queryKey: ["useTokenBurned", tokenId],
+    queryFn: async () => {
       if (!tokenId) return undefined;
       return (await icpswap_fetch_post<string>(`/info/tokens/burned`, { ledgerId: tokenId }))?.data;
-    }, [tokenId]),
-  );
+    },
+    enabled: !!tokenId,
+  });
 }

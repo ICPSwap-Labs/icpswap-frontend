@@ -1,28 +1,28 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useCallback, useRef } from "react";
-import { Box, Typography, InputAdornment, useTheme } from "components/Mui";
-import { FilledTextField, Flex, LoadingRow, NoData, TextButton } from "components/index";
-import { Search as SearchIcon } from "react-feather";
 import { useAddressBook, useDebouncedChangeHandler } from "@icpswap/hooks";
-import { Trans, useTranslation } from "react-i18next";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import type { AddressBook as AddressBookType } from "@icpswap/types";
-import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import Copy, { CopyRef } from "components/Copy";
-import { useRefreshTriggerManager } from "hooks/index";
-import { ADDRESS_BOOK_REFRESH } from "constants/index";
-import { JdenticonAvatar } from "components/JdenticonAvatar";
-import { useContactFilter } from "hooks/wallet/useContactFilter";
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import Copy, { type CopyRef } from "components/Copy";
+import { FilledTextField, Flex, LoadingRow, NoData, TextButton } from "components/index";
+import { JdenticonAvatar } from "components/JdenticonAvatar";
+import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { ADDRESS_BOOK_REFRESH } from "constants/index";
+import { useRefreshTriggerManager } from "hooks/index";
+import { useContactFilter } from "hooks/wallet/useContactFilter";
+import { useCallback, useRef, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
+import { Trans, useTranslation } from "react-i18next";
 
 interface AddressBookRowProps {
   addressBook: AddressBookType;
 }
 
 function AddressBookRow({ addressBook }: AddressBookRowProps) {
-  const { setPages } = useWalletContext();
-  const { setSelectedContact, selectContactPrevPage } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { setSelectedContact, selectContactPrevPage } = useWalletAddressBookStore();
 
   const copyRef = useRef<CopyRef>(null);
 
@@ -71,20 +71,20 @@ export function SelectContact() {
   const { t } = useTranslation();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [refreshTrigger] = useRefreshTriggerManager(ADDRESS_BOOK_REFRESH);
-  const { setPages } = useWalletContext();
-  const { setAddAddressBookPrevPage, selectContactPrevPage } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { setAddAddressBookPrevPage, selectContactPrevPage } = useWalletAddressBookStore();
   const [, debouncedSearch] = useDebouncedChangeHandler(searchKeyword, setSearchKeyword, 300);
 
   const handlePrev = useCallback(() => {
     setPages(selectContactPrevPage);
-  }, [selectContactPrevPage]);
+  }, [selectContactPrevPage, setPages]);
 
   const handleAddAddress = useCallback(() => {
     setPages(WalletManagerPage.AddAddress);
     setAddAddressBookPrevPage(WalletManagerPage.SelectContact);
-  }, [setPages]);
+  }, [setPages, setAddAddressBookPrevPage]);
 
-  const { result: addresses, loading } = useAddressBook(refreshTrigger);
+  const { data: addresses, isLoading: loading } = useAddressBook(refreshTrigger);
 
   const filteredAddresses = useContactFilter({ search: searchKeyword, addresses });
 

@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
-import dayjs from "dayjs";
 import { useStakingPoolClaimTransactions } from "@icpswap/hooks";
+import type { StakingPoolTransaction } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, ImageLoading, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
 import { AddressFormat } from "components/index";
-import { type StakingPoolTransaction } from "@icpswap/types";
-import { HeaderCell, BodyCell, Pagination, NoData, Header, TableRow, ImageLoading } from "@icpswap/ui";
 import { Box, makeStyles } from "components/Mui";
+import dayjs from "dayjs";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
@@ -37,7 +37,12 @@ export function StakeClaimTransactions({ id }: { id: string | undefined }) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useStakingPoolClaimTransactions(id, undefined, offset, pagination.pageSize);
+  const { data: result, isLoading: loading } = useStakingPoolClaimTransactions(
+    id,
+    undefined,
+    offset,
+    pagination.pageSize,
+  );
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (page: number) => {
@@ -53,13 +58,11 @@ export function StakeClaimTransactions({ id }: { id: string | undefined }) {
           <HeaderCell>{t("common.address")}</HeaderCell>
         </Header>
 
-        <>
-          {list
-            .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
-            .map((transactions, index) => (
-              <PoolItem key={index} transactions={transactions} />
-            ))}
-        </>
+        {list
+          .sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+          .map((transactions, index) => (
+            <PoolItem key={index} transactions={transactions} />
+          ))}
         {list.length === 0 && !loading && !!id ? <NoData /> : null}
         {loading || !id ? <ImageLoading loading={loading || !id} /> : null}
         {Number(totalElements) > 0 ? (

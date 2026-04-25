@@ -1,14 +1,14 @@
-import { useMemo } from "react";
-import { Box, Typography } from "components/Mui";
-import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
 import { BreadcrumbsV1, Flex } from "@icpswap/ui";
-import { SelectPair, InfoWrapper } from "components/index";
-import { useNavigate, useLocation } from "react-router-dom";
-import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
-import { Null } from "@icpswap/types";
+import { locationSearchReplace } from "@icpswap/utils";
+import { InfoWrapper, SelectPair } from "components/index";
+import { PrincipalSearcher, ToolsWrapper } from "components/info/tools/index";
 import { PositionTable } from "components/liquidity/index";
+import { Box, Typography } from "components/Mui";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Positions() {
   const { t } = useTranslation();

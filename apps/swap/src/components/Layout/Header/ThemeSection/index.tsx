@@ -1,9 +1,8 @@
+import { Avatar, Box, ButtonBase, makeStyles, type Theme, useTheme } from "components/Mui";
+import { Brightness4Icon, Brightness4OutlinedIcon } from "components/MuiIcon";
 import React from "react";
-import { useAppDispatch } from "store/hooks";
-import { Avatar, Box, ButtonBase, makeStyles, useTheme, Theme } from "components/Mui";
-import Brightness4OutlinedIcon from "@mui/icons-material/Brightness4Outlined";
-import Brightness4Icon from "@mui/icons-material/Brightness4";
 import { changeTheme } from "store/customization/actions";
+import { useAppDispatch } from "store/hooks";
 
 const useStyles = makeStyles((theme: Theme) => ({
   navContainer: {
@@ -62,24 +61,22 @@ export default function ThemeSelector() {
   }, [open]);
 
   return (
-    <>
-      <Box component="span" className={classes.box}>
-        <ButtonBase sx={{ borderRadius: "12px" }}>
-          <Avatar
-            variant="rounded"
-            className={classes.headerAvatar}
-            ref={anchorRef}
-            onClick={handleToggle}
-            color="inherit"
-          >
-            {theme.palette.mode === "dark" ? (
-              <Brightness4OutlinedIcon sx={{ fontSize: "1.3rem" }} />
-            ) : (
-              <Brightness4Icon sx={{ fontSize: "1.3rem" }} />
-            )}
-          </Avatar>
-        </ButtonBase>
-      </Box>
-    </>
+    <Box component="span" className={classes.box}>
+      <ButtonBase sx={{ borderRadius: "12px" }}>
+        <Avatar
+          variant="rounded"
+          className={classes.headerAvatar}
+          ref={anchorRef}
+          onClick={handleToggle}
+          color="inherit"
+        >
+          {theme.palette.mode === "dark" ? (
+            <Brightness4OutlinedIcon sx={{ fontSize: "1.3rem" }} />
+          ) : (
+            <Brightness4Icon sx={{ fontSize: "1.3rem" }} />
+          )}
+        </Avatar>
+      </ButtonBase>
+    </Box>
   );
 }

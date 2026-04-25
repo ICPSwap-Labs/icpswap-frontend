@@ -1,32 +1,34 @@
-import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { Typography, Grid, Box, CircularProgress, InputAdornment, Checkbox } from "components/Mui";
-import { useAccount } from "store/auth/hooks";
+import { useParsedQueryString } from "@icpswap/hooks";
+import type { NFTControllerInfo } from "@icpswap/types";
+import { BigNumber } from "@icpswap/utils";
 import {
+  AuthButton,
+  Breadcrumbs,
   FilledTextField,
-  TextFieldNumberComponent,
-  TextButton,
   MainCard,
   NoData,
-  Breadcrumbs,
-  AuthButton,
+  TextButton,
+  TextFieldNumberComponent,
 } from "components/index";
-import Upload, { UploadRef } from "components/NFT/Upload";
-import { useMintNFTCallback, useCanisterMetadata, useUserCanisterList } from "hooks/nft/useNFTCalls";
-import { useTips, TIP_ERROR } from "hooks/useTips";
-import { NFT_UPLOAD_FILES, MAX_NFT_MINT_SUPPLY } from "constants/index";
-import { type NFTControllerInfo } from "@icpswap/types";
-import RequiredMark from "components/RequiredMark";
-import RadioButtonUncheckedOutlinedIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
-import RadioButtonCheckedOutlined from "@mui/icons-material/RadioButtonCheckedOutlined";
-import AddIcon from "@mui/icons-material/Add";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { stringToArrayBuffer } from "utils/index";
-import { getLocaleMessage } from "i18n/service";
-import { useParsedQueryString } from "@icpswap/hooks";
 import { CardContent1120 } from "components/Layout/CardContent1120";
+import { Box, Checkbox, CircularProgress, Grid, InputAdornment, Typography } from "components/Mui";
+import {
+  AddIcon,
+  HighlightOffIcon,
+  RadioButtonCheckedOutlined,
+  RadioButtonUncheckedOutlinedIcon,
+} from "components/MuiIcon";
+import Upload, { type UploadRef } from "components/NFT/Upload";
+import RequiredMark from "components/RequiredMark";
+import { MAX_NFT_MINT_SUPPLY, NFT_UPLOAD_FILES } from "constants/index";
+import { useCanisterMetadata, useMintNFTCallback, useUserCanisterList } from "hooks/nft/useNFTCalls";
+import { TIP_ERROR, useTips } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BigNumber } from "@icpswap/utils";
+import { useNavigate } from "react-router-dom";
+import { useAccount } from "store/auth/hooks";
+import { stringToArrayBuffer } from "utils/index";
 
 export type Metadata = { label: string; value: string; key: number };
 
@@ -49,13 +51,13 @@ export default function NFTMint() {
 
   const { canister: NFTCanisterId } = useParsedQueryString() as { canister: string };
 
-  const { result: canisterMetadata } = useCanisterMetadata(mintTokenInfo.nftCanister);
+  const { data: canisterMetadata } = useCanisterMetadata(mintTokenInfo.nftCanister);
 
   useEffect(() => {
     if (NFTCanisterId) {
       setMintTokenInfo({ ...mintTokenInfo, nftCanister: NFTCanisterId });
     }
-  }, [NFTCanisterId]);
+  }, [NFTCanisterId, mintTokenInfo]);
 
   const handleFieldChange = (value: string, field: string) => {
     let new_value = value;
@@ -99,7 +101,9 @@ export default function NFTMint() {
               (mintTokenInfo.metadata ?? []).reduce(
                 (previousValue, currentValue) => {
                   if (!!currentValue.label && !!currentValue.value) {
-                    return [...previousValue, { label: currentValue.label, value: currentValue.value }];
+                    const newValue = previousValue.slice();
+                    newValue.push({ label: currentValue.label, value: currentValue.value });
+                    return newValue;
                   }
 
                   return [];
@@ -121,7 +125,7 @@ export default function NFTMint() {
     }
   };
 
-  const { result: userNFTCanister } = useUserCanisterList(account, 0, 100);
+  const { data: userNFTCanister } = useUserCanisterList(account, 0, 100);
   const { content: nftCanisterList } = userNFTCanister ?? { content: [] as NFTControllerInfo[] };
 
   const handleFileChange = (file: File) => {
@@ -393,31 +397,29 @@ export default function NFTMint() {
               </Box>
 
               <Box className="grid-box">
-                <>
-                  <Box>
-                    <RequiredMark />
-                    <Typography component="span" fontSize="16px" color="text.secondary">
-                      {t("nft.upload.file")}
-                    </Typography>
+                <Box>
+                  <RequiredMark />
+                  <Typography component="span" fontSize="16px" color="text.secondary">
+                    {t("nft.upload.file")}
+                  </Typography>
+                </Box>
+                <Box mt={2}>
+                  <Box sx={{ height: "180px" }}>
+                    <Upload
+                      ref={uploadRef}
+                      maxSize={200 * 1024}
+                      types={NFT_UPLOAD_FILES}
+                      accept=".jpeg, .png, .jpg, .gif, .apng, .pdf, .txt, .json, .ppt, .pptx, .xls, .xlsx, .docx, .doc"
+                      placeholder="Upload your file"
+                      beforeUpload={handleBeforeFileUpload}
+                      canisterId={mintTokenInfo.nftCanister}
+                      uploadImmediately={false}
+                      onFileSelected={handleFileChange}
+                      onFileError={handleFileError}
+                    />
+                    <Typography sx={{ marginTop: "5px" }}>{t("nft.upload.support")}</Typography>
                   </Box>
-                  <Box mt={2}>
-                    <Box sx={{ height: "180px" }}>
-                      <Upload
-                        ref={uploadRef}
-                        maxSize={200 * 1024}
-                        types={NFT_UPLOAD_FILES}
-                        accept=".jpeg, .png, .jpg, .gif, .apng, .pdf, .txt, .json, .ppt, .pptx, .xls, .xlsx, .docx, .doc"
-                        placeholder="Upload your file"
-                        beforeUpload={handleBeforeFileUpload}
-                        canisterId={mintTokenInfo.nftCanister}
-                        uploadImmediately={false}
-                        onFileSelected={handleFileChange}
-                        onFileError={handleFileError}
-                      />
-                      <Typography sx={{ marginTop: "5px" }}>{t("nft.upload.support")}</Typography>
-                    </Box>
-                  </Box>
-                </>
+                </Box>
               </Box>
             </Grid>
             <Box mt={8}>

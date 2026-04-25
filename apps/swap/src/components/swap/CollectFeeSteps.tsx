@@ -1,7 +1,7 @@
-import { Box, Avatar } from "components/Mui";
-import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
+import type { Principal } from "@icp-sdk/core/principal";
+import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import { TextButton } from "components/index";
-import { Principal } from "@dfinity/principal";
+import { Avatar, Box } from "components/Mui";
 import i18n from "i18n/index";
 
 export interface CollectStepsProps {

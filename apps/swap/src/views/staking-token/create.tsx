@@ -1,22 +1,22 @@
-import { useEffect, useState } from "react";
-import { Typography, Grid, Box } from "components/Mui";
-import { MainCard, Wrapper, TextFieldNumberComponent, FilledTextField, AuthButton } from "components/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { MessageTypes, useTips } from "hooks/useTips";
-import { numberToString, BigNumber } from "@icpswap/utils";
 import { createStakingPool } from "@icpswap/hooks";
-import { ResultStatus } from "@icpswap/types";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
-import { getTokenInfo } from "hooks/token/calls";
-import { timeParser } from "utils/index";
+import { ResultStatus } from "@icpswap/types";
+import { BigNumber, numberToString } from "@icpswap/utils";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AuthButton, FilledTextField, MainCard, TextFieldNumberComponent, Wrapper } from "components/index";
+import { Box, Grid, Typography } from "components/Mui";
 import dayjs from "dayjs";
-import { useUpdateTokenStandard } from "store/token/cache/hooks";
-import { TokenInfo } from "types/token";
+import { getTokenInfo } from "hooks/token/calls";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useUpdateTokenStandard } from "store/token/cache/hooks";
+import type { TokenInfo } from "types/token";
+import { timeParser } from "utils/index";
+import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
 
 export const TokenStandards = [
   { label: "EXT", value: TOKEN_STANDARD.EXT },
@@ -91,7 +91,7 @@ export default function CreateStakingTokenPool() {
     };
 
     call();
-  }, [values.rewardToken, values.rewardStandard]);
+  }, [values.rewardToken, values.rewardStandard, openTip, updateTokenStandard]);
 
   const handleCreateEvent = async () => {
     if (loading || !principal) return;

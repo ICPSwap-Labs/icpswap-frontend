@@ -1,9 +1,9 @@
-import { Grid, Typography, Box, useTheme, makeStyles } from "components/Mui";
 import CollectionDemo from "assets/images/nft/collection_demo.svg";
 import CollectionLogo from "assets/images/nft/collection_logo.svg";
-import { TradeOrder } from "types/nft";
+import { Box, Grid, makeStyles, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import type { TradeOrder } from "types/nft";
 
 export const BorderColor = "#384572";
 

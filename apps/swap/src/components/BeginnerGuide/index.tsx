@@ -1,5 +1,5 @@
-import { SwapGuide } from "components/BeginnerGuide/SwapGuide";
 import { LiquidityGuide } from "components/BeginnerGuide/LiquidityGuide";
+import { SwapGuide } from "components/BeginnerGuide/SwapGuide";
 
 export function BeginnerGuide() {
   return (

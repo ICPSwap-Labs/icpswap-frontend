@@ -1,23 +1,24 @@
-import { useState, useMemo } from "react";
-import { useMediaQuery, makeStyles, useTheme } from "components/Mui";
-import { InfoTokenRealTimeDataResponse } from "@icpswap/types";
-import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { TokenImage } from "components/index";
-import { useToken } from "hooks/index";
+import type { InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import {
+  BodyCell,
+  Flex,
   Header,
   HeaderCell,
-  BodyCell,
-  TableRow,
-  SortDirection,
-  Proportion,
-  NoData,
   ImageLoading,
-  Flex,
   Link,
+  NoData,
   Pagination,
+  Proportion,
+  SortDirection,
+  TableRow,
 } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import { TokenImage } from "components/index";
+import { makeStyles } from "components/Mui";
+import { useToken } from "hooks/index";
+import { useMediaQueryMD } from "hooks/theme";
 import i18n from "i18n/index";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
@@ -128,9 +129,8 @@ const headers: HeaderType[] = [
 export function TokenTable({ tokens: _tokens, maxItems = 10, loading }: TokenTableProps) {
   const { t } = useTranslation();
   const classes = useStyles();
-  const theme = useTheme();
   const [page, setPage] = useState(1);
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const [sortField, setSortField] = useState<string>(DEFAULT_SORT_FIELD);
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.DESC);

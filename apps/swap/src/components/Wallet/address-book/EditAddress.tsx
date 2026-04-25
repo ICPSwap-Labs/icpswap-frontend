@@ -1,14 +1,14 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Box, Typography, useTheme, Button, CircularProgress } from "components/Mui";
-import { FilledTextField, Flex } from "components/index";
-import { isUndefinedOrNull, isValidAccount, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
-import { useTranslation } from "react-i18next";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { editAddressBook, useAddressBook } from "@icpswap/hooks";
 import { ResultStatus } from "@icpswap/types";
+import { isUndefinedOrNull, isValidAccount, isValidPrincipal, nonUndefinedOrNull } from "@icpswap/utils";
+import { FilledTextField, Flex } from "components/index";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export function EditAddress() {
   const theme = useTheme();
@@ -16,23 +16,20 @@ export function EditAddress() {
   const [name, setName] = useState<undefined | string>(undefined);
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
-  const { setPages } = useWalletContext();
-  const { editAddressBook: addressBook, deleteAddressBookLoading } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { editAddressBook: addressBook, deleteAddressBookLoading } = useWalletAddressBookStore();
 
   const handlePrev = useCallback(() => {
     setPages(WalletManagerPage.AddressBook);
   }, [setPages]);
 
-  const handleValueChange = useCallback(
-    (filed: "name" | "address", value: string) => {
-      if (filed === "name") {
-        setName(value);
-      } else {
-        setAddress(value);
-      }
-    },
-    [setAddress, setName],
-  );
+  const handleValueChange = useCallback((filed: "name" | "address", value: string) => {
+    if (filed === "name") {
+      setName(value);
+    } else {
+      setAddress(value);
+    }
+  }, []);
 
   const isValidAddress = useMemo(() => {
     if (isUndefinedOrNull(address)) return undefined;
@@ -59,7 +56,7 @@ export function EditAddress() {
       setName(addressBook.name);
       setAddress(addressBook.address);
     }
-  }, [addressBook, setName, setAddress]);
+  }, [addressBook]);
 
   const isEdited = useMemo(() => {
     if (isUndefinedOrNull(name) || isUndefinedOrNull(address) || isUndefinedOrNull(addressBook)) return false;
@@ -74,7 +71,7 @@ export function EditAddress() {
     }
   }, [addressBook, removeAddressHandler]);
 
-  const { result: addresses } = useAddressBook();
+  const { data: addresses } = useAddressBook();
 
   const error = useMemo(() => {
     if (isUndefinedOrNull(addresses) || isUndefinedOrNull(addressBook)) return t("common.save");
@@ -88,7 +85,7 @@ export function EditAddress() {
     if (isExist) return t("wallet.address.name.exist");
 
     return undefined;
-  }, [addresses, name, address, loading, isValidAddress, addressBook]);
+  }, [addresses, name, address, isValidAddress, addressBook, t]);
 
   return (
     <DrawerWrapper

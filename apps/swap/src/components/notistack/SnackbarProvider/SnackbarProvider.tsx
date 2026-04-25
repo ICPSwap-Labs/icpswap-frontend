@@ -1,22 +1,23 @@
-import React, { Component } from "react";
-import { createPortal } from "react-dom";
 import clsx from "clsx";
-import SnackbarContext from "../SnackbarContext";
-import { originKeyExtractor, isDefined } from "../utils";
-import { defaults, merge } from "./merger";
-import SnackbarItem from "../SnackbarItem";
+import type React from "react";
+import { Component } from "react";
+import { createPortal } from "react-dom";
 import SnackbarContainer from "../SnackbarContainer";
-import warning from "../utils/warning";
-import {
-  SnackbarProviderProps,
-  SnackbarKey,
-  ProviderContext,
-  TransitionHandlerProps,
+import SnackbarContext from "../SnackbarContext";
+import SnackbarItem from "../SnackbarItem";
+import type {
   InternalSnack,
   OptionsObject,
+  ProviderContext,
   SharedProps,
+  SnackbarKey,
+  SnackbarProviderProps,
+  TransitionHandlerProps,
 } from "../types";
+import { isDefined, originKeyExtractor } from "../utils";
 import createChainedFunction from "../utils/createChainedFunction";
+import warning from "../utils/warning";
+import { defaults, merge } from "./merger";
 
 type Reducer = (state: State) => State;
 type SnacksByPosition = { [key: string]: InternalSnack[] };
@@ -54,7 +55,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
     const { key, preventDuplicate, ...options } = opts;
 
     const hasSpecifiedKey = isDefined(key);
-    const id = hasSpecifiedKey ? (key as SnackbarKey) : new Date().getTime() + Math.random();
+    const id = hasSpecifiedKey ? (key as SnackbarKey) : Date.now() + Math.random();
 
     const merger = merge(options, this.props);
     const snack: InternalSnack = {
@@ -190,7 +191,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
   /**
    * Set the entered state of the snackbar with the given key.
    */
-  handleEnteredSnack: TransitionHandlerProps["onEntered"] = (node, isAppearing, key) => {
+  handleEnteredSnack: TransitionHandlerProps["onEntered"] = (_node, _isAppearing, key) => {
     if (!isDefined(key)) {
       throw new Error("handleEnteredSnack Cannot be called with undefined key");
     }
@@ -234,7 +235,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
   closeSnackbar: ProviderContext["closeSnackbar"] = (key) => {
     // call individual snackbar onClose callback passed through options parameter
     const toBeClosed = this.state.snacks.find((item) => item.id === key);
-    if (isDefined(key) && toBeClosed && toBeClosed.onClose) {
+    if (isDefined(key) && toBeClosed?.onClose) {
       toBeClosed.onClose(null, "instructed", key);
     }
 
@@ -248,7 +249,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
    * waiting in the queue (if any). If after this process the queue is not empty, the
    * oldest message is dismissed.
    */
-  handleExitedSnack: TransitionHandlerProps["onExited"] = (node, key) => {
+  handleExitedSnack: TransitionHandlerProps["onExited"] = (_node, key) => {
     if (!isDefined(key)) {
       throw new Error("handleExitedSnack Cannot be called with undefined key");
     }
@@ -275,6 +276,7 @@ class SnackbarProvider extends Component<SnackbarProviderProps, State> {
       const category = originKeyExtractor(current.anchorOrigin);
       const existingOfCategory = acc[category] || [];
       return {
+        // oxlint-disable-next-line oxc/no-accumulating-spread -- object spread in reduce
         ...acc,
         [category]: [...existingOfCategory, current],
       };

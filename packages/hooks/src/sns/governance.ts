@@ -1,24 +1,21 @@
+import { Principal } from "@icp-sdk/core/principal";
 import { sns_governance } from "@icpswap/actor";
-import { useCallback } from "react";
-import { optionalArg, resultFormat } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
 import type {
-  ListNeuronsResponse,
-  NervousSystemParameters,
   GetNeuronResponse,
+  ListNervousSystemFunctionsResponse,
+  ListNeuronsResponse,
+  ManageNeuronResponse,
+  NervousSystemParameters,
   Neuron,
   NeuronId,
-  ManageNeuronResponse,
-  ListNervousSystemFunctionsResponse,
 } from "@icpswap/types";
-import { useCallsData } from "../useCallData";
+import { optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { neuronOperationCommand } from "./neuronCommand";
 
 export async function getNeuron(canisterId: string, neuron_id: Uint8Array | number[]) {
   const result = resultFormat<GetNeuronResponse>(
-    await (
-      await sns_governance(canisterId)
-    ).get_neuron({
+    await (await sns_governance(canisterId)).get_neuron({
       neuron_id: optionalArg<{ id: Uint8Array | number[] }>({ id: neuron_id }),
     }),
   ).data?.result;
@@ -32,14 +29,15 @@ export function useNeuron(
   governance_id: string | undefined,
   neuron_id: Uint8Array | number[] | undefined,
   refresh?: number,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<Neuron | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNeuron", governance_id, neuron_id, refresh],
+    queryFn: async () => {
       if (!governance_id || !neuron_id) return undefined;
       return await getNeuron(governance_id, neuron_id);
-    }, [governance_id, neuron_id]),
-    refresh,
-  );
+    },
+    enabled: !!governance_id && !!neuron_id,
+  });
 }
 
 export interface GetListNeuronsArgs {
@@ -51,9 +49,7 @@ export interface GetListNeuronsArgs {
 
 export async function getListNeurons({ canisterId, of_principal, limit, start_page_at }: GetListNeuronsArgs) {
   return resultFormat<ListNeuronsResponse>(
-    await (
-      await sns_governance(canisterId)
-    ).list_neurons({
+    await (await sns_governance(canisterId)).list_neurons({
       of_principal: optionalArg<Principal>(of_principal ? Principal.fromText(of_principal) : undefined),
       limit,
       start_page_at: optionalArg<{ id: Uint8Array | number[] }>(start_page_at ? { id: start_page_at } : undefined),
@@ -69,14 +65,21 @@ export interface UseListNeuronsArgs {
   refresh?: boolean | number;
 }
 
-export function useListNeurons({ canisterId, of_principal, limit, start_page_at, refresh }: UseListNeuronsArgs) {
-  return useCallsData(
-    useCallback(async () => {
+export function useListNeurons({
+  canisterId,
+  of_principal,
+  limit,
+  start_page_at,
+  refresh,
+}: UseListNeuronsArgs): UseQueryResult<ListNeuronsResponse["neurons"] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useListNeurons", canisterId, of_principal, limit, start_page_at, refresh],
+    queryFn: async () => {
       if (!canisterId || !of_principal) return undefined;
       return await getListNeurons({ canisterId, of_principal, limit, start_page_at });
-    }, [canisterId, of_principal, limit, start_page_at]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId && !!of_principal,
+  });
 }
 
 export async function getNervousSystemParameters(governance_id: string) {
@@ -85,13 +88,17 @@ export async function getNervousSystemParameters(governance_id: string) {
   ).data;
 }
 
-export function useNervousSystemParameters(governance_id: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNervousSystemParameters(
+  governance_id: string | undefined,
+): UseQueryResult<NervousSystemParameters | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNervousSystemParameters", governance_id],
+    queryFn: async () => {
       if (!governance_id) return undefined;
       return await getNervousSystemParameters(governance_id);
-    }, [governance_id]),
-  );
+    },
+    enabled: !!governance_id,
+  });
 }
 
 export async function getNeuronSystemFunctions(governance_id: string) {
@@ -100,13 +107,17 @@ export async function getNeuronSystemFunctions(governance_id: string) {
   ).data;
 }
 
-export function useNeuronSystemFunctions(governance_id: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNeuronSystemFunctions(
+  governance_id: string | undefined,
+): UseQueryResult<ListNervousSystemFunctionsResponse | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNeuronSystemFunctions", governance_id],
+    queryFn: async () => {
       if (!governance_id) return undefined;
       return await getNeuronSystemFunctions(governance_id);
-    }, [governance_id]),
-  );
+    },
+    enabled: !!governance_id,
+  });
 }
 
 export async function splitNeuron(
@@ -116,9 +127,7 @@ export async function splitNeuron(
   memo: bigint,
 ) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {
@@ -134,9 +143,7 @@ export async function splitNeuron(
 
 export async function stopDissolvingNeuron(governance_id: string, neuron_id: Uint8Array | number[]) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: neuronOperationCommand({
         StopDissolving: {},
@@ -147,9 +154,7 @@ export async function stopDissolvingNeuron(governance_id: string, neuron_id: Uin
 
 export async function dissolveNeuron(governance_id: string, neuron_id: Uint8Array | number[]) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: neuronOperationCommand({ StartDissolving: {} }),
     }),
@@ -162,9 +167,7 @@ export async function increaseNeuronDelay(
   additionalDissolveDelaySeconds: bigint,
 ) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: neuronOperationCommand({
         IncreaseDissolveDelay: {
@@ -177,9 +180,7 @@ export async function increaseNeuronDelay(
 
 export async function autoStakeMaturity(governance_id: string, neuron_id: Uint8Array | number[], autoStake: boolean) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: neuronOperationCommand({
         ChangeAutoStakeMaturity: {
@@ -197,9 +198,7 @@ export async function claimOrRefreshNeuronFromAccount(
   subaccount: number[],
 ) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount,
       command: [
         {
@@ -221,9 +220,7 @@ export async function claimOrRefreshNeuronFromAccount(
 
 export async function claimOrRefreshNeuron(governance_id: string, neuron_id: Uint8Array | number[]) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {
@@ -242,9 +239,7 @@ export async function claimOrRefreshNeuron(governance_id: string, neuron_id: Uin
 
 export async function disburseNeuron(governance_id: string, neuron_id: Uint8Array | number[]) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {
@@ -260,9 +255,7 @@ export async function disburseNeuron(governance_id: string, neuron_id: Uint8Arra
 
 export async function disburseNeuronMaturity(governance_id: string, neuron_id: Uint8Array | number[]) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {
@@ -278,9 +271,7 @@ export async function disburseNeuronMaturity(governance_id: string, neuron_id: U
 
 export async function stakeNeuronMaturity(governance_id: string, neuron_id: Uint8Array | number[], percent: number) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {
@@ -300,9 +291,7 @@ export async function setNeuronFollows(
   follows: NeuronId[],
 ) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {
@@ -323,9 +312,7 @@ export async function neuronVoteForProposal(
   proposal_id: bigint,
 ) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {
@@ -346,9 +333,7 @@ export async function neuronAddPermissions(
   permissions: Int32Array | number[],
 ) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {
@@ -373,9 +358,7 @@ export async function neuronRemovePermissions(
   permissions: Int32Array | number[],
 ) {
   return resultFormat<ManageNeuronResponse>(
-    await (
-      await sns_governance(governance_id, true)
-    ).manage_neuron({
+    await (await sns_governance(governance_id, true)).manage_neuron({
       subaccount: [...neuron_id],
       command: [
         {

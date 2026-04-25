@@ -1,15 +1,16 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
-  updateTaggedTokens,
+  cleanDogeDissolveTxs,
   deleteTaggedTokens,
-  updateCK_BTCAddresses,
   updateBitcoinDissolveTxs,
-  updateWalletSortType,
-  updateSortBalance,
+  updateDogeDissolveTxs,
   updateHideSmallBalance,
-  updateRemovedWalletDefaultTokens,
   updateHideZeroNFT,
+  updateRemovedWalletDefaultTokens,
+  updateSortBalance,
   updateSortedTokens,
+  updateTaggedTokens,
+  updateWalletSortType,
 } from "./actions";
 import { initialState } from "./states";
 
@@ -29,12 +30,6 @@ export default createReducer(initialState, (builder) => {
       return {
         ...state,
         taggedTokens: newTaggedTokens,
-      };
-    })
-    .addCase(updateCK_BTCAddresses, (state, { payload }) => {
-      state.ckBTCAddresses = {
-        ...state.ckBTCAddresses,
-        [`${payload.principal}_${payload.type}`]: payload.address,
       };
     })
     .addCase(updateBitcoinDissolveTxs, (state, { payload }) => {
@@ -67,7 +62,7 @@ export default createReducer(initialState, (builder) => {
     .addCase(updateRemovedWalletDefaultTokens, (state, { payload }) => {
       if (payload.add) {
         const __removedWalletDefaultTokens = [...state.removedWalletDefaultTokens];
-        const index = __removedWalletDefaultTokens.findIndex((tokenId) => tokenId === payload.tokenId);
+        const index = __removedWalletDefaultTokens.indexOf(payload.tokenId);
         if (index !== -1) {
           __removedWalletDefaultTokens.splice(index, 1);
         }
@@ -82,5 +77,26 @@ export default createReducer(initialState, (builder) => {
     })
     .addCase(updateSortedTokens, (state, { payload }) => {
       state.sortedTokens = payload;
+    })
+    .addCase(updateDogeDissolveTxs, (state, { payload }) => {
+      const old_state = [...state.dogeDissolveTxs];
+      const index = old_state.findIndex((tx) => tx.id === payload.id);
+
+      if (index === -1) {
+        old_state.unshift(payload);
+      } else {
+        old_state.splice(index, 1, payload);
+      }
+
+      const dissolveTxs = old_state.sort((a, b) => {
+        if (Number(a.block_index) > Number(b.block_index)) return -1;
+        if (Number(a.block_index) < Number(b.block_index)) return 1;
+        return 0;
+      });
+
+      state.dogeDissolveTxs = dissolveTxs;
+    })
+    .addCase(cleanDogeDissolveTxs, (state) => {
+      state.dogeDissolveTxs = [];
     });
 });

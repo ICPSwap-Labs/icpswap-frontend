@@ -1,11 +1,11 @@
-import { useState, useCallback, useMemo } from "react";
-import { Typography } from "components/Mui";
-import { BigNumber, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import type { Pool, Price, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { BigNumber, formatTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
+import { Typography } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { PoolCurrentPrice } from "components/swap/PoolCurrentPrice";
-import { Pool, Price, Token } from "@icpswap/swap-sdk";
+import { useCallback, useMemo, useState } from "react";
 
 export interface LimitAndCurrentPriceProps {
   inputToken: Token | Null;
@@ -19,7 +19,7 @@ export function LimitAndCurrentPrice({ inputToken, outputToken, limitPrice, pool
 
   const handleInvert = useCallback(() => {
     setInvertPrice(!invertPrice);
-  }, [invertPrice, setInvertPrice]);
+  }, [invertPrice]);
 
   const isSorted = useMemo(() => {
     if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return undefined;

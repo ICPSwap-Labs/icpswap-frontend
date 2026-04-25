@@ -1,43 +1,43 @@
-import { useCallback, useMemo } from "react";
-import { useAppSelector, useAppDispatch } from "store/hooks";
-import { Bound, FIELD } from "constants/swap";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import {
-  Price,
   CurrencyAmount,
-  Rounding,
-  nearestUsableTick,
-  TickMath,
-  tickToPrice,
-  TICK_SPACINGS,
   encodeSqrtRatioX96,
-  priceToClosestTick,
+  type FeeAmount,
+  nearestUsableTick,
   Pool,
   Position,
-  Token,
-  FeeAmount,
+  Price,
+  priceToClosestTick,
+  Rounding,
+  TICK_SPACINGS,
+  TickMath,
+  type Token,
+  tickToPrice,
 } from "@icpswap/swap-sdk";
-import { getTickToPrice } from "utils/swap/getTickToPrice";
-import { usePool, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
-import { JSBI, tryParseAmount, inputNumberCheck, tryParseTick } from "utils/index";
-import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
-import { getTokenStandard } from "store/token/cache/hooks";
+import { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
-import { getTokenInsufficient, useAllBalanceMaxSpend } from "hooks/swap/index";
+import { Bound, FIELD } from "constants/swap";
 import { useTokenAllBalance } from "hooks/liquidity/index";
+import { getTokenInsufficient, useAllBalanceMaxSpend } from "hooks/swap/index";
+import { usePool, useTokensHasPairWithBaseToken } from "hooks/swap/usePools";
+import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
 import { useAllowance } from "hooks/token";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { PoolState } from "types/swap";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { getTokenStandard } from "store/token/cache/hooks";
+import { PoolState } from "types/swap";
+import { inputNumberCheck, JSBI, tryParseAmount, tryParseTick } from "utils/index";
+import { getTickToPrice } from "utils/swap/getTickToPrice";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 import {
+  resetMintState,
   updateFiled,
+  updateFullRange,
   updateLeftRange,
   updateRightRange,
   updateStartPrice,
-  updateFullRange,
-  resetMintState,
 } from "./actions";
 
 export function useMintState() {
@@ -98,7 +98,7 @@ export function useMintInfo(
     return {
       poolId: pool.id,
     };
-  }, [pool, poolState]);
+  }, [pool]);
 
   const hasPairWithBaseToken = useTokensHasPairWithBaseToken(tokens);
 
@@ -195,26 +195,26 @@ export function useMintInfo(
         typeof existingPosition?.tickLower === "number"
           ? existingPosition.tickLower
           : (invertPrice && typeof rightRangeTypedValue === "boolean") ||
-            (!invertPrice && typeof leftRangeTypedValue === "boolean") ||
-            // if no liquidity, full range by default
-            (noLiquidity &&
-              ((invertPrice && rightRangeTypedValue === "") || (!invertPrice && leftRangeTypedValue === "")))
-          ? tickSpaceLimits[Bound.LOWER]
-          : invertPrice
-          ? tryParseTick(token1, token0, feeAmount, rightRangeTypedValue.toString())
-          : tryParseTick(token0, token1, feeAmount, leftRangeTypedValue.toString()),
+              (!invertPrice && typeof leftRangeTypedValue === "boolean") ||
+              // if no liquidity, full range by default
+              (noLiquidity &&
+                ((invertPrice && rightRangeTypedValue === "") || (!invertPrice && leftRangeTypedValue === "")))
+            ? tickSpaceLimits[Bound.LOWER]
+            : invertPrice
+              ? tryParseTick(token1, token0, feeAmount, rightRangeTypedValue.toString())
+              : tryParseTick(token0, token1, feeAmount, leftRangeTypedValue.toString()),
       [Bound.UPPER]:
         typeof existingPosition?.tickUpper === "number"
           ? existingPosition.tickUpper
           : (!invertPrice && typeof rightRangeTypedValue === "boolean") ||
-            (invertPrice && typeof leftRangeTypedValue === "boolean") ||
-            // if no liquidity, full range by default
-            (noLiquidity &&
-              ((!invertPrice && rightRangeTypedValue === "") || (invertPrice && leftRangeTypedValue === "")))
-          ? tickSpaceLimits[Bound.UPPER]
-          : invertPrice
-          ? tryParseTick(token1, token0, feeAmount, leftRangeTypedValue.toString())
-          : tryParseTick(token0, token1, feeAmount, rightRangeTypedValue.toString()),
+              (invertPrice && typeof leftRangeTypedValue === "boolean") ||
+              // if no liquidity, full range by default
+              (noLiquidity &&
+                ((!invertPrice && rightRangeTypedValue === "") || (invertPrice && leftRangeTypedValue === "")))
+            ? tickSpaceLimits[Bound.UPPER]
+            : invertPrice
+              ? tryParseTick(token1, token0, feeAmount, leftRangeTypedValue.toString())
+              : tryParseTick(token0, token1, feeAmount, rightRangeTypedValue.toString()),
     };
   }, [
     existingPosition,
@@ -235,7 +235,7 @@ export function useMintInfo(
       [Bound.LOWER]: feeAmount && tickLower === tickSpaceLimits.LOWER,
       [Bound.UPPER]: feeAmount && tickUpper === tickSpaceLimits.UPPER,
     }),
-    [tickSpaceLimits, tickLower, tickUpper, feeAmount],
+    [tickSpaceLimits, feeAmount, tickLower, tickUpper],
   );
 
   const ticksAtLimit = useMemo(() => {
@@ -307,10 +307,10 @@ export function useMintInfo(
     dependentField,
     tokenB,
     tokenA,
-    tickLower,
-    tickUpper,
     poolForPosition,
     invalidRange,
+    tickUpper,
+    tickLower,
   ]);
 
   const parsedAmounts = useMemo(() => {
@@ -332,14 +332,14 @@ export function useMintInfo(
     invalidRange ||
     Boolean(
       (deposit0Disabled && poolForPosition && tokenA && poolForPosition.token0.equals(tokenA)) ||
-        (deposit1Disabled && poolForPosition && tokenA && poolForPosition.token1.equals(tokenA)),
+      (deposit1Disabled && poolForPosition && tokenA && poolForPosition.token1.equals(tokenA)),
     );
 
   const depositBDisabled =
     invalidRange ||
     Boolean(
       (deposit0Disabled && poolForPosition && tokenB && poolForPosition.token0.equals(tokenB)) ||
-        (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB)),
+      (deposit1Disabled && poolForPosition && tokenB && poolForPosition.token1.equals(tokenB)),
     );
 
   const position = useMemo(() => {
@@ -381,16 +381,16 @@ export function useMintInfo(
     deposit0Disabled,
     deposit1Disabled,
     invalidRange,
-    tickLower,
     tickUpper,
+    tickLower,
   ]);
 
-  const { result: tokenAAllowance } = useAllowance({
+  const { data: tokenAAllowance } = useAllowance({
     canisterId: tokenA?.address,
     spender: poolId,
     owner: principal?.toString(),
   });
-  const { result: tokenBAllowance } = useAllowance({
+  const { data: tokenBAllowance } = useAllowance({
     canisterId: tokenB?.address,
     spender: poolId,
     owner: principal?.toString(),
@@ -426,6 +426,7 @@ export function useMintInfo(
   const atMaxAmounts: { [field in FIELD]?: CurrencyAmount<Token> } = [FIELD.CURRENCY_A, FIELD.CURRENCY_B].reduce(
     (accumulator, field) => {
       return {
+        // oxlint-disable-next-line oxc/no-accumulating-spread -- object spread in reduce
         ...accumulator,
         [field]:
           maxAmounts[field] && parsedAmounts[field] ? maxAmounts[field]?.equalTo(parsedAmounts[field] ?? "0") : false,
@@ -523,10 +524,11 @@ export function useMintInfo(
     token1,
     token1Insufficient,
     tokenA,
-    currencyAAmount,
     tokenB,
-    currencyBAmount,
     noLiquidity,
+    t,
+    currencyBAmount,
+    currencyAAmount,
   ]);
 
   return {

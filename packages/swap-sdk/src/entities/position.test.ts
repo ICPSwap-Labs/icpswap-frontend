@@ -1,8 +1,7 @@
-import { describe, it, expect } from "vitest";
-
-import { Percent, Token } from "../core";
 import JSBI from "jsbi";
+import { describe, expect, it } from "vitest";
 import { FeeAmount, TICK_SPACINGS } from "../constants";
+import { Percent, Token } from "../core";
 import { encodeSqrtRatioX96 } from "../utils/encodeSqrtRatioX96";
 import { nearestUsableTick } from "../utils/nearestUsableTick";
 import { TickMath } from "../utils/tickMath";

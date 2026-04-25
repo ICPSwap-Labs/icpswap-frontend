@@ -1,8 +1,8 @@
-import { TransactionReceipt } from "viem";
 import { isUndefinedOrNull } from "@icpswap/utils";
 import { useBlockNumber } from "hooks/web3";
 import { useCallback, useMemo } from "react";
 import { useGlobalMinterInfoManager } from "store/global/hooks";
+import type { TransactionReceipt } from "viem";
 
 export function useEthereumConfirmations(transactionResponse: TransactionReceipt | undefined) {
   const blockNumber = useBlockNumber();
@@ -84,7 +84,7 @@ export function useEthereumTxSyncedBlock(erc20?: boolean) {
   return useMemo(() => {
     if (isUndefinedOrNull(minterInfo)) return undefined;
     return erc20 ? minterInfo.last_erc20_scraped_block_number[0] : minterInfo.last_eth_scraped_block_number[0];
-  }, [minterInfo]);
+  }, [minterInfo, erc20]);
 }
 
 export function useEthereumTxSyncBlockCallback() {

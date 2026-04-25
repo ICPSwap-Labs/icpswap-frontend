@@ -1,6 +1,6 @@
-import { Percent, CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import JSBI from "jsbi";
+import { type CurrencyAmount, Percent, type Token } from "@icpswap/swap-sdk";
 import { ONE_HUNDRED_PERCENT } from "constants/misc";
+import JSBI from "jsbi";
 
 export function computeFiatValuePriceImpact(
   fiatValueInput: CurrencyAmount<Token> | undefined | null,

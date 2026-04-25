@@ -1,9 +1,9 @@
-import { Box, Typography } from "components/Mui";
-import { useMemo } from "react";
-import { MainCard } from "components/index";
 import type { ProposalData } from "@icpswap/types";
 import { nowInSeconds } from "@icpswap/utils";
+import { MainCard } from "components/index";
+import { Box, Typography } from "components/Mui";
 import { Markdown } from "components/markdown/BaseMarkdown";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface ProposalPayloadProps {

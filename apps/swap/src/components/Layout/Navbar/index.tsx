@@ -1,6 +1,6 @@
 import { Box } from "components/Mui";
 
-import { routes, MAX_NUMBER } from "./config";
+import { MAX_NUMBER, routes } from "./config";
 import { ExceedRoutes } from "./ExceedRoutes";
 import { Routes } from "./Routes";
 

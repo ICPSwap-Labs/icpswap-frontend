@@ -1,17 +1,17 @@
 import { createReducer } from "@reduxjs/toolkit";
 import {
+  removeTaggedTokens,
+  updateKeepTokenInPools,
+  updateShowClosedPosition,
+  updateSwapProAutoRefresh,
+  updateTaggedTokens,
   updateUserExpertMode,
+  updateUserMultipleApprove,
+  updateUserPositionPools,
   updateUserSelectedToken,
   updateUserSingleHop,
   updateUserSlippage,
   updateUserTransactionsDeadline,
-  updateTaggedTokens,
-  removeTaggedTokens,
-  updateShowClosedPosition,
-  updateUserPositionPools,
-  updateUserMultipleApprove,
-  updateSwapProAutoRefresh,
-  updateKeepTokenInPools,
 } from "./actions";
 import { initialState } from "./state";
 
@@ -37,7 +37,7 @@ export default createReducer(initialState, (builder) => {
       state.taggedTokens = [...state.taggedTokens, ...payload];
     })
     .addCase(removeTaggedTokens, (state, { payload }) => {
-      state.taggedTokens = state.taggedTokens.filter((token) => payload.findIndex((_token) => _token === token) === -1);
+      state.taggedTokens = state.taggedTokens.filter((token) => payload.indexOf(token) === -1);
     })
     .addCase(updateShowClosedPosition, (state, { payload }) => {
       state.showClosedPosition = payload;

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
 import { SnsProposalDecisionStatus } from "@icpswap/constants";
-import { Box, Checkbox, Typography } from "components/Mui";
 import { Modal } from "@icpswap/ui";
+import { Box, Checkbox, Typography } from "components/Mui";
+import { useEffect, useState } from "react";
 import { Filter } from "react-feather";
 import { useTranslation } from "react-i18next";
 
@@ -18,7 +18,7 @@ export interface SelectNeuronProposalStatusProps {
   onChange: (status: SnsProposalDecisionStatus[]) => void;
 }
 
-export function SelectNeuronProposalStatus({ governance_id, onChange }: SelectNeuronProposalStatusProps) {
+export function SelectNeuronProposalStatus({ onChange }: SelectNeuronProposalStatusProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<SnsProposalDecisionStatus[]>([]);
@@ -28,7 +28,7 @@ export function SelectNeuronProposalStatus({ governance_id, onChange }: SelectNe
     const status = SnsProposalDecisionStatusMap.map((e) => e.value);
     setSelectedStatus(status);
     setFilteredStatus(status);
-  }, [governance_id]);
+  }, []);
 
   const handleConfirm = () => {
     onChange(selectedStatus);
@@ -107,7 +107,7 @@ export function SelectNeuronProposalStatus({ governance_id, onChange }: SelectNe
               <Typography>{element.label}</Typography>
               <Checkbox
                 checked={selectedStatus.includes(element.value)}
-                onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+                onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                   handleCheckboxChange(checked, element.value)
                 }
               />

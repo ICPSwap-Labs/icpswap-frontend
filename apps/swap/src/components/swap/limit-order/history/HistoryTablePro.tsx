@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { Null } from "@icpswap/types";
 import { useUserLimitTransactions, useUserUnusedBalance } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { useMemo } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
 
 import { HistoryTableProUI } from "./HistoryTableProUI";
@@ -13,21 +13,11 @@ export interface HistoryTableProProps {
 export function HistoryTablePro({ poolId, wrapperClassName }: HistoryTableProProps) {
   const principal = useAccountPrincipal();
 
-  const start_time = useMemo(() => {
-    const now = parseInt(String(new Date().getTime() / 1000));
-    return now - 60 * 24 * 3600;
-  }, []);
-
-  const { result: limitTransactionsResult, loading } = useUserLimitTransactions(
-    principal?.toString(),
-    start_time,
-    0,
-    100,
-  );
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal);
+  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions(principal?.toString(), 1, 100);
+  const { data: unusedBalance } = useUserUnusedBalance(poolId, principal);
 
   const limitTransactions = useMemo(() => {
-    return limitTransactionsResult?.records;
+    return limitTransactionsResult?.content;
   }, [limitTransactionsResult]);
 
   return (

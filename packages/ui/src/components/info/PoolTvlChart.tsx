@@ -1,10 +1,9 @@
-import { useMemo, useState } from "react";
-import dayjs from "dayjs";
-import { InfoPoolDataResponse, VolumeWindow } from "@icpswap/types";
+import type { InfoPoolDataResponse, VolumeWindow } from "@icpswap/types";
 import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
-
-import { ImageLoading } from "../Loading";
+import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 import { LineChartAlt } from "../LineChart/alt";
+import { ImageLoading } from "../Loading";
 import { Box, Typography } from "../Mui";
 
 export interface PoolTvlChartProps {
@@ -22,7 +21,7 @@ export function PoolTvlChart({ chartsData, loading, noData, height = "340px" }: 
   const formattedData = useMemo(() => {
     return chartsData.map((data) => {
       return {
-        time: dayjs(Number(data.beginTime)).format("YYYY-MM-DD HH:mm:ss"),
+        time: Number(data.beginTime),
         value: Number(data.tvlUSD),
       };
     });
@@ -30,45 +29,51 @@ export function PoolTvlChart({ chartsData, loading, noData, height = "340px" }: 
 
   const latestData = formattedData.length > 0 ? formattedData[formattedData.length - 1] : null;
 
-  return loading ? (
-    <Box
-      sx={{
-        width: "100%",
-        height,
-      }}
-    >
-      <ImageLoading loading />
-    </Box>
-  ) : formattedData.length > 0 ? (
+  return (
     <>
-      <Box sx={{ height: "50px" }}>
-        {latestData ? (
-          <>
-            <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
-              {nonUndefinedOrNull(latestValue) ? formatDollarAmount(latestValue) : formatDollarAmount(latestData.value)}
-            </Typography>
+      {loading ? (
+        <Box
+          sx={{
+            width: "100%",
+            height,
+          }}
+        >
+          <ImageLoading loading />
+        </Box>
+      ) : formattedData.length > 0 ? (
+        <>
+          <Box sx={{ height: "50px" }}>
+            {latestData ? (
+              <>
+                <Typography color="text.primary" fontSize="28px" fontWeight={500} component="div">
+                  {nonUndefinedOrNull(latestValue)
+                    ? formatDollarAmount(latestValue)
+                    : formatDollarAmount(latestData.value)}
+                </Typography>
 
-            <Typography
-              sx={{
-                height: "20px",
-                fontSize: "12px",
-                margin: "10px 0 0 0",
-              }}
-            >
-              {valueLabel ?? dayjs(latestData.time).format("MMM D, YYYY") ?? ""}
-            </Typography>
-          </>
-        ) : null}
-      </Box>
+                <Typography
+                  sx={{
+                    height: "20px",
+                    fontSize: "12px",
+                    margin: "10px 0 0 0",
+                  }}
+                >
+                  {valueLabel ?? dayjs(latestData.time).format("MMM D, YYYY") ?? ""}
+                </Typography>
+              </>
+            ) : null}
+          </Box>
 
-      <LineChartAlt
-        data={formattedData}
-        setLabel={setValueLabel}
-        minHeight={parseInt(height)}
-        setValue={setLatestValue}
-      />
+          <LineChartAlt
+            data={formattedData}
+            setLabel={setValueLabel}
+            minHeight={parseInt(height, 10)}
+            setValue={setLatestValue}
+          />
+        </>
+      ) : noData ? (
+        noData
+      ) : null}
     </>
-  ) : noData ? (
-    <>{noData}</>
-  ) : null;
+  );
 }

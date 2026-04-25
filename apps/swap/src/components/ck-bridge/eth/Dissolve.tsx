@@ -1,36 +1,34 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { ckBridgeChain } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import { ckETH } from "@icpswap/tokens";
+import { Flex } from "@icpswap/ui";
 import {
+  formatTokenAmount,
   nonUndefinedOrNull,
   parseTokenAmount,
-  formatTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { ckETH } from "@icpswap/tokens";
-import { Box, Typography, useTheme, CircularProgress, TextField } from "components/Mui";
-import { InputWrapper, EthFee } from "components/ck-bridge";
-import { useBridgeTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useAccount } from "wagmi";
-import { isAddress } from "utils/web3/index";
+import ButtonConnector from "components/authentication/ButtonConnector";
+import { EthFee, InputWrapper } from "components/ck-bridge";
+import { DisconnectButton } from "components/ck-bridge/Disconnect";
+import { Box, CircularProgress, TextField, Typography, useTheme } from "components/Mui";
+import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
+import { useIcpTokenBalance, useTokenSymbol } from "hooks/ck-bridge/index";
 import { useDissolveCallback } from "hooks/ck-eth/index";
 import { useRefreshTriggerManager } from "hooks/index";
-import { MIN_WITHDRAW_AMOUNT } from "constants/ckETH";
-import ButtonConnector from "components/authentication/ButtonConnector";
-import { useTranslation } from "react-i18next";
 import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
-import { Flex } from "@icpswap/ui";
-import { DisconnectButton } from "components/ck-bridge/Disconnect";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { isAddress } from "utils/web3/index";
+import { useAccount } from "wagmi";
 
 export interface EthDissolveProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
-  minterInfo?: ChainKeyETHMinterInfo | Null;
+  bridgeChain: BridgeChainType;
 }
 
-export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps) {
+export function EthDissolve({ token, bridgeChain }: EthDissolveProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const { address: account } = useAccount();
@@ -38,23 +36,20 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
 
   const symbol = useTokenSymbol({
     token,
-    bridgeChain: bridgeChain === ckBridgeChain.icp ? ckBridgeChain.eth : ckBridgeChain.icp,
+    chain: BridgeChainType.icp,
   });
 
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [refreshTrigger, setRefreshTrigger] = useRefreshTriggerManager("Erc20Dissolve");
-  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo, refresh: refreshTrigger });
-  const ercTokenBalance = useBridgeTokenBalance({
+  const tokenBalance = useIcpTokenBalance({
     token,
-    chain: ckBridgeChain.eth,
-    minterInfo,
     refresh: refreshTrigger,
   });
 
   useEffect(() => {
     setAddress(account);
-  }, [account, setAddress]);
+  }, [account]);
 
   const dissolve_error = useMemo(() => {
     if (!address) return t("common.enter.address");
@@ -73,7 +68,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, token, tokenBalance, address]);
+  }, [amount, token, tokenBalance, address, t]);
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
@@ -83,7 +78,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
     setAmount(
       parseTokenAmount(tokenBalance, token.decimals).minus(parseTokenAmount(token.transFee, token.decimals)).toFixed(8),
     );
-  }, [token, tokenBalance, ercTokenBalance, setAmount]);
+  }, [token, tokenBalance]);
 
   const { loading, dissolve_call } = useDissolveCallback();
 
@@ -97,7 +92,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
       setAmount("");
       setAddress("");
     }
-  }, [address, amount, principal, token]);
+  }, [address, amount, principal, token, dissolve_call, setRefreshTrigger]);
 
   return (
     <>
@@ -163,7 +158,7 @@ export function EthDissolve({ token, bridgeChain, minterInfo }: EthDissolveProps
       <InputWrapper
         value={amount}
         token={token}
-        chain={bridgeChain}
+        bridgeCurrentChain={bridgeChain}
         balance={tokenBalance}
         onInput={(value: string) => setAmount(value)}
         onMax={handleMax}

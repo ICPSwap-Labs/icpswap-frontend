@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { FilterState } from "types/staking-token";
-import { getStakePools, getUserStakePools, getStakingPoolFromController } from "@icpswap/hooks";
-import { StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { getStakePools, getStakingPoolFromController, getUserStakePools } from "@icpswap/hooks";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
 import { isAvailablePageArgs } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { FilterState } from "types/staking-token";
 import { getStateValueByFilterState } from "utils/stake/index";
 
 export interface UsePoolsArgs {

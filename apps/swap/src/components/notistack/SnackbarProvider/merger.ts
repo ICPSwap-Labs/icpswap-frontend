@@ -1,6 +1,6 @@
-import defaultIconVariants from "../utils/defaultIconVariants";
-import { InternalSnack } from "../types";
 import { Slide } from "../transitions/Slide";
+import type { InternalSnack } from "../types";
+import defaultIconVariants from "../utils/defaultIconVariants";
 
 export const defaults = {
   maxSnack: 3,
@@ -68,7 +68,6 @@ export const merge =
   (name: keyof InternalSnack, shouldObjectMerge = false): any => {
     if (shouldObjectMerge) {
       return {
-        // @ts-ignore
         ...defaults[name],
         ...props[name],
         ...options[name],
@@ -83,6 +82,6 @@ export const merge =
       return getTransitionDuration(options.transitionDuration, props.transitionDuration);
     }
 
-    // @ts-ignore
+
     return options[name] || props[name] || defaults[name];
   };

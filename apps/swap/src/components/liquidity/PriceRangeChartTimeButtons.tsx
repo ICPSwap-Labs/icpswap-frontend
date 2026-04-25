@@ -1,6 +1,6 @@
 import { ChartTimeEnum } from "@icpswap/types";
-import { useTheme } from "components/Mui";
 import { SmallTabButton, SmallTabsButtonWrapper } from "@icpswap/ui";
+import { useTheme } from "components/Mui";
 
 const buttons = [
   { label: "24H", value: ChartTimeEnum["24H"] },

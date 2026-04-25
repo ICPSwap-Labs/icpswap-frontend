@@ -1,31 +1,31 @@
-import { ReactNode, useCallback, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Grid, Typography, Box, makeStyles, Theme } from "components/Mui";
-import { MainCard, Wrapper, AuthButton } from "components/index";
+import { useParsedUrlPath } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { Flex, LoadingRow } from "@icpswap/ui";
+import { BigNumber, isUndefinedOrNull, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { AuthButton, MainCard, Wrapper } from "components/index";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { ReclaimTips } from "components/ReclaimTips";
+import StepViewButton from "components/Steps/View";
+import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
 import HeaderTab from "components/swap/Header";
 import { SwapDepositAmount } from "components/swap/index";
-import { FIELD, INCREASE_LIQUIDITY_REFRESH_KEY, NONE_TOKEN_SYMBOL } from "constants/index";
-import { useMintState, useMintHandlers, useMintInfo, useResetMintState } from "store/swap/liquidity/hooks";
-import { usePosition } from "hooks/swap/usePosition";
-import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
-import { useLoadingTip, useErrorTip } from "hooks/useTips";
-import { isUndefinedOrNull, parseTokenAmount, toSignificantWithGroupSeparator, BigNumber } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { isDarkTheme } from "utils/index";
-import { useAccountPrincipal } from "store/auth/hooks";
 import LiquidityInfo from "components/swap/LiquidityInfo";
-import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
-import { useIncreaseLiquidityCall } from "hooks/swap/useIncreaseLiquidity";
-import StepViewButton from "components/Steps/View";
-import { ExternalTipArgs } from "types/index";
-import { ReclaimTips } from "components/ReclaimTips";
-import { maxAmountFormat } from "utils/swap";
-import { useRefreshTrigger } from "hooks/index";
-import { Flex, LoadingRow } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
 import { ReclaimTokensInPool } from "components/swap/reclaim/Reclaim";
 import { ToReclaim } from "components/swap/reclaim/ToReclaim";
-import { useParsedUrlPath } from "@icpswap/hooks";
+import { FIELD, INCREASE_LIQUIDITY_REFRESH_KEY, NONE_TOKEN_SYMBOL } from "constants/index";
+import { useRefreshTrigger } from "hooks/index";
+import { useIncreaseLiquidityCall } from "hooks/swap/useIncreaseLiquidity";
+import { usePosition } from "hooks/swap/usePosition";
+import { usePositionDetailsFromId } from "hooks/swap/v3Calls";
+import { useErrorTip, useLoadingTip } from "hooks/useTips";
+import { type ReactNode, useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useMintHandlers, useMintInfo, useMintState, useResetMintState } from "store/swap/liquidity/hooks";
+import type { ExternalTipArgs } from "types/index";
+import { isDarkTheme } from "utils/index";
+import { maxAmountFormat } from "utils/swap";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -106,7 +106,7 @@ export default function IncreaseLiquidity() {
   const { positionId, pool: poolId } = useParams() as { positionId: string; pool: string };
   const { path } = useParsedUrlPath();
 
-  const { result: _position, loading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
+  const { data: _position, isLoading: positionRequestLoading } = usePositionDetailsFromId(poolId, positionId);
   const { position: existingPosition, loading: usePositionLoading } = usePosition({
     poolId,
     tickLower: _position?.tickLower,
@@ -153,7 +153,7 @@ export default function IncreaseLiquidity() {
 
   const handleCancel = useCallback(() => {
     setConfirmModalShow(false);
-  }, [setConfirmModalShow]);
+  }, []);
 
   const [openLoadingTip, closeLoadingTip] = useLoadingTip();
   const [openErrorTip] = useErrorTip();
@@ -226,7 +226,23 @@ export default function IncreaseLiquidity() {
     }
 
     closeLoadingTip(loadingTipKey);
-  }, [position, poolId, positionId, token0SubAccountBalance, token1SubAccountBalance, unusedBalance]);
+  }, [
+    position,
+    poolId,
+    positionId,
+    token0SubAccountBalance,
+    token1SubAccountBalance,
+    unusedBalance,
+    closeLoadingTip,
+    increaseLiquidityCall,
+    loadLiquidityPage,
+    openErrorTip,
+    openLoadingTip,
+    principal,
+    t,
+    token0Balance,
+    token1Balance,
+  ]);
 
   const handleCurrencyAMax = () => {
     const currencyAAmount = maxAmounts[FIELD.CURRENCY_A];

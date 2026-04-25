@@ -1,7 +1,7 @@
-import { useState } from "react";
-import MarketWrapper, { Pages, MarketPageConfig } from "components/NFT/market/MarketWrapper";
-import { useParams } from "react-router-dom";
 import CollectionInfo from "components/NFT/market/CollectionInfo";
+import MarketWrapper, { type MarketPageConfig, Pages } from "components/NFT/market/MarketWrapper";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 export default function NFTCollectionMarketplace() {
   const { canisterId } = useParams() as { canisterId: string };

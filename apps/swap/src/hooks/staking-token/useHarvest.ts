@@ -1,13 +1,12 @@
-import { useCallback } from "react";
 import { stakingPoolHarvest } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { sleep } from "@icpswap/utils";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback } from "react";
 import { useUpdateStepData } from "store/steps/hooks";
-import { Token } from "@icpswap/swap-sdk";
-import { useTips, MessageTypes } from "hooks/useTips";
-
-import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
 import { useHarvestSteps } from "./useHarvestSteps";
+import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
 
 export interface UseHarvestCallbackArgs {
   poolId: string;
@@ -20,19 +19,22 @@ function useHarvestCallback() {
   const updateStepData = useUpdateStepData();
   const stepsManager = useHarvestSteps();
 
-  return useCallback(async ({ poolId, token, key }: UseHarvestCallbackArgs) => {
-    const { status, message, data } = await stakingPoolHarvest(poolId);
+  return useCallback(
+    async ({ poolId, token, key }: UseHarvestCallbackArgs) => {
+      const { status, message, data } = await stakingPoolHarvest(poolId);
 
-    if (status === "err") {
-      openTip(`Failed to unstake ${token.symbol}: ${message}`, MessageTypes.error);
-      return false;
-    }
+      if (status === "err") {
+        openTip(`Failed to unstake ${token.symbol}: ${message}`, MessageTypes.error);
+        return false;
+      }
 
-    updateStepData(key, data);
-    stepsManager(key, { token, poolId });
+      updateStepData(key, data);
+      stepsManager(key, { token, poolId });
 
-    return true;
-  }, []);
+      return true;
+    },
+    [openTip, stepsManager, updateStepData],
+  );
 }
 
 interface UnstakeCallsArgs {

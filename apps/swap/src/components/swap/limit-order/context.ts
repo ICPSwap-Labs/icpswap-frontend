@@ -1,6 +1,6 @@
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { createContext } from "react";
-import { Pool, Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
 
 export interface LimitContextProps {
   selectedPool: Pool | Null;

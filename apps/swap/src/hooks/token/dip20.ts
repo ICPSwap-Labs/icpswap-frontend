@@ -1,7 +1,7 @@
-import { useCallback } from "react";
+import { Principal } from "@icp-sdk/core/principal";
 import { xtc } from "@icpswap/actor";
-import { Principal } from "@dfinity/principal";
 import { resultFormat } from "@icpswap/utils";
+import { useCallback } from "react";
 
 export interface XTCTopUpProps {
   canisterId: string;

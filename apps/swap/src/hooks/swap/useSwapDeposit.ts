@@ -1,10 +1,10 @@
-import { TOKEN_STANDARD } from "@icpswap/types";
-import { Token, Pool } from "@icpswap/swap-sdk";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/types";
+import { formatTokenAmount } from "@icpswap/utils";
+import { useSwapApprove, useSwapDeposit, useSwapTransfer } from "hooks/swap/index";
 import { useCallback } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useSwapApprove, useSwapDeposit, useSwapTransfer } from "hooks/swap/index";
 import { isUseTransfer } from "utils/token/index";
-import { formatTokenAmount } from "@icpswap/utils";
 
 export interface SwapDepositTokenBalanceArgs {
   amount: string;

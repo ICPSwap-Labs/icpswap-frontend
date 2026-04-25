@@ -1,18 +1,18 @@
-import { useCallback } from "react";
-import { makeStyles, useTheme, Box, Grid, Typography, Theme } from "components/Mui";
-import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+// import { TokenBalanceSlider } from "components/Slider/index";
+import type { Null } from "@icpswap/types";
+import { Flex } from "@icpswap/ui";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import LockIcon from "assets/images/swap/Lock";
 import { NumberTextField, TokenImage } from "components/index";
-import { SAFE_DECIMALS_LENGTH, MAX_SWAP_INPUT_LENGTH } from "constants/index";
-import { isDarkTheme } from "utils";
-import { nonUndefinedOrNull, parseTokenAmount, BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
-import { Flex } from "@icpswap/ui";
-// import { TokenBalanceSlider } from "components/Slider/index";
-import { Null } from "@icpswap/types";
-import { WalletBalance } from "components/swap/WalletBalance";
+import { Box, Grid, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { SwapPoolBalance } from "components/swap/SwapPoolBalance";
-import { useTranslation } from "react-i18next";
+import { WalletBalance } from "components/swap/WalletBalance";
+import { MAX_SWAP_INPUT_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
 import { useBalanceMaxSpend } from "hooks";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { isDarkTheme } from "utils";
 import { maxAmountFormat } from "utils/index";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
@@ -151,7 +151,7 @@ export function SwapDepositAmount({
           .toString(),
       );
     }
-  }, [subAccountBalance, unusedBalance, currency]);
+  }, [subAccountBalance, unusedBalance, currency, onUserInput]);
 
   const maxWalletBalanceSpent = useBalanceMaxSpend({
     token: currency,

@@ -1,7 +1,7 @@
-import { useAccount, useReadContracts } from "wagmi";
-import { useMemo } from "react";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { erc20Abi } from "abis/abis";
+import { useMemo } from "react";
+import { useAccount, useReadContracts } from "wagmi";
 
 export function useERC20Balance(contractAddress: string | undefined, reload = -1) {
   const { address: account, chainId } = useAccount();

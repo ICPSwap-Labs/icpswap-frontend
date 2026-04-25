@@ -1,24 +1,24 @@
-import { useState, useCallback, useMemo } from "react";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import { MessageTypes, useTips } from "hooks/index";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
 import { ResultStatus } from "@icpswap/types";
-import { getLocaleMessage } from "i18n/service";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { NFTSendUI } from "components/Wallet/NFT/NFTSendUI";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { MessageTypes, useTips } from "hooks/index";
 import { extNFTTransfer } from "hooks/nft/useExtNFTTransfer";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { decodeTokenId } from "utils";
 
 export function NFTExtSend() {
   const { t } = useTranslation();
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
-  const { setSelectedContact } = useWalletAddressBookContext();
-  const { extNFTSendingInfo } = useWalletNFTContext();
+  const { setSelectedContact } = useWalletAddressBookStore();
+  const { extNFTSendingInfo } = useWalletNFTStore();
   const [loading, setLoading] = useState<boolean>(false);
 
   const { index } = useMemo(() => {
@@ -54,7 +54,7 @@ export function NFTExtSend() {
 
       setLoading(false);
     },
-    [setSelectedContact, setLoading, principal, setPages],
+    [setSelectedContact, principal, setPages, extNFTSendingInfo, openTip, t],
   );
 
   return extNFTSendingInfo ? (

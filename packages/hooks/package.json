@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc",
     "check": "tsc --pretty --noEmit",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "clean": "rm -rf node_modules && rm -rf dist",
     "dev": "tsc --watch"
   },
   "devDependencies": {
@@ -28,7 +28,6 @@
     "@icpswap/tokens": "workspace:*",
     "@icpswap/types": "workspace:*",
     "@icpswap/utils": "workspace:*",
-    "bignumber.js": "^9.0.1",
     "@tanstack/react-query": "5.28.14"
   }
 }

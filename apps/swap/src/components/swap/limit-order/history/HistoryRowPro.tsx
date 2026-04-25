@@ -1,16 +1,16 @@
-import { Pool } from "@icpswap/swap-sdk";
-import { TableRow, BodyCell, Flex } from "@icpswap/ui";
-import { LoadingRow, TokenImage } from "components/index";
-import { useState } from "react";
-import { useTheme } from "components/Mui";
+import type { Pool } from "@icpswap/swap-sdk";
+import type { InfoSwapRecordResponse, Null } from "@icpswap/types";
+import { BodyCell, Flex, TableRow } from "@icpswap/ui";
 import { BigNumber, formatAmount, formatTokenPrice } from "@icpswap/utils";
+import { LoadingRow, TokenImage } from "components/index";
+import { useTheme } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import dayjs from "dayjs";
-import { LimitTransaction, Null } from "@icpswap/types";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useLimitHistory } from "hooks/swap/limit-order/useLimitHistory";
+import { useState } from "react";
 
 export interface HistoryRowProProps {
-  limitTransaction: LimitTransaction;
+  limitTransaction: InfoSwapRecordResponse;
   pool: Pool | Null;
   wrapperClassName?: string;
   noBorder?: boolean;
@@ -36,7 +36,7 @@ export function HistoryRowPro({
           className={wrapperClassName}
           borderBottom={noBorder ? "none!important" : `1px solid ${theme.palette.border.level1}`}
         >
-          <BodyCell>{dayjs(Number(transaction.timestamp * BigInt(1000))).format("YYYY-MM-DD HH:mm")}</BodyCell>
+          <BodyCell>{dayjs(Number(transaction.timestamp * 1000)).format("YYYY-MM-DD HH:mm")}</BodyCell>
 
           {/* You pay */}
           <BodyCell sx={{ gap: "0 6px", alignItems: "center" }}>

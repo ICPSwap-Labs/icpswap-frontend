@@ -1,6 +1,6 @@
-import { ResultStatus, type NFTBuyArgs, type NFTRevokeArgs, type NFTSaleArgs } from "@icpswap/types";
+import { type NFTBuyArgs, type NFTRevokeArgs, type NFTSaleArgs, ResultStatus } from "@icpswap/types";
 
-import { BaseNFTsTradeAdapter } from "./BaseNFTAdapter";
+import type { BaseNFTsTradeAdapter } from "./BaseNFTAdapter";
 import { ICPSwapTradeAdapter } from "./ICPSwapNFTTradeAdapter";
 
 export enum TradeAdapterName {

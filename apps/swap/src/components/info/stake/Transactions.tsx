@@ -1,12 +1,12 @@
-import { useMemo, useState } from "react";
-import { ImageLoading, AddressFormat } from "components/index";
+import { useStakingPoolTransactions } from "@icpswap/hooks";
+import type { StakingPoolTransaction } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { enumToString, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { AddressFormat, ImageLoading } from "components/index";
 import { Box, makeStyles } from "components/Mui";
 import dayjs from "dayjs";
-import { useStakingPoolTransactions } from "@icpswap/hooks";
-import { parseTokenAmount, enumToString, pageArgsFormat } from "@icpswap/utils";
-import { StakingPoolTransaction } from "@icpswap/types";
 import upperFirst from "lodash/upperFirst";
-import { HeaderCell, BodyCell, Header, TableRow, NoData, Pagination } from "@icpswap/ui";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(() => {
@@ -39,7 +39,14 @@ function PoolItem({ transactions }: { transactions: StakingPoolTransaction }) {
     return `${parseTokenAmount(transactions.amount, transactions.stakingTokenDecimals).toFormat()} ${
       transactions.stakingTokenSymbol
     }`;
-  }, [tokenType]);
+  }, [
+    tokenType,
+    transactions.amount,
+    transactions.rewardTokenDecimals,
+    transactions.rewardTokenSymbol,
+    transactions.stakingTokenDecimals,
+    transactions.stakingTokenSymbol,
+  ]);
 
   return (
     <TableRow className={classes.wrapper}>
@@ -62,7 +69,7 @@ export function StakeTransactions({ id }: TransactionsProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useStakingPoolTransactions(id, undefined, offset, pagination.pageSize);
+  const { data: result, isLoading: loading } = useStakingPoolTransactions(id, undefined, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (page: number) => {

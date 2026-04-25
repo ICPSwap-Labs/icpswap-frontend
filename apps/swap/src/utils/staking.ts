@@ -1,5 +1,5 @@
-import { STATE } from "types/staking-token";
 import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { STATE } from "types/staking-token";
 
 export enum POOL_STATE {
   LIVE = "Live",
@@ -11,7 +11,7 @@ export enum POOL_STATE {
 export function getStakingTokenPoolState(pool: StakingPoolControllerPoolInfo | undefined | null): STATE {
   if (!pool) return STATE.LIVE;
 
-  const now = BigInt(new Date().getTime());
+  const now = BigInt(Date.now());
   const end = pool.bonusEndTime * BigInt(1000);
   const start = pool.startTime * BigInt(1000);
 

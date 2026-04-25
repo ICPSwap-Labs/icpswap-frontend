@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import type React from "react";
+import { useEffect, useState } from "react";
 
 export interface DisableIframeProps {
-  children: React.ReactNode;
+  children: React.ReactElement;
 }
 
 export function DisableIframe({ children }: DisableIframeProps) {
@@ -11,7 +12,7 @@ export function DisableIframe({ children }: DisableIframeProps) {
     if (top?.location !== self.location) {
       setSameOrigin(false);
     }
-  }, [setSameOrigin]);
+  }, []);
 
-  return sameOrigin ? <>{children}</> : <div>Not support iframe now</div>;
+  return sameOrigin ? children : <div>Not support iframe now</div>;
 }

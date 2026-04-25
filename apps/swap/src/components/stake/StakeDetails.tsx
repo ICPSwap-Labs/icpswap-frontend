@@ -1,28 +1,28 @@
-import React, { useMemo } from "react";
-import { Box, Collapse, Typography, useTheme, Link } from "components/Mui";
-import { MainCard, Flex, Image } from "components/index";
-import { INFO_URL } from "constants/index";
+import { useStakingPoolCycles, useStakingPoolState, useStakingPoolUserInfo } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
+import { type StakingPoolInfo, StakingState } from "@icpswap/types";
 import {
-  parseTokenAmount,
-  toSignificantWithGroupSeparator,
   cycleValueFormat,
+  formatDollarAmount,
+  icDashboardExplorerLink,
+  nonUndefinedOrNull,
+  parseTokenAmount,
   shorten,
   timestampFormat,
-  explorerLink,
-  formatDollarAmount,
-  nonUndefinedOrNull,
+  toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { useStakingPoolState, useStakingPoolCycles, useStakingPoolUserInfo } from "@icpswap/hooks";
+import { Flex, Image, MainCard } from "components/index";
+import { Box, Collapse, Link, Typography, useTheme } from "components/Mui";
+import { INFO_URL } from "constants/index";
+import React, { useMemo } from "react";
 import Countdown from "react-countdown";
-import { Token } from "@icpswap/swap-sdk";
 import { ArrowUpRight } from "react-feather";
-import { StakingPoolInfo, StakingState } from "@icpswap/types";
-import { ICP } from "@icpswap/tokens";
 import { useTranslation } from "react-i18next";
 
 function CountdownBox({ startTime, endTime }: { startTime: number; endTime: number }) {
   const { t } = useTranslation();
-  const nowTime = parseInt(String(Date.now() / 1000));
+  const nowTime = parseInt(String(Date.now() / 1000), 10);
   const isEnded = nowTime > endTime;
 
   if (isEnded) return <Typography color="text.primary">{t("common.end")}</Typography>;
@@ -52,8 +52,8 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
     setExpanded(!expanded);
   };
 
-  const { result: cycles } = useStakingPoolCycles(poolId);
-  const { result: stakingPoolUserInfo } = useStakingPoolUserInfo(poolId, 0, 1);
+  const { data: cycles } = useStakingPoolCycles(poolId);
+  const { data: stakingPoolUserInfo } = useStakingPoolUserInfo(poolId, 0, 1);
 
   const totalStaker = useMemo(() => {
     return stakingPoolUserInfo?.totalElements;
@@ -116,7 +116,11 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
               <Flex sx={{ width: "100%" }} justify="space-between">
                 <Typography>{t("stake.details.token", { symbol: stakeToken.symbol })}</Typography>
 
-                <Link href={explorerLink(stakeToken.address.toString())} target="_blank" color="text.theme-secondary">
+                <Link
+                  href={icDashboardExplorerLink(stakeToken.address.toString())}
+                  target="_blank"
+                  color="text.theme-secondary"
+                >
                   {shorten(stakeToken.address.toString())}
                 </Link>
               </Flex>
@@ -128,7 +132,11 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
                   {t("common.reward.token")}({rewardToken.symbol})
                 </Typography>
 
-                <Link href={explorerLink(rewardToken.address.toString())} target="_blank" color="text.theme-secondary">
+                <Link
+                  href={icDashboardExplorerLink(rewardToken.address.toString())}
+                  target="_blank"
+                  color="text.theme-secondary"
+                >
                   {shorten(rewardToken.address.toString())}
                 </Link>
               </Flex>
@@ -199,7 +207,11 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
               <Typography>{t("common.creator")}</Typography>
               <Typography color="text.primary.main">
                 {poolInfo ? (
-                  <Link href={explorerLink(poolInfo.creator.toString())} target="_blank" color="text.theme-secondary">
+                  <Link
+                    href={icDashboardExplorerLink(poolInfo.creator.toString())}
+                    target="_blank"
+                    color="text.theme-secondary"
+                  >
                     {shorten(poolInfo.creator.toString())}
                   </Link>
                 ) : (
@@ -212,7 +224,7 @@ export function StakeDetails({ poolId, stakeToken, rewardToken, rewardTokenPrice
               <Typography>{t("common.canister.id")}</Typography>
               <Typography color="text.primary">
                 {poolId ? (
-                  <Link href={explorerLink(poolId)} target="_blank" color="text.theme-secondary">
+                  <Link href={icDashboardExplorerLink(poolId)} target="_blank" color="text.theme-secondary">
                     {shorten(poolId)}
                   </Link>
                 ) : (

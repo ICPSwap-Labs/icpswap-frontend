@@ -1,8 +1,8 @@
-import { useCallback, useMemo, ReactNode } from "react";
-import { openLoading, closeLoading } from "store/loadingReducer";
-import { useAppDispatch, useAppSelector } from "store/hooks";
+import { ResultStatus } from "@icpswap/types";
 import { useSnackbar } from "components/notistack";
-import { ResultStatus } from "types/global";
+import { type ReactNode, useCallback, useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { closeLoading, openLoading } from "store/loadingReducer";
 
 export enum MessageTypes {
   success = "ok",
@@ -30,7 +30,6 @@ export function useTips(): [
   (message: ReactNode, type: MessageTypes | ResultStatus, options?: TIP_OPTIONS) => TIP_KEY,
   (key: string | undefined | number) => void,
 ] {
-  const dispatch = useAppDispatch();
   const { closeSnackbar, enqueueSnackbar } = useSnackbar();
 
   const open = useCallback(
@@ -41,14 +40,14 @@ export function useTips(): [
         ...(options ?? {}),
       });
     },
-    [dispatch],
+    [enqueueSnackbar],
   );
 
   const close = useCallback(
     (messageKey: TIP_KEY) => {
       closeSnackbar(messageKey);
     },
-    [dispatch],
+    [closeSnackbar],
   );
 
   return useMemo(() => [open, close], [open, close]);

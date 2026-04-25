@@ -1,7 +1,7 @@
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import BigNumber from "bignumber.js";
 
-import { Typography, TypographyProps } from "./Mui";
+import { Typography, type TypographyProps } from "./Mui";
 
 export interface ProportionProps {
   value: bigint | number | string | undefined | null;

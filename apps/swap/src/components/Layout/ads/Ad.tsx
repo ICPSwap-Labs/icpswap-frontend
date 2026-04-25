@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import { useSettingGlobalAds } from "@icpswap/hooks";
-import { nonUndefinedOrNull } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
+import { nonUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useState } from "react";
 
 import { AdsUI } from "./UI";
 
@@ -11,7 +11,7 @@ export function Ads() {
   const [globalAdsLink, setGlobalAdsLink] = useState<string | undefined>(undefined);
   const [globalAdsButtonText, setGlobalAdsButtonText] = useState<string | undefined>(undefined);
 
-  const { result: globalAds } = useSettingGlobalAds();
+  const { data: globalAds } = useSettingGlobalAds();
 
   useEffect(() => {
     if (globalAds) {

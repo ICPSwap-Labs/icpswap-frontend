@@ -1,3 +1,3 @@
 export * from "./GlobalContextProvider";
-export * from "./useGlobalUpdater";
 export * from "./GlobalLayout";
+export * from "./useGlobalUpdater";

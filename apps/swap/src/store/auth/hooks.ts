@@ -1,18 +1,18 @@
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { principalToAccount, isPrincipal } from "@icpswap/utils";
-import { ic_host } from "@icpswap/constants";
-import { Connector, IdentityKitConnector, IdentityKitId } from "constants/index";
-import { Principal } from "@dfinity/principal";
-import { connectManager, WalletConnector } from "utils/connector";
-import { isMeWebview } from "utils/connector/me";
+import { Principal } from "@icp-sdk/core/principal";
 import { actor } from "@icpswap/actor";
-import { useIsInitializing, useAuth, useAgent } from "@nfid/identitykit/react";
+import { ic_host } from "@icpswap/constants";
+import { isPrincipal, principalToAccount } from "@icpswap/utils";
+import { useAgent, useAuth, useIsInitializing } from "@nfid/identitykit/react";
+import { Connector, IdentityKitConnector, IdentityKitId } from "constants/index";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import { connectManager, type WalletConnector } from "utils/connector";
+import { isMeWebview } from "utils/connector/me";
 import { isSafari } from "utils/index";
 
 import store from "../index";
-import { login, logout, updateConnected, updateWalletConnector } from "./actions";
 import { updateLockStatus as _updateLockStatus } from "../session/actions";
+import { login, logout, updateConnected, updateWalletConnector } from "./actions";
 import { NF_IDConnector } from "./NF_IDConnector";
 
 export function useIsUnLocked() {
@@ -78,7 +78,7 @@ export function useLogout() {
     dispatch(logout());
     updateLockStatus(true);
     dispatch(updateConnected({ isConnected: false }));
-  }, [dispatch, updateLockStatus]);
+  }, [dispatch]);
 }
 
 export function useDisconnect() {
@@ -90,7 +90,7 @@ export function useDisconnect() {
     if (walletType && window.icConnector) window.icConnector.disconnect();
     await updateLockStatus(true);
     dispatch(updateConnected({ isConnected: false }));
-  }, [dispatch, updateLockStatus]);
+  }, [dispatch, walletType]);
 }
 
 export function useAccountPrincipal(): Principal | undefined {
@@ -134,6 +134,8 @@ export function useInitialConnect() {
 
   const [loading, setLoading] = useState(true);
 
+  // TODO
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- initial connect effect; deps intentionally narrow
   useEffect(() => {
     async function call() {
       const connector = getConnector();
@@ -169,7 +171,7 @@ export function useInitialConnect() {
     }
 
     call();
-  }, [isUnLocked]);
+  }, [isUnLocked, disconnect, dispatch]);
 
   return useMemo(() => ({ loading }), [loading]);
 }
@@ -185,6 +187,8 @@ export function useIdentityKitInitialConnect() {
 
   const [loading, setLoading] = useState(true);
 
+  // TODO
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- initial connect effect; deps intentionally narrow
   useEffect(() => {
     async function call() {
       const connector = getConnector();
@@ -206,14 +210,14 @@ export function useIdentityKitInitialConnect() {
         //   return;
         // }
 
-        if (user && user.principal) {
+        if (user?.principal) {
           updateAuth({ walletType: connector, principal: user.principal.toString() });
           dispatch(updateConnected({ isConnected: true }));
           // Initial actor
           actor.setConnector(connector);
 
           if (agent) {
-            // @ts-ignore
+            // @ts-expect-error
             window.icConnector = new NF_IDConnector(agent);
           }
         }
@@ -223,7 +227,7 @@ export function useIdentityKitInitialConnect() {
     }
 
     call();
-  }, [connectManager, isInitializing, user, agent]);
+  }, [isInitializing, user, agent, dispatch]);
 
   return useMemo(
     () => ({
@@ -249,25 +253,28 @@ export function useConnectManager() {
     [dispatch],
   );
 
-  const connect = useCallback(async (connector: Connector, connectorOutside?: null | WalletConnector) => {
-    if (IdentityKitConnector.includes(connector)) {
-      await identityKitConnect(IdentityKitId[connector]);
-      updateAuth({ walletType: connector, connected: false });
-      return true;
-    }
-
-    // Fix pop-up window was blocked when there is a asynchronous call before connecting the wallet
-    if (isSafari()) {
-      if (connectorOutside) {
-        return await connectorOutside.connect();
+  const connect = useCallback(
+    async (connector: Connector, connectorOutside?: null | WalletConnector) => {
+      if (IdentityKitConnector.includes(connector)) {
+        await identityKitConnect(IdentityKitId[connector]);
+        updateAuth({ walletType: connector, connected: false });
+        return true;
       }
 
-      throw new Error("Some unknown error happened. Please refresh the page to reconnect.");
-    }
+      // Fix pop-up window was blocked when there is a asynchronous call before connecting the wallet
+      if (isSafari()) {
+        if (connectorOutside) {
+          return await connectorOutside.connect();
+        }
 
-    await connectManager.init(connector);
-    return await connectManager.connect();
-  }, []);
+        throw new Error("Some unknown error happened. Please refresh the page to reconnect.");
+      }
+
+      await connectManager.init(connector);
+      return await connectManager.connect();
+    },
+    [identityKitConnect],
+  );
 
   const disconnect = useCallback(async () => {
     if (connector) {
@@ -277,7 +284,7 @@ export function useConnectManager() {
     }
 
     await authDisconnect();
-  }, [connector, identityKitDisconnect]);
+  }, [connector, identityKitDisconnect, authDisconnect]);
 
   const { loading } = useInitialConnect();
   useIdentityKitInitialConnect();

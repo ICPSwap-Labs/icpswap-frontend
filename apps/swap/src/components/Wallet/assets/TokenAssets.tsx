@@ -1,18 +1,6 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import { Box, useTheme, Typography } from "components/Mui";
-import { Flex, MenuWrapper } from "@icpswap/ui";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import {
-  useDisplayedTokensInWallet,
-  useHideSmallBalanceManager,
-  useTaggedTokenManager,
-  useWalletSortManager,
-} from "store/wallet/hooks";
-import { useBridgeTokens, useGlobalTokenList } from "store/global/hooks";
-import { DISPLAY_IN_WALLET_BY_DEFAULT, TOKEN_ASSETS_REFRESH } from "constants/wallet";
-import { chain } from "constants/web3";
 import { ChainId } from "@icpswap/constants";
-import { ckSepoliaUSDCTokenInfo, ckSepoliaETHTokenInfo } from "@icpswap/tokens";
+import { ckSepoliaETHTokenInfo, ckSepoliaUSDCTokenInfo } from "@icpswap/tokens";
+import { Flex, MenuWrapper } from "@icpswap/ui";
 import {
   BigNumber,
   formatAmount,
@@ -22,21 +10,33 @@ import {
   parseTokenAmount,
 } from "@icpswap/utils";
 import { TokenImage } from "components/Image";
-import { useRefreshTrigger, useToken, useUSDPrice } from "hooks/index";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { DotLoading } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import {
+  ConvertItem,
+  RemoveItem,
+  SwapItem,
   TokenReceiveItem,
   TokenSendItem,
-  RemoveItem,
-  ConvertItem,
-  TransactionItem,
-  SwapItem,
   TopUpItem,
+  TransactionItem,
 } from "components/Wallet/TokenMenuItem/index";
-import { useTokenDataManager } from "hooks/wallet/useTokenDataManager";
-import { DotLoading } from "components/index";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { XTC } from "constants/tokens";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { DISPLAY_IN_WALLET_BY_DEFAULT, TOKEN_ASSETS_REFRESH } from "constants/wallet";
+import { chain } from "constants/web3";
+import { useRefreshTrigger, useToken, useUSDPrice } from "hooks/index";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useTokenDataManager } from "hooks/wallet/useTokenDataManager";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useBridgeTokens } from "store/global/hooks";
+import {
+  useDisplayedTokensInWallet,
+  useHideSmallBalanceManager,
+  useTaggedTokenManager,
+  useWalletSortManager,
+} from "store/wallet/hooks";
 
 interface TokenRowProps {
   tokenId: string;
@@ -53,7 +53,7 @@ function TokenRow({ tokenId }: TokenRowProps) {
   const allBridgeTokens = useBridgeTokens();
   const tokenPrice = useUSDPrice(token);
 
-  const { result: tokenBalance, loading } = useTokenBalance(tokenId, principal, refreshTrigger);
+  const { result: tokenBalance, loading } = useTokenBalance({ tokenId, account: principal, refresh: refreshTrigger });
 
   const handleTokenRowClick = useCallback(() => {
     setOpen(true);
@@ -61,103 +61,100 @@ function TokenRow({ tokenId }: TokenRowProps) {
 
   const handleClick = useCallback(() => {
     setOpen(true);
-  }, [setOpen]);
+  }, []);
 
   const handleMouseLeave = useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
+  }, []);
 
   const handleClose = useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
+  }, []);
 
   const { usdValue } = useTokenDataManager({ tokenId, tokenBalance, balanceLoading: loading });
 
   return (
-    <>
-      <Box
-        ref={ref}
-        onClick={handleClick}
-        onMouseLeave={handleMouseLeave}
+    <Box
+      ref={ref}
+      onClick={handleClick}
+      onMouseLeave={handleMouseLeave}
+      sx={{
+        display: hideSmallBalance && usdValue?.isLessThan(1) ? "none" : "block",
+      }}
+    >
+      <Flex
+        className="wrapper"
         sx={{
-          display: hideSmallBalance && usdValue && usdValue.isLessThan(1) ? "none" : "block",
+          cursor: "pointer",
+          padding: "16px",
+          background: open ? theme.palette.background.level1 : theme.palette.background.wallet,
+          "&:hover": {
+            background: theme.palette.background.level1,
+          },
         }}
+        justify="space-between"
+        onClick={handleTokenRowClick}
       >
-        <Flex
-          className="wrapper"
-          sx={{
-            cursor: "pointer",
-            padding: "16px",
-            background: open ? theme.palette.background.level1 : theme.palette.background.wallet,
-            "&:hover": {
-              background: theme.palette.background.level1,
-            },
-          }}
-          justify="space-between"
-          onClick={handleTokenRowClick}
-        >
-          <Flex gap="0 8px">
-            <TokenImage logo={token?.logo} tokenId={tokenId} size="40px" />
+        <Flex gap="0 8px">
+          <TokenImage logo={token?.logo} tokenId={tokenId} size="40px" />
 
-            <Box>
-              <Typography sx={{ fontSize: "14px", color: "text.primary", fontWeight: 500 }}>
-                {token?.name ?? "--"}
-              </Typography>
-              <Typography fontSize="12px" sx={{ margin: "6px 0 0 0" }}>
-                {nonUndefinedOrNull(tokenPrice) ? `${formatDollarTokenPrice(tokenPrice)}` : "--"}
-              </Typography>
-            </Box>
-          </Flex>
-
-          {loading ? (
-            <DotLoading loading />
-          ) : (
-            <Flex vertical gap="6px 0" align="flex-end">
-              <Typography sx={{ fontWeight: "500", color: "text.primary", fontSize: "14px" }}>
-                {nonUndefinedOrNull(tokenBalance) && nonUndefinedOrNull(token)
-                  ? `${formatAmount(parseTokenAmount(tokenBalance, token.decimals).toString())}`
-                  : "--"}
-              </Typography>
-
-              <Typography sx={{ fontSize: "12px" }}>
-                {nonUndefinedOrNull(tokenPrice) && nonUndefinedOrNull(tokenBalance) && token
-                  ? `${formatDollarAmount(
-                      parseTokenAmount(tokenBalance, token.decimals).multipliedBy(tokenPrice).toString(),
-                    )}`
-                  : "--"}
-              </Typography>
-            </Flex>
-          )}
+          <Box>
+            <Typography sx={{ fontSize: "14px", color: "text.primary", fontWeight: 500 }}>
+              {token?.name ?? "--"}
+            </Typography>
+            <Typography fontSize="12px" sx={{ margin: "6px 0 0 0" }}>
+              {nonUndefinedOrNull(tokenPrice) ? `${formatDollarTokenPrice(tokenPrice)}` : "--"}
+            </Typography>
+          </Box>
         </Flex>
 
-        <MenuWrapper
-          open={open}
-          anchor={ref?.current}
-          placement="bottom-start"
-          onClickAway={handleClose}
-          menuWidth="186px"
-          background={theme.palette.background.level3}
-          border="1px solid #49588E"
-        >
-          <SwapItem tokenId={tokenId} />
-          <TokenSendItem tokenId={tokenId} />
-          <TokenReceiveItem tokenId={tokenId} />
-          <TransactionItem tokenId={tokenId} isBridgeToken={allBridgeTokens.includes(tokenId)} />
-          {allBridgeTokens.includes(tokenId) ? <ConvertItem tokenId={tokenId} /> : null}
-          {tokenId === XTC.address ? <TopUpItem tokenId={tokenId} /> : null}
-          <RemoveItem tokenId={tokenId} isLast onRemoveClick={handleClose} />
-        </MenuWrapper>
-      </Box>
-    </>
+        {loading ? (
+          <DotLoading loading />
+        ) : (
+          <Flex vertical gap="6px 0" align="flex-end">
+            <Typography sx={{ fontWeight: "500", color: "text.primary", fontSize: "14px" }}>
+              {nonUndefinedOrNull(tokenBalance) && nonUndefinedOrNull(token)
+                ? `${formatAmount(parseTokenAmount(tokenBalance, token.decimals).toString())}`
+                : "--"}
+            </Typography>
+
+            <Typography sx={{ fontSize: "12px" }}>
+              {nonUndefinedOrNull(tokenPrice) && nonUndefinedOrNull(tokenBalance) && token
+                ? `${formatDollarAmount(
+                    parseTokenAmount(tokenBalance, token.decimals).multipliedBy(tokenPrice).toString(),
+                  )}`
+                : "--"}
+            </Typography>
+          </Flex>
+        )}
+      </Flex>
+
+      <MenuWrapper
+        open={open}
+        anchor={ref?.current}
+        placement="bottom-start"
+        onClickAway={handleClose}
+        menuWidth="186px"
+        background={theme.palette.background.level3}
+        border="1px solid #49588E"
+      >
+        <SwapItem tokenId={tokenId} />
+        <TokenSendItem tokenId={tokenId} />
+        <TokenReceiveItem tokenId={tokenId} />
+        <TransactionItem tokenId={tokenId} isBridgeToken={allBridgeTokens.includes(tokenId)} />
+        {allBridgeTokens.includes(tokenId) ? <ConvertItem tokenId={tokenId} /> : null}
+        {tokenId === XTC.address ? <TopUpItem /> : null}
+        <RemoveItem tokenId={tokenId} isLast onRemoveClick={handleClose} />
+      </MenuWrapper>
+    </Box>
   );
 }
 
 export function TokenAssets() {
   const { taggedTokens } = useTaggedTokenManager();
   const { sort } = useWalletSortManager();
-  const { allTokenUSDMap, noUSDTokens } = useWalletTokenContext();
+  const { allTokenUSDMap } = useWalletTokenStore();
 
-  const globalTokenList = useGlobalTokenList();
   const displayedTokensInWallet = useDisplayedTokensInWallet();
 
   const tokens = useMemo(() => {
@@ -167,7 +164,7 @@ export function TokenAssets() {
     ];
 
     return [...new Set([...tokenIds, ...taggedTokens.filter((id) => !DISPLAY_IN_WALLET_BY_DEFAULT.includes(id))])];
-  }, [taggedTokens, globalTokenList]);
+  }, [taggedTokens, displayedTokensInWallet]);
 
   const sortedTokens = useMemo(() => {
     if (sort === "Default") return tokens;
@@ -182,7 +179,7 @@ export function TokenAssets() {
       if (aUSDValue.isLessThan(bUSDValue)) return sort === "High" ? 1 : -1;
       return 0;
     });
-  }, [tokens, allTokenUSDMap, noUSDTokens, sort]);
+  }, [tokens, allTokenUSDMap, sort]);
 
   return (
     <Box sx={{ margin: "22px 0 0 0 " }}>

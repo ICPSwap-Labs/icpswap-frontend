@@ -1,10 +1,10 @@
-import { useContext, useMemo } from "react";
-import { Box, Typography } from "components/Mui";
+import { type Token, tickToPrice } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { tickToPrice, Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { WaringIcon } from "assets/icons/WaringIcon";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { WaringIcon } from "assets/icons/WaringIcon";
+import { Box, Typography } from "components/Mui";
+import { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { LimitContext } from "./context";
@@ -26,7 +26,7 @@ export function PriceError({
   ui = "normal",
 }: PriceErrorProps) {
   const { t } = useTranslation();
-  const { selectedPool, inverted } = useContext(LimitContext);
+  const { inverted } = useContext(LimitContext);
 
   const pricePercent = useMemo(() => {
     if (
@@ -47,7 +47,7 @@ export function PriceError({
     if (new BigNumber(__percent).isLessThan(0)) return __percent;
 
     return null;
-  }, [selectedPool, orderPriceTick, inputToken, minSettableTick, inputToken, outputToken]);
+  }, [orderPriceTick, inputToken, minSettableTick, outputToken]);
 
   return pricePercent ? (
     <Box

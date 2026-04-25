@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
-import { Typography, Box } from "components/Mui";
-import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
 import { usePositionValueChartData } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
-import { LineChartAlt, ImageLoading, Flex } from "@icpswap/ui";
+import { Flex, ImageLoading, LineChartAlt } from "@icpswap/ui";
+import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography } from "components/Mui";
 import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 
 export interface TokenChartsProps {
   poolId: string | Null;
@@ -15,13 +15,13 @@ export function PositionValueChart({ poolId, positionId }: TokenChartsProps) {
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
-  const { result: positionValueChartData, loading } = usePositionValueChartData(poolId, positionId);
+  const { data: positionValueChartData, isLoading: loading } = usePositionValueChartData(poolId, positionId);
 
   const formattedPositionValueChartData = useMemo(() => {
     if (positionValueChartData) {
       return positionValueChartData.map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          time: data.snapshotTime,
           value: Number(data.value),
         };
       });

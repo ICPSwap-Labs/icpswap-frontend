@@ -1,7 +1,7 @@
-import { ReactNode, ReactElement } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { HelpCircle } from "react-feather";
 
-import { Typography, Tooltip as MuiToolTip, TooltipProps as MuiTooltipProps, Box } from "./Mui";
+import { Box, Tooltip as MuiToolTip, type TooltipProps as MuiTooltipProps, Typography } from "./Mui";
 
 export interface TooltipProps {
   background?: string;

@@ -1,16 +1,16 @@
 /* eslint-disable guard-for-in */
 import { BigNumber } from "@ethersproject/bignumber";
 import type { TransactionResponse } from "@ethersproject/providers";
-import { ChainId } from "@icpswap/constants";
+import type { ChainId } from "@icpswap/constants";
+import type { ERC20Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { SUPPORTED_CHAINS } from "constants/web3";
-import { useAccount, useChainId } from "wagmi";
 import { useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import { ERC20Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { useAccount, useChainId } from "wagmi";
 
 import { addTransaction, cancelTransaction, removeTransaction } from "./reducer";
-import { TransactionDetails, TransactionInfo, TransactionType } from "./types";
+import { type TransactionDetails, type TransactionInfo, TransactionType } from "./types";
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -77,7 +77,7 @@ function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const chainId = useChainId();
   const state = useAppSelector((state) => state.transactions);
 
-  return chainId ? state[chainId] ?? {} : {};
+  return chainId ? (state[chainId] ?? {}) : {};
 }
 
 export function useTransaction(transactionHash?: string): TransactionDetails | undefined {
@@ -115,7 +115,7 @@ export function useIsTransactionConfirmed(transactionHash?: string): boolean {
  * @param tx to check for recency
  */
 function isTransactionRecent(tx: TransactionDetails): boolean {
-  return new Date().getTime() - tx.addedTime < 86_400_000;
+  return Date.now() - tx.addedTime < 86_400_000;
 }
 
 function usePendingApprovalAmount(token: ERC20Token | Null, spender: string | Null): BigNumber | undefined {

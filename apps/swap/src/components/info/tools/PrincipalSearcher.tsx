@@ -1,9 +1,9 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { isValidPrincipal } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
+import { isValidPrincipal } from "@icpswap/utils";
 import { FilledTextField } from "components/index";
-import { Null } from "@icpswap/types";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 interface PrincipalSearcherProps {

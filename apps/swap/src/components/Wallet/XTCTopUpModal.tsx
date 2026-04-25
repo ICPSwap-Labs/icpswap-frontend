@@ -1,24 +1,24 @@
-import { useCallback, useMemo, useState } from "react";
-import { Modal, MaxButton, Flex, FilledTextField, NumberFilledTextField } from "components/index";
-import { Box, Button, Typography } from "components/Mui";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { XTC } from "constants/tokens";
+import { ResultStatus } from "@icpswap/types";
 import {
-  parseTokenAmount,
-  formatTokenAmount,
-  numberToString,
-  isValidPrincipal,
   BigNumber,
+  formatTokenAmount,
   isUndefinedOrNull,
-  nonUndefinedOrNull,
   isUndefinedOrNullOrEmpty,
+  isValidPrincipal,
+  nonUndefinedOrNull,
+  numberToString,
+  parseTokenAmount,
 } from "@icpswap/utils";
-import { useTips, TIP_LOADING, TIP_SUCCESS, TIP_ERROR } from "hooks/useTips";
+import { FilledTextField, Flex, MaxButton, Modal, NumberFilledTextField } from "components/index";
+import { Box, Button, Typography } from "components/Mui";
+import { XTC } from "constants/tokens";
 import { useXTCTopUp } from "hooks/token/dip20";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { TIP_ERROR, TIP_LOADING, TIP_SUCCESS, useTips } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
-import { ResultStatus } from "constants/index";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 const XTC_TOP_UP_AMOUNT_DECIMALS = 4;
 
@@ -36,7 +36,7 @@ export interface Values {
 export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) {
   const { t } = useTranslation();
   const principal = useAccountPrincipal();
-  const { result: balance, loading } = useTokenBalance(XTC.address, principal);
+  const { result: balance, loading } = useTokenBalance({ tokenId: XTC.address, account: principal });
   const [canisterId, setCanisterId] = useState<undefined | string>(undefined);
   const [amount, setAmount] = useState<string | undefined>(undefined);
   const [topUpLoading, setTopUpLoading] = useState<boolean>(false);
@@ -53,7 +53,7 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
   const XTCTopUp = useXTCTopUp();
 
   const handleTopUp = useCallback(async () => {
-    if (loading || isUndefinedOrNullOrEmpty(canisterId) || isUndefinedOrNullOrEmpty(amount)) return;
+    if (topUpLoading || isUndefinedOrNullOrEmpty(canisterId) || isUndefinedOrNullOrEmpty(amount)) return;
 
     if (onClose) onClose();
     setTopUpLoading(true);
@@ -77,7 +77,7 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
     }
 
     setTopUpLoading(false);
-  }, [topUpLoading, setTopUpLoading, canisterId, amount]);
+  }, [topUpLoading, canisterId, amount, openTip, XTCTopUp, closeTip, onClose, onTopUpSuccess, t]);
 
   const handleMax = useCallback(() => {
     if (nonUndefinedOrNull(balance)) {
@@ -96,7 +96,7 @@ export function XTCTopUpModal({ open, onClose, onTopUpSuccess }: XTCTopUpProps) 
     if (new BigNumber(Number(amount)).isGreaterThan(parseTokenAmount(balance, XTC.decimals)))
       return t("common.error.insufficient.balance");
     return undefined;
-  }, [canisterId, balance, amount]);
+  }, [canisterId, balance, amount, t]);
 
   return (
     <Modal open={open} title={t("wallet.topUp.xtc")} onClose={onClose}>

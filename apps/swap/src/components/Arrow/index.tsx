@@ -1,5 +1,5 @@
-import { SvgIconProps } from "components/Mui";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import type { SvgIconProps } from "components/Mui";
+import { ArrowDownwardIcon } from "components/MuiIcon";
 
 export function DownArrow(props: SvgIconProps) {
   return <ArrowDownwardIcon {...props} sx={{ width: "16px", height: "16px" }} />;

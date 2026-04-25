@@ -1,9 +1,9 @@
-import { Flex, BodyCell } from "@icpswap/ui";
-import { useMemo } from "react";
+import type { FarmInfo, Null } from "@icpswap/types";
+import { BodyCell, Flex } from "@icpswap/ui";
+import { formatDollarAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { useUserTvlValue } from "hooks/staking-farm";
 import { useToken } from "hooks/useCurrency";
-import { formatDollarAmount, isUndefinedOrNull } from "@icpswap/utils";
-import type { FarmInfo, Null } from "@icpswap/types";
+import { useMemo } from "react";
 
 interface UserStakedCellProps {
   farmId: string;

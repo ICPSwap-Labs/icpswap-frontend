@@ -1,9 +1,8 @@
-import { useState, useMemo } from "react";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
 import { useToken } from "hooks/useCurrency";
-
-import Selector from "./selector";
+import { useMemo, useState } from "react";
 import { CurrencySelectorButton } from "./button";
+import Selector from "./selector";
 
 export interface CurrencySelectorProps {
   currencyId: string | undefined;
@@ -36,14 +35,14 @@ export function CurrencySelector({
   const [, token] = useToken(currencyId);
 
   const disabledCurrencyIds = useMemo(() => {
-    if (disabledCurrency && disabledCurrency.length) {
+    if (disabledCurrency?.length) {
       return disabledCurrency.map((currency) => currency?.address);
     }
     return [];
   }, [disabledCurrency]);
 
   const activeCurrencyIds = useMemo(() => {
-    if (activeCurrencies && activeCurrencies.length) {
+    if (activeCurrencies?.length) {
       return activeCurrencies.map((currency) => currency?.address);
     }
     return [];

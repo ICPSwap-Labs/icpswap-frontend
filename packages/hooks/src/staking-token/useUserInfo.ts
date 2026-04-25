@@ -1,8 +1,7 @@
-import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs } from "@icpswap/utils";
 import { stakingPool } from "@icpswap/actor";
-import type { StakingPoolUserInfo, PaginationResult } from "@icpswap/types";
-import { useCallsData } from "../useCallData";
+import type { PaginationResult, StakingPoolUserInfo } from "@icpswap/types";
+import { isAvailablePageArgs, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getStakingPoolUserInfo(canisterId: string, offset: number, limit: number) {
   return resultFormat<PaginationResult<StakingPoolUserInfo>>(
@@ -10,11 +9,17 @@ export async function getStakingPoolUserInfo(canisterId: string, offset: number,
   ).data;
 }
 
-export function useStakingPoolUserInfo(canisterId: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useStakingPoolUserInfo(
+  canisterId: string | undefined,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<StakingPoolUserInfo> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingPoolUserInfo", canisterId, offset, limit],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit) || !canisterId) return undefined;
       return await getStakingPoolUserInfo(canisterId, offset, limit);
-    }, [offset, limit, canisterId]),
-  );
+    },
+    enabled: isAvailablePageArgs(offset, limit) && !!canisterId,
+  });
 }

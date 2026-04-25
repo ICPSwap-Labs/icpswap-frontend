@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import CheckboxGroupContext from "./context";
 
 export interface CheckboxGroupProps {
@@ -11,7 +11,7 @@ export default function CheckboxGroup({ defaultChecked, onChange, children }: Ch
   const [checked, setChecked] = useState<string[]>([]);
 
   useEffect(() => {
-    if (defaultChecked && defaultChecked.length) {
+    if (defaultChecked?.length) {
       setChecked(defaultChecked);
     }
   }, [defaultChecked]);

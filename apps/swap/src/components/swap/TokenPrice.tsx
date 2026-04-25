@@ -1,9 +1,9 @@
-import { useMemo } from "react";
-import { Typography, TypographyProps } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { BigNumber, formatDollarTokenPrice, formatTokenPrice } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { Typography, type TypographyProps } from "components/Mui";
 import { useUSDPriceById } from "hooks/index";
+import { useMemo } from "react";
 
 export interface TokenPriceProps {
   price: string | Null;

@@ -1,5 +1,5 @@
 export function ownerDocument(node: Node | null | undefined): Document {
-  return (node && node.ownerDocument) || document;
+  return node?.ownerDocument || document;
 }
 
 export function ownerWindow(node: Node | null): Window {

@@ -1,7 +1,6 @@
 import { AuthClient } from "@honopu/auth-client";
-import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
-import type { Identity } from "@dfinity/agent";
-import { type CreateActorArgs, ConnectorAbstract, Connector, WalletConnectorConfig } from "./connectors";
+import { Actor, type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
+import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds
 
@@ -13,7 +12,7 @@ export class ICPSwapConnector implements ConnectorAbstract {
     dev: boolean;
   };
 
-  private identity?: Identity;
+  private identity?: any;
 
   private principal?: string;
 
@@ -92,7 +91,7 @@ export class ICPSwapConnector implements ConnectorAbstract {
     this.identity = identity;
     this.principal = principal;
 
-    window.localStorage.setItem("ICPSwap-wallet-expire-time", (new Date().getTime() + EXPIRE_TIME * 1000).toString());
+    window.localStorage.setItem("ICPSwap-wallet-expire-time", (Date.now() + EXPIRE_TIME * 1000).toString());
 
     return true;
   }
@@ -104,7 +103,7 @@ export class ICPSwapConnector implements ConnectorAbstract {
   async expired() {
     const iiExpireTime = window.localStorage.getItem("ICPSwap-wallet-expire-time");
     if (!iiExpireTime) return true;
-    return new Date().getTime() >= Number(iiExpireTime);
+    return Date.now() >= Number(iiExpireTime);
   }
 }
 

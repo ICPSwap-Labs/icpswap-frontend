@@ -1,23 +1,19 @@
-import { useState, useMemo, useCallback } from "react";
-import { Typography, Box, useMediaQuery, makeStyles, InputAdornment, useTheme, Theme, BoxProps } from "components/Mui";
-import { useNavigate } from "react-router-dom";
-import { NoData, TokenImage, TabPanel, type Tab, ScrollTop } from "components/index";
+import { getPoolAPR, useDebouncedChangeHandler, useNodeInfoAllPools, useTokensFromList } from "@icpswap/hooks";
+import { ICP } from "@icpswap/tokens";
 import {
+  APRPanel,
+  BodyCell,
+  FeeTierPercentLabel,
+  FilledTextField,
+  Flex,
   Header,
   HeaderCell,
-  BodyCell,
-  TableRow,
-  SortDirection,
-  FeeTierPercentLabel,
-  OnlyTokenList,
-  Flex,
-  LoadingRow,
-  FilledTextField,
-  APRPanel,
   Link,
+  LoadingRow,
+  OnlyTokenList,
+  SortDirection,
+  TableRow,
 } from "@icpswap/ui";
-import { useTokensFromList, useNodeInfoAllPools, useDebouncedChangeHandler, getPoolAPR } from "@icpswap/hooks";
-import { ICP } from "@icpswap/tokens";
 import {
   BigNumber,
   formatDollarAmount,
@@ -26,14 +22,19 @@ import {
   percentToNum,
   urlStringFormat,
 } from "@icpswap/utils";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { generateLogoUrl } from "hooks/token/useTokenLogo";
-import { Search } from "react-feather";
-import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
-import { PoolTvlTooltip } from "components/swap/index";
-import { useTranslation } from "react-i18next";
+import { NoData, ScrollTop, type Tab, TabPanel, TokenImage } from "components/index";
 import { PoolCharts } from "components/liquidity/PoolCharts";
-import { PoolInfoWithApr } from "types/info";
+import { Box, type BoxProps, InputAdornment, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { PoolTvlTooltip } from "components/swap/index";
+import { useLoadAddLiquidityCallback } from "hooks/liquidity/index";
+import { useMediaQuerySM } from "hooks/theme";
+import { generateLogoUrl } from "hooks/token/useTokenLogo";
+import { useCallback, useMemo, useState } from "react";
+import { Search } from "react-feather";
+import { useTranslation } from "react-i18next";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useNavigate } from "react-router-dom";
+import type { PoolInfoWithApr } from "types/info";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -89,7 +90,7 @@ export function PoolTableHeader({ onSortChange, defaultSortFiled = "", timeBase 
   const { t } = useTranslation();
   const classes = useStyles();
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const headers: HeaderType[] = matchDownSM
     ? [
@@ -151,7 +152,7 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
   const classes = useStyles();
   const navigate = useNavigate();
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const [poolChartOpen, setPoolChartOpen] = useState(false);
 
@@ -185,15 +186,12 @@ export function PoolRow({ pool, index, timeBase }: PoolItemProps) {
     [navigate, pool],
   );
 
-  const handleChart: BoxProps["onClick"] = useCallback(
-    (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      event.nativeEvent.stopImmediatePropagation();
-      setPoolChartOpen(true);
-    },
-    [setPoolChartOpen],
-  );
+  const handleChart: BoxProps["onClick"] = useCallback((event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+    setPoolChartOpen(true);
+  }, []);
 
   return (
     <>
@@ -327,8 +325,8 @@ export function InfoPools() {
   const [timeBase, setTimeBase] = useState<"24H" | "7D">("24H");
   const [debounceSearchToken, debounceSetSearchToken] = useDebouncedChangeHandler(searchToken, setSearchToken, 300);
 
-  const { result: tokenList } = useTokensFromList();
-  const { result: allSwapPools } = useNodeInfoAllPools();
+  const { data: tokenList } = useTokensFromList();
+  const { data: allSwapPools } = useNodeInfoAllPools();
 
   const allPools = useMemo(() => {
     if (!allSwapPools || !tokenList) return undefined;
@@ -396,13 +394,10 @@ export function InfoPools() {
       .slice(0, PAGE_SIZE * page);
   }, [allPools, page, timeBase, sortField, sortDirection]);
 
-  const handleOnlyTokenList = useCallback(
-    (checked: boolean) => {
-      setOnlyTokenList(checked);
-      setPage(START_PAGE);
-    },
-    [setOnlyTokenList, setPage],
-  );
+  const handleOnlyTokenList = useCallback((checked: boolean) => {
+    setOnlyTokenList(checked);
+    setPage(START_PAGE);
+  }, []);
 
   const handleSortChange = (sortField: string, sortDirection: SortDirection) => {
     setSortDirection(sortDirection);
@@ -411,7 +406,7 @@ export function InfoPools() {
 
   const handleScrollNext = useCallback(() => {
     setPage(page + 1);
-  }, [setPage, page]);
+  }, [page]);
 
   const hasMore = useMemo(() => {
     if (!slicedPools || !allPools) return false;
@@ -423,161 +418,154 @@ export function InfoPools() {
       debounceSetSearchToken(value);
       setPage(START_PAGE);
     },
-    [debounceSetSearchToken, setPage],
+    [debounceSetSearchToken],
   );
 
-  const handleTabChange = useCallback(
-    (tab: Tab) => {
-      if (tab.key === "24h") {
-        setTimeBase("24H");
-      } else {
-        setTimeBase("7D");
-      }
-    },
-    [setTimeBase],
-  );
+  const handleTabChange = useCallback((tab: Tab) => {
+    if (tab.key === "24h") {
+      setTimeBase("24H");
+    } else {
+      setTimeBase("7D");
+    }
+  }, []);
 
   return (
-    <>
-      <Box className={classes.card} id="scroll-main-wrapper">
-        <Box
+    <Box className={classes.card} id="scroll-main-wrapper">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          padding: "14px 24px",
+          "@media(max-width: 640px)": {
+            flexDirection: "column",
+            gap: "16px 0",
+            padding: "24px 16px",
+          },
+        }}
+      >
+        <Flex gap="0 8px" sx={{ width: "fit-content" }}>
+          <Typography sx={{ whiteSpace: "nowrap" }}>{t("common.time.base")}</Typography>
+
+          <TabPanel
+            size="small"
+            tabs={[
+              { key: "24h", value: "24H" },
+              { key: "7d", value: "7D" },
+            ]}
+            onChange={handleTabChange}
+          />
+        </Flex>
+
+        <Flex
+          align="center"
+          gap="0 16px"
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            padding: "14px 24px",
             "@media(max-width: 640px)": {
               flexDirection: "column",
               gap: "16px 0",
-              padding: "24px 16px",
+              alignItems: "flex-start",
             },
           }}
         >
-          <Flex gap="0 8px" sx={{ width: "fit-content" }}>
-            <Typography sx={{ whiteSpace: "nowrap" }}>{t("common.time.base")}</Typography>
-
-            <TabPanel
-              size="small"
-              tabs={[
-                { key: "24h", value: "24H" },
-                { key: "7d", value: "7D" },
-              ]}
-              onChange={handleTabChange}
-            />
-          </Flex>
-
-          <Flex
-            align="center"
-            gap="0 16px"
-            sx={{
-              "@media(max-width: 640px)": {
-                flexDirection: "column",
-                gap: "16px 0",
-                alignItems: "flex-start",
-              },
-            }}
-          >
-            <OnlyTokenList onChange={handleOnlyTokenList} checked={onlyTokenList} />
-            <Box sx={{ width: "260px" }}>
-              <FilledTextField
-                width="100%"
-                fullHeight
-                placeholder={t("common.search.by.token")}
-                onChange={handleSearchInput}
-                background="level1"
-                placeholderSize="14px"
-                fontSize="14px"
-                textFieldProps={{
-                  slotProps: {
-                    input: {
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <Search size={14} color={theme.colors.darkTextSecondary} />
-                        </InputAdornment>
-                      ),
-                    },
+          <OnlyTokenList onChange={handleOnlyTokenList} checked={onlyTokenList} />
+          <Box sx={{ width: "260px" }}>
+            <FilledTextField
+              width="100%"
+              fullHeight
+              placeholder={t("common.search.by.token")}
+              onChange={handleSearchInput}
+              background="level1"
+              placeholderSize="14px"
+              fontSize="14px"
+              textFieldProps={{
+                slotProps: {
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search size={14} color={theme.colors.darkTextSecondary} />
+                      </InputAdornment>
+                    ),
                   },
-                }}
-              />
-            </Box>
-          </Flex>
-        </Box>
-
-        <Box sx={{ width: "100%" }}>
-          <Box
-            sx={{
-              position: "sticky",
-              top: "64px",
-              background: theme.palette.background.level3,
-              zIndex: 10,
-              width: "100%",
-              maxWidth: "1200px",
-            }}
-          >
-            <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" timeBase={timeBase} />
+                },
+              }}
+            />
           </Box>
-
-          <Box
-            sx={{
-              minWidth: "1200px",
-              height: nonUndefinedOrNull(slicedPools)
-                ? `${new BigNumber(slicedPools.length).multipliedBy(73).toString()}px`
-                : "640px",
-              "@media(max-width: 640px)": {
-                width: "100%",
-                minWidth: "auto",
-                height: nonUndefinedOrNull(slicedPools)
-                  ? `${new BigNumber(slicedPools.length).multipliedBy(65).toString()}px`
-                  : "640px",
-              },
-            }}
-          >
-            <InfiniteScroll
-              dataLength={slicedPools?.length ?? 0}
-              next={handleScrollNext}
-              hasMore={hasMore}
-              loader={
-                <Box sx={{ padding: "24px" }}>
-                  <LoadingRow>
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                  </LoadingRow>
-                </Box>
-              }
-            >
-              {slicedPools && slicedPools.length > 0 ? (
-                <>
-                  {(slicedPools ?? []).map((pool, index) => (
-                    <PoolRow key={pool.poolId} index={index + 1} pool={pool} timeBase={timeBase} />
-                  ))}
-                </>
-              ) : isUndefinedOrNull(slicedPools) ? (
-                <Box sx={{ padding: "24px" }}>
-                  <LoadingRow>
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                  </LoadingRow>
-                </Box>
-              ) : (
-                <NoData />
-              )}
-            </InfiniteScroll>
-          </Box>
-        </Box>
-
-        <ScrollTop target="scroll-main-wrapper" heightShowScrollTop={510} />
+        </Flex>
       </Box>
-    </>
+
+      <Box sx={{ width: "100%" }}>
+        <Box
+          sx={{
+            position: "sticky",
+            top: "64px",
+            background: theme.palette.background.level3,
+            zIndex: 10,
+            width: "100%",
+            maxWidth: "1200px",
+          }}
+        >
+          <PoolTableHeader onSortChange={handleSortChange} defaultSortFiled="volumeUSD" timeBase={timeBase} />
+        </Box>
+
+        <Box
+          sx={{
+            minWidth: "1200px",
+            height: nonUndefinedOrNull(slicedPools)
+              ? `${new BigNumber(slicedPools.length).multipliedBy(73).toString()}px`
+              : "640px",
+            "@media(max-width: 640px)": {
+              width: "100%",
+              minWidth: "auto",
+              height: nonUndefinedOrNull(slicedPools)
+                ? `${new BigNumber(slicedPools.length).multipliedBy(65).toString()}px`
+                : "640px",
+            },
+          }}
+        >
+          <InfiniteScroll
+            dataLength={slicedPools?.length ?? 0}
+            next={handleScrollNext}
+            hasMore={hasMore}
+            loader={
+              <Box sx={{ padding: "24px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
+            }
+          >
+            {slicedPools && slicedPools.length > 0 ? (
+              (slicedPools ?? []).map((pool, index) => (
+                <PoolRow key={pool.poolId} index={index + 1} pool={pool} timeBase={timeBase} />
+              ))
+            ) : isUndefinedOrNull(slicedPools) ? (
+              <Box sx={{ padding: "24px" }}>
+                <LoadingRow>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </LoadingRow>
+              </Box>
+            ) : (
+              <NoData />
+            )}
+          </InfiniteScroll>
+        </Box>
+      </Box>
+
+      <ScrollTop target="scroll-main-wrapper" heightShowScrollTop={510} />
+    </Box>
   );
 }

@@ -1,7 +1,7 @@
+import type { ChainKeyETHMinterInfo, IcpSwapAPITokenInfo } from "@icpswap/types";
 import { createAction } from "@reduxjs/toolkit";
-import { SupportedLocale } from "constants/locales";
-import { TokenListMetadata } from "types/token-list";
-import { ChainKeyETHMinterInfo, type IcpSwapAPITokenInfo } from "@icpswap/types";
+import type { SupportedLocale } from "constants/locales";
+import type { TokenListMetadata } from "types/token-list";
 
 export const updateUserLocale = createAction<SupportedLocale>("global/updateUserLocale");
 

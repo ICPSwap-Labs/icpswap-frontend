@@ -1,12 +1,10 @@
-import { useEffect, useState, useImperativeHandle, forwardRef, Ref, useRef } from "react";
-import { Grid, TextField, Typography, useTheme, makeStyles, Theme } from "components/Mui";
 import { Loading } from "@icpswap/ui";
-import { isMobile } from "react-device-detect";
+import Identity, { type IdentityRef, type SubmitLoadingProps } from "components/Identity";
+import { Grid, makeStyles, TextField, type Theme, Typography, useTheme } from "components/Mui";
+import { useIsMobile } from "hooks/theme/useIsMobile";
 import useFileUpload from "hooks/useNFTUpload";
+import { forwardRef, type Ref, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { getFileType } from "utils/type";
-import { Identity as CallIdentity } from "types/index";
-import Identity, { SubmitLoadingProps, IdentityRef } from "components/Identity";
-
 import CloudUploadIcon from "./UploadCloudIcon";
 
 const useStyles = makeStyles(() => {
@@ -87,6 +85,7 @@ const Upload = forwardRef(
     });
 
     const identityRef = useRef<IdentityRef>(null);
+    const isMobile = useIsMobile();
 
     const {
       loading: uploadLoading,
@@ -109,7 +108,7 @@ const Upload = forwardRef(
       if (props.defaultValue) {
         setImagePreview(props.defaultValue);
       }
-    }, [props]);
+    }, [props.defaultValue]);
 
     useEffect(() => {
       if (filePath) {
@@ -122,33 +121,33 @@ const Upload = forwardRef(
           });
         }
       }
-    }, [filePath, fileType]);
+    }, [filePath, fileType, batchId, onUploaded]);
 
     useEffect(() => {
       if (onFileError) {
         onFileError(fileError);
       }
-    }, [fileError]);
+    }, [fileError, onFileError]);
 
-    async function uploadCb() {
+    const uploadCb = useCallback(async () => {
       if (file) {
         return await uploadCallback({
           file,
           canisterId,
         });
       }
-    }
+    }, [file, uploadCallback, canisterId]);
 
     useImperativeHandle(
       ref,
       () => ({
         uploadCb,
       }),
-      [uploadCallback, file, uploadCb],
+      [uploadCb],
     );
 
     const handleIdentityFileUpload = async (
-      identity: CallIdentity,
+      _identity: boolean,
       { loading }: SubmitLoadingProps,
       { file, canisterId }: any,
     ) => {

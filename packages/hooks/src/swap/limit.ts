@@ -1,16 +1,26 @@
-import { useCallback } from "react";
-import { swapPool, limitTransaction } from "@icpswap/actor";
-import type { LimitOrderKey, LimitOrderValue, Null, LimitTransactionResult, LimitOrder } from "@icpswap/types";
-import { resultFormat, isAvailablePageArgs, nonUndefinedOrNull, isUndefinedOrNull } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
-
-import { useCallsData } from "../useCallData";
+import { Principal } from "@icp-sdk/core/principal";
+import { swapPool } from "@icpswap/actor";
+import type {
+  IcpSwapAPIPageResult,
+  InfoSwapRecordResponse,
+  LimitOrder,
+  LimitOrderKey,
+  LimitOrderValue,
+  Null,
+} from "@icpswap/types";
+import {
+  getTimeRangeForPastDays,
+  icpswap_fetch_get,
+  isAvailablePageArgs,
+  isUndefinedOrNull,
+  nonUndefinedOrNull,
+  resultFormat,
+} from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function placeOrder(canisterId: string, positionId: bigint, tickLimit: bigint) {
   return resultFormat<boolean>(
-    await (
-      await swapPool(canisterId, true)
-    ).addLimitOrder({
+    await (await swapPool(canisterId, true)).addLimitOrder({
       positionId,
       tickLimit,
     }),
@@ -26,14 +36,19 @@ export async function getUserLimitOrders(canisterId: string, principal: string) 
   return resultFormat<Array<LimitOrder>>(result).data;
 }
 
-export function useUserLimitOrders(canisterId: string | Null, principal: string | Null, refresh?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserLimitOrders(
+  canisterId: string | Null,
+  principal: string | Null,
+  refresh?: number,
+): UseQueryResult<LimitOrder[] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserLimitOrders", canisterId, principal, refresh],
+    queryFn: async () => {
       if (!canisterId || !principal) return undefined;
       return await getUserLimitOrders(canisterId, principal);
-    }, [canisterId, principal]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId && !!principal,
+  });
 }
 
 export async function getLimitOrders(canisterId: string) {
@@ -43,13 +58,22 @@ export async function getLimitOrders(canisterId: string) {
   }>(await (await swapPool(canisterId)).getLimitOrders()).data;
 }
 
-export function useLimitOrders(canisterId: string | Null) {
-  return useCallsData(
-    useCallback(async () => {
+export function useLimitOrders(canisterId: string | Null): UseQueryResult<
+  | {
+      lowerLimitOrders: Array<[LimitOrderKey, LimitOrderValue]>;
+      upperLimitOrders: Array<[LimitOrderKey, LimitOrderValue]>;
+    }
+  | undefined,
+  Error
+> {
+  return useQuery({
+    queryKey: ["useLimitOrders", canisterId],
+    queryFn: async () => {
       if (isUndefinedOrNull(canisterId)) return undefined;
       return await getLimitOrders(canisterId);
-    }, [canisterId]),
-  );
+    },
+    enabled: !isUndefinedOrNull(canisterId),
+  });
 }
 
 export async function getPoolLimitAvailableState(canisterId: string) {
@@ -57,37 +81,53 @@ export async function getPoolLimitAvailableState(canisterId: string) {
   return resultFormat<boolean>(result).data;
 }
 
-export function usePoolLimitAvailableState(canisterId: string | Null, refresh?: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function usePoolLimitAvailableState(
+  canisterId: string | Null,
+  refresh?: number,
+): UseQueryResult<boolean | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePoolLimitAvailableState", canisterId, refresh],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getPoolLimitAvailableState(canisterId);
-    }, [canisterId]),
-    refresh,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
-export async function getUserLimitTransactions(principal: string, start: number, offset: number, limit: number) {
-  const result = await (await limitTransaction()).get(principal, BigInt(start), BigInt(offset), BigInt(limit));
-
-  return resultFormat<LimitTransactionResult>(result).data;
+interface GetUserLimitTransactionsProps {
+  principal: string;
+  page: number;
+  limit: number;
+  begin: number;
+  end: number;
 }
 
+export async function getUserLimitTransactions({ principal, page, limit, begin, end }: GetUserLimitTransactionsProps) {
+  return (
+    await icpswap_fetch_get<IcpSwapAPIPageResult<InfoSwapRecordResponse>>(
+      `/info/record/limitOrder/list?principal=${principal}&page=${page}&limit=${limit}&begin=${begin}&end=${end}`,
+    )
+  ).data;
+}
+
+// Default to 180 days history
 export function useUserLimitTransactions(
   principal: string | undefined,
-  start: number | Null,
   offset: number,
   limit: number,
   refresh?: number,
-) {
-  return useCallsData<LimitTransactionResult>(
-    useCallback(async () => {
-      if (nonUndefinedOrNull(start) && nonUndefinedOrNull(principal) && isAvailablePageArgs(offset, limit)) {
-        return await getUserLimitTransactions(principal, start, offset, limit);
-      }
+): UseQueryResult<IcpSwapAPIPageResult<InfoSwapRecordResponse> | undefined, Error> {
+  const enabled = nonUndefinedOrNull(principal) && isAvailablePageArgs(offset, limit);
+  return useQuery({
+    queryKey: ["useUserLimitTransactions", principal, offset, limit, refresh],
+    queryFn: async () => {
+      if (isUndefinedOrNull(principal)) return undefined;
 
-      return undefined;
-    }, [start, principal, offset, limit]),
-    refresh,
-  );
+      const { start, end } = getTimeRangeForPastDays(180 - 1);
+
+      return await getUserLimitTransactions({ principal, page: offset, limit, begin: start, end });
+    },
+    enabled,
+  });
 }

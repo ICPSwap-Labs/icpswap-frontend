@@ -1,10 +1,10 @@
-import { Typography } from "components/Mui";
+import { type Position, type Token, tickToPrice } from "@icpswap/swap-sdk";
 import { parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
-import { Position, tickToPrice, Token } from "@icpswap/swap-sdk";
 import { Flex, TextButton, TokenImage } from "components/index";
-import { isUseTransfer } from "utils/token/index";
-import { StepContents, StepContent } from "types/step";
+import { Typography } from "components/Mui";
 import i18n from "i18n/index";
+import type { StepContent, StepContents } from "types/step";
+import { isUseTransfer } from "utils/token/index";
 
 export interface GetLimitOrderStepsProps {
   position: Position | undefined;
@@ -101,9 +101,9 @@ export function getLimitOrderSteps({
         { label: i18n.t("common.canister.id"), value: inputToken.address },
       ],
       errorActions: [
-        <>
-          <TextButton onClick={handleReclaim}>{i18n.t("common.reclaim")}</TextButton>
-        </>,
+        <TextButton key="reclaim" onClick={handleReclaim}>
+          {i18n.t("common.reclaim")}
+        </TextButton>,
       ],
       errorMessage: i18n.t("common.check.balance.tips"),
     },

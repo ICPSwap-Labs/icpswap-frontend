@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import type { Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { useMemo } from "react";
 
 interface UsePoolAPRProps {
   volumeUSD: string | number | bigint | Null;

@@ -1,19 +1,19 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { useMediaQuery, useTheme } from "../Mui";
+import Dashboard from "./Dashboard";
+import DexScreener from "./DexScreener";
 import DiscordIcon from "./Discord";
-import TwitterIcon from "./Twitter";
-import TelegramIcon from "./Telegram";
 import DistriktIcon from "./Distrikt";
 import DscvrIcon from "./Dscvr";
+import Explorer from "./Explorer";
+import GithubIcon from "./Github";
 import InstagramIcon from "./Instagram";
 import MediumIcon from "./Medium";
-import WebsiteIcon from "./Website";
-import OtherIcon from "./Other";
-import GithubIcon from "./Github";
 import OpenChatIcon from "./OpenChat";
-import Dashboard from "./Dashboard";
-import Explorer from "./Explorer";
-import DexScreener from "./DexScreener";
+import OtherIcon from "./Other";
+import TelegramIcon from "./Telegram";
+import TwitterIcon from "./Twitter";
+import WebsiteIcon from "./Website";
 
 export const Icons: { [key: string]: FC<{ width?: number }> } = {
   Website: WebsiteIcon,

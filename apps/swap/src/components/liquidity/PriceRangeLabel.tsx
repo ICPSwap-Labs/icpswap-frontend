@@ -1,7 +1,7 @@
-import { Box, Typography, useTheme } from "components/Mui";
+import type { ChartTimeEnum, Null } from "@icpswap/types";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatTokenPrice, nonUndefinedOrNull } from "@icpswap/utils";
-import { Null, ChartTimeEnum } from "@icpswap/types";
+import { Box, Typography, useTheme } from "components/Mui";
 import { SWAP_CHART_RANGE_PRICE_COLOR } from "constants/swap";
 import { useTranslation } from "react-i18next";
 

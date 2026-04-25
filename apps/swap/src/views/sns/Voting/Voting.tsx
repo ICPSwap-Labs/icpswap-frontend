@@ -1,19 +1,18 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { useProposal, useListNeurons, useNervousSystemParameters, useParsedQueryString } from "@icpswap/hooks";
-import { useCallback, useMemo, useState } from "react";
-import { LoadingRow, TokenImage, MainCard, Wrapper, Flex } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { useListNeurons, useNervousSystemParameters, useParsedQueryString, useProposal } from "@icpswap/hooks";
 import { nowInSeconds } from "@icpswap/utils";
+import { Flex, LoadingRow, MainCard, TokenImage, Wrapper } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
-import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useMemo, useState } from "react";
 import { ArrowLeft } from "react-feather";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { getNnsLedgerId, getNnsRootId, nnsEqualToGovernance } from "utils/sns/utils";
-
-import { ProposalDetails } from "./components/ProposalDetails";
-import { VotingResult } from "./components/VotingResult";
-import { ProposalSummary } from "./components/Summary";
 import { ProposalPayload } from "./components/Payload";
+import { ProposalDetails } from "./components/ProposalDetails";
+import { ProposalSummary } from "./components/Summary";
+import { VotingResult } from "./components/VotingResult";
 
 interface ProposalSwitchProps {
   proposal_id: string;
@@ -31,7 +30,7 @@ function ProposalSwitch({ proposal_id, latest_id, governance_id, prev }: Proposa
     } else {
       navigate(`/sns/voting/${governance_id}/${Number(proposal_id) + 1}?latest_id=${latest_id}`);
     }
-  }, [navigate, prev, proposal_id, governance_id]);
+  }, [navigate, prev, proposal_id, governance_id, latest_id]);
 
   return (
     <Box
@@ -65,20 +64,20 @@ export default function Voting() {
   const root_id = getNnsRootId(sns);
 
   const [, token] = useToken(ledger_id);
-  const { result: proposal_data, loading } = useProposal(
+  const { data: proposal_data, isLoading: loading } = useProposal(
     governance_id,
     proposal_id ? BigInt(proposal_id) : undefined,
     refreshTrigger,
   );
 
-  const { result: listNeurons } = useListNeurons({
+  const { data: listNeurons } = useListNeurons({
     canisterId: governance_id,
     limit: 100,
     of_principal: principal,
     refresh: refreshTrigger,
   });
 
-  const { result: neuronSystemParameters } = useNervousSystemParameters(governance_id);
+  const { data: neuronSystemParameters } = useNervousSystemParameters(governance_id);
 
   const { title, isExecuted } = useMemo(() => {
     if (!proposal_data) return {};

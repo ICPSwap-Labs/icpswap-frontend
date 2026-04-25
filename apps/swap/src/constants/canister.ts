@@ -1,13 +1,13 @@
 /* eslint-disable global-require */
 /* eslint-disable @typescript-eslint/no-var-requires */
-import { actor, Actor } from "@icpswap/actor";
-import { network, NETWORK, host } from "./server";
+import { Actor, actor } from "@icpswap/actor";
+import { host, NETWORK, network } from "./server";
 
 let CanisterIdsJson: { [key: string]: { [key1: string]: string } } = {};
 
 try {
-  const canister_ids = require("../canister_ids.json");
-  const temp_canister_ids = require("../temp_canister_ids.json");
+  const canister_ids = (await import("../canister_ids.json")).default;
+  const temp_canister_ids = (await import("../temp_canister_ids.json")).default;
 
   CanisterIdsJson = {
     ...canister_ids,
@@ -41,13 +41,9 @@ export const CANISTER_NAMES = {
   SingleSmartChef: "SingleSmartChef",
   SwapStaker: "SwapStaker",
   FileActor: "File",
-  SwapRecord: "BaseDataStructure",
-  SwapGraphPool: "Pools",
+
   TokenList: "TokenList",
 
-  V3SwapFactory: "SwapFactory",
-  V3SwapPool: "SwapPool",
-  V3SwapNFT: "SwapNFT",
   PassCodeManager: "PassCodeManager",
 
   ClaimStorage: "ClaimStorage",
@@ -55,9 +51,6 @@ export const CANISTER_NAMES = {
   FarmController: "FarmController",
   StakingTokenController: "StakingTokenController",
   StakeIndex: "StakeIndex",
-
-  NodeIndex: "node_index",
-  GlobalIndex: "global_index",
 };
 
 export const fileCanisterId = getCanisterId(CANISTER_NAMES.FILE);
@@ -67,14 +60,12 @@ export const SwapNFTCanisterId = getCanisterId(CANISTER_NAMES.SwapNFTCanister);
 export const NFTCanisterController = getCanisterId(CANISTER_NAMES.NFTCanisterController);
 export const ClaimStorageId = getCanisterId(CANISTER_NAMES.ClaimStorage);
 export const NFTTradeTokenCanisterId = WICPCanisterId;
-export const V3SwapNFTCanisterId = getCanisterId(CANISTER_NAMES.V3SwapNFT);
 export const FarmControllerId = getCanisterId(CANISTER_NAMES.FarmController);
-export const NodeIndexId = getCanisterId(CANISTER_NAMES.NodeIndex);
-export const GlobalId = getCanisterId(CANISTER_NAMES.GlobalIndex);
 export const PassCodeManagerId = getCanisterId(CANISTER_NAMES.PassCodeManager);
 
 Actor.setActorCanisterIds(canisterIds);
 actor.setHost(host);
+actor.setLog(import.meta.env.VITE_APP_ENV === "development");
 
 export const ALL_CANISTER_IDS = [...Object.values(canisterIds)];
 

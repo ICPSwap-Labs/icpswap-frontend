@@ -1,61 +1,25 @@
-import { memo, useState, useMemo, useCallback } from "react";
-import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
-import { Token, Price, Pool } from "@icpswap/swap-sdk";
-import { Bound, FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
-import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
-import { TokenToggle } from "components/TokenToggle";
-import { isDarkTheme } from "utils/index";
-import { NumberTextField } from "components/index";
+import { usePoolPricePeriodRange } from "@icpswap/hooks";
+import type { Pool, Price, Token } from "@icpswap/swap-sdk";
+import { ChartTimeEnum, type Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Null, ChartTimeEnum } from "@icpswap/types";
-import { usePoolPricePeriodRange } from "@icpswap/hooks";
-import { useTranslation } from "react-i18next";
-import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
-import PriceRangeChart from "components/liquidity/PriceRangeChart";
+import { NumberTextField } from "components/index";
+import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
 import { FullRangeWarning } from "components/liquidity/FullRangeWarning";
-import { PriceRangeSelector } from "components/liquidity/PriceRangeSelector";
-import { RangeButton } from "components/liquidity/RangeButton";
+import { AutoPriceRangeButton } from "components/liquidity/PriceRange/Auto";
+import PriceRangeChart from "components/liquidity/PriceRangeChart";
 import { PriceRangeChartTimeButtons } from "components/liquidity/PriceRangeChartTimeButtons";
 import { PriceRangeLabel } from "components/liquidity/PriceRangeLabel";
-import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
-import { AutoPriceRangeButton } from "components/liquidity/PriceRange/Auto";
-
-const useSetPriceStyle = makeStyles((theme: Theme) => {
-  return {
-    startPriceDescription: {
-      padding: "16px",
-      borderRadius: "12px",
-      border: `1px solid ${theme.colors.warningDark}`,
-      backgroundColor: theme.palette.background.level3,
-      ". description": {
-        color: theme.colors.warningDark,
-        fontSize: "12px",
-      },
-    },
-    startPrice: {
-      border: isDarkTheme(theme) ? "1px solid #29314F" : `1px solid ${theme.colors.lightGray200BorderColor}`,
-      background: isDarkTheme(theme) ? "transparent" : "#fff",
-      borderRadius: "12px",
-      height: "51px",
-      padding: "0 14px",
-    },
-    priceRangeInput: {
-      position: "relative",
-    },
-    fullRangeButton: {
-      borderRadius: "12px",
-      backgroundColor: isDarkTheme(theme) ? theme.colors.darkLevel1 : "#ffffff",
-      border: theme.palette.border.gray200,
-      color: isDarkTheme(theme) ? theme.palette.grey[700] : theme.colors.lightTextPrimary,
-      textTransform: "none",
-      "&:hover": {
-        backgroundColor: theme.palette.mode === "dark" ? theme.palette.dark.light + 20 : theme.palette.primary.light,
-        borderColor: theme.palette.mode === "dark" ? "#29314F" : theme.palette.grey[100],
-      },
-    },
-  };
-});
+import { PriceRangeSelector } from "components/liquidity/PriceRangeSelector";
+import { RangeButton } from "components/liquidity/RangeButton";
+import { Box, Typography, useTheme } from "components/Mui";
+import { TokenToggle } from "components/TokenToggle";
+import { MAX_SWAP_INPUT_LENGTH } from "constants/index";
+import { Bound, type FeeAmount, ZOOM_LEVEL_INITIAL_MIN_MAX } from "constants/swap";
+import { memo, useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { isDarkTheme } from "utils/index";
+import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 const RANGE_BUTTONS = [
   { value: "5", text: "± 5%" },
@@ -118,8 +82,7 @@ export const PriceRange = memo(
   }: PriceRangeProps) => {
     const { t } = useTranslation();
     const theme = useTheme();
-    const classes = useSetPriceStyle();
-    const { result: periodPriceRange } = usePoolPricePeriodRange(pool?.id);
+    const { data: periodPriceRange } = usePoolPricePeriodRange(pool?.id);
 
     const [chartTime, setChartTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
     const [fullRangeWaring, setFullRangeWarning] = useState(false);
@@ -151,13 +114,13 @@ export const PriceRange = memo(
           }
         }
       },
-      [setRangeValue, getRangeByPercent],
+      [getRangeByPercent, onLeftRangeInput, onRightRangeInput],
     );
 
     const handleIUnderstand = useCallback(() => {
       setFullRangeWarning(true);
       getSetFullRange();
-    }, []);
+    }, [getSetFullRange]);
 
     const handleReset = useCallback(() => {
       if (feeAmount && price) {
@@ -171,7 +134,7 @@ export const PriceRange = memo(
         setRangeValue(null);
         setFullRangeWarning(false);
       }
-    }, [price, ZOOM_LEVEL_INITIAL_MIN_MAX, feeAmount, onLeftRangeInput, onRightRangeInput, setRangeValue]);
+    }, [price, feeAmount, onLeftRangeInput, onRightRangeInput]);
 
     const fullRangeShow = useMemo(() => {
       return rangeValue === "FullRange" && !fullRangeWaring;
@@ -200,17 +163,17 @@ export const PriceRange = memo(
         poolPriceLower: isSorted
           ? poolPriceLower
           : poolPriceLower
-          ? poolPriceUpper
-            ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
-            : null
-          : null,
+            ? poolPriceUpper
+              ? new BigNumber(1).dividedBy(poolPriceUpper).toString()
+              : null
+            : null,
         poolPriceUpper: isSorted
           ? poolPriceUpper
           : poolPriceUpper
-          ? poolPriceLower
-            ? new BigNumber(1).dividedBy(poolPriceLower).toString()
-            : null
-          : null,
+            ? poolPriceLower
+              ? new BigNumber(1).dividedBy(poolPriceLower).toString()
+              : null
+            : null,
       };
     }, [periodPriceRange, chartTime, isSorted]);
 
@@ -222,7 +185,18 @@ export const PriceRange = memo(
               {t("liquidity.set.price")}
             </Typography>
             <Box mt={2}>
-              <Box className={classes.startPriceDescription}>
+              <Box
+                sx={{
+                  padding: "16px",
+                  borderRadius: "12px",
+                  border: `1px solid ${theme.colors.warningDark}`,
+                  backgroundColor: theme.palette.background.level3,
+                  ". description": {
+                    color: theme.colors.warningDark,
+                    fontSize: "12px",
+                  },
+                }}
+              >
                 <Typography color={theme.colors.warningDark} fontSize={12} lineHeight="16px">
                   {t("liquidity.set.price.description")}
                 </Typography>
@@ -242,7 +216,19 @@ export const PriceRange = memo(
                   onChange={(e) => onStartPriceInput(e.target.value)}
                 />
               </Box>
-              <Flex sx={{ margin: "16px 0" }} className={classes.startPrice} justify="space-between">
+              <Flex
+                sx={{
+                  margin: "16px 0",
+                  border: isDarkTheme(theme)
+                    ? "1px solid #29314F"
+                    : `1px solid ${theme.colors.lightGray200BorderColor}`,
+                  background: isDarkTheme(theme) ? "transparent" : "#fff",
+                  borderRadius: "12px",
+                  height: "51px",
+                  padding: "0 14px",
+                }}
+                justify="space-between"
+              >
                 <Typography sx={{ marginRight: "8px" }}>
                   {t("liquidity.current.token.price", {
                     symbol: tokenSymbolEllipsis({ symbol: baseCurrency?.symbol }),
@@ -327,7 +313,7 @@ export const PriceRange = memo(
               </Box>
             )}
 
-            <Box mt={4} className={classes.priceRangeInput}>
+            <Box mt={4} sx={{ position: "relative" }}>
               <Box
                 sx={{
                   opacity: fullRangeShow ? 0.05 : 1,
@@ -338,7 +324,7 @@ export const PriceRange = memo(
                     <PriceRangeSelector
                       label={t("common.min.price")}
                       value={
-                        ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : leftPrice?.toSignificant(5) ?? ""
+                        ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER] ? "0" : (leftPrice?.toSignificant(5) ?? "")
                       }
                       onRangeInput={onLeftRangeInput}
                       decrement={isSorted ? getDecrementLower : getIncrementUpper}
@@ -353,7 +339,7 @@ export const PriceRange = memo(
                     <PriceRangeSelector
                       label={t("common.max.price")}
                       value={
-                        ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : rightPrice?.toSignificant(6) ?? ""
+                        ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER] ? "∞" : (rightPrice?.toSignificant(6) ?? "")
                       }
                       onRangeInput={(value) => onRightRangeInput(value)}
                       decrement={isSorted ? getDecrementUpper : getIncrementLower}

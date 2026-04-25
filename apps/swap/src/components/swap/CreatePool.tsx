@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { useCallback, useMemo } from "react";
-import { Box, Typography, Button } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { Token } from "@icpswap/swap-sdk";
+import { Box, Button, Typography } from "components/Mui";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export interface CreatePoolProps {
   fontSize?: "12px" | "14px";
@@ -32,7 +32,7 @@ export function CreatePool({ inputToken, outputToken, fontSize = "14px", ui }: C
         `/swap?input=${inputToken.address}&output=${outputToken.address}`,
       )}`,
     );
-  }, [inputToken, outputToken]);
+  }, [inputToken, outputToken, navigate]);
 
   return (
     <Box

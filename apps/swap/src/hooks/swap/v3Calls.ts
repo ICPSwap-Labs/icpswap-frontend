@@ -1,22 +1,21 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { getSwapTokenArgs } from "hooks/token/index";
+import type { Principal } from "@icp-sdk/core/principal";
 import { swapPool } from "@icpswap/actor";
 import {
-  useCallsData,
-  quote,
+  _getSwapPoolAllBalance,
+  createSwapPool,
+  getSwapPool,
   getSwapPoolMetadata,
   getSwapPosition,
-  getSwapPool,
-  createSwapPool,
-  _getSwapPoolAllBalance,
+  quote,
 } from "@icpswap/hooks";
-import { resultFormat, isUndefinedOrNull, optionalArg, BigNumber } from "@icpswap/utils";
 import { FeeAmount } from "@icpswap/swap-sdk";
 import type { Null, SwapPoolData } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { swapFactory_update_call } from "actor/swap";
-import { UserPosition } from "types/swap";
-import { Principal } from "@dfinity/principal";
-import { useStateCallsData } from "hooks/useCallsData";
+import { getSwapTokenArgs } from "hooks/token/index";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import type { UserPosition } from "types/swap";
 import { sortToken } from "utils/swap";
 
 export async function getPool(token0: string, token1: string, fee: FeeAmount = FeeAmount.MEDIUM) {
@@ -33,9 +32,7 @@ export async function getPool_update_call(token0: string, token1: string, fee: F
   const sortedToken = sortToken(token0, token1);
 
   return resultFormat<SwapPoolData>(
-    await (
-      await swapFactory_update_call()
-    ).getPool({
+    await (await swapFactory_update_call()).getPool({
       fee: BigInt(fee),
       token0: getSwapTokenArgs(sortedToken.token0),
       token1: getSwapTokenArgs(sortedToken.token1),
@@ -69,7 +66,7 @@ export async function createPool({ token0, token1, fee, sqrtPriceX96, subnet }: 
   });
 }
 
-export { deposit, mint, increaseLiquidity, decreaseLiquidity, quote, swap, collect, withdraw } from "@icpswap/hooks";
+export { collect, decreaseLiquidity, deposit, increaseLiquidity, mint, quote, swap, withdraw } from "@icpswap/hooks";
 
 export async function getPositionDetailsFromId(poolId: string, positionId: string) {
   const pool = await getSwapPoolMetadata(poolId);
@@ -95,17 +92,22 @@ export async function getPositionDetailsFromId(poolId: string, positionId: strin
   return undefined;
 }
 
-export function usePositionDetailsFromId(poolId: string | Null, positionId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function usePositionDetailsFromId(
+  poolId: string | Null,
+  positionId: string | undefined,
+): UseQueryResult<UserPosition | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePositionDetailsFromId", poolId, positionId],
+    queryFn: async () => {
       if (isUndefinedOrNull(poolId) || isUndefinedOrNull(positionId)) return undefined;
       return await getPositionDetailsFromId(poolId, positionId);
-    }, [poolId, positionId]),
-  );
+    },
+    enabled: !isUndefinedOrNull(poolId) && !!positionId,
+  });
 }
 
 export function useQuoteExactInput(args: string | undefined) {
-  const call = useCallback(async () => {
+  const callback = useCallback(async () => {
     if (!args) return undefined;
 
     const _args = JSON.parse(args) as { amountIn: string; zeroForOne: boolean; poolId: string };
@@ -117,24 +119,26 @@ export function useQuoteExactInput(args: string | undefined) {
     });
   }, [args]);
 
-  return useStateCallsData(call, "quoteExactInput", !!args);
+  return useQuery({ queryKey: ["QuoteExactInput", args], queryFn: callback, enabled: !!args });
 }
 
 export function useQuoteUnitPrice(
   poolId: string | undefined,
   amountIn: string | undefined,
   zeroForOne: boolean | undefined,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<Awaited<ReturnType<typeof quote>> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useQuoteUnitPrice", poolId, amountIn, zeroForOne],
+    queryFn: async () => {
       if (!amountIn || amountIn === "0" || !poolId || zeroForOne === undefined) return undefined;
       return await quote(poolId, {
         amountIn,
         zeroForOne,
         amountOutMinimum: "0",
       });
-    }, [amountIn, poolId, zeroForOne]),
-  );
+    },
+    enabled: !!amountIn && amountIn !== "0" && !!poolId && zeroForOne !== undefined,
+  });
 }
 
 export async function getPoolCanisterId(token0Id: string, token1Id: string, fee: FeeAmount) {
@@ -146,13 +150,15 @@ export function usePoolCanisterId(
   token0Id: string | undefined | null,
   token1Id: string | undefined | null,
   fee: FeeAmount | undefined | null,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<string | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePoolCanisterId", token0Id, token1Id, fee],
+    queryFn: async () => {
       if (!token0Id || !token1Id || !fee) return undefined;
       return await getPoolCanisterId(token0Id, token1Id, fee);
-    }, [token0Id, token1Id, fee]),
-  );
+    },
+    enabled: !!token0Id && !!token1Id && !!fee,
+  });
 }
 
 export type TokenAmounts = [Principal, { balance0: bigint; balance1: bigint }];
@@ -175,13 +181,17 @@ export async function getPoolTokenAmounts(poolId: string) {
   return undefined;
 }
 
-export function usePoolTokenAmounts(poolId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function usePoolTokenAmounts(
+  poolId: string | undefined,
+): UseQueryResult<{ balance0: BigNumber; balance1: BigNumber } | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePoolTokenAmounts", poolId],
+    queryFn: async () => {
       if (!poolId) return undefined;
       return await getPoolTokenAmounts(poolId);
-    }, [poolId]),
-  );
+    },
+    enabled: !!poolId,
+  });
 }
 
 export type Key = {
@@ -252,24 +262,6 @@ export function usePoolTokenAmountsFromKey(key: Key | undefined) {
   return useMemo(() => ({ result: result[0], loading }), [result, loading]);
 }
 
-// export function useUserSwapTransactions(principal: string | undefined, offset: number, limit: number) {
-//   return useCallsData(
-//     useCallback(async () => {
-//       if (!principal || !isAvailablePageArgs(offset, limit)) return undefined;
-
-//       const storageIds = await getInfoUserStorageIds(principal);
-
-//       if (!storageIds || storageIds.length === 0) return undefined;
-
-//       const storageId = storageIds[storageIds.length - 1];
-
-//       return resultFormat<PaginationResult<UserStorageTransaction>>(
-//         await (await userStorage(storageId)).get(principal, BigInt(offset), BigInt(limit), []),
-//       ).data;
-//     }, [principal, offset, limit]),
-//   );
-// }
-
 export async function getSwapPoolAvailable(canisterId: string) {
   const result = resultFormat<{ whitelist: string[]; available: boolean }>(
     await (await swapPool(canisterId)).getAvailabilityState(),
@@ -279,17 +271,15 @@ export async function getSwapPoolAvailable(canisterId: string) {
 }
 
 export function useSwapPoolAvailable(canisterId: string | undefined) {
-  const [available, setAvailable] = useState(true);
-
-  useEffect(() => {
-    const call = async () => {
-      if (!canisterId) return;
-      const available = await getSwapPoolAvailable(canisterId);
-      setAvailable(!!available);
-    };
-
-    call();
-  }, [canisterId]);
+  const { data: available } = useQuery({
+    queryKey: ["useSwapPoolAvailable", canisterId],
+    queryFn: async () => {
+      if (!canisterId) return true;
+      const result = await getSwapPoolAvailable(canisterId);
+      return isUndefinedOrNull(result) ? true : result;
+    },
+    enabled: !!canisterId,
+  });
 
   return useMemo(() => available, [available]);
 }

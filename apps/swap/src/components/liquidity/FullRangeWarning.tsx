@@ -1,6 +1,6 @@
-import { Box, Typography, useTheme, ButtonBase } from "components/Mui";
-import WarningIcon from "assets/images/swap/warning";
 import { Flex } from "@icpswap/ui";
+import WarningIcon from "assets/images/swap/warning";
+import { Box, ButtonBase, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 interface FullRangeWarningProps {

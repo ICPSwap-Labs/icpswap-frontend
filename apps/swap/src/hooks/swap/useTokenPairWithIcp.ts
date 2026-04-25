@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { icpswap_fetch_post } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 interface UesTokenPairWithIcpProps {
   tokenId: string | Null;
 }
 
-export function uesTokenPairWithIcp({ tokenId }: UesTokenPairWithIcpProps) {
+export function useTokenPairWithIcp({ tokenId }: UesTokenPairWithIcpProps) {
   const [poolId, setPoolId] = useState<string | undefined>();
 
   useEffect(() => {

@@ -1,9 +1,9 @@
+import type { Principal } from "@icp-sdk/core/principal";
 import { actor } from "@icpswap/actor";
-import { type ActorIdentity } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
-import { resultFormat, isPrincipal } from "@icpswap/utils";
+import type { ActorIdentity } from "@icpswap/types";
+import { isPrincipal, resultFormat } from "@icpswap/utils";
+import type { _SERVICE as OGY_SERVICE } from "candid/ogy";
 import { idlFactory as OGY_IDL } from "candid/ogy.did";
-import { _SERVICE as OGY_SERVICE } from "candid/ogy";
 
 const ORG_ID = "rd6wb-lyaaa-aaaaj-acvla-cai";
 

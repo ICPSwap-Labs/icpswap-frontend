@@ -1,6 +1,6 @@
-import { Box, Typography } from "components/Mui";
+import { Flex, TextButton } from "@icpswap/ui";
 import MaintenanceSVG from "assets/images/Maintenance.svg";
-import { TextButton, Flex } from "@icpswap/ui";
+import { Box, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 export function Maintenance() {

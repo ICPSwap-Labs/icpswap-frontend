@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { Box, Typography, BoxProps, useTheme } from "./Mui";
+import { Box, type BoxProps, Typography, useTheme } from "./Mui";
 
 export interface SmallTabButtonProps {
   children: ReactNode;
@@ -26,7 +26,7 @@ export function SmallTabButton({
       component="span"
       color={active ? "text.primary" : "text.secondary"}
       sx={{
-        background: active ? background ?? theme.palette.background.level3 : "transparent",
+        background: active ? (background ?? theme.palette.background.level3) : "transparent",
         borderRadius,
         display: "flex",
         justifyContent: "center",

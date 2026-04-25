@@ -1,5 +1,6 @@
-import React, { Suspense } from "react";
 import { LinearLoader } from "@icpswap/ui";
+import type React from "react";
+import { Suspense } from "react";
 
 export default function Loadable(Component: React.FC) {
   return (props: any) => (

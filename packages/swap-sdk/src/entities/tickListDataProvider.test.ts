@@ -1,6 +1,5 @@
-import { describe, it, expect } from "vitest";
-
 import JSBI from "jsbi";
+import { describe, expect, it } from "vitest";
 import { TickListDataProvider } from "./tickListDataProvider";
 
 describe("TickListDataProvider", () => {

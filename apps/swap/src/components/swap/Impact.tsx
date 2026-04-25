@@ -1,6 +1,6 @@
-import { useState, useCallback } from "react";
+import { Checkbox, Flex } from "@icpswap/ui";
 import { Box, Typography } from "components/Mui";
-import { Flex, Checkbox } from "@icpswap/ui";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface ImpactProps {
@@ -13,10 +13,13 @@ export const Impact = ({ showImpact, onCheckChange, ui }: ImpactProps) => {
   const { t } = useTranslation();
   const [impactChecked, setImpactChecked] = useState(false);
 
-  const handleCheck = useCallback((check: boolean) => {
-    setImpactChecked(check);
-    onCheckChange(check);
-  }, []);
+  const handleCheck = useCallback(
+    (check: boolean) => {
+      setImpactChecked(check);
+      onCheckChange(check);
+    },
+    [onCheckChange],
+  );
 
   return showImpact ? (
     <Box

@@ -1,26 +1,26 @@
-import { useMemo } from "react";
-import { Typography, Box, Button, useTheme } from "components/Mui";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { useTokenBalance, useUserUnusedBalance } from "@icpswap/hooks";
+import type { Position } from "@icpswap/swap-sdk";
+import type { LimitOrder } from "@icpswap/types";
+import { Line, Modal } from "@icpswap/ui";
 import {
-  formatDollarAmount,
-  nanosecond2Millisecond,
-  toSignificantWithGroupSeparator,
-  formatTokenAmount,
-  parseTokenAmount,
   BigNumber,
+  formatDollarAmount,
+  formatTokenAmount,
+  nanosecond2Millisecond,
+  parseTokenAmount,
+  toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { Modal, Line } from "@icpswap/ui";
-import { Position } from "@icpswap/swap-sdk";
 import { Flex, TokenImage, Tooltip } from "components/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { ArrowDown } from "react-feather";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import dayjs from "dayjs";
-import { useLimitDetails } from "hooks/swap/limit-order/index";
-import { useUserUnusedBalance, useTokenBalance } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
 import { useSwapTokenFeeCost } from "hooks/swap/index";
-import { LimitOrder } from "@icpswap/types";
+import { useLimitDetails } from "hooks/swap/limit-order/index";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useMemo } from "react";
+import { ArrowDown } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 import { LimitDealRatio } from "./LimitDealRatio";
 
@@ -55,14 +55,14 @@ export function LimitDetails({ open, position, order, onClose, onCancelLimit }: 
     return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
   }, [principal]);
 
-  const { result: inputTokenSubBalance } = useTokenBalance({
+  const { data: inputTokenSubBalance } = useTokenBalance({
     canisterId: inputToken?.address,
     address: poolId,
     sub,
   });
 
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal);
-  const { result: inputTokenBalance } = useTokenBalance({
+  const { data: unusedBalance } = useUserUnusedBalance(poolId, principal);
+  const { data: inputTokenBalance } = useTokenBalance({
     canisterId: inputToken?.address,
     address: principal,
   });

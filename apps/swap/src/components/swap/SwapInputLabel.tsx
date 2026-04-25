@@ -1,14 +1,14 @@
+import type { Token } from "@icpswap/swap-sdk";
 import { Grid, Typography } from "components/Mui";
-import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
-import { Token } from "@icpswap/swap-sdk";
 import { useCurrencyBalance } from "hooks/token/useTokenBalance";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { formatCurrencyAmount } from "utils/swap/formatCurrencyAmount";
 
 export interface SwapInputLabelProps {
   type: "from" | "to";
   currency: Token | undefined;
-  refreshBalance?: boolean;
+  refreshBalance?: number;
 }
 
 export default function SwapInputLabel({ type, currency, refreshBalance }: SwapInputLabelProps) {

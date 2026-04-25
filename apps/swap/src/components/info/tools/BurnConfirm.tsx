@@ -1,13 +1,13 @@
+import type { Token } from "@icpswap/swap-sdk";
 import { Modal } from "@icpswap/ui";
-import { TokenImage } from "components/index";
-import { Typography, Box, Button, CircularProgress } from "components/Mui";
-import { tokenTransfer } from "hooks/token/calls";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { BigNumber, formatTokenAmount } from "@icpswap/utils";
-import { useSuccessTip, useErrorTip, useLoadingTip } from "hooks/useTips";
+import { TokenImage } from "components/index";
+import { Box, Button, CircularProgress, Typography } from "components/Mui";
+import { tokenTransfer } from "hooks/token/calls";
+import { useErrorTip, useLoadingTip, useSuccessTip } from "hooks/useTips";
 import { useState } from "react";
-import { Token } from "@icpswap/swap-sdk";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface ConfirmBurnProps {
   open: boolean;

@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { useLocation } from "react-router-dom";
-import { Button, ButtonProps, Typography } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
 import { ICP, ICS } from "@icpswap/tokens";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
+import type { Null } from "@icpswap/types";
 import { Link } from "@icpswap/ui";
 import { urlStringFormat } from "@icpswap/utils";
+import { Button, type ButtonProps, Typography } from "components/Mui";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 
 interface BuyTokenButtonProps {
   token: Token | Null;

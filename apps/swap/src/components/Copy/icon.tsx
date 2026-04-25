@@ -1,6 +1,6 @@
-import copyToClipboard from "copy-to-clipboard";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import { useTips, TIP_SUCCESS } from "hooks/useTips";
+import copyToClipboard from "copy-to-clipboard";
+import { TIP_SUCCESS, useTips } from "hooks/useTips";
 
 export interface CopyProps {
   content: string | undefined | null;

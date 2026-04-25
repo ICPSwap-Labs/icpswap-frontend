@@ -1,11 +1,11 @@
-import { useCallback } from "react";
-import { Box, Grid, Typography, makeStyles, Theme } from "components/Mui";
-import { CurrenciesAvatar } from "components/CurrenciesAvatar";
-import { useToken } from "hooks/useCurrency";
-import { feeAmountToPercentage } from "utils/swap/index";
-import { useNavigate } from "react-router-dom";
 import { formatDollarAmount } from "@icpswap/utils";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { useToken } from "hooks/useCurrency";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { feeAmountToPercentage } from "utils/swap/index";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -70,7 +70,7 @@ export default function PoolCard({
 
   const handlePoolClick = useCallback(() => {
     navigate(`/liquidity/add/${token0}/${token1}/${Number(fee)}`);
-  }, [navigate]);
+  }, [navigate, fee, token0, token1]);
 
   return (
     <Box className={`${classes.listItem} list-item`} onClick={handlePoolClick}>

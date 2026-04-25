@@ -1,12 +1,10 @@
-import { createContext, useContext, useMemo } from "react";
-import type { SwapPoolData, PublicTokenOverview, Null } from "@icpswap/types";
+import type { SwapPoolData } from "@icpswap/types";
+import { createContext, useCallback, useContext, useMemo } from "react";
 
 export type GlobalContextProps = {
   AllPools: SwapPoolData[] | undefined;
   refreshTriggers: { [key: string]: number };
   setRefreshTriggers: (key: string) => void;
-  infoAllTokens: PublicTokenOverview[] | Null;
-  setInfoAllTokens: (args: PublicTokenOverview[]) => void;
 };
 
 export const GlobalContext = createContext({} as GlobalContextProps);
@@ -24,12 +22,17 @@ export function useRefreshTrigger(key: string | undefined) {
   }, [refreshTriggers, key]);
 }
 
-export function useRefreshTriggerManager(key: string | undefined): [undefined | number, () => void] {
+export function useRefreshTriggerManager(key: string | undefined): [number, () => void] {
   const { refreshTriggers, setRefreshTriggers } = useGlobalContext();
 
-  return useMemo(() => {
-    if (!key) return [undefined, () => setRefreshTriggers("Global_key")];
+  const refresh = useCallback(() => {
+    if (!key) return setRefreshTriggers("Global_key");
+    setRefreshTriggers(key);
+  }, [key, setRefreshTriggers]);
 
-    return [refreshTriggers[key], () => setRefreshTriggers(key)];
-  }, [refreshTriggers, key, setRefreshTriggers]);
+  return useMemo(() => {
+    if (!key) return [0, refresh];
+
+    return [refreshTriggers[key], refresh];
+  }, [refreshTriggers, key, refresh]);
 }

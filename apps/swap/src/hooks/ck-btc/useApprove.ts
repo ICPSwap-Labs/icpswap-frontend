@@ -1,10 +1,10 @@
-import { resultFormat, optionalArg } from "@icpswap/utils";
-import { StatusResult } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
+import { Principal } from "@icp-sdk/core/principal";
 import { ckBtcActor } from "@icpswap/actor";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useCallback } from "react";
 import { ckBTC_MINTER_ID } from "@icpswap/constants";
+import type { StatusResult } from "@icpswap/types";
+import { optionalArg, resultFormat } from "@icpswap/utils";
+import { useCallback } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 import { useAllowance } from "./useAllowance";
 
@@ -47,7 +47,7 @@ export function useApprove() {
 
   const spender = ckBTC_MINTER_ID;
 
-  const { result: allowance } = useAllowance({ spender, owner: principal });
+  const { data: allowance } = useAllowance({ spender, owner: principal });
 
   return useCallback(
     async ({ amount, expected_allowance }: useApproveCallbackArgs) => {

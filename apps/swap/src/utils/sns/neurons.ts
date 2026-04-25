@@ -1,9 +1,5 @@
-import type { Neuron, DissolveState, NervousSystemParameters, ProposalData, SnsBallot } from "@icpswap/types";
-import { BigNumber, nowInSeconds, toHexString, asciiStringToByteArray } from "@icpswap/utils";
-import { Principal } from "@dfinity/principal";
-import { SubAccount } from "@dfinity/ledger-icp";
-import { arrayOfNumberToUint8Array } from "@dfinity/utils";
-import { sha256 } from "@noble/hashes/sha256";
+import type { DissolveState, NervousSystemParameters, Neuron, ProposalData, SnsBallot } from "@icpswap/types";
+import { BigNumber, nowInSeconds, toHexString } from "@icpswap/utils";
 
 export enum NeuronState {
   Unspecified = 0,
@@ -49,7 +45,7 @@ export function neuronState(state: DissolveState | undefined): NeuronState {
     return NeuronState.Dissolved;
   }
 
-  const now = new Date().getTime();
+  const now = Date.now();
   const dissolve_time: bigint = state[state_key];
   if (new BigNumber(dissolve_time.toString()).times(1000).gt(now)) return NeuronState.Dissolving;
   return NeuronState.Dissolved;
@@ -142,7 +138,7 @@ export const getSnsDelayTimeInSeconds = (neuron: Neuron): bigint | undefined => 
     dissolveState !== undefined &&
     "WhenDissolvedTimestampSeconds" in dissolveState
   ) {
-    return dissolveState.WhenDissolvedTimestampSeconds - BigInt(parseInt((new Date().getTime() / 1000).toString(), 10));
+    return dissolveState.WhenDissolvedTimestampSeconds - BigInt(parseInt((Date.now() / 1000).toString(), 10));
   }
 };
 
@@ -179,7 +175,7 @@ export function getNervousVotingPower(
     const delay_seconds: bigint = dissolve_state[state_key];
     dissolve_delay = Number(delay_seconds);
   } else {
-    const now = Math.ceil(new Date().getTime() / 1000);
+    const now = Math.ceil(Date.now() / 1000);
     const dissolve_time: bigint = dissolve_state[state_key];
     if (Number(dissolve_time) - now >= 0) {
       dissolve_delay = Number(dissolve_time) - now;
@@ -210,9 +206,9 @@ export function getNervousVotingPower(
     .div(100)
     .plus(1);
 
-  const now = new Date().getTime() / 1000;
+  const now = Date.now() / 1000;
   let aging = BigInt(
-    parseInt(new BigNumber(now).minus(neuron.aging_since_timestamp_seconds.toString(10)).toString(10)),
+    parseInt(new BigNumber(now).minus(neuron.aging_since_timestamp_seconds.toString(10)).toString(10), 10),
   );
 
   if (state_key === "WhenDissolvedTimestampSeconds") {
@@ -321,15 +317,4 @@ export const filterVotedNeurons = ({ neurons, proposal }: VotedNeuronsArgs): Neu
 
 export function votingPowerFormat(votingPower_es8: bigint) {
   return new BigNumber(votingPower_es8.toString()).dividedBy(10 ** 8).toFormat(2);
-}
-
-export function getNeuronStakeSubAccountBytes(nonce: Uint8Array, principal: Principal): Uint8Array {
-  const padding = asciiStringToByteArray("neuron-stake");
-  const shaObj = sha256.create();
-  shaObj.update(arrayOfNumberToUint8Array([0x0c, ...padding, ...principal.toUint8Array(), ...nonce]));
-  return shaObj.digest();
-}
-
-export function buildNeuronStakeSubAccount(nonce: Uint8Array, principal: Principal): SubAccount {
-  return SubAccount.fromBytes(getNeuronStakeSubAccountBytes(nonce, principal)) as SubAccount;
 }

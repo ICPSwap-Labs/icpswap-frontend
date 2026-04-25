@@ -1,22 +1,22 @@
-import { useState, useCallback } from "react";
-import { isUndefinedOrNull, principalToAccount } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import { MessageTypes, useTips } from "hooks/index";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { nftTransfer } from "hooks/nft/useNFTCalls";
-import { encodeTokenIdentifier, stringToArrayBuffer } from "utils";
 import { ResultStatus } from "@icpswap/types";
-import { getLocaleMessage } from "i18n/service";
+import { isUndefinedOrNull, principalToAccount } from "@icpswap/utils";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { NFTSendUI } from "components/Wallet/NFT/NFTSendUI";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { MessageTypes, useTips } from "hooks/index";
+import { nftTransfer } from "hooks/nft/useNFTCalls";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { encodeTokenIdentifier, stringToArrayBuffer } from "utils";
 
 export function NFTSend() {
   const { t } = useTranslation();
-  const { setPages } = useWalletContext();
-  const { setSelectedContact } = useWalletAddressBookContext();
-  const { sendingNFTMetadata } = useWalletNFTContext();
+  const { setPages } = useWalletStore();
+  const { setSelectedContact } = useWalletAddressBookStore();
+  const { sendingNFTMetadata } = useWalletNFTStore();
   const principal = useAccountPrincipalString();
   const [openTip] = useTips();
   const [loading, setLoading] = useState<boolean>(false);
@@ -54,7 +54,7 @@ export function NFTSend() {
 
       setLoading(false);
     },
-    [setSelectedContact, setLoading, principal, setPages],
+    [setSelectedContact, principal, setPages, openTip, sendingNFTMetadata, t],
   );
 
   return sendingNFTMetadata ? (
@@ -64,6 +64,7 @@ export function NFTSend() {
       disabled={isUndefinedOrNull(sendingNFTMetadata)}
       name={sendingNFTMetadata.name}
       tokenId={sendingNFTMetadata.tokenId}
+      metadata={sendingNFTMetadata}
     />
   ) : null;
 }

@@ -1,7 +1,4 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
-import { FilledTextField, Flex } from "components/index";
+import type { NFTTokenMetadata } from "@icpswap/candid";
 import {
   isUndefinedOrNull,
   isUndefinedOrNullOrEmpty,
@@ -10,15 +7,18 @@ import {
   nonUndefinedOrNull,
   principalToAccount,
 } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import NFTAvatar from "components/NFT/NFTAvatar";
+import { FilledTextField, Flex } from "components/index";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { NFTAvatar as NFTExtAvatar } from "components/NFT/ext/NFTAvatar";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import NFTAvatar from "components/NFT/NFTAvatar";
 import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
-import { NFTTokenMetadata } from "@icpswap/candid";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 export interface NFTSendUIProps {
   isExt?: boolean;
@@ -35,8 +35,8 @@ export function NFTSendUI({ isExt, loading, disabled, metadata, name, logo, toke
   const theme = useTheme();
   const { t } = useTranslation();
   const principal = useAccountPrincipalString();
-  const { setPages } = useWalletContext();
-  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookStore();
   const [address, setAddress] = useState<string | undefined>(undefined);
   const [memo, setMemo] = useState<string | undefined>(undefined);
 
@@ -54,21 +54,15 @@ export function NFTSendUI({ isExt, loading, disabled, metadata, name, logo, toke
     if (selectedContact) {
       setAddress(selectedContact.address);
     }
-  }, [selectedContact, setAddress]);
+  }, [selectedContact]);
 
-  const handleAddressChange = useCallback(
-    (value: string) => {
-      setAddress(value);
-    },
-    [setAddress],
-  );
+  const handleAddressChange = useCallback((value: string) => {
+    setAddress(value);
+  }, []);
 
-  const handleMemoChange = useCallback(
-    (value: string) => {
-      setMemo(value);
-    },
-    [setMemo],
-  );
+  const handleMemoChange = useCallback((value: string) => {
+    setMemo(value);
+  }, []);
 
   const isValidAddress = useMemo(() => {
     if (isUndefinedOrNull(address)) return undefined;
@@ -82,11 +76,11 @@ export function NFTSendUI({ isExt, loading, disabled, metadata, name, logo, toke
     if (!address.includes("-") && !isValidAccount(address)) return t("common.invalid.account.id");
 
     return undefined;
-  }, [address]);
+  }, [address, t]);
 
   const disableSend = useMemo(() => {
     return isValidAddress === false || loading || nonUndefinedOrNull(error);
-  }, [address, error, loading, isValidAddress]);
+  }, [error, loading, isValidAddress]);
 
   const isOwner = useMemo(() => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(address)) return undefined;
@@ -99,7 +93,7 @@ export function NFTSendUI({ isExt, loading, disabled, metadata, name, logo, toke
   const handleSend = useCallback(async () => {
     if (isUndefinedOrNull(address) || isUndefinedOrNull(principal)) return;
     await onSend(address, memo);
-  }, [onSend, address, memo]);
+  }, [onSend, address, memo, principal]);
 
   return (
     <DrawerWrapper

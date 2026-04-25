@@ -1,13 +1,13 @@
-import { useMemo } from "react";
 import { useFarmTVL } from "@icpswap/hooks";
-import { useICPPrice } from "store/global/hooks";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useToken, useUSDPrice } from "hooks/index";
+import { useMemo } from "react";
+import { useICPPrice } from "store/global/hooks";
 
 export function useFarmTvl(farmId: string) {
   const icpPrice = useICPPrice();
 
-  const { result: farmTvl } = useFarmTVL(farmId);
+  const { data: farmTvl } = useFarmTVL(farmId);
 
   const [, token0] = useToken(farmTvl?.poolToken0.address);
   const [, token1] = useToken(farmTvl?.poolToken1.address);

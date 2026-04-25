@@ -1,14 +1,14 @@
-import { useState, useMemo } from "react";
-import { Grid, Box, Link, makeStyles } from "components/Mui";
-import { parseTokenAmount, pageArgsFormat, explorerLink, shorten } from "@icpswap/utils";
+import { useAllFarms, useFarmInfo, useFarmState, useSwapPoolMetadata } from "@icpswap/hooks";
+import { BodyCell, Flex, Header, HeaderCell, LoadingRow, NoData, Pagination, TableRow, TextButton } from "@icpswap/ui";
+import { icDashboardExplorerLink, pageArgsFormat, parseTokenAmount, shorten } from "@icpswap/utils";
+import { Box, Grid, Link, makeStyles } from "components/Mui";
 import dayjs from "dayjs";
 import { useToken } from "hooks/index";
-import { feeAmountToPercentage } from "utils/swap/index";
-import { useFarmInfo, useSwapPoolMetadata, useAllFarms, useFarmState } from "@icpswap/hooks";
 import { useFarmTvl, useStateColors } from "hooks/staking-farm";
-import { Header, HeaderCell, TableRow, BodyCell, NoData, Pagination, LoadingRow, TextButton, Flex } from "@icpswap/ui";
 import upperFirst from "lodash/upperFirst";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { feeAmountToPercentage } from "utils/swap/index";
 
 const useStyles = makeStyles(() => {
   return {
@@ -31,9 +31,9 @@ function PoolItem({ farmId }: PoolItemProps) {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  const { result: farmInfo, loading } = useFarmInfo(farmId);
+  const { data: farmInfo, isLoading: loading } = useFarmInfo(farmId);
 
-  const { result: swapPool } = useSwapPoolMetadata(farmInfo?.pool.toString());
+  const { data: swapPool } = useSwapPoolMetadata(farmInfo?.pool.toString());
   const [, token0] = useToken(swapPool?.token0.address);
   const [, token1] = useToken(swapPool?.token1.address);
   const [, rewardToken] = useToken(farmInfo?.rewardToken.address);
@@ -54,7 +54,7 @@ function PoolItem({ farmId }: PoolItemProps) {
   ) : (
     <TableRow className={classes.wrapper}>
       <BodyCell title={farmId}>
-        <Link href={explorerLink(farmId)}>{shorten(farmId, 6)}</Link>
+        <Link href={icDashboardExplorerLink(farmId)}>{shorten(farmId, 6)}</Link>
       </BodyCell>
       <BodyCell
         sx={{
@@ -72,7 +72,7 @@ function PoolItem({ farmId }: PoolItemProps) {
         }
       >
         {token0 && token1 && farmInfo ? (
-          <Link href={explorerLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
+          <Link href={icDashboardExplorerLink(farmInfo.pool.toString())}>{`${token0.symbol}/${
             token1.symbol
           }/${feeAmountToPercentage(Number(farmInfo?.poolFee))}`}</Link>
         ) : (
@@ -127,7 +127,7 @@ export function FarmPools() {
   const { t } = useTranslation();
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const { result: allFarms, loading } = useAllFarms();
+  const { data: allFarms, isLoading: loading } = useAllFarms();
 
   const handlePageChange = (page: number) => {
     setPagination({ pageNum: page, pageSize: 10 });
@@ -160,7 +160,9 @@ export function FarmPools() {
         <HeaderCell>&nbsp;</HeaderCell>
       </Header>
 
-      {farms?.map((farm) => <PoolItem key={farm.toString()} farmId={farm.toString()} />)}
+      {farms?.map((farm) => (
+        <PoolItem key={farm.toString()} farmId={farm.toString()} />
+      ))}
 
       {farms?.length === 0 && !loading ? <NoData /> : null}
 

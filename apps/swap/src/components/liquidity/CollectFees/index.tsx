@@ -1,6 +1,6 @@
-import { useState, useCallback, ReactNode } from "react";
+import type { Position } from "@icpswap/swap-sdk";
 import { Box } from "components/Mui";
-import { Position } from "@icpswap/swap-sdk";
+import { type ReactNode, useCallback, useState } from "react";
 
 import { CollectFeesModal } from "./Modal";
 
@@ -18,7 +18,7 @@ export function CollectFees({ position, positionId, children, onCollectSuccess, 
   const handleShowCollect = useCallback(() => {
     if (disabled) return;
     setOpen(true);
-  }, [setOpen, disabled]);
+  }, [disabled]);
 
   return (
     <>

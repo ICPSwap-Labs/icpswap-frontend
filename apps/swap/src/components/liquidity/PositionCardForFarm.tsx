@@ -1,7 +1,7 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
-import { CurrenciesAvatar } from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
+import { useFarmInitArgs, useFarmState, useFarmUserPositions, useSwapPoolMetadata } from "@icpswap/hooks";
+import { CurrencyAmount, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
+import type { FarmInfoWithId } from "@icpswap/types";
+import { APRPanel, FeeTierPercentLabel, Flex } from "@icpswap/ui";
 import {
   BigNumber,
   formatDollarAmount,
@@ -9,24 +9,25 @@ import {
   nonUndefinedOrNull,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { FeeTierPercentLabel, Flex, APRPanel } from "@icpswap/ui";
-import { useFarmState, useFarmInitArgs, useFarmUserPositions, useSwapPoolMetadata } from "@icpswap/hooks";
-import { type FarmInfoWithId } from "@icpswap/types";
-import { Loading } from "components/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { usePositionContext, PositionRangeState } from "components/swap/index";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
 import { FarmStateChip } from "components/farm/index";
-import { encodePositionKey, PositionState } from "utils/swap/index";
-import { PositionFilterState, PositionSort } from "types/swap";
-import { useRefreshTrigger, useToken } from "hooks/index";
-import { usePositionState, usePositionValue, usePositionFeesValue } from "hooks/liquidity";
-import { useFarmUserRewardAmountAndValue, useUserSingleLiquidityApr, useFarmTvlValue } from "hooks/staking-farm/index";
-import { usePositionsTotalValue } from "hooks/swap/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import { PositionDetails } from "components/liquidity/PositionDetails";
+import { Loading } from "components/index";
 import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
+import { PositionDetails } from "components/liquidity/PositionDetails";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { KeyboardArrowDownIcon, KeyboardArrowUpIcon } from "components/MuiIcon";
+import { PositionRangeState, usePositionContext } from "components/swap/index";
+import { useRefreshTrigger, useToken } from "hooks/index";
+import { usePositionFeesValue, usePositionState, usePositionValue } from "hooks/liquidity";
+import { useFarmTvlValue, useFarmUserRewardAmountAndValue, useUserSingleLiquidityApr } from "hooks/staking-farm/index";
+import { usePositionsTotalValue } from "hooks/swap/index";
+import { useMediaQueryMD } from "hooks/theme";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { PositionFilterState, type PositionSort } from "types/swap";
+import { encodePositionKey, PositionState } from "utils/swap/index";
 
 const useStyle = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -100,7 +101,7 @@ export function PositionCardForFarm({
   const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme();
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
   const principal = useAccountPrincipal();
 
   const [detailShow, setDetailShow] = useState<boolean | undefined>(undefined);
@@ -118,7 +119,7 @@ export function PositionCardForFarm({
   const handleToggleShow = useCallback(() => {
     if (!position) return;
     setDetailShow(!detailShow);
-  }, [detailShow, setDetailShow, position]);
+  }, [detailShow, position]);
 
   const pool = position?.pool;
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -173,7 +174,7 @@ export function PositionCardForFarm({
     if (nonUndefinedOrNull(totalUSDValue) && nonUndefinedOrNull(positionKey)) {
       setAllPositionsUSDValue(positionKey, new BigNumber(totalUSDValue));
     }
-  }, [totalUSDValue, positionKey, staked]);
+  }, [totalUSDValue, positionKey, setAllPositionsUSDValue]);
 
   const displayByFilter = useMemo(() => {
     if (isUndefinedOrNull(positionState)) return true;
@@ -198,10 +199,10 @@ export function PositionCardForFarm({
     }
   }, [displayByFilter, setHiddenNumbers, positionKey]);
 
-  const { result: farmInitArgs } = useFarmInitArgs(farmInfo.id);
+  const { data: farmInitArgs } = useFarmInitArgs(farmInfo.id);
   const [, rewardToken] = useToken(farmInfo.rewardToken.address);
-  const { result: deposits } = useFarmUserPositions(farmInfo.id, principal?.toString(), refreshTrigger);
-  const { result: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
+  const { data: deposits } = useFarmUserPositions(farmInfo.id, principal?.toString(), refreshTrigger);
+  const { data: swapPoolMetadata } = useSwapPoolMetadata(farmInfo?.pool.toString());
 
   const deposit = useMemo(() => {
     if (!deposits || isUndefinedOrNull(positionId)) return undefined;
@@ -395,9 +396,9 @@ export function PositionCardForFarm({
               </Typography>
 
               {detailShow ? (
-                <KeyboardArrowUp />
+                <KeyboardArrowUpIcon />
               ) : (
-                <KeyboardArrowDown
+                <KeyboardArrowDownIcon
                   sx={{
                     color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
                   }}
@@ -424,7 +425,7 @@ export function PositionCardForFarm({
                     borderRadius: "50%",
                   }}
                 >
-                  <KeyboardArrowUp />
+                  <KeyboardArrowUpIcon />
                 </Box>
               ) : (
                 <Box
@@ -435,7 +436,7 @@ export function PositionCardForFarm({
                     borderRadius: "50%",
                   }}
                 >
-                  <KeyboardArrowDown
+                  <KeyboardArrowDownIcon
                     sx={{
                       color: theme.palette.text.secondary,
                     }}

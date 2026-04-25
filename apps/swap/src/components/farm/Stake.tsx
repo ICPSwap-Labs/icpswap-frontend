@@ -1,11 +1,11 @@
-import { useState, useMemo } from "react";
-import { Button, Box, CircularProgress, useTheme } from "components/Mui";
+import { approvePosition, farmStake } from "@icpswap/hooks";
+import type { Position, Token } from "@icpswap/swap-sdk";
+import { type FarmInfo, type InitFarmArgs, ResultStatus } from "@icpswap/types";
+import { Modal } from "components/index";
+import { Box, Button, CircularProgress, useTheme } from "components/Mui";
 import { useTips } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
-import { Modal } from "components/index";
-import { type FarmInfo, ResultStatus, InitFarmArgs } from "@icpswap/types";
-import { approvePosition, farmStake } from "@icpswap/hooks";
-import { Position, Token } from "@icpswap/swap-sdk";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { PositionCard } from "./PositionCard1";

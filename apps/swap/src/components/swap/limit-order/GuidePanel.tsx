@@ -1,7 +1,7 @@
-import { Typography } from "components/Mui";
 import { Flex, MainCard } from "@icpswap/ui";
-import { Link } from "components/index";
 import { WaringIcon } from "assets/icons/WaringIcon";
+import { Link } from "components/index";
+import { Typography } from "components/Mui";
 
 export function GuidePanel() {
   return (

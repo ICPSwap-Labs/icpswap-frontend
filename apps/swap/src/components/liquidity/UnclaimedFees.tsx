@@ -1,14 +1,14 @@
-import { useCallback, useState, useMemo } from "react";
-import { Typography, Box, Button, CircularProgress } from "components/Mui";
+import { collect } from "@icpswap/hooks";
 import { Flex, Tooltip } from "@icpswap/ui";
 import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
+import { Box, Button, CircularProgress, Typography } from "components/Mui";
 import { usePositionContext } from "components/swap/index";
-import { collect } from "@icpswap/hooks";
-import { decodePositionKey } from "utils/swap";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { useGlobalContext } from "hooks/index";
-import { useTranslation } from "react-i18next";
 import { POSITIONS_FEES_REFRESH_KEY } from "constants/liquidity";
+import { useGlobalContext } from "hooks/index";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { decodePositionKey } from "utils/swap";
 
 export interface UnclaimedFeesProps {
   className?: string;
@@ -57,7 +57,7 @@ export function UnclaimedFees({ className }: UnclaimedFeesProps) {
     closeTip(loading_key);
 
     setLoading(false);
-  }, [positionFees, availableFees]);
+  }, [availableFees, closeTip, openTip, setRefreshTriggers, t]);
 
   return (
     <Box sx={{ width: "260px" }}>

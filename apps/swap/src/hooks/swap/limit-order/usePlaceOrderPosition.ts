@@ -1,7 +1,15 @@
-import { useMemo } from "react";
-import { Price, TICK_SPACINGS, Pool, Position, Token, CurrencyAmount, priceToClosestTick } from "@icpswap/swap-sdk";
+import {
+  CurrencyAmount,
+  type Pool,
+  Position,
+  Price,
+  priceToClosestTick,
+  TICK_SPACINGS,
+  type Token,
+} from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
+import { useMemo } from "react";
 import { priceToClosestUseableTick } from "utils/swap/limit-order";
 
 interface usePlaceOrderPositionProps {
@@ -53,7 +61,7 @@ export function usePlaceOrderPosition({
       orderPriceTick: closetTick,
       closetUseableTick,
     };
-  }, [orderPrice, inputToken, token0, token1, pool]);
+  }, [orderPrice, inputToken, token0, token1, pool, isInputTokenSorted]);
 
   const { tickLower, tickUpper } = useMemo(() => {
     if (isUndefinedOrNull(closetUseableTick) || isUndefinedOrNull(feeAmount) || isUndefinedOrNull(isInputTokenSorted))

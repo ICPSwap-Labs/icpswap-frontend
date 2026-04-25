@@ -1,5 +1,4 @@
-import { Box, useTheme, Theme } from "components/Mui";
-import LoadingImage from "assets/images/loading.png";
+import { Box, type Theme, useTheme } from "components/Mui";
 
 export default function SwapAnalyticLoading({ loading }: { loading: boolean }) {
   const theme = useTheme() as Theme;
@@ -19,7 +18,7 @@ export default function SwapAnalyticLoading({ loading }: { loading: boolean }) {
         zIndex: 100,
       }}
     >
-      <img width="80px" height="80px" src={LoadingImage} alt="" />
+      <img width="80px" height="80px" src="/images/loading.png" alt="" />
     </Box>
   ) : null;
 }

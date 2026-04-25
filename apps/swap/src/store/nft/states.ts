@@ -1,4 +1,4 @@
-import { ImportedNFT } from "types/nft";
+import type { ImportedNFT } from "types/nft";
 
 export interface NFTState {
   userSelectedCanisters: string[];

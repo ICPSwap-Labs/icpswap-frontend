@@ -17,7 +17,6 @@
     "distrikt",
     "dscvr",
     "passcode",
-    "numbro",
     "reduxjs",
     "astrox",
     "nfid",
@@ -41,6 +40,9 @@
     "jdenticon",
     "highcharts",
     "treemap",
-    "wagmi"
+    "wagmi",
+    "utxo",
+    "utxos",
+    "dogecoin"
   ]
 }

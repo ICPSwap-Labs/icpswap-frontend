@@ -1,7 +1,7 @@
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useMemo } from "react";
-import { type Null } from "@icpswap/types";
-import { Pool, Token } from "@icpswap/swap-sdk";
 
 import { useInfoAllTokens } from "../info";
 import { useTokenBalance } from "../token";
@@ -23,8 +23,8 @@ export function usePoolTVLValue({ pool }: UsePoolTVLValueProps): string | undefi
     return { token0: pool.token0, token1: pool.token1, poolId: pool.id };
   }, [pool]);
 
-  const { result: token0Balance } = useTokenBalance({ address: poolId, canisterId: token0?.address });
-  const { result: token1Balance } = useTokenBalance({ address: poolId, canisterId: token1?.address });
+  const { data: token0Balance } = useTokenBalance({ address: poolId, canisterId: token0?.address });
+  const { data: token1Balance } = useTokenBalance({ address: poolId, canisterId: token1?.address });
 
   return useMemo(() => {
     if (

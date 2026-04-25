@@ -10,18 +10,16 @@
   "scripts": {
     "build": "tsc",
     "check": "tsc --pretty --noEmit",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "clean": "rm -rf node_modules && rm -rf dist",
     "dev": "tsc --watch",
     "test": "vitest"
   },
   "dependencies": {
-    "@icpswap/types": "workspace:*",
     "@icpswap/constants": "workspace:*",
+    "@icpswap/types": "workspace:*",
     "@icpswap/vitest-config": "workspace:*",
-    "big.js": "^6.1.1",
     "decimal.js-light": "^2.5.1",
     "idb": "8.0.0",
-    "numbro": "^2.5.0",
     "toformat": "^2.0.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   }

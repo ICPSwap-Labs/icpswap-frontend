@@ -1,13 +1,13 @@
-import { Box, Typography } from "components/Mui";
-import { useEffect, useMemo, useState, ReactNode, useCallback, memo } from "react";
+import { Principal } from "@icp-sdk/core/principal";
+import type { IcpSwapAPITokenInfo } from "@icpswap/types";
 import { Select } from "@icpswap/ui";
-import { generateLogoUrl } from "hooks/token/useTokenLogo";
 import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
 import { TokenImage } from "components/index";
-import type { IcpSwapAPITokenInfo } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
-import { useStateSwapAllTokens } from "store/global/hooks";
+import { Box, Typography } from "components/Mui";
+import { generateLogoUrl } from "hooks/token/useTokenLogo";
+import { memo, type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useStateSwapAllTokens } from "store/global/hooks";
 
 import type { MenuProps } from "./types";
 
@@ -61,7 +61,7 @@ export interface SelectTokenProps {
   defaultPanel?: ReactNode;
 }
 
-const __SelectToken = ({
+const SelectTokenComponent = ({
   value: tokenId,
   onTokenChange,
   border,
@@ -104,7 +104,7 @@ const __SelectToken = ({
         onTokenChange(value);
       }
     },
-    [onTokenChange, setValue],
+    [onTokenChange],
   );
 
   const handleFilterMenu = useCallback(
@@ -150,4 +150,4 @@ const __SelectToken = ({
   );
 };
 
-export const SelectToken = memo(__SelectToken);
+export const SelectToken = memo(SelectTokenComponent);

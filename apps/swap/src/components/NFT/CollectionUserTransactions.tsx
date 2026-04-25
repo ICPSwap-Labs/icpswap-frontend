@@ -1,46 +1,37 @@
-import { useState, useCallback, useMemo } from "react";
-import { makeStyles } from "components/Mui";
+import type { NFTTransaction, PaginationResult } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, LoadingRow, Pagination, TableRow } from "@icpswap/ui";
+import { arrayBufferToString, enumToString, pageArgsFormat, shorten, timestampFormat } from "@icpswap/utils";
 import Copy from "components/Copy";
+import { NoData, TextButton } from "components/index";
 import { useUserNFTTransactions } from "hooks/nft/useNFTCalls";
-import { TextButton, NoData } from "components/index";
-import type { PaginationResult, NFTTransaction } from "@icpswap/types";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import upperFirst from "lodash/upperFirst";
-import { pageArgsFormat, enumToString, arrayBufferToString, shorten, timestampFormat } from "@icpswap/utils";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { TableRow, Header, HeaderCell, BodyCell, LoadingRow, Pagination } from "@icpswap/ui";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      display: "grid",
-      alignItems: "center",
-      gridTemplateColumns: "1.5fr 120px repeat(4, 1fr) 120px",
-    },
-  };
-});
+const wrapperSx = {
+  display: "grid",
+  alignItems: "center",
+  gridTemplateColumns: "1.5fr 120px repeat(4, 1fr) 120px",
+};
 
 export default function CollectionUserTransactions({ canisterId }: { canisterId: string }) {
   const { t } = useTranslation();
-  const classes = useStyles();
   const [pageNum, setPageNum] = useState(1);
   const [offset, limit] = pageArgsFormat(pageNum, 10);
 
   const principal = useAccountPrincipalString();
 
-  const { result, loading } = useUserNFTTransactions(canisterId, principal, offset, limit);
+  const { data: result, isLoading: loading } = useUserNFTTransactions(canisterId, principal, offset, limit);
 
   const { content: list, totalElements } = useMemo(
     () => result ?? ({ totalElements: 0, content: [], offset: 0, limit: 10 } as PaginationResult<NFTTransaction>),
     [result],
   );
 
-  const onPageChange = useCallback(
-    (pageNum: number) => {
-      setPageNum(pageNum);
-    },
-    [setPageNum],
-  );
+  const onPageChange = useCallback((pageNum: number) => {
+    setPageNum(pageNum);
+  }, []);
 
   return (
     <>
@@ -57,7 +48,7 @@ export default function CollectionUserTransactions({ canisterId }: { canisterId:
         </LoadingRow>
       ) : (
         <>
-          <Header className={classes.wrapper}>
+          <Header sx={wrapperSx}>
             <HeaderCell>{t("common.time")}</HeaderCell>
             <HeaderCell>{t("common.type")}</HeaderCell>
             <HeaderCell>{t("common.name")}</HeaderCell>
@@ -68,7 +59,7 @@ export default function CollectionUserTransactions({ canisterId }: { canisterId:
           </Header>
 
           {list.map((row, index) => (
-            <TableRow key={`${row.time}_${index}`} className={classes.wrapper}>
+            <TableRow key={`${row.time}_${index}`} sx={wrapperSx}>
               <BodyCell>{timestampFormat(row.time)}</BodyCell>
 
               <BodyCell>{upperFirst(enumToString(row.txType))}</BodyCell>

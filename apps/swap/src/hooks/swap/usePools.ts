@@ -1,16 +1,15 @@
-import { useMemo, useEffect, useState } from "react";
-import { Pool, Token, FeeAmount } from "@icpswap/swap-sdk";
-import { ICP } from "@icpswap/tokens";
 import { getSwapPoolMetadata, useSwapPools } from "@icpswap/hooks";
-import { isUndefinedOrNull, nonUndefinedOrNull, numberToString } from "@icpswap/utils";
+import { type FeeAmount, Pool, Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
 import type { Null, PoolMetadata } from "@icpswap/types";
-import { getPool_update_call } from "hooks/swap/v3Calls";
+import { isUndefinedOrNull, nonUndefinedOrNull, numberToString } from "@icpswap/utils";
 import { NETWORK, network } from "constants/index";
-import { useToken, getTokensFromInfos } from "hooks/useCurrency";
+import { getMultiPoolsMetadata } from "hooks/swap/usePoolsMetadata";
+import { getPool_update_call } from "hooks/swap/v3Calls";
 import { getTokenInfo } from "hooks/token/calls";
-import { TokenInfo, PoolState } from "types/index";
-
-import { getMultiPoolsMetadata } from "./usePoolsMetadata";
+import { getTokensFromInfos, useToken } from "hooks/useCurrency";
+import { useEffect, useMemo, useState } from "react";
+import { PoolState, type TokenInfo } from "types/index";
 
 const POOL_METADATA_UPDATE_INTERVAL = 60000;
 
@@ -43,6 +42,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
 
       return [__token0, __token1, fee];
     });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(poolKeys)]);
 
   useEffect(() => {
@@ -112,9 +112,11 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
     }
 
     call();
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(sortedPoolKeys), withoutVerify]);
 
   // Interval update pool's metadata
+
   useEffect(() => {
     let timer: number | null = null;
 
@@ -154,6 +156,7 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
         timer = null;
       }
     };
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(pools)]);
 
   return useMemo(() => {
@@ -227,7 +230,8 @@ export function usePools(poolKeys: PoolKey[], withoutVerify = false): [PoolState
         return [PoolState.NOT_EXISTS, null];
       }
     });
-  }, [JSON.stringify(pools), loading, , JSON.stringify(sortedPoolKeys)]);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
+  }, [JSON.stringify(pools), loading, JSON.stringify(sortedPoolKeys)]);
 }
 
 export function usePool(
@@ -245,7 +249,7 @@ export function usePool(
 }
 
 export function useTokenSwapPools(tokens: string[] | undefined) {
-  const { result: allPools } = useSwapPools();
+  const { data: allPools } = useSwapPools();
 
   return useMemo(() => {
     if (!tokens || !allPools) return undefined;
@@ -265,7 +269,7 @@ export function useTokenHasPairWithBaseToken(token: string | undefined) {
     if (!tokenPools || !tokenPools[0] || !token) return undefined;
 
     return !!tokenPools[0].find((pool) => pool.token0.address === ICP.address || pool.token1.address === ICP.address);
-  }, [tokenPools]);
+  }, [tokenPools, token]);
 }
 
 export function useTokensHasPairWithBaseToken(tokens: string[] | undefined) {
@@ -278,14 +282,14 @@ export function useTokensHasPairWithBaseToken(tokens: string[] | undefined) {
 
     if (tokens.find((token) => token === ICP.address)) return true;
 
-    return tokens.reduce((prev, curr, index) => {
+    return tokens.reduce((prev, _curr, index) => {
       const hasPairWithBaseToken = !!tokenPools[index].find(
         (pool) => pool.token0.address === ICP.address || pool.token1.address === ICP.address,
       );
 
       return prev || hasPairWithBaseToken;
     }, false);
-  }, [tokenPools]);
+  }, [tokenPools, tokens]);
 }
 
 export function usePoolByPoolId(canisterId: string | Null): [PoolState, Pool | null] {
@@ -404,7 +408,10 @@ export function usePoolsByIds(canisterIds: string[] | undefined): {
     const Pools: [PoolState, null | Pool][] = [];
 
     pools.forEach((pool, index) => {
-      if (!pool || !canisterIds) return [PoolState.NOT_EXISTS, null];
+      if (!pool || !canisterIds) {
+        Pools.push([PoolState.NOT_EXISTS, null]);
+        return;
+      }
 
       const { fee, sqrtPriceX96, liquidity, tick } = pool;
 

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
 import type { Neuron, ProposalData } from "@icpswap/types";
 import { shorten } from "@icpswap/utils";
-import { Collapse, Typography, Box, Checkbox } from "components/Mui";
-import { neuronFormat, votingPowerFormat, getVotingPowers, getVotingPower } from "utils/sns/index";
+import { Box, Checkbox, Collapse, Typography } from "components/Mui";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { getVotingPower, getVotingPowers, neuronFormat, votingPowerFormat } from "utils/sns/index";
 
 export interface ProposalDetailsProps {
   voteableNeurons: Neuron[];
@@ -37,7 +37,7 @@ export function VotableNeurons({ voteableNeurons, onCheckedChange, proposal }: P
     );
 
     onCheckedChange(checkedNeurons, votingPowers);
-  }, [voteableNeurons, proposal]);
+  }, [voteableNeurons, proposal, onCheckedChange]);
 
   const handleToggleOpen = () => {
     setVoteableOpen(!votableOpen);
@@ -130,7 +130,7 @@ export function VotableNeurons({ voteableNeurons, onCheckedChange, proposal }: P
 
                   <Checkbox
                     checked={checkedNeurons.includes(formattedNeuron.id)}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
+                    onChange={(_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) =>
                       handleCheckedChange(checked, formattedNeuron.id)
                     }
                   />

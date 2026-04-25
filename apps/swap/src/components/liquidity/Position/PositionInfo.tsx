@@ -1,5 +1,7 @@
-import { Typography, Button, useMediaQuery, useTheme, Box } from "components/Mui";
-import { IsSneedOwner, MainCard } from "components/index";
+import { useAddressAlias, usePositionAPRChartData } from "@icpswap/hooks";
+import type { Position } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { APRPanel, Flex, Link, TextButton, TextualAddress } from "@icpswap/ui";
 import {
   BigNumber,
   isUndefinedOrNull,
@@ -9,20 +11,19 @@ import {
   numToPercent,
   principalToAccount,
 } from "@icpswap/utils";
-import { Flex, TextButton, APRPanel, Link, TextualAddress } from "@icpswap/ui";
-import { Position } from "@icpswap/swap-sdk";
-import { useAddressAlias, usePositionAPRChartData } from "@icpswap/hooks";
-import { PositionPriceRange, TransferPosition, PositionRangeState } from "components/liquidity/index";
+import { IsSneedOwner, MainCard } from "components/index";
+import { PositionPriceRange, PositionRangeState, TransferPosition } from "components/liquidity/index";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import { LimitLabel } from "components/swap/limit-order/index";
-import { usePositionState, useLoadLiquidityPageCallback } from "hooks/liquidity";
-import { useIsSneedOwner, useRefreshTriggerManager, useSneedLedger, useCopySuccess } from "hooks/index";
-import { useCallback, useMemo } from "react";
-import { Null } from "@icpswap/types";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
-import { useNavigate } from "react-router-dom";
+import { useCopySuccess, useIsSneedOwner, useRefreshTriggerManager, useSneedLedger } from "hooks/index";
+import { useLoadLiquidityPageCallback, usePositionState } from "hooks/liquidity";
 import { useAvailableFarmsForPool, useLiquidityIsStakedByOwner } from "hooks/staking-farm";
 import { useIsLimitOrder } from "hooks/swap/limit-order";
+import { useMediaQuerySM } from "hooks/theme";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { infoRoutesConfigs } from "routes/info.config";
 import { useAccountPrincipal } from "store/auth/hooks";
 
@@ -38,7 +39,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
   const theme = useTheme();
   const navigate = useNavigate();
   const positionState = usePositionState(position);
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const principal = useAccountPrincipal();
   const copySuccess = useCopySuccess();
 
@@ -48,7 +49,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     return [position.pool.token0.address, position.pool.token1.address];
   }, [position.pool]);
 
-  const { result: positionChartData } = usePositionAPRChartData(position.pool.id, BigInt(positionId));
+  const { data: positionChartData } = usePositionAPRChartData(position.pool.id, BigInt(positionId));
   const availableFarmsForPool = useAvailableFarmsForPool({ poolId: position.pool.id });
   // TODO Multiple farms for this pool
   const farmId = useMemo(() => {
@@ -89,7 +90,7 @@ export function PositionInfo({ position, positionId, isOwner, owner }: PositionI
     return !!farmId && isStakedByOwner === false;
   }, [farmId, isStakedByOwner]);
 
-  const { result: addressAlias } = useAddressAlias({
+  const { data: addressAlias } = useAddressAlias({
     account: owner ? (isValidAccount(owner) ? owner : null) : null,
     principal: owner ? (isValidPrincipal(owner) ? owner : null) : null,
   });

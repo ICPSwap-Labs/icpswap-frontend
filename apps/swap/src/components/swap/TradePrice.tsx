@@ -1,20 +1,21 @@
-import { useCallback, useState, useMemo } from "react";
-import { Price, Token } from "@icpswap/swap-sdk";
+import type { Price, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import {
+  BigNumber,
+  formatDollarAmount,
   formatDollarTokenPrice,
   formatTokenPrice,
-  toSignificantWithGroupSeparator,
-  BigNumber,
   isUndefinedOrNull,
-  formatDollarAmount,
+  toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { Typography, useTheme, useMediaQuery } from "components/Mui";
 import LinkIcon from "assets/images/LinkIcon";
-import { TextButton, Flex } from "components/index";
+import { Flex, TextButton } from "components/index";
+import { Typography } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { INFO_URL } from "constants/index";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
 import { useUSDPriceById } from "hooks";
-import { Null } from "@icpswap/types";
+import { useMediaQuerySM } from "hooks/theme";
+import { useCallback, useMemo, useState } from "react";
 
 export interface TradePriceProps {
   price: Price<Token, Token> | undefined;
@@ -42,8 +43,7 @@ export function TradePrice({
   showConvert = true,
   noInfo = false,
 }: TradePriceProps) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [showInverted, setShowInverted] = useState(true);
 
   const formattedPrice = useMemo(() => {
@@ -56,7 +56,7 @@ export function TradePrice({
 
   const label = showInverted ? `${price?.quoteCurrency?.symbol}` : `${price?.baseCurrency?.symbol} `;
   const labelInverted = showInverted ? `${price?.baseCurrency?.symbol} ` : `${price?.quoteCurrency?.symbol}`;
-  const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted]);
+  const flipPrice = useCallback(() => setShowInverted(!showInverted), [showInverted]);
 
   const usdValue = useMemo(() => {
     if (!price || !token0 || !token0PriceUSDValue || !token1 || !token1PriceUSDValue) return undefined;
@@ -66,8 +66,8 @@ export function TradePrice({
         ? token0PriceUSDValue
         : token1PriceUSDValue
       : price.quoteCurrency.equals(token0)
-      ? token0PriceUSDValue
-      : token1PriceUSDValue;
+        ? token0PriceUSDValue
+        : token1PriceUSDValue;
   }, [price, showInverted, token0, token0PriceUSDValue, token1, token1PriceUSDValue]);
 
   const text = `${`1 ${labelInverted} = ${formattedPrice ? formatTokenPrice(formattedPrice) : "-"}`} ${label}`;
@@ -115,8 +115,7 @@ export interface TradePriceV2Props {
 }
 
 export function TradePriceV2({ price, token0, token1, showConvert = true, color }: TradePriceV2Props) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [showInverted, setShowInverted] = useState(true);
 
   const token0USDPrice = useUSDPriceById(token0?.address);
@@ -130,7 +129,7 @@ export function TradePriceV2({ price, token0, token1, showConvert = true, color 
 
   const label = showInverted ? `${token1?.symbol}` : `${token0?.symbol} `;
   const labelInverted = showInverted ? `${token0?.symbol} ` : `${token1?.symbol}`;
-  const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted]);
+  const flipPrice = useCallback(() => setShowInverted(!showInverted), [showInverted]);
 
   const usdValue = useMemo(() => {
     if (

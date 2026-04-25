@@ -1,10 +1,10 @@
-import { HttpAgent, ActorSubclass } from "@dfinity/agent";
-import { ActorIdentity } from "@icpswap/types";
-import { IDL } from "@dfinity/candid";
+import { type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
+import { IDL } from "@icp-sdk/core/candid";
 import { ic_host } from "@icpswap/constants";
+import type { ActorIdentity } from "@icpswap/types";
 import isObject from "lodash/isObject";
 
-import { ActorName } from "./ActorName";
+import type { ActorName } from "./ActorName";
 import { createBaseActor } from "./BaseActor";
 
 let cachedCanisterIds: { [key: string]: string } = {};
@@ -66,7 +66,7 @@ export class Actor {
 
   private beforeSubmit: BeforeSubmitCallback;
 
-  public log = process.env.REACT_APP_ENV === "development";
+  public log = false;
 
   public setConnector(connector: Connector) {
     this.connector = connector;

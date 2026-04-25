@@ -1,16 +1,16 @@
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useCallback, useMemo, useState } from "react";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { principalToBytes32 } from "utils/ic/index";
+import { Principal } from "@icp-sdk/core/principal";
+import { withdrawErc20Token } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ResultStatus } from "@icpswap/types";
 import { formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
 import { MINTER_CANISTER_ID } from "constants/ckERC20";
 import { ckETH } from "constants/ckETH";
 import { useApprove } from "hooks/token/index";
-import { ResultStatus } from "@icpswap/types";
-import { withdrawErc20Token } from "@icpswap/hooks";
-import { Principal } from "@dfinity/principal";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { principalToBytes32 } from "utils/ic/index";
 
 export function useDissolveCallback() {
   const { t } = useTranslation();
@@ -92,7 +92,7 @@ export function useDissolveCallback() {
 
       return result.status === ResultStatus.OK;
     },
-    [bytes32, principal, setLoading],
+    [bytes32, principal, approve, openTip, t],
   );
 
   return useMemo(() => ({ loading, dissolve_call }), [loading, dissolve_call]);

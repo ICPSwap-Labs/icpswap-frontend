@@ -1,15 +1,15 @@
-import { Box, Typography } from "components/Mui";
-import { useMemo } from "react";
-import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
-import { generateLogoUrl } from "hooks/token/useTokenLogo";
-import { ResponsiveContainer, Treemap, Tooltip } from "recharts";
-import { TreemapNode } from "recharts/types/chart/Treemap";
 import { Flex, LoadingRow, Proportion } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, formatDollarTokenPrice, isUndefinedOrNull } from "@icpswap/utils";
 import { TokenImage } from "components/Image";
-import { useTokens } from "hooks/info/tokens/index";
-import { useMediaQuery640 } from "hooks/theme";
 import { HideStableCoins, useHideStableCoins } from "components/info/tokens/HideStableCoins";
 import { StableCoins } from "components/info/tokens/stableCoins";
+import { Box, Typography } from "components/Mui";
+import { useTokens } from "hooks/info/tokens/index";
+import { useMediaQuery640 } from "hooks/theme";
+import { generateLogoUrl } from "hooks/token/useTokenLogo";
+import { useMemo } from "react";
+import { ResponsiveContainer, Tooltip, Treemap } from "recharts";
+import type { TreemapNode } from "recharts/types/chart/Treemap";
 
 const COLORS = [
   { value: -20, color: "#971E27" },

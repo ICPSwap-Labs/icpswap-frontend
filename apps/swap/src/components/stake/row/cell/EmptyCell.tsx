@@ -1,4 +1,4 @@
-import { Flex, BodyCell } from "@icpswap/ui";
+import { BodyCell, Flex } from "@icpswap/ui";
 
 export function EmptyCell() {
   return (

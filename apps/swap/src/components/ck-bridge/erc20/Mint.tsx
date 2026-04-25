@@ -1,31 +1,30 @@
-import { useState, useCallback, useMemo } from "react";
-import { ckBridgeChain } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
+import { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
 import { BigNumber, parseTokenAmount } from "@icpswap/utils";
-import { ChainKeyETHMinterInfo, Null } from "@icpswap/types";
-import { InputWrapper } from "components/ck-bridge";
-import { useBridgeTokenBalance } from "hooks/ck-bridge/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useAccount } from "wagmi";
-import { useActiveChain } from "hooks/web3/index";
-import { useERC20TokenByChainKeyId } from "hooks/token/index";
-import { ApprovalState } from "hooks/web3/useApproveCallback";
-import { chainIdToNetwork, chain } from "constants/web3";
-import { useMintCallback } from "hooks/ck-erc20/index";
 import ButtonConnector from "components/authentication/ButtonConnector";
-import { useTranslation } from "react-i18next";
-import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { InputWrapper } from "components/ck-bridge";
 import { MintExtraContent } from "components/ck-bridge/erc20/MintExtra";
 import { Web3WalletWrapper } from "components/ck-bridge/Web3WalletWrapper";
+import { chain, chainIdToNetwork } from "constants/web3";
+import { useErc20TokenBalance, useIcpTokenBalance } from "hooks/ck-bridge/index";
+import { useMintCallback } from "hooks/ck-erc20/index";
+import { useERC20TokenByChainKeyId } from "hooks/token/index";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
+import { useActiveChain } from "hooks/web3/index";
+import { ApprovalState } from "hooks/web3/useApproveCallback";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useAccount } from "wagmi";
 
 export interface Erc20MintProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
   minterInfo?: ChainKeyETHMinterInfo | Null;
   blockNumber: number | string | Null;
 }
 
-export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20MintProps) {
+export function Erc20Mint({ token, minterInfo, blockNumber }: Erc20MintProps) {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const principal = useAccountPrincipal();
@@ -39,8 +38,8 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
     return minterInfo.deposit_with_subaccount_helper_contract_address[0];
   }, [minterInfo]);
 
-  const tokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.icp, minterInfo });
-  const ercTokenBalance = useBridgeTokenBalance({ token, chain: ckBridgeChain.eth, minterInfo });
+  const tokenBalance = useIcpTokenBalance({ token });
+  const ercTokenBalance = useErc20TokenBalance({ token, minterInfo });
 
   const { loading, mint_call, approveState } = useMintCallback({ erc20Token, helperContractAddress, amount });
 
@@ -49,7 +48,7 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
 
     const response = await mint_call(erc20Token, amount, token, blockNumber);
 
-    if (response && response.hash) {
+    if (response?.hash) {
       setAmount("");
     }
   }, [mint_call, token, erc20Token, principal, amount, blockNumber]);
@@ -61,15 +60,13 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [chainId, chain, amount, erc20Token, ercTokenBalance, approveState]);
-
-  const balance = useBridgeTokenBalance({ token, chain: bridgeChain, minterInfo });
+  }, [chainId, amount, erc20Token, ercTokenBalance, t]);
 
   const handleMax = useCallback(() => {
     if (ercTokenBalance) {
       setAmount(parseTokenAmount(ercTokenBalance, token.decimals).toString());
     }
-  }, [token, tokenBalance, ercTokenBalance, setAmount]);
+  }, [token, ercTokenBalance]);
 
   const oisyButtonDisabled = useOisyDisabledTips({ page: "ck-bridge" });
 
@@ -80,8 +77,8 @@ export function Erc20Mint({ token, bridgeChain, minterInfo, blockNumber }: Erc20
       <InputWrapper
         value={amount}
         token={token}
-        chain={bridgeChain}
-        balance={balance}
+        bridgeCurrentChain={BridgeChainType.erc20}
+        balance={ercTokenBalance}
         onInput={(value: string) => setAmount(value)}
         onMax={handleMax}
       />

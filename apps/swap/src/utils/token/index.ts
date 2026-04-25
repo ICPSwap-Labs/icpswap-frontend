@@ -1,6 +1,6 @@
-import { numberToString, BigNumber } from "@icpswap/utils";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { BigNumber, numberToString } from "@icpswap/utils";
 
 export function isUseTransferByStandard(standard: TOKEN_STANDARD) {
   return standard.includes("ICRC1");

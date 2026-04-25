@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Typography, Box, useTheme } from "components/Mui";
+import type { Pool } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { nonUndefinedOrNull, formatDollarTokenPrice } from "@icpswap/utils";
-import { Pool } from "@icpswap/swap-sdk";
+import { formatDollarTokenPrice, nonUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography, useTheme } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { useUSDPriceById } from "hooks/index";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Null } from "@icpswap/types";
+import { useState } from "react";
 
 interface PoolTokensPriceProps {
   pool: Pool | Null;

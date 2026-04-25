@@ -1,4 +1,4 @@
-export * from "./neurons";
 export * from "./date";
-export * from "./votingPower";
+export * from "./neurons";
 export * from "./vote";
+export * from "./votingPower";

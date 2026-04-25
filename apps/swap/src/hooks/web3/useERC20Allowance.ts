@@ -1,5 +1,5 @@
-import { ERC20Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import type { ERC20Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { erc20Abi } from "abis/abis";
 import { useMemo } from "react";
 import { assume0xAddress } from "utils/wagmi";
@@ -30,5 +30,5 @@ export function useERC20TokenAllowance(
   const rawAmount = data?.toString(); // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(() => (token && rawAmount ? rawAmount : undefined), [token, rawAmount]);
 
-  return useMemo(() => ({ tokenAllowance: allowance, isSyncing: isLoading }), [data, isLoading]);
+  return useMemo(() => ({ tokenAllowance: allowance, isSyncing: isLoading }), [isLoading, allowance]);
 }

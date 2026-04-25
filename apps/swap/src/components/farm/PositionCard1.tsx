@@ -1,10 +1,9 @@
-import { useMemo } from "react";
-import { Typography } from "components/Mui";
+import { formatTickPrice, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { Flex, MainCard } from "@icpswap/ui";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import { getPriceOrderingFromPositionForUI, useInverter, Position } from "@icpswap/swap-sdk";
+import { Typography } from "components/Mui";
 import { Bound } from "constants/swap";
 import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import PositionRangeState from "./PositionState";
@@ -93,7 +92,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
           <Typography>{t("common.amount.with.symbol", { symbol: token0 ? token0.symbol : "--" })}</Typography>
 
           <Typography color="text.primary">
-            <>{token0 && token0Amount ? `${token0Amount} ${token0.symbol}` : "--"}</>
+            {token0 && token0Amount ? `${token0Amount} ${token0.symbol}` : "--"}
           </Typography>
         </Flex>
 
@@ -101,7 +100,7 @@ export function PositionCard({ position, positionId }: UnStakingModalProps) {
           <Typography>{t("common.amount.with.symbol", { symbol: token1 ? token1.symbol : "--" })}</Typography>
 
           <Typography color="text.primary">
-            <>{token1 && token1Amount ? `${token1Amount} ${token1.symbol}` : "--"}</>
+            {token1 && token1Amount ? `${token1Amount} ${token1.symbol}` : "--"}
           </Typography>
         </Flex>
 

@@ -1,31 +1,30 @@
-import { useCallback, useState, useMemo } from "react";
-import {
-  Button,
-  Grid,
-  Typography,
-  CircularProgress,
-  Box,
-  InputAdornment,
-  useTheme,
-  makeStyles,
-  Theme,
-} from "components/Mui";
-import { formatTokenAmount, BigNumber } from "@icpswap/utils";
-import { useErrorTip, useSuccessTip } from "hooks/useTips";
-import { sell, approve } from "hooks/nft/trade";
-import { Modal, NumberTextField } from "components/index";
-import { WRAPPED_ICP_TOKEN_INFO, ResultStatus } from "constants/index";
-import type { NFTTokenMetadata } from "@icpswap/types";
-import { NFTTradeFee } from "constants/nft";
-import WICPCurrencyImage from "assets/images/wicp_currency.svg";
-import LazyImage from "components/LazyImage";
-import { encodeTokenIdentifier } from "utils/nft/index";
-import { getLocaleMessage } from "i18n/service";
-import { useAccount } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-
-import FileImage from "../FileImage";
 import { useLoadingCallData } from "@icpswap/hooks";
+import { type NFTTokenMetadata, ResultStatus } from "@icpswap/types";
+import { BigNumber, formatTokenAmount } from "@icpswap/utils";
+import WICPCurrencyImage from "assets/images/wicp_currency.svg";
+import { Modal, NumberTextField } from "components/index";
+import LazyImage from "components/LazyImage";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  InputAdornment,
+  makeStyles,
+  type Theme,
+  Typography,
+  useTheme,
+} from "components/Mui";
+import { WRAPPED_ICP } from "constants/index";
+import { NFTTradeFee } from "constants/nft";
+import { approve, sell } from "hooks/nft/trade";
+import { useErrorTip, useSuccessTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccount } from "store/auth/hooks";
+import { encodeTokenIdentifier } from "utils/nft/index";
+import FileImage from "../FileImage";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -94,7 +93,7 @@ export default function NFTSell({
 
       const result = await sell({
         nftCid: canisterId,
-        price: BigInt(price ? formatTokenAmount(price, WRAPPED_ICP_TOKEN_INFO.decimals).toNumber() : 0),
+        price: BigInt(price ? formatTokenAmount(price, WRAPPED_ICP.decimals).toNumber() : 0),
         tokenIndex: Number(nft.tokenId),
       });
 
@@ -105,19 +104,19 @@ export default function NFTSell({
       }
 
       if (onSellSuccess) onSellSuccess(result);
-    }, [nft, account, price]),
+    }, [nft, account, price, canisterId, onSellSuccess, openErrorTip, openSuccessTip]),
   );
 
   const handleClose = useCallback(() => {
     setPrice(null);
     if (onClose) onClose();
-  }, [onClose, setPrice]);
+  }, [onClose]);
 
   const errorMsg = useMemo(() => {
     if (!price) return `Enter the price`;
     if (price && new BigNumber(price).isLessThan(0.001))
       return t("common.must.greater.than", { symbol: "Price", amount: "0.001" });
-  }, [price]);
+  }, [price, t]);
 
   const receiveTokenAmount = useMemo(() => {
     if (!price) return 0;
@@ -126,7 +125,7 @@ export default function NFTSell({
     const CreatorFee = new BigNumber(price).multipliedBy(String(nft.royalties ?? 0)).div(100 * 100);
 
     return new BigNumber(price).minus(TradeFee).minus(CreatorFee).toFormat(8);
-  }, [price]);
+  }, [price, nft.royalties]);
 
   return open ? (
     <Modal open={open} onClose={handleClose} title="List item for sale" background={theme.palette.background.level2}>
@@ -215,7 +214,7 @@ export default function NFTSell({
             onChange={({ target: { value } }) => setPrice(value)}
             numericProps={{
               thousandSeparator: true,
-              decimalScale: WRAPPED_ICP_TOKEN_INFO.decimals,
+              decimalScale: WRAPPED_ICP.decimals,
               allowNegative: false,
               maxLength: 20,
             }}

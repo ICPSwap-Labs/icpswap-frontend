@@ -1,40 +1,21 @@
-import { resultFormat, optionalArg, isBigIntMemo } from "@icpswap/utils";
-import { PaginationResult, ResultStatus } from "@icpswap/types";
 import { icrc2 } from "@icpswap/actor";
-import { ICRC2 } from "@icpswap/candid";
+import type { ICRC2 } from "@icpswap/candid";
+import { isBigIntMemo, optionalArg, resultFormat } from "@icpswap/utils";
 import {
+  type ActualReceivedByTransferRequest,
+  type AllowanceRequest,
+  type ApproveRequest,
+  type BalanceRequest,
   BaseTokenAdapter,
-  SupplyRequest,
-  BalanceRequest,
-  TransferRequest,
-  GetFeeRequest,
-  TransactionRequest,
-  ApproveRequest,
-  AllowanceRequest,
-  MetadataRequest,
-  ActualReceivedByTransferRequest,
+  type GetFeeRequest,
+  type MetadataRequest,
+  type SupplyRequest,
+  type TransactionRequest,
+  type TransferRequest,
 } from "./BaseTokenAdapter";
-import { TokenHolder } from "./types";
 import { icrc1Adapter } from "./ICRC1";
 
 export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
-  public async holders() {
-    return {
-      status: ResultStatus.OK,
-      data: {
-        content: [] as TokenHolder[],
-        totalElements: 0,
-        limit: 10,
-        offset: 0,
-      } as PaginationResult<TokenHolder>,
-      message: "",
-    };
-  }
-
-  public async totalHolders() {
-    return resultFormat<bigint>(undefined);
-  }
-
   public async supply({ canisterId }: SupplyRequest) {
     return resultFormat<bigint>(await (await this.actor(canisterId)).icrc1_total_supply());
   }
@@ -76,9 +57,7 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
 
   public async approve({ canisterId, params, identity }: ApproveRequest) {
     return resultFormat<boolean>(
-      await (
-        await this.actor(canisterId, identity)
-      ).icrc2_approve({
+      await (await this.actor(canisterId, identity)).icrc2_approve({
         spender: {
           owner: params.spender,
           subaccount: optionalArg<number[]>(params.spenderSub ? params.spenderSub : undefined),
@@ -97,9 +76,7 @@ export class ICRC2Adapter extends BaseTokenAdapter<ICRC2> {
   public async allowance({ canisterId, params }: AllowanceRequest) {
     if (!params.owner.principal) throw Error("no principal");
 
-    const result = await (
-      await this.actor(canisterId)
-    ).icrc2_allowance({
+    const result = await (await this.actor(canisterId)).icrc2_allowance({
       spender: {
         owner: params.spender,
         subaccount: optionalArg<Array<number>>(params.spenderSub ? params.spenderSub : undefined),

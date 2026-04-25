@@ -1,20 +1,22 @@
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { Principal } from "@icp-sdk/core/principal";
 import {
-  getStakingPools,
-  usePaginationAllData,
-  getStakingTokenUserInfo,
-  getStakingTokenPool,
   getPaginationAllData,
+  getStakingPools,
+  getStakingTokenPool,
+  getStakingTokenUserInfo,
   useInterval,
+  usePaginationAllData,
 } from "@icpswap/hooks";
-import { ResultStatus, type StakingPoolUserInfo, StakingPoolInfo, Null } from "@icpswap/types";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { UnusedBalance } from "types/staking-token";
-import { Principal } from "@dfinity/principal";
-import { getTokenBalance } from "hooks/token/useTokenBalance";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { type Null, ResultStatus, type StakingPoolInfo, type StakingPoolUserInfo } from "@icpswap/types";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useQuery } from "@tanstack/react-query";
+import { getTokenBalance } from "hooks/token/useTokenBalance";
 import { useIntervalFetch } from "hooks/useIntervalFetch";
+import { useCallback, useMemo, useState } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import type { UnusedBalance } from "types/staking-token";
 
 export async function getAllTokenPools() {
   const call = async (offset: number, limit: number) => {
@@ -32,9 +34,7 @@ export function useStakingTokenAllPools() {
   return usePaginationAllData(call, 500);
 }
 
-export function useUserUnusedTokens(reload?: boolean | number) {
-  const [loading, setLoading] = useState(true);
-  const [balances, setBalances] = useState<UnusedBalance[]>([]);
+export function useUserUnusedTokens(reload?: number) {
   const principal = useAccountPrincipal();
 
   const { result, loading: poolsLoading } = useStakingTokenAllPools();
@@ -44,54 +44,44 @@ export function useUserUnusedTokens(reload?: boolean | number) {
     return result.filter((ele) => ele.stakingToken.standard !== TOKEN_STANDARD.DIP20);
   }, [result]);
 
-  useEffect(() => {
-    const call = async () => {
-      if (pools && principal) {
-        if (pools.length === 0) {
-          setLoading(false);
-        } else {
-          const calls = pools.map(async (ele) => {
-            return await getTokenBalance(
-              ele.stakingToken.address,
-              Principal.fromText(ele.canisterId.toString()),
-              SubAccount.fromPrincipal(principal).toUint8Array(),
-            );
-          });
+  const { data, isLoading } = useQuery({
+    queryKey: ["useUnusedTokens", principal, reload],
+    queryFn: async () => {
+      if (isUndefinedOrNull(pools) || isUndefinedOrNull(principal)) return;
 
-          const _result = await Promise.all(calls);
+      const calls = pools.map(async (ele) => {
+        return await getTokenBalance(
+          ele.stakingToken.address,
+          Principal.fromText(ele.canisterId.toString()),
+          SubAccount.fromPrincipal(principal).toUint8Array(),
+        );
+      });
 
-          const data = _result
-            .map((ele, index) => {
-              if (ele.status === ResultStatus.OK && ele.data) {
-                const pool = pools[index];
+      return (await Promise.all(calls))
+        .map((ele, index) => {
+          if (ele.status === ResultStatus.OK && ele.data) {
+            const pool = pools[index];
 
-                return {
-                  balance: ele.data,
-                  poolId: pool.canisterId.toString(),
-                  rewardTokenId: pool.rewardToken.address,
-                  ...pool,
-                } as UnusedBalance;
-              }
-              return null;
-            })
-            .filter((ele) => !!ele) as UnusedBalance[];
-
-          setBalances(data);
-
-          setLoading(false);
-        }
-      }
-    };
-
-    call();
-  }, [pools, principal, reload]);
+            return {
+              balance: ele.data,
+              poolId: pool.canisterId.toString(),
+              rewardTokenId: pool.rewardToken.address,
+              ...pool,
+            } as UnusedBalance;
+          }
+          return null;
+        })
+        .filter((ele) => !!ele) as UnusedBalance[];
+    },
+    enabled: nonUndefinedOrNull(principal) && nonUndefinedOrNull(pools),
+  });
 
   return useMemo(() => {
     return {
-      loading: poolsLoading || loading,
-      result: balances,
+      loading: poolsLoading || isLoading,
+      result: data,
     };
-  }, [loading, poolsLoading, balances]);
+  }, [isLoading, poolsLoading, data]);
 }
 
 export function useIntervalUserPoolInfo(
@@ -119,11 +109,15 @@ export function useIntervalStakingPoolInfo(poolId: string | undefined): [Staking
     return await getStakingTokenPool(poolId);
   }, [poolId]);
 
-  const poolInfo = useInterval<StakingPoolInfo | undefined>(callback, forceUpdate);
+  const poolInfo = useInterval<StakingPoolInfo | undefined>({
+    callback: callback,
+    interval: 5_000,
+    force: forceUpdate,
+  });
 
   return [poolInfo, update];
 }
 
-export * from "./useStateColors";
 export * from "./usePools";
+export * from "./useStateColors";
 export * from "./useUnusedTokens";

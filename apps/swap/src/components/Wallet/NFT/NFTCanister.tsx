@@ -1,18 +1,18 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useCallback } from "react";
-import { Box } from "components/Mui";
-import { LoadingRow, NoData } from "components/index";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccount } from "store/auth/hooks";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useCanisterNFTs } from "hooks/nft/useNFTCalls";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { LoadingRow, NoData } from "components/index";
+import { Box } from "components/Mui";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
 import { NFTRowUI } from "components/Wallet/NFT/NFTRowUI";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useCanisterNFTs } from "hooks/nft/useNFTCalls";
+import { useCallback, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useAccount } from "store/auth/hooks";
 
 export function NFTCanister() {
-  const { setPages } = useWalletContext();
-  const { displayedNFTInfo } = useWalletNFTContext();
+  const { setPages } = useWalletStore();
+  const { displayedNFTInfo } = useWalletNFTStore();
   const account = useAccount();
   const [page, setPage] = useState<number>(1);
 
@@ -24,7 +24,7 @@ export function NFTCanister() {
 
   const handleScrollNext = useCallback(() => {
     setPage(page + 1);
-  }, [page, setPage]);
+  }, [page]);
 
   return displayedNFTInfo ? (
     <DrawerWrapper

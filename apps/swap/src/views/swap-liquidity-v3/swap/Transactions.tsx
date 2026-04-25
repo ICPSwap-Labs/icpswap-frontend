@@ -1,17 +1,17 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { enumToString, BigNumber } from "@icpswap/utils";
-import { LoadingRow, NoData, TokenImage } from "components/index";
-import type { InfoTransactionResponse } from "@icpswap/types";
-import dayjs from "dayjs";
-import { DAYJS_FORMAT } from "constants/index";
-import { useToken } from "hooks/index";
-import { ArrowUpRight } from "react-feather";
-import { Link, SwapTransactionPriceTip } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
 import { useUserSwapTransactions } from "@icpswap/hooks";
-import { useMemo } from "react";
+import type { InfoTransactionResponse } from "@icpswap/types";
+import { Link, SwapTransactionPriceTip } from "@icpswap/ui";
+import { BigNumber, enumToString, getTimeRangeForPastDays } from "@icpswap/utils";
+import { LoadingRow, NoData, TokenImage } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { SwapTransactionType } from "components/swap/SwapTransactionType";
+import { DAYJS_FORMAT } from "constants/index";
+import dayjs from "dayjs";
+import { useToken } from "hooks/index";
+import { useMemo } from "react";
+import { ArrowUpRight } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 interface SwapTransactionItemProps {
   transaction: InfoTransactionResponse;
@@ -89,21 +89,17 @@ export function SwapTransactions() {
   const principal = useAccountPrincipalString();
   const theme = useTheme();
 
-  const { startTime, endTime } = useMemo(() => {
-    const now = new Date().getTime();
-    const startTime = new BigNumber(now).minus(180 * 24 * 3600 * 1000).toNumber();
-    const endTime = now;
-
-    return { startTime, endTime };
+  const { start, end } = useMemo(() => {
+    return getTimeRangeForPastDays(180);
   }, []);
 
-  const { result, loading } = useUserSwapTransactions({
+  const { data: result, isLoading: loading } = useUserSwapTransactions({
     principal,
     poolId: undefined,
     page: 1,
     limit: 100,
-    startTime,
-    endTime,
+    startTime: start,
+    endTime: end,
   });
 
   const transactions = result?.content;
@@ -111,7 +107,9 @@ export function SwapTransactions() {
   return (
     <>
       <Box sx={{ overflow: "hidden auto", height: "340px" }}>
-        {transactions?.map((transaction, index) => <SwapTransactionItem key={index} transaction={transaction} />)}
+        {transactions?.map((transaction, index) => (
+          <SwapTransactionItem key={index} transaction={transaction} />
+        ))}
         {(transactions?.length === 0 || !transactions) && !loading ? <NoData /> : null}
 
         {loading ? (

@@ -1,33 +1,26 @@
-import { Grid, Typography, CircularProgress, useTheme, Box, Theme } from "components/Mui";
-import Modal from "components/modal/index";
-import { TradeOrder } from "types/nft";
-import { type NFTTokenMetadata, ResultStatus } from "@icpswap/types";
-import { useSuccessTip, useErrorTip } from "hooks/useTips";
-import { useNFTBuyCallback } from "hooks/nft/trade";
-import { useApprove } from "hooks/token/useApprove";
-import {
-  getCanisterId,
-  CANISTER_NAMES,
-  NFTTradeTokenCanisterId,
-  WRAPPED_ICP_TOKEN_INFO,
-  NFTTradeFee,
-} from "constants/index";
-import { parseTokenAmount, numberToString, formatDollarAmount, BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { useICPAmountUSDValue } from "store/global/hooks";
-import { useAccount } from "store/auth/hooks";
-import WICPPriceFormat from "components/NFT/WICPPriceFormat";
-import LazyImage from "components/LazyImage";
-import { getLocaleMessage } from "i18n/service";
-import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
-import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
-import VerifyNFT from "components/NFT/VerifyNFT";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { TextButton, AuthButton } from "components/index";
-import { useTranslation } from "react-i18next";
-
-import FileImage from "../FileImage";
 import { useLoadingCallData } from "@icpswap/hooks";
+import { type NFTTokenMetadata, ResultStatus } from "@icpswap/types";
+import { BigNumber, formatDollarAmount, isUndefinedOrNull, numberToString, parseTokenAmount } from "@icpswap/utils";
+import { AuthButton, TextButton } from "components/index";
+import LazyImage from "components/LazyImage";
+import { Box, CircularProgress, Grid, type Theme, Typography, useTheme } from "components/Mui";
+import Modal from "components/modal/index";
+import VerifyNFT from "components/NFT/VerifyNFT";
+import WICPPriceFormat from "components/NFT/WICPPriceFormat";
+import { CANISTER_NAMES, getCanisterId, NFTTradeFee, NFTTradeTokenCanisterId, WRAPPED_ICP } from "constants/index";
+import { useNFTBuyCallback } from "hooks/nft/trade";
+import { useNFTMetadata as useNFTMetadataCall } from "hooks/nft/useNFTCalls";
+import { useNFTByMetadata } from "hooks/nft/useNFTMetadata";
+import { useApprove } from "hooks/token/useApprove";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useErrorTip, useSuccessTip } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccount } from "store/auth/hooks";
+import { useICPAmountUSDValue } from "store/global/hooks";
+import type { TradeOrder } from "types/nft";
+import FileImage from "../FileImage";
 
 export default function NFTBuyReview({
   order,
@@ -50,13 +43,13 @@ export default function NFTBuyReview({
   const approve = useApprove();
   const buy = useNFTBuyCallback();
 
-  const { result } = useNFTMetadataCall(order?.nftCid, order?.tokenIndex);
+  const { data: result } = useNFTMetadataCall(order?.nftCid, order?.tokenIndex);
   const _metadata = result ?? ({} as NFTTokenMetadata);
 
   const nft = useNFTByMetadata(_metadata);
 
   const userPay = new BigNumber(order?.price ? String(order.price) : 0)
-    .plus(new BigNumber(String(WRAPPED_ICP_TOKEN_INFO.transFee)).multipliedBy(3))
+    .plus(new BigNumber(String(WRAPPED_ICP.transFee)).multipliedBy(3))
     .toNumber();
 
   const { loading, callback: handleBuyNFT } = useLoadingCallData(
@@ -69,7 +62,7 @@ export default function NFTBuyReview({
         canisterId: NFTTradeTokenCanisterId,
         spender: TradeCanisterId,
         account,
-        value: numberToString(parseTokenAmount(userPay, WRAPPED_ICP_TOKEN_INFO.decimals)),
+        value: numberToString(parseTokenAmount(userPay, WRAPPED_ICP.decimals)),
       });
 
       if (approveStatus === "err") {
@@ -84,17 +77,15 @@ export default function NFTBuyReview({
           if (onTradeSuccess) onTradeSuccess();
         }
       }
-    }, [account, onTradeSuccess, userPay, order]),
+    }, [account, onTradeSuccess, userPay, order, approve, buy, openErrorTip, openSuccessTip, t]),
   );
 
   const USDValue = useICPAmountUSDValue(order?.price);
 
   // 3 times transaction fee
-  const userTransFee = parseTokenAmount(WRAPPED_ICP_TOKEN_INFO.transFee, WRAPPED_ICP_TOKEN_INFO.decimals).multipliedBy(
-    3,
-  );
+  const userTransFee = parseTokenAmount(WRAPPED_ICP.transFee, WRAPPED_ICP.decimals).multipliedBy(3);
 
-  const { result: tradeTokenBalance } = useTokenBalance(NFTTradeTokenCanisterId, account);
+  const { result: tradeTokenBalance } = useTokenBalance({ tokenId: NFTTradeTokenCanisterId, account });
 
   return (
     <Modal open={open} onClose={onClose} title={t("nft.confirm.buying")} background={theme.palette.background.level2}>
@@ -242,9 +233,7 @@ export default function NFTBuyReview({
         <Typography color="text.primary" sx={{ "@media (max-width: 640px)": { fontSize: "12px" } }}>
           {t("common.balance.colon.amount", {
             amount: `${
-              tradeTokenBalance
-                ? parseTokenAmount(tradeTokenBalance.toString(), WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()
-                : 0
+              tradeTokenBalance ? parseTokenAmount(tradeTokenBalance.toString(), WRAPPED_ICP.decimals).toFormat() : 0
             } WICP`,
           })}
         </Typography>

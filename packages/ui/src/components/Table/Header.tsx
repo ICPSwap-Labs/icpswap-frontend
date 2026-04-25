@@ -1,7 +1,7 @@
-import { useState, useCallback } from "react";
-import { Override } from "@icpswap/types";
+import type { Override } from "@icpswap/types";
+import { useCallback, useState } from "react";
 
-import { Box, BoxProps } from "../Mui";
+import { Box, type BoxProps } from "../Mui";
 import HeaderContext from "./headerContext";
 import { SortDirection } from "./types";
 
@@ -27,12 +27,15 @@ export default function Header({
   const [sortField, setSortField] = useState(defaultSortFiled);
   const [sortDirection, setSortDirection] = useState(defaultSortDirection);
 
-  const sortChange = useCallback((sortField: string, sortDirection: SortDirection) => {
-    setSortField(sortField);
-    setSortDirection(sortDirection);
+  const sortChange = useCallback(
+    (sortField: string, sortDirection: SortDirection) => {
+      setSortField(sortField);
+      setSortDirection(sortDirection);
 
-    if (onSortChange) onSortChange(sortField, sortDirection);
-  }, []);
+      if (onSortChange) onSortChange(sortField, sortDirection);
+    },
+    [onSortChange],
+  );
 
   return (
     <HeaderContext.Provider value={{ sortChange, sortField, sortDirection }}>

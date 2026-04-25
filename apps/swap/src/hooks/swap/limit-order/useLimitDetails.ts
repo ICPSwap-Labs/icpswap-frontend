@@ -1,7 +1,7 @@
+import { CurrencyAmount, type Position, type Token, tickToPrice } from "@icpswap/swap-sdk";
+import type { LimitOrder, Null } from "@icpswap/types";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
 import { useMemo } from "react";
-import { isUndefinedOrNull, BigNumber, formatTokenAmount } from "@icpswap/utils";
-import { Position, tickToPrice, CurrencyAmount, Token } from "@icpswap/swap-sdk";
-import { LimitOrder, Null } from "@icpswap/types";
 
 export interface GetLimitTokenAndAmountProps {
   position: Position;

@@ -1,7 +1,7 @@
 import { TextButton } from "components/index";
 import { Typography } from "components/Mui";
-import { useNavigate } from "react-router-dom";
 import { useCloseStep } from "hooks/useStepCall";
+import { useNavigate } from "react-router-dom";
 
 export interface ReclaimTipsProps {
   message: string | undefined;
@@ -20,8 +20,8 @@ export function ReclaimTips({ message, onReclaimClick, tipKey, poolId, tokenId }
     const to = poolId
       ? `/swap/withdraw?type=pair&poolId=${poolId}`
       : tokenId
-      ? `/swap/withdraw?type=token&tokenId=${tokenId}`
-      : "/swap/withdraw";
+        ? `/swap/withdraw?type=token&tokenId=${tokenId}`
+        : "/swap/withdraw";
 
     navigate(to);
     if (onReclaimClick) onReclaimClick();

@@ -1,6 +1,6 @@
-import { useSwapUserPositionWithAmount, useInfoPoolDetails } from "@icpswap/hooks";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { useInfoPoolDetails, useSwapUserPositionWithAmount } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useMemo } from "react";
 
@@ -17,8 +17,8 @@ export function useLiquidityTokenAmountsForInfoPoolTvl({
   token0: Token | Null;
   token1: Token | Null;
 }) {
-  const { result: positionsResult } = useSwapUserPositionWithAmount(poolId, 0, LIMIT_PER_REQUEST);
-  const { result: poolDetails } = useInfoPoolDetails({ poolId });
+  const { data: positionsResult } = useSwapUserPositionWithAmount(poolId, 0, LIMIT_PER_REQUEST);
+  const { data: poolDetails } = useInfoPoolDetails({ poolId });
 
   return useMemo(() => {
     if (

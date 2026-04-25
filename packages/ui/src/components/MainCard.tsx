@@ -1,6 +1,7 @@
-import React, { useMemo } from "react";
+import type React from "react";
+import { useMemo } from "react";
 
-import { Box, BoxProps, useTheme } from "./Mui";
+import { Box, type BoxProps, useTheme } from "./Mui";
 
 export type MainCardBorder = "level1" | "level2" | "level3" | "level4";
 
@@ -34,12 +35,12 @@ export function MainCard({
       border === "level1"
         ? theme.palette.background.level1
         : border === "level2"
-        ? theme.palette.background.level2
-        : border === "level3"
-        ? theme.palette.background.level3
-        : border === "level4"
-        ? theme.palette.background.level4
-        : undefined;
+          ? theme.palette.background.level2
+          : border === "level3"
+            ? theme.palette.background.level3
+            : border === "level4"
+              ? theme.palette.background.level4
+              : undefined;
 
     switch (level) {
       case 1:
@@ -73,7 +74,14 @@ export function MainCard({
           ...(_border ? { border: `1px solid ${_border}` } : {}),
         };
     }
-  }, [level, border]);
+  }, [
+    level,
+    border,
+    theme.palette.background.level1,
+    theme.palette.background.level2,
+    theme.palette.background.level3,
+    theme.palette.background.level4,
+  ]);
 
   return (
     <Box

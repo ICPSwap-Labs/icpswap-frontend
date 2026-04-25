@@ -1,15 +1,14 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
 import { useTokensFromList } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useMemo, useState } from "react";
-import { Null } from "@icpswap/types";
 import { useTranslation } from "react-i18next";
-
-import { Staking } from "./Staking";
-import { Farm } from "./Farm";
-import { Swap } from "./Swap";
 import { IcpswapContext } from "./context";
+import { Farm } from "./Farm";
+import { Staking } from "./Staking";
+import { Swap } from "./Swap";
 
 export function ICPSwap() {
   const { t } = useTranslation();
@@ -19,7 +18,7 @@ export function ICPSwap() {
   const [farmTVL, setFarmTVL] = useState<string | number | Null>(null);
   const [stakeTVL, setStakeTVL] = useState<string | number | Null>(null);
 
-  const { result: tokenList } = useTokensFromList();
+  const { data: tokenList } = useTokensFromList();
 
   const tvl = useMemo(() => {
     if (nonUndefinedOrNull(swapTVL) && nonUndefinedOrNull(farmTVL) && nonUndefinedOrNull(stakeTVL)) {

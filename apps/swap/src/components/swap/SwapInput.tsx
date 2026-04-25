@@ -1,8 +1,9 @@
-import React, { memo } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { MAX_SWAP_INPUT_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { NumberTextField } from "components/index";
+import { MAX_SWAP_INPUT_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
+import type React from "react";
+import { memo } from "react";
 
 export interface SwapInputProps {
   value: string | number | Null;

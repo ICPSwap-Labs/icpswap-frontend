@@ -1,56 +1,49 @@
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { Token, FeeAmount } from "@icpswap/swap-sdk";
-import { useMemo, useEffect, useState } from "react";
 import { getSwapPool, getSwapPoolMetadata } from "@icpswap/hooks";
+import type { FeeAmount, Token } from "@icpswap/swap-sdk";
 import type { Null, PoolMetadata } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export interface PoolResult {
   poolId: string;
   metadata: PoolMetadata;
 }
 
+export async function getPoolMetadataByPoolKey(poolKey: [Token | Null, Token | Null, FeeAmount | Null]) {
+  const [tokenA, tokenB, feeAmount] = poolKey;
+
+  if (!tokenA || !tokenB || !feeAmount || tokenA.equals(tokenB)) return null;
+
+  const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA];
+
+  // Args for get pool base ifo
+  const args = {
+    token0: { address: token0.wrapped.address, standard: token0.standard },
+    token1: { address: token1.wrapped.address, standard: token1.standard },
+    fee: BigInt(feeAmount),
+    sqrtPriceX96: "0",
+  };
+
+  const poolBaseInfo = await getSwapPool(args);
+
+  if (poolBaseInfo) {
+    const poolId = poolBaseInfo.canisterId.toString();
+    const poolMetadata = await getSwapPoolMetadata(poolId);
+
+    return {
+      poolId,
+      metadata: poolMetadata,
+    };
+  }
+
+  return null;
+}
+
 export async function getMultiPoolsMetadata(poolKeys: [Token | Null, Token | Null, FeeAmount | Null][]) {
-  const transformedPoolKeys: ([Token, Token, FeeAmount] | null)[] = poolKeys.map(
-    ([currencyA, currencyB, feeAmount]) => {
-      if (!currencyA || !currencyB || !feeAmount) return null;
-
-      const tokenA = currencyA?.wrapped;
-      const tokenB = currencyB?.wrapped;
-      if (!tokenA || !tokenB || tokenA.equals(tokenB)) return null;
-
-      const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA];
-
-      return [token0, token1, feeAmount];
-    },
-  );
-
   return await Promise.all(
-    transformedPoolKeys.map(async (ele) => {
-      if (isUndefinedOrNull(ele)) return null;
-
-      const [token0, token1, fee] = ele;
-
-      // Args for get pool base ifo
-      const args = {
-        token0: { address: token0.wrapped.address, standard: token0.standard },
-        token1: { address: token1.wrapped.address, standard: token1.standard },
-        fee: BigInt(fee),
-        sqrtPriceX96: "0",
-      };
-
-      const poolBaseInfo = await getSwapPool(args);
-
-      if (poolBaseInfo) {
-        const poolId = poolBaseInfo.canisterId.toString();
-        const poolMetadata = await getSwapPoolMetadata(poolId);
-
-        return {
-          poolId,
-          metadata: poolMetadata,
-        };
-      }
-
-      return null;
+    poolKeys.map(async (key) => {
+      if (isUndefinedOrNull(key)) return null;
+      return await getPoolMetadataByPoolKey(key);
     }),
   );
 }
@@ -61,7 +54,7 @@ export function useMultiPoolsMetadata(poolKeys: [Token | undefined, Token | unde
 
   useEffect(() => {
     async function call() {
-      if (poolKeys && poolKeys.length) {
+      if (poolKeys?.length) {
         setLoading(true);
 
         const result = await getMultiPoolsMetadata(poolKeys);
@@ -72,6 +65,7 @@ export function useMultiPoolsMetadata(poolKeys: [Token | undefined, Token | unde
     }
 
     call();
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(poolKeys)]);
 
   return useMemo(

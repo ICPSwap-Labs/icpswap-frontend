@@ -1,8 +1,5 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useRefreshTriggerManager, useTokens, useUSDPrice } from "hooks/index";
-import { useState, useMemo, useCallback } from "react";
-import { Box, Typography, InputAdornment, useTheme } from "components/Mui";
-import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
+import { useAddressOverview, useDebouncedChangeHandler } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import {
   BigNumber,
   formatAmount,
@@ -12,17 +9,20 @@ import {
   parseTokenAmount,
   sleep,
 } from "@icpswap/utils";
-import { Search as SearchIcon } from "react-feather";
-import { useDebouncedChangeHandler, useAddressOverview } from "@icpswap/hooks";
-import { useTranslation } from "react-i18next";
-import { Token } from "@icpswap/swap-sdk";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { FilledTextField, Flex, LoadingRow, NoData, TokenImage } from "components/index";
+import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
+import { ROTATE_ANIMATION_LOADING_CLASS, useRotateAnimationLoading } from "components/theme";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { WALLET_TOKEN_SELECTOR_REFRESH } from "constants/wallet";
+import { useRefreshTriggerManager, useTokens, useUSDPrice } from "hooks/index";
 import { useTokenBalance } from "hooks/token";
+import { useCallback, useMemo, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
+import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import { useTaggedTokenManager } from "store/wallet/hooks";
-import { WALLET_TOKEN_SELECTOR_REFRESH } from "constants/wallet";
-import { useRotateAnimationLoading, ROTATE_ANIMATION_LOADING_CLASS } from "components/theme";
-import { useWalletTokenContext } from "components/Wallet/token/context";
 
 function isTokenFiltered(token: Token, search: string) {
   return !(
@@ -39,8 +39,8 @@ interface TokenRowUIProps {
 }
 
 function TokenRowUI({ token, balance, tokenValue }: TokenRowUIProps) {
-  const { setPages } = useWalletContext();
-  const { setSendToken } = useWalletTokenContext();
+  const { setPages } = useWalletStore();
+  const { setSendToken } = useWalletTokenStore();
 
   const handleSelectToken = useCallback(() => {
     setSendToken(token);
@@ -79,7 +79,11 @@ interface TokenRowProps {
 function TokenRow({ token }: TokenRowProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger] = useRefreshTriggerManager(WALLET_TOKEN_SELECTOR_REFRESH);
-  const { result: tokenBalance } = useTokenBalance(token.address, principal, refreshTrigger);
+  const { result: tokenBalance } = useTokenBalance({
+    tokenId: token.address,
+    account: principal,
+    refresh: refreshTrigger,
+  });
   const tokenUSDPrice = useUSDPrice(token);
 
   const parsedTokenBalance = useMemo(() => {
@@ -102,7 +106,7 @@ interface TokenListProps {
 function TokenList({ search }: TokenListProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger] = useRefreshTriggerManager(WALLET_TOKEN_SELECTOR_REFRESH);
-  const { result: addressOverview, loading } = useAddressOverview(principal, refreshTrigger);
+  const { data: addressOverview, isLoading } = useAddressOverview(principal, refreshTrigger);
 
   const tokenMaps = useMemo(() => {
     if (isUndefinedOrNull(addressOverview)) return undefined;
@@ -142,7 +146,7 @@ function TokenList({ search }: TokenListProps) {
 
   return (
     <>
-      {loading || isUndefinedOrNull(formattedData) ? (
+      {isLoading || isUndefinedOrNull(formattedData) ? (
         <LoadingRow>
           <div />
           <div />
@@ -171,7 +175,7 @@ interface TaggedTokensProps {
 function TaggedTokens({ search }: TaggedTokensProps) {
   const principal = useAccountPrincipalString();
   const [refreshTrigger] = useRefreshTriggerManager(WALLET_TOKEN_SELECTOR_REFRESH);
-  const { result: addressOverview, loading } = useAddressOverview(principal, refreshTrigger);
+  const { data: addressOverview, isLoading } = useAddressOverview(principal, refreshTrigger);
   const { taggedTokens } = useTaggedTokenManager();
 
   const allTokens = useTokens(taggedTokens);
@@ -191,7 +195,7 @@ function TaggedTokens({ search }: TaggedTokensProps) {
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <LoadingRow>
           <div />
           <div />
@@ -236,7 +240,7 @@ export function TokenSelector() {
     setLoading(true);
     await sleep(2000);
     setLoading(false);
-  }, []);
+  }, [setRefreshTrigger]);
 
   return (
     <DrawerWrapper

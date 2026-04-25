@@ -1,8 +1,8 @@
-import { useLocation } from "react-router-dom";
+import { MenuItem, MenuWrapper } from "@icpswap/ui";
 import { Link } from "components/index";
-import { MenuWrapper, MenuItem } from "@icpswap/ui";
+import { useLocation } from "react-router-dom";
 
-import { Route, routeKey } from "./config";
+import { type Route, routeKey } from "./config";
 
 export interface SubMenuPopperProps {
   route: Route;
@@ -38,7 +38,7 @@ export function SubMenuPopper({
     return pathName === route?.path;
   };
 
-  return route.subMenus && route.subMenus.length ? (
+  return route.subMenus?.length ? (
     <MenuWrapper
       open={subMenuKey === routeKey(route.key)}
       anchor={anchor}

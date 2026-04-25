@@ -1,12 +1,12 @@
-import { useCallback } from "react";
-import { resultFormat, optionalArg, isAvailablePageArgs } from "@icpswap/utils";
-import { useCallsData } from "@icpswap/hooks";
-import { StatusResult1, PaginationResult, getCanisterId, CANISTER_NAMES } from "constants/index";
-import { Principal } from "@dfinity/principal";
-import { TradeOrder, TxRecord } from "types";
-import type { NFTSaleArgs, Null } from "@icpswap/types";
-import { NFTs, AdapterName, NFTsTrade, TradeAdapterName } from "utils/nft/index";
+import { Principal } from "@icp-sdk/core/principal";
 import { NFTTradeCanister } from "@icpswap/actor";
+import type { NFTSaleArgs, Null, PaginationResult, StatusResult } from "@icpswap/types";
+import { isAvailablePageArgs, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
+import { CANISTER_NAMES, getCanisterId } from "constants/index";
+import { useCallback } from "react";
+import type { TradeOrder, TxRecord } from "types";
+import { AdapterName, NFTs, NFTsTrade, TradeAdapterName } from "utils/nft/index";
 
 export interface AllowanceArgs {
   canisterId: string;
@@ -56,7 +56,7 @@ export async function approve({ canisterId, tokenIdentifier, account }: ApproveA
   return true;
 }
 
-export async function sell(params: NFTSaleArgs): Promise<StatusResult1<boolean>> {
+export async function sell(params: NFTSaleArgs): Promise<StatusResult<boolean | undefined>> {
   return await NFTsTrade.sale({
     adapterName: TradeAdapterName.ICPSwap,
     params,
@@ -74,9 +74,7 @@ export async function getTradeOrders(
   desc = false,
 ) {
   return resultFormat<PaginationResult<TradeOrder>>(
-    await (
-      await NFTTradeCanister()
-    ).findOrderPage(
+    await (await NFTTradeCanister()).findOrderPage(
       optionalArg<string>(canisterId),
       optionalArg<string>(name),
       optionalArg<string>(user),
@@ -98,13 +96,15 @@ export function useNFTTradeOrder(
   limit: number,
   sort: string,
   desc = false,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<PaginationResult<TradeOrder> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTTradeOrder", canisterId, name, user, token, offset, limit, sort, desc],
+    queryFn: async () => {
       if (!sort || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getTradeOrders(canisterId, name, user, token, offset, limit, sort, desc);
-    }, [canisterId, name, offset, limit, sort, desc]),
-  );
+    },
+    enabled: !!sort && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export function useNFTBuyCallback() {
@@ -131,15 +131,14 @@ export function useTradeTxList(
   limit: number,
   sort: string,
   desc: boolean,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<PaginationResult<TxRecord> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useTradeTxList", canisterId, name, tokenIndex, offset, limit, sort, desc],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<TxRecord>>(
-        await (
-          await NFTTradeCanister()
-        ).findTxPage(
+        await (await NFTTradeCanister()).findTxPage(
           optionalArg<string>(canisterId),
           optionalArg<string>(name),
           optionalArg<number>(tokenIndex),
@@ -149,8 +148,9 @@ export function useTradeTxList(
           desc,
         ),
       ).data;
-    }, [canisterId, name, offset, limit, sort]),
-  );
+    },
+    enabled: isAvailablePageArgs(offset, limit),
+  });
 }
 
 export function useUserTradeTxList(
@@ -161,15 +161,14 @@ export function useUserTradeTxList(
   limit: number,
   sort: string,
   desc: boolean,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<PaginationResult<TxRecord> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserTradeTxList", account, canisterId, name, offset, limit, sort, desc],
+    queryFn: async () => {
       if (!account || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<TxRecord>>(
-        await (
-          await NFTTradeCanister()
-        ).findUserTxPage(
+        await (await NFTTradeCanister()).findUserTxPage(
           account,
           optionalArg<string>(canisterId),
           optionalArg<string>(name),
@@ -179,34 +178,41 @@ export function useUserTradeTxList(
           desc,
         ),
       ).data;
-    }, [account, canisterId, name, offset, limit, sort]),
-  );
+    },
+    enabled: !!account && isAvailablePageArgs(offset, limit),
+  });
 }
 
-export function useNFTRecommend(offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTRecommend(
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<TradeOrder> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTRecommend", offset, limit],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
 
       return resultFormat<PaginationResult<TradeOrder>>(
         await (await NFTTradeCanister()).findRecommend(BigInt(offset), BigInt(limit)),
       ).data;
-    }, [offset, limit]),
-  );
+    },
+    enabled: isAvailablePageArgs(offset, limit),
+  });
 }
 
 export function useNFTOrderInfo(
   canisterId: string | undefined,
   tokenIndex: number | bigint | undefined,
   reload?: boolean,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<TradeOrder | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTOrderInfo", canisterId, tokenIndex, reload],
+    queryFn: async () => {
       if (!canisterId || !tokenIndex) return undefined;
       return resultFormat<TradeOrder>(await (await NFTTradeCanister()).getOrder(canisterId, Number(tokenIndex))).data;
-    }, [canisterId, tokenIndex]),
-    reload,
-  );
+    },
+    enabled: !!canisterId && !!tokenIndex,
+  });
 }
 
 export async function checkPayment(tx: string) {

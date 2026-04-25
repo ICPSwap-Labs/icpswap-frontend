@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 
-import { Typography, TypographyProps } from "../Mui";
+import { Typography, type TypographyProps } from "../Mui";
 
 export interface SmallButtonProps {
   children: React.ReactNode;

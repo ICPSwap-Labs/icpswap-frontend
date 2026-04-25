@@ -1,7 +1,7 @@
-import { AuthClient } from "@dfinity/auth-client";
-import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
-import type { Identity } from "@dfinity/agent";
-import { ConnectorAbstract, CreateActorArgs, Connector, type WalletConnectorConfig } from "./connectors";
+import { AuthClient } from "@icp-sdk/auth/client";
+import type { Identity } from "@icp-sdk/core/agent";
+import { Actor, type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
+import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 
 const iiExpireTime = 7 * 24 * 3600; // seconds
 
@@ -86,7 +86,7 @@ export class InternetIdentityConnector implements ConnectorAbstract {
         maxTimeToLive: BigInt(iiExpireTime * 1000 * 1000 * 1000),
       });
     });
-    window.localStorage.setItem("ii-expire-time", (new Date().getTime() + iiExpireTime * 1000).toString());
+    window.localStorage.setItem("ii-expire-time", (Date.now() + iiExpireTime * 1000).toString());
     const identity = this.client?.getIdentity();
     const principal = identity?.getPrincipal().toString();
     this.identity = identity;
@@ -101,7 +101,7 @@ export class InternetIdentityConnector implements ConnectorAbstract {
   async expired() {
     const iiExpireTime = window.localStorage.getItem("ii-expire-time");
     if (!iiExpireTime) return true;
-    return new Date().getTime() >= Number(iiExpireTime);
+    return Date.now() >= Number(iiExpireTime);
   }
 }
 

@@ -1,6 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
-import { Typography, Button, Box } from "components/Mui";
-import { MaxButton, NumberTextField } from "components/index";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import { Flex, Modal } from "@icpswap/ui";
 import {
   BigNumber,
   isUndefinedOrNull,
@@ -8,14 +7,15 @@ import {
   parseTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { Token, Pool } from "@icpswap/swap-sdk";
-import { Flex, Modal } from "@icpswap/ui";
+import { MaxButton, NumberTextField } from "components/index";
+import { Box, Button, Typography } from "components/Mui";
 import { MuiSlider } from "components/Slider/MuiSlider/ui";
-import { useTokenBalance } from "hooks/token";
-import { useAccountPrincipal } from "store/auth/hooks";
 import { useSwapDepositTokenBalance } from "hooks/swap/useSwapDeposit";
+import { useTokenBalance } from "hooks/token";
 import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface DepositModalProps {
   open: boolean;
@@ -34,7 +34,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
   const [percent, setPercent] = useState(0);
   const [amount, setAmount] = useState<string>("");
 
-  const { result: balance } = useTokenBalance(token.address, principal);
+  const { result: balance } = useTokenBalance({ tokenId: token.address, account: principal });
 
   const maxDepositAmount = useMemo(() => {
     if (!balance || !token) return undefined;
@@ -50,7 +50,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
   }, [maxDepositAmount]);
 
   const handleSliderChange = useCallback(
-    (event, value) => {
+    (_event, value) => {
       setPercent(value);
 
       if (balance && token) {
@@ -84,7 +84,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
         }
       }
     },
-    [maxDepositAmount, setPercent],
+    [maxDepositAmount],
   );
 
   const depositCallback = useSwapDepositTokenBalance();
@@ -113,7 +113,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
     }
 
     setLoading(false);
-  }, [openTip, closeTip, depositCallback, amount, onClose, token, pool, loading, setLoading, onDepositSuccess]);
+  }, [openTip, closeTip, depositCallback, amount, onClose, token, pool, loading, onDepositSuccess, t]);
 
   const error = useMemo(() => {
     if (amount === "") return t("common.enter.input.amount");
@@ -123,7 +123,7 @@ export function DepositModal({ open, onClose, token, pool, onDepositSuccess }: D
     if (new BigNumber(maxDepositAmount).isLessThan(amount)) return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, balance, token, maxDepositAmount]);
+  }, [amount, balance, token, maxDepositAmount, t]);
 
   return (
     <Modal open={open} title={t`Deposit`} onClose={onClose} background="level1">

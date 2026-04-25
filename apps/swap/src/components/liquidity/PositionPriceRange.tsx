@@ -1,10 +1,9 @@
-import { useState, useMemo } from "react";
-import { Box, BoxProps, Typography, useTheme } from "components/Mui";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { formatTickPrice, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { Bound } from "constants/swap";
-import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
+import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { useMemo, useState } from "react";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PositionPriceRangeProps {
@@ -84,7 +83,7 @@ export function PositionPriceRange({
       {arrow ? (
         <SyncAltIcon
           sx={{
-            fontSize: fontSize === "inherit" ? 14 : parseInt(fontSize),
+            fontSize: fontSize === "inherit" ? 14 : parseInt(fontSize, 10),
             cursor: "pointer",
             color: arrowColor === "primary" ? theme.palette.text.primary : theme.palette.text.secondary,
             margin: "0 0 0 4px",

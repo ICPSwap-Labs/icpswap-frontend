@@ -1,4 +1,4 @@
-import { Slider, Tooltip, tooltipClasses, styled, makeStyles, Theme } from "components/Mui";
+import { makeStyles, Slider, styled, type Theme, Tooltip, tooltipClasses } from "components/Mui";
 import { isDarkTheme } from "utils";
 
 const useStyle = makeStyles((theme: Theme) => {

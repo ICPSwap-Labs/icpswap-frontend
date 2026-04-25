@@ -1,6 +1,6 @@
-import { Box, Typography, SvgIcon, makeStyles, Theme } from "components/Mui";
-import { AlertCircle } from "react-feather";
 import { Flex } from "@icpswap/ui";
+import { Box, makeStyles, SvgIcon, type Theme, Typography } from "components/Mui";
+import { AlertCircle } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => {

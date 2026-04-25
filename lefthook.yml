@@ -1,0 +1,10 @@
+pre-commit:
+  commands:
+    check:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: pnpm exec oxlint -c .oxlintrc.json --no-error-on-unmatched-pattern --colors=off {staged_files} && pnpm exec oxfmt --check {staged_files}
+
+commit-msg:
+  commands:
+    lint-commit:
+      run: npx commitlint --edit $1

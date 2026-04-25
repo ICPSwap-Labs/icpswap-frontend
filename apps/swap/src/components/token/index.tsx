@@ -1,2 +1,2 @@
-export * from "./TokenTransferModal";
 export * from "./TokenStandardLabel";
+export * from "./TokenTransferModal";

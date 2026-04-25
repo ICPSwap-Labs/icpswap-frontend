@@ -1,9 +1,9 @@
+import type { WithdrawalDetail } from "@icpswap/types";
 import { createAction } from "@reduxjs/toolkit";
-import { TX } from "types/web3";
-import { DissolveTx } from "types/ckETH";
-import { TransactionReceipt } from "viem";
-import { BitcoinTxResponse } from "types/ckBTC";
-import { WithdrawalDetail } from "@icpswap/types";
+import type { BitcoinTxResponse } from "types/ckBTC";
+import type { DissolveTx } from "types/ckETH";
+import type { TX } from "types/web3";
+import type { TransactionReceipt } from "viem";
 
 export const updateEthMintTx = createAction<{ principal: string; tx: TX }>("web3/updateEthMintTx");
 export const updateEthDissolveTX = createAction<{ principal: string; tx: DissolveTx }>("web3/updateEthDissolveTX");

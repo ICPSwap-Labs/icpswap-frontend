@@ -1,14 +1,14 @@
-import { useCallback, useMemo } from "react";
-import { useICPPrice, useRefreshTriggerManager } from "hooks/index";
 import { EstimatedBalanceUI } from "components/Wallet/assets/EstimatedBalanceUI";
-import { useTranslation } from "react-i18next";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { TOKEN_ASSETS_REFRESH } from "constants/wallet";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useICPPrice, useRefreshTriggerManager } from "hooks/index";
+import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 export function EstimatedBalance() {
   const { t } = useTranslation();
   const icpPrice = useICPPrice();
-  const { totalValue, totalUSDBeforeChange } = useWalletTokenContext();
+  const { totalValue, totalUSDBeforeChange } = useWalletTokenStore();
   const [, setRefreshTrigger] = useRefreshTriggerManager(TOKEN_ASSETS_REFRESH);
 
   const useTotalICPValue = useMemo(() => {

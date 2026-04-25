@@ -1,15 +1,15 @@
-import { Box, Typography } from "components/Mui";
-import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
-import { Select } from "components/Select/ForToken";
-import { TokenPair } from "components/TokenPair";
+import { Principal } from "@icp-sdk/core/principal";
 import type { IcpSwapAPITokenInfo, Null } from "@icpswap/types";
+import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
+import { Box, Typography } from "components/Mui";
+import { Select } from "components/Select/ForToken";
+import type { MenuProps } from "components/Select/types";
+import { TokenPair } from "components/TokenPair";
 import { useTokenLogo } from "hooks/token/useTokenLogo";
-import { Principal } from "@dfinity/principal";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useStateSwapAllTokens } from "store/global/hooks";
 import { useAllSwapPools } from "store/swap/hooks";
-import { useTranslation } from "react-i18next";
-import type { MenuProps } from "components/Select/types";
-import { isUndefinedOrNull, isValidPrincipal } from "@icpswap/utils";
 
 function isFilteredByNameOrSymbol(tokenInfo: IcpSwapAPITokenInfo, search: string | undefined) {
   if (!search) return false;

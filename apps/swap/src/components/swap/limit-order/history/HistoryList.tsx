@@ -1,13 +1,12 @@
-import { useMemo } from "react";
-import { Box, makeStyles } from "components/Mui";
-import { Flex, LoadingRow } from "@icpswap/ui";
 import { useUserLimitTransactions } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
+import { Flex, LoadingRow } from "@icpswap/ui";
+import { Box, makeStyles } from "components/Mui";
 import { useScrollToTop } from "hooks/useScrollToTop";
-
+import { useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { LimitTransactionsEmpty } from "../Empty";
 import { HistoryHeader } from "./HistoryHeader";
 import { HistoryRow } from "./HistoryRow";
-import { LimitTransactionsEmpty } from "../Empty";
 
 const useStyles = makeStyles(() => {
   return {
@@ -20,23 +19,12 @@ const useStyles = makeStyles(() => {
 
 export function HistoryList() {
   const classes = useStyles();
-
   const principal = useAccountPrincipal();
 
-  const start_time = useMemo(() => {
-    const now = parseInt(String(new Date().getTime() / 1000));
-    return now - 60 * 24 * 3600;
-  }, []);
-
-  const { result: limitTransactionsResult, loading } = useUserLimitTransactions(
-    principal?.toString(),
-    start_time,
-    0,
-    100,
-  );
+  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions(principal?.toString(), 1, 100);
 
   const limitTransactions = useMemo(() => {
-    return limitTransactionsResult?.records;
+    return limitTransactionsResult?.content;
   }, [limitTransactionsResult]);
 
   const scrollToTop = useScrollToTop();

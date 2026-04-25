@@ -1,8 +1,7 @@
-import { WrapICP, WrapICPInterfaceFactory, EXTToken, EXTTokenInterfaceFactory } from "@icpswap/candid";
-import { ActorIdentity } from "@icpswap/types";
-
-import { actor } from "../actor";
+import { type EXTToken, EXTTokenInterfaceFactory, type WrapICP, WrapICPInterfaceFactory } from "@icpswap/candid";
+import type { ActorIdentity } from "@icpswap/types";
 import { ActorName } from "../ActorName";
+import { actor } from "../actor";
 
 export const ext = (canisterId: string, identity?: ActorIdentity) =>
   actor.create<EXTToken>({

@@ -1,22 +1,22 @@
-import { useState, ReactNode } from "react";
-import { Grid, Box, Typography, Link, makeStyles } from "components/Mui";
-import { Copy, InfoWrapper } from "components/index";
-import { FarmClaimTransactions, FarmTransactions } from "components/info/farm";
-import { useParams } from "react-router-dom";
+import { AnonymousPrincipal } from "@icpswap/constants";
+import { useFarmCycles, useFarmState, useUserFarmInfo, useV3FarmRewardMetadata } from "@icpswap/hooks";
+import { BreadcrumbsV1, MainCard } from "@icpswap/ui";
 import {
+  cycleValueFormat,
+  icDashboardExplorerLink,
   parseTokenAmount,
   shorten,
-  explorerLink,
   toSignificantWithGroupSeparator,
-  cycleValueFormat,
 } from "@icpswap/utils";
+import { Copy, InfoWrapper } from "components/index";
+import { FarmClaimTransactions, FarmTransactions } from "components/info/farm";
+import { Box, Grid, Link, makeStyles, Typography } from "components/Mui";
 import dayjs from "dayjs";
-import { useUserFarmInfo, useV3FarmRewardMetadata, useFarmCycles, useFarmState } from "@icpswap/hooks";
-import { AnonymousPrincipal } from "@icpswap/constants";
-import { MainCard, BreadcrumbsV1 } from "@icpswap/ui";
 import { useToken } from "hooks/index";
 import upperFirst from "lodash/upperFirst";
+import { type ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   return {
@@ -62,9 +62,9 @@ export default function FarmDetails() {
   const { t } = useTranslation();
   const classes = useStyles();
   const { id: farmId } = useParams() as { id: string };
-  const { result: farmInfo } = useUserFarmInfo(farmId, AnonymousPrincipal);
-  const { result: farmMetadata } = useV3FarmRewardMetadata(farmId);
-  const { result: cycles } = useFarmCycles(farmId);
+  const { data: farmInfo } = useUserFarmInfo(farmId, AnonymousPrincipal);
+  const { data: farmMetadata } = useV3FarmRewardMetadata(farmId);
+  const { data: cycles } = useFarmCycles(farmId);
 
   const state = useFarmState(farmInfo);
 
@@ -123,7 +123,7 @@ export default function FarmDetails() {
                 value={
                   <Typography component="span" color="text.primary">
                     {parseTokenAmount(farmInfo?.totalReward, rewardToken?.decimals).toFormat()}
-                    <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                    <Link href={icDashboardExplorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                       &nbsp;{`${rewardToken?.symbol ?? "--"}`}
                     </Link>
                   </Typography>
@@ -138,7 +138,7 @@ export default function FarmDetails() {
                         parseTokenAmount(farmMetadata.totalRewardHarvested.toString(), rewardToken.decimals).toString(),
                         8,
                       )}
-                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      <Link href={icDashboardExplorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                         &nbsp;{rewardToken.symbol}
                       </Link>
                     </>
@@ -159,7 +159,7 @@ export default function FarmDetails() {
                         ).toString(),
                         8,
                       )}
-                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      <Link href={icDashboardExplorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                         &nbsp;{rewardToken.symbol}
                       </Link>
                     </>
@@ -192,7 +192,7 @@ export default function FarmDetails() {
                         parseTokenAmount(farmMetadata.rewardPerCycle, rewardToken.decimals).toString(),
                         8,
                       )}
-                      <Link href={explorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
+                      <Link href={icDashboardExplorerLink(farmInfo?.rewardToken.address ?? "")} target="_blank">
                         &nbsp;{rewardToken.symbol}
                       </Link>
                     </>

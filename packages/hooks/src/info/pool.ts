@@ -1,8 +1,6 @@
-import { useCallback } from "react";
+import type { InfoPoolDataResponse, InfoPoolRealTimeDataResponse, Null, PageResponse } from "@icpswap/types";
 import { icpswap_fetch_get } from "@icpswap/utils";
-import { PageResponse, InfoPoolDataResponse, Null, InfoPoolRealTimeDataResponse } from "@icpswap/types";
-
-import { useCallsData } from "../useCallData";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 interface GetPoolChartsProps {
   poolId: string;
@@ -26,13 +24,20 @@ interface UsePoolChartsProps {
   limit: number;
 }
 
-export function usePoolCharts({ poolId, level, page, limit }: UsePoolChartsProps) {
-  return useCallsData(
-    useCallback(async () => {
+export function usePoolCharts({
+  poolId,
+  level,
+  page,
+  limit,
+}: UsePoolChartsProps): UseQueryResult<PageResponse<InfoPoolDataResponse> | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePoolCharts", poolId, level, page, limit],
+    queryFn: async () => {
       if (!poolId) return undefined;
       return await getPoolCharts({ page, poolId, level, limit });
-    }, [poolId, level, page, limit]),
-  );
+    },
+    enabled: !!poolId,
+  });
 }
 
 export async function getInfoPoolDetails({ poolId }: { poolId: string }) {
@@ -41,11 +46,17 @@ export async function getInfoPoolDetails({ poolId }: { poolId: string }) {
   return result?.data;
 }
 
-export function useInfoPoolDetails({ poolId }: { poolId: string | Null }) {
-  return useCallsData(
-    useCallback(async () => {
+export function useInfoPoolDetails({
+  poolId,
+}: {
+  poolId: string | Null;
+}): UseQueryResult<InfoPoolRealTimeDataResponse | undefined, Error> {
+  return useQuery({
+    queryKey: ["useInfoPoolDetails", poolId],
+    queryFn: async () => {
       if (!poolId) return undefined;
       return await getInfoPoolDetails({ poolId });
-    }, [poolId]),
-  );
+    },
+    enabled: !!poolId,
+  });
 }

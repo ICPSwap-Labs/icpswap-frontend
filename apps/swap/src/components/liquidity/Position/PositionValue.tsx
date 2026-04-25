@@ -1,18 +1,18 @@
-import { useMemo } from "react";
-import { Typography, Box, useTheme } from "components/Mui";
-import { MainCard, TokenImage } from "components/index";
+import type { Position } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
 import {
   BigNumber,
   formatDollarAmount,
+  formatLiquidityAmount,
   isUndefinedOrNull,
   nonUndefinedOrNull,
   numToPercent,
-  formatLiquidityAmount,
 } from "@icpswap/utils";
-import { Position } from "@icpswap/swap-sdk";
+import { MainCard, TokenImage } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useUSDPriceById } from "hooks/index";
 import { usePositionValue } from "hooks/liquidity";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 interface PositionValueProps {

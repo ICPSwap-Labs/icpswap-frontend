@@ -1,7 +1,7 @@
-import { lazy } from "react";
 import Loadable from "components/Loading/Loadable";
 import i18n from "i18n";
-import { RouteDefinition } from "./type";
+import { lazy } from "react";
+import type { RouteDefinition } from "./type";
 
 const Staking = Loadable(lazy(() => import("../views/staking-token")));
 const StakingDetails = Loadable(lazy(() => import("../views/staking-token/details")));

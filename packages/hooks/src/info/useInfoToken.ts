@@ -1,32 +1,35 @@
-import { useMemo } from "react";
-import useSwr from "swr";
-import useSWRImmutable from "swr/immutable";
-import type { Null, InfoTokenRealTimeDataResponse } from "@icpswap/types";
 import { ckUSDC } from "@icpswap/tokens";
+import type { InfoTokenRealTimeDataResponse, Null } from "@icpswap/types";
+import { useQuery } from "@tanstack/react-query";
+import { atom, useAtom, useAtomValue } from "jotai";
+import { useMemo } from "react";
 
 import { getNodeInfoAllTokens } from "./node";
 
-export function useFetchInfoAllTokens() {
-  const { data } = useSwr(
-    ["info_all_tokens"],
-    async () => {
-      return await getNodeInfoAllTokens();
-    },
-    {
-      refreshInterval: 60000,
-    },
-  );
+const infoAtom = atom<InfoTokenRealTimeDataResponse[]>([]);
 
-  return data;
+export function useFetchInfoAllTokens() {
+  const [, setInfoAllTokens] = useAtom(infoAtom);
+
+  const { data } = useQuery({
+    queryKey: ["info_all_tokens"],
+    queryFn: async () => {
+      const data = await getNodeInfoAllTokens();
+      setInfoAllTokens(data);
+      return data;
+    },
+    refetchInterval: 60_000,
+  });
+
+  return useMemo(() => data, [data]);
 }
 
 export function useInfoAllTokens() {
-  const { data } = useSWRImmutable<InfoTokenRealTimeDataResponse[] | undefined>(["info_all_tokens"]);
-  return useMemo(() => data, data);
+  return useAtomValue(infoAtom);
 }
 
 export function useInfoToken(tokenId: string | Null): InfoTokenRealTimeDataResponse | undefined {
-  const { data } = useSWRImmutable<InfoTokenRealTimeDataResponse[] | undefined>(["info_all_tokens"]);
+  const data = useInfoAllTokens();
 
   return useMemo(() => {
     const info = data?.find((e) => e.tokenLedgerId === tokenId);

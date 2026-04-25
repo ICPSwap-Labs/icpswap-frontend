@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { useTheme } from "components/Mui";
 import { MenuItem } from "@icpswap/ui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { useTheme } from "components/Mui";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
 import { useToken } from "hooks/index";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useCallback } from "react";
 
 interface TokenSendItemProps {
   tokenId: string;
@@ -11,8 +11,8 @@ interface TokenSendItemProps {
 
 export function TokenSendItem({ tokenId }: TokenSendItemProps) {
   const theme = useTheme();
-  const { setPages } = useWalletContext();
-  const { setSendToken } = useWalletTokenContext();
+  const { setPages } = useWalletStore();
+  const { setSendToken } = useWalletTokenStore();
   const [, token] = useToken(tokenId);
 
   const handleSend = useCallback(() => {
@@ -20,7 +20,7 @@ export function TokenSendItem({ tokenId }: TokenSendItemProps) {
       setPages(WalletManagerPage.Send, false);
       setSendToken(token);
     }
-  }, [setPages, tokenId, token]);
+  }, [setPages, token, setSendToken]);
 
   return (
     <MenuItem

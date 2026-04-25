@@ -1,10 +1,10 @@
-import { Box, useTheme, Typography } from "components/Mui";
-import { useCallback, useRef, useState } from "react";
-import { Flex, MenuWrapper, MenuItem } from "@icpswap/ui";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import type { AddressBook as AddressBookType } from "@icpswap/types";
+import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useRemoveAddressHandler } from "hooks/wallet/useRemoveAddressHandler";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
+import { useCallback, useRef, useState } from "react";
 
 interface AddressBookManagerProps {
   addressBook: AddressBookType;
@@ -14,8 +14,8 @@ export function AddressBookManager({ addressBook }: AddressBookManagerProps) {
   const ref = useRef(null);
   const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
-  const { setPages } = useWalletContext();
-  const { setEditAddressBook } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { setEditAddressBook } = useWalletAddressBookStore();
   const removeAddressHandler = useRemoveAddressHandler();
 
   const handleMouseEnter = () => {
@@ -33,7 +33,7 @@ export function AddressBookManager({ addressBook }: AddressBookManagerProps) {
   const handleEditAddress = useCallback(() => {
     setPages(WalletManagerPage.EditAddress, false);
     setEditAddressBook(addressBook);
-  }, [setPages, addressBook]);
+  }, [setPages, addressBook, setEditAddressBook]);
 
   return (
     <Box

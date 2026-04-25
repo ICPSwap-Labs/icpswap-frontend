@@ -1,7 +1,7 @@
-import { useState } from "react";
+import type { Pool, Token } from "@icpswap/swap-sdk";
 import { TextButton } from "@icpswap/ui";
 import { DepositModal } from "components/swap/DepositModal";
-import { Pool, Token } from "@icpswap/swap-sdk";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface DepositButtonProps {

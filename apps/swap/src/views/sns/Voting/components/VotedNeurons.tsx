@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
+import { Vote } from "@icpswap/constants";
 import type { Neuron, ProposalData } from "@icpswap/types";
 import { shorten, toHexString } from "@icpswap/utils";
-import { Collapse, Typography, Box, useTheme } from "components/Mui";
-import { neuronFormat, votingPowerFormat, getVotingPower, getVotingPowers, getVote } from "utils/sns/index";
-import { ChevronDown, ThumbsUp, ThumbsDown } from "react-feather";
-import { Vote } from "@icpswap/constants";
+import { Box, Collapse, Typography, useTheme } from "components/Mui";
+import { useMemo, useState } from "react";
+import { ChevronDown, ThumbsDown, ThumbsUp } from "react-feather";
 import { useTranslation } from "react-i18next";
+import { getVote, getVotingPower, getVotingPowers, neuronFormat, votingPowerFormat } from "utils/sns/index";
 
 interface VotedNeuronItemProps {
   neuron: Neuron;

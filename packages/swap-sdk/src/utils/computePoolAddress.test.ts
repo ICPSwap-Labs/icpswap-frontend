@@ -1,7 +1,6 @@
-import { describe, it, expect } from "vitest";
-
-import { Token } from "../core";
+import { describe, expect, it } from "vitest";
 import { FeeAmount } from "../constants";
+import { Token } from "../core";
 import { computePoolAddress } from "./computePoolAddress";
 
 describe("#computePoolAddress", () => {

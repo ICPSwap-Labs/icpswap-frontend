@@ -1,17 +1,17 @@
-import { useEffect, useMemo } from "react";
-import { Box } from "components/Mui";
-import { PositionCardForFarm } from "components/liquidity/index";
-import { usePosition } from "hooks/swap/usePosition";
-import { LoadingRow } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useSwapPositionsMultipleFarm, useSortedPositions, useMultiplePositionsFee } from "hooks/swap/index";
-import { usePositionContext } from "components/swap/index";
-import { useUserAllFarmsInfo } from "hooks/staking-farm/index";
-import { PositionFilterState, PositionSort, type UserPositionForFarm } from "types/swap";
-import { getPositionFeeKey } from "utils/swap";
-import { useRefreshTrigger } from "hooks";
-import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/liquidity";
 import { YourFarmEmpty } from "components/farm/Empty";
+import { LoadingRow } from "components/index";
+import { PositionCardForFarm } from "components/liquidity/index";
+import { Box } from "components/Mui";
+import { usePositionContext } from "components/swap/index";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/liquidity";
+import { useRefreshTrigger } from "hooks";
+import { useUserAllFarmsInfo } from "hooks/staking-farm/index";
+import { useMultiplePositionsFee, useSortedPositions, useSwapPositionsMultipleFarm } from "hooks/swap/index";
+import { usePosition } from "hooks/swap/usePosition";
+import { useEffect, useMemo } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import type { PositionFilterState, PositionSort, UserPositionForFarm } from "types/swap";
+import { getPositionFeeKey } from "utils/swap";
 
 interface PositionItemProps {
   position: UserPositionForFarm;
@@ -60,7 +60,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
   const refreshTrigger = useRefreshTrigger(LIQUIDITY_OWNER_REFRESH_KEY);
 
   const { result: allFarms, loading: farmsLoading } = useUserAllFarmsInfo();
-  const { result: positions, loading } = useSwapPositionsMultipleFarm(allFarms, refreshTrigger);
+  const { data: positions, isLoading } = useSwapPositionsMultipleFarm(allFarms, refreshTrigger);
 
   const positionsFeeArgs = useMemo(() => {
     if (!positions) return undefined;
@@ -70,7 +70,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
         const existIndex = prev.findIndex(({ poolId }) => poolId === curr.poolId);
 
         if (existIndex === -1)
-          return [...prev, { poolId: curr.poolId, positionIds: [curr.positionId] }] as Array<{
+          return [prev.slice(), { poolId: curr.poolId, positionIds: [curr.positionId] }] as Array<{
             poolId: string;
             positionIds: bigint[];
           }>;
@@ -99,7 +99,7 @@ export function StakedPositions({ filterState, sort, hiddenNumbers }: StakedPosi
     sort,
   });
 
-  return (loading || farmsLoading) && !!principal ? (
+  return (isLoading || farmsLoading) && !!principal ? (
     <LoadingRow>
       <div />
       <div />

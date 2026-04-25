@@ -1,15 +1,15 @@
-import { Box, useTheme } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, Image } from "@icpswap/ui";
 import {
   BigNumber,
-  nonUndefinedOrNull,
   isUndefinedOrNull,
+  nonUndefinedOrNull,
+  numToPercent,
   parseTokenAmount,
   percentToNum,
-  numToPercent,
 } from "@icpswap/utils";
-import { Flex, Image } from "@icpswap/ui";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { Box, useTheme } from "components/Mui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 let MouseDownX: number | null = null;
@@ -57,8 +57,8 @@ export function BalanceSlider({ amount, token, balance, onAmountChange }: Balanc
     return !amount
       ? "0%"
       : !new BigNumber(amount).isLessThan(unformattedBalance)
-      ? "100%"
-      : numToPercent(new BigNumber(amount).dividedBy(unformattedBalance).toString());
+        ? "100%"
+        : numToPercent(new BigNumber(amount).dividedBy(unformattedBalance).toString());
   }, [balance, token, amount]);
 
   const arrowPosition = useMemo(() => {
@@ -71,7 +71,7 @@ export function BalanceSlider({ amount, token, balance, onAmountChange }: Balanc
     if (ref.current) {
       setWrapperWidth(ref.current.clientWidth);
     }
-  }, [ref]);
+  }, []);
 
   const handleWalletBalanceClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
@@ -99,18 +99,21 @@ export function BalanceSlider({ amount, token, balance, onAmountChange }: Balanc
         onAmountChange(amount);
       }
     },
-    [wrapperWidth, canisterRef, token, balance, onAmountChange],
+    [wrapperWidth, token, balance, onAmountChange],
   );
 
-  const onArrowPositionChange = (position: string) => {
-    if (nonUndefinedOrNull(balance) && nonUndefinedOrNull(token)) {
-      const amount = parseTokenAmount(balance, token.decimals)
-        .multipliedBy(percentToNum(position))
-        .toFixed(token.decimals);
+  const onArrowPositionChange = useCallback(
+    (position: string) => {
+      if (nonUndefinedOrNull(balance) && nonUndefinedOrNull(token)) {
+        const amount = parseTokenAmount(balance, token.decimals)
+          .multipliedBy(percentToNum(position))
+          .toFixed(token.decimals);
 
-      onAmountChange(amount);
-    }
-  };
+        onAmountChange(amount);
+      }
+    },
+    [balance, token, onAmountChange],
+  );
 
   useEffect(() => {
     const move = (event: MouseEvent) => {
@@ -124,8 +127,8 @@ export function BalanceSlider({ amount, token, balance, onAmountChange }: Balanc
         const position = new BigNumber(percentToNum(__position)).isGreaterThan(1)
           ? "100%"
           : new BigNumber(percentToNum(__position)).isLessThan(0)
-          ? "0%"
-          : __position;
+            ? "0%"
+            : __position;
 
         setArrowPosition(position);
         onArrowPositionChange(position);
@@ -145,16 +148,13 @@ export function BalanceSlider({ amount, token, balance, onAmountChange }: Balanc
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", mouseUp);
     };
-  }, [mouseDown, wrapperWidth, arrowPosition, arrowPositionByMouse]);
+  }, [mouseDown, wrapperWidth, arrowPosition, arrowPositionByMouse, onArrowPositionChange]);
 
-  const handleArrowMouseDown = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      setMouseDown(true);
-      MouseDownX = event.screenX;
-    },
-    [setMouseDown],
-  );
+  const handleArrowMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setMouseDown(true);
+    MouseDownX = event.screenX;
+  }, []);
 
   return (
     <Box
@@ -164,54 +164,52 @@ export function BalanceSlider({ amount, token, balance, onAmountChange }: Balanc
         height: "12px",
       }}
     >
-      <>
-        <Flex
-          fullWidth
+      <Flex
+        fullWidth
+        sx={{
+          height: "4px",
+        }}
+      >
+        <Box
           sx={{
+            position: "relative",
+            width: "100%",
             height: "4px",
+            borderRadius: "10px",
+            background: theme.palette.background.level4,
+            cursor: "pointer",
           }}
+          onClick={handleWalletBalanceClick}
         >
           <Box
             sx={{
-              position: "relative",
-              width: "100%",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: balanceWidth ?? 0,
               height: "4px",
               borderRadius: "10px",
-              background: theme.palette.background.level4,
+              background: "#63D7B9",
               cursor: "pointer",
             }}
-            onClick={handleWalletBalanceClick}
-          >
-            <Box
-              sx={{
-                position: "absolute",
-                left: 0,
-                top: 0,
-                width: balanceWidth ?? 0,
-                height: "4px",
-                borderRadius: "10px",
-                background: "#63D7B9",
-                cursor: "pointer",
-              }}
-            />
-          </Box>
-        </Flex>
-
-        <Box
-          sx={{
-            position: "absolute",
-            left: arrowPositionByMouse ?? arrowPosition,
-            top: "4px",
-            width: "8px",
-            height: "8px",
-            cursor: "pointer",
-            transform: `translate(-50%, 0)`,
-          }}
-          onMouseDown={handleArrowMouseDown}
-        >
-          <Image sx={{ width: "8px", height: "8px" }} src="/images/swap-balance-arrow.png" />
+          />
         </Box>
-      </>
+      </Flex>
+
+      <Box
+        sx={{
+          position: "absolute",
+          left: arrowPositionByMouse ?? arrowPosition,
+          top: "4px",
+          width: "8px",
+          height: "8px",
+          cursor: "pointer",
+          transform: `translate(-50%, 0)`,
+        }}
+        onMouseDown={handleArrowMouseDown}
+      >
+        <Image sx={{ width: "8px", height: "8px" }} src="/images/swap-balance-arrow.png" />
+      </Box>
     </Box>
   );
 }

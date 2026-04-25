@@ -1,17 +1,17 @@
-import { useCallback } from "react";
-import { ckBridgeChain } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { ckETH } from "@icpswap/tokens";
+import { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import { ckBTC, ckDoge, ckETH } from "@icpswap/tokens";
 import { Flex, Image } from "@icpswap/ui";
+import { BridgeTokenSelector, SelectButton } from "components/ck-bridge";
 import { Box } from "components/Mui";
-import { SelectButton, BridgeTokenSelector } from "components/ck-bridge";
+import { useCallback } from "react";
 
 interface BridgeTokensProps {
   token: Token;
-  bridgeChain: ckBridgeChain;
-  onTokenChange: (token: Token, chain: ckBridgeChain) => void;
-  onBridgeChainChange: (chain: ckBridgeChain) => void;
-  targetTokenBridgeChain: ckBridgeChain;
+  bridgeChain: BridgeChainType;
+  onTokenChange: (token: Token, chain: BridgeChainType) => void;
+  onBridgeChainChange: (chain: BridgeChainType) => void;
+  targetTokenBridgeChain: BridgeChainType;
 }
 
 export function BridgeTokens({
@@ -22,13 +22,27 @@ export function BridgeTokens({
   targetTokenBridgeChain,
 }: BridgeTokensProps) {
   const handleSwitchChain = useCallback(() => {
-    onBridgeChainChange(
-      bridgeChain === ckBridgeChain.icp
-        ? token.address === ckETH.address
-          ? ckBridgeChain.eth
-          : ckBridgeChain.btc
-        : ckBridgeChain.icp,
-    );
+    let newChain: BridgeChainType;
+
+    if (bridgeChain === BridgeChainType.icp) {
+      switch (token.address) {
+        case ckETH.address:
+          newChain = BridgeChainType.eth;
+          break;
+        case ckDoge.address:
+          newChain = BridgeChainType.doge;
+          break;
+        case ckBTC.address:
+          newChain = BridgeChainType.btc;
+          break;
+        default:
+          newChain = BridgeChainType.erc20;
+      }
+    } else {
+      newChain = BridgeChainType.icp;
+    }
+
+    onBridgeChainChange(newChain);
   }, [bridgeChain, onBridgeChainChange, token]);
 
   return (

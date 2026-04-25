@@ -1,22 +1,22 @@
-import { useMemo, useState } from "react";
-import { Box } from "components/Mui";
-import {
-  MainCard,
-  ChartDateButtons,
-  PoolVolumeChart,
-  PoolTvlChart,
-  SmallTabsButtonWrapper,
-  SmallTabButton,
-  ChartView,
-  PoolAPRChart,
-  APRChartTimeButtons,
-  Flex,
-} from "@icpswap/ui";
-import { DensityChart } from "components/info/DensityChart";
-import { ChartTimeEnum, VolumeWindow } from "@icpswap/types";
-import i18n from "i18n/index";
 import { usePoolCharts } from "@icpswap/hooks";
+import { ChartTimeEnum, VolumeWindow } from "@icpswap/types";
+import {
+  APRChartTimeButtons,
+  ChartDateButtons,
+  ChartView,
+  Flex,
+  MainCard,
+  PoolAPRChart,
+  PoolTvlChart,
+  PoolVolumeChart,
+  SmallTabButton,
+  SmallTabsButtonWrapper,
+} from "@icpswap/ui";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { DensityChart } from "components/info/DensityChart";
+import { Box } from "components/Mui";
+import i18n from "i18n/index";
+import { useMemo, useState } from "react";
 
 export const chartViews = [
   { label: i18n.t("common.apr"), value: ChartView.APR },
@@ -36,7 +36,7 @@ export function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps
   const [aprTime, setAPRTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
   const [chartView, setChartView] = useState<ChartView>(ChartView.TVL);
 
-  const { result: poolChartsResult, loading } = usePoolCharts({
+  const { data: poolChartsResult, isLoading: loading } = usePoolCharts({
     poolId: canisterId,
     level: "d1",
     page: 1,
@@ -46,7 +46,7 @@ export function PoolChart({ canisterId, token0Price, volume24H }: PoolChartProps
   const poolChartsData = useMemo(() => {
     if (isUndefinedOrNull(poolChartsResult)) return [];
     return poolChartsResult.content ? [...poolChartsResult.content].reverse() : [];
-  }, [poolChartsResult?.content]);
+  }, [poolChartsResult]);
 
   return (
     <MainCard

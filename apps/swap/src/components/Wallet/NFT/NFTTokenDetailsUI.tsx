@@ -1,14 +1,14 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useCallback } from "react";
-import { Box, Button, Typography, useTheme } from "components/Mui";
+import type { NFTTokenMetadata } from "@icpswap/types";
+import { nonUndefinedOrNull, shorten } from "@icpswap/utils";
 import { Flex, LoadingRow } from "components/index";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
+import { Box, Button, Typography, useTheme } from "components/Mui";
 import { NFTAvatar as ExtNFTAvatar } from "components/NFT/ext/NFTAvatar";
 import NFTAvatar from "components/NFT/NFTAvatar";
-import { useTranslation } from "react-i18next";
-import { nonUndefinedOrNull, shorten } from "@icpswap/utils";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
 import { useClosePageBackToNFT } from "hooks/wallet/useClosePageBackToNFT";
-import { NFTTokenMetadata } from "@icpswap/types";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 interface NFTTokenDetailsUIProps {
   logo: string | undefined;
@@ -33,7 +33,7 @@ export function NFTTokenDetailsUI({
   isExt,
   metadata,
 }: NFTTokenDetailsUIProps) {
-  const { setPages } = useWalletContext();
+  const { setPages } = useWalletStore();
   const { t } = useTranslation();
   const theme = useTheme();
 

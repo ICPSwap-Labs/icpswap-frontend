@@ -1,5 +1,5 @@
-import { Avatar, Box, BoxProps } from "./Mui";
 import { SnsIcon } from "../assets/icons/SNS";
+import { Avatar, Box, type BoxProps } from "./Mui";
 
 export interface TokenImageProps {
   logo: string | undefined | null;

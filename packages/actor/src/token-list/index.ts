@@ -1,7 +1,6 @@
-import { TokenListService, TokenListInterfaceFactory } from "@icpswap/candid";
-
-import { actor } from "../actor";
+import { TokenListInterfaceFactory, type TokenListService } from "@icpswap/candid";
 import { ActorName } from "../ActorName";
+import { actor } from "../actor";
 
 export const tokenList = async (identity?: true) =>
   actor.create<TokenListService>({

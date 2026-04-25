@@ -1,8 +1,8 @@
-import { useMemo } from "react";
+import { useInfoAllTokens } from "@icpswap/hooks";
 import type { PoolMetadata } from "@icpswap/types";
 import { BigNumber } from "@icpswap/utils";
-import { useInfoAllTokens } from "@icpswap/hooks";
-import { useMultiplePositions, type PositionInfo } from "hooks/swap/useMultiplePositions";
+import { type PositionInfo, useMultiplePositions } from "hooks/swap/useMultiplePositions";
+import { useMemo } from "react";
 
 export interface UseMultiPositionsValueProps {
   positionInfos: PositionInfo[] | undefined;
@@ -37,6 +37,7 @@ export function useMultiPoolPositionsValue(args: UseMultiPositionsValueProps[]) 
     });
 
     return vals;
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(positions), allTokenInfos]);
 }
 
@@ -82,6 +83,7 @@ export function useMultiPoolPositionsTotalValue(args: UseMultiPoolPositionsTotal
     });
 
     return totalValue?.toString();
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(positions), allTokenInfos]);
 }
 

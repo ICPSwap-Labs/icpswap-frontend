@@ -1,17 +1,17 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Box } from "components/Mui";
-import { Flex, LoadingRow, NoData } from "@icpswap/ui";
-import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { useCanisterUserNFTCount, useNFTCanisterList, useCanisterLogo } from "hooks/nft/useNFTCalls";
-import { isICPSwapOfficial } from "utils/index";
-import { useEXTManager, useSelectedCanistersManager } from "store/nft/hooks";
-import { useWalletNFTContext } from "components/Wallet/NFT/NFTContext";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { useEXTAllCollections, useExtUserNFTs } from "@icpswap/hooks";
-import type { NFTControllerInfo, EXTCollection, ExtNft } from "@icpswap/types";
+import type { EXTCollection, ExtNft, NFTControllerInfo } from "@icpswap/types";
+import { Flex, LoadingRow, NoData } from "@icpswap/ui";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { Box } from "components/Mui";
 import { NFTAssetsRowUI } from "components/Wallet/NFT/NFTAssetsRowUI";
+import { useWalletNFTStore } from "components/Wallet/NFT/store";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useCanisterLogo, useCanisterUserNFTCount, useNFTCanisterList } from "hooks/nft/useNFTCalls";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
+import { useEXTManager, useSelectedCanistersManager } from "store/nft/hooks";
 import { useHideZeroNFTManager } from "store/wallet/hooks";
+import { isICPSwapOfficial } from "utils/index";
 
 const ICPSwapPositionNFTs = [
   "jwh2l-aqaaa-aaaan-qatdq-cai",
@@ -26,12 +26,12 @@ interface NFTRowProps {
 
 function NFTRow({ info, updateHidedNFTs }: NFTRowProps) {
   const account = useAccount();
-  const { setDisplayedNFTInfo } = useWalletNFTContext();
-  const { setPages } = useWalletContext();
+  const { setDisplayedNFTInfo } = useWalletNFTStore();
+  const { setPages } = useWalletStore();
   const [hideZeroNFT] = useHideZeroNFTManager();
 
-  const { result: count } = useCanisterUserNFTCount(info.cid, account);
-  const { result: logo } = useCanisterLogo(info.cid);
+  const { data: count } = useCanisterUserNFTCount(info.cid, account);
+  const { data: logo } = useCanisterLogo(info.cid);
 
   const handleNFTClick = useCallback(() => {
     setDisplayedNFTInfo({
@@ -50,7 +50,7 @@ function NFTRow({ info, updateHidedNFTs }: NFTRowProps) {
     if (isHidden && nonUndefinedOrNull(count)) {
       updateHidedNFTs(info.cid, Number(count));
     }
-  }, [info, count, hideZeroNFT]);
+  }, [info, count, isHidden, updateHidedNFTs]);
 
   return (
     <Box
@@ -77,8 +77,8 @@ interface ExtNFTRowProps {
 }
 
 function ExtNFTRow({ metadata, userAllExtNfts, updateHidedNFTs }: ExtNFTRowProps) {
-  const { setDisplayedNFTInfo } = useWalletNFTContext();
-  const { setPages } = useWalletContext();
+  const { setDisplayedNFTInfo } = useWalletNFTStore();
+  const { setPages } = useWalletStore();
   const [hideZeroNFT] = useHideZeroNFTManager();
 
   const handleNFTClick = useCallback(() => {
@@ -103,7 +103,7 @@ function ExtNFTRow({ metadata, userAllExtNfts, updateHidedNFTs }: ExtNFTRowProps
     if (nonUndefinedOrNull(count)) {
       updateHidedNFTs(metadata.id, count);
     }
-  }, [metadata, count, hideZeroNFT]);
+  }, [metadata, count, updateHidedNFTs]);
 
   return (
     <Box sx={{ padding: "0 12px", width: "100%", display: isHidden ? "none" : "block" }}>
@@ -124,9 +124,9 @@ interface ExtNFTsProps {
 
 function ExtNFTs({ updateHidedNFTs, updateExtNFTsLength }: ExtNFTsProps) {
   const principal = useAccountPrincipalString();
-  const { result: userAllExtNfts } = useExtUserNFTs(principal);
+  const { data: userAllExtNfts } = useExtUserNFTs(principal);
   const { nfts: importedExtNFTIds } = useEXTManager();
-  const { result: extNFTs } = useEXTAllCollections();
+  const { data: extNFTs } = useEXTAllCollections();
 
   const importedExtNFTs = useMemo(() => {
     if (isUndefinedOrNull(extNFTs) || isUndefinedOrNull(importedExtNFTIds)) return undefined;
@@ -157,7 +157,7 @@ function ExtNFTs({ updateHidedNFTs, updateExtNFTsLength }: ExtNFTsProps) {
 }
 
 export function NFTAssets() {
-  const { result: nftResult, loading } = useNFTCanisterList(0, 1000);
+  const { data: nftResult, isLoading: loading } = useNFTCanisterList(0, 1000);
   const [hidedNFTs, setHidedNFTs] = useState<Array<string>>([]);
   const [extNFTsLength, setExtNFTsLength] = useState<number | undefined>(undefined);
   const [hideZeroNFT] = useHideZeroNFTManager();
@@ -175,14 +175,11 @@ export function NFTAssets() {
     });
   }, [userSelectedCanisters, nftResult]);
 
-  const handleUpdateHidedNFTs = useCallback(
-    (canisterId: string) => {
-      setHidedNFTs((prevState) => {
-        return [...new Set([...prevState, canisterId])];
-      });
-    },
-    [setHidedNFTs],
-  );
+  const handleUpdateHidedNFTs = useCallback((canisterId: string) => {
+    setHidedNFTs((prevState) => {
+      return [...new Set([...prevState, canisterId])];
+    });
+  }, []);
 
   const noData = useMemo(() => {
     // always has NFT list, so only hideZeroNFT is true there will be no data

@@ -1,7 +1,5 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
-import { FilledTextField, Flex, MaxButton, NumberTextField, TokenImage } from "components/index";
+import { CurrencyAmount } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
 import {
   BigNumber,
   formatTokenAmount,
@@ -13,32 +11,34 @@ import {
   principalToAccount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useTranslation } from "react-i18next";
-import { ChevronDown } from "react-feather";
+import { FilledTextField, Flex, MaxButton, NumberTextField, TokenImage } from "components/index";
+import { Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { WalletBalance } from "components/swap/WalletBalance";
-import { CurrencyAmount } from "@icpswap/swap-sdk";
-import { useTokenBalance } from "hooks/token";
-import { MessageTypes, useRefreshTriggerManager, useTips, useUSDPrice } from "hooks/index";
+import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
+import { useWalletAddressBookStore } from "components/Wallet/address-book/store";
 import { BalanceSlider } from "components/Wallet/BalanceSlider";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { TOKEN_BALANCE_REFRESH } from "constants/wallet";
+import { MessageTypes, useRefreshTriggerManager, useTips, useUSDPrice } from "hooks/index";
+import { useTokenBalance } from "hooks/token";
 import { tokenTransfer } from "hooks/token/calls";
 import { getLocaleMessage } from "i18n/service";
-import { TOKEN_BALANCE_REFRESH } from "constants/wallet";
-import { ICP } from "@icpswap/tokens";
-import { useWalletAddressBookContext } from "components/Wallet/address-book/context";
-import { useWalletTokenContext } from "components/Wallet/token/context";
-import { AddressBookLabel } from "components/Wallet/address-book/AddressBookLabel";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronDown } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
-function usePrincipalStandard(tokenId: string, standard: string) {
+function getPrincipalStandard(tokenId: string, standard: string) {
   return (standard.includes("DIP20") || standard.includes("ICRC")) && tokenId !== ICP.address;
 }
 
 export function TokenSend() {
   const theme = useTheme();
-  const { setPages } = useWalletContext();
-  const { sendToken: token } = useWalletTokenContext();
-  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookContext();
+  const { setPages } = useWalletStore();
+  const { sendToken: token } = useWalletTokenStore();
+  const { selectedContact, setSelectedContact, setSelectContactPrevPage } = useWalletAddressBookStore();
 
   const principal = useAccountPrincipalString();
   const { t } = useTranslation();
@@ -62,24 +62,18 @@ export function TokenSend() {
     if (selectedContact) {
       setAddress(selectedContact.address);
     }
-  }, [selectedContact, setAddress]);
+  }, [selectedContact]);
 
-  const handleAddressChange = useCallback(
-    (value: string) => {
-      setAddress(value);
-    },
-    [setAddress],
-  );
+  const handleAddressChange = useCallback((value: string) => {
+    setAddress(value);
+  }, []);
 
-  const onUserInput = useCallback(
-    (value: string) => {
-      setAmount(value);
-    },
-    [setAmount],
-  );
+  const onUserInput = useCallback((value: string) => {
+    setAmount(value);
+  }, []);
 
   const tokenUSDPrice = useUSDPrice(token);
-  const { result: balance } = useTokenBalance(token.address, principal, refreshTrigger);
+  const { result: balance } = useTokenBalance({ tokenId: token?.address, account: principal, refresh: refreshTrigger });
 
   const currencyBalance = useMemo(() => {
     if (isUndefinedOrNull(balance)) return undefined;
@@ -91,7 +85,7 @@ export function TokenSend() {
     if (new BigNumber(balance).isEqualTo(0)) return;
 
     setAmount(parseTokenAmount(balance, token.decimals).toString());
-  }, [balance, token, setAmount]);
+  }, [balance, token]);
 
   const actualTransferAmount = useMemo(() => {
     if (isUndefinedOrNull(amount)) return 0;
@@ -105,12 +99,9 @@ export function TokenSend() {
     return isValidAccount(address);
   }, [address]);
 
-  const handleInputChange = useCallback(
-    (value: string) => {
-      setAmount(value);
-    },
-    [setAmount],
-  );
+  const handleInputChange = useCallback((value: string) => {
+    setAmount(value);
+  }, []);
 
   const handleSend = useCallback(async () => {
     if (isUndefinedOrNull(principal) || isUndefinedOrNull(address) || isUndefinedOrNull(amount)) return;
@@ -144,7 +135,7 @@ export function TokenSend() {
     }
 
     setLoading(false);
-  }, [setSelectedContact, setLoading, principal, address, amount]);
+  }, [setSelectedContact, principal, address, amount, openTip, setRefreshTrigger, t, token]);
 
   const error = useMemo(() => {
     if (
@@ -156,7 +147,7 @@ export function TokenSend() {
     )
       return t("wallet.send.enter.address.amount");
 
-    if (usePrincipalStandard(token.address, token.standard)) {
+    if (getPrincipalStandard(token.address, token.standard)) {
       if (!isValidPrincipal(address)) return t("common.invalid.principal.id");
     } else if (!isValidAccount(address) && !isValidPrincipal(address)) {
       return t("wallet.send.error.invalid.principal.account");
@@ -171,11 +162,11 @@ export function TokenSend() {
     }
 
     return undefined;
-  }, [address, token, amount, balance]);
+  }, [address, token, amount, balance, t]);
 
   const disableSend = useMemo(() => {
     return isValidAddress === false || loading || nonUndefinedOrNull(error);
-  }, [address, error, amount, loading, isValidAddress]);
+  }, [error, loading, isValidAddress]);
 
   const handleSelectToken = useCallback(() => {
     setPages(WalletManagerPage.TokenSelector, false);

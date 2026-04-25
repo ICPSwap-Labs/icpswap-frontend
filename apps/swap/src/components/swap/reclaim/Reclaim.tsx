@@ -1,10 +1,7 @@
-import { useCallback, useMemo } from "react";
-import { Box, Typography, useTheme, makeStyles, Theme } from "components/Mui";
-import { DotLoading } from "components/index";
 import { useParsedQueryString } from "@icpswap/hooks";
+import type { Pool, Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
-import { AlertTriangle } from "react-feather";
 import {
   BigNumber,
   isUndefinedOrNull,
@@ -12,14 +9,17 @@ import {
   parseTokenAmount,
   toSignificantWithGroupSeparator,
 } from "@icpswap/utils";
-import { Pool, Token } from "@icpswap/swap-sdk";
-import { useGlobalContext } from "hooks/index";
 import { CanisterIcon } from "assets/icons/swap/CanisterIcon";
-import colors from "theme/colors";
+import { DotLoading } from "components/index";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { DepositButton } from "components/swap/reclaim/DepositButton";
 import { WithdrawButton } from "components/swap/reclaim/WithdrawButton";
-import { useUnusedBalanceAndWithdrawQueue } from "hooks/swap/useUnusedBalanceAndWithdrawQueue";
 import { SWAP_REFRESH_KEY } from "constants/index";
+import { useGlobalContext } from "hooks/index";
+import { useUnusedBalanceAndWithdrawQueue } from "hooks/swap/useUnusedBalanceAndWithdrawQueue";
+import { useCallback, useMemo } from "react";
+import { AlertTriangle } from "react-feather";
+import colors from "theme/colors";
 
 const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -105,7 +105,7 @@ export function ReclaimTokensInPool({
         if (onInputTokenClick) onInputTokenClick(tokenAmount);
       }
     },
-    [inputToken],
+    [inputToken, onInputTokenClick],
   );
 
   const availableWithdrawTokens = useMemo(() => {

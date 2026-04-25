@@ -1,6 +1,6 @@
 export * from "./HistoryHeader";
-export * from "./HistoryRow";
 export * from "./HistoryList";
+export * from "./HistoryRow";
 
 export * from "./HistoryRowPro";
 export * from "./HistoryTablePro";

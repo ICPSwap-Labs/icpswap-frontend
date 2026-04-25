@@ -1,12 +1,12 @@
 import { useSwapPositions, useSwapUserPositions } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { useMemo } from "react";
-import { PositionDetails } from "types/swap";
+import type { PositionDetails } from "types/swap";
 
 export function usePositions(poolId: string | Null, principal: string | undefined, offset: number, limit: number) {
-  const { result: swapPoolPositions, loading: allPositionsLoading } = useSwapPositions(poolId, offset, limit);
+  const { data: swapPoolPositions, isLoading: allPositionsLoading } = useSwapPositions(poolId, offset, limit);
 
-  const { result: userSwapPoolAllPositions, loading: userAllPositionsLoading } = useSwapUserPositions(
+  const { data: userSwapPoolAllPositions, isLoading: userAllPositionsLoading } = useSwapUserPositions(
     poolId,
     principal,
   );

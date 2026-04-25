@@ -1,9 +1,9 @@
-import { usePositions } from "hooks/liquidity/usePositions";
-import { isUndefinedOrNull, pageArgsFormat } from "@icpswap/utils";
-import { useEffect, useMemo, useState } from "react";
-import { Null } from "@icpswap/types";
 import { useLimitOrders } from "@icpswap/hooks";
-import { type PaginationPadding } from "@icpswap/ui";
+import type { Null } from "@icpswap/types";
+import type { PaginationPadding } from "@icpswap/ui";
+import { isUndefinedOrNull, pageArgsFormat } from "@icpswap/utils";
+import { usePositions } from "hooks/liquidity/usePositions";
+import { useEffect, useMemo, useState } from "react";
 
 import { PositionTableUI } from "./PositionTableUI";
 
@@ -36,12 +36,12 @@ export function PositionTable({
     setPagination({ pageNum: page, pageSize: 10 });
   };
 
-  // Reset pagination when pool or principal change
   useEffect(() => {
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- Reset pagination when pool or principal change
   }, [poolId, principal]);
 
-  const { result: allLimitOrdersResult } = useLimitOrders(poolId);
+  const { data: allLimitOrdersResult } = useLimitOrders(poolId);
   const allLimitOrders = useMemo(() => {
     if (isUndefinedOrNull(allLimitOrdersResult)) return null;
 

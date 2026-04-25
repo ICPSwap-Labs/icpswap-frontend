@@ -1,11 +1,11 @@
-import { useState, useMemo, memo } from "react";
-import { Grid, Box, Typography, Theme, makeStyles } from "components/Mui";
-import { usePoolsTokenAmountsFromKey } from "hooks/swap/v3Calls";
-import { isDarkTheme } from "utils";
+import { FeeAmount, type Token } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
-import { Token, FeeAmount } from "@icpswap/swap-sdk";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { usePoolsTokenAmountsFromKey } from "hooks/swap/v3Calls";
 import i18n from "i18n/index";
+import { memo, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { isDarkTheme } from "utils";
 
 export const FEE_DESCRIPTION = {
   [FeeAmount.LOW]: i18n.t`Best for stable pairs`,
@@ -159,13 +159,13 @@ export function FeeSelector({ currencyA, currencyB, defaultActiveFee = FeeAmount
         token1: currencyB.address,
       };
     });
-  }, [LOCAL_FEES, currencyA, currencyB]);
+  }, [currencyA, currencyB]);
 
   const { result: tvl } = usePoolsTokenAmountsFromKey(feeAmountKeys);
 
   const fees = useMemo(() => {
     return LOCAL_FEES.map((fee, index) => {
-      if (tvl && tvl[index]) {
+      if (tvl?.[index]) {
         return {
           ...tvl[index],
           ...fee,
@@ -176,7 +176,7 @@ export function FeeSelector({ currencyA, currencyB, defaultActiveFee = FeeAmount
         ...fee,
       };
     });
-  }, [tvl, LOCAL_FEES]);
+  }, [tvl]);
 
   const getFee = (feeValue: FeeAmount) => {
     return fees.filter((fee) => fee.feeTier === feeValue)[0];

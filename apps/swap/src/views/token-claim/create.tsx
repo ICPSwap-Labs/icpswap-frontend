@@ -1,13 +1,6 @@
 /* eslint-disable no-param-reassign */
-import React, { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Typography, Grid, Box, Input, makeStyles, Theme } from "components/Mui";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { FilledTextField, TextFieldNumberComponent, Wrapper, MainCard, AuthButton } from "components/index";
-import { MessageTypes, useTips } from "hooks/useTips";
-import { formatTokenAmount, isValidAccount, numberToString, isValidPrincipal, isUndefinedOrNull } from "@icpswap/utils";
-import BigNumber from "bignumber.js";
-import { ResultStatus, type StatusResult } from "@icpswap/types";
+
+import { Principal } from "@icp-sdk/core/principal";
 import {
   createClaimEvent,
   setClaimEventData,
@@ -16,12 +9,21 @@ import {
   useLoadingCallData,
 } from "@icpswap/hooks";
 import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { read, utils } from "xlsx";
+import { ResultStatus, type StatusResult } from "@icpswap/types";
+import { formatTokenAmount, isUndefinedOrNull, isValidAccount, isValidPrincipal, numberToString } from "@icpswap/utils";
+import BigNumber from "bignumber.js";
+import { AuthButton, FilledTextField, MainCard, TextFieldNumberComponent, Wrapper } from "components/index";
+import { Box, Grid, Input, makeStyles, type Theme, Typography } from "components/Mui";
 import { useToken } from "hooks/index";
-import { Principal } from "@dfinity/principal";
-import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
-import { useUpdateTokenStandard } from "store/token/cache/hooks";
+import { MessageTypes, useTips } from "hooks/useTips";
+import type React from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useUpdateTokenStandard } from "store/token/cache/hooks";
+import { verifyTokenStandard } from "utils/token/verifyTokenStandard";
+import { read, utils } from "xlsx";
 
 import Config from "./Config";
 
@@ -113,7 +115,7 @@ export default function CreateTokenClaim() {
     if (values.standard && values.id) {
       call();
     }
-  }, [values.standard, values.id]);
+  }, [values.standard, values.id, openTip, updateTokenStandard]);
 
   const handleFieldChange = (value: string, field: string) => {
     setValues({ ...values, [field]: value });
@@ -238,7 +240,7 @@ export default function CreateTokenClaim() {
       if (status === ResultStatus.OK) {
         navigate("/token-claim");
       }
-    }, [token, principal, values, userClaims]),
+    }, [token, principal, values, userClaims, navigate, openTip]),
   );
 
   const ExcelTotalAmount = token

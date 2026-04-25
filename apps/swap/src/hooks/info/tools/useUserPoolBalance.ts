@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { Override } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
-import { useSwapPools, getUserUnusedBalance, getTokenBalance } from "@icpswap/hooks";
-import type { SwapPoolData } from "@icpswap/types";
+import { Principal } from "@icp-sdk/core/principal";
+import { getTokenBalance, getUserUnusedBalance, useSwapPools } from "@icpswap/hooks";
+import type { Override, SwapPoolData } from "@icpswap/types";
 import { principalToSubaccount } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export type UserSwapPoolsBalance = Override<
   SwapPoolData,
@@ -24,6 +23,7 @@ export function useUserUnDepositBalance(
     }
   }, [balances, pools]);
 
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- refetch dependencies
   useEffect(() => {
     const _fetch = async (pool: SwapPoolData) => {
       const sub = principalToSubaccount(principal!);
@@ -87,7 +87,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
   const [loading, setLoading] = useState(false);
   const [balances, setBalances] = useState<(UserSwapPoolsBalance | null)[]>([]);
 
-  const { result: pools, loading: poolsLoading } = useSwapPools();
+  const { data: pools, isLoading: poolsLoading } = useSwapPools();
 
   useEffect(() => {
     if (balances.length === pools?.length && pools?.length !== 0) {
@@ -99,6 +99,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
     return pools?.map((pool) => pool.canisterId.toString());
   }, [pools]);
 
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- refetch dependencies
   useEffect(() => {
     const _fetch = async (poolId: string) => {
       getUserUnusedBalance(poolId, Principal.fromText(principal!))
@@ -135,7 +136,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
       setLoading(true);
       call();
     }
-  }, [poolIds, reload, principal]);
+  }, [poolIds, reload, principal, pools]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     pools,

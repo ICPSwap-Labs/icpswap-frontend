@@ -1,4 +1,4 @@
-import { SettingInterfaceFactory, SettingService } from "@icpswap/candid";
+import { SettingInterfaceFactory, type SettingService } from "@icpswap/candid";
 
 import { ActorName } from "../ActorName";
 import { actor } from "../actor";

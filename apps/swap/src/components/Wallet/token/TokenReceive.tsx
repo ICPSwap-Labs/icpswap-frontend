@@ -1,14 +1,14 @@
-import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
-import { useState, useMemo, useCallback } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
-import { Flex } from "components/index";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
-import QRCode from "components/qrcode";
-import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
-import Copy from "components/Copy/index";
 import { ICP } from "@icpswap/tokens";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import Copy from "components/Copy/index";
+import { Flex } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import QRCode from "components/qrcode";
+import { DrawerWrapper } from "components/Wallet/DrawerWrapper";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { useCallback, useMemo, useState } from "react";
+import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 
 enum TAB {
   Principal = "Principal",
@@ -23,8 +23,8 @@ const Tabs = [
 export function TokenReceive() {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState<TAB>(TAB.Principal);
-  const { setPages } = useWalletContext();
-  const { tokenReceiveId } = useWalletTokenContext();
+  const { setPages } = useWalletStore();
+  const { tokenReceiveId } = useWalletTokenStore();
   const principal = useAccountPrincipalString();
   const account = useAccount();
 

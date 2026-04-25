@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Typography, Box, Menu, Grid, MenuItem, useTheme, makeStyles, Theme } from "components/Mui";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { isDarkTheme } from "utils";
 import { NoData } from "components/index";
+import { Box, Grid, Menu, MenuItem, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { KeyboardArrowDownIcon } from "components/MuiIcon";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import { isDarkTheme } from "utils";
 
 const useStyles = (contained: boolean, fullHeight?: boolean) => {
   return makeStyles((theme: Theme) => {
@@ -150,28 +151,26 @@ export function Select({
           container
           alignItems="center"
         >
-          <>
-            <Grid container alignItems="center">
-              <Grid item xs sx={{ marginRight: "10px" }}>
-                {value ? (
-                  <Value menus={menus} value={value} helperText={helperText} />
-                ) : (
-                  <Typography
-                    sx={{
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      whiteSpace: "nowrap",
-                    }}
-                    color={isDark ? "#fff" : "#c5c5c5"}
-                  >
-                    {props.placeholder}
-                  </Typography>
-                )}
-              </Grid>
-
-              <KeyboardArrowDownIcon sx={{ width: "18px", height: "18px", cursor: "pointer", color: "#8492C4" }} />
+          <Grid container alignItems="center">
+            <Grid item xs sx={{ marginRight: "10px" }}>
+              {value ? (
+                <Value menus={menus} value={value} helperText={helperText} />
+              ) : (
+                <Typography
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                  color={isDark ? "#fff" : "#c5c5c5"}
+                >
+                  {props.placeholder}
+                </Typography>
+              )}
             </Grid>
-          </>
+
+            <KeyboardArrowDownIcon sx={{ width: "18px", height: "18px", cursor: "pointer", color: "#8492C4" }} />
+          </Grid>
         </Grid>
       </Box>
 

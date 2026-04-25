@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
-import { useEffect, useMemo, useState } from "react";
-import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
-import { isValidPrincipal } from "@icpswap/utils";
 
-import { getUserUnusedBalance, _getSwapPoolAllBalance } from "./calls";
+import { Principal } from "@icp-sdk/core/principal";
+import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
+import { isValidPrincipal } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
+
+import { getUserUnusedBalance } from "./calls";
 
 const CALL_LIMITED = 20;
 
@@ -28,7 +29,7 @@ export function useUserUnUsedBalance(
     return pools?.map((pool) => pool.canisterId.toString());
   }, [pools]);
 
-  // When tokenId or targetPools is changed, update the index, and the _fetch would be abort if index is not match
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- When tokenId or targetPools is changed, update the index, and the _fetch would be abort if index is not match
   useEffect(() => {
     unused_fetch_index++;
   }, [tokenId, targetPools]);

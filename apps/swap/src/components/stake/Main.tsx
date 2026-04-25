@@ -1,17 +1,17 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { MainCard, Flex, Tooltip } from "components/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { parseTokenAmount, formatDollarAmount, toSignificantWithGroupSeparator, formatAmount } from "@icpswap/utils";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { Null, StakingPoolInfo } from "@icpswap/types";
 import { useStakePoolStatInfo } from "@icpswap/hooks";
-import { Token } from "@icpswap/swap-sdk";
-import { useTokenBalance } from "hooks/token";
-import { useApr } from "hooks/staking-token/useApr";
-import { useIntervalUserPoolInfo } from "hooks/staking-token";
-import { Stake } from "components/stake/Stake";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null, StakingPoolInfo } from "@icpswap/types";
+import { formatAmount, formatDollarAmount, parseTokenAmount, toSignificantWithGroupSeparator } from "@icpswap/utils";
+import { Flex, MainCard, Tooltip } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { Harvest, Unstake } from "components/stake/index";
+import { Stake } from "components/stake/Stake";
+import { useIntervalUserPoolInfo } from "hooks/staking-token";
+import { useApr } from "hooks/staking-token/useApr";
+import { useTokenBalance } from "hooks/token";
+import { useUSDPrice } from "hooks/useUSDPrice";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface StakeMainProps {
   poolId: string | undefined;
@@ -34,10 +34,14 @@ export function MainContent({
   const theme = useTheme();
   const principal = useAccountPrincipal();
 
-  const { result: userStakeTokenBalance } = useTokenBalance(stakeToken?.address, principal?.toString(), refreshTrigger);
+  const { result: userStakeTokenBalance } = useTokenBalance({
+    tokenId: stakeToken?.address,
+    account: principal,
+    refresh: refreshTrigger,
+  });
 
-  const userPoolInfo = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
-  const { result: stakeStatInfo } = useStakePoolStatInfo(poolId);
+  const { data: userPoolInfo } = useIntervalUserPoolInfo(poolId, principal, refreshTrigger);
+  const { data: stakeStatInfo } = useStakePoolStatInfo(poolId);
 
   const rewardTokenPrice = useUSDPrice(rewardToken);
   const stakeTokenPrice = useUSDPrice(stakeToken);

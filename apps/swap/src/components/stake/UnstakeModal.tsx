@@ -1,19 +1,20 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Button, Typography, Box, CircularProgress } from "components/Mui";
-import { Flex, Modal, NumberTextField, StepViewButton, MaxButton } from "components/index";
+import type { Token } from "@icpswap/swap-sdk";
 import {
   BigNumber,
-  parseTokenAmount,
+  formatDollarAmount,
   formatTokenAmount,
   isUndefinedOrNull,
+  parseTokenAmount,
   toSignificantWithGroupSeparator,
-  formatDollarAmount,
 } from "@icpswap/utils";
+import { Flex, MaxButton, Modal, NumberTextField, StepViewButton } from "components/index";
+import { Box, Button, CircularProgress, Typography } from "components/Mui";
 import { useUnstakeCall } from "hooks/staking-token/useUnstake";
-import { useLoadingTip, useTips, MessageTypes } from "hooks/useTips";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { Token } from "@icpswap/swap-sdk";
+import { MessageTypes, useLoadingTip, useTips } from "hooks/useTips";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface ClaimModalProps {
   open: boolean;
@@ -93,7 +94,7 @@ export function UnstakeModal({
   // Reset amount
   useEffect(() => {
     setAmount("");
-  }, [open]);
+  }, []);
 
   const errorMessage = useMemo(() => {
     if (!stakeToken || !stakeAmount) return t`Confirm`;
@@ -102,7 +103,7 @@ export function UnstakeModal({
       return t("common.error.insufficient.balance");
 
     return undefined;
-  }, [amount, stakeToken, stakeAmount]);
+  }, [amount, stakeToken, stakeAmount, t]);
 
   return (
     <Modal open={open} onClose={onClose} title={t`Unstake`} background="level1">

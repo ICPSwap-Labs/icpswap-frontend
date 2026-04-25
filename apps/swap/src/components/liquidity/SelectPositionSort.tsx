@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { Select } from "components/Select/ForToken";
-import { PositionSort } from "types/swap";
 import { Typography } from "components/Mui";
+import { Select } from "components/Select/ForToken";
 import i18n from "i18n/index";
+import { useEffect, useState } from "react";
+import { PositionSort } from "types/swap";
 
 type MenuProps = { label: string; value: PositionSort };
 

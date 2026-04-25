@@ -1,13 +1,13 @@
 /**
  * Credit to MUI team @ https://mui.com
  */
-import * as React from "react";
+
 import clsx from "clsx";
 import { ClickAwayListener } from "components/Mui";
-
-import useEventCallback from "../utils/useEventCallback";
-import { CloseReason, SharedProps, SnackbarKey } from "../types";
+import * as React from "react";
+import type { CloseReason, SharedProps, SnackbarKey } from "../types";
 import { ComponentClasses } from "../utils/styles";
+import useEventCallback from "../utils/useEventCallback";
 
 interface SnackbarProps extends Required<Pick<SharedProps, "disableWindowBlurListener" | "onClose">> {
   open: boolean;
@@ -67,11 +67,11 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>((props, ref) =>
    * Pause the timer when the user is interacting with the Snackbar
    * or when the user hide the window.
    */
-  const handlePause = () => {
+  const handlePause = React.useCallback(() => {
     if (timerAutoHide.current) {
       clearTimeout(timerAutoHide.current);
     }
-  };
+  }, []);
 
   /**
    * Restart the timer when the user is no longer interacting with the Snackbar
@@ -99,7 +99,7 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>((props, ref) =>
 
   const handleClickAway = (event: MouseEvent | TouchEvent) => {
     if (onClose) {
-      // @ts-ignore
+      // @ts-expect-error
       onClose(event, "clickaway", id);
     }
   };
@@ -116,11 +116,11 @@ const Snackbar = React.forwardRef<HTMLDivElement, SnackbarProps>((props, ref) =>
     }
 
     return undefined;
-  }, [disableWindowBlurListener, handleResume, open]);
+  }, [disableWindowBlurListener, open, handlePause, handleResume]);
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
-      {/* @ts-ignore */}
+      {/* oxlint-disable-next-line react/jsx-props-no-spreading -- merge upstream SnackbarProps */}
       <div
         ref={ref}
         {...SnackbarProps}

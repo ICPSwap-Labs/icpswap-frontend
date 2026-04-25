@@ -1,11 +1,11 @@
-import { useCallback } from "react";
+import type { Token } from "@icpswap/swap-sdk";
 import { ResultStatus } from "@icpswap/types";
-import { TokenInfo } from "types/token";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { withdraw, deposit } from "hooks/swap/v3Calls";
-import { Token } from "@icpswap/swap-sdk";
 import { sleep } from "@icpswap/utils";
+import { deposit, withdraw } from "hooks/swap/v3Calls";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import type { TokenInfo } from "types/token";
 
 export interface ReclaimArgs {
   poolId: string;
@@ -20,44 +20,47 @@ export function useReclaim() {
   const { t } = useTranslation();
   const [openTip] = useTips();
 
-  return useCallback(async ({ token, balance, poolId, name, type, refresh }: ReclaimArgs) => {
-    const amount = balance;
+  return useCallback(
+    async ({ token, balance, poolId, name, type, refresh }: ReclaimArgs) => {
+      const amount = balance;
 
-    const tokenId = "canisterId" in token ? token.canisterId : token.address;
-    const tokenFee = BigInt(token.transFee);
+      const tokenId = "canisterId" in token ? token.canisterId : token.address;
+      const tokenFee = BigInt(token.transFee);
 
-    if (amount !== BigInt(0)) {
-      if (type === "unDeposit") {
-        const result = await deposit(poolId, tokenId, amount, tokenFee);
+      if (amount !== BigInt(0)) {
+        if (type === "unDeposit") {
+          const result = await deposit(poolId, tokenId, amount, tokenFee);
 
-        if (result.status === ResultStatus.OK) {
-          openTip(t("swap.withdrawal.submitted"), MessageTypes.success);
+          if (result.status === ResultStatus.OK) {
+            openTip(t("swap.withdrawal.submitted"), MessageTypes.success);
 
+            await sleep(2000);
+
+            withdraw(poolId, tokenId, tokenFee, amount - tokenFee).then(({ status, message }) => {
+              if (status === ResultStatus.OK) {
+                if (refresh) refresh();
+              } else {
+                openTip(message ?? `Failed to Withdraw ${name ?? ""} ${token.symbol}`, MessageTypes.error);
+              }
+            });
+          } else {
+            openTip(`Failed to deposit: ${result.message ?? ""}`, MessageTypes.error);
+          }
+        } else {
           await sleep(2000);
 
-          withdraw(poolId, tokenId, tokenFee, amount - tokenFee).then(({ status, message }) => {
+          openTip(t("swap.withdrawal.submitted"), MessageTypes.success);
+
+          withdraw(poolId, tokenId, tokenFee, amount).then(({ status, message }) => {
             if (status === ResultStatus.OK) {
               if (refresh) refresh();
             } else {
               openTip(message ?? `Failed to Withdraw ${name ?? ""} ${token.symbol}`, MessageTypes.error);
             }
           });
-        } else {
-          openTip(`Failed to deposit: ${result.message ?? ""}`, MessageTypes.error);
         }
-      } else {
-        await sleep(2000);
-
-        openTip(t("swap.withdrawal.submitted"), MessageTypes.success);
-
-        withdraw(poolId, tokenId, tokenFee, amount).then(({ status, message }) => {
-          if (status === ResultStatus.OK) {
-            if (refresh) refresh();
-          } else {
-            openTip(message ?? `Failed to Withdraw ${name ?? ""} ${token.symbol}`, MessageTypes.error);
-          }
-        });
       }
-    }
-  }, []);
+    },
+    [openTip, t],
+  );
 }

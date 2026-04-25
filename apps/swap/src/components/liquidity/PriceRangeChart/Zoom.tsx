@@ -1,13 +1,13 @@
-import { useEffect, useMemo, useRef, forwardRef } from "react";
-import { select, zoom, zoomIdentity, ZoomTransform, ScaleLinear, ZoomBehavior } from "d3";
-import { Box, Chip, makeStyles, useTheme, Theme } from "components/Mui";
-import { Replay as ReplayIcon } from "@mui/icons-material";
+import { Flex } from "@icpswap/ui";
 import ZoomInIcon from "assets/images/swap/zoomIn";
 import ZoomOutIcon from "assets/images/swap/zoomOut";
+import { Box, Chip, styled, type Theme, useTheme } from "components/Mui";
+import { ReplayIcon } from "components/MuiIcon";
+import { type ScaleLinear, select, type ZoomBehavior, type ZoomTransform, zoom, zoomIdentity } from "d3";
+import { forwardRef, useEffect, useMemo, useRef } from "react";
 import { isDarkTheme } from "utils";
-import { Flex } from "@icpswap/ui";
 
-import { ZoomLevels } from "./types";
+import type { ZoomLevels } from "./types";
 
 interface ZoomOverlayProps {
   width: string | number;
@@ -32,29 +32,22 @@ export const ZoomOverlay = forwardRef(({ width, height }: ZoomOverlayProps, ref)
   );
 });
 
-const useStyle = makeStyles((theme: Theme) => {
-  return {
-    chartIcon: {
-      width: "28px",
-      height: "28px",
-      backgroundColor: theme.palette.background.level3,
-      borderRadius: "50%",
-      cursor: "pointer",
-      "&:last-child": {
-        marginRight: 0,
-      },
-      "& .MuiSvgIcon-root": {
-        fontSize: "1.2rem",
-        marginRight: "0",
-        marginLeft: "0",
-        color: isDarkTheme(theme) ? "inherit" : theme.colors.darkLevel2,
-      },
-      "& .MuiChip-label": {
-        display: "none",
-      },
-    },
-  };
-});
+const StyledChip = styled(Chip)(({ theme }: { theme: Theme }) => ({
+  width: "28px",
+  height: "28px",
+  backgroundColor: theme.palette.background.level3,
+  borderRadius: "50%",
+  cursor: "pointer",
+  "& .MuiSvgIcon-root": {
+    fontSize: "1.2rem",
+    marginRight: "0",
+    marginLeft: "0",
+    color: isDarkTheme(theme) ? "inherit" : theme.colors.darkLevel2,
+  },
+  "& .MuiChip-label": {
+    display: "none",
+  },
+}));
 
 export interface ZoomProps {
   svg: SVGElement | null;
@@ -67,17 +60,7 @@ export interface ZoomProps {
   noIcons?: boolean;
 }
 
-export default function Zoom({
-  svg,
-  xScale,
-  setZoom,
-  width,
-  height,
-  resetBrush,
-  zoomLevels,
-  noIcons = false,
-}: ZoomProps) {
-  const classes = useStyle();
+export default function Zoom({ svg, setZoom, width, height, resetBrush, zoomLevels, noIcons = false }: ZoomProps) {
   const theme = useTheme();
 
   const zoomBehavior = useRef<ZoomBehavior<Element, unknown>>();
@@ -125,10 +108,10 @@ export default function Zoom({
       .on("zoom", ({ transform }) => setZoom(transform));
 
     select(svg as Element).call(zoomBehavior.current);
-  }, [height, width, setZoom, svg, xScale, zoomBehavior, zoomLevels, zoomLevels.max, zoomLevels.min]);
+  }, [height, width, setZoom, svg, zoomLevels, zoomLevels.max, zoomLevels.min]);
 
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- reset zoom to initial on zoomLevel change
   useEffect(() => {
-    // reset zoom to initial on zoomLevel change
     zoomInitial();
   }, [zoomInitial, zoomLevels]);
 
@@ -141,21 +124,18 @@ export default function Zoom({
       }}
     >
       <Flex gap="0 8px">
-        <Chip
-          className={classes.chartIcon}
+        <StyledChip
           icon={<ReplayIcon />}
           onClick={() => {
             if (resetBrush) resetBrush();
             zoomReset();
           }}
         />
-        <Chip
-          className={classes.chartIcon}
+        <StyledChip
           icon={<ZoomInIcon fillColor={isDarkTheme(theme) ? undefined : theme.colors.darkLevel2} />}
           onClick={zoomIn}
         />
-        <Chip
-          className={classes.chartIcon}
+        <StyledChip
           icon={<ZoomOutIcon fillColor={isDarkTheme(theme) ? undefined : theme.colors.darkLevel2} />}
           onClick={zoomOut}
         />

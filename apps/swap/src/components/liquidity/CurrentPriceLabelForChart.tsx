@@ -1,10 +1,10 @@
-import { memo } from "react";
-import { Box, Typography } from "components/Mui";
-import { Token, Pool } from "@icpswap/swap-sdk";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
+import { Box, Typography } from "components/Mui";
 import { PoolCurrentPrice } from "components/swap/index";
-import { Null } from "@icpswap/types";
 import { SWAP_CHART_CURRENT_PRICE_COLOR } from "constants/swap";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface CurrentPriceLabelForChartProps {

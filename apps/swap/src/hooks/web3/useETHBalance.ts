@@ -1,26 +1,23 @@
+import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { useAccount } from "wagmi";
-import { useEffect, useMemo, useState } from "react";
-import { BigNumber } from "@icpswap/utils";
 import Web3 from "web3";
 
-export function useETHBalance(reload?: boolean) {
+export function useETHBalance(reload?: number) {
   const { address: account } = useAccount();
-  const [balance, setBalance] = useState<BigNumber | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    async function call() {
+  const { data, isLoading } = useQuery({
+    queryKey: ["ethBalance", account, reload],
+    queryFn: async () => {
       if (account) {
-        setLoading(true);
         const web3 = new Web3(Web3.givenProvider);
         const balance = await web3.eth.getBalance(account);
-        setBalance(new BigNumber(balance.toString()));
-        setLoading(false);
+        return new BigNumber(balance.toString());
       }
-    }
+    },
+    enabled: nonUndefinedOrNull(account),
+  });
 
-    call();
-  }, [account, reload]);
-
-  return useMemo(() => ({ result: balance, loading }), [balance, loading]);
+  return useMemo(() => ({ result: data, loading: isLoading }), [data, isLoading]);
 }

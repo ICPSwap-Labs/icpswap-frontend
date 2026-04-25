@@ -1,14 +1,14 @@
-import { Box, Typography, useTheme } from "components/Mui";
-import { locationSearchReplace } from "@icpswap/utils";
 import { useParsedQueryString } from "@icpswap/hooks";
 import { BreadcrumbsV1, Flex } from "@icpswap/ui";
-import { SelectPair, InfoWrapper } from "components/index";
-import { useNavigate, useLocation } from "react-router-dom";
-import { ToolsWrapper, SneedLockedPositions, BlackHolePositions } from "components/info/tools/index";
-import { useEffect, useState } from "react";
-import i18n from "i18n/index";
-import { useTranslation } from "react-i18next";
+import { locationSearchReplace } from "@icpswap/utils";
+import { InfoWrapper, SelectPair } from "components/index";
+import { BlackHolePositions, SneedLockedPositions, ToolsWrapper } from "components/info/tools/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { TitleTextPanels } from "components/UI/panel";
+import i18n from "i18n/index";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 
 enum Panel {
   BlackHole = "BlackHole",

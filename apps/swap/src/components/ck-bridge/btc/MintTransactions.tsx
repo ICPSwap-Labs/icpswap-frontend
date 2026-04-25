@@ -1,32 +1,19 @@
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { BridgeChainName } from "@icpswap/constants";
+import type { Null } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
-import { useBitcoinConfirmations, useBtcMintTransactions } from "hooks/ck-bridge/index";
-import { Null } from "@icpswap/types";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import { BITCOIN_CONFIRMATIONS, BITCOIN_MINT_REFRESH } from "constants/chain-key";
 import dayjs from "dayjs";
-import { RotateCcw } from "react-feather";
+import { useBitcoinConfirmations, useBtcMintTransactions } from "hooks/ck-bridge/index";
 import { useRefreshTriggerManager } from "hooks/index";
+import { RotateCcw } from "react-feather";
 import { useTranslation } from "react-i18next";
-import {
-  bitcoinAddressExplorer,
-  bitcoinBlockExplorer,
-  bitcoinTransactionExplorer,
-  BTC_MINT_REFRESH,
-} from "constants/ckBTC";
-import { BitcoinTransaction } from "types/ckBTC";
+import type { BitcoinTransaction } from "types/ckBTC";
+import { bitcoinAddressExplorer, bitcoinBlockExplorer, bitcoinTransactionExplorer } from "utils/chain-key/bitcoin";
 import { getBitcoinAmountFromTrans } from "utils/web3/ck-bridge";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
 
 interface TransactionProps {
   transaction: BitcoinTransaction;
@@ -36,7 +23,6 @@ interface TransactionProps {
 function Transaction({ transaction, address }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
 
   const confirmations = useBitcoinConfirmations(transaction.status.block_height);
 
@@ -54,7 +40,7 @@ function Transaction({ transaction, address }: TransactionProps) {
           <Typography>{t("common.time")}</Typography>
           <Typography color="text.primary">
             {transaction.status.block_time ? (
-              <>{dayjs(Number(transaction.status.block_time) * 1000).format("YYYY-MM-DD HH:mm:ss")}</>
+              dayjs(Number(transaction.status.block_time) * 1000).format("YYYY-MM-DD HH:mm:ss")
             ) : (
               <>--</>
             )}
@@ -81,7 +67,7 @@ function Transaction({ transaction, address }: TransactionProps) {
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             <ALink
               link={bitcoinTransactionExplorer(transaction.txid)}
               color="secondary"
@@ -95,7 +81,7 @@ function Transaction({ transaction, address }: TransactionProps) {
 
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.from")}</Typography>
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             <ALink
               link={bitcoinAddressExplorer(transaction.vin[0]?.prevout.scriptpubkey_address)}
               color="secondary"
@@ -109,7 +95,7 @@ function Transaction({ transaction, address }: TransactionProps) {
 
         <Flex fullWidth justify="space-between" align="flex-start">
           <Typography>{t("common.to")}</Typography>
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             {address ? (
               <ALink
                 link={bitcoinAddressExplorer(address)}
@@ -141,12 +127,12 @@ function Transaction({ transaction, address }: TransactionProps) {
 
 export interface MintTransactionProps {
   refresh?: boolean | number;
-  btc_address: string | Null;
+  bitcoinAddress: string | Null;
 }
 
-export function MintTransactions({ btc_address }: MintTransactionProps) {
+export function MintTransactions({ bitcoinAddress }: MintTransactionProps) {
   const { t } = useTranslation();
-  const [, setRefreshTrigger] = useRefreshTriggerManager(BTC_MINT_REFRESH);
+  const [, setRefreshTrigger] = useRefreshTriggerManager(BITCOIN_MINT_REFRESH);
   const { result: transactions, loading } = useBtcMintTransactions();
 
   return (
@@ -158,7 +144,11 @@ export function MintTransactions({ btc_address }: MintTransactionProps) {
       </Flex>
 
       <Typography sx={{ margin: "12px 0 0 0", lineHeight: "20px", fontSize: "12px" }}>
-        {t("ck.bitcoin.sync.block")}
+        {t("ck.bridge.sync.block", {
+          chainName: BridgeChainName.bitcoin,
+          symbol: "ckBTC",
+          confirmationBlock: BITCOIN_CONFIRMATIONS,
+        })}
       </Typography>
 
       <Box sx={{ margin: "16px 0 0 0" }}>
@@ -179,18 +169,14 @@ export function MintTransactions({ btc_address }: MintTransactionProps) {
               <div />
             </LoadingRow>
           </Box>
+        ) : isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
         ) : (
-          <>
-            {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-              <NoData tip={t("ck.empty")} />
-            ) : (
-              transactions.map((transaction, index) => (
-                <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                  <Transaction transaction={transaction} address={btc_address} />
-                </Box>
-              ))
-            )}
-          </>
+          transactions.map((transaction, index) => (
+            <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+              <Transaction transaction={transaction} address={bitcoinAddress} />
+            </Box>
+          ))
         )}
       </Box>
     </MainCard>

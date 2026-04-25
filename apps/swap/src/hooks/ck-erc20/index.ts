@@ -1,2 +1,2 @@
-export * from "./useMint";
 export * from "./useDissolve";
+export * from "./useMint";

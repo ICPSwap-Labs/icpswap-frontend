@@ -1,18 +1,17 @@
-import { useCallback } from "react";
-import { NFTCanister, NFTTradeCanister, NFTCanisterController, NFTTradeStat, NFT_V1 } from "@icpswap/actor";
-import { resultFormat, isAvailablePageArgs, isPrincipal, optionalArg } from "@icpswap/utils";
-import { useCallsData } from "../useCallData";
-import { Principal } from "@dfinity/principal";
+import type { Principal } from "@icp-sdk/core/principal";
+import { NFT_V1, NFTCanister, NFTCanisterController, NFTTradeCanister, NFTTradeStat } from "@icpswap/actor";
 import type {
-  PaginationResult,
   NFTCanisterInfo,
   NFTTokenMetadata,
+  NFTTransaction,
+  OrderInfo,
+  PaginationResult,
+  TotalTradeStat,
   TradeStateResult,
   TradeTransaction,
-  OrderInfo,
-  TotalTradeStat,
-  NFTTransaction,
 } from "@icpswap/types";
+import { isAvailablePageArgs, isPrincipal, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 // ----------------> NFT Canisters
 export async function getNFTCanisters(offset: number, limit: number) {
@@ -21,13 +20,18 @@ export async function getNFTCanisters(offset: number, limit: number) {
   ).data;
 }
 
-export function useNFTCanisters(offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTCanisters(
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<NFTCanisterInfo> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTCanisters", offset, limit],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
       return await getNFTCanisters(offset, limit);
-    }, [offset, limit]),
-  );
+    },
+    enabled: isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getUserNFTCanisters(account: string, offset: number, limit: number) {
@@ -36,39 +40,52 @@ export async function getUserNFTCanisters(account: string, offset: number, limit
   ).data;
 }
 
-export function useUserNFTCanisters(account: string | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserNFTCanisters(
+  account: string | undefined,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<NFTCanisterInfo> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserNFTCanisters", account, offset, limit],
+    queryFn: async () => {
       if (!account || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getUserNFTCanisters(account!, offset, limit);
-    }, [offset, limit]),
-  );
+      return await getUserNFTCanisters(account, offset, limit);
+    },
+    enabled: !!account && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getV1NFTCanisterMetadata(canisterId: string) {
   return resultFormat<NFTCanisterInfo>(await (await NFTCanisterController()).canisterInfo(canisterId)).data;
 }
 
-export function useV1NFTCanisterMetadata(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useV1NFTCanisterMetadata(
+  canisterId: string | undefined,
+): UseQueryResult<NFTCanisterInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useV1NFTCanisterMetadata", canisterId],
+    queryFn: async () => {
       return await getV1NFTCanisterMetadata(canisterId!);
-    }, [canisterId]),
-    !!canisterId,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getNFTCanisterMetadata(canisterId: string) {
   return resultFormat<NFTCanisterInfo>(await (await NFTCanister(canisterId)).canisterInfo()).data;
 }
 
-export function useNFTCanisterMetadata(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTCanisterMetadata(
+  canisterId: string | undefined,
+): UseQueryResult<NFTCanisterInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTCanisterMetadata", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
-      return await getNFTCanisterMetadata(canisterId!);
-    }, [canisterId]),
-  );
+      return await getNFTCanisterMetadata(canisterId);
+    },
+    enabled: !!canisterId,
+  });
 }
 
 // ----------------> NFT Canisters
@@ -100,20 +117,21 @@ export function useNFTTransactions({
   offset: number;
   limit: number;
   reload?: boolean;
-}) {
-  return useCallsData(
-    useCallback(async () => {
+}): UseQueryResult<PaginationResult<NFTTransaction> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTTransactions", canisterId, tokenIdentifier, offset, limit, reload],
+    queryFn: async () => {
       if (!canisterId || !tokenIdentifier || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return await getNFTTransactions({
-        canisterId: canisterId,
-        tokenIdentifier: tokenIdentifier,
+        canisterId,
+        tokenIdentifier,
         offset,
         limit,
       });
-    }, [canisterId, offset, limit, tokenIdentifier]),
-    reload,
-  );
+    },
+    enabled: !!canisterId && !!tokenIdentifier && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getUserNFTs({
@@ -128,9 +146,7 @@ export async function getUserNFTs({
   account: string | Principal;
 }) {
   return resultFormat<PaginationResult<NFTTokenMetadata>>(
-    await (
-      await NFTCanister(canisterId)
-    ).findTokenList(
+    await (await NFTCanister(canisterId)).findTokenList(
       isPrincipal(account) ? { principal: account } : { address: account },
       BigInt(offset),
       BigInt(limit),
@@ -150,20 +166,21 @@ export function useUserNFTs({
   limit: number;
   account?: string | Principal;
   reload?: boolean;
-}) {
-  return useCallsData(
-    useCallback(async () => {
+}): UseQueryResult<PaginationResult<NFTTokenMetadata> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserNFTs", canisterId, offset, limit, account, reload],
+    queryFn: async () => {
       if (!account || (!canisterId && !isAvailablePageArgs(offset, limit))) return undefined;
 
       return await getUserNFTs({
-        canisterId: canisterId,
+        canisterId: canisterId!,
         offset,
         limit,
-        account: account,
+        account,
       });
-    }, [canisterId, account, offset, limit]),
-    reload,
-  );
+    },
+    enabled: !!account && (!!canisterId || isAvailablePageArgs(offset, limit)),
+  });
 }
 
 export async function getNFTs({ canisterId, offset, limit }: { canisterId: string; offset: number; limit: number }) {
@@ -179,14 +196,20 @@ export interface useNFTsArgs {
   reload?: boolean;
 }
 
-export function useNFTs({ canisterId, offset, limit, reload }: useNFTsArgs) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTs({
+  canisterId,
+  offset,
+  limit,
+  reload,
+}: useNFTsArgs): UseQueryResult<PaginationResult<NFTTokenMetadata> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTs", canisterId, offset, limit, reload],
+    queryFn: async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getNFTs({ canisterId: canisterId, offset, limit });
-    }, [canisterId, offset, limit]),
-    reload,
-  );
+      return await getNFTs({ canisterId, offset, limit });
+    },
+    enabled: !!canisterId && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getNFTsStat(offset: number, limit: number) {
@@ -195,29 +218,38 @@ export async function getNFTsStat(offset: number, limit: number) {
   ).data;
 }
 
-export function useNFTsStat(offset: number, limit: number, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTsStat(
+  offset: number,
+  limit: number,
+  reload?: boolean,
+): UseQueryResult<PaginationResult<TradeStateResult> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTsStat", offset, limit, reload],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
       return await getNFTsStat(offset, limit);
-    }, [offset, limit]),
-    reload,
-  );
+    },
+    enabled: isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getNFTStat(canisterId: string) {
   return resultFormat<[bigint, bigint]>(await (await NFTCanister(canisterId)).getNftStat()).data;
 }
 
-export function useNFTStat(canisterId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTStat(
+  canisterId: string | undefined,
+  reload?: boolean,
+): UseQueryResult<[bigint, bigint] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTStat", canisterId, reload],
+    queryFn: async () => {
       if (!canisterId) return undefined;
 
       return await getNFTStat(canisterId);
-    }, [canisterId]),
-    reload,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getV1NFTStat(canisterId: string) {
@@ -226,27 +258,34 @@ export async function getV1NFTStat(canisterId: string) {
   return resultFormat<[bigint, bigint]>(result).data;
 }
 
-export function useV1NFTStat(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useV1NFTStat(canisterId: string | undefined): UseQueryResult<[bigint, bigint] | undefined, Error> {
+  return useQuery({
+    queryKey: ["useV1NFTStat", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
-      return await getV1NFTStat(canisterId!);
-    }, [canisterId]),
-  );
+      return await getV1NFTStat(canisterId);
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getNFTMetadata(canisterId: string, tokenId: number) {
   return resultFormat<NFTTokenMetadata>(await (await NFTCanister(canisterId)).icsMetadata(Number(tokenId))).data;
 }
 
-export function useNFTMetadata(canisterId: string | undefined, tokenId: number | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTMetadata(
+  canisterId: string | undefined,
+  tokenId: number | undefined,
+  reload?: boolean,
+): UseQueryResult<NFTTokenMetadata | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTMetadata", canisterId, tokenId, reload],
+    queryFn: async () => {
       if (!canisterId || (tokenId !== 0 && !tokenId)) return undefined;
       return await getNFTMetadata(canisterId, tokenId!);
-    }, [canisterId, tokenId]),
-    reload,
-  );
+    },
+    enabled: !!canisterId && (tokenId === 0 || !!tokenId),
+  });
 }
 
 // ----------------> NFTs
@@ -273,9 +312,7 @@ export async function getNFTTradeTransactions({
   desc,
 }: NFTTradeTransactionsArgs) {
   return resultFormat<PaginationResult<TradeTransaction>>(
-    await (
-      await NFTTradeCanister()
-    ).findTxPage(
+    await (await NFTTradeCanister()).findTxPage(
       optionalArg<string>(canisterId),
       optionalArg<string>(name),
       optionalArg<number>(Number(tokenIndex)),
@@ -296,9 +333,10 @@ export function useNFTTradeTransactions({
   sort,
   desc,
   reload,
-}: NFTTradeTransactionsArgs) {
-  return useCallsData(
-    useCallback(async () => {
+}: NFTTradeTransactionsArgs): UseQueryResult<PaginationResult<TradeTransaction> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTTradeTransactions", canisterId, name, tokenIndex, offset, limit, sort, desc, reload],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
 
       return await getNFTTradeTransactions({
@@ -310,9 +348,9 @@ export function useNFTTradeTransactions({
         tokenIndex,
         name,
       });
-    }, [canisterId, name, tokenIndex, limit, offset, sort, desc]),
-    reload,
-  );
+    },
+    enabled: isAvailablePageArgs(offset, limit),
+  });
 }
 
 export type NFTUserTradeTransactionsArgs = {
@@ -336,9 +374,7 @@ export async function getUserNFTTradeTransactions({
   desc,
 }: NFTUserTradeTransactionsArgs) {
   return resultFormat<PaginationResult<TradeTransaction>>(
-    await (
-      await NFTTradeCanister()
-    ).findUserTxPage(
+    await (await NFTTradeCanister()).findUserTxPage(
       account,
       optionalArg<string>(canisterId),
       optionalArg<string>(name),
@@ -359,9 +395,10 @@ export function useUserNFTTradeTransactions({
   sort,
   desc,
   reload,
-}: NFTUserTradeTransactionsArgs) {
-  return useCallsData(
-    useCallback(async () => {
+}: NFTUserTradeTransactionsArgs): UseQueryResult<PaginationResult<TradeTransaction> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserNFTTradeTransactions", account, canisterId, name, offset, limit, sort, desc, reload],
+    queryFn: async () => {
       if (!account || !isAvailablePageArgs(offset, limit)) return undefined;
 
       return await getUserNFTTradeTransactions({
@@ -373,34 +410,40 @@ export function useUserNFTTradeTransactions({
         desc,
         name,
       });
-    }, [account, canisterId, name, limit, offset, sort, desc]),
-    reload,
-  );
+    },
+    enabled: !!account && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getTradeOrder(canisterId: string, tokenIndex: number) {
   return resultFormat<OrderInfo>(await (await NFTTradeCanister()).getOrder(canisterId!, tokenIndex)).data;
 }
 
-export function useTradeOrder(canisterId: string, tokenIndex: number, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
-      if (!canisterId || (!tokenIndex && tokenIndex !== 0)) return undefined;
+export function useTradeOrder(
+  canisterId: string,
+  tokenIndex: number,
+  reload?: boolean,
+): UseQueryResult<OrderInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useTradeOrder", canisterId, tokenIndex, reload],
+    queryFn: async () => {
+      if (!canisterId || (tokenIndex === undefined && tokenIndex !== 0)) return undefined;
       return await getTradeOrder(canisterId, tokenIndex);
-    }, [canisterId, tokenIndex]),
-    reload,
-  );
+    },
+    enabled: !!canisterId && (tokenIndex !== undefined || tokenIndex === 0),
+  });
 }
 
 export async function getNFTTradeData() {
   return resultFormat<TotalTradeStat>(await (await NFTTradeCanister()).getStat()).data;
 }
 
-export function useNFTTradeData() {
-  return useCallsData(
-    useCallback(async () => {
+export function useNFTTradeData(): UseQueryResult<TotalTradeStat | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNFTTradeData"],
+    queryFn: async () => {
       return await getNFTTradeData();
-    }, []),
-  );
+    },
+  });
 }
 // ----------------> NFT Trade

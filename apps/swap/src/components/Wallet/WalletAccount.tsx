@@ -1,15 +1,17 @@
-import { useMemo, useRef } from "react";
-import { Box, Typography } from "components/Mui";
 import { formatDollarTokenPrice, formatIcpAmount, principalToAccount } from "@icpswap/utils";
+import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
+import Copy, { type CopyRef } from "components/Copy";
+import { Flex, Tooltip } from "components/index";
+import { Box, Typography } from "components/Mui";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { WALLET_TOKEN_BALANCE_REFRESH } from "constants/wallet";
+import { useRefreshTriggerManager } from "hooks";
 import { useSuccessTip } from "hooks/useTips";
 import { useICPPrice } from "hooks/useUSDPrice";
-import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
-import { useAccountPrincipal } from "store/auth/hooks";
-import Copy, { CopyRef } from "components/Copy";
-import { ReactComponent as RefreshIcon } from "assets/icons/refresh.svg";
-import { Flex, Tooltip } from "components/index";
+import { useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface AddressWrapperProps {
   address: string | undefined;
@@ -82,14 +84,9 @@ export default function WalletAccount() {
   const principal = useAccountPrincipal();
   const [openSuccessTip] = useSuccessTip();
 
-  const {
-    refreshTotalBalance,
-    setRefreshTotalBalance,
-    refreshCounter,
-    setRefreshCounter,
-    totalValue,
-    totalUSDBeforeChange,
-  } = useWalletTokenContext();
+  const { totalValue, totalUSDBeforeChange } = useWalletTokenStore();
+
+  const [, setRefreshCounter] = useRefreshTriggerManager(WALLET_TOKEN_BALANCE_REFRESH);
 
   const useTotalICPValue = useMemo(() => {
     if (icpPrice) return totalValue.dividedBy(icpPrice);
@@ -101,12 +98,11 @@ export default function WalletAccount() {
     return `${totalValue.minus(totalUSDBeforeChange).dividedBy(totalUSDBeforeChange).multipliedBy(100).toFixed(2)}%`;
   }, [totalUSDBeforeChange, totalValue]);
 
-  const usdChangeType = usdChange && usdChange.includes("-") ? "down" : "up";
+  const usdChangeType = usdChange?.includes("-") ? "down" : "up";
   const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";
 
   const handleRefreshBalance = () => {
-    if (setRefreshTotalBalance) setRefreshTotalBalance(!refreshTotalBalance);
-    setRefreshCounter(refreshCounter + 1);
+    setRefreshCounter();
     openSuccessTip("Refresh Success");
   };
 

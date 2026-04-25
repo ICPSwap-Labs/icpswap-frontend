@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { BURN_FIELD } from "constants/swap";
+import type { BURN_FIELD } from "constants/swap";
 
 export interface updateTypedInputPayload {
   independentField: BURN_FIELD;

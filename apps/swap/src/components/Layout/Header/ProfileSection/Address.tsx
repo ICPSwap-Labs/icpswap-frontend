@@ -1,9 +1,9 @@
-import { useRef } from "react";
-import { Box, Typography } from "components/Mui";
-import Copy, { CopyRef } from "components/Copy";
-import { Image } from "components/index";
-import { mockALinkAndOpen, shorten } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
+import { mockALinkAndOpen, shorten } from "@icpswap/utils";
+import Copy, { type CopyRef } from "components/Copy";
+import { Image } from "components/index";
+import { Box, Typography } from "components/Mui";
+import { useRef } from "react";
 
 export interface AddressSectionProps {
   label: string;

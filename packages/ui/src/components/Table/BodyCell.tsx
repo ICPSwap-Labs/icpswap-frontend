@@ -1,4 +1,4 @@
-import { Typography, TypographyProps } from "../Mui";
+import { Typography, type TypographyProps } from "../Mui";
 
 export type BodyCellProps = {
   color?: string;

@@ -1,22 +1,23 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { Typography, useMediaQuery, Box, makeStyles, useTheme, Theme } from "components/Mui";
-import { CurrenciesAvatar } from "components/CurrenciesAvatar";
-import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
-import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { CurrencyAmount, Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { isDarkTheme } from "utils/index";
-import { Loading } from "components/index";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import { usePositionContext, PositionRangeState, PoolCurrentPrice } from "components/swap/index";
+import { CurrencyAmount, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { FeeTierPercentLabel, Flex } from "@icpswap/ui";
-import { encodePositionKey, PositionState } from "utils/swap/index";
-import { PositionFilterState, PositionSort } from "types/swap";
-import { usePositionState } from "hooks/liquidity";
-import { LimitLabel } from "components/swap/limit-order/index";
-import { useTranslation } from "react-i18next";
-import { TokenPairName } from "components/TokenPairName";
+import { BigNumber, formatDollarAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { CurrenciesAvatar } from "components/CurrenciesAvatar";
+import { Loading } from "components/index";
 import { LiquidityStateFlag } from "components/liquidity/LiquidityStateFlag";
 import { PositionDetails } from "components/liquidity/PositionDetails";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { KeyboardArrowDownIcon, KeyboardArrowUpIcon } from "components/MuiIcon";
+import { PoolCurrentPrice, PositionRangeState, usePositionContext } from "components/swap/index";
+import { LimitLabel } from "components/swap/limit-order/index";
+import { TokenPairName } from "components/TokenPairName";
+import { usePositionState } from "hooks/liquidity";
+import { useMediaQueryMD } from "hooks/theme";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { PositionFilterState, type PositionSort } from "types/swap";
+import { isDarkTheme } from "utils/index";
+import { encodePositionKey, PositionState } from "utils/swap/index";
 
 const useStyle = makeStyles((theme: Theme) => ({
   wrapper: {
@@ -92,7 +93,7 @@ export function PositionCard({
   const { t } = useTranslation();
   const classes = useStyle();
   const theme = useTheme();
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const [detailShow, setDetailShow] = useState<boolean | undefined>(undefined);
   const [manuallyInverted, setManuallyInverted] = useState(false);
@@ -102,7 +103,7 @@ export function PositionCard({
   const handleToggleShow = useCallback(() => {
     if (!position) return;
     setDetailShow(!detailShow);
-  }, [detailShow, setDetailShow, position]);
+  }, [detailShow, position]);
 
   const pool = position?.pool;
   const { token0, token1, fee: feeAmount } = pool || {};
@@ -185,7 +186,7 @@ export function PositionCard({
     if (nonUndefinedOrNull(totalUSDValue) && nonUndefinedOrNull(positionKey) && isLimit === false) {
       setAllPositionsUSDValue(positionKey, new BigNumber(totalUSDValue));
     }
-  }, [totalUSDValue, positionKey, staked, isLimit]);
+  }, [totalUSDValue, positionKey, isLimit, setAllPositionsUSDValue]);
 
   const displayByFilter = useMemo(() => {
     if (isUndefinedOrNull(positionState) || isUndefinedOrNull(isLimit)) return true;
@@ -376,9 +377,9 @@ export function PositionCard({
               </Typography>
 
               {detailShow ? (
-                <KeyboardArrowUp />
+                <KeyboardArrowUpIcon />
               ) : (
-                <KeyboardArrowDown
+                <KeyboardArrowDownIcon
                   sx={{
                     color: matchDownMD ? theme.palette.text["theme-secondary"] : theme.palette.text.secondary,
                   }}
@@ -405,7 +406,7 @@ export function PositionCard({
                     borderRadius: "50%",
                   }}
                 >
-                  <KeyboardArrowUp />
+                  <KeyboardArrowUpIcon />
                 </Box>
               ) : (
                 <Box
@@ -416,7 +417,7 @@ export function PositionCard({
                     borderRadius: "50%",
                   }}
                 >
-                  <KeyboardArrowDown
+                  <KeyboardArrowDownIcon
                     sx={{
                       color: theme.palette.text.secondary,
                     }}

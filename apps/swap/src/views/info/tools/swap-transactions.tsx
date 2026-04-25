@@ -1,17 +1,17 @@
 import { useParsedQueryString, useSwapTransactions } from "@icpswap/hooks";
-import { SelectPair, InfoWrapper } from "components/index";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useCallback } from "react";
-import { Box, Typography, makeStyles, useTheme, Theme } from "components/Mui";
+import type { Null } from "@icpswap/types";
+import { BreadcrumbsV1, Flex, Header, HeaderCell, LoadingRow, NoData, Pagination, TransactionRow } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, locationSearchReplace } from "@icpswap/utils";
-import { Header, HeaderCell, Flex, TransactionRow, LoadingRow, Pagination, NoData, BreadcrumbsV1 } from "@icpswap/ui";
-import { useTips, TIP_SUCCESS } from "hooks/index";
-import copyToClipboard from "copy-to-clipboard";
-import { ToolsWrapper, PrincipalSearcher } from "components/info/tools/index";
-import { Null } from "@icpswap/types";
-import { useTranslation } from "react-i18next";
+import { InfoWrapper, SelectPair } from "components/index";
+import { PrincipalSearcher, ToolsWrapper } from "components/info/tools/index";
 import { SwapTransactionsDownload } from "components/info/tools/SwapTransactionsDownload";
+import { Box, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import { TimeRange } from "components/TimeRange/TimeRange";
+import copyToClipboard from "copy-to-clipboard";
+import { TIP_SUCCESS, useTips } from "hooks/index";
+import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -43,7 +43,7 @@ export default function SwapTransactions() {
 
   const { pair, principal } = useParsedQueryString() as { pair: string; principal: string | undefined };
 
-  const now = new Date().getTime();
+  const now = Date.now();
 
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
   const [startTime, setStartTime] = useState<undefined | number>(
@@ -51,7 +51,7 @@ export default function SwapTransactions() {
   );
   const [endTime, setEndTime] = useState<undefined | number>(now);
 
-  const { result, loading } = useSwapTransactions({
+  const { data: result, isLoading: loading } = useSwapTransactions({
     principal,
     poolId: pair,
     page: pagination.pageNum,
@@ -82,10 +82,13 @@ export default function SwapTransactions() {
     setPagination({ pageNum: page, pageSize: 10 });
   };
 
-  const handleCopy = useCallback((address: string) => {
-    copyToClipboard(address);
-    openTip(t`Copy Success`, TIP_SUCCESS);
-  }, []);
+  const handleCopy = useCallback(
+    (address: string) => {
+      copyToClipboard(address);
+      openTip(t`Copy Success`, TIP_SUCCESS);
+    },
+    [openTip, t],
+  );
 
   const handleTimeRangeChange = useCallback((startTime: number, endTime: number) => {
     setPagination(DEFAULT_PAGINATION);

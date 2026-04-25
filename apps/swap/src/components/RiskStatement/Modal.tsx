@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Typography, Box, Checkbox, Button, makeStyles, useTheme, Theme } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { TextButton, Modal } from "components/index";
-import storage from "redux-persist/lib/storage";
+import { Modal, TextButton } from "components/index";
+import { Box, Button, Checkbox, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
+import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
+import storage from "redux-persist/lib/storage";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {

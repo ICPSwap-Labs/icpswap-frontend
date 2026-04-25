@@ -1,6 +1,6 @@
-import { Box, Theme, makeStyles } from "components/Mui";
-import { Header, HeaderCell, LoadingRow, NoData, Pagination, PaginationProps } from "@icpswap/ui";
-import { Null, PositionTransaction } from "@icpswap/types";
+import type { InfoSwapRecordResponse, Null } from "@icpswap/types";
+import { Header, HeaderCell, LoadingRow, NoData, Pagination, type PaginationProps } from "@icpswap/ui";
+import { Box, makeStyles, type Theme } from "components/Mui";
 import { useTranslation } from "react-i18next";
 
 import { PositionTransactionsRow } from "./PositionTransactionsRow";
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => {
 export interface PositionTransactionsTableUIProps {
   wrapperClassName?: string;
   loading: boolean;
-  transactions: PositionTransaction[] | Null;
+  transactions: InfoSwapRecordResponse[] | Null;
   totalElements: number | Null;
   onPaginationChange?: PaginationProps["onPageChange"];
   page: number;

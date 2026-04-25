@@ -1,17 +1,17 @@
-import { useMemo } from "react";
-import { Box, Typography, useTheme } from "components/Mui";
+import { useInfoToken, useTokenAnalysis, useTokenBurned, useTokenSupply } from "@icpswap/hooks";
 import { ICP, ICS } from "@icpswap/tokens";
+import { Flex, Proportion } from "@icpswap/ui";
 import {
-  parseTokenAmount,
+  BigNumber,
   formatAmount,
   formatDollarAmount,
-  BigNumber,
-  nonUndefinedOrNull,
   formatDollarTokenPrice,
+  nonUndefinedOrNull,
+  parseTokenAmount,
 } from "@icpswap/utils";
-import { useInfoToken, useTokenAnalysis, useTokenSupply, useTokenBurned } from "@icpswap/hooks";
-import { Flex, Proportion } from "@icpswap/ui";
 import { TokenImage } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { ICSPriceChart } from "./icsPriceChart";
@@ -22,9 +22,9 @@ export function Ics() {
 
   const infoToken = useInfoToken(ICS.address);
   const icpInfoToken = useInfoToken(ICP.address);
-  const { result: tokenSupply } = useTokenSupply(ICS.address);
-  const { result: tokenAnalysis } = useTokenAnalysis(ICS.address);
-  const { result: tokenBurned } = useTokenBurned(ICS.address);
+  const { data: tokenSupply } = useTokenSupply(ICS.address);
+  const { data: tokenAnalysis } = useTokenAnalysis(ICS.address);
+  const { data: tokenBurned } = useTokenBurned(ICS.address);
 
   const marketCap = useMemo(() => {
     if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(infoToken)) {

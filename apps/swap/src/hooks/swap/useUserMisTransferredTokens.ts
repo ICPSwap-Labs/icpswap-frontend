@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { getTokenBalance, useSwapPools } from "@icpswap/hooks";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { swapPool } from "@icpswap/actor";
+import { getTokenBalance, useSwapPools } from "@icpswap/hooks";
 import { resultFormat } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
 
 export interface useUserMisTransferredTokensArgs {
   tokenId: string | undefined;
@@ -21,7 +21,7 @@ export function useUserMisTransferredTokens({ tokenId }: useUserMisTransferredTo
   const [loading, setLoading] = useState(true);
   const [misTransferred, setMisTransferred] = useState<MisTransferredResult[]>([]);
 
-  const { result: allSwapPools } = useSwapPools();
+  const { data: allSwapPools } = useSwapPools();
   const principal = useAccountPrincipal();
 
   useEffect(() => {
@@ -62,9 +62,7 @@ export function useUserMisTransferredTokens({ tokenId }: useUserMisTransferredTo
 
 export async function withdrawMisTransferredToken(poolId: string, tokenId: string, standard: string) {
   return resultFormat<bigint>(
-    await (
-      await swapPool(poolId, true)
-    ).withdrawMistransferBalance({
+    await (await swapPool(poolId, true)).withdrawMistransferBalance({
       address: tokenId,
       standard,
     }),

@@ -1,18 +1,18 @@
-import { Typography, Box, useTheme } from "components/Mui";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { enumToString, BigNumber } from "@icpswap/utils";
-import { LoadingRow, TokenImage } from "components/index";
-import type { InfoTransactionResponse } from "@icpswap/types";
-import dayjs from "dayjs";
-import { DAYJS_FORMAT } from "constants/index";
-import { useToken } from "hooks/index";
-import { ArrowUpRight } from "react-feather";
-import { Link, Modal, SwapTransactionPriceTip } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
-import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
 import { useUserSwapTransactions } from "@icpswap/hooks";
-import { useMemo } from "react";
+import type { InfoTransactionResponse } from "@icpswap/types";
+import { Link, Modal, SwapTransactionPriceTip } from "@icpswap/ui";
+import { BigNumber, enumToString, formatAmount } from "@icpswap/utils";
+import { LoadingRow, TokenImage } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { SwapTransactionType } from "components/swap/SwapTransactionType";
+import { UserTransactionsEmpty } from "components/swap/UserTransactionsEmpty";
+import { DAYJS_FORMAT } from "constants/index";
+import dayjs from "dayjs";
+import { useToken } from "hooks/index";
+import { useMemo } from "react";
+import { ArrowUpRight } from "react-feather";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 interface SwapTransactionItemProps {
   transaction: InfoTransactionResponse;
@@ -22,15 +22,15 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
   const theme = useTheme();
 
   const token0Amount = useMemo(() => {
-    return new BigNumber(transaction.token0AmountIn).isEqualTo(0)
-      ? transaction.token0AmountOut
-      : transaction.token0AmountIn;
+    return formatAmount(
+      new BigNumber(transaction.token0AmountIn).isEqualTo(0) ? transaction.token0AmountOut : transaction.token0AmountIn,
+    );
   }, [transaction]);
 
   const token1Amount = useMemo(() => {
-    return new BigNumber(transaction.token1AmountIn).isEqualTo(0)
-      ? transaction.token1AmountOut
-      : transaction.token1AmountIn;
+    return formatAmount(
+      new BigNumber(transaction.token1AmountIn).isEqualTo(0) ? transaction.token1AmountOut : transaction.token1AmountIn,
+    );
   }, [transaction]);
 
   const symbol0 = transaction.token0Symbol;
@@ -67,16 +67,32 @@ function SwapTransactionItem({ transaction }: SwapTransactionItemProps) {
           </Typography>
           <Typography sx={{ fontSize: "12px" }}>{dayjs(Number(transaction.txTime)).format(DAYJS_FORMAT)}</Typography>
         </Box>
-        <Typography color="text.primary" sx={{ fontSize: "16px", fontWeight: 500, margin: "8px 0 0 0" }}>
-          {enumToString(transaction.actionType) === "swap" ? (
+        <Typography
+          color="text.primary"
+          sx={{ fontSize: "16px", fontWeight: 500, margin: "8px 0 0 0", display: "flex", alignItems: "center" }}
+          component="div"
+        >
+          {enumToString(transaction.actionType) === "Swap" ? (
             <>
-              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> to{" "}
-              {token1Amount} <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+              {token0Amount}&nbsp;
+              <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} />
+              &nbsp;
+              <Typography
+                sx={{ fontSize: "16px", fontWeight: 500, position: "relative", top: "-1px", color: "text.primary" }}
+              >
+                →
+              </Typography>
+              &nbsp;
+              {token1Amount}&nbsp;
+              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
             </>
           ) : (
             <>
-              {token0Amount} <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} /> and{" "}
-              {token1Amount} <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
+              {token0Amount}&nbsp;
+              <SwapTransactionPriceTip symbol={symbol0} price={transaction.token0Price} />
+              &nbsp;+&nbsp;
+              {token1Amount}&nbsp;
+              <SwapTransactionPriceTip symbol={symbol1} price={transaction.token1Price} />
             </>
           )}
         </Typography>
@@ -96,14 +112,14 @@ export function SwapTransactionsModal({ open, onClose }: SwapTransactionsModalPr
   const theme = useTheme();
 
   const { startTime, endTime } = useMemo(() => {
-    const now = new Date().getTime();
+    const now = Date.now();
     const startTime = new BigNumber(now).minus(180 * 24 * 3600 * 1000).toNumber();
     const endTime = now;
 
     return { startTime, endTime };
   }, []);
 
-  const { result, loading } = useUserSwapTransactions({
+  const { data: result, isLoading: loading } = useUserSwapTransactions({
     principal,
     poolId: undefined,
     page: 1,
@@ -117,7 +133,9 @@ export function SwapTransactionsModal({ open, onClose }: SwapTransactionsModalPr
   return (
     <Modal open={open} onClose={onClose} title={t("swap.history")}>
       <Box sx={{ overflow: "hidden auto", height: "340px" }}>
-        {transactions?.map((transaction, index) => <SwapTransactionItem key={index} transaction={transaction} />)}
+        {transactions?.map((transaction, index) => (
+          <SwapTransactionItem key={index} transaction={transaction} />
+        ))}
         {(transactions?.length === 0 || !transactions) && !loading ? <UserTransactionsEmpty onClick={onClose} /> : null}
 
         {loading ? (

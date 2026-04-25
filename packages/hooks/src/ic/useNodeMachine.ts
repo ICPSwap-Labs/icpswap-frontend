@@ -1,24 +1,23 @@
-import { useCallback } from "react";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
-
-import { useCallsData } from "../useCallData";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 interface NodeMachineResult {
   total_nodes: Array<[number, string]>;
   up_nodes: Array<[number, string]>;
 }
 
-export function useNodeMachines() {
-  return useCallsData(
-    useCallback(async () => {
+export function useNodeMachines(): UseQueryResult<NodeMachineResult | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNodeMachines"],
+    queryFn: async () => {
       const fetch_result = await fetch("https://ic-api.internetcomputer.org/api/v3/metrics/ic-nodes-count").catch(
         () => undefined,
       );
       if (!fetch_result) return undefined;
       return (await fetch_result.json()) as NodeMachineResult;
-    }, []),
-  );
+    },
+  });
 }
 
 export interface NodeMachinesOfSubnet {
@@ -45,15 +44,19 @@ interface UserNodeMachinesOfSubnetProps {
   subnet: string | Null;
 }
 
-export function useNodeMachinesOfSubnet({ subnet }: UserNodeMachinesOfSubnetProps) {
-  return useCallsData(
-    useCallback(async () => {
+export function useNodeMachinesOfSubnet({
+  subnet,
+}: UserNodeMachinesOfSubnetProps): UseQueryResult<NodeMachinesOfSubnetResult | undefined, Error> {
+  return useQuery({
+    queryKey: ["useNodeMachinesOfSubnet", subnet],
+    queryFn: async () => {
       if (isUndefinedOrNull(subnet)) return undefined;
       const fetch_result = await fetch(`https://ic-api.internetcomputer.org/api/v3/nodes?subnet=${subnet}`).catch(
         () => undefined,
       );
       if (!fetch_result) return undefined;
       return (await fetch_result.json()) as NodeMachinesOfSubnetResult;
-    }, [subnet]),
-  );
+    },
+    enabled: !isUndefinedOrNull(subnet),
+  });
 }

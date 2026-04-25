@@ -1,10 +1,10 @@
-import keyBy from "lodash/keyBy";
-import { TickMath, tickToPrice, Token, FeeAmount } from "@icpswap/swap-sdk";
+import { useLiquidityTickInfos, useSwapPool } from "@icpswap/hooks";
+import { type FeeAmount, TickMath, type Token, tickToPrice } from "@icpswap/swap-sdk";
 import type { PoolMetadata } from "@icpswap/types";
 import { useToken } from "hooks/useCurrency";
 import JSBI from "jsbi";
+import keyBy from "lodash/keyBy";
 import { useMemo } from "react";
-import { useLiquidityTickInfos, useSwapPool } from "@icpswap/hooks";
 
 const PRICE_FIXED_DIGITS = 18;
 const DEFAULT_SURROUNDING_TICKS = 300;
@@ -35,7 +35,7 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
     };
   }, [token0, token1, feeAmount]);
 
-  const { result: poolData } = useSwapPool(args);
+  const { data: poolData } = useSwapPool(args);
 
   const id = useMemo(() => {
     if (!poolData) return undefined;
@@ -77,7 +77,7 @@ export function useTicksSurroundingPrice(
   const [, token0] = useToken(_token0?.address);
   const [, token1] = useToken(_token1?.address);
 
-  const { result: initializedTicks, loading } = useAllTicks(token0, token1, Number(feeTier));
+  const { data: initializedTicks, isLoading: loading } = useAllTicks(token0, token1, Number(feeTier));
 
   if (!token0 || !token1 || !initializedTicks) return { loading: false, data: undefined };
 
@@ -88,7 +88,7 @@ export function useTicksSurroundingPrice(
     };
   }
 
-  const poolCurrentTickIdx = parseInt(String(poolCurrentTick));
+  const poolCurrentTickIdx = parseInt(String(poolCurrentTick), 10);
   const tickSpacing = FEE_TIER_TO_TICK_SPACING(String(feeTier));
 
   // The pools current tick isn't necessarily a tick that can actually be initialized.

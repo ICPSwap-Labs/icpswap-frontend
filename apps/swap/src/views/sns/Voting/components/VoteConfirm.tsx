@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { neuronVoteForProposal } from "@icpswap/hooks";
-import { useTips, TIP_ERROR, TIP_SUCCESS, useFullscreenLoading } from "hooks/useTips";
-import { Neuron, ProposalData } from "@icpswap/types";
-import { ConfirmModal } from "@icpswap/ui";
-import { neuronFormat, votingPowerFormat } from "utils/sns/index";
 import { Vote } from "@icpswap/constants";
+import { neuronVoteForProposal } from "@icpswap/hooks";
+import type { Neuron, ProposalData } from "@icpswap/types";
+import { ConfirmModal } from "@icpswap/ui";
+import { TIP_ERROR, TIP_SUCCESS, useFullscreenLoading, useTips } from "hooks/useTips";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { neuronFormat, votingPowerFormat } from "utils/sns/index";
 
 export interface VoteConfirmProps {
   onVoteCallEnded?: () => void;

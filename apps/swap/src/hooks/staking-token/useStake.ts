@@ -1,18 +1,18 @@
-import { useCallback, useMemo } from "react";
 import { stakingPoolDeposit, stakingPoolDepositFrom, stakingTokenStake } from "@icpswap/hooks";
-import { Null, ResultStatus } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
+import { type Null, ResultStatus } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull, sleep } from "@icpswap/utils";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
 import { getSteps } from "components/stake/StakeStep";
-import { useStepContentManager, useUpdateStepData } from "store/steps/hooks";
-import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { useTranslation } from "react-i18next";
 import { useAllowance } from "hooks/token";
+import { useTokenTransferOrApprove } from "hooks/token/useTokenTransferOrApprove";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useStepContentManager, useUpdateStepData } from "store/steps/hooks";
+import { isUseTransfer, isUseTransferByStandard } from "utils/token/index";
 import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
 
 interface UpdateStepArgs {
@@ -27,20 +27,23 @@ function useSteps() {
   const { t } = useTranslation();
   const initialAndUpdateDetails = useStepContentManager();
 
-  return useCallback((key: string, { token, amount, standard, rewardToken }: UpdateStepArgs) => {
-    const content = getSteps({
-      token,
-      amount,
-      standard,
-      key,
-      rewardToken,
-    });
+  return useCallback(
+    (key: string, { token, amount, standard, rewardToken }: UpdateStepArgs) => {
+      const content = getSteps({
+        token,
+        amount,
+        standard,
+        key,
+        rewardToken,
+      });
 
-    initialAndUpdateDetails(String(key), {
-      content,
-      title: t("stake.staking.details"),
-    });
-  }, []);
+      initialAndUpdateDetails(String(key), {
+        content,
+        title: t("stake.staking.details"),
+      });
+    },
+    [initialAndUpdateDetails, t],
+  );
 }
 
 interface UseStakingTokenDepositArgs {
@@ -52,7 +55,6 @@ interface UseStakingTokenDepositArgs {
 
 function useStakingTokenDeposit() {
   const [openTip] = useTips();
-  const principal = useAccountPrincipal();
 
   return useCallback(
     async ({ token, poolId, standard, amount }: UseStakingTokenDepositArgs) => {
@@ -78,7 +80,7 @@ function useStakingTokenDeposit() {
 
       return true;
     },
-    [principal],
+    [openTip],
   );
 }
 
@@ -96,19 +98,22 @@ function useStakeCallback() {
   const updateStepData = useUpdateStepData();
   const updateStep = useSteps();
 
-  return useCallback(async ({ token, poolId, amount, standard, rewardToken, key }: UseStakeCallbackArgs) => {
-    const { status, message, data } = await stakingTokenStake(poolId);
+  return useCallback(
+    async ({ token, poolId, amount, standard, rewardToken, key }: UseStakeCallbackArgs) => {
+      const { status, message, data } = await stakingTokenStake(poolId);
 
-    if (status === "err") {
-      openTip(`Failed to stake ${token.symbol}: ${message}`, MessageTypes.error);
-      return false;
-    }
+      if (status === "err") {
+        openTip(`Failed to stake ${token.symbol}: ${message}`, MessageTypes.error);
+        return false;
+      }
 
-    updateStepData(key, data);
-    updateStep(key, { token, amount, poolId, standard, rewardToken });
+      updateStepData(key, data);
+      updateStep(key, { token, amount, poolId, standard, rewardToken });
 
-    return true;
-  }, []);
+      return true;
+    },
+    [openTip, updateStep, updateStepData],
+  );
 }
 
 interface UseStakeCallsArgs {
@@ -135,7 +140,7 @@ function useStakeCalls({ token, poolId }: UseStakeCallsProps) {
     return isUseTransfer(token) ? undefined : token.address;
   }, [token]);
 
-  const { result: allowance } = useAllowance({
+  const { data: allowance } = useAllowance({
     canisterId: allowanceTokenId,
     spender: poolId,
     owner: principal?.toString(),
@@ -175,7 +180,7 @@ function useStakeCalls({ token, poolId }: UseStakeCallsProps) {
 
       return [call0, call1, call2, call3];
     },
-    [approveOrTransfer, allowance, deposit, stake, withdraw],
+    [approveOrTransfer, allowance, deposit, stake, withdraw, poolId, token],
   );
 }
 

@@ -1,5 +1,5 @@
-import { Actor, HttpAgent } from "@dfinity/agent";
-import { IDL } from "@dfinity/candid";
+import { Actor, type HttpAgent } from "@icp-sdk/core/agent";
+import type { IDL } from "@icp-sdk/core/candid";
 
 export interface CreateBaseActorProps {
   canisterId: string;
@@ -19,9 +19,7 @@ export async function createBaseActor<T>({
   // Fetch root key for certificate validation during development
   if (fetchRootKey) {
     await agent?.fetchRootKey().catch((err) => {
-      console.warn(
-        "Unable to fetch root key. Check to ensure that your local replica is running"
-      );
+      console.warn("Unable to fetch root key. Check to ensure that your local replica is running");
       console.error(err);
     });
   }

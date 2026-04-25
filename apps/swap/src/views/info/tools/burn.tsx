@@ -1,24 +1,24 @@
-import { Box, Typography } from "components/Mui";
-import { useState, useMemo } from "react";
-import {
-  MainCard,
-  FilledTextField,
-  NumberFilledTextField,
-  MaxButton,
-  AuthButton,
-  SelectToken,
-  InfoWrapper,
-} from "components/index";
-import { type IcpSwapAPITokenInfo } from "@icpswap/types";
 import { useTokenMintingAccount } from "@icpswap/hooks";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useToken } from "hooks/index";
-import { parseTokenAmount, BigNumber } from "@icpswap/utils";
+import type { IcpSwapAPITokenInfo } from "@icpswap/types";
 import { BreadcrumbsV1 } from "@icpswap/ui";
+import { BigNumber, parseTokenAmount } from "@icpswap/utils";
+import {
+  AuthButton,
+  FilledTextField,
+  InfoWrapper,
+  MainCard,
+  MaxButton,
+  NumberFilledTextField,
+  SelectToken,
+} from "components/index";
 import { BurnConfirmModal } from "components/info/tools/BurnConfirm";
+import { Box, Typography } from "components/Mui";
 import { icrc_standards } from "constants/swap";
+import { useToken } from "hooks/index";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 import { parseTokenStandards } from "utils/parseTokenStandards";
 
 export default function Burn() {
@@ -34,8 +34,8 @@ export default function Burn() {
   };
 
   const [, token] = useToken(tokenId);
-  const { result: mintingAccount } = useTokenMintingAccount(tokenId);
-  const { result: balance } = useTokenBalance(tokenId, principal, refreshTrigger);
+  const { data: mintingAccount } = useTokenMintingAccount(tokenId);
+  const { result: balance } = useTokenBalance({ tokenId, account: principal, refresh: refreshTrigger });
 
   const handleMax = () => {
     if (!balance || !token) return;
@@ -55,7 +55,7 @@ export default function Burn() {
     if (new BigNumber(amount).isEqualTo(0)) return t("common.must.greater.than", { symbol: "Amount", amount: "0" });
     if (parseTokenAmount(new BigNumber(balance).minus(token.transFee.toString()), token.decimals).isLessThan(amount))
       return t("common.error.insufficient.balance");
-  }, [amount, balance, token, mintingAccount, tokenId]);
+  }, [amount, balance, token, mintingAccount, tokenId, t]);
 
   const showMax = useMemo(() => {
     if (!balance || !token) return false;

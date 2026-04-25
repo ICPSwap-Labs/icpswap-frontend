@@ -1,24 +1,24 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
-import { Typography, Box, makeStyles, Theme } from "components/Mui";
-import { Flex, TextButton, NumberLabel, Tooltip } from "@icpswap/ui";
+import { useParsedQueryString } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { Flex, NumberLabel, TextButton, Tooltip } from "@icpswap/ui";
+import { BigNumber, formatDollarAmount, isUndefinedOrNullOrEmpty, replaceBrowserHistoryMultiple } from "@icpswap/utils";
+import { FindPositionsModal, Link } from "components/index";
 import {
-  YourPositions,
-  StakedPositions,
-  UnusedPCMBalance,
-  UnclaimedFees,
   SelectPositionState,
   SelectPositionsSort,
+  StakedPositions,
+  UnclaimedFees,
+  UnusedPCMBalance,
+  YourPositions,
 } from "components/liquidity/index";
-import { FindPositionsModal, Link } from "components/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
 import { PositionContext } from "components/swap/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { formatDollarAmount, BigNumber, replaceBrowserHistoryMultiple } from "@icpswap/utils";
-import { PositionSort, PositionFilterState, UserPositionByList, UserPositionForFarm } from "types/swap";
-import { useParsedQueryString } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
+import i18n from "i18n/index";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Unlock } from "react-feather";
 import { useTranslation } from "react-i18next";
-import i18n from "i18n/index";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { PositionFilterState, PositionSort, type UserPositionByList, type UserPositionForFarm } from "types/swap";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -109,46 +109,39 @@ export function Positions() {
 
   const handleFindPosition = useCallback(() => {
     setFindPosition(true);
-  }, [setFindPosition]);
+  }, []);
 
-  const handleAllPositionsUSDValue = useCallback(
-    (id: string, usdValue: BigNumber) => {
-      setAllPositionsUSDValue((prevState) => ({
-        ...prevState,
-        [id]: usdValue,
-      }));
-    },
-    [setAllPositionsUSDValue],
-  );
+  const handleAllPositionsUSDValue = useCallback((id: string, usdValue: BigNumber) => {
+    setAllPositionsUSDValue((prevState) => ({
+      ...prevState,
+      [id]: usdValue,
+    }));
+  }, []);
 
-  const handleAllPositionFees = useCallback(
-    (id: string, usdValue: BigNumber) => {
-      setAllPositionFees((prevState) => ({
-        ...prevState,
-        [id]: usdValue,
-      }));
-    },
-    [setAllPositionFees],
-  );
+  const handleAllPositionFees = useCallback((id: string, usdValue: BigNumber) => {
+    setAllPositionFees((prevState) => ({
+      ...prevState,
+      [id]: usdValue,
+    }));
+  }, []);
 
   const handleUpdateRefreshTrigger = useCallback(() => {
     setRefreshTrigger(refreshTrigger + 1);
-  }, [refreshTrigger, setRefreshTrigger]);
+  }, [refreshTrigger]);
 
-  const handleSetHiddenNumbers = useCallback(
-    (key: string, hidden: boolean) => {
-      setHiddenNumbers((prevState) => ({ ...prevState, [key]: hidden }));
-    },
-    [setHiddenNumbers],
-  );
+  const handleSetHiddenNumbers = useCallback((key: string, hidden: boolean) => {
+    setHiddenNumbers((prevState) => ({ ...prevState, [key]: hidden }));
+  }, []);
 
   // reset all positions usd value when account change
   useEffect(() => {
-    setAllPositionsUSDValue(undefined);
-    setAllPositions(undefined);
-    setAllStakedPositions(undefined);
-    setAllPositionFees(undefined);
-    setHiddenNumbers({});
+    if (isUndefinedOrNullOrEmpty(principalString)) {
+      setAllPositionsUSDValue(undefined);
+      setAllPositions(undefined);
+      setAllStakedPositions(undefined);
+      setAllPositionFees(undefined);
+      setHiddenNumbers({});
+    }
   }, [principalString]);
 
   useEffect(() => {
@@ -264,7 +257,7 @@ export function Positions() {
                         ? allPositions
                           ? allPositions.length - hiddenNumbersOfYourPositions
                           : "--"
-                        : allStakedPositions?.length ?? "--"
+                        : (allStakedPositions?.length ?? "--")
                     }
                   />
                 </Flex>

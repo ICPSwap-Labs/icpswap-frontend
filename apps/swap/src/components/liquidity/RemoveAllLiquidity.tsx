@@ -1,15 +1,16 @@
-import { useCallback, useMemo, useState } from "react";
-import { Button, useMediaQuery, useTheme } from "components/Mui";
-import { CurrencyAmount, Percent, Position } from "@icpswap/swap-sdk";
-import { BURN_FIELD } from "constants/swap";
-import { useSuccessTip, useLoadingTip } from "hooks/useTips";
-import { CurrencyAmountFormatDecimals } from "constants/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import StepViewButton from "components/Steps/View";
-import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
-import { useTranslation } from "react-i18next";
+import { CurrencyAmount, Percent, type Position } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { DecreaseLiquidityConfirm } from "components/liquidity/Decrease/Confirm";
-import { Null } from "@icpswap/types";
+import { Button } from "components/Mui";
+import StepViewButton from "components/Steps/View";
+import { CurrencyAmountFormatDecimals } from "constants/index";
+import { BURN_FIELD } from "constants/swap";
+import { useDecreaseLiquidityCallback } from "hooks/swap/liquidity";
+import { useMediaQuerySM } from "hooks/theme";
+import { useLoadingTip, useSuccessTip } from "hooks/useTips";
+import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export interface RemoveAllLiquidityProps {
   position: Position | undefined;
@@ -19,8 +20,7 @@ export interface RemoveAllLiquidityProps {
 
 export function RemoveAllLiquidity({ position, positionId, onDecreaseSuccess }: RemoveAllLiquidityProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const principal = useAccountPrincipal();
 
@@ -48,11 +48,11 @@ export function RemoveAllLiquidity({ position, positionId, onDecreaseSuccess }: 
   const parsedAmounts = {
     [BURN_FIELD.LIQUIDITY_PERCENT]: percentToRemove,
     [BURN_FIELD.CURRENCY_A]:
-      currencyA && discountedAmount0 && percentToRemove && percentToRemove.greaterThan("0")
+      currencyA && discountedAmount0 && percentToRemove?.greaterThan("0")
         ? CurrencyAmount.fromRawAmount(currencyA, discountedAmount0)
         : undefined,
     [BURN_FIELD.CURRENCY_B]:
-      currencyB && discountedAmount1 && percentToRemove && percentToRemove.greaterThan("0")
+      currencyB && discountedAmount1 && percentToRemove?.greaterThan("0")
         ? CurrencyAmount.fromRawAmount(currencyB, discountedAmount1)
         : undefined,
   };
@@ -102,7 +102,19 @@ export function RemoveAllLiquidity({ position, positionId, onDecreaseSuccess }: 
     }
 
     setLoading(false);
-  }, [position, liquidityToRemove, loading]);
+  }, [
+    position,
+    loading,
+    closeLoadingTip,
+    currencyA?.symbol,
+    currencyB?.symbol,
+    getDecreaseLiquidityCall,
+    onDecreaseSuccess,
+    openLoadingTip,
+    openSuccessTip,
+    principal,
+    t,
+  ]);
 
   return (
     <>

@@ -1,21 +1,21 @@
-import { useEffect, useMemo } from "react";
-import { Box } from "components/Mui";
-import { PositionCard } from "components/liquidity/index";
-import { usePosition } from "hooks/swap/usePosition";
 import { LoadingRow } from "components/index";
-import { useAccountPrincipalString } from "store/auth/hooks";
-import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
-import { PositionFilterState, PositionSort, UserPositionByList } from "types/swap";
-import { useInitialUserPositionPools } from "store/hooks";
+import { PositionCard } from "components/liquidity/index";
+import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
+import { Box } from "components/Mui";
 import { usePositionContext } from "components/swap/index";
-import { useMultiplePositionsFee, useSortedPositions } from "hooks/swap/index";
-import { useAvailableFarmsForPool } from "hooks/staking-farm";
-import { useIsLimitOrder } from "hooks/swap/limit-order";
-import { getPositionFeeKey } from "utils/swap";
-import { useRefreshTrigger } from "hooks/index";
 import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/index";
 import { POSITIONS_FEES_REFRESH_KEY } from "constants/liquidity";
-import { UserLiquidityEmpty } from "components/liquidity/UserLiquidityEmpty";
+import { useRefreshTrigger } from "hooks/index";
+import { useAvailableFarmsForPool } from "hooks/staking-farm";
+import { useMultiplePositionsFee, useSortedPositions } from "hooks/swap/index";
+import { useIsLimitOrder } from "hooks/swap/limit-order";
+import { usePosition } from "hooks/swap/usePosition";
+import { useUserAllPositions } from "hooks/swap/useUserAllPositions";
+import { useEffect, useMemo } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
+import { useInitialUserPositionPools } from "store/hooks";
+import type { PositionFilterState, PositionSort, UserPositionByList } from "types/swap";
+import { getPositionFeeKey } from "utils/swap";
 
 interface PositionItemProps {
   position: UserPositionByList;
@@ -72,18 +72,19 @@ export function YourPositions({ filterState, sort, hiddenNumbers }: YourPosition
 
     return positions.reduce(
       (prev: Array<{ poolId: string; positionIds: bigint[] }>, curr: UserPositionByList) => {
-        const existIndex = prev.findIndex(({ poolId }) => poolId === curr.poolId);
+        const index = prev.findIndex(({ poolId }) => poolId === curr.poolId);
 
-        if (existIndex === -1)
-          return [...prev, { poolId: curr.poolId, positionIds: [curr.position.id] }] as Array<{
+        if (index === -1) {
+          return prev.concat([{ poolId: curr.poolId, positionIds: [curr.position.id] }] as Array<{
             poolId: string;
             positionIds: bigint[];
-          }>;
+          }>);
+        }
 
-        const existData = prev[existIndex];
+        const existData = prev[index];
         const existNewData = { poolId: existData.poolId, positionIds: [...existData.positionIds, curr.position.id] };
 
-        prev.splice(existIndex, 1, existNewData);
+        prev.splice(index, 1, existNewData);
 
         return prev;
       },

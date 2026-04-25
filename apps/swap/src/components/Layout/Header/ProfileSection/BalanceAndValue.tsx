@@ -1,16 +1,15 @@
-import { Typography } from "components/Mui";
-import { formatDollarAmount, formatIcpAmount, parseTokenAmount } from "@icpswap/utils";
+import { useInfoToken } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
 import { Flex } from "@icpswap/ui";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useInfoToken } from "@icpswap/hooks";
+import { formatDollarAmount, formatIcpAmount, parseTokenAmount } from "@icpswap/utils";
+import { Typography } from "components/Mui";
 import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export function BalanceAndValue() {
   const principal = useAccountPrincipal();
-
   const infoToken = useInfoToken(ICP.address);
-  const { result: tokenBalance } = useTokenBalance(ICP.address, principal);
+  const { result: tokenBalance } = useTokenBalance({ tokenId: ICP.address, account: principal });
 
   return (
     <Flex sx={{ padding: "20px 0 0 0" }} justify="center" vertical align="center">

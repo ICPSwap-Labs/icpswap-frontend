@@ -1,9 +1,10 @@
+import { Flex, MenuItem, MenuWrapper } from "@icpswap/ui";
+import { Link } from "components/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
+import { useMediaQueryMD, useMediaQuerySM } from "hooks/theme";
 import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { MenuWrapper, MenuItem, Flex } from "@icpswap/ui";
-import { Link } from "components/index";
-import { makeStyles, useTheme, Box, Typography, useMediaQuery, Theme } from "components/Mui";
-import { routes, Route } from "./nav.config";
+import { type Route, routes } from "./nav.config";
 
 const linearGradient = "linear-gradient(89.44deg, #5569DB -0.31%, #8572FF 91.14%)";
 
@@ -62,13 +63,12 @@ const useStyles = makeStyles((theme: Theme) => {
 export function InfoNavBar() {
   const classes = useStyles();
   const location = useLocation();
-  const theme = useTheme() as Theme;
   const navigate = useNavigate();
   const ref = useRef(null);
   const pathName = location.pathname;
 
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownMD = useMediaQueryMD();
+  const matchDownSM = useMediaQuerySM();
 
   const RoutesNumber = matchDownMD ? (matchDownSM ? 3 : 4) : 7;
 
@@ -145,7 +145,7 @@ export function InfoNavBar() {
 
             <MenuWrapper open={open} anchor={ref?.current} placement="bottom-start" onClickAway={handleClose}>
               {routes.map((route, index) =>
-                index > RoutesNumber || index === RoutesNumber ? (
+                index >= RoutesNumber ? (
                   <Link key={route.path ?? index} to={route.path} link={route.link}>
                     <MenuItem value={route} label={route.name} onMenuClick={() => handleMenuClick(route)} />
                   </Link>

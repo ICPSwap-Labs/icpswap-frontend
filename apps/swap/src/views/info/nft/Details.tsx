@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Typography, Box } from "components/Mui";
-import { useParams } from "react-router-dom";
-import { NFTs, NFTLayoutHeader } from "components/info/nft";
-import { useNFTCanisterMetadata, useNFTUserCanisterCount, useNFTCanisterCycles } from "hooks/info/nft";
-import { InfoWrapper, LoadingRow, Breadcrumbs } from "components/index";
 import { MainCard } from "@icpswap/ui";
+import { Breadcrumbs, InfoWrapper, LoadingRow } from "components/index";
+import { NFTLayoutHeader, NFTs } from "components/info/nft";
+import { Box, Typography } from "components/Mui";
+import { useNFTCanisterCycles, useNFTCanisterMetadata, useNFTUserCanisterCount } from "hooks/info/nft";
 import i18n from "i18n/index";
+import type React from "react";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 type PageType = {
   component: React.FC<{ canisterId: string }>;
@@ -18,9 +19,9 @@ const Pages: PageType[] = [{ key: "NFTs", label: i18n.t("nfts"), component: NFTs
 export default function NFTCanisterDetails() {
   const { id: canisterId } = useParams() as { id: string };
 
-  const { result: metadata, loading } = useNFTCanisterMetadata(canisterId);
-  const { result: cycles } = useNFTCanisterCycles(canisterId);
-  const { result: count } = useNFTUserCanisterCount(canisterId, "");
+  const { data: metadata, isLoading: loading } = useNFTCanisterMetadata(canisterId);
+  const { data: cycles } = useNFTCanisterCycles(canisterId);
+  const { data: count } = useNFTUserCanisterCount(canisterId, "");
 
   const [pageKey, setPageKey] = useState(Pages[0].key);
 

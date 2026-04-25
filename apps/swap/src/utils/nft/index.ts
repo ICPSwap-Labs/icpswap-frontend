@@ -1,11 +1,11 @@
-import { Principal } from "@dfinity/principal";
-import { type SwapNFTTokenMetadata } from "@icpswap/types";
+import { Principal } from "@icp-sdk/core/principal";
+import type { SwapNFTTokenMetadata } from "@icpswap/types";
+import { stringToArrayBuffer, toHexString } from "@icpswap/utils";
 
 export function from32bits(data: number[]) {
   let value;
 
   for (let i = 0; i < 4; i++) {
-    // @ts-ignore
     value = (value << 8) | data[i];
   }
 
@@ -18,15 +18,8 @@ export function to32bits(num: number) {
   return Array.from(new Uint8Array(arrayBuffer));
 }
 
-export function toHexString(byteArray: number[]) {
-  return Array.from(byteArray, (byte) => {
-    return `0${(byte & 0xff).toString(16)}`.slice(-2);
-  }).join("");
-}
-
 export function encodeTokenIdentifier(principal: string, index: number | bigint) {
-  // @ts-ignore
-  const padding = Buffer("\x0Atid");
+  const padding = stringToArrayBuffer("\x0Atid");
 
   const array = new Uint8Array([
     ...padding,
@@ -40,8 +33,7 @@ export function decodeTokenId(tid: string) {
   const p = [...Principal.fromText(tid).toUint8Array()];
   const padding = p.splice(0, 4);
 
-  // @ts-ignore
-  if (toHexString(padding) !== toHexString(Buffer("\x0Atid"))) {
+  if (toHexString(padding) !== toHexString(stringToArrayBuffer("\x0Atid"))) {
     return {
       index: 0,
       canister: tid,
@@ -50,8 +42,7 @@ export function decodeTokenId(tid: string) {
   }
   return {
     index: from32bits(p.splice(-4)),
-    // @ts-ignore
-    canister: Principal.fromUint8Array(p).toText(),
+    canister: Principal.fromUint8Array(Uint8Array.from(p)).toText(),
     token: tid,
   };
 }
@@ -61,19 +52,6 @@ export function getNFTSwapPoolId(nft: SwapNFTTokenMetadata) {
 
   for (let i = 0; i < nft.attributes.length; i++) {
     if (nft.attributes[i].k === "pool") {
-      poolId = nft.attributes[i].v;
-      break;
-    }
-  }
-
-  return poolId;
-}
-
-export function getNFTSwapPositionId(nft: SwapNFTTokenMetadata) {
-  let poolId = "";
-
-  for (let i = 0; i < nft.attributes.length; i++) {
-    if (nft.attributes[i].k === "positionId") {
       poolId = nft.attributes[i].v;
       break;
     }

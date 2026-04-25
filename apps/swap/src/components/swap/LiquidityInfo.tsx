@@ -1,13 +1,12 @@
-import { useState, useMemo } from "react";
-import { Typography, Grid, Box, makeStyles, Theme } from "components/Mui";
-import { formatTickPrice } from "utils/swap/formatTickPrice";
-import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
-import { Bound } from "constants/swap";
-import { Position, getPriceOrderingFromPositionForUI, useInverter } from "@icpswap/swap-sdk";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
+import { formatTickPrice, getPriceOrderingFromPositionForUI, type Position, useInverter } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/Image/Token";
+import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
 import { PositionRangeState } from "components/swap/index";
+import { Bound } from "constants/swap";
 import { usePositionState } from "hooks/liquidity";
+import useIsTickAtLimit from "hooks/swap/useIsTickAtLimit";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => ({
@@ -157,8 +156,8 @@ export default function LiquidityInfo({ position }: LiquidityInfoProps) {
                       ? `${pool?.priceOf(token1).toSignificant(6)}`
                       : "--"
                     : pool?.priceOf(token0)
-                    ? `${pool?.priceOf(token0).toSignificant(6)}`
-                    : "--"
+                      ? `${pool?.priceOf(token0).toSignificant(6)}`
+                      : "--"
                   : "--"}
               </Typography>
               <SyncAltIcon

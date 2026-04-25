@@ -1,10 +1,10 @@
-import { isUndefinedOrNull, isValidPrincipal, principalToAccount } from "@icpswap/utils";
 import { useLiquidityLockIds } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { isUndefinedOrNull, isValidPrincipal, principalToAccount } from "@icpswap/utils";
 import { useMemo } from "react";
-import { Null } from "@icpswap/types";
 
 export function useSneedLedger(tokenIds: string[] | Null) {
-  const { result: locksIds } = useLiquidityLockIds(tokenIds);
+  const { data: locksIds } = useLiquidityLockIds(tokenIds);
 
   return useMemo(() => {
     if (!locksIds) return undefined;

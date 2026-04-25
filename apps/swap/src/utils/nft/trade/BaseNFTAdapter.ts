@@ -1,5 +1,4 @@
-import type { NFTBuyArgs, NFTSaleArgs, NFTRevokeArgs } from "@icpswap/types";
-import { StatusResult } from "@icpswap/types";
+import type { NFTBuyArgs, NFTRevokeArgs, NFTSaleArgs, StatusResult } from "@icpswap/types";
 
 export interface BuyParameters {
   params: NFTBuyArgs;

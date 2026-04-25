@@ -1,2 +1,2 @@
-export * from "./useGuide";
 export * from "./config";
+export * from "./useGuide";

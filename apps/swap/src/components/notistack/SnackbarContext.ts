@@ -1,4 +1,4 @@
 import React from "react";
-import { ProviderContext } from "./types";
+import type { ProviderContext } from "./types";
 
 export default React.createContext<ProviderContext>({} as ProviderContext);

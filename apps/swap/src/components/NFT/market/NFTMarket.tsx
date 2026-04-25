@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
-import { Box, Button, Typography, Grid, CircularProgress, makeStyles, useTheme } from "components/Mui";
+import { ImageLoading } from "@icpswap/ui";
+import { isValidAccount, pageArgsFormat } from "@icpswap/utils";
+import { NoData } from "components/index";
+import { Box, Button, CircularProgress, Grid, makeStyles, Typography, useTheme } from "components/Mui";
 import NFTCard from "components/NFT/market/NFTCard";
 import { getTradeOrders } from "hooks/nft/trade";
-import { isValidAccount, pageArgsFormat } from "@icpswap/utils";
-import { ImageLoading } from "@icpswap/ui";
-import { TradeOrder } from "types/nft";
-import { NoData } from "components/index";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import type { TradeOrder } from "types/nft";
 
 const useStyles = makeStyles(() => {
   return {
@@ -105,7 +105,7 @@ export default function NFTMarketOrders({
     };
 
     call();
-  }, [sortBy, searchValue, canisterId]);
+  }, [sortBy, searchValue, canisterId, isAddress]);
 
   const handleLoadMore = async () => {
     if (firstLoading || moreLoading) return;

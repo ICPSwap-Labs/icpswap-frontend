@@ -1,6 +1,6 @@
-import React from "react";
+import type React from "react";
 
-import { Box, BoxProps } from "../Mui";
+import { Box, type BoxProps } from "../Mui";
 
 export interface RowProps {
   borderBottom?: string;

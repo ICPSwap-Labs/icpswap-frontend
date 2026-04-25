@@ -1,10 +1,10 @@
-import { Box, useTheme, Typography } from "components/Mui";
-import { useState, useCallback, useRef } from "react";
-import { Flex, MenuWrapper, Image, ALink, MenuItem } from "@icpswap/ui";
-import { getTransactionExplorerLink, TransactionLink } from "@icpswap/hooks";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { getTransactionExplorerLink, type TransactionLink } from "@icpswap/hooks";
+import { ALink, Flex, Image, MenuItem, MenuWrapper } from "@icpswap/ui";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
+import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 const TRANSACTIONS: { label: string; img: string; value: TransactionLink }[] = [
   { label: `IC Explorer`, img: "/images/explorer/ic-explorer.svg", value: "ic-explorer" },
@@ -29,11 +29,11 @@ export function TransactionItem({ tokenId, isBridgeToken }: TransactionItemProps
 
   const handleMouseEnter = useCallback(() => {
     setOpen(true);
-  }, [setOpen]);
+  }, []);
 
   const handleMouseLeave = useCallback(() => {
     setOpen(false);
-  }, [setOpen]);
+  }, []);
 
   return (
     <Box ref={ref} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>

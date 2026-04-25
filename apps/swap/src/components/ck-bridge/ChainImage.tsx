@@ -1,17 +1,17 @@
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { ckBridgeChain } from "@icpswap/constants";
+import { BridgeChainType } from "@icpswap/constants";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Image } from "@icpswap/ui";
 import { Box, useTheme } from "components/Mui";
 
 export interface ChainImageProps {
   token: Token | Null;
-  chain: ckBridgeChain | Null;
+  chain: BridgeChainType | Null;
   size?: string;
   chainSize?: string;
 }
 
-export function TokenImageWithChain({ token, chain, size = "40px", chainSize = "16px" }: ChainImageProps) {
+export function TokenImageWithChain({ token, chain, size = "40px", chainSize = "14px" }: ChainImageProps) {
   const theme = useTheme();
 
   return (
@@ -22,21 +22,32 @@ export function TokenImageWithChain({ token, chain, size = "40px", chainSize = "
           position: "absolute",
           bottom: 0,
           right: 0,
-          borderWidth: "2px 1px 1px 2px",
+          borderWidth: "2px",
           borderRadius: "4px",
           borderColor: theme.palette.background.level2,
+          width: `${parseInt(chainSize, 10) + 2}px`,
+          height: `${parseInt(chainSize, 10) + 2}px`,
+          background: "#1A223F",
         }}
       >
-        <Image
-          src={
-            chain === ckBridgeChain.icp
-              ? "/images/ck-bridge-chain-icp.svg"
-              : chain === ckBridgeChain.btc
-              ? "/images/ck-bridge-chain-btc.svg"
-              : "/images/ck-bridge-chain-eth.svg"
-          }
-          sx={{ width: chainSize, height: chainSize, borderRadius: "4px" }}
-        />
+        <Box sx={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <Image
+            src={
+              chain === BridgeChainType.icp
+                ? "/images/ck-bridge/chain-icp.svg"
+                : chain === BridgeChainType.btc
+                  ? "/images/ck-bridge/chain-btc.svg"
+                  : chain === BridgeChainType.doge
+                    ? "/images/ck-bridge/chain-doge.svg"
+                    : "/images/ck-bridge/chain-eth.svg"
+            }
+            sx={{
+              width: chainSize,
+              height: chainSize,
+              borderRadius: "4px",
+            }}
+          />
+        </Box>
       </Box>
     </Box>
   );

@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Grid, Box, makeStyles, useTheme } from "components/Mui";
-import ErrorImage from "@mui/icons-material/BrokenImage";
-
-import { LoadingDarkImage } from "./LoadingDarkImage";
-import { LoadingLightImage } from "./LoadingLightImage";
+import { Box, Grid, makeStyles, useTheme } from "components/Mui";
+import { BrokenImage } from "components/MuiIcon";
+import type React from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { DefaultDarkImage } from "./DefaultDarkImage";
 import { DefaultLightImage } from "./DefaultLightImage";
+import { LoadingDarkImage } from "./LoadingDarkImage";
+import { LoadingLightImage } from "./LoadingLightImage";
 
 const useStyle = makeStyles(() => ({
   image: {
@@ -52,23 +52,29 @@ export default function LazyImage(props: LazyImageProps) {
 
   const image = useRef<HTMLImageElement>(null);
 
-  const handleLoadImage = (e?: any) => {
-    setImageError(false);
-    setImageLoaded(true);
-    if (props.onLoad) {
-      props.onLoad(e);
-    }
-  };
-
-  const handleImageError = (e?: any) => {
-    if (props.src) {
-      setImageError(true);
-
-      if (props.onError) {
-        props.onError(e);
+  const handleLoadImage = useCallback(
+    (e?: any) => {
+      setImageError(false);
+      setImageLoaded(true);
+      if (props.onLoad) {
+        props.onLoad(e);
       }
-    }
-  };
+    },
+    [props],
+  );
+
+  const handleImageError = useCallback(
+    (e?: any) => {
+      if (props.src) {
+        setImageError(true);
+
+        if (props.onError) {
+          props.onError(e);
+        }
+      }
+    },
+    [props],
+  );
 
   const {
     animationDuration = 3000,
@@ -94,7 +100,7 @@ export default function LazyImage(props: LazyImageProps) {
   useEffect(() => {
     if (props.showDefault) return;
     const img = image.current;
-    if (img && img.complete) {
+    if (img?.complete) {
       // image loaded before the component rendered (e.g. SSR), see #43 and #51
       if (img.naturalWidth === 0) {
         handleImageError();
@@ -102,7 +108,7 @@ export default function LazyImage(props: LazyImageProps) {
         handleLoadImage();
       }
     }
-  }, [props.showDefault]);
+  }, [props.showDefault, handleImageError, handleLoadImage]);
 
   return (
     <Grid container justifyContent="center" sx={{ position: "relative", overflow: "hidden" }}>
@@ -150,7 +156,7 @@ export default function LazyImage(props: LazyImageProps) {
         ) : (
           <LoadingLightImage height={height} sx={imageLoaded ? { marginTop: "-100%" } : {}} />
         ))}
-      {imageLoaded && imageError && <ErrorImage sx={{ marginTop: "-100%" }} />}
+      {imageLoaded && imageError && <BrokenImage sx={{ marginTop: "-100%" }} />}
       {showDefault &&
         !CustomImage &&
         (theme.customization.mode === "dark" ? (

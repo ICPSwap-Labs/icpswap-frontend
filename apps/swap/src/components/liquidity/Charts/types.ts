@@ -1,5 +1,5 @@
-import { Bound } from "constants/mint";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
+import type { Bound } from "constants/mint";
 
 export interface ChartEntry {
   activeLiquidity: number;

@@ -1,24 +1,14 @@
-import { useTheme, Box, Typography, makeStyles } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { toSignificant, parseTokenAmount, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import dayjs from "dayjs";
-import { TX } from "types/web3";
-import { EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK } from "constants/ckETH";
 import { Flex } from "@icpswap/ui";
-import { useEthMintTxs, useEthTxResponse } from "store/web3/hooks";
-import { useTranslation } from "react-i18next";
+import { isUndefinedOrNull, nonUndefinedOrNull, parseTokenAmount, toSignificant } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import { EXPLORER_ADDRESS_LINK, EXPLORER_BLOCK_LINK, EXPLORER_TX_LINK } from "constants/ckETH";
+import dayjs from "dayjs";
 import { useEthereumConfirmations } from "hooks/ck-bridge/useEthereumConfirmations";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
+import { useTranslation } from "react-i18next";
+import { useEthMintTxs, useEthTxResponse } from "store/web3/hooks";
+import type { TX } from "types/web3";
 
 interface TransactionProps {
   transaction: TX;
@@ -27,7 +17,6 @@ interface TransactionProps {
 function Transaction({ transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
   const transactionResponse = useEthTxResponse(transaction.hash);
   const confirmations = useEthereumConfirmations(transactionResponse);
 
@@ -67,7 +56,7 @@ function Transaction({ transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.txid")}</Typography>
 
-          <Typography className={classes.txLink}>
+          <Typography sx={txLinkTypographySx}>
             <ALink link={`${EXPLORER_TX_LINK}/${transaction.hash}`} color="secondary" textDecorationColor="secondary">
               {transaction.hash}
             </ALink>
@@ -77,7 +66,7 @@ function Transaction({ transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.from")}</Typography>
 
-          <Typography className={classes.txLink}>
+          <Typography sx={txLinkTypographySx}>
             <ALink
               link={`${EXPLORER_ADDRESS_LINK}/${transaction.from}`}
               color="secondary"
@@ -91,7 +80,7 @@ function Transaction({ transaction }: TransactionProps) {
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.to")}</Typography>
 
-          <Typography className={classes.txLink}>
+          <Typography sx={txLinkTypographySx}>
             {transaction.to ? (
               <ALink
                 link={`${EXPLORER_ADDRESS_LINK}/${transaction.to}`}
@@ -133,13 +122,11 @@ export function EthMintTransactions() {
       </Typography>
 
       <Box>
-        <>
-          {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-            <NoData tip={t("ck.empty")} />
-          ) : (
-            transactions.map((transaction, index) => <Transaction key={index} transaction={transaction} />)
-          )}
-        </>
+        {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
+        ) : (
+          transactions.map((transaction, index) => <Transaction key={index} transaction={transaction} />)
+        )}
       </Box>
     </MainCard>
   );

@@ -1,11 +1,10 @@
 import { Box, Typography } from "components/Mui";
 import { useCallback } from "react";
-import { useAccount, useChainId, useDisconnect } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 
 export function DisconnectButton() {
   const { address } = useAccount();
   const { disconnect } = useDisconnect();
-  const currChainId = useChainId();
 
   const handleDisconnect = useCallback(async () => {
     try {
@@ -13,7 +12,7 @@ export function DisconnectButton() {
     } catch (error) {
       console.error(`web3-react connection error: ${error}`);
     }
-  }, [currChainId]);
+  }, [disconnect]);
 
   return address ? (
     <Box

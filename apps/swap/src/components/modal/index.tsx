@@ -1,19 +1,20 @@
-import { ReactNode } from "react";
+import DialogCloseIcon from "assets/images/icons/dialog-close";
 import {
-  makeStyles,
-  useTheme,
-  Theme,
   Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  makeStyles,
+  type Theme,
   Typography,
   useMediaQuery,
-  Dialog,
-  DialogTitle,
-  DialogContent,
+  useTheme,
 } from "components/Mui";
-import DialogCloseIcon from "assets/images/icons/dialog-close";
-import { isElement } from "react-is";
+import { useMediaQueryMD } from "hooks/theme";
 import i18n from "i18n/index";
+import type { ReactNode } from "react";
+import { isElement } from "react-is";
 
 const useStyles = makeStyles((theme: Theme) => ({
   titleContainer: {
@@ -113,7 +114,7 @@ export default function Modal({
 }: ModalProps) {
   const classes = useStyles();
   const theme = useTheme() as Theme;
-  const matchDownMD = useMediaQuery(theme.breakpoints.down("md"));
+  const matchDownMD = useMediaQueryMD();
 
   const down760 = useMediaQuery("(max-width:760px)");
 

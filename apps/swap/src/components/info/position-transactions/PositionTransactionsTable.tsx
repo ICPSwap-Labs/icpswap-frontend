@@ -1,7 +1,6 @@
-import { pageArgsFormat } from "@icpswap/utils";
-import { useEffect, useMemo, useState } from "react";
-import { Null } from "@icpswap/types";
 import { usePositionTransactions } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { useEffect, useMemo, useState } from "react";
 
 import { PositionTransactionsTableUI } from "./PositionTransactionsTableUI";
 
@@ -19,11 +18,15 @@ export function PositionTransactionsTable({
   empty,
 }: PositionTransactionsTableProps) {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
-  const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
   const poolIds = useMemo(() => (poolId ? [poolId] : []), [poolId]);
 
-  const { loading, result } = usePositionTransactions(poolIds, principal, offset, pagination.pageSize);
+  const { isLoading: loading, data: result } = usePositionTransactions(
+    poolIds,
+    principal,
+    pagination.pageNum,
+    pagination.pageSize,
+  );
 
   const transactions = result?.content;
   const totalElements = result?.totalElements;
@@ -32,10 +35,10 @@ export function PositionTransactionsTable({
     setPagination({ pageNum: page, pageSize: 10 });
   };
 
-  // Reset pagination when pool or principal change
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- reset pagination when pool or principal change
   useEffect(() => {
     setPagination({ pageNum: 1, pageSize: pagination.pageSize });
-  }, [poolId, principal]);
+  }, [pagination.pageSize, principal]);
 
   return (
     <PositionTransactionsTableUI

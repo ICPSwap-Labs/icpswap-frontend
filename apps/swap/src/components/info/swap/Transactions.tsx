@@ -1,12 +1,12 @@
-import { useState, useMemo, useCallback, ReactNode } from "react";
+import type { InfoTransactionResponse, Null } from "@icpswap/types";
+import { Flex, Header, HeaderCell, LoadingRow, NoData, Pagination, SortDirection, TransactionRow } from "@icpswap/ui";
 import { BigNumber, enumToString, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Header, HeaderCell, SortDirection, TransactionRow, NoData, LoadingRow, Flex, Pagination } from "@icpswap/ui";
-import { InfoTransactionResponse, Null } from "@icpswap/types";
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { useTips, TIP_SUCCESS } from "hooks/index";
-import copyToClipboard from "copy-to-clipboard";
-import { useTranslation } from "react-i18next";
 import { ValueLabelTooltip } from "components/info/ValueLabelTooltip";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import copyToClipboard from "copy-to-clipboard";
+import { TIP_SUCCESS, useTips } from "hooks/index";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface StyleProps {
   padding?: string;
@@ -116,10 +116,13 @@ export function Transactions({
     setFilter(filter);
   };
 
-  const handleCopy = useCallback((address: string) => {
-    copyToClipboard(address);
-    openTip(t`Copy Success`, TIP_SUCCESS);
-  }, []);
+  const handleCopy = useCallback(
+    (address: string) => {
+      copyToClipboard(address);
+      openTip(t`Copy Success`, TIP_SUCCESS);
+    },
+    [openTip, t],
+  );
 
   return (
     <>
@@ -185,7 +188,7 @@ export function Transactions({
               </LoadingRow>
             </Box>
           ) : sortedTransactions.length === 0 ? (
-            CustomNoData ?? <NoData />
+            (CustomNoData ?? <NoData />)
           ) : (
             sortedTransactions.map((transaction, index) => (
               <TransactionRow

@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { parseTokenAmount, pageArgsFormat } from "@icpswap/utils";
-import dayjs from "dayjs";
-import { ImageLoading, AddressFormat } from "components/index";
 import { useV3FarmDistributeRecords } from "@icpswap/hooks";
 import type { StakingFarmDistributeTransaction } from "@icpswap/types";
+import { BodyCell, Header, HeaderCell, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { AddressFormat, ImageLoading } from "components/index";
+import { Box, makeStyles } from "components/Mui";
+import dayjs from "dayjs";
 import { useToken } from "hooks/index";
-import { Header, HeaderCell, BodyCell, Pagination, NoData, TableRow } from "@icpswap/ui";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { makeStyles, Box } from "components/Mui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -48,7 +48,7 @@ export function FarmClaimTransactions({ id, rewardTokenId }: FarmClaimTransactio
   const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
-  const { result, loading } = useV3FarmDistributeRecords(id, offset, pagination.pageSize);
+  const { data: result, isLoading: loading } = useV3FarmDistributeRecords(id, offset, pagination.pageSize);
   const { content: list, totalElements = 0 } = result ?? { totalElements: 0, content: [] };
 
   const handlePageChange = (page: number) => {

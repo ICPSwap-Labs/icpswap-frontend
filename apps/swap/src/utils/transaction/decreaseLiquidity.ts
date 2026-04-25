@@ -1,7 +1,7 @@
-import { DecreaseLiquidityInfo } from "@icpswap/types";
-import { __getTokenInfo } from "hooks/token";
+import type { DecreaseLiquidityInfo } from "@icpswap/types";
 import { parseTokenAmount } from "@icpswap/utils";
-import { SwapTransactionResult, SWAP_TRANSACTIONS_FAILED_STATUS } from "utils/transaction/constant";
+import { __getTokenInfo } from "hooks/token";
+import { SWAP_TRANSACTIONS_FAILED_STATUS, type SwapTransactionResult } from "utils/transaction/constant";
 
 export async function swapTransactionDecreaseLiquidityFormat(
   info: DecreaseLiquidityInfo,

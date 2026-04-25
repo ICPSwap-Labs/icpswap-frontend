@@ -1,22 +1,24 @@
-import React, { useMemo, useEffect, useCallback } from "react";
-import { useTheme, Typography, Box, useMediaQuery } from "components/Mui";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { DotLoading, Flex, TokenImage } from "components/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { useUSDPriceById } from "hooks/useUSDPrice";
-import {
-  parseTokenAmount,
-  formatDollarAmount,
-  BigNumber,
-  isValidPrincipal,
-  formatAmount,
-  nonUndefinedOrNull,
-} from "@icpswap/utils";
+import type { Token } from "@icpswap/swap-sdk";
 import { Image, Tooltip } from "@icpswap/ui";
-import { PlusCircle } from "react-feather";
-import { useTaggedTokenManager, useSortedTokensManager } from "store/wallet/hooks";
-import { Token } from "@icpswap/swap-sdk";
+import {
+  BigNumber,
+  formatAmount,
+  formatDollarAmount,
+  isValidPrincipal,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+} from "@icpswap/utils";
+import { DotLoading, Flex, TokenImage } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useMediaQuerySM } from "hooks/theme";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useUSDPriceById } from "hooks/useUSDPrice";
+import type React from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import { PlusCircle } from "react-feather";
+import { useAccountPrincipal } from "store/auth/hooks";
+import { useSortedTokensManager, useTaggedTokenManager } from "store/wallet/hooks";
 
 export interface TokenItemProps {
   canisterId: string;
@@ -43,7 +45,7 @@ export function TokenItem({
 }: TokenItemProps) {
   const theme = useTheme();
   const principal = useAccountPrincipal();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const getBalanceId = useMemo(() => {
     if (showBalance) return canisterId;
@@ -51,7 +53,7 @@ export function TokenItem({
   }, [showBalance, canisterId]);
 
   const [, token] = useToken(canisterId);
-  const { result: balance, loading } = useTokenBalance(getBalanceId, principal);
+  const { result: balance, loading } = useTokenBalance({ tokenId: getBalanceId, account: principal });
   const interfacePrice = useUSDPriceById(getBalanceId);
 
   const { taggedTokens, updateTaggedTokens, deleteTaggedTokens } = useTaggedTokenManager();
@@ -71,7 +73,7 @@ export function TokenItem({
     if (canisterId && balance) {
       if (onUpdateTokenAdditional) onUpdateTokenAdditional(canisterId, balance.toString());
     }
-  }, [canisterId, balance]);
+  }, [canisterId, balance, onUpdateTokenAdditional]);
 
   const isTagged = taggedTokens.includes(canisterId);
 

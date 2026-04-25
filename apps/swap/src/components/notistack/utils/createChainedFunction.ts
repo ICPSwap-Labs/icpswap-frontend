@@ -5,7 +5,7 @@ export default function createChainedFunction(funcs) {
     (acc, func) => {
       if (func == null) return acc;
 
-      if (process.env.NODE_ENV !== "production") {
+      if (import.meta.env.MODE !== "production") {
         if (typeof func !== "function") {
           // eslint-disable-next-line no-console
           console.error("Invalid Argument Type. must only provide functions, undefined, or null.");

@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import clsx from "clsx";
 import { makeStyles } from "components/Mui";
+import type React from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import Collapse from "../transitions/Collapse";
-import { getSlideDirection, toSnackbarAnchorOrigin, keepSnackbarClassKeys } from "./utils";
-import {
-  TransitionHandlerProps,
-  SnackbarProviderProps,
+import type {
   CustomContentProps,
   InternalSnack,
   SharedProps,
+  SnackbarProviderProps,
+  TransitionHandlerProps,
 } from "../types";
+import MaterialDesignContent from "../ui/MaterialDesignContent";
 import createChainedFunction from "../utils/createChainedFunction";
 import Snackbar from "./Snackbar";
-import MaterialDesignContent from "../ui/MaterialDesignContent";
+import { getSlideDirection, keepSnackbarClassKeys, toSnackbarAnchorOrigin } from "./utils";
 
 const useStyles = makeStyles({
   wrappedRoot: {
@@ -95,6 +96,7 @@ export default function SnackbarItem(props: SnackbarItemProps) {
     ["onEnter", "onEntered", "onExit", "onExited"] as (keyof TransitionHandlerProps)[]
   ).reduce(
     (acc, cbName) => ({
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- object spread in reduce
       ...acc,
       [cbName]: createChainedFunction([props.snack[cbName], props[cbName]]),
     }),

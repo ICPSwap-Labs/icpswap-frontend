@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 export const defaultEasing = {
   // This is the most common easing curve.
   easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -15,8 +14,6 @@ export const defaultEasing = {
  * CSS hack to force a repaint
  */
 export const reflow = (node: Element): void => {
-  // We have to do something with node.scrollTop.
-  // Otherwise it removed from the compiled code by optimisers
-  // eslint-disable-next-line no-self-assign
-  node.scrollTop = node.scrollTop;
+  // Force layout; reading geometry triggers a reflow without self-assignment.
+  void node.getBoundingClientRect();
 };

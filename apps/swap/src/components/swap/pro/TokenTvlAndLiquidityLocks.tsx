@@ -1,0 +1,185 @@
+import { useInfoToken } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, Tooltip } from "@icpswap/ui";
+import { BigNumber, formatAmount, formatDollarAmount, parseTokenAmount } from "@icpswap/utils";
+import { TokenImage } from "components/index";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
+import { SwapProCardWrapper } from "components/swap/pro";
+import { LiquidityLocks } from "components/swap/pro/LiquidityLocks";
+import { TokenPoolPrice } from "components/TokenPoolPrice";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import type React from "react";
+import { type ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowUpRight } from "react-feather";
+import { useTranslation } from "react-i18next";
+
+interface TokenTvlProps {
+  token: Token | Null;
+  poolId: string | Null;
+  onUpdateTvl: (tvl: string | undefined) => void;
+}
+
+function TokenTvl({ token, poolId, onUpdateTvl }: TokenTvlProps) {
+  const { result: tokenBalance } = useTokenBalance({ tokenId: token?.address, account: poolId });
+  const infoToken = useInfoToken(token?.address);
+
+  const tokenPrice = useMemo(() => infoToken?.price, [infoToken]);
+
+  const tokenUsdTvl = useMemo(() => {
+    if (!tokenBalance || !tokenPrice || !token) return undefined;
+    return new BigNumber(tokenPrice).multipliedBy(parseTokenAmount(tokenBalance, token.decimals)).toString();
+  }, [tokenBalance, tokenPrice, token]);
+
+  useEffect(() => {
+    if (tokenUsdTvl) {
+      onUpdateTvl(tokenUsdTvl);
+    }
+  }, [tokenUsdTvl, onUpdateTvl]);
+
+  return (
+    <Box sx={{ display: "flex", gap: "0 6px", alignItems: "center" }}>
+      <TokenImage logo={token?.logo} tokenId={token?.address} size="18px" />
+      <Typography color="text.primary" fontSize="12px">
+        {tokenBalance ? formatAmount(parseTokenAmount(tokenBalance, token?.decimals).toNumber()) : "--"}{" "}
+        {token?.symbol ?? "--"} ({formatDollarAmount(tokenUsdTvl)})
+      </Typography>
+    </Box>
+  );
+}
+
+interface CardProps {
+  padding?: "12px" | "8px";
+  title?: ReactNode;
+  titleArrow?: boolean;
+  children: React.ReactNode;
+  fontSize?: "14px" | "12px";
+  tips?: ReactNode;
+  wrapperSx?: BoxProps["sx"];
+}
+
+function Card({ title, titleArrow, padding = "8px", fontSize = "14px", tips, children, wrapperSx }: CardProps) {
+  const theme = useTheme();
+
+  return (
+    <Box sx={{ background: theme.palette.background.level1, borderRadius: "8px", padding, ...wrapperSx }}>
+      {title ? (
+        <Flex fullWidth justify="center" gap="0 4px" sx={{ margin: "0 0 8px 0" }}>
+          <Typography sx={{ fontSize }}>{title}</Typography>
+          {titleArrow ? <ArrowUpRight size={14} color={theme.colors.secondaryMain} /> : null}
+          {tips ? <Tooltip iconSize="12px" tips={tips} /> : null}
+        </Flex>
+      ) : null}
+      {children}
+    </Box>
+  );
+}
+
+interface TvlValue {
+  tvl0: string | Null;
+  tvl1: string | Null;
+}
+
+interface TokenTvlAndLiquidityLocksProps {
+  inputToken: Token | Null;
+  outputToken: Token | Null;
+  poolId: string | Null;
+}
+
+export function TokenTvlAndLiquidityLocks({ inputToken, outputToken, poolId }: TokenTvlAndLiquidityLocksProps) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+
+  const { token0, token1 } = useMemo(() => {
+    if (inputToken && outputToken) {
+      const sorted = inputToken.sortsBefore(outputToken);
+
+      const token0 = sorted ? inputToken : outputToken;
+      const token1 = sorted ? outputToken : inputToken;
+
+      return { token0, token1 };
+    }
+
+    return { token0: null, token1: null };
+  }, [inputToken, outputToken]);
+
+  const infoToken0 = useInfoToken(token0?.address);
+  const infoToken1 = useInfoToken(token1?.address);
+
+  const [tvlValue, setTvlValue] = useState<TvlValue>({
+    tvl0: null,
+    tvl1: null,
+  });
+
+  const totalTVL = useMemo(() => {
+    if (!tvlValue.tvl0 || !tvlValue.tvl1) return undefined;
+    return formatDollarAmount(new BigNumber(tvlValue.tvl0).plus(tvlValue.tvl1).toString());
+  }, [tvlValue]);
+
+  const handleUpdateTvl = useCallback((key: keyof TvlValue, tvl: string | undefined) => {
+    setTvlValue((prevState) => ({ ...prevState, [key]: tvl }));
+  }, []);
+
+  const handleUpdateTvl0 = useCallback(
+    (tvl: string | undefined) => {
+      handleUpdateTvl("tvl0", tvl);
+    },
+    [handleUpdateTvl],
+  );
+
+  const handleUpdateTvl1 = useCallback(
+    (tvl: string | undefined) => {
+      handleUpdateTvl("tvl1", tvl);
+    },
+    [handleUpdateTvl],
+  );
+
+  return (
+    <SwapProCardWrapper padding="0px">
+      <Box sx={{ padding: "16px" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
+          {token0 && token1 ? (
+            <Card title={t("common.last.price")} fontSize="12px">
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0", padding: "0 0 0 4px" }}>
+                <TokenPoolPrice
+                  tokenA={token0}
+                  tokenB={token1}
+                  priceA={infoToken0?.price}
+                  priceB={infoToken1?.price}
+                  background="none"
+                />
+                <TokenPoolPrice
+                  tokenA={token1}
+                  tokenB={token0}
+                  priceA={infoToken1?.price}
+                  priceB={infoToken0?.price}
+                  background="none"
+                />
+              </Box>
+            </Card>
+          ) : null}
+
+          <Card>
+            <Box sx={{ display: "flex", gap: "0 16px" }}>
+              <Box sx={{ padding: "0 0 0 8px", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                <Typography align="center" fontSize="12px" sx={{ transform: "scale(0.9)" }}>
+                  {t("common.tvl")}
+                </Typography>
+                <Typography color="text.primary" align="center" sx={{ margin: "5px 0 0 0" }} fontSize="12px">
+                  {totalTVL ?? "--"}
+                </Typography>
+              </Box>
+              <Box sx={{ width: "1px", height: "48px", background: theme.palette.background.level4 }} />
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "8px 0" }}>
+                <TokenTvl token={token0} poolId={poolId} onUpdateTvl={handleUpdateTvl0} />
+                <TokenTvl token={token1} poolId={poolId} onUpdateTvl={handleUpdateTvl1} />
+              </Box>
+            </Box>
+          </Card>
+
+          <LiquidityLocks poolId={poolId} />
+        </Box>
+      </Box>
+    </SwapProCardWrapper>
+  );
+}

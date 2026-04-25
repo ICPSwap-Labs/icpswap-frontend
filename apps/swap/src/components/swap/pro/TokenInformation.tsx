@@ -1,11 +1,12 @@
-import React, { ReactNode, useMemo, useState } from "react";
-import { Box, BoxProps, Typography, useTheme } from "components/Mui";
-import { BigNumber, formatDollarAmount, formatAmount, parseTokenAmount, nonUndefinedOrNull } from "@icpswap/utils";
-import { Flex, Tooltip } from "@icpswap/ui";
-import { useTokenSupply, useTokenAnalysis, useTokenListTokenInfo, useInfoToken } from "@icpswap/hooks";
+import { useInfoToken, useTokenAnalysis, useTokenListTokenInfo, useTokenSupply } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
-import { ChevronDown, ArrowUpRight } from "react-feather";
-import { Token } from "@icpswap/swap-sdk";
+import { Flex, Tooltip } from "@icpswap/ui";
+import { BigNumber, formatAmount, formatDollarAmount, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { Box, type BoxProps, Typography, useTheme } from "components/Mui";
+import type React from "react";
+import { type ReactNode, useMemo, useState } from "react";
+import { ArrowUpRight, ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 import { PoolAndTokenBaseInfo } from "./PoolAndTokenBaseInfo";
@@ -47,7 +48,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
   const theme = useTheme();
   const [moreInformation, setMoreInformation] = useState(false);
 
-  const { result: tokenListInfo } = useTokenListTokenInfo(token.address);
+  const { data: tokenListInfo } = useTokenListTokenInfo(token.address);
   const infoToken = useInfoToken(token.address);
 
   const tokenId = useMemo(() => token?.address, [token]);
@@ -56,8 +57,8 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
     return infoToken?.price;
   }, [infoToken]);
 
-  const { result: tokenSupply } = useTokenSupply(tokenId);
-  const { result: tokenAnalysis } = useTokenAnalysis(tokenId);
+  const { data: tokenSupply } = useTokenSupply(tokenId);
+  const { data: tokenAnalysis } = useTokenAnalysis(tokenId);
 
   const marketCap = useMemo(() => {
     if (nonUndefinedOrNull(tokenAnalysis) && nonUndefinedOrNull(tokenPrice) && tokenAnalysis.marketAmount) {

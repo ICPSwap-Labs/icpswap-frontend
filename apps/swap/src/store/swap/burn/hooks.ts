@@ -1,17 +1,17 @@
-import { useAppSelector, useAppDispatch } from "store/hooks";
-import { useCallback, useMemo } from "react";
 import { useSwapPoolMetadata } from "@icpswap/hooks";
+import { CurrencyAmount, Percent, Position, type Token } from "@icpswap/swap-sdk";
 import { numberToString } from "@icpswap/utils";
-import { Percent, CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
 import { BURN_FIELD } from "constants/swap";
-import { tryParseAmount, inputNumberCheck } from "utils/swap";
-import { useToken } from "hooks/useCurrency";
 import { usePool } from "hooks/swap/usePools";
-import { UserPosition } from "types/swap";
 import { useSwapPoolAvailable } from "hooks/swap/v3Calls";
+import { useToken } from "hooks/useCurrency";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useAppDispatch, useAppSelector } from "store/hooks";
+import type { UserPosition } from "types/swap";
+import { inputNumberCheck, tryParseAmount } from "utils/swap";
 
-import { updateTypedInput, resetBurnState } from "./actions";
+import { resetBurnState, updateTypedInput } from "./actions";
 
 export function useBurnState() {
   return useAppSelector((state) => state.swapBurn);
@@ -27,7 +27,7 @@ export function useResetBurnState() {
 
 export function useBurnInfo(position: UserPosition | undefined | null) {
   const { t } = useTranslation();
-  const { result: poolMeta } = useSwapPoolMetadata(position?.id);
+  const { data: poolMeta } = useSwapPoolMetadata(position?.id);
 
   const token0Address = poolMeta?.token0.address;
   const token1Address = poolMeta?.token1.address;
@@ -89,11 +89,11 @@ export function useBurnInfo(position: UserPosition | undefined | null) {
   const parsedAmounts = {
     [BURN_FIELD.LIQUIDITY_PERCENT]: percentToRemove,
     [BURN_FIELD.CURRENCY_A]:
-      token0 && discountedAmount0 && percentToRemove && percentToRemove.greaterThan("0")
+      token0 && discountedAmount0 && percentToRemove?.greaterThan("0")
         ? CurrencyAmount.fromRawAmount(token0, discountedAmount0)
         : undefined,
     [BURN_FIELD.CURRENCY_B]:
-      token1 && discountedAmount1 && percentToRemove && percentToRemove.greaterThan("0")
+      token1 && discountedAmount1 && percentToRemove?.greaterThan("0")
         ? CurrencyAmount.fromRawAmount(token1, discountedAmount1)
         : undefined,
   };

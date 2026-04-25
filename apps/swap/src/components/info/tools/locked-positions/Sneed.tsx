@@ -1,12 +1,12 @@
+import { useSwapUserPositions } from "@icpswap/hooks";
+import type { Null } from "@icpswap/types";
+import { isUndefinedOrNull } from "@icpswap/utils";
+import { PositionTableUI } from "components/liquidity/index";
 import { usePoolByPoolId } from "hooks/swap";
 import { useSneedLedger } from "hooks/useSneedLedger";
 import { useMemo } from "react";
-import { isUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
-import { PositionTableUI } from "components/liquidity/index";
-import { useSwapUserPositions } from "@icpswap/hooks";
-import { PositionDetails } from "types/swap";
 import { useTranslation } from "react-i18next";
+import type { PositionDetails } from "types/swap";
 
 interface SneedLockedPositionsProps {
   poolId: string | Null;
@@ -23,13 +23,13 @@ export function SneedLockedPositions({ poolId }: SneedLockedPositionsProps) {
 
   const sneedLedger = useSneedLedger(tokenIds);
 
-  const { result: __positions, loading } = useSwapUserPositions(poolId, sneedLedger);
+  const { data: __positions, isLoading: loading } = useSwapUserPositions(poolId, sneedLedger);
 
   const positions = useMemo(() => {
     if (isUndefinedOrNull(__positions)) return null;
 
     return __positions.map((ele) => ({ ...ele, poolId }) as PositionDetails);
-  }, [__positions]);
+  }, [__positions, poolId]);
 
   return (
     <PositionTableUI

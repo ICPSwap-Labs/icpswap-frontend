@@ -1,0 +1,42 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "oxc", "react"],
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "no-unused-vars": [
+      "warn",
+      {
+        "args": "after-used",
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "react-hooks/exhaustive-deps": "warn",
+    "react-hooks/rules-of-hooks": "warn"
+  },
+  "env": {
+    "builtin": true,
+    "browser": true
+  },
+  "ignorePatterns": [
+    "**/node_modules/**",
+    "**/charting_library/**",
+    "**/public/charting_library/**",
+    "**/abis/**",
+    "**/*.did.ts",
+    "**/build/**",
+    "**/dist/**",
+    ".nx/**"
+  ],
+  "settings": {
+    "react": {
+      "version": "18.2.0"
+    }
+  },
+  "options": {
+    "reportUnusedDisableDirectives": "off"
+  }
+}

@@ -1,10 +1,8 @@
 import { createTheme } from "components/Mui";
-import { DynamicObject } from "types/index";
-
-import { componentStyleOverrides } from "./compStyleOverride";
-import { themePalette } from "./palette";
-import { themeTypography } from "./typography";
-import colors from "./colors";
+import colors from "theme/colors";
+import { componentStyleOverrides } from "theme/compStyleOverride";
+import { themePalette } from "theme/palette";
+import { themeTypography } from "theme/typography";
 
 const fontSize = {
   xs: "0.75rem",
@@ -19,7 +17,7 @@ export interface ThemeOption {
   [key: string]: any;
 }
 
-export function theme(customization: DynamicObject) {
+export function theme(customization: { [key: string]: any }) {
   const themeOption: ThemeOption = {
     colors,
     fontSize,
@@ -56,7 +54,6 @@ export function theme(customization: DynamicObject) {
       themeOption.divider = colors.darkTextPrimary;
       themeOption.heading = colors.darkTextSecondary;
       break;
-    case "light":
     default:
       themeOption.paper = colors.paper;
       themeOption.backgroundDefault = colors.paper;
@@ -78,7 +75,7 @@ export function theme(customization: DynamicObject) {
     direction: customization.rtlLayout ? "rtl" : "ltr",
     palette: themePalette(themeOption),
     typography: themeTypography(themeOption),
-    // @ts-ignore
+    // @ts-expect-error
     components: componentStyleOverrides(themeOption),
     themeOption,
     colors,

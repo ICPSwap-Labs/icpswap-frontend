@@ -1,5 +1,5 @@
-import { getAllCanisters } from "store/allCanisters";
 import { ckBTC_MINTER_ID } from "@icpswap/constants";
+import { getAllCanisters } from "store/allCanisters";
 
 import { ALL_CANISTER_IDS } from "./canister";
 import { LEDGER_CANISTER_ID } from "./icp";

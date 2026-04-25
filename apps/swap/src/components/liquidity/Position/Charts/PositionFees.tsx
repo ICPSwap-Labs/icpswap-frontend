@@ -1,10 +1,10 @@
-import { useState, useMemo } from "react";
-import { Typography, Box } from "components/Mui";
-import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
 import { usePositionFeesChartData } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
-import { LineChartAlt, ImageLoading, Flex } from "@icpswap/ui";
+import { Flex, ImageLoading, LineChartAlt } from "@icpswap/ui";
+import { formatDollarAmount, nonUndefinedOrNull } from "@icpswap/utils";
+import { Box, Typography } from "components/Mui";
 import dayjs from "dayjs";
+import { useMemo, useState } from "react";
 
 interface PositionFeesChartProps {
   poolId: string | Null;
@@ -15,13 +15,13 @@ export function PositionFeesChart({ poolId, positionId }: PositionFeesChartProps
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
 
-  const { result: positionChartData, loading } = usePositionFeesChartData(poolId, positionId);
+  const { data: positionChartData, isLoading: loading } = usePositionFeesChartData(poolId, positionId);
 
   const formattedChartData = useMemo(() => {
     if (positionChartData) {
       return positionChartData.map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          time: data.snapshotTime,
           value: data.fees,
         };
       });

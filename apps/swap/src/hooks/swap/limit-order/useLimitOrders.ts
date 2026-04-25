@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
-import { useUserLimitOrders, getUserLimitOrders } from "@icpswap/hooks";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { Null, LimitOrder } from "@icpswap/types";
+import { getUserLimitOrders, useUserLimitOrders } from "@icpswap/hooks";
+import type { LimitOrder, Null } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 import { useStoreUserPositionPools } from "store/hooks";
 
 export interface UseLimitOrdersProps {
@@ -19,7 +19,7 @@ export function useLimitOrders({ val, refreshTrigger }: UseLimitOrdersProps): {
   const [allPairLoading, setAllPairLoading] = useState(false);
   const [allLimitOrders, setAllLimitOrders] = useState<Null | Array<[LimitOrder, string]>>(null);
 
-  const { result: userLimitOrders, loading } = useUserLimitOrders(
+  const { data: userLimitOrders, isLoading: loading } = useUserLimitOrders(
     val === "ALL PAIR" ? null : val,
     principal?.toString(),
     refreshTrigger,
@@ -53,7 +53,7 @@ export function useLimitOrders({ val, refreshTrigger }: UseLimitOrdersProps): {
     }
 
     call();
-  }, [usePositionPools, val]);
+  }, [usePositionPools, val, principal]);
 
   return useMemo(
     () => ({

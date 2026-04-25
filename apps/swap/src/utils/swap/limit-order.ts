@@ -1,14 +1,14 @@
 import {
-  Pool,
-  Position,
-  Token,
-  TICK_SPACINGS,
-  priceToClosestTick,
-  nearestUsableTick,
-  Price,
   availableTick,
+  nearestUsableTick,
+  type Pool,
+  type Position,
+  type Price,
+  priceToClosestTick,
+  TICK_SPACINGS,
+  type Token,
 } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { BigNumber, toSignificant } from "@icpswap/utils";
 
 export function getBackendLimitTick(position: Position) {

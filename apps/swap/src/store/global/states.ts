@@ -1,6 +1,6 @@
-import { DEFAULT_LOCALE, SupportedLocale } from "constants/locales";
-import { TokenListMetadata } from "types/token-list";
-import { ChainKeyETHMinterInfo, type IcpSwapAPITokenInfo } from "@icpswap/types";
+import type { ChainKeyETHMinterInfo, IcpSwapAPITokenInfo } from "@icpswap/types";
+import { DEFAULT_LOCALE, type SupportedLocale } from "constants/locales";
+import type { TokenListMetadata } from "types/token-list";
 
 export interface GlobalState {
   xdr_usdt: number;

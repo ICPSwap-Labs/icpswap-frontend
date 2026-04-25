@@ -1,6 +1,6 @@
 import { ChainId } from "@icpswap/constants";
-import { chain, EXPLORER_TX_LINKS, EXPLORER_BLOCK_LINKS, EXPLORER_MAPS } from "constants/web3";
 import { ckETH as ckETHToken, ckSepoliaETH } from "@icpswap/tokens";
+import { chain, EXPLORER_BLOCK_LINKS, EXPLORER_MAPS, EXPLORER_TX_LINKS } from "constants/web3";
 
 const API_LINKS = {
   [ChainId.MAINNET]: "https://api.etherscan.io/api",

@@ -1,8 +1,8 @@
-import React from "react";
-import { Box, Typography, makeStyles, Theme } from "components/Mui";
-import { NumberTextField, TokenImage, Flex } from "components/index";
+import type { Token } from "@icpswap/swap-sdk";
+import { Flex, NumberTextField, TokenImage } from "components/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
 import { MAX_SWAP_INPUT_LENGTH, SAFE_DECIMALS_LENGTH } from "constants/index";
-import { Token } from "@icpswap/swap-sdk";
+import type React from "react";
 import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => {

@@ -1,1 +1,1 @@
-export type { AlertInfo, AlertType, AddAlertArgs } from "@icpswap/candid";
+export type { AddAlertArgs, AlertInfo, AlertType } from "@icpswap/candid";

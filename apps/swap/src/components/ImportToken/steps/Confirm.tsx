@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { Button, Box, Typography, Checkbox, Avatar, useTheme } from "components/Mui";
-import { Modal, TextButton, TokenStandardLabel } from "components/index";
-import { TOKEN_STANDARD } from "@icpswap/token-adapter";
-import { getTokenStandard } from "store/token/cache/hooks";
-import { useSuccessTip } from "hooks/useTips";
-import { INFO_URL } from "constants/index";
-import { useTaggedTokenManager } from "store/wallet/hooks";
-import { useToken } from "hooks/index";
+import type { TOKEN_STANDARD } from "@icpswap/token-adapter";
 import { Flex } from "@icpswap/ui";
+import { Modal, TextButton, TokenStandardLabel } from "components/index";
+import { Avatar, Box, Button, Checkbox, Typography, useTheme } from "components/Mui";
+import { INFO_URL } from "constants/index";
+import { useToken } from "hooks/index";
+import { useSuccessTip } from "hooks/useTips";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getTokenStandard } from "store/token/cache/hooks";
+import { useTaggedTokenManager } from "store/wallet/hooks";
 
 export function WarningIcon() {
   return (

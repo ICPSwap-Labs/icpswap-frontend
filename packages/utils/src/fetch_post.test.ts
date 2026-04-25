@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { fetch_post, fetch_get } from "./fetch_post";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { fetch_get, fetch_post } from "./fetch_post";
 
 describe("fetch_post", () => {
   beforeEach(() => {

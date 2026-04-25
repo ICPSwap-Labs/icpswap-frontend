@@ -1,39 +1,43 @@
-import { useState, useMemo, useEffect, useCallback } from "react";
-import { Typography, Box, useTheme, makeStyles } from "components/Mui";
+import { BridgeChainType } from "@icpswap/constants";
+import { useInfoToken } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { ckBTC, ckETH, ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import type { ChainKeyETHMinterInfo } from "@icpswap/types";
 import {
+  BigNumber,
+  formatAmount,
   formatDollarAmount,
   formatDollarTokenPrice,
-  parseTokenAmount,
-  mockALinkAndOpen,
-  BigNumber,
-  principalToAccount,
-  nonUndefinedOrNull,
   isUndefinedOrNull,
-  formatAmount,
+  mockALinkAndOpen,
+  nonUndefinedOrNull,
+  parseTokenAmount,
+  principalToAccount,
 } from "@icpswap/utils";
-import { NoData, LoadingRow, TokenStandardLabel, TokenTransferModal, ImportToNns } from "components/index";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { NO_HIDDEN_TOKENS, INFO_URL, DISPLAY_IN_WALLET_BY_DEFAULT } from "constants/index";
-import { useToken } from "hooks/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { XTC, TOKEN_STANDARD } from "constants/tokens";
-import { ICP, WRAPPED_ICP, ckBTC, ckETH } from "@icpswap/tokens";
-import { ckBridgeChain } from "@icpswap/constants";
-import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
-import { useNavigate } from "react-router-dom";
 import { TokenImage } from "components/Image/Token";
+import { ImportToNns, LoadingRow, NoData, TokenStandardLabel, TokenTransferModal } from "components/index";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
+import {
+  DISPLAY_IN_WALLET_BY_DEFAULT,
+  INFO_URL,
+  NO_HIDDEN_TOKENS,
+  WALLET_TOKEN_BALANCE_REFRESH,
+} from "constants/index";
+import { TOKEN_STANDARD, XTC } from "constants/tokens";
+import { useRefreshTriggerManager, useToken } from "hooks/index";
 import { useSNSTokenRootId } from "hooks/token/useSNSTokenRootId";
-import { ChainKeyETHMinterInfo } from "@icpswap/types";
-import { useInfoToken } from "@icpswap/hooks";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 import { useSortBalanceManager } from "store/wallet/hooks";
 import { SortBalanceEnum } from "types/index";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
-import { useWalletTokenContext } from "components/Wallet/token/context";
-
+import { Button } from "./Button";
 import { ReceiveModal } from "./Receive";
 import { RemoveToken } from "./RemoveToken";
-import { Button } from "./Button";
 import { TransactionButton } from "./TransactionButton";
 
 const useStyles = makeStyles(() => ({
@@ -63,13 +67,13 @@ type ckTOKEN = {
 const ckTokens: ckTOKEN[] = [
   {
     id: ckBTC.address,
-    mintPath: `/ck-bridge?tokenId=${ckBTC.address}&chain=${ckBridgeChain.btc}`,
-    dissolvePath: `/ck-bridge?tokenId=${ckBTC.address}&chain=${ckBridgeChain.icp}`,
+    mintPath: `/ck-bridge?tokenId=${ckBTC.address}&chainType=${BridgeChainType.btc}`,
+    dissolvePath: `/ck-bridge?tokenId=${ckBTC.address}&chainType=${BridgeChainType.icp}`,
   },
   {
     id: ckETH.address,
-    mintPath: `/ck-bridge?tokenId=${ckETH.address}&chain=${ckBridgeChain.eth}`,
-    dissolvePath: `/ck-bridge?tokenId=${ckETH.address}&chain=${ckBridgeChain.icp}`,
+    mintPath: `/ck-bridge?tokenId=${ckETH.address}&chainType=${BridgeChainType.eth}`,
+    dissolvePath: `/ck-bridge?tokenId=${ckETH.address}&chainType=${BridgeChainType.icp}`,
   },
 ];
 
@@ -115,7 +119,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   const [refreshInnerCounter, setRefreshInnerCounter] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [receiveOpen, setReceiveOpen] = useState(false);
-  const { refreshCounter, setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletTokenContext();
+  const { setTotalValue, setTotalUSDBeforeChange, setNoUSDTokens } = useWalletTokenStore();
   const { sortBalance } = useSortBalanceManager();
 
   const infoTokenAddress = useMemo(() => {
@@ -123,13 +127,19 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
     return canisterId;
   }, [canisterId]);
 
+  const [refreshCounter] = useRefreshTriggerManager(WALLET_TOKEN_BALANCE_REFRESH);
+
   const refreshNumber = useMemo(() => {
     return refreshInnerCounter + refreshCounter;
   }, [refreshInnerCounter, refreshCounter]);
 
   const infoToken = useInfoToken(infoTokenAddress);
   const [, token] = useToken(canisterId);
-  const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance(canisterId, principal, refreshNumber);
+  const { result: tokenBalance, loading: tokenBalanceLoading } = useTokenBalance({
+    tokenId: canisterId,
+    account: principal,
+    refresh: refreshNumber,
+  });
   const tokenUSDPrice = useMemo(() => {
     return infoToken?.price;
   }, [infoToken]);
@@ -137,7 +147,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
   const handleIncreaseCounter = useCallback(() => {
     setRefreshInnerCounter(COUNTER + 1);
     COUNTER += 1;
-  }, [setRefreshInnerCounter]);
+  }, []);
 
   // Interval update user's token balance
   useEffect(() => {
@@ -166,7 +176,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
         parseTokenAmount(tokenBalance, token.decimals).multipliedBy(usdBeforeChange),
       );
     }
-  }, [tokenBalance, infoToken, token, tokenUSDPrice]);
+  }, [tokenBalance, infoToken, token, setTotalUSDBeforeChange, setTotalValue]);
 
   useEffect(() => {
     if (
@@ -179,7 +189,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
     ) {
       setNoUSDTokens(token.address);
     }
-  }, [token, tokenBalance, tokenBalanceLoading, infoToken]);
+  }, [token, tokenBalance, tokenBalanceLoading, infoToken, setNoUSDTokens]);
 
   const allSupportedErc20Tokens = useMemo(() => {
     if (!chainKeyMinterInfo) return ckTokens;
@@ -192,12 +202,12 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
 
         return {
           id: ledger_id,
-          mintPath: `/ck-bridge?chain=${ckBridgeChain.eth}&tokenId=${ledger_id}`,
-          dissolvePath: `/ck-bridge?chain=${ckBridgeChain.icp}&tokenId=${ledger_id}`,
+          mintPath: `/ck-bridge?chainType=${BridgeChainType.erc20}&tokenId=${ledger_id}`,
+          dissolvePath: `/ck-bridge?chainType=${BridgeChainType.icp}&tokenId=${ledger_id}`,
         };
       }),
     );
-  }, [ckTokens, chainKeyMinterInfo]);
+  }, [chainKeyMinterInfo]);
 
   const handleCloseModal = async () => {
     setOpen(false);
@@ -305,7 +315,7 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
             <Typography sx={{ fontSize: "12px" }}>{token?.name}</Typography>
           </Box>
         </Box>
-        <TokenStandardLabel standard={token && token.standard ? (token.standard as TOKEN_STANDARD) : null} />
+        <TokenStandardLabel standard={token?.standard ? (token.standard as TOKEN_STANDARD) : null} />
       </Box>
 
       <Box sx={{ display: "flex", margin: "12px 0 0 0" }}>
@@ -390,8 +400,8 @@ export function TokenRow({ canisterId, chainKeyMinterInfo }: TokenListItemProps)
             !principal
               ? ""
               : token?.standard === TOKEN_STANDARD.EXT || token?.address === ICP.address
-              ? principalToAccount(principal.toString())
-              : principal.toString()
+                ? principalToAccount(principal.toString())
+                : principal.toString()
           }
         />
       ) : null}

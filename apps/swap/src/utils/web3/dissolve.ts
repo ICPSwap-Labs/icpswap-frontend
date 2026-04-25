@@ -1,16 +1,7 @@
-import { TransactionResponse } from "@ethersproject/abstract-provider";
+import type { WithdrawalStatus } from "@icpswap/types";
 import BigNumber from "bignumber.js";
 import { ETHEREUM_CONFIRMATIONS } from "constants/web3";
-import { RetrieveEthStatus, WithdrawalStatus } from "@icpswap/types";
-import { Erc20DissolveStatus } from "types/web3";
-
-export function isTxFinalized(status: RetrieveEthStatus) {
-  return "TxFinalized" in status;
-}
-
-export function isEthereumMintFinalized(transactionResponse: TransactionResponse) {
-  return !new BigNumber(transactionResponse.confirmations).isLessThan(ETHEREUM_CONFIRMATIONS);
-}
+import type { Erc20DissolveStatus } from "types/web3";
 
 export function isEthereumMintFinalizedByConfirmations(confirmations: number) {
   return !new BigNumber(confirmations).isLessThan(ETHEREUM_CONFIRMATIONS);

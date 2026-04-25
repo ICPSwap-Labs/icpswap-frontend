@@ -1,5 +1,5 @@
 import { createAction } from "@reduxjs/toolkit";
-import { FIELD } from "constants/swap";
+import type { FIELD } from "constants/swap";
 
 export const updateFiled = createAction<{ field: FIELD; typedValue: string }>("swapLiquidity/updateFiled");
 

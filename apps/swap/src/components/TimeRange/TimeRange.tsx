@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Flex, DropDownMenu } from "@icpswap/ui";
+import { DropDownMenu, Flex } from "@icpswap/ui";
+import { BigNumber, getLocalDayEndMs, getLocalDayStartMs, nonUndefinedOrNull } from "@icpswap/utils";
 import { Box, Typography, useTheme } from "components/Mui";
-import { BigNumber, nonUndefinedOrNull, toEndTimeOfDay, toStartTimeOfDay } from "@icpswap/utils";
-import { ChevronDown } from "react-feather";
 import { TimeRangeSelector } from "components/TimeRange/TimeRangeSelector";
 import dayjs from "dayjs";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronDown } from "react-feather";
 
 type RangeValue = { value: number; label: string };
 
@@ -31,15 +31,12 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
   const [startTime, setStartTime] = useState<number | string | undefined>(undefined);
   const [endTime, setEndTime] = useState<number | string | undefined>(undefined);
 
-  const handleSetRange = useCallback(
-    (rangeValue: number) => {
-      const range = TimeRanges.find((range) => range.value === rangeValue);
-      if (range) {
-        setRange(range);
-      }
-    },
-    [setRange, onChange],
-  );
+  const handleSetRange = useCallback((rangeValue: number) => {
+    const range = TimeRanges.find((range) => range.value === rangeValue);
+    if (range) {
+      setRange(range);
+    }
+  }, []);
 
   // Set default range
   useEffect(() => {
@@ -66,7 +63,7 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
         } else {
           if (__range.value === range?.value) return;
 
-          const now = new Date().getTime();
+          const now = Date.now();
           const start = new BigNumber(now)
             .minus(new BigNumber(__range.value).multipliedBy(24).multipliedBy(3600).multipliedBy(1000))
             .toNumber();
@@ -76,16 +73,16 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
         }
       }
     },
-    [onChange, range, setRange],
+    [onChange, range],
   );
 
   // Set default startTime/endTime
   useEffect(() => {
-    const now = new Date().getTime();
-    const endTime = toEndTimeOfDay(now);
+    const now = Date.now();
+    const endTime = getLocalDayEndMs(now);
 
     setEndTime(endTime);
-    setStartTime(toStartTimeOfDay(new BigNumber(endTime).minus(180 * 24 * 3600 * 1000).toString()));
+    setStartTime(getLocalDayStartMs(new BigNumber(endTime).minus(180 * 24 * 3600 * 1000).toString()));
   }, []);
 
   const handleRangeDateChange = useCallback(
@@ -101,7 +98,7 @@ export function TimeRange({ defaultRange, onChange }: TimeRangeProps) {
 
   const handleRangeSelectorClose = useCallback(() => {
     setDateRangeOpen(false);
-  }, [setDateRangeOpen, handleSetRange]);
+  }, []);
 
   return (
     <>

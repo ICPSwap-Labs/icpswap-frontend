@@ -1,22 +1,12 @@
-import { Box, Typography, useTheme, makeStyles } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { Flex } from "@icpswap/ui";
-import { useBitcoinDissolveTxs } from "store/wallet/hooks";
-import { BitcoinTx } from "types/ckBTC";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
-import { bitcoinTransactionExplorer } from "constants/ckBTC";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
+import { useBitcoinDissolveTxs } from "store/wallet/hooks";
+import type { BitcoinTx } from "types/ckBTC";
+import { bitcoinTransactionExplorer } from "utils/chain-key/bitcoin";
 
 interface TransactionProps {
   transaction: BitcoinTx;
@@ -25,7 +15,6 @@ interface TransactionProps {
 function Transaction({ transaction }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
 
   return (
     <Box
@@ -52,7 +41,7 @@ function Transaction({ transaction }: TransactionProps) {
 
           <Typography component="div">
             {transaction.txid ? (
-              <Typography className={classes.txLink} component="div">
+              <Typography sx={txLinkTypographySx} component="div">
                 <ALink
                   link={bitcoinTransactionExplorer(transaction.txid)}
                   color="secondary"
@@ -92,17 +81,15 @@ export function DissolveTransactions() {
       <Typography sx={{ color: "text.primary", fontSize: "16px" }}>{t("common.retrieved")}</Typography>
 
       <Box>
-        <>
-          {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-            <NoData tip={t("ck.empty")} />
-          ) : (
-            transactions.map((transaction, index) => (
-              <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                <Transaction transaction={transaction} />
-              </Box>
-            ))
-          )}
-        </>
+        {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
+        ) : (
+          transactions.map((transaction, index) => (
+            <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+              <Transaction transaction={transaction} />
+            </Box>
+          ))
+        )}
       </Box>
     </MainCard>
   );

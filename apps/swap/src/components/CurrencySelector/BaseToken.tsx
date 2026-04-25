@@ -1,8 +1,8 @@
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex, TokenImage } from "components/index";
-import { useTheme, Typography } from "components/Mui";
-import { Token } from "@icpswap/swap-sdk";
-import { useCallback } from "react";
+import { Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useCallback } from "react";
 import { useFetchGlobalDefaultTokens } from "store/global/hooks";
 
 export interface BaseTokenProps {

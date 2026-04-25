@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Typography, makeStyles, Theme } from "components/Mui";
-import { MainCard, Wrapper } from "components/index";
-import { useNFTCanisterList, useCanisterMetadata } from "hooks/nft/useNFTCalls";
 import type { NFTControllerInfo } from "@icpswap/types";
 import { ImageLoading } from "@icpswap/ui";
+import { MainCard, Wrapper } from "components/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
 import CollectionAvatar from "components/NFT/CollectionAvatar";
+import { useCanisterMetadata, useNFTCanisterList } from "hooks/nft/useNFTCalls";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -65,7 +65,7 @@ export function CollectionCard({ collection }: { collection: NFTControllerInfo }
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const { result: metadata } = useCanisterMetadata(collection.cid);
+  const { data: metadata } = useCanisterMetadata(collection.cid);
 
   const handleCollectionClick = () => {
     navigate(`/marketplace/NFT/${collection.cid}`);
@@ -113,7 +113,7 @@ const filteredNFTs = [
 export default function MarketplaceCollections() {
   const { t } = useTranslation();
   const classes = useStyles();
-  const { result, loading } = useNFTCanisterList(0, 1000);
+  const { data: result, isLoading: loading } = useNFTCanisterList(0, 1000);
 
   const collections = useMemo(() => {
     return result?.content.filter((e) => !filteredNFTs.includes(e.cid)) ?? [];

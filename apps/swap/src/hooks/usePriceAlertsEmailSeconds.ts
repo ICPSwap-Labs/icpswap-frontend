@@ -34,5 +34,5 @@ export function usePriceAlertsEmailSeconds() {
       if (timer) clearInterval(timer);
       timer = null;
     };
-  }, [second, showGetCode, setSecond]);
+  }, [second, showGetCode, setSecond, setShowGetCode]);
 }

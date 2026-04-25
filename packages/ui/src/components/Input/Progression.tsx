@@ -1,4 +1,4 @@
-import { Slider, Tooltip, Theme, makeStyles, styled, tooltipClasses } from "../Mui";
+import { makeStyles, Slider, styled, type Theme, Tooltip, tooltipClasses } from "../Mui";
 
 const marks = [{ value: 0 }, { value: 25 }, { value: 50 }, { value: 75 }, { value: 100 }];
 
@@ -65,7 +65,7 @@ export interface ProgressionProps {
 export function Progression({ value, onChange }: ProgressionProps) {
   const classes = useStyle();
 
-  const handleSliderChange = (event, value: number | number[]) => {
+  const handleSliderChange = (_event, value: number | number[]) => {
     if (typeof value === "number") {
       onChange(value);
     } else {

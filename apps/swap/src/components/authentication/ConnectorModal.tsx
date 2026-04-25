@@ -1,9 +1,9 @@
-import { Box, makeStyles, Theme, Typography } from "components/Mui";
-import Modal from "components/modal";
 import { Flex, TextButton } from "components/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
+import Modal from "components/modal";
 import { ConnectorConfigs } from "constants/wallet";
+import { Trans, useTranslation } from "react-i18next";
 import { useConnectManager } from "store/auth/hooks";
-import { useTranslation, Trans } from "react-i18next";
 
 import { ConnectorComponent } from "./connector";
 

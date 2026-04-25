@@ -1,29 +1,29 @@
-import { TradeType } from "@icpswap/constants";
-import { Null, ResultStatus, TOKEN_STANDARD } from "@icpswap/types";
-import { Trade, Token } from "@icpswap/swap-sdk";
-import { useCallback } from "react";
-import { useSlippageManager } from "store/swap/cache/hooks";
-import { useSwapFinalMetadataManager, useUpdateSwapOutAmount } from "store/swap/hooks";
-import { slippageToPercent } from "constants/index";
+import type { TradeType } from "@icpswap/constants";
 import { depositAndSwap, depositFromAndSwap } from "@icpswap/hooks";
-import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
+import type { Token, Trade } from "@icpswap/swap-sdk";
+import { type Null, ResultStatus, type TOKEN_STANDARD } from "@icpswap/types";
+import { BigNumber, formatTokenAmount, isUndefinedOrNull } from "@icpswap/utils";
+import { getSwapSteps } from "components/swap/SwapSteps";
+import { slippageToPercent } from "constants/index";
 import {
-  useSwapApprove,
-  useSwapTransfer,
   getTokenActualTransferRawAmount,
   getTokenInsufficient,
   noApproveOrTransferByTokenInsufficient,
+  useSwapApprove,
+  useSwapTransfer,
 } from "hooks/swap/index";
-import { StepCallback, useStepCalls, newStepKey } from "hooks/useStepCall";
-import { getLocaleMessage } from "i18n/service";
-import { MessageTypes, TIP_SUCCESS, useTips } from "hooks/useTips";
-import { isUseTransfer } from "utils/token/index";
-import { getSwapSteps } from "components/swap/SwapSteps";
-import { useStepContentManager } from "store/steps/hooks";
-import { OpenExternalTip } from "types/index";
-import { isUndefinedOrNull, BigNumber, formatTokenAmount } from "@icpswap/utils";
-import { useTranslation } from "react-i18next";
 import { useAllowance } from "hooks/token";
+import { newStepKey, type StepCallback, useStepCalls } from "hooks/useStepCall";
+import { MessageTypes, TIP_SUCCESS, useTips } from "hooks/useTips";
+import { getLocaleMessage } from "i18n/service";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccountPrincipal, useAccountPrincipalString } from "store/auth/hooks";
+import { useStepContentManager } from "store/steps/hooks";
+import { useSlippageManager } from "store/swap/cache/hooks";
+import { useSwapFinalMetadataManager } from "store/swap/hooks";
+import type { OpenExternalTip } from "types/index";
+import { isUseTransfer } from "utils/token/index";
 
 export enum SwapCallbackState {
   INVALID = "INVALID",
@@ -41,34 +41,37 @@ export function useInitialSwapSteps() {
   const { t } = useTranslation();
   const updateStep = useStepContentManager();
 
-  return useCallback(({ trade, key, retry }: InitialSwapStepsArgs) => {
-    if (!trade) return undefined;
+  return useCallback(
+    ({ trade, key, retry }: InitialSwapStepsArgs) => {
+      if (!trade) return undefined;
 
-    const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
-    const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount0 = trade.inputAmount.toSignificant(12, { groupSeparator: "," });
+      const amount1 = trade.outputAmount.toSignificant(12, { groupSeparator: "," });
 
-    const pool = trade.route.pools[0];
-    const token0 = pool.token0;
-    const token1 = pool.token1;
-    const inputToken = token0.address === trade.inputAmount.currency.address ? token0 : token1;
-    const outputToken = token0.address === trade.outputAmount.currency.address ? token0 : token1;
+      const pool = trade.route.pools[0];
+      const token0 = pool.token0;
+      const token1 = pool.token1;
+      const inputToken = token0.address === trade.inputAmount.currency.address ? token0 : token1;
+      const outputToken = token0.address === trade.outputAmount.currency.address ? token0 : token1;
 
-    const content = getSwapSteps({
-      inputToken,
-      outputToken,
-      amount0,
-      amount1,
-      key: key.toString(),
-      retry,
-    });
+      const content = getSwapSteps({
+        inputToken,
+        outputToken,
+        amount0,
+        amount1,
+        key: key.toString(),
+        retry,
+      });
 
-    updateStep(String(key), {
-      content,
-      title: t("swap.details"),
-      description: t("swap.details.descriptions"),
-      type: "swap",
-    });
-  }, []);
+      updateStep(String(key), {
+        content,
+        title: t("swap.details"),
+        description: t("swap.details.descriptions"),
+        type: "swap",
+      });
+    },
+    [t, updateStep],
+  );
 }
 
 export interface SwapCallsCallbackArgs {
@@ -91,7 +94,6 @@ export function useSwapCalls() {
   const approve = useSwapApprove();
   const transfer = useSwapTransfer();
 
-  const updateSwapOutAmount = useUpdateSwapOutAmount();
   const { callback: swapFinalMetadataCallback } = useSwapFinalMetadataManager();
 
   const [openTip] = useTips();
@@ -134,8 +136,6 @@ export function useSwapCalls() {
             const pool = route.pools[0];
             const poolId = pool.id;
 
-            updateSwapOutAmount(stepKey, undefined);
-
             // Amount that user input
             // Now the swap amount is the amount that user input
             const userInputAmount = actualSwapAmount;
@@ -177,7 +177,7 @@ export function useSwapCalls() {
             const swap = async () => {
               if (!principal || !actualSwapAmount || !amountOut) return false;
 
-              const { status, message, data } = isUseTransfer(inputToken)
+              const { status, message } = isUseTransfer(inputToken)
                 ? await depositAndSwap(poolId, {
                     zeroForOne: inputToken.address < outputToken.address,
                     amountIn: actualSwapAmount,
@@ -204,7 +204,6 @@ export function useSwapCalls() {
                   openTip(getLocaleMessage(message), MessageTypes.error);
                 }
               } else {
-                updateSwapOutAmount(stepKey, data);
                 swapFinalMetadataCallback({
                   outputAmount: formatTokenAmount(outputAmount.toExact(), outputToken.decimals).toString(),
                   inputAmount: actualSwapAmount,
@@ -231,7 +230,7 @@ export function useSwapCalls() {
 
       return calls;
     },
-    [principal, slippageTolerance, allowedSlippage],
+    [principal, approve, slippageTolerance, initialAndUpdateSwapStep, openTip, swapFinalMetadataCallback, transfer],
   );
 }
 
@@ -256,7 +255,7 @@ export function useSwapCallback({ inputToken, poolId, refresh }: UseConsolidated
   const initialSteps = useInitialSwapSteps();
   const principal = useAccountPrincipalString();
 
-  const { result: inputAllowance } = useAllowance({
+  const { data: inputAllowance } = useAllowance({
     canisterId: inputToken?.address,
     spender: poolId,
     owner: principal,

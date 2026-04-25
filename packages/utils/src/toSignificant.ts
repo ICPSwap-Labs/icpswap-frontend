@@ -1,5 +1,4 @@
 import _Decimal from "decimal.js-light";
-import _Big from "big.js";
 import toFormat from "toformat";
 
 enum Rounding {
@@ -16,6 +15,11 @@ const toSignificantRounding = {
   [Rounding.ROUND_UP]: Decimal.ROUND_UP,
 };
 
+/**
+ * Formats a number to a fixed number of significant digits using decimal.js rounding.
+ *
+ * @param format - Passed to `toFormat` (e.g. `groupSeparator`).
+ */
 export function toSignificant(
   num: number | string,
   significantDigits = 6,
@@ -31,6 +35,7 @@ export function toSignificant(
   return quotient.toFormat(quotient.decimalPlaces(), format);
 }
 
+/** Like {@link toSignificant} with thousands separated by commas and round-down semantics. */
 export function toSignificantWithGroupSeparator(num: number | string, significantDigits = 6): string {
   Decimal.set({
     precision: significantDigits + 1,

@@ -1,5 +1,5 @@
 import { isUndefinedOrNull } from "@icpswap/utils";
-import { network, NETWORK } from "./server";
+import { NETWORK, network } from "./server";
 
 export const ASSETS_DECIMALS = 2;
 export const ICP_BALANCE_DECIMALS = 4;
@@ -68,13 +68,12 @@ export const ICPSwapStableBlockRate = 2;
 // 24 hours (nanosecond)
 export const MAX_IDENTITY_KIT_TIME_LIVE = BigInt(24 * 3600) * BigInt(1000 * 1000 * 1000);
 
-export * from "./canister";
-export * from "./server";
-export * from "./tokens";
-export * from "./swap";
-export * from "./nft";
-export * from "./types";
-export * from "./icp";
-export * from "./wallet";
-export * from "./ckERC20";
 export * from "./auth";
+export * from "./canister";
+export * from "./ckERC20";
+export * from "./icp";
+export * from "./nft";
+export * from "./server";
+export * from "./swap";
+export * from "./tokens";
+export * from "./wallet";

@@ -1,23 +1,23 @@
-import { Typography, Box, BoxProps, useTheme, Theme } from "components/Mui";
+import {
+  useFarmInitArgs,
+  useFarmState,
+  useSwapPoolMetadata,
+  useSwapUserPositions,
+  useV3FarmRewardMetadata,
+} from "@icpswap/hooks";
+import type { FarmTvl } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { useCallback, useMemo } from "react";
-import { type FarmTvl } from "@icpswap/types";
-import { useIntervalUserFarmInfo, useFarmApr, useFarmTvlValue, useStateColors } from "hooks/staking-farm";
+import { formatDollarAmount } from "@icpswap/utils";
+import { TokenImage } from "components/Image";
+import { Box, type BoxProps, type Theme, Typography, useTheme } from "components/Mui";
+import { AnonymousPrincipal } from "constants/index";
+import { useFarmApr, useFarmTvlValue, useIntervalUserFarmInfo, useStateColors } from "hooks/staking-farm";
 import { usePositionsTotalValue } from "hooks/swap/index";
 import { useToken } from "hooks/useCurrency";
-import { AnonymousPrincipal } from "constants/index";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { formatDollarAmount } from "@icpswap/utils";
-import {
-  useV3FarmRewardMetadata,
-  useFarmInitArgs,
-  useSwapUserPositions,
-  useSwapPoolMetadata,
-  useFarmState,
-} from "@icpswap/hooks";
-import { TokenImage } from "components/Image";
 import upperFirst from "lodash/upperFirst";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface YourFarmListCardProps {
   farmTvl: FarmTvl;
@@ -31,13 +31,13 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
   const theme = useTheme() as Theme;
   const navigate = useNavigate();
 
-  const userFarmInfo = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
-  const { result: farmInitArgs } = useFarmInitArgs(farmId);
-  const { result: userAllPositions } = useSwapUserPositions(userFarmInfo?.pool.toString(), principal?.toString());
+  const { data: userFarmInfo } = useIntervalUserFarmInfo(farmId, principal?.toString() ?? AnonymousPrincipal);
+  const { data: farmInitArgs } = useFarmInitArgs(farmId);
+  const { data: userAllPositions } = useSwapUserPositions(userFarmInfo?.pool.toString(), principal?.toString());
   const [, token0] = useToken(userFarmInfo?.poolToken0.address);
   const [, token1] = useToken(userFarmInfo?.poolToken1.address);
   const [, rewardToken] = useToken(userFarmInfo?.rewardToken.address);
-  const { result: poolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
+  const { data: poolMetadata } = useSwapPoolMetadata(userFarmInfo?.pool.toString());
 
   const userAvailablePositions = useMemo(() => {
     if (!userAllPositions || !farmInitArgs || !poolMetadata) return undefined;
@@ -65,7 +65,7 @@ export function YourFarmListCard({ farmId, wrapperSx, showState }: YourFarmListC
     farmId,
   });
 
-  const { result: rewardMetadata } = useV3FarmRewardMetadata(farmId);
+  const { data: rewardMetadata } = useV3FarmRewardMetadata(farmId);
 
   const state = useFarmState(userFarmInfo);
 

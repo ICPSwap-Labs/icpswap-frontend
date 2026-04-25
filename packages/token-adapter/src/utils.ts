@@ -1,16 +1,15 @@
+import { AccountIdentifier, SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import type { ICRCTransaction } from "@icpswap/candid";
 import { enumToString, isOkSubAccount } from "@icpswap/utils";
-import { ICRCTransaction } from "@icpswap/candid";
-import { AccountIdentifier, SubAccount } from "@dfinity/ledger-icp";
-import { Transaction as TokenTransaction } from "./types";
+import type { Transaction as TokenTransaction } from "./types";
+
+function getFirstMemo(tx: ICRCTransaction) {
+  const m = tx.transfer[0]?.memo ?? tx.burn[0]?.memo ?? tx.mint[0]?.memo;
+  return m?.length ? m : undefined;
+}
 
 export function icrcTransactionFormat(transaction: ICRCTransaction, index: bigint) {
-  const memo = transaction.transfer[0]?.memo.length
-    ? transaction.transfer[0]?.memo
-    : transaction.burn[0]?.memo.length
-    ? transaction.burn[0]?.memo
-    : transaction.mint[0]?.memo.length
-    ? transaction.mint[0]?.memo
-    : undefined;
+  const memo = getFirstMemo(transaction);
 
   const from_owner = transaction.transfer[0]?.from.owner ?? transaction.burn[0]?.from.owner;
   const _from_sub = transaction.transfer[0]?.from.subaccount[0] ?? transaction.burn[0]?.from.subaccount[0];
@@ -49,10 +48,10 @@ export function icrcTransactionFormat(transaction: ICRCTransaction, index: bigin
       transaction.transfer[0]
         ? { Transfer: null }
         : transaction.burn[0]
-        ? { Burn: null }
-        : transaction.mint[0]
-        ? { Mint: null }
-        : { Approve: null },
+          ? { Burn: null }
+          : transaction.mint[0]
+            ? { Mint: null }
+            : { Approve: null },
     ),
     amount: transaction.transfer[0]?.amount ?? transaction.burn[0]?.amount ?? transaction.mint[0]?.amount,
     index,

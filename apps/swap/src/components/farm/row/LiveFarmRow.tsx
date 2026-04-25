@@ -1,17 +1,17 @@
-import { Box, BoxProps, useTheme } from "components/Mui";
+import type { FarmInfo, FarmState, InitFarmArgs, Null } from "@icpswap/types";
 import { Link } from "@icpswap/ui";
-import type { FarmInfo, Null, FarmState, InitFarmArgs } from "@icpswap/types";
-import { FilterState } from "types/staking-farm";
 import {
-  TotalStakedCell,
-  UserStakedCell,
-  UserRewardsCell,
-  PoolCell,
-  StateCell,
-  RewardTokenCell,
-  AvailableCell,
   AprCell,
+  AvailableCell,
+  PoolCell,
+  RewardTokenCell,
+  StateCell,
+  TotalStakedCell,
+  UserRewardsCell,
+  UserStakedCell,
 } from "components/farm/row/cell/index";
+import { Box, type BoxProps, useTheme } from "components/Mui";
+import { FilterState } from "types/staking-farm";
 
 interface LiveFarmRowProps {
   farmId: string;

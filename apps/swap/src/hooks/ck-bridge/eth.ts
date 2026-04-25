@@ -1,6 +1,6 @@
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useCallback, useMemo } from "react";
 import { useEthDissolveTxs, useEthUnTxFinalizedTxs } from "store/web3/hooks";
-import { isUndefinedOrNull } from "@icpswap/utils";
 
 export function useEthUnFinalizedMintHashes() {
   const mintTxs = useEthUnTxFinalizedTxs();

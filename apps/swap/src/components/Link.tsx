@@ -1,11 +1,9 @@
-import { makeStyles, useTheme } from "components/Mui";
+import { styled, useTheme } from "components/Mui";
 import { Link as ReactLink } from "react-router-dom";
 
-const useStyles = makeStyles(() => ({
-  link: {
-    textDecoration: "none",
-    userSelect: "none",
-  },
+const StyledLink = styled(ReactLink)(() => ({
+  textDecoration: "none",
+  userSelect: "none",
 }));
 
 export interface LinkProps {
@@ -19,15 +17,14 @@ export interface LinkProps {
 }
 
 export function Link({ to, link, color, children, width, height, display }: LinkProps) {
-  const classes = useStyles();
   const theme = useTheme();
 
   return (
     <>
       {to ? (
-        <ReactLink className={classes.link} to={to} style={{ width, height, display }}>
+        <StyledLink to={to} style={{ width, height, display }}>
           {children}
-        </ReactLink>
+        </StyledLink>
       ) : link ? (
         <a
           href={link}
@@ -42,8 +39,8 @@ export function Link({ to, link, color, children, width, height, display }: Link
               color === "primary"
                 ? theme.colors.primaryMain
                 : color === "secondary"
-                ? theme.colors.secondaryMain
-                : "inherit",
+                  ? theme.colors.secondaryMain
+                  : "inherit",
           }}
         >
           {children}

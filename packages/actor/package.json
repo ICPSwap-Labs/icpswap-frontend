@@ -3,13 +3,14 @@
   "version": "0.0.1",
   "private": true,
   "main": "./dist/index.js",
+  "type": "module",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "tsc",
     "check": "tsc --pretty --noEmit",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "clean": "rm -rf node_modules && rm -rf dist",
     "dev": "tsc --watch"
   },
   "devDependencies": {

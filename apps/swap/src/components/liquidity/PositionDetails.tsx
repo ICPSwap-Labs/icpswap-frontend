@@ -1,26 +1,28 @@
-import React, { useState, useMemo, useEffect } from "react";
-import { Typography, Button, useMediaQuery, Box, useTheme } from "components/Mui";
-import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/swap";
-import { KeyboardArrowUp, SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { CurrencyAmountFormatDecimals } from "constants/index";
+import type { CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
+import { Flex, Link } from "@icpswap/ui";
 import {
   BigNumber,
   formatDollarAmount,
+  formatLiquidityAmount,
   isUndefinedOrNull,
   toSignificantWithGroupSeparator,
-  formatLiquidityAmount,
   urlStringFormat,
 } from "@icpswap/utils";
-import { CurrencyAmount, Position, Token } from "@icpswap/swap-sdk";
-import { PositionState } from "utils/index";
 import { TokenImage } from "components/index";
-import { usePositionContext, TransferPosition } from "components/swap/index";
-import { isElement } from "react-is";
-import { Flex, Link } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
-import { RemoveAllLiquidity } from "components/liquidity/RemoveAllLiquidity";
-import { useRefreshTriggerManager } from "hooks";
 import { PositionPriceRange } from "components/liquidity/PositionPriceRange";
+import { RemoveAllLiquidity } from "components/liquidity/RemoveAllLiquidity";
+import { Box, Button, Typography, useTheme } from "components/Mui";
+import { KeyboardArrowUpIcon, SyncAltIcon } from "components/MuiIcon";
+import { TransferPosition, usePositionContext } from "components/swap/index";
+import { CurrencyAmountFormatDecimals } from "constants/index";
+import { LIQUIDITY_OWNER_REFRESH_KEY } from "constants/swap";
+import { useRefreshTriggerManager } from "hooks";
+import { useMediaQuerySM } from "hooks/theme";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { isElement } from "react-is";
+import type { PositionState } from "utils/index";
 
 interface PositionDetailItemProps {
   label: React.ReactNode;
@@ -30,8 +32,7 @@ interface PositionDetailItemProps {
 }
 
 function PositionDetailItem({ label, value, convert, onConvertClick }: PositionDetailItemProps) {
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   return (
     <Flex fullWidth align={matchDownSM ? "flex-start" : "center"} gap={matchDownSM ? "0px" : "0 12px"}>
@@ -114,7 +115,7 @@ export function PositionDetails({
 }: PositionDetailsProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [transferShow, setTransferShow] = useState(false);
 
   const { setPositionFees } = usePositionContext();
@@ -287,12 +288,12 @@ export function PositionDetails({
                     {!token0 || !token1
                       ? "--"
                       : feeAmount0 !== undefined || feeAmount1 !== undefined
-                      ? `${feeAmount0 ? toSignificantWithGroupSeparator(feeAmount0.toExact()) : 0} ${
-                          token0.symbol
-                        } and ${feeAmount1 ? toSignificantWithGroupSeparator(feeAmount1.toExact()) : 0} ${
-                          token1.symbol
-                        }`
-                      : "--"}
+                        ? `${feeAmount0 ? toSignificantWithGroupSeparator(feeAmount0.toExact()) : 0} ${
+                            token0.symbol
+                          } and ${feeAmount1 ? toSignificantWithGroupSeparator(feeAmount1.toExact()) : 0} ${
+                            token1.symbol
+                          }`
+                        : "--"}
                   </Typography>
                   <Typography
                     align="right"
@@ -394,7 +395,7 @@ export function PositionDetails({
         >
           {t("common.hide")}
         </Typography>
-        <KeyboardArrowUp
+        <KeyboardArrowUpIcon
           sx={{
             color: theme.palette.text["theme-secondary"],
           }}

@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { open, close, updateStepDetails, updateKey, closeAll, updateData } from "./actions";
+import { close, closeAll, open, updateData, updateKey, updateStepDetails } from "./actions";
 import { initialState } from "./state";
 
 export default createReducer(initialState, (builder) => {

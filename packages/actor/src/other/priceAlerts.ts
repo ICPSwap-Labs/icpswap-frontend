@@ -1,4 +1,4 @@
-import { PriceAlertsService, PriceAlertsFactory } from "@icpswap/candid";
+import { PriceAlertsFactory, type PriceAlertsService } from "@icpswap/candid";
 
 import { ActorName } from "../ActorName";
 import { actor } from "../actor";

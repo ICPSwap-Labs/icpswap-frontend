@@ -1,9 +1,9 @@
-import { Box } from "components/Mui";
 import { BreadcrumbsV1 } from "@icpswap/ui";
-import { useTranslation } from "react-i18next";
 import { InfoWrapper } from "components/index";
-import { LatestTokens } from "components/info/tools/LatestTokens";
 import { LatestPools } from "components/info/tools/LatestPools";
+import { LatestTokens } from "components/info/tools/LatestTokens";
+import { Box } from "components/Mui";
+import { useTranslation } from "react-i18next";
 
 export default function NewTokensPools() {
   const { t } = useTranslation();

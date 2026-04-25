@@ -1,6 +1,6 @@
-import { describe, it, expect } from "vitest";
-import { MaxUint256 } from "../core/constants";
 import JSBI from "jsbi";
+import { describe, expect, it } from "vitest";
+import { MaxUint256 } from "../core/constants";
 import { ONE } from "../internalConstants";
 import { mostSignificantBit } from "./mostSignificantBit";
 

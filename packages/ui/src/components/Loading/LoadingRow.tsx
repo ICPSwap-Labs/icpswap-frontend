@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
-import { Box, useTheme, keyframes } from "../Mui";
+import { Box, keyframes, useTheme } from "../Mui";
 
 const loadingAnimation = keyframes`
   0% {

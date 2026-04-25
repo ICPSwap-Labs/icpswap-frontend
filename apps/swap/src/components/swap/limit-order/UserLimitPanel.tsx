@@ -1,5 +1,5 @@
-import { Box, Typography, useTheme } from "components/Mui";
 import { Flex } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { ArrowRight } from "react-feather";
 import { useTranslation } from "react-i18next";
 

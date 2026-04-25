@@ -1,8 +1,8 @@
-import { Typography, Box, useTheme } from "components/Mui";
+import type { Position } from "@icpswap/swap-sdk";
+import type { LimitOrder, Null } from "@icpswap/types";
 import { numToPercent } from "@icpswap/utils";
-import { Position } from "@icpswap/swap-sdk";
-import { LimitOrder, Null } from "@icpswap/types";
 import { Flex } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
 import { useLimitDealRatio } from "hooks/swap/limit-order/index";
 
 export interface LimitDealRatioProps {

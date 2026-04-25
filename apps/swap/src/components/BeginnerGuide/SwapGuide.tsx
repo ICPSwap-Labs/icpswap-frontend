@@ -1,5 +1,5 @@
 import { BeginnerGuideUI } from "components/BeginnerGuide/BeginnerGuideUI";
-import { useShowGuideModalManager, SwapGuideName } from "hooks/global/guide";
+import { SwapGuideName, useShowGuideModalManager } from "hooks/global/guide";
 
 const Guides = [
   {

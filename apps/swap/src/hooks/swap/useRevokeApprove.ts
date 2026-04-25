@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
 import type { SwapPoolData } from "@icpswap/types";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { allowance, approve } from "hooks/token/index";
 import { resultFormat } from "@icpswap/utils";
+import { allowance, approve } from "hooks/token/index";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 export async function revoke(tokenId: string, spender: string, principal: string) {
   return resultFormat<boolean>(

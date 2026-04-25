@@ -1,7 +1,7 @@
-import { Box, Typography, makeStyles, Theme } from "components/Mui";
-import { getStateColor, PositionState } from "utils/swap/index";
 import { PositionRangeDot } from "components/liquidity/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
+import { getStateColor, PositionState } from "utils/swap/index";
 
 interface UseStyleProps {
   width?: string;

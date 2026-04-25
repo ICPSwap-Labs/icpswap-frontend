@@ -1,14 +1,14 @@
-import { useState, useMemo } from "react";
-import { makeStyles, Typography, Box } from "components/Mui";
-import { NoData, ImageLoading } from "components/index";
-import { Header, HeaderCell, SortDirection, OnlyTokenList, Pagination } from "@icpswap/ui";
-import { useTokensFromList, getPoolAPR, useInfoTokenPools } from "@icpswap/hooks";
+import { getPoolAPR, useInfoTokenPools, useTokensFromList } from "@icpswap/hooks";
 import { ICP } from "@icpswap/tokens";
-import { HIDDEN_POOLS } from "constants/info";
-import { useTranslation } from "react-i18next";
-import { PoolRow } from "components/info/swap/pool";
-import { PoolInfoWithApr } from "types/info";
+import { Header, HeaderCell, OnlyTokenList, Pagination, SortDirection } from "@icpswap/ui";
 import { BigNumber, percentToNum } from "@icpswap/utils";
+import { ImageLoading, NoData } from "components/index";
+import { PoolRow } from "components/info/swap/pool";
+import { Box, makeStyles, Typography } from "components/Mui";
+import { HIDDEN_POOLS } from "constants/info";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import type { PoolInfoWithApr } from "types/info";
 
 const useStyles = makeStyles(() => {
   return {
@@ -78,8 +78,8 @@ export function TokenPools({ canisterId }: TokenPoolsProps) {
 
   const [page, setPage] = useState(1);
 
-  const { result: tokenList } = useTokensFromList();
-  const { result: tokenPools, loading } = useInfoTokenPools(canisterId);
+  const { data: tokenList } = useTokensFromList();
+  const { data: tokenPools, isLoading: loading } = useInfoTokenPools(canisterId);
 
   const allPoolsOfToken = useMemo(() => {
     if (!tokenPools || !tokenList) return undefined;

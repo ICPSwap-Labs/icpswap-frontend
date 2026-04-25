@@ -1,12 +1,16 @@
-import { useCallback } from "react";
-import { IcpSwapAPIPageResult, IcpSwapAPITokenHolderDetail, Null } from "@icpswap/types";
+import type { IcpSwapAPIPageResult, IcpSwapAPITokenHolderDetail, Null } from "@icpswap/types";
 import { icpswap_fetch_post } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
-import { useCallsData } from "../useCallData";
-
-export function useTokenHolders(tokenId: string | Null, pageNum: number, pageSize: number, isDesc = true) {
-  return useCallsData(
-    useCallback(async () => {
+export function useTokenHolders(
+  tokenId: string | Null,
+  pageNum: number,
+  pageSize: number,
+  isDesc = true,
+): UseQueryResult<IcpSwapAPIPageResult<IcpSwapAPITokenHolderDetail> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useTokenHolders", tokenId, pageNum, pageSize, isDesc],
+    queryFn: async () => {
       if (!tokenId) return undefined;
 
       const result = await icpswap_fetch_post<IcpSwapAPIPageResult<IcpSwapAPITokenHolderDetail>>(`/info/holder/token`, {
@@ -17,6 +21,7 @@ export function useTokenHolders(tokenId: string | Null, pageNum: number, pageSiz
       });
 
       return result?.data;
-    }, [tokenId, pageNum, pageSize, isDesc]),
-  );
+    },
+    enabled: !!tokenId,
+  });
 }

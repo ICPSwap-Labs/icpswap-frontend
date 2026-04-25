@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState, ReactNode } from "react";
-import { Select } from "components/Select/ForToken";
 import type { IcpSwapAPITokenInfo } from "@icpswap/types";
+import { Select } from "components/Select/ForToken";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface SelectTokenProps {

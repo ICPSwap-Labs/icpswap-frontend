@@ -1,9 +1,9 @@
-import { useCallback, useMemo, useState } from "react";
-import { parseTokenAmount, BigNumber } from "@icpswap/utils";
-import { useInfoAllTokens, useInterval, useFarmTotalAmount, useFarmRewardInfos } from "@icpswap/hooks";
-import { __getTokenInfo } from "hooks/token/index";
+import { useFarmRewardInfos, useFarmTotalAmount, useInfoAllTokens, useInterval } from "@icpswap/hooks";
+import { BigNumber, parseTokenAmount } from "@icpswap/utils";
 import { useFarmUserAllPositions } from "hooks/staking-farm/useUserAllPositions";
 import { useUserStakedPositions } from "hooks/staking-farm/useUserStakedPositions";
+import { __getTokenInfo } from "hooks/token/index";
+import { useCallback, useMemo, useState } from "react";
 
 interface GlobalData {
   stakeTokenTVL: string;
@@ -15,11 +15,11 @@ export function useFarmGlobalData() {
   const [stakedTokenTVL, setStakedTokenTVL] = useState("0");
   const [rewardedTokenTVL, setRewardedTokenTVL] = useState("0");
 
-  const { result: farmTotalAmount } = useFarmTotalAmount();
+  const { data: farmTotalAmount } = useFarmTotalAmount();
 
-  const { result: allLiveFarmsInfos } = useFarmRewardInfos("LIVE", refreshTrigger);
-  const { result: allFinishedFarmsInfos } = useFarmRewardInfos("FINISHED", refreshTrigger);
-  const { result: allClosedFarmsInfos } = useFarmRewardInfos("CLOSED", refreshTrigger);
+  const { data: allLiveFarmsInfos } = useFarmRewardInfos("LIVE", refreshTrigger);
+  const { data: allFinishedFarmsInfos } = useFarmRewardInfos("FINISHED", refreshTrigger);
+  const { data: allClosedFarmsInfos } = useFarmRewardInfos("CLOSED", refreshTrigger);
 
   const { positionAmount, positionsValue } = useFarmUserAllPositions();
   const { tvl: stakedTvl, farms: stakedFarms } = useUserStakedPositions();
@@ -135,7 +135,7 @@ export function useFarmGlobalData() {
     setRefreshTrigger((prevState) => prevState + 1);
   }, []);
 
-  useInterval<void>(update);
+  useInterval<void>({ callback: update });
 
   return useMemo(
     () => ({

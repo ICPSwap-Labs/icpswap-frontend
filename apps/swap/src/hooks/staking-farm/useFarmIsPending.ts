@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import type { Token } from "@icpswap/swap-sdk";
 import type { FarmState, Null } from "@icpswap/types";
-import { Token } from "@icpswap/swap-sdk";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { useTokenBalance } from "hooks/token";
+import { useMemo } from "react";
 
 export interface UseFarmIsPendingProps {
   state: FarmState | Null;
@@ -11,7 +11,7 @@ export interface UseFarmIsPendingProps {
 }
 
 export function useFarmIsPending({ farmId, state, rewardToken }: UseFarmIsPendingProps) {
-  const { result: farmTokenBalance } = useTokenBalance(rewardToken?.address, farmId);
+  const { result: farmTokenBalance } = useTokenBalance({ tokenId: rewardToken?.address, account: farmId });
 
   return useMemo(() => {
     if (isUndefinedOrNull(state) || isUndefinedOrNull(farmTokenBalance)) return false;

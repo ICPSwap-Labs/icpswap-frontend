@@ -1,18 +1,18 @@
 import type { FarmInfo } from "@icpswap/candid";
-import { Override } from "./global";
+import type { Override } from "./global";
 
 export type {
   CreateFarmArgs,
-  FarmTvl,
   FarmDepositArgs,
+  FarmFilterCondition,
+  FarmInfo,
+  FarmRewardInfo,
+  FarmStatusArgs,
+  FarmTvl,
+  FarmUserTvl,
+  InitFarmArgs,
   StakingFarmDistributeTransaction,
   StakingFarmStakeTransaction,
-  FarmInfo,
-  InitFarmArgs,
-  FarmUserTvl,
-  FarmStatusArgs,
-  FarmFilterCondition,
-  FarmRewardInfo,
 } from "@icpswap/candid";
 
 export type FarmRewardMetadata = {

@@ -1,4 +1,4 @@
-import { SocialMediaInterfaceFactory, SocialMediaService } from "@icpswap/candid";
+import { SocialMediaInterfaceFactory, type SocialMediaService } from "@icpswap/candid";
 
 import { ActorName } from "../ActorName";
 import { actor } from "../actor";

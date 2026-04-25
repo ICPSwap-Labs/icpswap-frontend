@@ -28,17 +28,17 @@ export interface TokenTransaction {
 export type TokenTransType = { burn: null } | { mint: null } | { approve: null } | { transfer: null };
 
 export type {
-  WrapUser,
-  WrapTransaction,
-  WrapMintArgs,
-  WrapWithdrawArgs,
   TokenApproveArgs,
   TokenHolder,
   TokenHolderArgs,
+  TokenTransaction as CandidTokenTransaction,
   TokenTransactionArgs,
   TokenTransferArgs,
   TokenTransferResult,
-  TokenTransaction as CandidTokenTransaction,
+  WrapMintArgs,
+  WrapTransaction,
+  WrapUser,
+  WrapWithdrawArgs,
 } from "@icpswap/candid";
 
 export type TokenInfo = {

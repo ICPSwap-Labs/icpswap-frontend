@@ -1,4 +1,11 @@
-import { useEffect, useMemo } from "react";
+import { useInterval } from "@icpswap/hooks";
+import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { useErc20UnFinalizedDissolveHashes, useErc20UnFinalizedMintHashes } from "hooks/ck-bridge/erc20";
+import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "hooks/ck-bridge/eth";
+import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
+import { useSuccessTip } from "hooks/useTips";
+import { useCallback, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useAccountPrincipalString } from "store/auth/hooks";
 import {
   useErc20AllMintTxs,
@@ -6,12 +13,6 @@ import {
   useEthMintTxs,
   useUpdateEthereumTxResponse,
 } from "store/web3/hooks";
-import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { useSuccessTip } from "hooks/useTips";
-import { useErc20UnFinalizedDissolveHashes, useErc20UnFinalizedMintHashes } from "hooks/ck-bridge/erc20";
-import { useEthUnFinalizedDissolveHashes, useEthUnFinalizedMintHashes } from "hooks/ck-bridge/eth";
-import { useEthereumTxSyncFinalized } from "hooks/ck-bridge/useEthereumConfirmations";
-import { useTranslation } from "react-i18next";
 import { usePublicClient } from "wagmi";
 
 const INTERVAL_TIME = 20000;
@@ -30,33 +31,24 @@ export function useEthereumTxWatcher() {
     return [...ethDissolveHashes, ...ethUnFinalizedMintHashes, ...erc20DissolveHashes, ...erc20MintHashes];
   }, [ethDissolveHashes, ethUnFinalizedMintHashes, erc20DissolveHashes, erc20MintHashes]);
 
-  useEffect(() => {
-    async function call() {
-      if (ethereumHashes.length === 0 || isUndefinedOrNull(principal) || isUndefinedOrNull(publicClient)) return;
+  const callback = useCallback(async () => {
+    if (ethereumHashes.length === 0 || isUndefinedOrNull(principal) || isUndefinedOrNull(publicClient)) return;
 
-      for (let i = 0; i < ethereumHashes.length; i++) {
-        const hash = ethereumHashes[i];
-        const transaction = await publicClient.getTransactionReceipt({ hash: hash as `0x${string}` }).catch((error) => {
-          console.error(error);
-          return undefined;
-        });
+    for (let i = 0; i < ethereumHashes.length; i++) {
+      const hash = ethereumHashes[i];
+      const transaction = await publicClient.getTransactionReceipt({ hash: hash as `0x${string}` }).catch((error) => {
+        console.error(error);
+        return undefined;
+      });
 
-        if (nonUndefinedOrNull(transaction)) {
-          updateEthereumTxResponse(hash, transaction);
-        }
+      if (nonUndefinedOrNull(transaction)) {
+        updateEthereumTxResponse(hash, transaction);
       }
     }
-
-    const timer = setInterval(() => {
-      call();
-    }, INTERVAL_TIME);
-
-    call();
-
-    return () => {
-      clearInterval(timer);
-    };
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
   }, [JSON.stringify(ethereumHashes), principal]);
+
+  useInterval({ callback, interval: INTERVAL_TIME });
 }
 
 export function useEthereumTxTips() {
@@ -91,5 +83,5 @@ export function useEthereumTxTips() {
     }
 
     call();
-  }, [isSyncedTxs, ethereumFinalizedHashes, updateFinalizedHash]);
+  }, [isSyncedTxs, ethereumFinalizedHashes, updateFinalizedHash, openTip, t]);
 }

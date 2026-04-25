@@ -1,19 +1,18 @@
-import { useCallback } from "react";
-import { resultFormat, isAvailablePageArgs, optionalArg } from "@icpswap/utils";
-import { stakingPoolController, stakingPool } from "@icpswap/actor";
+import { Principal } from "@icp-sdk/core/principal";
+import { stakingPool, stakingPoolController } from "@icpswap/actor";
 import type {
   CreateStakingPoolArgs,
-  StakingPoolInfo,
-  StakingPoolControllerPoolInfo,
-  StakingPoolTransaction,
-  StakingPoolUserInfo,
-  StakingPoolCycle,
-  StakingPoolGlobalData,
   PaginationResult,
   StakeGlobalDataInfo,
+  StakingPoolControllerPoolInfo,
+  StakingPoolCycle,
+  StakingPoolGlobalData,
+  StakingPoolInfo,
+  StakingPoolTransaction,
+  StakingPoolUserInfo,
 } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
-import { useCallsData } from "../useCallData";
+import { isAvailablePageArgs, optionalArg, resultFormat } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 /* token controller */
 export async function createStakingPool(args: CreateStakingPoolArgs) {
@@ -22,19 +21,27 @@ export async function createStakingPool(args: CreateStakingPoolArgs) {
 
 export async function getStakingPools(state: bigint | undefined, offset: number, limit: number) {
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
-    await (
-      await stakingPoolController()
-    ).findStakingPoolPage(optionalArg<bigint>(state), BigInt(offset), BigInt(limit)),
+    await (await stakingPoolController()).findStakingPoolPage(
+      optionalArg<bigint>(state),
+      BigInt(offset),
+      BigInt(limit),
+    ),
   ).data;
 }
 
-export function useStakingPools(state: bigint | undefined, offset: number, limit: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function useStakingPools(
+  state: bigint | undefined,
+  offset: number,
+  limit: number,
+): UseQueryResult<PaginationResult<StakingPoolControllerPoolInfo> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingPools", state?.toString(), offset, limit],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
       return await getStakingPools(state, offset, limit);
-    }, [offset, limit, state]),
-  );
+    },
+    enabled: isAvailablePageArgs(offset, limit),
+  });
 }
 
 export interface GetStakePoolsProps {
@@ -47,9 +54,7 @@ export interface GetStakePoolsProps {
 
 export async function getStakePools({ state, offset, limit, rewardTokenId, stakeTokenId }: GetStakePoolsProps) {
   return resultFormat<PaginationResult<StakingPoolControllerPoolInfo>>(
-    await (
-      await stakingPoolController()
-    ).findStakingPoolPageV2(
+    await (await stakingPoolController()).findStakingPoolPageV2(
       optionalArg<bigint>(state),
       BigInt(offset),
       BigInt(limit),
@@ -67,26 +72,34 @@ export interface UseStakePoolsProps {
   stakeTokenId?: string | null;
 }
 
-export function useStakePools({ state, offset, limit, rewardTokenId, stakeTokenId }: UseStakePoolsProps) {
-  return useCallsData(
-    useCallback(async () => {
+export function useStakePools({
+  state,
+  offset,
+  limit,
+  rewardTokenId,
+  stakeTokenId,
+}: UseStakePoolsProps): UseQueryResult<PaginationResult<StakingPoolControllerPoolInfo> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakePools", state?.toString(), offset, limit, rewardTokenId, stakeTokenId],
+    queryFn: async () => {
       if (!isAvailablePageArgs(offset, limit)) return undefined;
       return await getStakePools({ state, offset, limit, rewardTokenId, stakeTokenId });
-    }, [offset, limit, state, rewardTokenId, stakeTokenId]),
-  );
+    },
+    enabled: isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getStakingPoolGlobalData() {
   return resultFormat<StakingPoolGlobalData>(await (await stakingPoolController()).getGlobalData()).data;
 }
 
-export function useStakingPoolGlobalData(reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useStakingPoolGlobalData(reload?: boolean): UseQueryResult<StakingPoolGlobalData | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingPoolGlobalData", reload],
+    queryFn: async () => {
       return await getStakingPoolGlobalData();
-    }, []),
-    reload,
-  );
+    },
+  });
 }
 
 export async function getStakingPoolFromController(canisterId: string) {
@@ -95,13 +108,17 @@ export async function getStakingPoolFromController(canisterId: string) {
   ).data;
 }
 
-export function useStakingPoolInfoFromController(canisterId: string | undefined) {
-  return useCallsData(
-    useCallback(async () => {
+export function useStakingPoolInfoFromController(
+  canisterId: string | undefined,
+): UseQueryResult<StakingPoolControllerPoolInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingPoolInfoFromController", canisterId],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getStakingPoolFromController(canisterId);
-    }, [canisterId]),
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 /* token pool */
@@ -109,14 +126,18 @@ export async function getStakingTokenPool(canisterId: string) {
   return resultFormat<StakingPoolInfo>(await (await stakingPool(canisterId)).getPoolInfo()).data;
 }
 
-export function useStakingTokenPool(canisterId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useStakingTokenPool(
+  canisterId: string | undefined,
+  reload?: boolean,
+): UseQueryResult<StakingPoolInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingTokenPool", canisterId, reload],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getStakingTokenPool(canisterId);
-    }, [canisterId]),
-    reload,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 export async function getStakingTokenUserInfo(canisterId: string, principal: Principal) {
@@ -127,49 +148,33 @@ export function useStakingTokenUserInfo(
   canisterId: string | undefined,
   principal: Principal | undefined,
   reload?: boolean,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<StakingPoolUserInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingTokenUserInfo", canisterId, principal?.toString(), reload],
+    queryFn: async () => {
       if (!canisterId || !principal) return undefined;
       return await getStakingTokenUserInfo(canisterId, principal);
-    }, [canisterId, principal]),
-    reload,
-  );
+    },
+    enabled: !!canisterId && !!principal,
+  });
 }
-
-// export async function getStakingPoolAllUserInfo(canisterId: string, offset: number, limit: number) {
-//   return resultFormat<StakingPoolUserInfo>(
-//     await (await stakingPool(canisterId)).findAllUserInfo(BigInt(offset), BigInt(limit)),
-//   ).data;
-// }
-
-// export function useStakingPoolAllUserInfo(
-//   canisterId: string | undefined,
-//   offset: number,
-//   limit: number,
-//   reload?: boolean,
-// ) {
-//   return useCallsData(
-//     useCallback(async () => {
-//       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-//       return await getStakingPoolAllUserInfo(canisterId!, offset, limit);
-//     }, [canisterId, offset, limit]),
-//     reload,
-//   );
-// }
 
 export async function getStakingPoolCycles(canisterId: string) {
   return resultFormat<StakingPoolCycle>(await (await stakingPool(canisterId)).getCycleInfo()).data;
 }
 
-export function useStakingPoolCycles(canisterId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useStakingPoolCycles(
+  canisterId: string | undefined,
+  reload?: boolean,
+): UseQueryResult<StakingPoolCycle | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingPoolCycles", canisterId, reload],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getStakingPoolCycles(canisterId);
-    }, [canisterId]),
-    reload,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }
 
 /**
@@ -221,9 +226,11 @@ export async function getStakingPoolTransactions(
   limit: number,
 ) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
-    await (
-      await stakingPool(canisterId)
-    ).findStakingRecordPage(optionalArg<Principal>(principal), BigInt(offset), BigInt(limit)),
+    await (await stakingPool(canisterId)).findStakingRecordPage(
+      optionalArg<Principal>(principal),
+      BigInt(offset),
+      BigInt(limit),
+    ),
   ).data;
 }
 
@@ -233,14 +240,15 @@ export function useStakingPoolTransactions(
   offset: number,
   limit: number,
   reload?: boolean,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<PaginationResult<StakingPoolTransaction> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingPoolTransactions", canisterId, principal?.toString(), offset, limit, reload],
+    queryFn: async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
       return await getStakingPoolTransactions(canisterId, principal, offset, limit);
-    }, [canisterId, offset, limit, principal]),
-    reload,
-  );
+    },
+    enabled: !!canisterId && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function getStakingPoolClaimTransactions(
@@ -250,9 +258,11 @@ export async function getStakingPoolClaimTransactions(
   limit: number,
 ) {
   return resultFormat<PaginationResult<StakingPoolTransaction>>(
-    await (
-      await stakingPool(canisterId)
-    ).findRewardRecordPage(optionalArg<Principal>(principal), BigInt(offset), BigInt(limit)),
+    await (await stakingPool(canisterId)).findRewardRecordPage(
+      optionalArg<Principal>(principal),
+      BigInt(offset),
+      BigInt(limit),
+    ),
   ).data;
 }
 
@@ -262,14 +272,15 @@ export function useStakingPoolClaimTransactions(
   offset: number,
   limit: number,
   reload?: boolean,
-) {
-  return useCallsData(
-    useCallback(async () => {
+): UseQueryResult<PaginationResult<StakingPoolTransaction> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakingPoolClaimTransactions", canisterId, principal?.toString(), offset, limit, reload],
+    queryFn: async () => {
       if (!canisterId || !isAvailablePageArgs(offset, limit)) return undefined;
-      return await getStakingPoolClaimTransactions(canisterId!, principal, offset, limit);
-    }, [canisterId, offset, limit, principal]),
-    reload,
-  );
+      return await getStakingPoolClaimTransactions(canisterId, principal, offset, limit);
+    },
+    enabled: !!canisterId && isAvailablePageArgs(offset, limit),
+  });
 }
 
 export async function stakingPoolClaimRewards(canisterId: string, owner: Principal | undefined) {
@@ -284,12 +295,16 @@ export async function getStakePoolStatInfo(principal: string) {
   ).data;
 }
 
-export function useStakePoolStatInfo(canisterId: string | undefined, reload?: boolean) {
-  return useCallsData(
-    useCallback(async () => {
+export function useStakePoolStatInfo(
+  canisterId: string | undefined,
+  reload?: boolean,
+): UseQueryResult<StakeGlobalDataInfo | undefined, Error> {
+  return useQuery({
+    queryKey: ["useStakePoolStatInfo", canisterId, reload],
+    queryFn: async () => {
       if (!canisterId) return undefined;
       return await getStakePoolStatInfo(canisterId);
-    }, [canisterId]),
-    reload,
-  );
+    },
+    enabled: !!canisterId,
+  });
 }

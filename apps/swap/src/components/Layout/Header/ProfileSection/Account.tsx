@@ -1,6 +1,6 @@
-import { explorerLink, principalToAccount } from "@icpswap/utils";
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { icDashboardExplorerLink, principalToAccount } from "@icpswap/utils";
 import { useTranslation } from "react-i18next";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 import { AddressSection } from "./Address";
 
@@ -12,7 +12,7 @@ export function AccountSection() {
     <AddressSection
       address={principal ? principalToAccount(principal) : ""}
       label={t("common.account.id")}
-      link={principal ? explorerLink(principal) : ""}
+      link={principal ? icDashboardExplorerLink(principal) : ""}
     />
   );
 }

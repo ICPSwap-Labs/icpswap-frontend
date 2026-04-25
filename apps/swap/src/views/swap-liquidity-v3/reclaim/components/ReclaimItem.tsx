@@ -1,12 +1,12 @@
-import { useState, useMemo, useEffect } from "react";
-import { Typography, Box, Button, CircularProgress, Avatar, useTheme } from "components/Mui";
-import { Tooltip, Flex } from "components/index";
+import type { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount } from "@icpswap/utils";
+import { Flex, Tooltip } from "components/index";
+import { Avatar, Box, Button, CircularProgress, Typography, useTheme } from "components/Mui";
 import { useToken } from "hooks/index";
-import { useHideUnavailableClaimManager } from "store/customization/hooks";
 import { useReclaim } from "hooks/swap/useReclaim";
-import { Token } from "@icpswap/swap-sdk";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useHideUnavailableClaimManager } from "store/customization/hooks";
 
 interface ReclaimItemProps {
   poolId: string;
@@ -50,7 +50,7 @@ export function ReclaimItem({
     if (unavailableClaim === true) {
       updateUnavailableKeys(claimedKey);
     }
-  }, [unavailableClaim, claimedKey]);
+  }, [unavailableClaim, claimedKey, updateUnavailableKeys]);
 
   const handleClaim = async () => {
     if (loading || unavailableClaim) return;

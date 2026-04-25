@@ -1,5 +1,5 @@
-import { Token } from "../core";
-import { FeeAmount } from "../constants";
+import type { FeeAmount } from "../constants";
+import type { Token } from "../core";
 
 /**
  * Computes a pool address
@@ -8,18 +8,8 @@ import { FeeAmount } from "../constants";
  * @param fee The fee tier of the pool
  * @returns The pool address
  */
-export function computePoolAddress({
-  tokenA,
-  tokenB,
-  fee,
-}: {
-  tokenA: Token;
-  tokenB: Token;
-  fee: FeeAmount;
-}): string {
-  const [token0, token1] = tokenA.sortsBefore(tokenB)
-    ? [tokenA, tokenB]
-    : [tokenB, tokenA]; // does safety checks
+export function computePoolAddress({ tokenA, tokenB, fee }: { tokenA: Token; tokenB: Token; fee: FeeAmount }): string {
+  const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]; // does safety checks
 
   return `${token0.address}_${token1.address}_${fee}`;
 }
@@ -27,7 +17,7 @@ export function computePoolAddress({
 export function computePoolAddressFromTokenAddress(
   token0Address: string,
   token1Address: string,
-  fee: number
+  fee: number,
 ): string | undefined {
   if (!token0Address || !token1Address || !fee) return undefined;
   return `${token0Address}_${token1Address}_${fee}`;

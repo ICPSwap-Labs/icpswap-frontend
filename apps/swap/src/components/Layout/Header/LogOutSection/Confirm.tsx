@@ -1,32 +1,5 @@
-import { makeStyles, Theme, Button, Grid, Typography, Dialog, DialogTitle, DialogContent } from "components/Mui";
+import { Button, Dialog, DialogContent, DialogTitle, Grid, Typography, useTheme } from "components/Mui";
 import { useTranslation } from "react-i18next";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  titleContainer: {
-    position: "relative",
-  },
-  title: {
-    fontSize: theme.fontSize.lg,
-    fontWeight: 700,
-  },
-  detailItem: {
-    marginBottom: "24px",
-  },
-  value: {
-    textAlign: "right",
-    wordBreak: "break-all",
-  },
-  closeButton: {
-    position: "absolute",
-    right: 0,
-    top: "50%",
-    transform: "translate(0, -50%)",
-    cursor: "pointer",
-    "&:hover": {
-      color: theme.palette.secondary.main,
-    },
-  },
-}));
 
 export default function LogoutConfirmModal({
   open,
@@ -38,13 +11,13 @@ export default function LogoutConfirmModal({
   onConfirm: () => void;
 }) {
   const { t } = useTranslation();
-  const classes = useStyles();
+  const theme = useTheme();
 
   return (
     <Dialog open={open}>
       <DialogTitle>
-        <Typography className={classes.titleContainer} component="div">
-          <Typography className={classes.title} component="span" color="textPrimary">
+        <Typography sx={{ position: "relative" }} component="div">
+          <Typography sx={{ fontSize: theme.fontSize.lg, fontWeight: 700 }} component="span" color="textPrimary">
             {t("common.logout")}
           </Typography>
         </Typography>

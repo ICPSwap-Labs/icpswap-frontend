@@ -1,6 +1,6 @@
-import { type ActorSubclass, Actor, HttpAgent } from "@dfinity/agent";
+import { MsqClient, type MsqIdentity } from "@fort-major/msq-client";
+import { Actor, type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
 import { Connector } from "@icpswap/actor";
-import { MsqClient, MsqIdentity } from "@fort-major/msq-client";
 import type { ConnectorAbstract, CreateActorArgs, WalletConnectorConfig } from "./connectors";
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds
@@ -56,7 +56,7 @@ export class MetamaskConnector implements ConnectorAbstract {
         return false;
       }
 
-      window.localStorage.setItem(EXPIRE_TIME_STORAGE_NAME, (new Date().getTime() + EXPIRE_TIME * 1000).toString());
+      window.localStorage.setItem(EXPIRE_TIME_STORAGE_NAME, (Date.now() + EXPIRE_TIME * 1000).toString());
       this.identity = identity;
       this.principal = identity?.getPrincipal().toString();
     } else {
@@ -75,7 +75,7 @@ export class MetamaskConnector implements ConnectorAbstract {
         return false;
       }
 
-      window.localStorage.setItem(EXPIRE_TIME_STORAGE_NAME, (new Date().getTime() + EXPIRE_TIME * 1000).toString());
+      window.localStorage.setItem(EXPIRE_TIME_STORAGE_NAME, (Date.now() + EXPIRE_TIME * 1000).toString());
       this.identity = identity;
       this.principal = identity.getPrincipal().toString();
       this.client = client;
@@ -102,6 +102,6 @@ export class MetamaskConnector implements ConnectorAbstract {
   async expired() {
     const expireTime = window.localStorage.getItem(EXPIRE_TIME_STORAGE_NAME);
     if (!expireTime) return true;
-    return new Date().getTime() >= Number(expireTime);
+    return Date.now() >= Number(expireTime);
   }
 }

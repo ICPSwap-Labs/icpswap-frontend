@@ -1,17 +1,13 @@
-import { useState, useMemo, useEffect } from "react";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { usePoolAPRChartData, usePoolAverageAPRs } from "@icpswap/hooks";
-import { type Null, ChartTimeEnum } from "@icpswap/types";
-import { ReferenceLine } from "recharts";
-
+import { ChartTimeEnum, type Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-
-import { ImageLoading } from "../Loading";
+import { useMemo, useState } from "react";
 import { LineChartAlt } from "../LineChart/alt";
-import { Typography, Box, useTheme } from "../Mui";
-import { ChartAPRLabel } from "./ChartAPRLabel";
+import { ImageLoading } from "../Loading";
+import { Box, Typography, useTheme } from "../Mui";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -27,16 +23,19 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
   const theme = useTheme();
   const [valueLabel, setValueLabel] = useState<string | undefined>();
   const [latestValue, setLatestValue] = useState<number | undefined>();
-  const [time, setTime] = useState<ChartTimeEnum>(ChartTimeEnum["7D"]);
 
-  const { result: poolChartData, loading } = usePoolAPRChartData(poolId);
-  const { result: averageAprResult } = usePoolAverageAPRs(poolId);
+  const { data: poolChartData, isLoading } = usePoolAPRChartData(poolId);
+  const { data: averageAprResult } = usePoolAverageAPRs(poolId);
+
+  const time = useMemo(() => {
+    return __time ? __time : ChartTimeEnum["7D"];
+  }, [__time]);
 
   const formattedChartData = useMemo(() => {
     if (poolChartData) {
       return [...poolChartData].reverse().map((data) => {
         return {
-          time: dayjs(Number(data.snapshotTime)).format("YYYY-MM-DD HH:mm:ss"),
+          time: Number(data.snapshotTime),
           value: Number(data.apr),
         };
       });
@@ -72,12 +71,8 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
 
     const diff = new BigNumber(sortedData[0].value).minus(sortedData[sortedData.length - 1].value);
 
-    return diff.minus(averageApr).dividedBy(diff).multipliedBy(parseInt(height)).toString();
-  }, [formattedChartData, averageApr, time]);
-
-  useEffect(() => {
-    setTime(__time);
-  }, [__time]);
+    return diff.minus(averageApr).dividedBy(diff).multipliedBy(parseInt(height, 10)).toString();
+  }, [formattedChartData, averageApr, height]);
 
   const averageAprSvgY = useMemo(() => {
     return new BigNumber(averageApr).isLessThan(1)
@@ -87,9 +82,9 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
 
   return (
     <>
-      {loading ? (
+      {isLoading ? (
         <Box sx={{ width: "100%", height }}>
-          <ImageLoading loading={loading} />
+          <ImageLoading loading={isLoading} />
         </Box>
       ) : (
         <>
@@ -122,26 +117,20 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
               <LineChartAlt
                 data={formattedChartData}
                 setLabel={setValueLabel}
-                minHeight={parseInt(height)}
+                minHeight={parseInt(height, 10)}
                 setValue={setLatestValue}
-                value={latestValue}
-                label={valueLabel}
                 showXAxis={false}
                 showYAxis
                 yTickFormatter={(val: string) => `${new BigNumber(val).toFixed(2)}%`}
                 tipFormat="MMM D, YYYY HH:mm:ss"
-                extraNode={
-                  averageAprSvgHeight && averageApr ? (
-                    <ReferenceLine
-                      stroke={theme.colors.apr}
-                      y={averageAprSvgY}
-                      label={
-                        // @ts-ignore
-                        <ChartAPRLabel apr={`${new BigNumber(averageApr).toFixed(2)}%`} />
+                markLine={
+                  averageAprSvgHeight && averageApr
+                    ? {
+                        y: averageAprSvgY,
+                        color: theme.colors.apr,
+                        labelText: `Avg ${new BigNumber(averageApr).toFixed(2)}%`,
                       }
-                      strokeDasharray="5 4"
-                    />
-                  ) : null
+                    : undefined
                 }
               />
             ) : (

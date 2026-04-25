@@ -1,27 +1,17 @@
-import { useTheme, makeStyles, Box, Typography } from "components/Mui";
-import { MainCard, NoData, ALink } from "components/index";
-import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
-import { LoadingRow, Flex } from "@icpswap/ui";
 import { useChainKeyMinterInfo } from "@icpswap/hooks";
-import type { WithdrawalDetail, ChainKeyETHMinterInfo } from "@icpswap/types";
-import { useMemo } from "react";
-import { MINTER_CANISTER_ID, EXPLORER_TX_LINK, EXPLORER_ADDRESS_LINK } from "constants/ckERC20";
-import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
-import { useToken } from "hooks/index";
-import { Token } from "@icpswap/swap-sdk";
-import { useTranslation } from "react-i18next";
+import type { Token } from "@icpswap/swap-sdk";
+import type { ChainKeyETHMinterInfo, WithdrawalDetail } from "@icpswap/types";
+import { Flex, LoadingRow } from "@icpswap/ui";
+import { isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
+import { txLinkTypographySx } from "components/ck-bridge/txLinkTypographySx";
+import { ALink, MainCard, NoData } from "components/index";
+import { Box, Typography, useTheme } from "components/Mui";
+import { EXPLORER_ADDRESS_LINK, EXPLORER_TX_LINK, MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useErc20DissolveTxs } from "hooks/ck-bridge/useErc20DissolveTxs";
-
-const useStyles = makeStyles(() => ({
-  txLink: {
-    maxWidth: "380px",
-    wordBreak: "break-all",
-    whiteSpace: "break-spaces",
-    textAlign: "right",
-    lineHeight: "16px",
-    "@media(max-width:640px)": { width: "220px" },
-  },
-}));
+import { useToken } from "hooks/index";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { formatWithdrawalStatus } from "utils/web3/withdrawalState";
 
 interface TransactionProps {
   transaction: WithdrawalDetail;
@@ -31,7 +21,6 @@ interface TransactionProps {
 function Transaction({ transaction, minterInfo }: TransactionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const classes = useStyles();
   const { state, hash } = formatWithdrawalStatus(transaction.status);
 
   const { ledger_id } = useMemo(() => {
@@ -79,7 +68,7 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
 
           <Typography component="div">
             {hash ? (
-              <Typography className={classes.txLink} component="div">
+              <Typography sx={txLinkTypographySx} component="div">
                 <ALink
                   link={`${EXPLORER_TX_LINK}/${hash}`}
                   color="secondary"
@@ -112,13 +101,13 @@ function Transaction({ transaction, minterInfo }: TransactionProps) {
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.from")}</Typography>
-          <Typography className={classes.txLink}>{transaction.from.toString()}</Typography>
+          <Typography sx={txLinkTypographySx}>{transaction.from.toString()}</Typography>
         </Flex>
 
         <Flex fullWidth justify="space-between">
           <Typography>{t("common.recipient")}</Typography>
 
-          <Typography className={classes.txLink} component="div">
+          <Typography sx={txLinkTypographySx} component="div">
             <ALink
               link={`${EXPLORER_ADDRESS_LINK}/${transaction.recipient_address}`}
               color="secondary"
@@ -141,7 +130,7 @@ export interface DissolveRecordsProps {
 
 export function Erc20DissolveTransactions({ token }: DissolveRecordsProps) {
   const { t } = useTranslation();
-  const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
+  const { data: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
   const { result: withdrawalResult, loading } = useErc20DissolveTxs();
 
   const transactions = useMemo(() => {
@@ -179,18 +168,14 @@ export function Erc20DissolveTransactions({ token }: DissolveRecordsProps) {
               <div />
             </LoadingRow>
           </Box>
+        ) : isUndefinedOrNull(transactions) || transactions.length === 0 ? (
+          <NoData tip={t("ck.empty")} />
         ) : (
-          <>
-            {isUndefinedOrNull(transactions) || transactions.length === 0 ? (
-              <NoData tip={t("ck.empty")} />
-            ) : (
-              transactions.map((transaction, index) => (
-                <Box key={index} sx={{ margin: "16px 0 0 0" }}>
-                  <Transaction transaction={transaction} minterInfo={minterInfo} />
-                </Box>
-              ))
-            )}
-          </>
+          transactions.map((transaction, index) => (
+            <Box key={index} sx={{ margin: "16px 0 0 0" }}>
+              <Transaction transaction={transaction} minterInfo={minterInfo} />
+            </Box>
+          ))
         )}
       </Box>
     </MainCard>

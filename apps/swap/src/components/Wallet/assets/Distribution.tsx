@@ -1,8 +1,8 @@
-import { useMemo } from "react";
-import { Box, Typography } from "components/Mui";
+import type { Null, UserAssetResponse } from "@icpswap/types";
 import { Flex, LoadingRow } from "@icpswap/ui";
 import { BigNumber, formatDollarAmount, isUndefinedOrNull, numToPercent } from "@icpswap/utils";
-import { AddressOverview, Null } from "@icpswap/types";
+import { Box, Typography } from "components/Mui";
+import { useMemo } from "react";
 
 enum Colors {
   Token = "#8672FF",
@@ -21,7 +21,7 @@ enum Labels {
 }
 
 interface DistributionProps {
-  addressOverview: AddressOverview | Null;
+  addressOverview: UserAssetResponse | Null;
 }
 
 export function Distribution({ addressOverview }: DistributionProps) {

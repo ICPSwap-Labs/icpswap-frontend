@@ -1,11 +1,11 @@
-import {
-  InternalSnack,
-  SlideTransitionDirection,
-  SnackbarOrigin,
-  SnackbarClassKey,
-  SnackbarProviderProps,
+import type {
   ClassNameMap,
   ContainerClassKey,
+  InternalSnack,
+  SlideTransitionDirection,
+  SnackbarClassKey,
+  SnackbarOrigin,
+  SnackbarProviderProps,
 } from "../types";
 import { originKeyExtractor } from "../utils";
 
@@ -42,7 +42,10 @@ export const keepSnackbarClassKeys = (
     containerAnchorOriginTopLeft: true,
     containerAnchorOriginBottomLeft: true,
   };
-  return (Object.keys(classes) as ContainerClassKey[])
-    .filter((key) => !containerClasses[key])
-    .reduce((obj, key) => ({ ...obj, [key]: classes[key] }), {});
+  return (
+    (Object.keys(classes) as ContainerClassKey[])
+      .filter((key) => !containerClasses[key])
+      // oxlint-disable-next-line oxc/no-accumulating-spread -- object spread in reduce
+      .reduce((obj, key) => ({ ...obj, [key]: classes[key] }), {})
+  );
 };

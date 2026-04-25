@@ -1,17 +1,16 @@
-import { Box, Typography } from "components/Mui";
-import { useSwapSaleParameters, useSNSSwapInitArgs } from "@icpswap/hooks";
-import { useMemo, useState } from "react";
-import { LoadingRow, TextButton, Wrapper } from "components/index";
+import { useSNSSwapInitArgs, useSwapSaleParameters } from "@icpswap/hooks";
 import AvatarImage from "components/Image/Avatar";
-import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "react-feather";
+import { LoadingRow, TextButton, Wrapper } from "components/index";
+import { Box, Typography } from "components/Mui";
 import { useToken } from "hooks/index";
+import { useMemo, useState } from "react";
+import { ArrowLeft } from "react-feather";
+import { useNavigate, useParams } from "react-router-dom";
 import { useStateSnsAllTokensInfo } from "store/sns/hooks";
 import { nnsTokenLogo } from "utils/sns/utils";
-
+import { LaunchContext } from "./components/context";
 import { LaunchDetail } from "./components/LaunchDetails";
 import { LaunchStatus } from "./components/LaunchStatus";
-import { LaunchContext } from "./components/context";
 
 export default function Launch() {
   const navigate = useNavigate();
@@ -35,8 +34,8 @@ export default function Launch() {
   }, [sns]);
 
   const [, token] = useToken(ledger_id);
-  const { result: saleParameters } = useSwapSaleParameters(swap_id, reloadCounter);
-  const { result: swapInitArgs } = useSNSSwapInitArgs(swap_id);
+  const { data: saleParameters } = useSwapSaleParameters(swap_id, reloadCounter);
+  const { data: swapInitArgs } = useSNSSwapInitArgs(swap_id);
 
   return (
     <Wrapper>

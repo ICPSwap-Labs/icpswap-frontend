@@ -1,8 +1,6 @@
-import { useCallback } from "react";
-import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
 import type { Null } from "@icpswap/types";
-
-import { useCallsData } from "../useCallData";
+import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export interface GetHelperUserTokensProps {
   principal: string;
@@ -25,12 +23,16 @@ export interface UseHelperUserTokensProps {
   refresh?: number;
 }
 
-export function useUserTokens({ principal, refresh }: UseHelperUserTokensProps) {
-  return useCallsData(
-    useCallback(async () => {
+export function useUserTokens({
+  principal,
+  refresh,
+}: UseHelperUserTokensProps): UseQueryResult<Awaited<ReturnType<typeof getUserTokens>> | undefined, Error> {
+  return useQuery({
+    queryKey: ["useUserTokens", principal, refresh],
+    queryFn: async () => {
       if (isUndefinedOrNull(principal)) return undefined;
       return await getUserTokens({ principal });
-    }, [principal]),
-    refresh,
-  );
+    },
+    enabled: !isUndefinedOrNull(principal),
+  });
 }

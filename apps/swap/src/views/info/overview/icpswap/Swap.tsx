@@ -1,18 +1,17 @@
-import { useContext, useEffect } from "react";
-import { Typography } from "components/Mui";
 import { Flex, Image, Link } from "@icpswap/ui";
-import { formatDollarAmount, formatAmount } from "@icpswap/utils";
-import { useTranslation } from "react-i18next";
+import { formatAmount, formatDollarAmount } from "@icpswap/utils";
+import { Typography } from "components/Mui";
 import { useGlobalProtocol } from "hooks/info/useSwapChartData";
-
-import { IcpswapContext } from "./context";
+import { useContext, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Card, Item } from "../component";
+import { IcpswapContext } from "./context";
 
 export function Swap() {
   const { t } = useTranslation();
   const { setSwapTVL } = useContext(IcpswapContext);
 
-  const { result: globalProtocol } = useGlobalProtocol();
+  const { data: globalProtocol } = useGlobalProtocol();
 
   useEffect(() => {
     if (globalProtocol) {

@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import type { BigNumber } from "@ethersproject/bignumber";
 
 /**
  * Returns the gas value plus a margin for unexpected or variable gas costs

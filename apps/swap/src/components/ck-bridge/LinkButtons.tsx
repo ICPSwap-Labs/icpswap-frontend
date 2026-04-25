@@ -1,7 +1,7 @@
-import { getExplorerAddress, getIcDashboard } from "constants/web3";
-import { ckERC20LedgerDashboardLink } from "constants/ckERC20";
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
 import { Flex } from "@icpswap/ui";
+import { ckERC20LedgerDashboardLink } from "constants/ckERC20";
+import { getExplorerAddress, getIcDashboard } from "constants/web3";
 import { useTranslation } from "react-i18next";
 
 import { LinkButton } from "./LinkButton";

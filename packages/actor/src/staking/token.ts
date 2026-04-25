@@ -1,15 +1,14 @@
-import { ActorIdentity } from "@icpswap/types";
 import {
-  TokenPool,
-  StakingPoolController,
-  StakingPoolControllerInterfaceFactory,
-  TokenPoolInterfaceFactory,
-  StakeIndex,
+  type StakeIndex,
   StakeIndexInterfaceFactor,
+  type StakingPoolController,
+  StakingPoolControllerInterfaceFactory,
+  type TokenPool,
+  TokenPoolInterfaceFactory,
 } from "@icpswap/candid";
-
-import { actor } from "../actor";
+import type { ActorIdentity } from "@icpswap/types";
 import { ActorName } from "../ActorName";
+import { actor } from "../actor";
 
 export const stakingPoolController = (identity?: ActorIdentity) =>
   actor.create<StakingPoolController>({

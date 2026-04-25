@@ -1,4 +1,4 @@
-import { Null } from "@icpswap/types";
+import type { Null } from "@icpswap/types";
 import { isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 
 interface TokenSymbolEllipsisProps {

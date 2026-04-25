@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useGlobalMinterInfoManager } from "store/global/hooks";
 
 export function useGlobalMinterInfo() {
-  const minterInfo = useIntervalChainKeyMinterInfo(MINTER_CANISTER_ID);
+  const { data: minterInfo } = useIntervalChainKeyMinterInfo(MINTER_CANISTER_ID);
   const [, updateGlobalMinterInfo] = useGlobalMinterInfoManager();
 
   useEffect(() => {

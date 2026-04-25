@@ -1,7 +1,7 @@
-import { Box, BoxProps, useTheme } from "components/Mui";
 import { Link } from "@icpswap/ui";
-import { FilterState } from "types/staking-farm";
 import { EmptyCell } from "components/farm/row/cell";
+import { Box, type BoxProps, useTheme } from "components/Mui";
+import { FilterState } from "types/staking-farm";
 
 interface EmptyRowProps {
   farmId: string;

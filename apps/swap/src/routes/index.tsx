@@ -1,7 +1,7 @@
 import { memo } from "react";
 
-import { routes } from "./routes";
+import { LayoutWithRoutes } from "./routes";
 
 export default memo(() => {
-  return routes();
+  return <LayoutWithRoutes />;
 });

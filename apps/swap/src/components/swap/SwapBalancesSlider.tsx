@@ -1,15 +1,15 @@
-import { Box, useTheme } from "components/Mui";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex, Image } from "@icpswap/ui";
 import {
   BigNumber,
-  nonUndefinedOrNull,
   isUndefinedOrNull,
+  nonUndefinedOrNull,
+  numToPercent,
   parseTokenAmount,
   percentToNum,
-  numToPercent,
 } from "@icpswap/utils";
-import { Flex, Image } from "@icpswap/ui";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
+import { Box, useTheme } from "components/Mui";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const GAP = 4;
@@ -154,18 +154,18 @@ export function SwapBalancesSlider({
     const canisterWidth = !amount
       ? "0%"
       : !new BigNumber(amount).isLessThan(totalCanisterAmount)
-      ? "100%"
-      : `${new BigNumber(amount).dividedBy(totalCanisterAmount).multipliedBy(100)}%`;
+        ? "100%"
+        : `${new BigNumber(amount).dividedBy(totalCanisterAmount).multipliedBy(100)}%`;
 
     const balanceWidth = !amount
       ? "0%"
       : !new BigNumber(amount).isLessThan(totalAmount)
-      ? "100%"
-      : new BigNumber(maxSpentAmount).isEqualTo(amount)
-      ? "100%"
-      : new BigNumber(amount).isGreaterThan(totalCanisterAmount)
-      ? `${new BigNumber(amount).minus(totalCanisterAmount).dividedBy(unformattedBalance).multipliedBy(100)}%`
-      : "0%";
+        ? "100%"
+        : new BigNumber(maxSpentAmount).isEqualTo(amount)
+          ? "100%"
+          : new BigNumber(amount).isGreaterThan(totalCanisterAmount)
+            ? `${new BigNumber(amount).minus(totalCanisterAmount).dividedBy(unformattedBalance).multipliedBy(100)}%`
+            : "0%";
 
     return {
       balancePercent,
@@ -233,7 +233,7 @@ export function SwapBalancesSlider({
     if (ref.current) {
       setWrapperWidth(ref.current.clientWidth);
     }
-  }, [ref]);
+  }, []);
 
   const handleCanisterBalanceClick = useCallback(
     (event: React.MouseEvent<HTMLDivElement>) => {
@@ -302,57 +302,70 @@ export function SwapBalancesSlider({
         onAmountChange(amount);
       }
     },
-    [wrapperWidth, canisterRef, maxSpentAmount, unusedBalance, subAccountBalance, token, balance, onAmountChange],
+    [wrapperWidth, maxSpentAmount, unusedBalance, subAccountBalance, token, balance, onAmountChange],
   );
 
-  const onArrowPositionChange = (position: string) => {
-    if (
-      nonUndefinedOrNull(wrapperWidth) &&
-      nonUndefinedOrNull(balance) &&
-      nonUndefinedOrNull(subAccountBalance) &&
-      nonUndefinedOrNull(unusedBalance) &&
-      nonUndefinedOrNull(token) &&
-      nonUndefinedOrNull(canisterPercent) &&
-      nonUndefinedOrNull(balancePercent) &&
-      nonUndefinedOrNull(maxSpentAmount)
-    ) {
-      const canisterWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(canisterPercent));
-      const balanceWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(balancePercent));
-      // The arrow's left includes the GAP width
-      const arrowLeft = new BigNumber(wrapperWidth).multipliedBy(percentToNum(position));
+  const onArrowPositionChange = useCallback(
+    (position: string) => {
+      if (
+        nonUndefinedOrNull(wrapperWidth) &&
+        nonUndefinedOrNull(balance) &&
+        nonUndefinedOrNull(subAccountBalance) &&
+        nonUndefinedOrNull(unusedBalance) &&
+        nonUndefinedOrNull(token) &&
+        nonUndefinedOrNull(canisterPercent) &&
+        nonUndefinedOrNull(balancePercent) &&
+        nonUndefinedOrNull(maxSpentAmount)
+      ) {
+        const canisterWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(canisterPercent));
+        const balanceWidth = new BigNumber(wrapperWidth).minus(GAP).multipliedBy(percentToNum(balancePercent));
+        // The arrow's left includes the GAP width
+        const arrowLeft = new BigNumber(wrapperWidth).multipliedBy(percentToNum(position));
 
-      // Only wallet balance or swap pool balance
-      if (canisterWidth.isEqualTo(0) || balanceWidth.isEqualTo(0)) {
-        const amount = new BigNumber(maxSpentAmount).multipliedBy(percentToNum(position)).toFixed(token.decimals);
-        onAmountChange(amount);
-        return;
+        // Only wallet balance or swap pool balance
+        if (canisterWidth.isEqualTo(0) || balanceWidth.isEqualTo(0)) {
+          const amount = new BigNumber(maxSpentAmount).multipliedBy(percentToNum(position)).toFixed(token.decimals);
+          onAmountChange(amount);
+          return;
+        }
+
+        if (new BigNumber(arrowLeft).isGreaterThan(canisterWidth)) {
+          const remainBalanceWidth = arrowLeft.minus(canisterWidth).minus(GAP);
+
+          const amount = new BigNumber(maxSpentAmount)
+            .multipliedBy(percentToNum(canisterPercent))
+            .plus(
+              !remainBalanceWidth.isGreaterThan(0)
+                ? 0
+                : new BigNumber(maxSpentAmount)
+                    .multipliedBy(percentToNum(balancePercent))
+                    .multipliedBy(remainBalanceWidth.dividedBy(balanceWidth)),
+            )
+            .toFixed(token.decimals);
+
+          onAmountChange(amount);
+        } else {
+          const amount = new BigNumber(maxSpentAmount)
+            .multipliedBy(percentToNum(canisterPercent))
+            .multipliedBy(arrowLeft.dividedBy(canisterWidth))
+            .toFixed(token.decimals);
+
+          onAmountChange(amount);
+        }
       }
-
-      if (new BigNumber(arrowLeft).isGreaterThan(canisterWidth)) {
-        const remainBalanceWidth = arrowLeft.minus(canisterWidth).minus(GAP);
-
-        const amount = new BigNumber(maxSpentAmount)
-          .multipliedBy(percentToNum(canisterPercent))
-          .plus(
-            !remainBalanceWidth.isGreaterThan(0)
-              ? 0
-              : new BigNumber(maxSpentAmount)
-                  .multipliedBy(percentToNum(balancePercent))
-                  .multipliedBy(remainBalanceWidth.dividedBy(balanceWidth)),
-          )
-          .toFixed(token.decimals);
-
-        onAmountChange(amount);
-      } else {
-        const amount = new BigNumber(maxSpentAmount)
-          .multipliedBy(percentToNum(canisterPercent))
-          .multipliedBy(arrowLeft.dividedBy(canisterWidth))
-          .toFixed(token.decimals);
-
-        onAmountChange(amount);
-      }
-    }
-  };
+    },
+    [
+      wrapperWidth,
+      balance,
+      subAccountBalance,
+      unusedBalance,
+      token,
+      canisterPercent,
+      balancePercent,
+      maxSpentAmount,
+      onAmountChange,
+    ],
+  );
 
   useEffect(() => {
     const move = (event: MouseEvent) => {
@@ -366,8 +379,8 @@ export function SwapBalancesSlider({
         const position = new BigNumber(percentToNum(__position)).isGreaterThan(1)
           ? "100%"
           : new BigNumber(percentToNum(__position)).isLessThan(0)
-          ? "0%"
-          : __position;
+            ? "0%"
+            : __position;
 
         setArrowPosition(position);
         onArrowPositionChange(position);
@@ -387,16 +400,13 @@ export function SwapBalancesSlider({
       document.removeEventListener("mousemove", move);
       document.removeEventListener("mouseup", mouseUp);
     };
-  }, [mouseDown, wrapperWidth, arrowPosition, arrowPositionByMouse]);
+  }, [mouseDown, wrapperWidth, arrowPosition, arrowPositionByMouse, onArrowPositionChange]);
 
-  const handleArrowMouseDown = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
-      event.preventDefault();
-      setMouseDown(true);
-      MouseDownX = event.screenX;
-    },
-    [setMouseDown],
-  );
+  const handleArrowMouseDown = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setMouseDown(true);
+    MouseDownX = event.screenX;
+  }, []);
 
   return (
     <Box

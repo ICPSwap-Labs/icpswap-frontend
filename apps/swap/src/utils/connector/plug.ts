@@ -1,6 +1,6 @@
-import { ActorSubclass } from "@dfinity/agent";
+import type { ActorSubclass } from "@icp-sdk/core/agent";
 import { getStoreWalletUnlocked } from "store/auth/hooks";
-import { type CreateActorArgs, ConnectorAbstract, Connector, type WalletConnectorConfig } from "./connectors";
+import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 
 const MAX_PLUG_WHITELIST_NUMBER = 200;
 
@@ -50,7 +50,7 @@ export class PlugConnector implements ConnectorAbstract {
       return false;
     }
 
-    if (window.ic && window.ic.plug) {
+    if (window.ic?.plug) {
       return await window.ic.plug.isConnected();
     }
 

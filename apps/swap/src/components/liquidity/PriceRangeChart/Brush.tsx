@@ -1,7 +1,7 @@
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { brushX, select, ScaleLinear, BrushBehavior } from "d3";
 import { usePrevious } from "@icpswap/hooks";
-import { useTheme, Box } from "components/Mui";
+import { Box, useTheme } from "components/Mui";
+import { type BrushBehavior, brushX, type ScaleLinear, select } from "d3";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from "./svg";
 
 interface HandleProps {
@@ -220,7 +220,7 @@ export const Brush = ({
     setShowLabels(true);
     const timeout = setTimeout(() => setShowLabels(false), 1500);
     return () => clearTimeout(timeout);
-  }, [localBrushExtent]);
+  }, []);
 
   // variables to help render the SVGs
   const flipWestHandle = localBrushExtent && xScale(localBrushExtent[0]) > FLIP_HANDLE_THRESHOLD_PX;
@@ -250,7 +250,7 @@ export const Brush = ({
           </clipPath>
         </defs>
 
-        {/* will host the d3 brush */}
+        {/* oxlint-disable-next-line react/self-closing-comp -- svg group hosts d3 brush */}
         <g
           ref={brushRef}
           clipPath={`url(#${id}-brush-clip)`}

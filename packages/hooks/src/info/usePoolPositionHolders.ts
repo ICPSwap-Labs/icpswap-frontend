@@ -1,8 +1,6 @@
-import { useCallback } from "react";
-import { isUndefinedOrNull, icpswap_fetch_post } from "@icpswap/utils";
 import type { Null, PoolPositionHolderResult } from "@icpswap/types";
-
-import { useCallsData } from "../useCallData";
+import { icpswap_fetch_post, isUndefinedOrNull } from "@icpswap/utils";
+import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 
 export async function getPoolPositionHolders(poolId: string, size: number) {
   const result = await icpswap_fetch_post<PoolPositionHolderResult>("/info/holder/position/top", {
@@ -13,12 +11,17 @@ export async function getPoolPositionHolders(poolId: string, size: number) {
   return result.data;
 }
 
-export function usePoolPositionHolders(poolId: string | Null, size: number) {
-  return useCallsData(
-    useCallback(async () => {
+export function usePoolPositionHolders(
+  poolId: string | Null,
+  size: number,
+): UseQueryResult<PoolPositionHolderResult | undefined, Error> {
+  return useQuery({
+    queryKey: ["usePoolPositionHolders", poolId, size],
+    queryFn: async () => {
       if (isUndefinedOrNull(poolId)) return undefined;
 
       return await getPoolPositionHolders(poolId, size);
-    }, [poolId, size]),
-  );
+    },
+    enabled: !isUndefinedOrNull(poolId),
+  });
 }

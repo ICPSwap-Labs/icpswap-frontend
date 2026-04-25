@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
 import { nftFile as fileActor } from "@icpswap/actor";
-import { network, NETWORK, host } from "constants/index";
+import { host, NETWORK, network } from "constants/index";
+import { useCallback, useMemo, useState } from "react";
 
 export interface UploadChunkRequest {
   batch_id: bigint;
@@ -42,60 +42,63 @@ export default function useFileUpload({ fileType }: { canisterId: string; fileTy
   const [filePath, setFilePath] = useState<string>("");
   const [batchId, setBatchId] = useState<bigint>(BigInt(0));
 
-  const fileUploadCallback = async ({ file, canisterId }: UploadCallbackProps) => {
-    if (uploading) return;
+  const fileUploadCallback = useCallback(
+    async ({ file, canisterId }: UploadCallbackProps) => {
+      if (uploading) return;
 
-    setUploading(true);
+      setUploading(true);
 
-    const actor = await fileActor(canisterId, true);
+      const actor = await fileActor(canisterId, true);
 
-    const { batch_id } = await actor.create_batch();
+      const { batch_id } = await actor.create_batch();
 
-    const promises: Promise<{ chunk_id: bigint }>[] = [];
+      const promises: Promise<{ chunk_id: bigint }>[] = [];
 
-    const chunkSize = 700000;
+      const chunkSize = 700000;
 
-    for (let start = 0; start < file.size; start += chunkSize) {
-      const chunk = file.slice(start, start + chunkSize);
+      for (let start = 0; start < file.size; start += chunkSize) {
+        const chunk = file.slice(start, start + chunkSize);
 
-      promises.push(
-        uploadChunk({
-          batch_id,
-          chunk,
-          canisterId,
-        }),
-      );
-    }
+        promises.push(
+          uploadChunk({
+            batch_id,
+            chunk,
+            canisterId,
+          }),
+        );
+      }
 
-    const chunkIds = await Promise.all(promises).catch((err) => {
-      console.error(err);
-      setFileError(`Failed to upload, please try again`);
+      const chunkIds = await Promise.all(promises).catch((err) => {
+        console.error(err);
+        setFileError(`Failed to upload, please try again`);
+        setUploading(false);
+      });
+
+      if (!chunkIds) return;
+
+      await actor.commit_batch({
+        batch_id,
+        chunk_ids: chunkIds.map(({ chunk_id }) => chunk_id),
+        content_type: file.type,
+      });
+
       setUploading(false);
-    });
 
-    if (!chunkIds) return;
+      const filePath =
+        network === NETWORK.IC
+          ? `https://${canisterId}.raw.icp0.io/${batch_id}`
+          : network === NETWORK.LOCAL
+            ? // TODO get from process port
+              `http://localhost:3000/dfx_image/${batch_id}?canisterId=${canisterId}`
+            : `${host}/${batch_id}?canisterId=${canisterId}`;
 
-    await actor.commit_batch({
-      batch_id,
-      chunk_ids: chunkIds.map(({ chunk_id }) => chunk_id),
-      content_type: file.type,
-    });
+      setFilePath(filePath);
+      setBatchId(batch_id);
 
-    setUploading(false);
-
-    const filePath =
-      network === NETWORK.IC
-        ? `https://${canisterId}.raw.icp0.io/${batch_id}`
-        : network === NETWORK.LOCAL
-        ? // TODO get from process port
-          `http://localhost:3000/dfx_image/${batch_id}?canisterId=${canisterId}`
-        : `${host}/${batch_id}?canisterId=${canisterId}`;
-
-    setFilePath(filePath);
-    setBatchId(batch_id);
-
-    return { filePath, batchId, fileType };
-  };
+      return { filePath, batchId: batch_id, fileType };
+    },
+    [uploading, fileType],
+  );
 
   return useMemo(
     () => [
@@ -106,6 +109,6 @@ export default function useFileUpload({ fileType }: { canisterId: string; fileTy
       },
       fileUploadCallback,
     ],
-    [uploading, filePath, batchId, fileUploadCallback, fileType],
+    [uploading, filePath, batchId, fileUploadCallback, fileType, fileError],
   );
 }

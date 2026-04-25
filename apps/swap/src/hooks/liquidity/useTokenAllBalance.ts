@@ -1,10 +1,10 @@
-import { useMemo } from "react";
-import { Token } from "@icpswap/swap-sdk";
-import { useTokenBalance } from "hooks/token/useTokenBalance";
-import { useAccountPrincipal } from "store/auth/hooks";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
 import { useUserUnusedBalance } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
+import { useTokenBalance } from "hooks/token/useTokenBalance";
+import { useMemo } from "react";
+import { useAccountPrincipal } from "store/auth/hooks";
 
 interface UseTokenAllBalanceProps {
   token0: Token | undefined;
@@ -23,12 +23,22 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
     return principal ? SubAccount.fromPrincipal(principal).toUint8Array() : undefined;
   }, [principal]);
 
-  const { result: token0Balance } = useTokenBalance(token0?.address, principal, refresh);
-  const { result: token1Balance } = useTokenBalance(token1?.address, principal, refresh);
+  const { result: token0Balance } = useTokenBalance({ tokenId: token0?.address, account: principal, refresh });
+  const { result: token1Balance } = useTokenBalance({ tokenId: token1?.address, account: principal, refresh });
 
-  const { result: token0SubAccountBalance } = useTokenBalance(token0?.address, sub ? poolId : undefined, refresh, sub);
-  const { result: token1SubAccountBalance } = useTokenBalance(token1?.address, sub ? poolId : undefined, refresh, sub);
-  const { result: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
+  const { result: token0SubAccountBalance } = useTokenBalance({
+    tokenId: token0?.address,
+    account: sub ? poolId : undefined,
+    refresh,
+    sub,
+  });
+  const { result: token1SubAccountBalance } = useTokenBalance({
+    tokenId: token1?.address,
+    account: sub ? poolId : undefined,
+    refresh,
+    sub,
+  });
+  const { data: unusedBalance } = useUserUnusedBalance(poolId, principal, refresh);
 
   return useMemo(() => {
     return {
@@ -50,5 +60,5 @@ export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseToken
           ? new BigNumber(token1Balance).plus(token1SubAccountBalance).plus(unusedBalance.balance1.toString())
           : undefined,
     };
-  }, [token0, token1, unusedBalance, token0SubAccountBalance, token1SubAccountBalance, token0Balance, token1Balance]);
+  }, [unusedBalance, token0SubAccountBalance, token1SubAccountBalance, token0Balance, token1Balance]);
 }

@@ -1,13 +1,13 @@
-import JSBI from "jsbi";
-import { TradeType } from "@icpswap/constants";
-import { Token, CurrencyAmount, Fraction, Percent, Trade } from "@icpswap/swap-sdk";
+import type { TradeType } from "@icpswap/constants";
+import { CurrencyAmount, Fraction, Percent, type Token, type Trade } from "@icpswap/swap-sdk";
+import { BigNumber } from "@icpswap/utils";
 import {
   ALLOWED_PRICE_IMPACT_HIGH,
   ALLOWED_PRICE_IMPACT_LOW,
   ALLOWED_PRICE_IMPACT_MEDIUM,
   BLOCKED_PRICE_IMPACT_NON_EXPERT,
 } from "constants/misc";
-import { BigNumber } from "@icpswap/utils";
+import JSBI from "jsbi";
 
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000));
 

@@ -1,9 +1,9 @@
-import { useEffect, useMemo } from "react";
-import { Connector } from "constants/index";
-import { useConnector } from "store/auth/hooks";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { type OisyDisabledPage, OisyDisabledTips } from "components/OisyDisabledTips";
+import { Connector } from "constants/index";
 import { useErrorTip } from "hooks/useTips";
-import { OisyDisabledTips, type OisyDisabledPage } from "components/OisyDisabledTips";
+import { useEffect, useMemo } from "react";
+import { useConnector } from "store/auth/hooks";
 
 export interface UseOisyDisabledProps {
   page: OisyDisabledPage;
@@ -20,7 +20,7 @@ export function useOisyDisabledTips({ page, noTips = false }: UseOisyDisabledPro
     if (connector === Connector.Oisy && noTips === false) {
       openErrorTip(<OisyDisabledTips page={page} />, { autoHideDuration: 10000 });
     }
-  }, [connector, noTips]);
+  }, [connector, noTips, openErrorTip, page]);
 
   return useMemo(() => {
     if (isUndefinedOrNull(connector)) return true;

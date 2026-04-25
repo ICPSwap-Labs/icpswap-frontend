@@ -1,7 +1,6 @@
-/* eslint-disable no-param-reassign */
-import { useState, useEffect } from "react";
-import { TextField, Grid, Typography, makeStyles } from "components/Mui";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Grid, makeStyles, TextField, Typography } from "components/Mui";
+import { CloudUploadIcon } from "components/MuiIcon";
+import { useEffect, useState } from "react";
 
 const useStyles = makeStyles(() => {
   return {

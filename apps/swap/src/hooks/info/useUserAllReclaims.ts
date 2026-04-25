@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { Override } from "@icpswap/types";
-import { Principal } from "@dfinity/principal";
-import { useSwapPools, getUserUnusedBalance, getTokenBalance } from "@icpswap/hooks";
-import type { SwapPoolData } from "@icpswap/types";
-import { SubAccount } from "@dfinity/ledger-icp";
+import { SubAccount } from "@icp-sdk/canisters/ledger/icp";
+import { Principal } from "@icp-sdk/core/principal";
+import { getTokenBalance, getUserUnusedBalance, useSwapPools } from "@icpswap/hooks";
+import type { Override, SwapPoolData } from "@icpswap/types";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { useEffect, useMemo, useState } from "react";
 
 export type UserSwapPoolsBalance = Override<
   SwapPoolData,
@@ -25,6 +24,7 @@ export function useUserUnDepositBalance(
     }
   }, [balances, pools]);
 
+  // oxlint-disable-next-line react-hooks/exhaustive-deps -- refetch dependencies
   useEffect(() => {
     const _fetch = async (pool: SwapPoolData) => {
       if (isUndefinedOrNull(principal) || isUndefinedOrNull(pool)) return;
@@ -90,7 +90,7 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
   const [loading, setLoading] = useState(false);
   const [balances, setBalances] = useState<(UserSwapPoolsBalance | null)[]>([]);
 
-  const { result: pools, loading: poolsLoading } = useSwapPools();
+  const { data: pools, isLoading: poolsLoading } = useSwapPools();
 
   useEffect(() => {
     if (balances.length === pools?.length && pools?.length !== 0) {
@@ -141,7 +141,8 @@ export function useUserAllReclaims(principal: string | undefined | null, reload?
       setLoading(true);
       call();
     }
-  }, [poolIds, reload, principal]);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- refetch dependencies
+  }, [poolIds, JSON.stringify(pools), reload, principal]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     pools,

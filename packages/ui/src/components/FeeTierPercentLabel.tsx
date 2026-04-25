@@ -1,6 +1,6 @@
 import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 
-import { Typography, Box, useTheme } from "./Mui";
+import { Box, Typography, useTheme } from "./Mui";
 
 export interface FeeTierLabelProps {
   feeTier: bigint | number | string | null | undefined;

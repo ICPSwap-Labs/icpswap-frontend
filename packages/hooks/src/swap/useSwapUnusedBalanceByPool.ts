@@ -1,7 +1,8 @@
 /* eslint-disable no-console */
-import { useMemo } from "react";
+
 import type { UserSwapPoolsBalance } from "@icpswap/types";
-import { useSwapPools, _getSwapPoolAllBalance } from "./calls";
+import { useMemo } from "react";
+import { useSwapPools } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
 
@@ -10,7 +11,7 @@ export function useUserSwapUnusedBalanceByPoolId(
   poolId: string | undefined,
   reload?: boolean,
 ) {
-  const { result: allSwapPools } = useSwapPools();
+  const { data: allSwapPools } = useSwapPools();
 
   const pools = useMemo(() => {
     if (!poolId || !allSwapPools) return undefined;

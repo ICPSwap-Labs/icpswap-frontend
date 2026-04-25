@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { updateUserSelectedCanisters, deleteUserSelectedCanisters, importNFT, deleteNFT } from "./actions";
+import { deleteNFT, deleteUserSelectedCanisters, importNFT, updateUserSelectedCanisters } from "./actions";
 import { initialState } from "./states";
 
 export default createReducer(initialState, (builder) => {

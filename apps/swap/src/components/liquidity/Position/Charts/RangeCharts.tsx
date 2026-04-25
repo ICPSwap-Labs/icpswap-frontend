@@ -1,19 +1,19 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
-import { BarChart2, Inbox, CloudOff, Loader } from "react-feather";
-import { useDensityChartData } from "hooks/swap/useDensityChartData";
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
+import { Flex } from "components/index";
+import type { ZoomLevels } from "components/liquidity/PriceRangeChart/types";
+import { Box, Typography, useTheme } from "components/Mui";
 import {
+  type Bound,
   FeeAmount,
-  ZOOM_LEVEL_INITIAL_MIN_MAX,
-  Bound,
   SWAP_CHART_RANGE_AREA_COLOR,
   SWAP_CHART_RANGE_LEFT_COLOR,
   SWAP_CHART_RANGE_RIGHT_COLOR,
+  ZOOM_LEVEL_INITIAL_MIN_MAX,
 } from "constants/swap";
-import { Token } from "@icpswap/swap-sdk";
-import { Box, Typography, useTheme } from "components/Mui";
-import { Flex } from "components/index";
-import type { Null } from "@icpswap/types";
-import { ZoomLevels } from "components/liquidity/PriceRangeChart/types";
+import { useDensityChartData } from "hooks/swap/useDensityChartData";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import { BarChart2, CloudOff, Inbox, Loader } from "react-feather";
 import { useTranslation } from "react-i18next";
 
 import { Chart } from "./Chart";
@@ -92,7 +92,7 @@ export default function LiquidityChartRangeInput({
       const width = wrapperRef.current.clientWidth;
       setWrapperWidth(width);
     }
-  }, [wrapperRef]);
+  }, []);
 
   return (
     <Box style={{ minHeight: "200px" }} ref={wrapperRef}>

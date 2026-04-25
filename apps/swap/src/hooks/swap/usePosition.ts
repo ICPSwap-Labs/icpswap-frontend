@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { Position, Pool } from "@icpswap/swap-sdk";
-import { usePoolByPoolId, PoolState } from "hooks/swap/usePools";
+import { type Pool, Position } from "@icpswap/swap-sdk";
 import { nonUndefinedOrNull } from "@icpswap/utils";
+import { PoolState, usePoolByPoolId } from "hooks/swap/usePools";
+import { useMemo } from "react";
 
 export interface UsePositionProps {
   poolId: string | undefined;

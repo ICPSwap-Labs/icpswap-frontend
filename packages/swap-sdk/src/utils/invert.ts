@@ -1,5 +1,5 @@
-import { Token } from "../core/entities/token";
-import { Price } from "../core/entities/fractions/price";
+import type { Price } from "../core/entities/fractions/price";
+import type { Token } from "../core/entities/token";
 
 interface useInverterProps {
   priceLower: Price<Token, Token> | undefined;

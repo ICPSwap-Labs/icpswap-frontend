@@ -1,22 +1,22 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { useUserPositionPools } from "@icpswap/hooks";
-import { useAppDispatch, useAppSelector } from "store/hooks";
-import { slippageToPercent, getDefaultSlippageTolerance } from "constants/swap";
+import type { Percent } from "@icpswap/swap-sdk";
+import { getDefaultSlippageTolerance, slippageToPercent } from "constants/swap";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useAccount } from "store/auth/hooks";
-import { Percent } from "@icpswap/swap-sdk";
+import { useAppDispatch, useAppSelector } from "store/hooks";
 import {
-  updateUserExpertMode,
-  updateUserSingleHop,
-  updateUserSelectedToken,
-  updateUserTransactionsDeadline,
-  updateUserSlippage,
-  updateTaggedTokens,
   removeTaggedTokens,
-  updateShowClosedPosition,
-  updateUserPositionPools,
-  updateUserMultipleApprove,
-  updateSwapProAutoRefresh,
   updateKeepTokenInPools,
+  updateShowClosedPosition,
+  updateSwapProAutoRefresh,
+  updateTaggedTokens,
+  updateUserExpertMode,
+  updateUserMultipleApprove,
+  updateUserPositionPools,
+  updateUserSelectedToken,
+  updateUserSingleHop,
+  updateUserSlippage,
+  updateUserTransactionsDeadline,
 } from "./actions";
 
 export function useIsExpertMode() {
@@ -69,7 +69,7 @@ export function useMultipleApproveManager() {
     (multipleApprove: number) => {
       dispatch(updateUserMultipleApprove(multipleApprove));
     },
-    [dispatch, multipleApprove],
+    [dispatch],
   );
 
   return useMemo(() => ({ multipleApprove, updateMultipleApprove }), [updateMultipleApprove, multipleApprove]);
@@ -96,10 +96,10 @@ export function useSlippageManager(type: string): [number, (value: number) => vo
     (value: number) => {
       dispatch(updateUserSlippage({ type, value }));
     },
-    [dispatch],
+    [dispatch, type],
   );
 
-  return [userSlippage, setUserSlippage];
+  return useMemo(() => [userSlippage, setUserSlippage], [userSlippage, setUserSlippage]);
 }
 
 export function useSlippageToleranceToPercent(type: string) {
@@ -119,7 +119,7 @@ export function useSlippageToleranceToPercent(type: string) {
     }
 
     return percentSlippage;
-  }, [slippageTolerance, slippageToPercent]);
+  }, [slippageTolerance, type]);
 }
 
 export function useTransactionsDeadlineManager(): [number, (value: number) => void] {
@@ -197,7 +197,7 @@ export function useInitialUserPositionPools() {
 
   const [initialLoading, setInitialLoading] = useState(true);
 
-  const { result: positionPools, loading } = useUserPositionPools(account);
+  const { data: positionPools, isLoading: loading } = useUserPositionPools(account);
 
   useEffect(() => {
     if (positionPools) {
@@ -207,7 +207,8 @@ export function useInitialUserPositionPools() {
     } else if (loading === false) {
       setInitialLoading(false);
     }
-  }, [JSON.stringify(storeUserPositionPools), positionPools, updateStoreUserPositionPools, loading]);
+    // oxlint-disable-next-line react-hooks/exhaustive-deps -- stringify array dependency to stop hook loop
+  }, [positionPools, updateStoreUserPositionPools, loading, JSON.stringify(storeUserPositionPools)]);
 
   return {
     loading: initialLoading,

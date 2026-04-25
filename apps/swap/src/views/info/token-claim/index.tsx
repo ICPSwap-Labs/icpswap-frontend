@@ -1,34 +1,30 @@
-import { useState } from "react";
-import { Typography, Box, makeStyles } from "components/Mui";
-import { InfoWrapper } from "components/index";
-import { pageArgsFormat, parseTokenAmount, BigNumber } from "@icpswap/utils";
 import { useClaimEvents } from "@icpswap/hooks";
 import type { ClaimEventInfo } from "@icpswap/types";
-import { getEventState } from "utils/info/token-claim";
 import {
-  MainCard,
-  NoData,
-  LoadingRow,
-  TextButton,
+  BodyCell,
   Header,
   HeaderCell,
-  TableRow,
-  BodyCell,
+  LoadingRow,
+  MainCard,
+  NoData,
   Pagination,
+  TableRow,
+  TextButton,
 } from "@icpswap/ui";
+import { BigNumber, pageArgsFormat, parseTokenAmount } from "@icpswap/utils";
+import { InfoWrapper } from "components/index";
+import { Box, Typography } from "components/Mui";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { getEventState } from "utils/info/token-claim";
 
-const useStyles = makeStyles(() => {
-  return {
-    wrapper: {
-      display: "grid",
-      gridTemplateColumns: "240px 200px 150px repeat(5, 1fr) 80px 80px",
-      padding: "16px",
-      alignItems: "center",
-      minWidth: "1152px",
-    },
-  };
-});
+const wrapperSx = {
+  display: "grid",
+  gridTemplateColumns: "240px 200px 150px repeat(5, 1fr) 80px 80px",
+  padding: "16px",
+  alignItems: "center",
+  minWidth: "1152px",
+};
 
 export interface ClaimEventItemProps {
   ele: ClaimEventInfo;
@@ -36,11 +32,10 @@ export interface ClaimEventItemProps {
 
 function ClaimEventItem({ ele }: ClaimEventItemProps) {
   const { t } = useTranslation();
-  const classes = useStyles();
   const state = getEventState(ele);
 
   return (
-    <TableRow className={classes.wrapper}>
+    <TableRow sx={wrapperSx}>
       <BodyCell>{ele.claimEventName}</BodyCell>
       <BodyCell>{ele.claimCanisterId}</BodyCell>
       <BodyCell>{ele.tokenSymbol}</BodyCell>
@@ -61,17 +56,16 @@ function ClaimEventItem({ ele }: ClaimEventItemProps) {
 
 export default function TokenClaim() {
   const { t } = useTranslation();
-  const classes = useStyles();
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useClaimEvents(offset, pagination.pageSize);
+  const { data, isLoading } = useClaimEvents(offset, pagination.pageSize);
 
   const handlePageChange = (page: number) => {
     setPagination({ pageNum: page, pageSize: 10 });
   };
 
-  const totalElements = Number(result?.totalElements ?? 0);
+  const totalElements = Number(data?.totalElements ?? 0);
 
   return (
     <InfoWrapper>
@@ -84,7 +78,7 @@ export default function TokenClaim() {
 
         <Box mt="20px" sx={{ overflow: "auto", width: "100%" }}>
           <Box>
-            <Header className={classes.wrapper}>
+            <Header sx={wrapperSx}>
               <HeaderCell>{t("claim.event")}</HeaderCell>
               <HeaderCell>{t("common.canister.id")}</HeaderCell>
               <HeaderCell>{t("common.token")}</HeaderCell>
@@ -97,9 +91,11 @@ export default function TokenClaim() {
               <HeaderCell>&nbsp;</HeaderCell>
             </Header>
 
-            {result?.content?.map((ele, index) => <ClaimEventItem key={index} ele={ele} />)}
+            {data?.content?.map((ele, index) => (
+              <ClaimEventItem key={index} ele={ele} />
+            ))}
 
-            {loading ? (
+            {isLoading ? (
               <Box sx={{ padding: "16px" }}>
                 <LoadingRow>
                   <div />
@@ -117,7 +113,7 @@ export default function TokenClaim() {
               </Box>
             ) : null}
 
-            {result?.content?.length === 0 && !loading ? <NoData /> : null}
+            {data?.content?.length === 0 && !isLoading ? <NoData /> : null}
           </Box>
         </Box>
 

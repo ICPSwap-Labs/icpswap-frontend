@@ -1,5 +1,5 @@
-import type { Principal } from "@dfinity/principal";
-import { Null, Override } from "@icpswap/types";
+import type { Principal } from "@icp-sdk/core/principal";
+import type { Null, Override } from "@icpswap/types";
 
 export type { TokenHolder, TokenHolderArgs } from "@icpswap/candid";
 

@@ -1,8 +1,8 @@
+import { CurrencyAmount, type Position } from "@icpswap/swap-sdk";
+import { BigNumber, numberToString, toSignificant } from "@icpswap/utils";
+import { Flex, TokenImage } from "components/index";
+import { Box, makeStyles, type Theme, Typography } from "components/Mui";
 import { useMemo } from "react";
-import { Typography, Box, makeStyles, Theme } from "components/Mui";
-import { CurrencyAmount, Position } from "@icpswap/swap-sdk";
-import { toSignificant, numberToString, BigNumber } from "@icpswap/utils";
-import { TokenImage, Flex } from "components/index";
 import { useTranslation } from "react-i18next";
 
 const useStyle = makeStyles((theme: Theme) => ({

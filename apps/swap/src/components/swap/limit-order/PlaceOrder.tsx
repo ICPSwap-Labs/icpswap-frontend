@@ -1,32 +1,31 @@
-import { useState, useCallback, useEffect, useContext, forwardRef, Ref, useImperativeHandle, useRef } from "react";
-import { Box } from "components/Mui";
-import { useLimitOrderInfo } from "store/swap/limit-order/hooks";
-import { useLoadDefaultParams, useCleanSwapState, useSwapState, useSwapHandlers } from "store/swap/hooks";
-import { isUndefinedOrNull, locationMultipleSearchReplace, nonUndefinedOrNull } from "@icpswap/utils";
-import { SWAP_FIELD } from "constants/swap";
-import { SWAP_LIMIT_REFRESH_KEY, USER_LIMIT_ORDERS_KEY } from "constants/limit";
-import { TradeState } from "hooks/swap/useTrade";
-import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
-import { usePlaceOrderCallback, useLimitSupported } from "hooks/swap/limit-order";
-import { ExternalTipArgs } from "types/index";
-import { useLoadingTip, useErrorTip } from "hooks/useTips";
-import { useUSDPrice } from "hooks/useUSDPrice";
-import { AuthButton } from "components/index";
-import StepViewButton from "components/Steps/View";
-import { ReclaimTips } from "components/ReclaimTips";
-import { SwapInputWrapper } from "components/swap/limit-order/index";
-import { useNavigate, useLocation } from "react-router-dom";
+import type { Token } from "@icpswap/swap-sdk";
 import { ICP } from "@icpswap/tokens";
-import { Token } from "@icpswap/swap-sdk";
+import { isUndefinedOrNull, locationMultipleSearchReplace, nonUndefinedOrNull } from "@icpswap/utils";
+import { AuthButton } from "components/index";
+import { Box } from "components/Mui";
+import { ReclaimTips } from "components/ReclaimTips";
+import StepViewButton from "components/Steps/View";
+import { SwapInputWrapper } from "components/swap/limit-order/index";
+import { SWAP_LIMIT_REFRESH_KEY, USER_LIMIT_ORDERS_KEY } from "constants/limit";
+import { SWAP_FIELD } from "constants/swap";
 import { useGlobalContext, useRefreshTrigger } from "hooks/index";
+import { useLimitSupported, usePlaceOrderCallback } from "hooks/swap/limit-order";
+import { TradeState } from "hooks/swap/useTrade";
+import { useErrorTip, useLoadingTip } from "hooks/useTips";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { forwardRef, type Ref, useCallback, useContext, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-
-import { LimitOrderConfirm } from "./LimitOrderConfirm";
-import { SwapLimitPrice, LimitPriceRef } from "./Price";
-import { LimitContext } from "./context";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useCleanSwapState, useLoadDefaultParams, useSwapHandlers, useSwapState } from "store/swap/hooks";
+import { useLimitOrderInfo } from "store/swap/limit-order/hooks";
+import type { ExternalTipArgs } from "types/index";
+import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
 import { CurrentPricePanel } from "./CurrentPricePanel";
-import { PriceError } from "./PriceError";
+import { LimitContext } from "./context";
+import { LimitOrderConfirm } from "./LimitOrderConfirm";
 import { LimitSupported } from "./LimitSupported";
+import { type LimitPriceRef, SwapLimitPrice } from "./Price";
+import { PriceError } from "./PriceError";
 
 export interface PlaceOrderRef {
   setInputAmount: (amount: string) => void;
@@ -104,7 +103,7 @@ export const PlaceOrder = forwardRef(
       if (onInputTokenChange) onInputTokenChange(inputToken);
       if (onOutputTokenChange) onOutputTokenChange(outputToken);
       if (onTradePoolIdChange && poolId) onTradePoolIdChange(poolId);
-    }, [poolId, outputToken, inputToken]);
+    }, [poolId, outputToken, inputToken, onInputTokenChange, onOutputTokenChange, onTradePoolIdChange]);
 
     const isLoadingRoute = swapState === TradeState.LOADING;
     const isNoRouteFound = swapState === TradeState.NO_ROUTE_FOUND;
@@ -117,7 +116,7 @@ export const PlaceOrder = forwardRef(
     useEffect(() => {
       setSelectedPool(pool);
       setNoLiquidity(noLiquidity);
-    }, [pool, setSelectedPool, noLiquidity]);
+    }, [pool, setSelectedPool, noLiquidity, setNoLiquidity]);
 
     useEffect(() => {
       setInputToken(inputToken);
@@ -148,7 +147,7 @@ export const PlaceOrder = forwardRef(
 
         navigate(`${prePath}${search}`);
       },
-      [outputTokenId],
+      [location.search, navigate, ui, outputTokenId],
     );
 
     const handleTokenBChange = useCallback(
@@ -170,16 +169,19 @@ export const PlaceOrder = forwardRef(
 
         navigate(`${prePath}${search}`);
       },
-      [inputTokenId, location],
+      [location, navigate, ui, inputTokenId],
     );
 
-    const handleInput = (value: string, type: "input" | "output") => {
-      if (type === "input") {
-        onUserInput(SWAP_FIELD.INPUT, value);
-      } else if (type === "output") {
-        onUserInput(SWAP_FIELD.OUTPUT, value);
-      }
-    };
+    const handleInput = useCallback(
+      (value: string, type: "input" | "output") => {
+        if (type === "input") {
+          onUserInput(SWAP_FIELD.INPUT, value);
+        } else if (type === "output") {
+          onUserInput(SWAP_FIELD.OUTPUT, value);
+        }
+      },
+      [onUserInput],
+    );
 
     const placeOrderCallback = usePlaceOrderCallback();
 
@@ -258,10 +260,8 @@ export const PlaceOrder = forwardRef(
     }, [
       placeOrderCallback,
       swapLoading,
-      setSwapLoading,
       trade,
       setRefreshTriggers,
-      orderPrice,
       unusedBalance,
       position,
       token0Balance,
@@ -271,7 +271,11 @@ export const PlaceOrder = forwardRef(
       inputToken,
       outputToken,
       orderPriceTick,
-      limitPriceRef,
+      closeLoadingTip,
+      handleInput,
+      openErrorTip,
+      openLoadingTip,
+      t,
     ]);
 
     const handleMaxInput = useCallback(() => {
@@ -284,7 +288,7 @@ export const PlaceOrder = forwardRef(
       return () => {
         clearSwapState();
       };
-    }, []);
+    }, [clearSwapState]);
 
     const handleSwitchTokens = useCallback(() => {
       const prePath = ui === "pro" ? "/swap/pro" : "/swap/limit";
@@ -304,7 +308,7 @@ export const PlaceOrder = forwardRef(
         limitPriceRef?.current?.resetInverted();
         limitPriceRef?.current?.setDefaultPrice();
       }
-    }, [ui, navigate, location, limitPriceRef, outputTokenId, inputTokenId]);
+    }, [ui, navigate, location, handleInput, onSwitchTokens, setOrderPrice, outputTokenId, inputTokenId]);
 
     useImperativeHandle(
       ref,
@@ -387,10 +391,10 @@ export const PlaceOrder = forwardRef(
             (isLoadingRoute
               ? t("swap.loading.route")
               : isNoRouteFound
-              ? t("swap.no.route")
-              : isPoolNotChecked
-              ? t("swap.waiting.verifying")
-              : t("limit.submit"))}
+                ? t("swap.no.route")
+                : isPoolNotChecked
+                  ? t("swap.waiting.verifying")
+                  : t("limit.submit"))}
         </AuthButton>
 
         {confirmModalShow && parsedAmounts[SWAP_FIELD.INPUT] && (

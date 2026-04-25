@@ -1,4 +1,4 @@
-import { Position } from "../entities/position";
+import type { Position } from "../entities/position";
 
 export function getPriceOrderingFromPositionForUI(position: Position | undefined) {
   if (!position) return {};

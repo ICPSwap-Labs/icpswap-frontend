@@ -1,5 +1,5 @@
-import { HttpAgent, ActorSubclass } from "@dfinity/agent";
-import { IDL } from "@dfinity/candid";
+import { HttpAgent, ActorSubclass } from "@icp-sdk/core/agent";
+import { IDL } from "@icp-sdk/core/candid";
 
 declare module "toformat";
 
@@ -7,19 +7,9 @@ declare global {
   interface Window {
     ic: {
       plug: {
-        createAgent: ({
-          whitelist,
-          host,
-        }: {
-          whitelist: string[];
-          host: string;
-        }) => Promise<boolean>;
+        createAgent: ({ whitelist, host }: { whitelist: string[]; host: string }) => Promise<boolean>;
         agent: HttpAgent;
-        requestConnect: ({
-          whitelist,
-        }: {
-          whitelist?: string[];
-        }) => Promise<any>;
+        requestConnect: ({ whitelist }: { whitelist?: string[] }) => Promise<any>;
         fetchRootKey: () => Promise<void>;
         createActor: <T>({
           canisterId,
@@ -30,11 +20,7 @@ declare global {
         }) => Promise<ActorSubclass<T>>;
       };
       infinityWallet: {
-        requestConnect: ({
-          whitelist,
-        }: {
-          whitelist?: string[];
-        }) => Promise<any>;
+        requestConnect: ({ whitelist }: { whitelist?: string[] }) => Promise<any>;
         createActor: <T>({
           canisterId,
           interfaceFactory,

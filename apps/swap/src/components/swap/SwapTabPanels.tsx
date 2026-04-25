@@ -1,8 +1,8 @@
-import { useCallback } from "react";
-import { Box, Typography } from "components/Mui";
-import { useNavigate, useLocation } from "react-router-dom";
 import { Flex } from "@icpswap/ui";
+import { Box, Typography } from "components/Mui";
 import i18n from "i18n/index";
+import { useCallback } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export enum TABS {
   SWAP = "Swap",

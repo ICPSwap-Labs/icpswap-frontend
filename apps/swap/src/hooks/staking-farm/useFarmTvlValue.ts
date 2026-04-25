@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useFarmTVL, useInfoAllTokens } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { useInfoAllTokens, useFarmTVL } from "@icpswap/hooks";
+import { useMemo } from "react";
 
 export interface UseFarmTvlValueArgs {
   token0: Token | undefined;
@@ -11,7 +11,7 @@ export interface UseFarmTvlValueArgs {
 
 export function useFarmTvlValue({ farmId, token0, token1 }: UseFarmTvlValueArgs) {
   const infoAllTokens = useInfoAllTokens();
-  const { result: farmTvl } = useFarmTVL(farmId);
+  const { data: farmTvl } = useFarmTVL(farmId);
 
   return useMemo(() => {
     if (!farmTvl || !infoAllTokens || !token0 || !token1) return undefined;
@@ -27,5 +27,5 @@ export function useFarmTvlValue({ farmId, token0, token1 }: UseFarmTvlValueArgs)
     const token1Tvl = parseTokenAmount(poolToken1.amount, token1.decimals).multipliedBy(token1Price);
 
     return token0Tvl.plus(token1Tvl).toFixed(3);
-  }, [farmTvl, token0, infoAllTokens, farmTvl]);
+  }, [farmTvl, token0, infoAllTokens, token1]);
 }

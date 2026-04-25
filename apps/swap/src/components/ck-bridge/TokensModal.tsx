@@ -1,22 +1,24 @@
-import { useState, useCallback, useMemo } from "react";
-import { InputAdornment, useTheme, Typography, Box, useMediaQuery } from "components/Mui";
-import { isDarkTheme } from "utils/index";
+import { BridgeChainType } from "@icpswap/constants";
+import { useChainKeyMinterInfo, useDebouncedChangeHandler } from "@icpswap/hooks";
+import type { Token } from "@icpswap/swap-sdk";
+import { Modal } from "@icpswap/ui";
+import type { BigNumber } from "@icpswap/utils";
+import { SelectorToken } from "components/ck-bridge/SelectorToken";
+import { getBridgeChainByTokenId } from "components/ck-bridge/utils";
 import { FilledTextField, NoData } from "components/index";
-import { Search as SearchIcon } from "react-feather";
-import { useDebouncedChangeHandler, useChainKeyMinterInfo } from "@icpswap/hooks";
+import { Box, InputAdornment, Typography, useTheme } from "components/Mui";
 import { MINTER_CANISTER_ID } from "constants/index";
 import { useAllBridgeTokens } from "hooks/ck-bridge";
-import { ckBridgeChain } from "@icpswap/constants";
-import { Token } from "@icpswap/swap-sdk";
-import { ckBTC } from "@icpswap/tokens";
+import { useMediaQuerySM } from "hooks/theme";
+import { useERC20Balances } from "hooks/web3";
+import { useCallback, useMemo, useState } from "react";
+import { Search as SearchIcon } from "react-feather";
 import { useTranslation } from "react-i18next";
-import { Modal } from "@icpswap/ui";
-
-import { SelectorToken } from "./SelectorToken";
+import { isDarkTheme } from "utils/index";
 
 export interface SelectorProps {
   open: boolean;
-  onChange: (token: Token, chain: ckBridgeChain) => void;
+  onChange: (token: Token, chain: BridgeChainType) => void;
   onClose: () => void;
 }
 
@@ -25,17 +27,46 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
   const theme = useTheme();
   const isDark = isDarkTheme(theme);
 
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [hiddenCanisterIds, setHiddenCanisterIds] = useState<{ [canisterId: string]: boolean }>({});
 
-  const { result: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
+  const { data: minterInfo } = useChainKeyMinterInfo(MINTER_CANISTER_ID);
 
   const allBridgeTokens = useAllBridgeTokens(minterInfo);
+  const erc20ContractAddresses = useMemo(() => {
+    if (!allBridgeTokens.length) return [];
 
-  const handleTokenClick = useCallback((token: Token, chain: ckBridgeChain) => {
-    if (onChange) onChange(token, chain);
-  }, []);
+    return allBridgeTokens.map((tokenId) => {
+      const tokenMinterInfo = minterInfo?.supported_ckerc20_tokens[0]?.find(
+        (info) => info.ledger_canister_id.toString() === tokenId,
+      );
+
+      return tokenMinterInfo?.erc20_contract_address;
+    });
+  }, [allBridgeTokens, minterInfo]);
+
+  const { result: erc20BalancesResult, loading: erc20BalancesLoading } = useERC20Balances(erc20ContractAddresses);
+
+  const erc20BalancesByTokenId = useMemo(() => {
+    return allBridgeTokens.reduce(
+      (acc, tokenId, index) => {
+        const item = erc20BalancesResult[index];
+        if (item?.success) {
+          acc[tokenId] = item.balance;
+        }
+        return acc;
+      },
+      {} as Record<string, BigNumber | undefined>,
+    );
+  }, [allBridgeTokens, erc20BalancesResult]);
+
+  const handleTokenClick = useCallback(
+    (token: Token, chain: BridgeChainType) => {
+      if (onChange) onChange(token, chain);
+    },
+    [onChange],
+  );
 
   const handleSearchToken = useCallback((value: string) => {
     setSearchKeyword(value);
@@ -47,107 +78,104 @@ export function TokensModal({ open, onChange, onClose }: SelectorProps) {
     return Object.values(hiddenCanisterIds).filter((e) => e === true).length === allBridgeTokens.length;
   }, [hiddenCanisterIds, allBridgeTokens]);
 
-  const handleUpdateTokenIsHidden = useCallback(
-    (tokenId: string, hidden: boolean) => {
-      setHiddenCanisterIds((prevState) => ({
-        ...prevState,
-        [tokenId]: hidden,
-      }));
-    },
-    [setHiddenCanisterIds],
-  );
+  const handleUpdateTokenIsHidden = useCallback((tokenId: string, hidden: boolean) => {
+    setHiddenCanisterIds((prevState) => ({
+      ...prevState,
+      [tokenId]: hidden,
+    }));
+  }, []);
 
   return (
-    <>
-      <Modal
-        open={open}
-        title={t("common.select.a.token")}
-        onClose={onClose}
-        dialogProps={{
-          sx: {
-            "& .MuiDialog-paper": {
-              padding: "0",
-              width: "570px",
-              backgroundColor: isDark ? theme.palette.background.level2 : theme.colors.lightGray200,
-            },
-            "& .MuiDialogContent-root": {
-              padding: "0",
-            },
+    <Modal
+      open={open}
+      title={t("common.select.a.token")}
+      onClose={onClose}
+      dialogProps={{
+        sx: {
+          "& .MuiDialog-paper": {
+            padding: "0",
+            width: "570px",
+            backgroundColor: isDark ? theme.palette.background.level2 : theme.colors.lightGray200,
           },
+          "& .MuiDialogContent-root": {
+            padding: "0",
+          },
+        },
+      }}
+    >
+      <Box
+        sx={{
+          position: "relative",
         }}
       >
         <Box
           sx={{
             position: "relative",
+            margin: "12px 0 0 0",
+            padding: matchDownSM ? "0 16px" : "0 24px",
           }}
         >
-          <Box
-            sx={{
-              position: "relative",
-              margin: "12px 0 0 0",
-              padding: matchDownSM ? "0 16px" : "0 24px",
-            }}
-          >
-            <FilledTextField
-              contained
-              borderRadius="8px"
-              background={theme.palette.background.level1}
-              placeholderSize="14px"
-              fullWidth
-              placeholder={t`Search name or canister ID`}
-              textFieldProps={{
-                slotProps: {
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
-                      </InputAdornment>
-                    ),
-                    maxLength: 50,
-                  },
+          <FilledTextField
+            contained
+            borderRadius="8px"
+            background={theme.palette.background.level1}
+            placeholderSize="14px"
+            fullWidth
+            placeholder={t`Search name or canister ID`}
+            textFieldProps={{
+              slotProps: {
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color={theme.themeOption.textSecondary} size="14px" />
+                    </InputAdornment>
+                  ),
+                  maxLength: 50,
                 },
-              }}
-              onChange={debouncedSearch}
-            />
-          </Box>
+              },
+            }}
+            onChange={debouncedSearch}
+          />
+        </Box>
 
-          <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
+        <Box sx={{ margin: "24px 0", width: "100%", height: "1px", background: theme.palette.background.level4 }} />
+
+        <Box>
+          <Typography sx={{ fontSize: "16px", padding: "0 24px", margin: "0 0 16px 0" }}>
+            {t("common.networks.all")}
+          </Typography>
+        </Box>
+
+        <Box sx={{ height: "315px", overflow: "hidden auto" }}>
+          {noData ? <NoData /> : null}
 
           <Box>
-            <Typography sx={{ fontSize: "16px", padding: "0 24px", margin: "0 0 16px 0" }}>
-              {t("common.networks.all")}
-            </Typography>
-          </Box>
+            {(allBridgeTokens ?? []).map((tokenId) => (
+              <Box key={tokenId}>
+                <SelectorToken
+                  tokenId={tokenId}
+                  onClick={handleTokenClick}
+                  searchWord={searchKeyword}
+                  chain={getBridgeChainByTokenId(tokenId)}
+                  updateTokenHide={handleUpdateTokenIsHidden}
+                  erc20Balance={erc20BalancesByTokenId[tokenId]}
+                  erc20BalanceLoading={erc20BalancesLoading}
+                />
 
-          <Box sx={{ height: "315px", overflow: "hidden auto" }}>
-            {noData ? <NoData /> : null}
-
-            <Box>
-              {(allBridgeTokens ?? []).map((tokenId) => (
-                <Box key={tokenId}>
-                  <SelectorToken
-                    tokenId={tokenId}
-                    onClick={handleTokenClick}
-                    searchWord={searchKeyword}
-                    chain={tokenId === ckBTC.address ? ckBridgeChain.btc : ckBridgeChain.eth}
-                    minterInfo={minterInfo}
-                    updateTokenHide={handleUpdateTokenIsHidden}
-                  />
-
-                  <SelectorToken
-                    tokenId={tokenId}
-                    onClick={handleTokenClick}
-                    searchWord={searchKeyword}
-                    chain={ckBridgeChain.icp}
-                    minterInfo={minterInfo}
-                    updateTokenHide={handleUpdateTokenIsHidden}
-                  />
-                </Box>
-              ))}
-            </Box>
+                <SelectorToken
+                  tokenId={tokenId}
+                  onClick={handleTokenClick}
+                  searchWord={searchKeyword}
+                  chain={BridgeChainType.icp}
+                  updateTokenHide={handleUpdateTokenIsHidden}
+                  erc20Balance={erc20BalancesByTokenId[tokenId]}
+                  erc20BalanceLoading={erc20BalancesLoading}
+                />
+              </Box>
+            ))}
           </Box>
         </Box>
-      </Modal>
-    </>
+      </Box>
+    </Modal>
   );
 }

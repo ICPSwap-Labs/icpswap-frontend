@@ -1,8 +1,8 @@
+import type { Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
-import { Null } from "@icpswap/types";
-import { useCallback } from "react";
 import { Slider } from "components/Slider/Slider";
+import { useCallback } from "react";
 
 export interface BalanceSliderProps {
   totalAmount: string | Null;

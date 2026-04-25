@@ -1,10 +1,12 @@
-import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
-import { Principal } from "@dfinity/principal";
-import { PostMessageTransport } from "@slide-computer/signer-web";
-import { SignerAgent } from "@slide-computer/signer-agent";
+// @ts-nocheck
+// @icp-js/core and @dfinity packages typescript errors
+import { Actor, type ActorSubclass, HttpAgent } from "@icp-sdk/core/agent";
+import { Principal } from "@icp-sdk/core/principal";
 import { Signer } from "@slide-computer/signer";
+import { SignerAgent } from "@slide-computer/signer-agent";
+import { PostMessageTransport } from "@slide-computer/signer-web";
 
-import { type CreateActorArgs, ConnectorAbstract, Connector, WalletConnectorConfig } from "./connectors";
+import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 
 export class OisyConnector implements ConnectorAbstract {
   private config: {

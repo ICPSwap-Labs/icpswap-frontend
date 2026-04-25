@@ -1,10 +1,10 @@
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import { Token, CurrencyAmount } from "@icpswap/swap-sdk";
-import { ICP } from "@icpswap/tokens";
-import { useMemo } from "react";
-import { WRAPPED_ICP } from "constants/tokens";
 import { useInfoToken } from "@icpswap/hooks";
-import { Null } from "@icpswap/types";
+import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import { ICP } from "@icpswap/tokens";
+import type { Null } from "@icpswap/types";
+import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { WRAPPED_ICP } from "constants/tokens";
+import { useMemo } from "react";
 
 export function useICPPrice(): number | undefined {
   const icpTokenInfo = useInfoToken(ICP.address);
@@ -54,7 +54,7 @@ export function useUSDValue(currencyAmount: CurrencyAmount<Token> | undefined) {
     if (!price || !currencyAmount) return null;
     try {
       return new BigNumber(price).multipliedBy(currencyAmount.toExact());
-    } catch (error) {
+    } catch (_error) {
       return null;
     }
   }, [currencyAmount, price]);

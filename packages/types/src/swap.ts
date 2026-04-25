@@ -1,51 +1,48 @@
+import type { Principal } from "@icp-sdk/core/principal";
 import type { SwapPoolData } from "@icpswap/candid";
-import type { Principal } from "@dfinity/principal";
-import { Override } from "./global";
+import type { Override } from "./global";
 
 export type UserSwapPoolsBalance = Override<
   SwapPoolData,
   { type: "unDeposit" | "unUsed"; balance0: bigint; balance1: bigint }
 >;
 
-export type { GetPoolArgs, CreatePoolArgs } from "@icpswap/candid";
-
 export type {
-  TickLiquidityInfo,
-  PoolMetadata,
-  MintArgs,
-  UserPositionInfo,
-  DecreaseLiquidityArgs,
-  IncreaseLiquidityArgs,
-  SwapArgs,
+  AddLimitOrderInfo,
+  AddLiquidityInfo,
   ClaimArgs,
-  UserPositionInfoWithTokenAmount,
-  UserPositionInfoWithId,
-  PositionInfoWithId,
-  TickInfoWithId,
-  SwapPoolData,
-  SwapPoolToken,
-  Ticket,
+  ClaimInfo,
+  CreatePoolArgs,
+  DecreaseLiquidityArgs,
+  DecreaseLiquidityInfo,
+  DepositAndSwapArgs,
+  DepositInfo,
+  ExecuteLimitOrderInfo,
+  FailedTransactionAction,
+  GetPoolArgs,
+  IncreaseLiquidityArgs,
   LimitOrderKey,
   LimitOrderValue,
-  LimitTransaction,
-  LimitTransactionResult,
-  PoolInstaller,
-  DepositAndSwapArgs,
-  SwapFailedTransaction,
-  AddLimitOrderInfo,
-  WithdrawInfo,
-  RemoveLimitOrderInfo,
+  MintArgs,
   OneStepSwapInfo,
-  DepositInfo,
+  PoolInstaller,
+  PoolMetadata,
+  PositionInfoWithId,
   RefundInfo,
+  RemoveLimitOrderInfo,
+  SwapArgs,
+  SwapFailedTransaction,
   SwapInfo,
-  ExecuteLimitOrderInfo,
+  SwapPoolData,
+  SwapPoolToken,
+  TickInfoWithId,
+  TickLiquidityInfo,
   TransferPositionInfo,
-  DecreaseLiquidityInfo,
-  ClaimInfo,
-  FailedTransactionAction,
-  AddLiquidityInfo,
+  UserPositionInfo,
+  UserPositionInfoWithId,
+  UserPositionInfoWithTokenAmount,
   UserWithdrawQueueInfo,
+  WithdrawInfo,
 } from "@icpswap/candid";
 
 export type LimitOrder = {
@@ -56,7 +53,7 @@ export type LimitOrder = {
   token1InAmount: bigint;
 };
 
-export type { SwapNFTTokenMetadata, PassCode } from "@icpswap/candid";
+export type { PassCode, SwapNFTTokenMetadata } from "@icpswap/candid";
 
 export type PCMMetadata = {
   passcodePrice: bigint;

@@ -1,9 +1,9 @@
 import { ERC20Token } from "@icpswap/swap-sdk";
-import { useCallback, useMemo } from "react";
-import { useSupportedActiveChain, useWeb3CallsData, useActiveChain } from "hooks/web3/index";
-import { useAccount, useReadContract } from "wagmi";
-import { erc20Abi } from "abis/abis";
 import { isUndefinedOrNull } from "@icpswap/utils/dist/isUndefinedOrNull";
+import { erc20Abi } from "abis/abis";
+import { useWeb3CallsData } from "hooks/web3/index";
+import { useCallback, useMemo } from "react";
+import { useAccount, useReadContract } from "wagmi";
 
 export function useTokenName(tokenAddress: string | undefined) {
   const { address: account, chainId } = useAccount();
@@ -66,7 +66,7 @@ export function useTokenDecimals(tokenAddress: string | undefined) {
 }
 
 export function useTokenLogo(tokenAddress: string | undefined) {
-  return useWeb3CallsData<string>(
+  return useWeb3CallsData<string | undefined>(
     useCallback(async () => {
       if (!tokenAddress) return undefined;
       return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/${tokenAddress}/logo.png`;
@@ -80,15 +80,12 @@ export function useTokenLogo(tokenAddress: string | undefined) {
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
 export function useTokenFromActiveNetwork(tokenAddress: string | undefined): ERC20Token | undefined {
-  const chainId = useActiveChain();
-  const supportedActiveChain = useSupportedActiveChain();
-
   // TODO (WEB-1709): reduce this to one RPC call instead of 5
   // TODO: Fix redux-multicall so that these values do not reload.
   const { result: name } = useTokenName(tokenAddress);
   const { result: symbol } = useTokenSymbol(tokenAddress);
   const { result: decimals } = useTokenDecimals(tokenAddress);
-  const { result: logo } = useTokenLogo(tokenAddress);
+  const { data: logo } = useTokenLogo(tokenAddress);
 
   return useMemo(() => {
     // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
@@ -99,5 +96,5 @@ export function useTokenFromActiveNetwork(tokenAddress: string | undefined): ERC
     }
 
     return new ERC20Token({ address: tokenAddress, decimals, name, symbol, logo });
-  }, [tokenAddress, chainId, name, symbol, decimals, logo, supportedActiveChain]);
+  }, [tokenAddress, name, symbol, decimals, logo]);
 }

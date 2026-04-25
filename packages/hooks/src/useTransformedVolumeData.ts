@@ -1,10 +1,11 @@
 /* eslint-disable no-case-declarations */
-import { useMemo } from "react";
-import { ChartDayVolumeData, GenericChartEntry } from "@icpswap/types";
+
+import type { ChartDayVolumeData, GenericChartEntry } from "@icpswap/types";
 import { BigNumber, unixToDate } from "@icpswap/utils";
+import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import weekOfYear from "dayjs/plugin/weekOfYear";
-import dayjs from "dayjs";
+import { useMemo } from "react";
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc);
@@ -16,12 +17,13 @@ function unixToType(unix: number, type: "month" | "week") {
   switch (type) {
     case "month":
       return date.format("YYYY-MM");
-    case "week":
+    case "week": {
       let week = String(date.week());
       if (week.length === 1) {
         week = `0${week}`;
       }
       return `${date.year()}-${week}`;
+    }
     default:
       break;
   }

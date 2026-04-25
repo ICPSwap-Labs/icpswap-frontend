@@ -1,10 +1,10 @@
-import { useCallback } from "react";
-import { Box, Typography, makeStyles } from "components/Mui";
 import { Flex } from "@icpswap/ui";
-import { RotateCcw } from "react-feather";
-import { useWalletContext, WalletManagerPage } from "components/Wallet/context";
 import { formatDollarTokenPrice, formatIcpAmount } from "@icpswap/utils";
-import { useWalletTokenContext } from "components/Wallet/token/context";
+import { Box, makeStyles, Typography } from "components/Mui";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { useWalletTokenStore } from "components/Wallet/token/store";
+import { useCallback } from "react";
+import { RotateCcw } from "react-feather";
 
 const useStyles = makeStyles(() => {
   return {
@@ -39,10 +39,10 @@ export function EstimatedBalanceUI({
   noValueChange,
 }: EstimatedBalanceUIProps) {
   const classes = useStyles();
-  const { setPages } = useWalletContext();
-  const { setTokenReceiveId } = useWalletTokenContext();
+  const { setPages } = useWalletStore();
+  const { setTokenReceiveId } = useWalletTokenStore();
 
-  const usdChangeType = valueChange && valueChange.includes("-") ? "down" : "up";
+  const usdChangeType = valueChange?.includes("-") ? "down" : "up";
   const USDChangeColor = usdChangeType === "up" ? "#54C081" : "#D3625B";
 
   const handleReceive = useCallback(() => {

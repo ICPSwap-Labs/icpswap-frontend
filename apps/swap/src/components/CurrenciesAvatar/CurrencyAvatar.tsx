@@ -1,4 +1,4 @@
-import { Token } from "@icpswap/swap-sdk";
+import type { Token } from "@icpswap/swap-sdk";
 import { TokenImage } from "components/index";
 
 export interface CurrencyAvatarProps {

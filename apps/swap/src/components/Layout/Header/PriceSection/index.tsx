@@ -1,4 +1,4 @@
-import { Chip, Box, ButtonBase, makeStyles, Theme } from "components/Mui";
+import { Box, ButtonBase, Chip, makeStyles, type Theme } from "components/Mui";
 
 const useStyles = makeStyles((theme: Theme) => ({
   box: {
@@ -19,12 +19,10 @@ export default function ProfileSection({ value, label }: { label: string; value:
   const classes = useStyles();
 
   return (
-    <>
-      <Box component="span" className={classes.box}>
-        <ButtonBase sx={{ borderRadius: "12px" }}>
-          <Chip className={classes.profileChip} label={`${label}: ${value}`} variant="outlined" color="primary" />
-        </ButtonBase>
-      </Box>
-    </>
+    <Box component="span" className={classes.box}>
+      <ButtonBase sx={{ borderRadius: "12px" }}>
+        <Chip className={classes.profileChip} label={`${label}: ${value}`} variant="outlined" color="primary" />
+      </ButtonBase>
+    </Box>
   );
 }

@@ -1,32 +1,32 @@
-import { useEffect, useCallback } from "react";
-import { Box, Drawer, useTheme } from "components/Mui";
-import { TokenAssetsWrapper } from "components/Wallet/TokenAssetsWrapper";
-import { TokenManager } from "components/Wallet/TokenManager";
-import { WalletManagerPage, useWalletContext } from "components/Wallet/context";
-import { useWalletTokenContext, AssetsType } from "components/Wallet/token/context";
-import { TokenReceive, TokenSend } from "components/Wallet/token/index";
-import { TokenSelector } from "components/Wallet/TokenSelector";
-import { AddressBook } from "components/Wallet/address-book/AddressBook";
-import { AddAddress } from "components/Wallet/address-book/AddAddress";
-import { EditAddress } from "components/Wallet/address-book/EditAddress";
-import { DeleteAddressConfirm } from "components/Wallet/address-book/DeleteAddressConfirm";
-import { SelectContact } from "components/Wallet/address-book/SelectContact";
-import { WALLET_DRAWER_WIDTH } from "constants/wallet";
-import { LogoutConfirm } from "components/Wallet/LogoutConfirm";
-import { RemoveTokenConfirm } from "components/Wallet/token/RemoveTokenConfirm";
-import { useAccountPrincipalString } from "store/auth/hooks";
 import { nonUndefinedOrNull } from "@icpswap/utils";
-import { useMediaQuery640 } from "hooks/theme";
-import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
+import { Box, Drawer, useTheme } from "components/Mui";
+import { AddAddress } from "components/Wallet/address-book/AddAddress";
+import { AddressBook } from "components/Wallet/address-book/AddressBook";
+import { DeleteAddressConfirm } from "components/Wallet/address-book/DeleteAddressConfirm";
+import { EditAddress } from "components/Wallet/address-book/EditAddress";
+import { SelectContact } from "components/Wallet/address-book/SelectContact";
 import { BalanceConvert } from "components/Wallet/BalanceConvert/BalanceConvert";
 import { ConvertToIcpConfirm } from "components/Wallet/BalanceConvert/Confirm";
+import { LogoutConfirm } from "components/Wallet/LogoutConfirm";
 import { NFTCanister } from "components/Wallet/NFT/NFTCanister";
-import { NFTTokenDetails } from "components/Wallet/NFT/NFTTokenDetails";
-import { NFTSend } from "components/Wallet/NFT/NFTSend";
-import { NFTImporter } from "components/Wallet/NFT/NFTImporter";
 import { NFTExtCanister } from "components/Wallet/NFT/NFTExtCanister";
-import { NFTExtTokenDetails } from "components/Wallet/NFT/NFTExtTokenDetails";
 import { NFTExtSend } from "components/Wallet/NFT/NFTExtSend";
+import { NFTExtTokenDetails } from "components/Wallet/NFT/NFTExtTokenDetails";
+import { NFTImporter } from "components/Wallet/NFT/NFTImporter";
+import { NFTSend } from "components/Wallet/NFT/NFTSend";
+import { NFTTokenDetails } from "components/Wallet/NFT/NFTTokenDetails";
+import { useWalletStore, WalletManagerPage } from "components/Wallet/store";
+import { TokenAssetsWrapper } from "components/Wallet/TokenAssetsWrapper";
+import { TokenManager } from "components/Wallet/TokenManager";
+import { TokenSelector } from "components/Wallet/TokenSelector";
+import { TokenReceive, TokenSend } from "components/Wallet/token/index";
+import { RemoveTokenConfirm } from "components/Wallet/token/RemoveTokenConfirm";
+import { AssetsType, useWalletTokenStore } from "components/Wallet/token/store";
+import { XTCTopUpModal } from "components/Wallet/XTCTopUpModal";
+import { WALLET_DRAWER_WIDTH } from "constants/wallet";
+import { useMediaQuery640 } from "hooks/theme";
+import { useCallback, useEffect } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
 
 const components = {
   [WalletManagerPage.Index]: <TokenAssetsWrapper />,
@@ -52,12 +52,12 @@ export function WalletIndex() {
   const theme = useTheme();
   const mediaQuery640 = useMediaQuery640();
   const principal = useAccountPrincipalString();
-  const { open, setOpen, pages, setPages } = useWalletContext();
-  const { xtcTopUpShow, setXTCTopUpShow, setActiveAssetsTab } = useWalletTokenContext();
+  const { open, setOpen, pages, setPages } = useWalletStore();
+  const { xtcTopUpShow, setXTCTopUpShow, setActiveAssetsTab } = useWalletTokenStore();
 
   useEffect(() => {
     setPages(WalletManagerPage.Index);
-  }, []);
+  }, [setPages]);
 
   const handleDrawerClose = useCallback(() => {
     setOpen(false);

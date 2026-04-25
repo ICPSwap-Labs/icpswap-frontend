@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Grid, Typography, Button, Box, useTheme, makeStyles, Theme } from "components/Mui";
-import { TradeOrder } from "types";
-import { WRAPPED_ICP_TOKEN_INFO } from "constants/index";
-import WICPCurrencyImage from "assets/images/wicp_currency.svg";
 import { parseTokenAmount } from "@icpswap/utils";
-import { useAccount } from "store/auth/hooks";
+import WICPCurrencyImage from "assets/images/wicp_currency.svg";
+import { Box, Button, Grid, makeStyles, type Theme, Typography, useTheme } from "components/Mui";
 import NFTBuyReview from "components/NFT/market/NFTBuyReview";
-import VerifyNFT from "components/NFT/VerifyNFT";
-import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
 import NFTAvatar from "components/NFT/NFTAvatar";
+import VerifyNFT from "components/NFT/VerifyNFT";
+import { WRAPPED_ICP } from "constants/index";
+import { useNFTMetadata } from "hooks/nft/useNFTMetadata";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccount } from "store/auth/hooks";
+import type { TradeOrder } from "types";
 
 export const BorderColor = "#2F3C6D";
 
@@ -121,7 +121,7 @@ export default function NFTCard({ order }: { order: TradeOrder }) {
                     <img width="14px" height="14px" src={WICPCurrencyImage} alt="" />
                     <Grid item ml="3px">
                       <Typography color="text.primary" fontWeight="700" fontSize="14px" component="span">
-                        {parseTokenAmount(order?.price, WRAPPED_ICP_TOKEN_INFO.decimals).toFormat()}
+                        {parseTokenAmount(order?.price, WRAPPED_ICP.decimals).toFormat()}
                       </Typography>
                     </Grid>
                   </Grid>

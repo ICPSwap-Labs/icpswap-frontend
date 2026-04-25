@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
-import { Box, useTheme, useMediaQuery } from "components/Mui";
 import { Image } from "@icpswap/ui";
+import { Box } from "components/Mui";
+import { useMediaQuerySM } from "hooks/theme";
+import { useCallback, useEffect, useState } from "react";
 
 interface ScrollTopProps {
   left?: string;
@@ -13,8 +14,7 @@ export function ScrollTop({ target, heightShowScrollTop, scrollTopTarget }: Scro
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [scrollTopPositionLeft, setScrollTopPositionLeft] = useState<number | null>(null);
 
-  const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchDownSM = useMediaQuerySM();
 
   const handleScrollTop = useCallback(() => {
     let top = 0;

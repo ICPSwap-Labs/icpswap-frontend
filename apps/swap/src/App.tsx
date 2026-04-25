@@ -1,51 +1,26 @@
-import { useState } from "react";
-import { useAppSelector } from "store/hooks";
-import { CssBaseline, StyledEngineProvider, ThemeProvider } from "components/Mui";
-import { SnackbarProvider } from "components/notistack";
 import ErrorBoundary from "components/ErrorBoundary";
-import TransactionsUpdater from "store/transactions/updater";
-import { WagmiProvider } from "wagmi";
-import { wagmiConfig } from "constants/wagmi";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { DisableIframe } from "components/DisableIframe";
-import { WalletContextProvider } from "components/Wallet/WalletContextProvider";
+import { GlobalLayout, useGlobalUpdater } from "components/Global";
+import { CssBaseline } from "components/Mui";
 import NavigationScroll from "components/NavigationScroll";
-import { GlobalContextProvider, useGlobalUpdater, GlobalLayout } from "components/Global";
-
-import { theme } from "./theme";
-import Routes from "./routes";
+import Routes from "routes/index";
 import "utils/dayjs";
+// TODO: remove this import after we find a better way to import echarts
+// import echarts global,
+// otherwise it will cause the error "echarts is not defined" when importing echarts in @icpswap/ui
+import "components/echarts";
 
-export default function App() {
-  const customization = useAppSelector((state) => state.customization);
-  const [queryClient] = useState(() => new QueryClient());
-
+export const App = () => {
   useGlobalUpdater();
 
   return (
-    <DisableIframe>
-      <WagmiProvider config={wagmiConfig}>
-        <QueryClientProvider client={queryClient}>
-          <StyledEngineProvider injectFirst>
-            <WalletContextProvider>
-              <TransactionsUpdater />
-              <ThemeProvider theme={theme(customization)}>
-                <SnackbarProvider maxSnack={100}>
-                  <GlobalContextProvider>
-                    <CssBaseline />
-                    <NavigationScroll>
-                      <ErrorBoundary>
-                        <Routes />
-                      </ErrorBoundary>
-                      <GlobalLayout />
-                    </NavigationScroll>
-                  </GlobalContextProvider>
-                </SnackbarProvider>
-              </ThemeProvider>
-            </WalletContextProvider>
-          </StyledEngineProvider>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </DisableIframe>
+    <>
+      <CssBaseline />
+      <NavigationScroll>
+        <ErrorBoundary>
+          <Routes />
+        </ErrorBoundary>
+        <GlobalLayout />
+      </NavigationScroll>
+    </>
   );
-}
+};

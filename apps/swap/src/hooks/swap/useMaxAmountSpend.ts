@@ -1,6 +1,6 @@
-import { CurrencyAmount, Token } from "@icpswap/swap-sdk";
+import { CurrencyAmount, type Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
-import { Null } from "@icpswap/types";
 import { useAllowance } from "hooks/token";
 import { useMemo } from "react";
 import { useAccountPrincipalString } from "store/auth/hooks";
@@ -58,7 +58,7 @@ export function useBalanceMaxSpend({ token, balance, poolId, allowance: __allowa
     return isUseTransfer(token) ? undefined : token.address;
   }, [token, __allowance]);
 
-  const { result: allowance } = useAllowance({ canisterId: allowanceCanisterId, owner: principal, spender: poolId });
+  const { data: allowance } = useAllowance({ canisterId: allowanceCanisterId, owner: principal, spender: poolId });
 
   return useMemo(() => {
     if (isUndefinedOrNull(balance) || isUndefinedOrNull(token)) return undefined;
@@ -86,7 +86,7 @@ export function useBalanceMaxSpend({ token, balance, poolId, allowance: __allowa
     }
 
     return CurrencyAmount.fromRawAmount(token, new BigNumber(balance).minus(token.transFee).toString());
-  }, [allowance, __allowance, token, balance, allowanceCanisterId]);
+  }, [allowance, __allowance, token, balance]);
 }
 
 export interface UseMaxAmountSpendArgs {
@@ -115,5 +115,5 @@ export function useAllBalanceMaxSpend({
     if (!maxBalanceSpend.currency.equals(maxPoolBalanceSpent.currency)) return undefined;
 
     return maxBalanceSpend.add(maxPoolBalanceSpent);
-  }, [maxBalanceSpend, maxPoolBalanceSpent]);
+  }, [maxBalanceSpend, maxPoolBalanceSpent, token]);
 }

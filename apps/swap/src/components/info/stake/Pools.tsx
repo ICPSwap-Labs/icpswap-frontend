@@ -1,14 +1,14 @@
-import { useState } from "react";
-import dayjs from "dayjs";
-import { useStakingPools, useStakingPoolState } from "@icpswap/hooks";
-import { pageArgsFormat, explorerLink } from "@icpswap/utils";
+import { useStakingPoolState, useStakingPools } from "@icpswap/hooks";
+import type { StakingPoolControllerPoolInfo } from "@icpswap/types";
+import { BodyCell, Flex, Header, HeaderCell, ImageLoading, NoData, Pagination, TableRow } from "@icpswap/ui";
+import { icDashboardExplorerLink, pageArgsFormat } from "@icpswap/utils";
 import { TextButton } from "components/index";
-import { type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { HeaderCell, BodyCell, NoData, Pagination, Header, TableRow, Flex, ImageLoading } from "@icpswap/ui";
-import upperFirst from "lodash/upperFirst";
+import { Box, Link, makeStyles } from "components/Mui";
+import dayjs from "dayjs";
 import { useStateColors } from "hooks/staking-token";
+import upperFirst from "lodash/upperFirst";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { makeStyles, Box, Link } from "components/Mui";
 
 const useStyles = makeStyles(() => {
   return {
@@ -28,7 +28,7 @@ function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
   return (
     <TableRow className={classes.wrapper}>
       <BodyCell sx={{ alignItems: "center" }}>
-        <Link href={explorerLink(pool.canisterId.toString())} target="_blank" sx={{ fontSize: "16px" }}>
+        <Link href={icDashboardExplorerLink(pool.canisterId.toString())} target="_blank" sx={{ fontSize: "16px" }}>
           {pool.canisterId.toString()}
         </Link>
       </BodyCell>
@@ -39,12 +39,12 @@ function PoolItem({ pool }: { pool: StakingPoolControllerPoolInfo }) {
         {dayjs(Number(pool.bonusEndTime) * 1000).format("YYYY-MM-DD HH:mm")}
       </BodyCell>
       <BodyCell sx={{ alignItems: "center" }}>
-        <Link href={explorerLink(pool.stakingToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
+        <Link href={icDashboardExplorerLink(pool.stakingToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
           {pool.stakingTokenSymbol}
         </Link>
       </BodyCell>
       <BodyCell sx={{ alignItems: "center" }}>
-        <Link href={explorerLink(pool.rewardToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
+        <Link href={icDashboardExplorerLink(pool.rewardToken.address)} target="_blank" sx={{ fontSize: "16px" }}>
           {pool.rewardTokenSymbol}
         </Link>
       </BodyCell>
@@ -81,7 +81,7 @@ export function StakePools() {
   const [pagination, setPagination] = useState({ pageNum: 1, pageSize: 10 });
   const [offset] = pageArgsFormat(pagination.pageNum, pagination.pageSize);
 
-  const { result, loading } = useStakingPools(undefined, offset, pagination.pageSize);
+  const { data: result, isLoading: loading } = useStakingPools(undefined, offset, pagination.pageSize);
   const { content = [], totalElements = 0 } = result ?? { content: [], totalElements: 0 };
 
   const handlePageChange = (page: number) => {

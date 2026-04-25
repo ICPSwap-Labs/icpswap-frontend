@@ -1,17 +1,17 @@
-import { useEffect, useState, useMemo } from "react";
-import { XTC, TOKEN_STANDARD, CAT, MOD, BoomDAO } from "constants/tokens";
-import { ckSepoliaUSDC, ckSepoliaETH, ICP, WRAPPED_ICP } from "@icpswap/tokens";
 import { getSwapPools } from "@icpswap/hooks";
-import type { SwapPoolData } from "@icpswap/types";
 import { registerTokens } from "@icpswap/token-adapter";
-import { network, NETWORK } from "constants/server";
-import { useUpdateTokenStandard, useTokenStandards } from "store/token/cache/hooks";
-import { usePoolCanisterIdManager, useUpdateAllSwapPools } from "store/swap/hooks";
+import { ckDoge, ckSepoliaETH, ckSepoliaUSDC, ICP, WRAPPED_ICP } from "@icpswap/tokens";
+import type { SwapPoolData } from "@icpswap/types";
+import { NETWORK, network } from "constants/server";
+import { BoomDAO, CAT, MOD, TOKEN_STANDARD, XTC } from "constants/tokens";
+import { useEffect, useMemo, useState } from "react";
 import { updateCanisters } from "store/allCanisters";
 import { updateTokens } from "store/allTokens";
 import { useGlobalTokenList } from "store/global/hooks";
+import { usePoolCanisterIdManager, useUpdateAllSwapPools } from "store/swap/hooks";
+import { useTokenStandards, useUpdateTokenStandard } from "store/token/cache/hooks";
 
-export const Tokens = [XTC, CAT, MOD, BoomDAO, ckSepoliaUSDC, ckSepoliaETH];
+export const Tokens = [XTC, CAT, MOD, BoomDAO, ckSepoliaUSDC, ckSepoliaETH, ckDoge];
 
 export function useInitialTokenStandard() {
   const [updated, setUpdated] = useState(false);
@@ -73,7 +73,7 @@ export function useInitialTokenStandard() {
     } else {
       setUpdated(true);
     }
-  }, []);
+  }, [updateAllSwapPools, updatePoolCanisterId, updateTokenStandard]);
 
   // Update the token standards from token list
   // Some token only exist in token list but not in swap pools
@@ -86,9 +86,10 @@ export function useInitialTokenStandard() {
 
       updateTokenStandard(standards);
     }
-  }, [tokensFromTokenList]);
+  }, [tokensFromTokenList, updateTokenStandard]);
 
   useEffect(() => {
+    // Tokens that not register in ICPSwap before new version release, so we need to register them manually
     if (network === NETWORK.IC) {
       Tokens.forEach((token) => {
         updateTokenStandard([
@@ -108,7 +109,7 @@ export function useInitialTokenStandard() {
       { canisterId: WRAPPED_ICP.address, standard: WRAPPED_ICP.standard as TOKEN_STANDARD },
       { canisterId: ICP.address, standard: ICP.standard as TOKEN_STANDARD },
     ]);
-  }, []);
+  }, [updateTokenStandard]);
 
   // All token's standards, includes the local cached tokens
   const tokenStandards = useTokenStandards();

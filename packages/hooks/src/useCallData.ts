@@ -1,120 +1,110 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import type { ApiResult, CallResult, PaginationResult } from "@icpswap/types";
+import type { PaginationResult } from "@icpswap/types";
 import { pageArgsFormat, sleep } from "@icpswap/utils";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-export type Call<T> = () => Promise<ApiResult<T>>;
+const DEFAULT_CONCURRENCY = 5;
+const MAX_RETRIES = 3;
+const THROTTLE_EVERY_PAGES = 80;
+const THROTTLE_MS = 2000;
 
-export function useCallsData<T>(fn: Call<T>, reload?: number | string | boolean | null): CallResult<T> {
-  const result = useRef<T | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (fn) {
-      result.current = undefined;
-      setLoading(true);
-      fn().then((res) => {
-        result.current = res;
-        setLoading(false);
-      });
-    }
-  }, [fn, reload]);
-
-  return useMemo(() => {
-    return {
-      result: result.current,
-      loading,
-    };
-  }, [result.current, loading]);
+export interface UsePaginationAllDataResult<T> {
+  result: T[];
+  loading: boolean;
 }
 
+/**
+ * Fetches all paginated data by first getting total count, then fetching pages
+ * with concurrency limit, stable callback ref, and abort on unmount.
+ */
 export function usePaginationAllData<T>(
   callback: (offset: number, limit: number) => Promise<PaginationResult<T> | undefined>,
   limit: number,
   reload = false,
-) {
+): UsePaginationAllDataResult<T> {
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState<T[]>([]);
-
-  const fetch = async (offset: number, limit: number) => {
-    return await callback(offset, limit).then((result) => {
-      if (result) {
-        const content = result.content;
-        if (content && content.length > 0) {
-          return content;
-        }
-        return [];
-      }
-      return [];
-    });
-  };
-
-  const fetchDone = async (_list: { [k: string]: T[] }) => {
-    let data: T[] = [];
-    Object.keys(_list).forEach((key) => {
-      data = data.concat(_list[key]);
-    });
-    setList(data);
-  };
+  const callbackRef = useRef(callback);
+  callbackRef.current = callback;
 
   useEffect(() => {
-    async function getTotalElements() {
-      if (callback) {
-        const result = await callback(0, 1);
-        if (result) {
-          return result.totalElements;
-        }
-        return BigInt(0);
+    const aborted = { current: false };
+    const run = async () => {
+      const cb = callbackRef.current;
+      let totalElements: bigint | number;
+
+      try {
+        const result = await cb(0, 1);
+        totalElements = result?.totalElements ?? BigInt(0);
+      } catch {
+        totalElements = BigInt(0);
       }
 
-      return BigInt(0);
-    }
-
-    async function call() {
-      const totalElements = await getTotalElements();
-
-      if (Number(totalElements) !== 0) {
-        const num = Number(totalElements) % limit;
-        const totalPage =
-          num === 0 ? Number(totalElements) / limit : parseInt(String(Number(totalElements) / limit)) + 1;
-
-        setLoading(true);
-
-        const _list: { [k: string]: T[] } = {};
-
-        for (let i = 0; i < totalPage; i++) {
-          const [offset] = pageArgsFormat(i + 1, limit);
-
-          if (totalPage % 80 === 0) {
-            await sleep(2000);
-          }
-
-          const _fetch = () => {
-            fetch(offset, limit)
-              .then(async (content) => {
-                if (content && content.length > 0) {
-                  _list[`${i + 1}`] = content;
-                  if (Object.keys(_list).length === totalPage) {
-                    await fetchDone(_list);
-                    setLoading(false);
-                  }
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-                _fetch();
-              });
-          };
-
-          _fetch();
-        }
-      } else {
+      if (aborted.current) return;
+      const total = Number(totalElements);
+      if (total === 0) {
         setList([]);
         setLoading(false);
+        return;
       }
-    }
 
-    call();
-  }, [reload, callback]);
+      setLoading(true);
+      const totalPage = total % limit === 0 ? Math.floor(total / limit) : Math.floor(total / limit) + 1;
+      const _list: Record<number, T[]> = {};
+      let completed = 0;
+
+      const mergeAndFinish = () => {
+        const ordered = Array.from({ length: totalPage }, (_, i) => _list[i + 1] ?? []);
+        setList(ordered.flat());
+        setLoading(false);
+      };
+
+      const fetchPage = async (pageIndex: number, retries = 0): Promise<void> => {
+        if (aborted.current) return;
+        const [offset] = pageArgsFormat(pageIndex + 1, limit);
+        try {
+          const result = await cb(offset, limit);
+          if (aborted.current) return;
+          const content = result?.content ?? [];
+          _list[pageIndex + 1] = Array.isArray(content) ? content : [];
+        } catch (error) {
+          if (aborted.current) return;
+          if (retries < MAX_RETRIES) {
+            await fetchPage(pageIndex, retries + 1);
+            return;
+          }
+          console.error("[usePaginationAllData] page failed:", pageIndex + 1, error);
+          _list[pageIndex + 1] = [];
+        }
+        completed += 1;
+        if (completed === totalPage) mergeAndFinish();
+      };
+
+      const runBatch = async (from: number, to: number) => {
+        for (let i = from; i < to; i++) {
+          if (aborted.current) return;
+          if (i > 0 && i % THROTTLE_EVERY_PAGES === 0) {
+            await sleep(THROTTLE_MS);
+          }
+          await fetchPage(i);
+        }
+      };
+
+      const concurrency = Math.min(DEFAULT_CONCURRENCY, totalPage);
+      const batchSize = Math.ceil(totalPage / concurrency);
+      const batches: Promise<void>[] = [];
+      for (let b = 0; b < concurrency; b++) {
+        const start = b * batchSize;
+        const end = Math.min(start + batchSize, totalPage);
+        if (start < end) batches.push(runBatch(start, end));
+      }
+      await Promise.all(batches);
+    };
+
+    run();
+    return () => {
+      aborted.current = true;
+    };
+  }, [reload, limit]);
 
   return useMemo(
     () => ({

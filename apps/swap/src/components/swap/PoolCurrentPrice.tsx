@@ -1,11 +1,11 @@
-import { useState, useMemo, useEffect } from "react";
-import { BoxProps, Typography, useTheme } from "components/Mui";
-import { SyncAlt as SyncAltIcon } from "@mui/icons-material";
-import { Pool, Token } from "@icpswap/swap-sdk";
+import type { Pool, Token } from "@icpswap/swap-sdk";
+import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { Null } from "@icpswap/types";
-import { useUSDPriceById } from "hooks/index";
 import { formatDollarAmount, formatTokenPrice, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
+import { type BoxProps, Typography, useTheme } from "components/Mui";
+import { SyncAltIcon } from "components/MuiIcon";
+import { useUSDPriceById } from "hooks/index";
+import { useEffect, useMemo, useState } from "react";
 import { tokenSymbolEllipsis } from "utils/tokenSymbolEllipsis";
 
 export interface PoolCurrentPriceProps {
@@ -61,7 +61,7 @@ export function PoolCurrentPrice({
     }
 
     return manuallyInverted ? token1 : token0;
-  }, [__token, token0, token1]);
+  }, [__token, token0, token1, manuallyInverted]);
 
   const quoteToken = useMemo(() => {
     if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1) || isUndefinedOrNull(baseToken)) return undefined;
@@ -79,7 +79,7 @@ export function PoolCurrentPrice({
       : pool.priceOf(baseToken).toFixed(baseToken.decimals);
 
     return formatTokenPrice(price);
-  }, [pool, quoteToken, manuallyInverted]);
+  }, [pool, quoteToken, manuallyInverted, baseToken]);
 
   const label = useMemo(() => {
     if (isUndefinedOrNull(baseToken) || isUndefinedOrNull(quoteToken)) return undefined;
@@ -93,12 +93,12 @@ export function PoolCurrentPrice({
             symbol: baseToken.symbol,
           })}`
       : manuallyInverted
-      ? `1 ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({
-          symbol: baseToken.symbol,
-        })}`
-      : `1 ${tokenSymbolEllipsis({
-          symbol: baseToken.symbol,
-        })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`;
+        ? `1 ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({
+            symbol: baseToken.symbol,
+          })}`
+        : `1 ${tokenSymbolEllipsis({
+            symbol: baseToken.symbol,
+          })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`;
   }, [formattedTokenPrice, per, baseToken, quoteToken, manuallyInverted]);
 
   useEffect(() => {

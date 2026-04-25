@@ -1,9 +1,9 @@
-import { useCallback } from "react";
-import { Position, Token } from "@icpswap/swap-sdk";
+import type { Position, Token } from "@icpswap/swap-sdk";
 import { getLimitOrderSteps } from "components/swap/limit-order/index";
-import { useStepContentManager } from "store/steps/hooks";
-import { useTranslation } from "react-i18next";
 import { useStepsToReclaimCallback } from "hooks/swap/useStepsToReclaimCallback";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { useStepContentManager } from "store/steps/hooks";
 
 interface LimitOrderStepsArgs {
   position: Position;
@@ -18,17 +18,20 @@ export function useStepManager() {
 
   const stepsToReclaimCallback = useStepsToReclaimCallback();
 
-  return useCallback(({ key, position, inputToken, retry }: LimitOrderStepsArgs) => {
-    const content = getLimitOrderSteps({
-      position,
-      retry,
-      handleReclaim: stepsToReclaimCallback,
-      inputToken,
-    });
+  return useCallback(
+    ({ key, position, inputToken, retry }: LimitOrderStepsArgs) => {
+      const content = getLimitOrderSteps({
+        position,
+        retry,
+        handleReclaim: stepsToReclaimCallback,
+        inputToken,
+      });
 
-    initialStepContent(String(key), {
-      content,
-      title: t("swap.limit.order.details"),
-    });
-  }, []);
+      initialStepContent(String(key), {
+        content,
+        title: t("swap.limit.order.details"),
+      });
+    },
+    [initialStepContent, stepsToReclaimCallback, t],
+  );
 }

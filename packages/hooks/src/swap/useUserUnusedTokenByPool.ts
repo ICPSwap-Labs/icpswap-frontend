@@ -1,9 +1,7 @@
+import { Principal } from "@icp-sdk/core/principal";
+import type { Pool } from "@icpswap/swap-sdk";
+import type { SwapPoolData, UserSwapPoolsBalance } from "@icpswap/types";
 import { useMemo } from "react";
-import type { UserSwapPoolsBalance, SwapPoolData } from "@icpswap/types";
-import { Pool } from "@icpswap/swap-sdk";
-
-import { Principal } from "@dfinity/principal";
-import { _getSwapPoolAllBalance } from "./calls";
 import { useUserUnDepositBalance } from "./useUserUnDepositBalance";
 import { useUserUnUsedBalance } from "./useUserUnUsedBalance";
 
@@ -31,7 +29,7 @@ export function useSwapUserUnusedTokenByPool(
         canisterId: Principal.fromText(pool.id),
       } as SwapPoolData,
     ];
-  }, [pool?.id.toString()]);
+  }, [pool]);
 
   const { loading: unDepositBalanceLoading, balances: unDepositBalances } = useUserUnDepositBalance(
     principal?.toString(),

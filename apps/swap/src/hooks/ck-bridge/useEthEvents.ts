@@ -1,8 +1,9 @@
+import { BridgeChainType, BridgeType } from "@icpswap/constants";
+import { ckETH } from "@icpswap/tokens";
+import { isUndefinedOrNull } from "@icpswap/utils";
 import { useMemo } from "react";
 import { useEthDissolveTxs, useEthUnTxFinalizedTxs } from "store/web3/hooks";
-import { ckETH } from "@icpswap/tokens";
-import { EthereumTransactionEvent } from "types/web3";
-import { isUndefinedOrNull } from "@icpswap/utils";
+import type { EthereumTransactionEvent } from "types/web3";
 
 export function useEthEvents() {
   const ethMintTxs = useEthUnTxFinalizedTxs();
@@ -15,8 +16,8 @@ export function useEthEvents() {
       return {
         hash: mintTx.hash,
         amount: mintTx.value,
-        type: "mint",
-        chain: "eth",
+        type: BridgeType.mint,
+        chain: BridgeChainType.eth,
         token: ckETH.address,
       };
     });
@@ -31,8 +32,8 @@ export function useEthEvents() {
         return {
           hash: dissolveTx.hash,
           amount: dissolveTx.value,
-          type: "dissolve",
-          chain: "eth",
+          type: BridgeType.dissolve,
+          chain: BridgeChainType.eth,
           token: ckETH.address,
         };
       });

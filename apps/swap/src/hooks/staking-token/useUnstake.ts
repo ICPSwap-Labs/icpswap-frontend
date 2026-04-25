@@ -1,13 +1,12 @@
-import { useCallback } from "react";
 import { stakingPoolUnstake, stakingPoolWithdraw } from "@icpswap/hooks";
-import { useTips, MessageTypes } from "hooks/useTips";
-import { useStepCalls, newStepKey } from "hooks/useStepCall";
+import type { Token } from "@icpswap/swap-sdk";
 import { parseTokenAmount, sleep } from "@icpswap/utils";
-import { Token } from "@icpswap/swap-sdk";
+import { newStepKey, useStepCalls } from "hooks/useStepCall";
+import { MessageTypes, useTips } from "hooks/useTips";
+import { useCallback } from "react";
 import { useUpdateStepData } from "store/steps/hooks";
-
-import { useUnstakeSteps } from "./useUnstakeSteps";
 import { useRewardTokenWithdrawCall } from "./useRewardTokenWithdrawCall";
+import { useUnstakeSteps } from "./useUnstakeSteps";
 
 export interface UseUnstakeCallbackArgs {
   poolId: string;
@@ -22,19 +21,22 @@ function useUnstakeCallback() {
   const stepManager = useUnstakeSteps();
   const updateStepData = useUpdateStepData();
 
-  return useCallback(async ({ poolId, amount, token, key, rewardToken }: UseUnstakeCallbackArgs) => {
-    const { status, message, data } = await stakingPoolUnstake(poolId, amount);
+  return useCallback(
+    async ({ poolId, amount, token, key, rewardToken }: UseUnstakeCallbackArgs) => {
+      const { status, message, data } = await stakingPoolUnstake(poolId, amount);
 
-    if (status === "err") {
-      openTip(`Failed to unstake ${token.symbol}: ${message}`, MessageTypes.error);
-      return false;
-    }
+      if (status === "err") {
+        openTip(`Failed to unstake ${token.symbol}: ${message}`, MessageTypes.error);
+        return false;
+      }
 
-    updateStepData(key, data);
-    stepManager(key, { token, amount, poolId, rewardToken });
+      updateStepData(key, data);
+      stepManager(key, { token, amount, poolId, rewardToken });
 
-    return true;
-  }, []);
+      return true;
+    },
+    [openTip, stepManager, updateStepData],
+  );
 }
 
 interface UseStakedTokenWithdrawArgs {
@@ -46,19 +48,22 @@ interface UseStakedTokenWithdrawArgs {
 function useStakedTokenWithdrawCallback() {
   const [openTip] = useTips();
 
-  return useCallback(async ({ poolId, amount, token }: UseStakedTokenWithdrawArgs) => {
-    const { status, message } = await stakingPoolWithdraw(poolId, true, amount);
+  return useCallback(
+    async ({ poolId, amount, token }: UseStakedTokenWithdrawArgs) => {
+      const { status, message } = await stakingPoolWithdraw(poolId, true, amount);
 
-    if (status === "err") {
-      openTip(
-        `Failed to withdraw ${parseTokenAmount(amount, token.decimals).toFormat()} ${token.symbol}: ${message}`,
-        MessageTypes.error,
-      );
-      return false;
-    }
+      if (status === "err") {
+        openTip(
+          `Failed to withdraw ${parseTokenAmount(amount, token.decimals).toFormat()} ${token.symbol}: ${message}`,
+          MessageTypes.error,
+        );
+        return false;
+      }
 
-    return true;
-  }, []);
+      return true;
+    },
+    [openTip],
+  );
 }
 
 type UnstakeCallsArgs = {

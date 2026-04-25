@@ -1,18 +1,17 @@
-import { useNeuronSystemFunctions, useNeuron } from "@icpswap/hooks";
+import { useNeuron, useNeuronSystemFunctions } from "@icpswap/hooks";
+import type { NervousSystemFunction, Neuron } from "@icpswap/types";
 import { Flex, Modal } from "@icpswap/ui";
-import { Copy } from "components/index";
-import { Button, Box, Typography, Collapse, Checkbox } from "components/Mui";
-import { Neuron, NervousSystemFunction } from "@icpswap/types";
-import { useCallback, useMemo, useState } from "react";
 import { BigNumber, shorten, toHexString } from "@icpswap/utils";
-import { ChevronDown } from "react-feather";
 import { ReactComponent as CopyIcon } from "assets/icons/Copy.svg";
+import { Copy } from "components/index";
+import { Box, Button, Checkbox, Collapse, Typography } from "components/Mui";
+import { useCallback, useMemo, useState } from "react";
+import { ChevronDown } from "react-feather";
 import { useTranslation } from "react-i18next";
-
-import { AddFolloweeModal } from "./AddFolloweeModal";
-import { DeleteFolloweeModal } from "./DeleteFolloweeModal";
 import { AddFollowee } from "./AddFollowee";
+import { AddFolloweeModal } from "./AddFolloweeModal";
 import { DeleteFollowee } from "./DeleteFollowee";
+import { DeleteFolloweeModal } from "./DeleteFolloweeModal";
 
 interface FollowNeuronProps {
   func: NervousSystemFunction;
@@ -41,10 +40,7 @@ function FollowNeuron({
   const following = useMemo(() => {
     if (!neuron) return undefined;
 
-    return neuron.followees
-      .filter(([id]) => id === func.id)
-      .map(([, followees]) => followees.followees)
-      .flat();
+    return neuron.followees.filter(([id]) => id === func.id).flatMap(([, followees]) => followees.followees);
   }, [neuron, func]);
 
   const handleRefreshNeuron = () => {
@@ -52,7 +48,7 @@ function FollowNeuron({
   };
 
   const handleCheckChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
+    (_event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
       onCheckChange(checked, func.id);
     },
     [func, onCheckChange],
@@ -162,8 +158,8 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [checkedFunc, setCheckedFunc] = useState<bigint[]>([]);
 
-  const { result: neuron_system_functions } = useNeuronSystemFunctions(governance_id);
-  const { result: neuron } = useNeuron(governance_id, neuron_id, refreshTrigger);
+  const { data: neuron_system_functions } = useNeuronSystemFunctions(governance_id);
+  const { data: neuron } = useNeuron(governance_id, neuron_id, refreshTrigger);
 
   const handleCheckAll = useCallback(() => {
     if (!neuron_system_functions) return;
@@ -176,14 +172,14 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
       setCheckedFunc([...func_ids]);
       setSelectAllOpen(true);
     }
-  }, [neuron_system_functions, checkedFunc, selectAllOpen]);
+  }, [neuron_system_functions, selectAllOpen]);
 
   const handleCheckChange = useCallback(
     (checked: boolean, func_id: bigint) => {
       if (checked) {
         setCheckedFunc([...new Set([...checkedFunc, func_id])]);
       } else {
-        const index = checkedFunc.findIndex((e) => e === func_id);
+        const index = checkedFunc.indexOf(func_id);
         if (index !== -1) {
           const __checkedFunc = [...checkedFunc];
           __checkedFunc.splice(index, 1);
@@ -214,7 +210,7 @@ export function Followings({ governance_id, neuron_id, disabled }: FollowingProp
       .toNumber();
 
     return followeesCount === 0;
-  }, [neuron]);
+  }, [neuron, checkedFunc.length]);
 
   return (
     <Box>

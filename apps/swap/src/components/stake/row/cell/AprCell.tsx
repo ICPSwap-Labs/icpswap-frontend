@@ -1,13 +1,12 @@
-import { Flex, APRPanel } from "@icpswap/ui";
-import { useMemo } from "react";
-import { Null, type StakingPoolControllerPoolInfo } from "@icpswap/types";
-import { formatDollarAmount, parseTokenAmount, formatAmount, nonUndefinedOrNull, BigNumber } from "@icpswap/utils";
 import { useStakePoolStatInfo } from "@icpswap/hooks";
-import { StakingPoolInfo } from "@icpswap/types";
-import { useUSDPrice } from "hooks/useUSDPrice";
+import type { Null, StakingPoolControllerPoolInfo, StakingPoolInfo } from "@icpswap/types";
+import { APRPanel, Flex } from "@icpswap/ui";
+import { BigNumber, formatAmount, formatDollarAmount, nonUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { useApr } from "hooks/staking-token/useApr";
-import { useTranslation } from "react-i18next";
 import { useToken } from "hooks/useCurrency";
+import { useUSDPrice } from "hooks/useUSDPrice";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 interface AprCellProps {
   poolInfo: StakingPoolControllerPoolInfo;
@@ -21,7 +20,7 @@ export function AprCell({ poolInfo, stakingPoolInfo }: AprCellProps) {
   const [, rewardToken] = useToken(poolInfo.rewardToken.address);
   const stakeTokenPrice = useUSDPrice(stakeToken);
   const rewardTokenPrice = useUSDPrice(rewardToken);
-  const { result: stakeStatInfo } = useStakePoolStatInfo(poolInfo.canisterId.toString());
+  const { data: stakeStatInfo } = useStakePoolStatInfo(poolInfo.canisterId.toString());
 
   const apr = useApr({
     poolInfo: stakingPoolInfo,

@@ -1,63 +1,26 @@
-import { useAccountPrincipalString } from "store/auth/hooks";
+import { Principal } from "@icp-sdk/core/principal";
 import { useWithdrawErc20TokenStatus, withdrawErc20TokenStatus } from "@icpswap/hooks";
 import type { WithdrawalDetail, WithdrawalSearchParameter } from "@icpswap/types";
-import { useEffect, useMemo, useState } from "react";
-import { MINTER_CANISTER_ID, ERC20_DISSOLVE_REFRESH } from "constants/ckERC20";
-import { Principal } from "@dfinity/principal";
 import { isUndefinedOrNull } from "@icpswap/utils";
+import { ERC20_DISSOLVE_REFRESH, MINTER_CANISTER_ID } from "constants/ckERC20";
 import { useRefreshTriggerManager } from "hooks/useGlobalContext";
+import { useEffect, useMemo, useState } from "react";
+import { useAccountPrincipalString } from "store/auth/hooks";
 import { useErc20DissolveCompletedTxsManager, useErc20DissolveDetailsManager } from "store/web3/hooks";
 import { isErc20Finalized } from "utils/web3/dissolve";
 
-const INTERVAL = 10000;
+const INTERVAL = 10_000;
 
 export function useErc20DissolveTxs() {
   const principal = useAccountPrincipalString();
-  const [refresh, setRefresh] = useRefreshTriggerManager(ERC20_DISSOLVE_REFRESH);
+  const [refresh] = useRefreshTriggerManager(ERC20_DISSOLVE_REFRESH);
   const [dissolveTxs, setDissolveTxs] = useState<undefined | WithdrawalDetail[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const erc20DissolveDetailsManager = useErc20DissolveDetailsManager();
   const [, erc20DissolveCompletedManager] = useErc20DissolveCompletedTxsManager();
 
-  // Update the completed dissolve txs once reload the page
-  useEffect(() => {
-    async function call() {
-      if (isUndefinedOrNull(principal)) return undefined;
-
-      const result = await withdrawErc20TokenStatus({
-        minter_id: MINTER_CANISTER_ID,
-        params: {
-          BySenderAccount: {
-            owner: Principal.fromText(principal),
-            subaccount: [],
-          },
-        } as WithdrawalSearchParameter,
-      });
-
-      const completedTxs = result.filter((tx) => isErc20Finalized(tx.status)).map((tx) => tx.withdrawal_id.toString());
-
-      erc20DissolveCompletedManager(completedTxs);
-    }
-
-    call();
-  }, [principal]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setRefresh();
-    }, INTERVAL);
-
-    return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    };
-  }, [setRefresh]);
-
   const params = useMemo(() => {
     if (isUndefinedOrNull(principal)) return undefined;
-
     return {
       BySenderAccount: {
         owner: Principal.fromText(principal),
@@ -66,35 +29,43 @@ export function useErc20DissolveTxs() {
     } as WithdrawalSearchParameter;
   }, [principal]);
 
-  const { result, loading: dissolveLoading } = useWithdrawErc20TokenStatus({
+  // Update the completed dissolve txs once on principal change
+  useEffect(() => {
+    if (!params) return;
+    let cancelled = false;
+    withdrawErc20TokenStatus({
+      minter_id: MINTER_CANISTER_ID,
+      params,
+    }).then((result) => {
+      if (cancelled) return;
+      const completedTxs = result.filter((tx) => isErc20Finalized(tx.status)).map((tx) => tx.withdrawal_id.toString());
+      erc20DissolveCompletedManager(completedTxs);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [params, erc20DissolveCompletedManager]);
+
+  const { data: withdrawalErc20Result, isLoading } = useWithdrawErc20TokenStatus({
     minter_id: MINTER_CANISTER_ID,
     params,
     refresh,
+    refetchInterval: INTERVAL,
   });
 
   useEffect(() => {
-    if (result) {
-      setDissolveTxs(result);
+    if (!withdrawalErc20Result) return;
+    setDissolveTxs(withdrawalErc20Result);
+    withdrawalErc20Result.forEach(erc20DissolveDetailsManager);
+  }, [withdrawalErc20Result, erc20DissolveDetailsManager]);
 
-      result.forEach((erc20DissolveDetails) => {
-        erc20DissolveDetailsManager(erc20DissolveDetails);
-      });
-    }
-  }, [result]);
-
-  useEffect(() => {
-    if (dissolveTxs && dissolveTxs.length > 0) {
-      setLoading(false);
-    } else {
-      setLoading(dissolveLoading);
-    }
-  }, [dissolveTxs, dissolveLoading]);
+  const loading = (dissolveTxs?.length ?? 0) === 0 && isLoading;
 
   return useMemo(
     () => ({
       result: dissolveTxs,
       loading,
     }),
-    [loading, dissolveTxs],
+    [dissolveTxs, loading],
   );
 }

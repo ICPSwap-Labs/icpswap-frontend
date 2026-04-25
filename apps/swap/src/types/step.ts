@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Override } from "@icpswap/types";
+import type { Override } from "@icpswap/types";
+import type { ReactNode } from "react";
 
 export type ExternalTipArgs = { message: string | undefined; tipKey?: string; poolId?: string; tokenId?: string };
 export type OpenExternalTip = (args: ExternalTipArgs) => void;

@@ -1,11 +1,11 @@
-import { Typography, Box } from "components/Mui";
-import { SelectPair } from "components/index";
 import { useNodeInfoAllPools, useTokensFromList } from "@icpswap/hooks";
-import Pools from "components/info/Pools";
-import { useState, useMemo } from "react";
 import { ICP } from "@icpswap/tokens";
 import { MainCard, OnlyTokenList } from "@icpswap/ui";
+import { SelectPair } from "components/index";
+import Pools from "components/info/Pools";
+import { Box, Typography } from "components/Mui";
 import { HIDDEN_POOLS } from "constants/info";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export default function TopPools() {
@@ -13,9 +13,9 @@ export default function TopPools() {
   const [onlyTokenList, setOnlyTokenList] = useState(true);
   const [selectedPair, setSelectedPair] = useState<undefined | string>(undefined);
 
-  const { result: pools, loading } = useNodeInfoAllPools();
+  const { data: pools, isLoading: loading } = useNodeInfoAllPools();
 
-  const { result: tokenList } = useTokensFromList();
+  const { data: tokenList } = useTokensFromList();
 
   const handleCheckChange = (checked: boolean) => {
     setOnlyTokenList(checked);
