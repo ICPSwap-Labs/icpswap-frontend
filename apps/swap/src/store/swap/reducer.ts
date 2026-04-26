@@ -26,7 +26,11 @@ export default createReducer(initialState, (builder) => {
       if (currencyId === state[otherField]) {
         return {
           ...state,
-          independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
+          // independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
+          // TODO
+          // For now the independent field will always be the input,
+          // because the output field is disabled for now
+          independentField: SWAP_FIELD.INPUT,
           [field]: currencyId,
           [otherField]: state[field],
         };
@@ -42,7 +46,11 @@ export default createReducer(initialState, (builder) => {
       return {
         ...state,
         typedValue: "",
-        independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
+        // independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
+        // TODO
+        // For now the independent field will always be the input,
+        // because the output field is disabled for now
+        independentField: SWAP_FIELD.INPUT,
       };
     })
     // Do not clear the input/output tokens

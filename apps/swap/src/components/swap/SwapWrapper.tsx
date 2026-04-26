@@ -112,13 +112,12 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     setOutputToken(outputToken);
   }, [inputToken, outputToken, setInputToken, setOutputToken]);
 
-  const parsedAmounts = useMemo(
-    () => ({
+  const parsedAmounts = useMemo(() => {
+    return {
       [SWAP_FIELD.INPUT]: independentField === SWAP_FIELD.INPUT ? parsedAmount : trade?.inputAmount,
       [SWAP_FIELD.OUTPUT]: independentField === SWAP_FIELD.OUTPUT ? parsedAmount : trade?.outputAmount,
-    }),
-    [independentField, parsedAmount, trade],
-  );
+    };
+  }, [independentField, parsedAmount, trade]);
 
   const handleTokenAChange = useCallback(
     (token: Token) => {

@@ -63,7 +63,7 @@ export const useQuoteResult = ({ inputToken, outputToken, value }: UseQuoteResul
 
   return useMemo(() => {
     return {
-      quotesResult: quotesResult ? [{ amountOut: `0x${new BigNumber(String(quotesResult)).toString(16)}` }] : [],
+      quotesResult: quotesResult ? [{ amountOut: quotesResult }] : [],
       quoteLoading,
       routesLoading,
       checked,
@@ -87,7 +87,7 @@ export function useBestTrade(inputToken: Token | undefined, outputToken: Token |
   const { quotesResult, quoteLoading, routesLoading, checked, noLiquidity, routes, pool } = useQuoteResult({
     inputToken,
     outputToken,
-    value: value,
+    value,
   });
 
   const available = useSwapPoolAvailable(pool?.id);
@@ -120,7 +120,7 @@ export function useBestTrade(inputToken: Token | undefined, outputToken: Token |
     }
 
     const { bestRoute, amountOut } = quotesResult.reduce(
-      (currentBest: { bestRoute: Route<Token, Token> | null; amountOut: string | null }, { amountOut }, i) => {
+      (currentBest: { bestRoute: Route<Token, Token> | null; amountOut: bigint | null }, { amountOut }, i) => {
         if (!amountOut) return currentBest;
 
         if (currentBest.amountOut === null) {
@@ -129,7 +129,7 @@ export function useBestTrade(inputToken: Token | undefined, outputToken: Token |
             amountOut,
           };
         }
-        if (new BigNumber(currentBest.amountOut).isLessThan(amountOut)) {
+        if (new BigNumber(currentBest.amountOut.toString()).isLessThan(amountOut.toString())) {
           return {
             bestRoute: routes[i],
             amountOut,
