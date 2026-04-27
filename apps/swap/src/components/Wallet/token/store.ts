@@ -62,7 +62,7 @@ export const useWalletTokenStore = create<WalletTokenState>((set) => ({
     set((state) => ({ _totalUSDBeforeChange: { ...state._totalUSDBeforeChange, [tokenId]: value } }));
     set((state) => {
       return {
-        totalValue: Object.values(state._totalUSDBeforeChange).reduce(
+        totalUSDBeforeChange: Object.values(state._totalUSDBeforeChange).reduce(
           (prev, curr) => prev.plus(curr),
           new BigNumber(0),
         ),
