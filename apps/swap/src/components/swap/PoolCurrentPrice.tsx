@@ -74,32 +74,22 @@ export function PoolCurrentPrice({
   const formattedTokenPrice = useMemo(() => {
     if (isUndefinedOrNull(quoteToken) || isUndefinedOrNull(baseToken) || isUndefinedOrNull(pool)) return undefined;
 
-    const price = manuallyInverted
-      ? pool.priceOf(quoteToken).toFixed(quoteToken.decimals)
-      : pool.priceOf(baseToken).toFixed(baseToken.decimals);
+    const price = pool.priceOf(baseToken).toFixed(baseToken.decimals);
 
     return formatTokenPrice(price);
-  }, [pool, quoteToken, manuallyInverted, baseToken]);
+  }, [pool, quoteToken, baseToken]);
 
   const label = useMemo(() => {
     if (isUndefinedOrNull(baseToken) || isUndefinedOrNull(quoteToken)) return undefined;
 
     return per
-      ? manuallyInverted
-        ? `${tokenSymbolEllipsis({
-            symbol: baseToken.symbol,
-          })} per ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`
-        : `${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} per ${tokenSymbolEllipsis({
-            symbol: baseToken.symbol,
-          })}`
-      : manuallyInverted
-        ? `1 ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({
-            symbol: baseToken.symbol,
-          })}`
-        : `1 ${tokenSymbolEllipsis({
-            symbol: baseToken.symbol,
-          })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`;
-  }, [formattedTokenPrice, per, baseToken, quoteToken, manuallyInverted]);
+      ? `${tokenSymbolEllipsis({ symbol: quoteToken.symbol })} per ${tokenSymbolEllipsis({
+          symbol: baseToken.symbol,
+        })}`
+      : `1 ${tokenSymbolEllipsis({
+          symbol: baseToken.symbol,
+        })} = ${formattedTokenPrice} ${tokenSymbolEllipsis({ symbol: quoteToken.symbol })}`;
+  }, [formattedTokenPrice, per, baseToken, quoteToken]);
 
   useEffect(() => {
     if (nonUndefinedOrNull(outerInvert)) {
@@ -157,7 +147,7 @@ export function PoolCurrentPrice({
                 }}
                 component="span"
               >
-                ({formatDollarAmount(manuallyInverted ? quoteTokenUSDPrice : baseTokenUSDPrice)})
+                ({formatDollarAmount(baseTokenUSDPrice)})
               </Typography>
             ) : null}
 
