@@ -10,7 +10,10 @@ vi.mock("@icp-sdk/core/principal", () => ({
   },
 }));
 
-vi.mock("@icp-sdk/canisters/ledger/icp", () => ({
+vi.mock("@icpswap/dfinity", () => ({
+  Principal: {
+    fromText: mockFromText,
+  },
   AccountIdentifier: {
     fromPrincipal: vi.fn().mockReturnValue({ toHex: mockToHex }),
   },

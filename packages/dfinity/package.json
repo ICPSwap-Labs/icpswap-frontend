@@ -16,5 +16,8 @@
   },
   "dependencies": {
     "@noble/hashes": "^1.8.0"
+  },
+  "devDependencies": {
+    "@icpswap/vitest-config": "workspace:*"
   }
 }

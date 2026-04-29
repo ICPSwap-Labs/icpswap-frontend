@@ -43,6 +43,7 @@
     "wagmi",
     "utxo",
     "utxos",
-    "dogecoin"
+    "dogecoin",
+    "vitest"
   ]
 }
