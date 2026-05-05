@@ -38,7 +38,6 @@ export function resultFormat<T>(result: any): StatusResult<T> {
       const messageKey = Object.keys(result[key[0]])[0];
       const value = result[key[0]][messageKey];
 
-      // TODO: for token
       if (messageKey === "Other") {
         message = value;
       } else {

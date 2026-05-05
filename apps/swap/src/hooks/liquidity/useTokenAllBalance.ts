@@ -15,7 +15,6 @@ interface UseTokenAllBalanceProps {
 
 // Set the token0SubAccountBalance, token0SubAccountBalance, unusedBalance is 0 by default
 // When pool is not created the value is undefined
-// TODO: Fix this?
 export function useTokenAllBalance({ token0, token1, poolId, refresh }: UseTokenAllBalanceProps) {
   const principal = useAccountPrincipal();
 

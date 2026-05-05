@@ -32,7 +32,6 @@ function isFilterByAddress(
   poolId: string,
 ) {
   if (isUndefinedOrNull(search)) return false;
-  // TODO: Perhaps token0 and token1 is undefined, fix it.
   if (isUndefinedOrNull(token0) || isUndefinedOrNull(token1)) return true;
 
   if (isValidPrincipal(search)) {

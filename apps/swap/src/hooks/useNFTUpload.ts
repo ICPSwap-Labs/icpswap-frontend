@@ -103,8 +103,7 @@ export default function useFileUpload({ fileType }: { fileType: string }): [
         network === NETWORK.IC
           ? `https://${canisterId ?? fileCanisterId}.raw.icp0.io/${batch_id}`
           : network === NETWORK.LOCAL
-            ? // TODO get from process port
-              `http://localhost:3000/dfx_image/${batch_id}?canisterId=${canisterId ?? fileCanisterId}`
+            ? `http://localhost:3000/dfx_image/${batch_id}?canisterId=${canisterId ?? fileCanisterId}`
             : `${host}/${batch_id}?canisterId=${canisterId ?? fileCanisterId}`;
 
       setFilePath(filePath);

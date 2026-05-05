@@ -251,7 +251,7 @@ export default function AddLiquidity() {
   const handleOnConfirm = useCallback(async () => {
     // token0SubAccountBalance, token1SubAccountBalance, unusedBalance is undefined when pool is not created
     // So set the value is 0 by default
-    // TODO: Fix this?
+
     if (
       isUndefinedOrNull(position) ||
       isUndefinedOrNull(principal) ||

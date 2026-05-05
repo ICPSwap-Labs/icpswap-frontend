@@ -185,7 +185,6 @@ export function useIdentityKitInitialConnect() {
 
   const [loading, setLoading] = useState(true);
 
-  // TODO
   // oxlint-disable-next-line react-hooks/exhaustive-deps -- initial connect effect; deps intentionally narrow
   useEffect(() => {
     async function call() {
@@ -198,7 +197,6 @@ export function useIdentityKitInitialConnect() {
       }
 
       if (IdentityKitConnector.includes(connector)) {
-        // TODO:
         // The returned user is undefined is initializing, so disable disconnect for now.
         // Do something when IdentityKit is out session
 

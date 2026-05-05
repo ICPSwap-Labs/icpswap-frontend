@@ -27,7 +27,6 @@ export default createReducer(initialState, (builder) => {
         return {
           ...state,
           // independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
-          // TODO
           // For now the independent field will always be the input,
           // because the output field is disabled for now
           independentField: SWAP_FIELD.INPUT,
@@ -47,7 +46,6 @@ export default createReducer(initialState, (builder) => {
         ...state,
         typedValue: "",
         // independentField: state.independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT,
-        // TODO
         // For now the independent field will always be the input,
         // because the output field is disabled for now
         independentField: SWAP_FIELD.INPUT,

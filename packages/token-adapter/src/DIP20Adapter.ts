@@ -76,7 +76,6 @@ export class DIP20TokenAdapter extends BaseTokenAdapter<DIP20> {
 
   public async approve({ canisterId, params, identity }: ApproveRequest) {
     // 10 times approve amount to fix dip20 insufficient allowance amount
-    // TODO: A better way to fix it
     return resultFormat<boolean>(
       await (await this.actor(canisterId, identity)).approve(params.spender, params.allowance * BigInt(10)),
     );
