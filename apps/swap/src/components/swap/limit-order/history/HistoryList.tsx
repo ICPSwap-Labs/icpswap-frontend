@@ -21,7 +21,11 @@ export function HistoryList() {
   const classes = useStyles();
   const principal = useAccountPrincipal();
 
-  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions(principal?.toString(), 1, 100);
+  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions({
+    principal: principal?.toString(),
+    offset: 1,
+    limit: 100,
+  });
 
   const limitTransactions = useMemo(() => {
     return limitTransactionsResult?.content;

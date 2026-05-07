@@ -103,32 +103,51 @@ interface GetUserLimitTransactionsProps {
   limit: number;
   begin: number;
   end: number;
+  poolId?: string | Null;
 }
 
-export async function getUserLimitTransactions({ principal, page, limit, begin, end }: GetUserLimitTransactionsProps) {
+export async function getUserLimitTransactions({
+  principal,
+  page,
+  limit,
+  begin,
+  end,
+  poolId,
+}: GetUserLimitTransactionsProps) {
   return (
     await icpswap_fetch_get<IcpSwapAPIPageResult<InfoSwapRecordResponse>>(
-      `/info/record/limitOrder/list?principal=${principal}&page=${page}&limit=${limit}&begin=${begin}&end=${end}`,
+      `/info/record/limitOrder/list?principal=${principal}&page=${page}&limit=${limit}&begin=${begin}&end=${end}${poolId ? `&poolId=${poolId}` : ""}`,
     )
   ).data;
 }
 
 // Default to 180 days history
-export function useUserLimitTransactions(
-  principal: string | undefined,
-  offset: number,
-  limit: number,
-  refresh?: number,
-): UseQueryResult<IcpSwapAPIPageResult<InfoSwapRecordResponse> | undefined, Error> {
+
+interface UseUserLimitTransactionsProps {
+  principal: string | undefined;
+  offset: number;
+  limit: number;
+  poolId?: string | Null;
+  refresh?: number;
+}
+
+export function useUserLimitTransactions({
+  principal,
+  offset,
+  limit,
+  poolId,
+  refresh,
+}: UseUserLimitTransactionsProps): UseQueryResult<IcpSwapAPIPageResult<InfoSwapRecordResponse> | undefined, Error> {
   const enabled = nonUndefinedOrNull(principal) && isAvailablePageArgs(offset, limit);
+
   return useQuery({
-    queryKey: ["useUserLimitTransactions", principal, offset, limit, refresh],
+    queryKey: ["useUserLimitTransactions", principal, offset, limit, poolId, refresh],
     queryFn: async () => {
       if (isUndefinedOrNull(principal)) return undefined;
 
       const { start, end } = getTimeRangeForPastDays(180 - 1);
 
-      return await getUserLimitTransactions({ principal, page: offset, limit, begin: start, end });
+      return await getUserLimitTransactions({ principal, page: offset, limit, begin: start, end, poolId });
     },
     enabled,
   });

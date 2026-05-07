@@ -13,7 +13,12 @@ export interface HistoryTableProProps {
 export function HistoryTablePro({ poolId, wrapperClassName }: HistoryTableProProps) {
   const principal = useAccountPrincipal();
 
-  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions(principal?.toString(), 1, 100);
+  const { data: limitTransactionsResult, isLoading: loading } = useUserLimitTransactions({
+    principal: principal?.toString(),
+    offset: 1,
+    limit: 100,
+    poolId,
+  });
   const { data: unusedBalance } = useUserUnusedBalance(poolId, principal);
 
   const limitTransactions = useMemo(() => {
