@@ -1,6 +1,6 @@
 {
   "name": "@icpswap/frontend",
-  "version": "4.21.20",
+  "version": "4.21.21",
   "description": "Frontend of ICPSwap",
   "type": "module",
   "scripts": {
