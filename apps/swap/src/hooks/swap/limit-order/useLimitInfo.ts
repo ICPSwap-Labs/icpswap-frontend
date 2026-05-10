@@ -21,15 +21,11 @@ import { TradeState, useBestTrade } from "hooks/swap/useTrade";
 import { useAllowance } from "hooks/token";
 import { useCurrencyBalance, useTokenBalance } from "hooks/token/useTokenBalance";
 import { useToken } from "hooks/useCurrency";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipal } from "store/auth/hooks";
-import { useAppDispatch } from "store/hooks";
-import store from "store/index";
 import { useSwapState } from "store/swap/hooks";
 import { inputNumberCheck, isUseTransfer, tryParseAmount } from "utils/index";
-
-import { updatePlaceOrderPositionId } from "./actions";
 
 export interface UseSwapInfoArgs {
   refresh?: number;
@@ -414,19 +410,4 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     minSettableTick,
     atLimitedTick,
   };
-}
-
-export function getPlaceOrderPositionId() {
-  return store.getState().limitOrder.placeOrderPositionId;
-}
-
-export function useUpdatePlaceOrderPositionId() {
-  const dispatch = useAppDispatch();
-
-  return useCallback(
-    (positionId: bigint | Null) => {
-      dispatch(updatePlaceOrderPositionId(positionId));
-    },
-    [dispatch],
-  );
 }

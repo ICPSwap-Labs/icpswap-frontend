@@ -10,7 +10,6 @@ import SnsReducer from "./sns/reducer";
 import StepReducer from "./steps/reducer";
 import SwapBurn from "./swap/burn/reducer";
 import SwapCacheReducer from "./swap/cache/reducer";
-import LimitOrderReducer from "./swap/limit-order/reducer";
 import SwapLiquidityReducer from "./swap/liquidity/reducer";
 import SwapReducer from "./swap/reducer";
 import tokenCacheReducer from "./token/cache/reducer";
@@ -35,7 +34,6 @@ export default {
   step: StepReducer,
   tokenCache: tokenCacheReducer,
   transactions: TransactionsReducer,
-  limitOrder: LimitOrderReducer,
   web3: Web3,
   sns: SnsReducer,
   priceAlerts: PriceAlertsReducer,

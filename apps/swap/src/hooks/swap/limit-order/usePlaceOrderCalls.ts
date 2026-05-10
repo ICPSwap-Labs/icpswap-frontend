@@ -1,27 +1,19 @@
 import { placeOrder as __placeOrder } from "@icpswap/hooks";
 import type { Position } from "@icpswap/swap-sdk";
-import { ResultStatus, type TOKEN_STANDARD } from "@icpswap/types";
+import { ResultStatus } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
-import {
-  getTokenActualDepositRawAmount,
-  getTokenActualTransferRawAmount,
-  getTokenInsufficient,
-  noApproveByTokenInsufficient,
-  noDepositByTokenInsufficient,
-  noTransferByTokenInsufficient,
-  useSwapApprove,
-  useSwapDeposit,
-  useSwapTransfer,
-} from "hooks/swap/index";
+import { getTokenInsufficient } from "hooks/swap/index";
 import { mint as __mint } from "hooks/swap/v3Calls";
 import { useErrorTip, useSuccessTip } from "hooks/useTips";
 import { getLocaleMessage } from "i18n/service";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useUpdateUserPositionPools } from "store/hooks";
-import { getPlaceOrderPositionId, useUpdatePlaceOrderPositionId } from "store/swap/limit-order/hooks";
-import type { ExternalTipArgs, OpenExternalTip } from "types/index";
+import type { OpenExternalTip } from "types/index";
 import { isUseTransfer } from "utils/token/index";
+import { useLimitApprove } from "hooks/swap/limit-order/usePlaceOrderApprove";
+import { useLimitTransfer } from "hooks/swap/limit-order/usePlaceOrderTransfer";
+import { useLimitDeposit } from "hooks/swap/limit-order/usePlaceOrderDeposit";
 
 interface PlaceOrderCallsArgs {
   position: Position;
@@ -43,12 +35,11 @@ export function usePlaceOrderCalls() {
   const [openSuccessTip] = useSuccessTip();
   const [openErrorTip] = useErrorTip();
 
-  const approve = useSwapApprove();
-  const deposit = useSwapDeposit();
-  const transfer = useSwapTransfer();
+  const limitDeposit = useLimitDeposit();
+  const limitApprove = useLimitApprove();
+  const limitTransfer = useLimitTransfer();
 
   const updateStoreUserPositionPool = useUpdateUserPositionPools();
-  const updatePlaceOrderPositionId = useUpdatePlaceOrderPositionId();
 
   return useCallback(
     ({
@@ -66,6 +57,10 @@ export function usePlaceOrderCalls() {
       const amount0Desired = position.mintAmounts.amount0.toString();
       const amount1Desired = position.mintAmounts.amount1.toString();
 
+      // The position that generate from mint may be used in place order,
+      // so we need to store the position id in store after mint, and use it in place order.
+      let positionIdToPlaceOrder: bigint | undefined;
+
       const token0Insufficient = getTokenInsufficient({
         token: token0,
         subAccountBalance: token0SubAccountBalance,
@@ -82,112 +77,57 @@ export function usePlaceOrderCalls() {
         unusedBalance: unusedBalance.balance1,
       });
 
-      const approveToken0 = async () => {
-        if (noApproveByTokenInsufficient(token0Insufficient)) return true;
+      const approveToken0 = limitApprove({
+        poolId,
+        token: token0,
+        amount: amount0Desired,
+        tokenInsufficient: token0Insufficient,
+      });
 
-        if (amount0Desired !== "0") {
-          return await approve({
-            token: token0,
-            amount: amount0Desired,
-            poolId,
-            standard: token0.standard as TOKEN_STANDARD,
-          });
-        }
+      const approveToken1 = limitApprove({
+        poolId,
+        token: token1,
+        amount: amount1Desired,
+        tokenInsufficient: token1Insufficient,
+      });
 
-        return true;
-      };
+      const transferToken0 = limitTransfer({
+        token: token0,
+        amount: amount0Desired,
+        poolId,
+        tokenInsufficient: token0Insufficient,
+        unusedBalance: unusedBalance.balance0.toString(),
+        subAccountBalance: token0SubAccountBalance,
+      });
 
-      const approveToken1 = async () => {
-        if (noApproveByTokenInsufficient(token1Insufficient)) return true;
+      const transferToken1 = limitTransfer({
+        token: token1,
+        amount: amount1Desired,
+        poolId,
+        tokenInsufficient: token1Insufficient,
+        unusedBalance: unusedBalance.balance1.toString(),
+        subAccountBalance: token1SubAccountBalance,
+      });
 
-        if (amount1Desired !== "0") {
-          return await approve({
-            token: token1,
-            amount: amount1Desired,
-            poolId,
-            standard: token1.standard as TOKEN_STANDARD,
-          });
-        }
+      const depositToken0 = limitDeposit({
+        token: token0,
+        amount: amount0Desired,
+        poolId,
+        tokenInsufficient: token0Insufficient,
+        unusedBalance: unusedBalance.balance0.toString(),
+        openExternalTip,
+        stepKey,
+      });
 
-        return true;
-      };
-
-      const transferToken0 = async () => {
-        if (noTransferByTokenInsufficient(token0Insufficient)) return true;
-
-        if (amount0Desired !== "0") {
-          return await transfer(
-            token0,
-            getTokenActualTransferRawAmount(
-              new BigNumber(amount0Desired)
-                .minus(unusedBalance.balance0.toString())
-                .minus(token0SubAccountBalance)
-                .toString(),
-              token0,
-            ),
-            poolId,
-          );
-        }
-
-        return true;
-      };
-
-      const transferToken1 = async () => {
-        if (noTransferByTokenInsufficient(token1Insufficient)) return true;
-
-        if (amount1Desired !== "0") {
-          return await transfer(
-            token1,
-            getTokenActualDepositRawAmount(
-              new BigNumber(amount1Desired)
-                .minus(unusedBalance.balance1.toString())
-                .minus(token1SubAccountBalance)
-                .toString(),
-              token1,
-            ),
-            poolId,
-          );
-        }
-
-        return true;
-      };
-
-      const depositToken0 = async () => {
-        if (noDepositByTokenInsufficient(token0Insufficient)) return true;
-        if (amount0Desired === "0") return true;
-
-        // Mins 1 token fee by backend, so the deposit amount should add 1 token fee if use deposit
-        return await deposit({
-          token: token0,
-          amount: getTokenActualDepositRawAmount(
-            new BigNumber(amount0Desired).minus(unusedBalance.balance0.toString()).toString(),
-            token0,
-          ),
-          poolId,
-          openExternalTip: ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey, poolId });
-          },
-          standard: token0.standard as TOKEN_STANDARD,
-        });
-      };
-
-      const depositToken1 = async () => {
-        if (noDepositByTokenInsufficient(token1Insufficient)) return true;
-        if (amount1Desired === "0") return true;
-
-        return await deposit({
-          token: token1,
-          amount: getTokenActualDepositRawAmount(
-            new BigNumber(amount1Desired).minus(unusedBalance.balance1.toString()).toString(),
-            token1,
-          ),
-          poolId,
-          openExternalTip: ({ message }: ExternalTipArgs) => {
-            openExternalTip({ message, tipKey: stepKey, poolId });
-          },
-          standard: token1.standard as TOKEN_STANDARD,
-        });
-      };
+      const depositToken1 = limitDeposit({
+        token: token1,
+        amount: amount1Desired,
+        poolId,
+        tokenInsufficient: token1Insufficient,
+        unusedBalance: unusedBalance.balance1.toString(),
+        openExternalTip,
+        stepKey,
+      });
 
       const mint = async () => {
         const { status, message, data } = await __mint(poolId, {
@@ -202,8 +142,7 @@ export function usePlaceOrderCalls() {
 
         if (status === ResultStatus.OK) {
           updateStoreUserPositionPool([poolId]);
-          updatePlaceOrderPositionId(data);
-
+          positionIdToPlaceOrder = data;
           return true;
         }
 
@@ -216,9 +155,8 @@ export function usePlaceOrderCalls() {
       };
 
       const placeOrder = async () => {
-        const positionId = getPlaceOrderPositionId();
-        if (isUndefinedOrNull(positionId)) return false;
-        const { status, message } = await __placeOrder(poolId, positionId, limitLick);
+        if (isUndefinedOrNull(positionIdToPlaceOrder)) return false;
+        const { status, message } = await __placeOrder(poolId, positionIdToPlaceOrder, limitLick);
         if (status === ResultStatus.OK) {
           openSuccessTip(t`Add limit order successfully`);
         } else {
@@ -241,15 +179,6 @@ export function usePlaceOrderCalls() {
         placeOrder,
       ].filter((fn) => fn !== undefined) as (() => Promise<boolean>)[];
     },
-    [
-      updatePlaceOrderPositionId,
-      approve,
-      transfer,
-      deposit,
-      openErrorTip,
-      openSuccessTip,
-      t,
-      updateStoreUserPositionPool,
-    ],
+    [limitApprove, limitTransfer, limitDeposit, openErrorTip, openSuccessTip, t, updateStoreUserPositionPool],
   );
 }

@@ -19,7 +19,6 @@ import type { SnsState } from "./sns/states";
 import type { StepsState } from "./steps/state";
 import type { SwapBurnState } from "./swap/burn/state";
 import type { SwapCacheState } from "./swap/cache/state";
-import type { LimitOrderState } from "./swap/limit-order/state";
 import type { SwapLiquidityState } from "./swap/liquidity/state";
 import type { SwapState } from "./swap/state";
 import type { TokenCacheState } from "./token/cache/states";
@@ -50,7 +49,6 @@ export interface AllState {
   web3: Web3State;
   sns: SnsState;
   transactions: TransactionsState;
-  limitOrder: LimitOrderState;
   priceAlerts: PriceAlertsState;
 }
 

@@ -17,9 +17,10 @@ import { forwardRef, type Ref, useCallback, useContext, useEffect, useImperative
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useCleanSwapState, useLoadDefaultParams, useSwapHandlers, useSwapState } from "store/swap/hooks";
-import { useLimitOrderInfo } from "store/swap/limit-order/hooks";
+import { useLimitOrderInfo } from "hooks/swap/limit-order/useLimitInfo";
 import type { ExternalTipArgs } from "types/index";
 import { getBackendLimitTick, maxAmountFormat } from "utils/swap/index";
+
 import { CurrentPricePanel } from "./CurrentPricePanel";
 import { LimitContext } from "./context";
 import { LimitOrderConfirm } from "./LimitOrderConfirm";
