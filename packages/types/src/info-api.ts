@@ -382,7 +382,7 @@ export interface UserAssetResponse extends Serializable {
 export interface UserWalletResponse extends Serializable {
   user: string;
   totalBalance: number;
-  tokens: TokenBalance[];
+  tokens: TokenBalance[] | null;
 }
 
 export interface ValueCheckResponse {

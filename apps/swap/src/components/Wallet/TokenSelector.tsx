@@ -110,7 +110,8 @@ function TokenList({ search }: TokenListProps) {
 
   const tokenMaps = useMemo(() => {
     if (isUndefinedOrNull(addressOverview)) return undefined;
-    return addressOverview.tokenList.tokens.map((token) => ({
+
+    return (addressOverview.tokenList.tokens ?? []).map((token) => ({
       id: token.token,
       usd: token.balance,
       balance: token.amount,
@@ -186,7 +187,7 @@ function TaggedTokens({ search }: TaggedTokensProps) {
     const filteredTokens = allTokens
       .filter(([, token]) => !!token)
       .filter(([, token]) => {
-        return !addressOverview.tokenList.tokens.find((e) => e.token === token?.address);
+        return !(addressOverview.tokenList.tokens ?? []).find((e) => e.token === token?.address);
       })
       .map(([, token]) => token) as Array<Token>;
     if (isUndefinedOrNull(search)) return filteredTokens;
