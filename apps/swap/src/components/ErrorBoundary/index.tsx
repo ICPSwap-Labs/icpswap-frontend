@@ -22,7 +22,11 @@ function Fallback({ error, eventId }: FallbackProps) {
   useEffect(() => {
     if (error) {
       const errorString = error.toString();
-      if (/Loading chunk *.{1,} failed./.test(errorString) || /Unexpected token '<'/.test(errorString)) {
+      if (
+        /Loading chunk *.{1,} failed./.test(errorString) ||
+        /Unexpected token '<'/.test(errorString) ||
+        /Failed to fetch dynamically imported module/.test(errorString)
+      ) {
         window.location.reload();
       }
     }
