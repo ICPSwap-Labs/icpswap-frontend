@@ -50,6 +50,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   const [confirmModalShow, setConfirmModalShow] = useState(false);
   const [swapLoading, setSwapLoading] = useState(false);
   const [swapSuccessModalShow, setSwapSuccessModalShow] = useState(false);
+  const [showOutOfCycles, setShowOutOfCycles] = useState<boolean | undefined>(undefined);
   const [outOfCyclesChecked, setOutOfCyclesChecked] = useState<boolean | undefined>(undefined);
 
   useLoadDefaultParams();
@@ -177,12 +178,16 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
     return getImpactConfirm(usdValueChange);
   }, [usdValueChange]);
 
+  const outOfCyclesDisabled = useMemo(() => {
+    return outOfCyclesChecked === false && showOutOfCycles === true;
+  }, [outOfCyclesChecked, showOutOfCycles]);
+
   const swapCallback = useSwapCallback({ inputToken, poolId, refresh: refreshTrigger });
 
   const handleSwapConfirm = useCallback(async () => {
     if (
       (exceedImpact && !impactChecked) ||
-      outOfCyclesChecked === false ||
+      outOfCyclesDisabled ||
       swapLoading ||
       !trade ||
       isUndefinedOrNull(inputTokenSubBalance) ||
@@ -235,7 +240,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   }, [
     exceedImpact,
     impactChecked,
-    outOfCyclesChecked,
+    outOfCyclesDisabled,
     swapLoading,
     trade,
     inputTokenSubBalance,
@@ -342,9 +347,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
         poolId={poolId}
         onCheckChange={(checked) => setOutOfCyclesChecked(checked)}
         updateNeedCheckOrNot={(needCheck: boolean) => {
-          if (needCheck) {
-            setOutOfCyclesChecked(false);
-          }
+          setShowOutOfCycles(needCheck);
         }}
       />
 
@@ -359,7 +362,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
           isPoolNotChecked ||
           (exceedImpact && !impactChecked) ||
           !trade ||
-          outOfCyclesChecked === false
+          outOfCyclesDisabled
         }
         sx={{
           borderRadius: "16px",
