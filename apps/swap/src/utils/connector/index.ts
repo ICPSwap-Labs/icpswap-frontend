@@ -25,7 +25,13 @@ export class WalletConnector {
       const connector = await WalletConnector.create(connectorType);
       this.connectorType = connectorType;
       await connector.init();
+
+      // Me, Metamask and NFId use the old @dfinity/agent, which does not has the same typescript with @icp-sdk.
+      // @ts-ignore
       this.connector = connector;
+
+      // Me, Metamask and NFId use the old @dfinity/agent, which does not has the same typescript with @icp-sdk.
+      // @ts-ignore
       window.icConnector = this.connector;
     }
 

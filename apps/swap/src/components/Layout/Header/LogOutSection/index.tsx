@@ -1,12 +1,12 @@
 import { Box } from "components/Mui";
 import { type ReactNode, useState } from "react";
-import { useConnectManager } from "store/auth/hooks";
+import { useDisconnectManager } from "store/auth/hooks";
 
 import LogoutConfirmModal from "./Confirm";
 
 export default function LogOutSection({ children, onLogout }: { children: ReactNode; onLogout?: () => void }) {
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
-  const { disconnect } = useConnectManager();
+  const { disconnect } = useDisconnectManager();
 
   const onLogoutConfirm = async () => {
     await disconnect();

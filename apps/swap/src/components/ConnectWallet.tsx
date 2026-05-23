@@ -2,10 +2,10 @@ import { Flex, NoData } from "@icpswap/ui";
 import { MainCard, Wrapper } from "components/index";
 import { Box, Button, Typography } from "components/Mui";
 import { useTranslation } from "react-i18next";
-import { useConnectManager } from "store/auth/hooks";
+import { useShowConnector } from "store/auth/hooks";
 
 export default function ConnectWallet() {
-  const { showConnector } = useConnectManager();
+  const { showConnector } = useShowConnector();
   const { t } = useTranslation();
 
   return (

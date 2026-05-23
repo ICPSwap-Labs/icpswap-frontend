@@ -1,13 +1,15 @@
 import { MsqClient, type MsqIdentity } from "@fort-major/msq-client";
-import { Actor, type ActorSubclass, HttpAgent } from "@icpswap/dfinity";
+import { Actor, type ActorSubclass, HttpAgent } from "@dfinity/agent";
 import { Connector } from "@icpswap/actor";
-import type { ConnectorAbstract, CreateActorArgs, WalletConnectorConfig } from "./connectors";
+import type { IDL } from "@dfinity/candid";
+
+import type { WalletConnectorConfig } from "./connectors";
 
 const EXPIRE_TIME = 7 * 24 * 3600; // seconds
 const EXPIRE_TIME_STORAGE_NAME = "metamask-expire-time";
 // const REQUEST_LINK_DOMAIN = "https://app.icpswap.com";
 
-export class MetamaskConnector implements ConnectorAbstract {
+export class MetamaskConnector {
   private config: {
     whitelist: Array<string>;
     providerUrl: string;
@@ -90,7 +92,13 @@ export class MetamaskConnector implements ConnectorAbstract {
     await this.client?.requestLogout();
   }
 
-  async createActor<Service>({ canisterId, interfaceFactory }: CreateActorArgs): Promise<ActorSubclass<Service>> {
+  async createActor<Service>({
+    canisterId,
+    interfaceFactory,
+  }: {
+    canisterId: string;
+    interfaceFactory: IDL.InterfaceFactory;
+  }): Promise<ActorSubclass<Service>> {
     const httpAgent = await HttpAgent.create({ identity: this.identity, host: this.config.host });
 
     return Actor.createActor<Service>(interfaceFactory, {
