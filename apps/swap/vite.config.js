@@ -49,7 +49,7 @@ export default defineConfig(() => {
               "@astrox/sdk-web",
               "@astrox/sdk-webview",
             ],
-            charts: ["recharts", "echarts", "lightweight-charts"],
+            charts: ["recharts", "echarts"],
           },
         },
       },
