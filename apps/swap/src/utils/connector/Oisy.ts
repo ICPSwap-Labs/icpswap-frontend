@@ -1,7 +1,7 @@
-import { Actor, type ActorSubclass, HttpAgent, Principal } from "@icpswap/dfinity";
-import { Signer } from "@slide-computer/signer";
-import { SignerAgent } from "@slide-computer/signer-agent";
-import { PostMessageTransport } from "@slide-computer/signer-web";
+import { HttpAgent, Actor, type ActorSubclass } from "@icpswap/dfinity";
+import { Signer } from "@icp-sdk/signer";
+import { PostMessageTransport } from "@icp-sdk/signer/web";
+import { SignerAgent } from "@icp-sdk/signer/agent";
 
 import { Connector, type ConnectorAbstract, type CreateActorArgs, type WalletConnectorConfig } from "./connectors";
 
@@ -19,8 +19,6 @@ export class OisyConnector implements ConnectorAbstract {
 
   private principal?: string;
 
-  private signerAgent?: SignerAgent<Signer>;
-
   public type = Connector.Oisy;
 
   public get getPrincipal() {
@@ -31,7 +29,7 @@ export class OisyConnector implements ConnectorAbstract {
     this.config = {
       whitelist: config.whitelist,
       host: config.host,
-      providerUrl: "https://oisy.com/sign",
+      providerUrl: "https://signer.oisy.com",
       dev: false,
     };
   }
@@ -41,20 +39,20 @@ export class OisyConnector implements ConnectorAbstract {
   }
 
   async isConnected(): Promise<boolean> {
-    return !!this.signerAgent && !!this.agent;
+    return !!this.signer && !!this.agent;
   }
 
   async createActor<Service>({
     canisterId,
     interfaceFactory,
   }: CreateActorArgs): Promise<ActorSubclass<Service> | undefined> {
-    if (!this.signerAgent) {
+    if (!this.agent) {
       throw new Error("No signer agent available. Please connect first.");
     }
 
     try {
       return Actor.createActor(interfaceFactory, {
-        agent: this.signerAgent,
+        agent: this.agent,
         canisterId,
       });
     } catch (error) {
@@ -64,36 +62,28 @@ export class OisyConnector implements ConnectorAbstract {
   }
 
   async connect() {
-    const agent = HttpAgent.createSync({ host: this.config.providerUrl });
-    this.signerAgent = SignerAgent.createSync({
-      signer: new Signer({
-        transport: new PostMessageTransport({
-          url: this.config.providerUrl,
-          windowOpenerFeatures: "width=525,height=705",
-          establishTimeout: 45000,
-          disconnectTimeout: 45000,
-          detectNonClickEstablishment: false,
-        }),
-      }),
-      account: Principal.anonymous(),
-      agent,
+    console.log("try to connect to oisy");
+
+    const transport = new PostMessageTransport({
+      url: this.config.providerUrl,
+      windowOpenerFeatures: "width=525,height=705",
+      establishTimeout: 45000,
+      disconnectTimeout: 45000,
+      detectNonClickEstablishment: false,
+    });
+    const signer = new Signer({ transport });
+
+    const accounts = await signer.getAccounts();
+    const account = accounts[0]; // Let the user choose if there are multiple
+
+    const agent = await SignerAgent.create({
+      signer,
+      account: account.owner,
     });
 
-    const accounts = await this.signerAgent.signer.accounts();
-
-    if (!accounts || accounts.length === 0) {
-      this.disconnect();
-      throw new Error("No accounts returned from Oisy");
-    }
-
-    const principal = accounts[0].owner;
-    if (principal.isAnonymous()) {
-      throw new Error("Failed to authenticate with Oisy - got anonymous principal");
-    }
-
-    this.signerAgent.replaceAccount(principal);
-    this.principal = (await this.signerAgent.getPrincipal())?.toString();
+    this.principal = account.owner.toString();
     this.agent = agent;
+    this.signer = signer;
 
     return true;
   }

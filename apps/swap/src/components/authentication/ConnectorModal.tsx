@@ -3,7 +3,7 @@ import { Box, makeStyles, type Theme, Typography } from "components/Mui";
 import Modal from "components/modal";
 import { ConnectorConfigs } from "constants/wallet";
 import { Trans, useTranslation } from "react-i18next";
-import { useConnectManager } from "store/auth/hooks";
+import { useShowConnector } from "store/auth/hooks";
 
 import { ConnectorComponent } from "./connector";
 
@@ -48,7 +48,7 @@ export default function WalletConnector() {
   const { t } = useTranslation();
   const classes = useStyles();
 
-  const { open, showConnector } = useConnectManager();
+  const { open, showConnector } = useShowConnector();
 
   return (
     <Modal open={open} onClose={() => showConnector(false)} title={t("auth.connect.a.wallet")}>

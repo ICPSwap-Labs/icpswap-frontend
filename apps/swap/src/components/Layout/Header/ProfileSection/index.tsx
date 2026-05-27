@@ -4,7 +4,7 @@ import { ConnectorImage } from "components/Image/index";
 import { Box, Button, Typography, useTheme } from "components/Mui";
 import { useWalletStore } from "components/Wallet/store";
 import { useTranslation } from "react-i18next";
-import { useAccountPrincipal, useConnectManager, useWalletIsConnected } from "store/auth/hooks";
+import { useAccountPrincipal, useShowConnector, useDisconnectManager, useWalletIsConnected } from "store/auth/hooks";
 
 export default function ProfileSection() {
   const { t } = useTranslation();
@@ -13,7 +13,8 @@ export default function ProfileSection() {
   const isConnected = useWalletIsConnected();
   const { openDrawer } = useWalletStore();
 
-  const { showConnector, disconnect } = useConnectManager();
+  const { showConnector } = useShowConnector();
+  const { disconnect } = useDisconnectManager();
 
   const handleConnectWallet = async () => {
     await disconnect();

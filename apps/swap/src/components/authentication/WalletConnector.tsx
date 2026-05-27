@@ -1,9 +1,9 @@
 import { Flex } from "@icpswap/ui";
 import type { ReactNode } from "react";
-import { useConnectManager } from "store/auth/hooks";
+import { useShowConnector } from "store/auth/hooks";
 
 export default function WalletConnector({ children }: { children: ReactNode }) {
-  const { showConnector } = useConnectManager();
+  const { showConnector } = useShowConnector();
 
   return (
     <Flex fullWidth justify="center" onClick={() => showConnector(true)}>

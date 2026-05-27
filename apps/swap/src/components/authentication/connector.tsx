@@ -4,7 +4,7 @@ import { Connector, IdentityKitConnector } from "constants/index";
 import { useErrorTip } from "hooks/useTips";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useConnectManager } from "store/auth/hooks";
+import { useConnectManager, useShowConnector } from "store/auth/hooks";
 import { WalletConnector } from "utils/connector";
 import { isSafari } from "utils/index";
 
@@ -42,7 +42,8 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
   const theme = useTheme();
   const classes = useStyles();
   const [openErrorTip] = useErrorTip();
-  const { showConnector, connect } = useConnectManager();
+  const { connect } = useConnectManager();
+  const { showConnector } = useShowConnector();
 
   const [loading, setLoading] = useState(false);
   const [initialedConnector, setInitialedConnector] = useState<null | WalletConnector>(null);

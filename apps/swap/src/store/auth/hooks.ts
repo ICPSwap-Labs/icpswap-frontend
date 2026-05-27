@@ -133,9 +133,12 @@ export function useInitialConnect() {
   const disconnect = useDisconnect();
 
   const [loading, setLoading] = useState(true);
+  const [onProcess, setOnProcess] = useState(false);
 
   useEffect(() => {
     async function call() {
+      if (onProcess) return;
+
       const connector = getConnector();
 
       if (!connector) {
@@ -158,6 +161,8 @@ export function useInitialConnect() {
         return;
       }
 
+      setOnProcess(true);
+
       const connected = await connectManager.isConnected();
 
       await nonAsyncFunctionBeforeConnect(connected);
@@ -166,10 +171,11 @@ export function useInitialConnect() {
       // Initial actor
       actor.setConnector(connector);
       setLoading(false);
+      setOnProcess(false);
     }
 
     call();
-  }, [isUnLocked, disconnect, dispatch]);
+  }, [onProcess, isUnLocked, disconnect, dispatch]);
 
   return useMemo(() => ({ loading }), [loading]);
 }
@@ -234,20 +240,7 @@ export function useIdentityKitInitialConnect() {
 }
 
 export function useConnectManager() {
-  const dispatch = useAppDispatch();
-  const connectorStateConnected = useWalletIsConnected();
-  const authDisconnect = useDisconnect();
-  const open = useAppSelector((state) => state.auth.walletConnectorOpen);
-  const connector = useAppSelector((state) => state.auth.walletType);
-
-  const { connect: identityKitConnect, disconnect: identityKitDisconnect } = useAuth();
-
-  const showConnector = useCallback(
-    (open: boolean) => {
-      dispatch(updateWalletConnector(open));
-    },
-    [dispatch],
-  );
+  const { connect: identityKitConnect } = useAuth();
 
   const connect = useCallback(
     async (connector: Connector, connectorOutside?: null | WalletConnector) => {
@@ -272,6 +265,24 @@ export function useConnectManager() {
     [identityKitConnect],
   );
 
+  const { loading } = useInitialConnect();
+  useIdentityKitInitialConnect();
+
+  return useMemo(
+    () => ({
+      connect,
+      loading,
+    }),
+    [connect, loading],
+  );
+}
+
+export function useDisconnectManager() {
+  const authDisconnect = useDisconnect();
+  const connector = useAppSelector((state) => state.auth.walletType);
+
+  const { disconnect: identityKitDisconnect } = useAuth();
+
   const disconnect = useCallback(async () => {
     if (connector) {
       if (IdentityKitConnector.includes(connector)) {
@@ -282,18 +293,32 @@ export function useConnectManager() {
     await authDisconnect();
   }, [connector, identityKitDisconnect, authDisconnect]);
 
-  const { loading } = useInitialConnect();
-  useIdentityKitInitialConnect();
+  return useMemo(
+    () => ({
+      disconnect,
+    }),
+    [disconnect],
+  );
+}
+
+export function useShowConnector() {
+  const dispatch = useAppDispatch();
+  const open = useAppSelector((state) => state.auth.walletConnectorOpen);
+  const connectorStateConnected = useWalletIsConnected();
+
+  const showConnector = useCallback(
+    (open: boolean) => {
+      dispatch(updateWalletConnector(open));
+    },
+    [dispatch],
+  );
 
   return useMemo(
     () => ({
       open,
-      connect,
-      disconnect,
       showConnector,
       isConnected: connectorStateConnected,
-      loading,
     }),
-    [open, connect, disconnect, showConnector, connectorStateConnected, loading],
+    [open, showConnector, connectorStateConnected],
   );
 }

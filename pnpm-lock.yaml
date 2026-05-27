@@ -44,6 +44,18 @@ importers:
       '@dfinity/utils':
         specifier: 4.2.0
         version: 4.2.0(@icp-sdk/core@5.2.0)
+      '@icp-sdk/auth':
+        specifier: ^5.0.0
+        version: 5.0.0(@icp-sdk/core@5.2.0)
+      '@icp-sdk/canisters':
+        specifier: ^3.5.1
+        version: 3.6.0(@dfinity/utils@4.2.0(@icp-sdk/core@5.2.0))(@icp-sdk/core@5.2.0)
+      '@icp-sdk/core':
+        specifier: ^5.0.0
+        version: 5.2.0
+      '@icp-sdk/signer':
+        specifier: ^5.3.1
+        version: 5.3.1(@icp-sdk/core@5.2.0)
       '@mui/base':
         specifier: 5.0.0-beta.27
         version: 5.0.0-beta.27(@types/react@18.2.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
@@ -282,15 +294,6 @@ importers:
       '@sentry/types':
         specifier: 7.80.0
         version: 7.80.0
-      '@slide-computer/signer':
-        specifier: ^3.14.0
-        version: 3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
-      '@slide-computer/signer-agent':
-        specifier: ^3.14.0
-        version: 3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)(@slide-computer/signer@3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2))
-      '@slide-computer/signer-web':
-        specifier: ^3.14.0
-        version: 3.14.0(@slide-computer/signer@3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2))
       '@tanstack/react-query':
         specifier: 5.28.14
         version: 5.28.14(react@18.2.0)
@@ -2225,8 +2228,24 @@ packages:
       '@dfinity/identity': 2.1.2
       '@dfinity/principal': 2.1.2
 
+  '@icp-sdk/auth@5.0.0':
+    resolution: {integrity: sha512-TaPfdaELT7s0vTIFOmCnlCmhPdL7kABA7+2Q0YNAUWIa/FFiwq6ffGPLvr0U0+2zFLaLQ4l7UCB2zf7vo6PFPQ==}
+    peerDependencies:
+      '@icp-sdk/core': ^5
+
+  '@icp-sdk/canisters@3.6.0':
+    resolution: {integrity: sha512-GALqQiywObRabz98etHccTq1DpLy5Sbx3adrYO27ffbDgZGLY5sZcAQfR0CkP0Da6KUEauzZk3gBi8UDzbydHg==}
+    peerDependencies:
+      '@dfinity/utils': ^4.1
+      '@icp-sdk/core': ^5
+
   '@icp-sdk/core@5.2.0':
     resolution: {integrity: sha512-HIEzaUO3MpQDoVYJ9IqN0rA3Gb9PR28//XOQFBCpSTJc+wv2URKumSslYfnDEaHIvmK92Bn817EuTnBa1XOR6A==}
+
+  '@icp-sdk/signer@5.3.1':
+    resolution: {integrity: sha512-2IJOdAnAit6SLZU3FTfPK0he4kCR+mr3IunDk62PgZCQKzvJ2DyV8FPBIceDpMSOXJLuXEMwd9E4Hdc53n0nrw==}
+    peerDependencies:
+      '@icp-sdk/core': ^5
 
   '@isaacs/cliui@8.0.2':
     resolution: {integrity: sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==}
@@ -3748,15 +3767,6 @@ packages:
       '@dfinity/principal': 2.1.2
       '@slide-computer/signer': ^3.11.0
 
-  '@slide-computer/signer-agent@3.14.0':
-    resolution: {integrity: sha512-J0BgGDAG9Z/T17ClBcQ+BW+mZZl++U4yFVyadBiLverjwWjQNgUcgoOE9fd+Yz68CCDTlWkBODYkVN9GCu2hqg==}
-    peerDependencies:
-      '@dfinity/agent': 2.1.2
-      '@dfinity/candid': 2.1.2
-      '@dfinity/identity': 2.1.2
-      '@dfinity/principal': 2.1.2
-      '@slide-computer/signer': ^3.14.0
-
   '@slide-computer/signer-extension@3.11.0':
     resolution: {integrity: sha512-ys2ySZMfm7cIcRcy+9OT2hP5WpxVrYR2ar2ewVRHYWj8MxGIfMAWlQcm+SfYXwgR96u2XoeCU6lsvBCWFGR73Q==}
     peerDependencies:
@@ -3797,21 +3807,8 @@ packages:
     peerDependencies:
       '@slide-computer/signer': ^3.11.0
 
-  '@slide-computer/signer-web@3.14.0':
-    resolution: {integrity: sha512-CfRjlJeOJHEoe4EF+9yi/9V4iD+tgI0pba3Nd4LT6JYRwj4A78BZe1UHcyPJmaZIt7ez+kimTThAffkfbcUWcA==}
-    peerDependencies:
-      '@slide-computer/signer': ^3.14.0
-
   '@slide-computer/signer@3.11.0':
     resolution: {integrity: sha512-tcaV+DPhpyKWmAlf3OZYugx3aSr8fzvKWxCSHspHNtW35oUKnE9GVT6tUpwu06sd0fqlL4PqWMoTCYqfRWLFIQ==}
-    peerDependencies:
-      '@dfinity/agent': 2.1.2
-      '@dfinity/candid': 2.1.2
-      '@dfinity/identity': 2.1.2
-      '@dfinity/principal': 2.1.2
-
-  '@slide-computer/signer@3.14.0':
-    resolution: {integrity: sha512-zJlFDIb/rESn0p0NzheSR9rscBBO16gC/ulXZwsAFJjPtq5fupWZYVp9x/5I+wda6g99IAZt/uDe3PZSzqfDIg==}
     peerDependencies:
       '@dfinity/agent': 2.1.2
       '@dfinity/candid': 2.1.2
@@ -4757,6 +4754,10 @@ packages:
   base58-js@1.0.5:
     resolution: {integrity: sha512-LkkAPP8Zu+c0SVNRTRVDyMfKVORThX+rCViget00xdgLRrKkClCTz1T7cIrpr69ShwV5XJuuoZvMvJ43yURwkA==}
     engines: {node: '>= 8'}
+
+  base58-js@3.0.3:
+    resolution: {integrity: sha512-3hf42BysHnUqmZO7mK6e5X/hs1AvyEJIhdVLbG/Mxn/fhFnhGxOO37mWbMHg1RT4TxqcPKXgqj9/bp1YG0GBXA==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
 
   base64-arraybuffer@0.2.0:
     resolution: {integrity: sha512-7emyCsu1/xiBXgQZrscw/8KPRT44I4Yq9Pe6EGs3aPRTsWuggML1/1DTuZUuIaJPIm1FTDUVXl4x/yW8s0kQDQ==}
@@ -7295,6 +7296,11 @@ packages:
   mime@1.6.0:
     resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
     engines: {node: '>=4'}
+    hasBin: true
+
+  mime@3.0.0:
+    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
+    engines: {node: '>=10.0.0'}
     hasBin: true
 
   mimic-fn@1.2.0:
@@ -9978,7 +9984,7 @@ snapshots:
       '@babel/core': 7.29.0
       '@babel/helper-compilation-targets': 7.28.6
       '@babel/helper-plugin-utils': 7.28.6
-      debug: 4.3.7(supports-color@7.2.0)
+      debug: 4.4.3
       lodash.debounce: 4.0.8
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -11831,6 +11837,20 @@ snapshots:
       '@dfinity/principal': 2.1.2
       idb: 8.0.0
 
+  '@icp-sdk/auth@5.0.0(@icp-sdk/core@5.2.0)':
+    dependencies:
+      '@icp-sdk/core': 5.2.0
+      idb: 7.1.1
+
+  '@icp-sdk/canisters@3.6.0(@dfinity/utils@4.2.0(@icp-sdk/core@5.2.0))(@icp-sdk/core@5.2.0)':
+    dependencies:
+      '@dfinity/utils': 4.2.0(@icp-sdk/core@5.2.0)
+      '@icp-sdk/core': 5.2.0
+      '@noble/hashes': 1.8.0
+      base58-js: 3.0.3
+      bech32: 2.0.0
+      mime: 3.0.0
+
   '@icp-sdk/core@5.2.0':
     dependencies:
       '@dfinity/cbor': 0.2.2
@@ -11839,6 +11859,10 @@ snapshots:
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       asn1js: 3.0.7
+
+  '@icp-sdk/signer@5.3.1(@icp-sdk/core@5.2.0)':
+    dependencies:
+      '@icp-sdk/core': 5.2.0
 
   '@isaacs/cliui@8.0.2':
     dependencies:
@@ -13524,14 +13548,6 @@ snapshots:
       '@dfinity/principal': 2.1.2
       '@slide-computer/signer': 3.11.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
 
-  '@slide-computer/signer-agent@3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)(@slide-computer/signer@3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2))':
-    dependencies:
-      '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
-      '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
-      '@dfinity/identity': 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/principal': 2.1.2
-      '@slide-computer/signer': 3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
-
   '@slide-computer/signer-extension@3.11.0(@slide-computer/signer@3.11.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2))':
     dependencies:
       '@slide-computer/signer': 3.11.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
@@ -13567,18 +13583,7 @@ snapshots:
     dependencies:
       '@slide-computer/signer': 3.11.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
 
-  '@slide-computer/signer-web@3.14.0(@slide-computer/signer@3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2))':
-    dependencies:
-      '@slide-computer/signer': 3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)
-
   '@slide-computer/signer@3.11.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)':
-    dependencies:
-      '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
-      '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
-      '@dfinity/identity': 2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0)
-      '@dfinity/principal': 2.1.2
-
-  '@slide-computer/signer@3.14.0(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/identity@2.1.2(@dfinity/agent@2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)(@peculiar/webcrypto@1.5.0))(@dfinity/principal@2.1.2)':
     dependencies:
       '@dfinity/agent': 2.1.2(@dfinity/candid@2.1.2(@dfinity/principal@2.1.2))(@dfinity/principal@2.1.2)
       '@dfinity/candid': 2.1.2(@dfinity/principal@2.1.2)
@@ -14938,6 +14943,8 @@ snapshots:
   balanced-match@4.0.4: {}
 
   base58-js@1.0.5: {}
+
+  base58-js@3.0.3: {}
 
   base64-arraybuffer@0.2.0: {}
 
@@ -18153,6 +18160,8 @@ snapshots:
       mime-db: 1.52.0
 
   mime@1.6.0: {}
+
+  mime@3.0.0: {}
 
   mimic-fn@1.2.0: {}
 

@@ -3,7 +3,7 @@ import { TextButton } from "@icpswap/ui";
 import { Typography } from "components/Mui";
 import { useErrorTip } from "hooks/useTips";
 import { useEffect } from "react";
-import { useConnectManager, useLogout } from "store/auth/hooks";
+import { useShowConnector, useLogout } from "store/auth/hooks";
 
 const INTERVAL = 30; // 30 seconds
 
@@ -46,7 +46,7 @@ export function isIISignatureVerificationError(message: string) {
 export function GlobalActorError() {
   const [open] = useErrorTip();
   const logout = useLogout();
-  const { showConnector } = useConnectManager();
+  const { showConnector } = useShowConnector();
 
   useEffect(() => {
     actor.onError(async (error: ActorError) => {
