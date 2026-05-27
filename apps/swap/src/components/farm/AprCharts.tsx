@@ -28,7 +28,7 @@ export function FarmAprCharts({ farmId }: FarmAprChartsProps) {
       .map((e) => ({ time: Number(e[0] * BigInt(1000)), value: e[1] }));
   }, [aprCharts]);
 
-  return aprCharts && aprCharts.length > 0 ? (
+  return chartData && chartData.length > 0 ? (
     <Box
       sx={{
         width: "470px",
