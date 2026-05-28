@@ -21,7 +21,7 @@ export function PositionTransactionsRow({ transaction, wrapperClassName }: Posit
 
   return (
     <TableRow className={wrapperClassName} borderBottom={`1px solid ${theme.palette.border.level1}`}>
-      <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD hh:mm:ss")}</BodyCell>
+      <BodyCell>{dayjs(Number(transaction.timestamp) * 1000).format("YYYY-MM-DD HH:mm:ss")}</BodyCell>
 
       <BodyCell sx={{ gap: "0 8px", alignItems: "center" }}>
         <Flex>
