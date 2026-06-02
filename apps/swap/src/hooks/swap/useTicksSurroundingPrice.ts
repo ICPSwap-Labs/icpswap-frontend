@@ -1,13 +1,12 @@
 import { useLiquidityTickInfos, useSwapPool } from "@icpswap/hooks";
-import { type FeeAmount, TickMath, type Token, tickToPrice } from "@icpswap/swap-sdk";
+import { type FeeAmount, type Token, tickToPrice } from "@icpswap/swap-sdk";
 import type { PoolMetadata } from "@icpswap/types";
 import { useToken } from "hooks/useCurrency";
 import JSBI from "jsbi";
-import keyBy from "lodash/keyBy";
 import { useMemo } from "react";
+import { computeSurroundingTicks, type TickProcessed } from "utils/swap/computeSurroundingTicks";
 
 const PRICE_FIXED_DIGITS = 18;
-const DEFAULT_SURROUNDING_TICKS = 300;
 
 const FEE_TIER_TO_TICK_SPACING = (feeTier: string): number => {
   switch (feeTier) {
@@ -45,14 +44,20 @@ export function useAllTicks(token0: Token | undefined, token1: Token | undefined
   return useLiquidityTickInfos(id, 100);
 }
 
-// Tick with fields parsed to JSBIs, and active liquidity computed.
-export interface TickProcessed {
-  liquidityGross: JSBI;
-  liquidityNet: JSBI;
-  tickIndex: number;
-  liquidityActive: JSBI;
-  price0: string;
-  price1: string;
+export type { TickProcessed };
+
+function getActiveTick({
+  tickCurrent,
+  feeAmount,
+  tickSpacing,
+}: {
+  tickCurrent?: number;
+  feeAmount?: FeeAmount;
+  tickSpacing?: number;
+}): number | undefined {
+  return tickCurrent !== undefined && feeAmount !== undefined && tickSpacing
+    ? Math.floor(tickCurrent / tickSpacing) * tickSpacing
+    : undefined;
 }
 
 export interface PoolTickData {
@@ -65,169 +70,129 @@ export interface PoolTickData {
 export interface UseTicksSurroundingPriceProps {
   loading?: boolean;
   error?: boolean;
-  data?: PoolTickData;
+  liquidity?: JSBI;
+  sqrtPriceX96?: JSBI;
+  currentTick?: bigint;
+  activeTick?: number;
+  data?: TickProcessed[];
 }
 
-export function useTicksSurroundingPrice(
-  pool: PoolMetadata | undefined,
-  numSurroundingTicks = DEFAULT_SURROUNDING_TICKS,
-): UseTicksSurroundingPriceProps {
-  const { tick: poolCurrentTick, fee: feeTier, liquidity, token0: _token0, token1: _token1 } = pool ?? {};
+export function useTicksSurroundingPrice(pool: PoolMetadata | undefined): UseTicksSurroundingPriceProps {
+  const { fee: feeAmount, token0: _token0, token1: _token1 } = pool ?? {};
 
   const [, token0] = useToken(_token0?.address);
   const [, token1] = useToken(_token1?.address);
 
-  const { data: initializedTicks, isLoading: loading } = useAllTicks(token0, token1, Number(feeTier));
+  const liquidity = pool?.liquidity;
+  const sqrtPriceX96 = pool?.sqrtPriceX96;
 
-  if (!token0 || !token1 || !initializedTicks) return { loading: false, data: undefined };
+  const tickSpacingWithFallback = feeAmount ? FEE_TIER_TO_TICK_SPACING(String(feeAmount)) : undefined;
 
-  if (loading) {
-    return {
-      loading,
-      error: false,
-    };
-  }
+  const currentTick = pool?.tick;
+  // Find nearest valid tick for pool in case tick is not initialized.
+  const activeTick = useMemo(
+    () =>
+      getActiveTick({
+        tickCurrent: currentTick ? Number(currentTick) : undefined,
+        feeAmount: feeAmount ? Number(feeAmount) : undefined,
+        tickSpacing: tickSpacingWithFallback,
+      }),
+    [currentTick, feeAmount, tickSpacingWithFallback],
+  );
 
-  const poolCurrentTickIdx = parseInt(String(poolCurrentTick), 10);
-  const tickSpacing = FEE_TIER_TO_TICK_SPACING(String(feeTier));
+  const { data: initializedTicks, isLoading: loading } = useAllTicks(token0, token1, Number(feeAmount));
 
-  // The pools current tick isn't necessarily a tick that can actually be initialized.
-  // Find the nearest valid tick given the tick spacing.
-  const activeTickIdx =
-    poolCurrentTickIdx < 0
-      ? Math.ceil(poolCurrentTickIdx / tickSpacing) * tickSpacing
-      : Math.floor(poolCurrentTickIdx / tickSpacing) * tickSpacing;
+  const ticks = useMemo(() => {
+    if (!initializedTicks) return undefined;
 
-  // const { ticks: initializedTicks } = initializedTicksResult;
+    return initializedTicks.sort((a, b) => {
+      if (a.tickIndex < b.tickIndex) return -1;
+      if (a.tickIndex > b.tickIndex) return 1;
+      return 0;
+    });
+  }, [initializedTicks]);
 
-  const tickIdxToInitializedTick = keyBy(initializedTicks, "tickIndex");
-
-  // If the pool's tick is MIN_TICK (-887272), then when we find the closest
-  // initializable tick to its left, the value would be smaller than MIN_TICK.
-  // In this case we must ensure that the prices shown never go below/above.
-  // what actual possible from the protocol.
-  let activeTickIdxForPrice = activeTickIdx;
-  if (activeTickIdxForPrice < TickMath.MIN_TICK) {
-    activeTickIdxForPrice = TickMath.MIN_TICK;
-  }
-  if (activeTickIdxForPrice > TickMath.MAX_TICK) {
-    activeTickIdxForPrice = TickMath.MAX_TICK;
-  }
-
-  const activeTickProcessed: TickProcessed = {
-    liquidityActive: JSBI.BigInt(Number(liquidity)),
-    tickIndex: activeTickIdx,
-    liquidityNet: JSBI.BigInt(0),
-    price0: tickToPrice(token0, token1, activeTickIdxForPrice).toFixed(PRICE_FIXED_DIGITS),
-    price1: tickToPrice(token1, token0, activeTickIdxForPrice).toFixed(PRICE_FIXED_DIGITS),
-    liquidityGross: JSBI.BigInt(0),
-  };
-
-  // If our active tick happens to be initialized (i.e. there is a position that starts or
-  // ends at that tick), ensure we set the gross and net.
-  // correctly.
-  const activeTick = tickIdxToInitializedTick[activeTickIdx];
-  if (activeTick) {
-    activeTickProcessed.liquidityGross = JSBI.BigInt(activeTick.liquidityGross.toString());
-    activeTickProcessed.liquidityNet = JSBI.BigInt(activeTick.liquidityNet.toString());
-  }
-
-  enum Direction {
-    ASC,
-    DESC,
-  }
-
-  // Computes the numSurroundingTicks above or below the active tick.
-  const computeSurroundingTicks = (
-    activeTickProcessed: TickProcessed,
-    tickSpacing: number,
-    numSurroundingTicks: number,
-    direction: Direction,
-  ) => {
-    let previousTickProcessed: TickProcessed = {
-      ...activeTickProcessed,
-    };
-
-    // Iterate outwards (either up or down depending on 'Direction') from the active tick,
-    // building active liquidity for every tick.
-    let processedTicks: TickProcessed[] = [];
-    for (let i = 0; i < numSurroundingTicks; i++) {
-      const currentTickIdx =
-        direction === Direction.ASC
-          ? previousTickProcessed.tickIndex + tickSpacing
-          : previousTickProcessed.tickIndex - tickSpacing;
-
-      if (currentTickIdx < TickMath.MIN_TICK || currentTickIdx > TickMath.MAX_TICK) {
-        break;
-      }
-
-      const currentTickProcessed: TickProcessed = {
-        liquidityActive: previousTickProcessed.liquidityActive,
-        tickIndex: currentTickIdx,
-        liquidityNet: JSBI.BigInt(0),
-        price0: tickToPrice(token0, token1, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-        price1: tickToPrice(token1, token0, currentTickIdx).toFixed(PRICE_FIXED_DIGITS),
-        liquidityGross: JSBI.BigInt(0),
+  return useMemo(() => {
+    if (loading) {
+      return {
+        loading,
+        error: false,
       };
-
-      // Check if there is an initialized tick at our current tick.
-      // If so copy the gross and net liquidity from the initialized tick.
-      const currentInitializedTick = tickIdxToInitializedTick[currentTickIdx.toString()];
-      if (currentInitializedTick) {
-        currentTickProcessed.liquidityGross = JSBI.BigInt(currentInitializedTick.liquidityGross.toString());
-        currentTickProcessed.liquidityNet = JSBI.BigInt(currentInitializedTick.liquidityNet.toString());
-      }
-
-      // Update the active liquidity.
-      // If we are iterating ascending and we found an initialized tick we immediately apply
-      // it to the current processed tick we are building.
-      // If we are iterating descending, we don't want to apply the net liquidity until the following tick.
-      if (direction === Direction.ASC && currentInitializedTick) {
-        currentTickProcessed.liquidityActive = JSBI.add(
-          previousTickProcessed.liquidityActive,
-          JSBI.BigInt(currentInitializedTick.liquidityNet.toString()),
-        );
-      } else if (direction === Direction.DESC && JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
-        // We are iterating descending, so look at the previous tick and apply any net liquidity.
-        currentTickProcessed.liquidityActive = JSBI.subtract(
-          previousTickProcessed.liquidityActive,
-          previousTickProcessed.liquidityNet,
-        );
-      }
-
-      processedTicks.push(currentTickProcessed);
-      previousTickProcessed = currentTickProcessed;
     }
 
-    if (direction === Direction.DESC) {
-      processedTicks = processedTicks.reverse();
+    if (
+      !token0 ||
+      !token1 ||
+      !liquidity ||
+      !initializedTicks ||
+      activeTick === undefined ||
+      !ticks ||
+      ticks.length === 0
+    )
+      return { loading: false, data: undefined };
+
+    // find where the active tick would be to partition the array
+    // if the active tick is initialized, the pivot will be an element
+    // if not, take the previous tick as pivot
+    const pivot = ticks.findIndex((tickData) => tickData?.tickIndex && Number(tickData.tickIndex) > activeTick) - 1;
+
+    if (pivot < 0) {
+      return {
+        loading: false,
+        error: false,
+        activeTick,
+        data: undefined,
+      };
     }
 
-    return processedTicks;
-  };
+    let sdkPrice;
+    try {
+      sdkPrice = tickToPrice(token0 as Token, token1 as Token, activeTick);
+    } catch (e) {
+      console.warn("Error computing price from tick", e);
+      return {
+        loading: false,
+        activeTick,
+        data: undefined,
+      };
+    }
 
-  const subsequentTicks: TickProcessed[] = computeSurroundingTicks(
-    activeTickProcessed,
-    tickSpacing,
-    numSurroundingTicks,
-    Direction.ASC,
-  );
+    const activeTickProcessed: TickProcessed = {
+      liquidityActive: JSBI.BigInt(liquidity?.toString()),
+      tick: activeTick,
+      liquidityNet: JSBI.BigInt(ticks[pivot]?.liquidityNet.toString() ?? 0),
+      price0: sdkPrice.toFixed(PRICE_FIXED_DIGITS),
+      price1: sdkPrice.invert().toFixed(PRICE_FIXED_DIGITS),
+      sdkPrice,
+    };
 
-  const previousTicks: TickProcessed[] = computeSurroundingTicks(
-    activeTickProcessed,
-    tickSpacing,
-    numSurroundingTicks,
-    Direction.DESC,
-  );
+    const subsequentTicks = computeSurroundingTicks({
+      token0,
+      token1,
+      activeTickProcessed,
+      sortedTickData: ticks,
+      pivot,
+      ascending: true,
+    });
 
-  const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks);
+    const previousTicks = computeSurroundingTicks({
+      token0,
+      token1,
+      activeTickProcessed,
+      sortedTickData: ticks,
+      pivot,
+      ascending: false,
+    });
 
-  return {
-    data: {
-      ticksProcessed,
-      feeTier: String(feeTier),
-      tickSpacing,
-      activeTickIdx,
-    },
-  };
+    const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks);
+
+    return {
+      loading: false,
+      currentTick,
+      activeTick,
+      liquidity: JSBI.BigInt(liquidity.toString() ?? 0),
+      sqrtPriceX96: JSBI.BigInt(sqrtPriceX96?.toString() ?? 0),
+      data: ticksProcessed,
+    };
+  }, [liquidity, sqrtPriceX96, token0, token1, initializedTicks, loading, ticks, activeTick, currentTick]);
 }

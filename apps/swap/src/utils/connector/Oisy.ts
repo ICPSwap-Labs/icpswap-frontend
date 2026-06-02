@@ -62,8 +62,6 @@ export class OisyConnector implements ConnectorAbstract {
   }
 
   async connect() {
-    console.log("try to connect to oisy");
-
     const transport = new PostMessageTransport({
       url: this.config.providerUrl,
       windowOpenerFeatures: "width=525,height=705",

@@ -24,33 +24,38 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
   const price1 = chartProps?.payload?.[0]?.payload.price1 as number;
   const tvlToken0 = chartProps?.payload?.[0]?.payload.tvlToken0;
   const tvlToken1 = chartProps?.payload?.[0]?.payload.tvlToken1;
-  const index = chartProps?.payload?.[0]?.payload.index;
+  const index = chartProps?.payload?.[0]?.payload.index - 1;
   const isCurrent = chartProps?.payload?.[0]?.payload.isCurrent;
 
   const token0USDPrice = useUSDPrice(token0);
   const token1USDPrice = useUSDPrice(token1);
+
+  const currentDataIndex = data?.findIndex((element) => element.isCurrent);
 
   const { lockedToken0Amount, lockedToken1Amount } = useMemo(() => {
     if (
       isUndefinedOrNull(data) ||
       isUndefinedOrNull(index) ||
       isUndefinedOrNull(currentPrice) ||
-      isUndefinedOrNull(price0)
+      isUndefinedOrNull(price0) ||
+      isUndefinedOrNull(currentDataIndex)
     )
       return {};
+
+    if (!data[index]) return {};
 
     let lockedToken0Amount = new BigNumber(0);
     let lockedToken1Amount = new BigNumber(0);
 
+    // The left part of chart
     if (currentPrice > price0) {
-      for (let i = index; i < data.length; i++) {
+      for (let i = index; i < currentDataIndex; i++) {
         const __data = data[i];
-        if (!__data.isCurrent) {
-          lockedToken0Amount = lockedToken0Amount.plus(__data.tvlToken0);
-          lockedToken1Amount = lockedToken1Amount.plus(__data.tvlToken1);
-        } else {
-          break;
-        }
+
+        lockedToken0Amount = lockedToken0Amount.plus(
+          new BigNumber(__data.tvlToken1).multipliedBy(new BigNumber(__data.price1)),
+        );
+        lockedToken1Amount = lockedToken1Amount.plus(__data.tvlToken1);
       }
 
       return {
@@ -59,31 +64,25 @@ export function LiquidityChartToolTip({ chartProps, token0, token1, currentPrice
       };
     }
 
-    let isCurrent = false;
-
-    for (let i = 0; i <= index; i++) {
+    for (let i = currentDataIndex; i <= index; i++) {
       const __data = data[i];
 
-      if (__data.isCurrent) {
-        isCurrent = true;
-      }
-
-      if (isCurrent) {
-        lockedToken0Amount = lockedToken0Amount.plus(__data.tvlToken0);
-        lockedToken1Amount = lockedToken1Amount.plus(__data.tvlToken1);
-      }
+      lockedToken0Amount = lockedToken0Amount.plus(__data.tvlToken0);
+      lockedToken1Amount = lockedToken1Amount.plus(
+        new BigNumber(__data.tvlToken0).multipliedBy(new BigNumber(__data.price0)),
+      );
     }
 
     return {
       lockedToken0Amount: lockedToken0Amount.toString(),
       lockedToken1Amount: lockedToken1Amount.toString(),
     };
-  }, [data, index, currentPrice, price0]);
+  }, [data, index, currentPrice, currentDataIndex, price0]);
 
   const price0IsLessThanCurrentPrice = useMemo(() => {
     if (isUndefinedOrNull(currentPrice) || isUndefinedOrNull(price0)) return true;
 
-    return currentPrice < price0;
+    return !(currentPrice > price0);
   }, [currentPrice, price0]);
 
   return (

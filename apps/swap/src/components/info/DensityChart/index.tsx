@@ -1,41 +1,23 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 
 import { useSwapPoolMetadata } from "@icpswap/hooks";
-import { CurrencyAmount, type FeeAmount, Pool, TICK_SPACINGS, TickMath, type Token } from "@icpswap/swap-sdk";
+import { type FeeAmount, TICK_SPACINGS, TickMath } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
-import { BigNumber, numberToString } from "@icpswap/utils";
 import { Box, useTheme } from "components/Mui";
 import { type TickProcessed, useTicksSurroundingPrice } from "hooks/swap/useTicksSurroundingPrice";
 import { useToken } from "hooks/useCurrency";
 import JSBI from "jsbi";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Bar, BarChart, Cell, LabelList, ResponsiveContainer, Tooltip } from "recharts";
 import { CurrentPriceLabel } from "./CurrentPriceLabel";
 import { LiquidityChartToolTip } from "./LiquidityChartToolTip";
 import type { ChartEntry } from "./type";
-
-const MAX_UINT128 = new BigNumber("340282366920938463463374607431768211455");
+import { calculateTokensLocked } from "./utils/calculateTokensLocked";
 
 interface DensityChartProps {
   address: string | Null;
   token0Price: number | string | undefined;
 }
-
-interface ZoomStateProps {
-  left: number;
-  right: number;
-  refAreaLeft: string | number;
-  refAreaRight: string | number;
-}
-
-const INITIAL_TICKS_TO_FETCH = 200;
-
-const initialState = {
-  left: 0,
-  right: INITIAL_TICKS_TO_FETCH * 2 + 1,
-  refAreaLeft: "",
-  refAreaRight: "",
-};
 
 interface CustomBarProps {
   x: number;
@@ -72,99 +54,57 @@ export function DensityChart({ address }: DensityChartProps) {
 
   const feeTier = __pool?.fee;
 
-  const { data: poolTickData } = useTicksSurroundingPrice(__pool);
+  const { data: ticksData } = useTicksSurroundingPrice(__pool);
 
   const [loading, setLoading] = useState(false);
-  const [zoomState] = useState<ZoomStateProps>(initialState);
 
   const [formattedData, setFormattedData] = useState<ChartEntry[] | undefined>();
   const [activeToken0Price, setActiveToken0Price] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     async function formatData() {
-      if (poolTickData && __pool && token0 && token1 && feeTier && address) {
+      if (ticksData && __pool && token0 && token1 && feeTier && address) {
         const newData = (
           await Promise.all(
-            poolTickData.ticksProcessed.map(async (t: TickProcessed, i) => {
-              const active = t.tickIndex === poolTickData.activeTickIdx;
-              const sqrtPriceX96 = TickMath.getSqrtRatioAtTick(t.tickIndex);
+            ticksData.map(async (tickProcessed: TickProcessed, index) => {
               const feeAmount: FeeAmount = Number(feeTier);
 
-              const minTick = t.tickIndex - TICK_SPACINGS[feeAmount];
+              const minTick = tickProcessed.tick - TICK_SPACINGS[feeAmount];
 
               if (minTick < TickMath.MIN_TICK) return undefined;
 
-              const mockTicks = [
-                {
-                  index: minTick,
-                  liquidityGross: t.liquidityGross,
-                  liquidityNet: JSBI.multiply(t.liquidityNet, JSBI.BigInt("-1")),
-                },
-                {
-                  index: t.tickIndex,
-                  liquidityGross: t.liquidityGross,
-                  liquidityNet: t.liquidityNet,
-                },
-              ];
+              const nextTick = ticksData[index + 1]?.tick;
 
-              const pool =
-                token0 && token1 && feeTier
-                  ? new Pool(
-                      address,
-                      token0,
-                      token1,
-                      Number(feeTier),
-                      sqrtPriceX96,
-                      t.liquidityActive,
-                      t.tickIndex,
-                      mockTicks,
-                    )
-                  : undefined;
+              const { amount0Locked, amount1Locked } = calculateTokensLocked({
+                token0,
+                token1,
+                currentTick: __pool?.tick ? Number(__pool.tick) : 0,
+                amount: JSBI.BigInt(tickProcessed.liquidityActive.toString()),
+                nextTick,
+                tick: { tick: tickProcessed.tick, liquidityNet: tickProcessed.liquidityNet },
+              });
 
-              const nextSqrtX96 = poolTickData.ticksProcessed[i - 1]
-                ? TickMath.getSqrtRatioAtTick(poolTickData.ticksProcessed[i - 1].tickIndex)
-                : undefined;
+              const isCurrent = amount0Locked > 0 && amount1Locked > 0;
 
-              const maxAmountToken0 = token0
-                ? CurrencyAmount.fromRawAmount(token0, numberToString(MAX_UINT128))
-                : undefined;
-
-              const outputRes0 =
-                pool && maxAmountToken0 ? await pool.getOutputAmount(maxAmountToken0, nextSqrtX96) : undefined;
-
-              const token1Amount = outputRes0?.[0] as CurrencyAmount<Token> | undefined;
-
-              const amount0 = token1Amount ? parseFloat(token1Amount.toExact()) * parseFloat(t.price1) : 0;
-              const amount1 = token1Amount ? parseFloat(token1Amount.toExact()) : 0;
-
-              if (active) {
-                setActiveToken0Price(parseFloat(t.price0));
+              if (isCurrent) {
+                setActiveToken0Price(parseFloat(tickProcessed.price0));
               }
 
+              if (amount0Locked === 0 && amount1Locked === 0) return undefined;
+
               return {
-                index: i,
-                isCurrent: active,
-                activeLiquidity: parseFloat(t.liquidityActive.toString()),
-                price0: parseFloat(t.price0),
-                price1: parseFloat(t.price1),
-                tvlToken0: amount0,
-                tvlToken1: amount1,
+                index: index,
+                isCurrent,
+                activeLiquidity: parseFloat(tickProcessed.liquidityActive.toString()),
+                price0: parseFloat(tickProcessed.price0),
+                price1: parseFloat(tickProcessed.price1),
+                tvlToken0: amount0Locked,
+                tvlToken1: amount1Locked,
+                tick: tickProcessed.tick,
               };
             }),
           )
         ).filter((ele) => !!ele) as TickChartData[];
-
-        // offset the values to line off bars with TVL used to swap across bar
-        newData
-          ?.map((entry, i) => {
-            if (i > 0) {
-              newData[i - 1].tvlToken0 = entry.tvlToken0;
-              newData[i - 1].tvlToken1 = entry.tvlToken1;
-            }
-
-            return undefined;
-          })
-          .filter((ele) => !!ele);
 
         if (newData) {
           setLoading(false);
@@ -179,14 +119,7 @@ export function DensityChart({ address }: DensityChartProps) {
       setLoading(true);
       formatData();
     }
-  }, [feeTier, formattedData, __pool, poolTickData, token0, token1, address]);
-
-  const zoomedData = useMemo(() => {
-    if (formattedData) {
-      return formattedData.slice(zoomState.left, zoomState.right);
-    }
-    return undefined;
-  }, [formattedData, zoomState.left, zoomState.right]);
+  }, [feeTier, formattedData, __pool, ticksData, token0, token1, address]);
 
   // reset data on address change
   useEffect(() => {
@@ -203,7 +136,7 @@ export function DensityChart({ address }: DensityChartProps) {
     >
       {!loading ? (
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart width={500} height={300} data={zoomedData}>
+          <BarChart width={500} height={300} data={formattedData}>
             <Tooltip
               content={(props) => {
                 return (
@@ -212,7 +145,7 @@ export function DensityChart({ address }: DensityChartProps) {
                     token0={token0}
                     token1={token1}
                     currentPrice={activeToken0Price}
-                    data={zoomedData}
+                    data={formattedData}
                   />
                 );
               }}
@@ -229,7 +162,7 @@ export function DensityChart({ address }: DensityChartProps) {
                 );
               }}
             >
-              {zoomedData?.map((entry, index) => {
+              {formattedData?.map((entry, index) => {
                 return <Cell key={`cell-${index}`} fill={entry.isCurrent ? "#ffffff" : theme.colors.secondaryMain} />;
               })}
 
@@ -237,7 +170,7 @@ export function DensityChart({ address }: DensityChartProps) {
                 dataKey="activeLiquidity"
                 position="inside"
                 content={(props) => (
-                  <CurrentPriceLabel chartProps={props} token0={token0} token1={token1} data={zoomedData} />
+                  <CurrentPriceLabel chartProps={props} token0={token0} token1={token1} data={formattedData} />
                 )}
               />
             </Bar>
