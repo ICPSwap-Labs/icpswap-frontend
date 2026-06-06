@@ -5,6 +5,7 @@ import type { Null } from "@icpswap/types";
 import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
 import { WRAPPED_ICP } from "constants/tokens";
 import { useMemo } from "react";
+import { useToken } from "hooks/index";
 
 export function useICPPrice(): number | undefined {
   const icpTokenInfo = useInfoToken(ICP.address);
@@ -24,27 +25,18 @@ export function useUSDPrice(token: Token | Null): string | number | undefined {
     return token.address;
   }, [token]);
 
-  const graphToken = useInfoToken(tokenId);
+  const tokenInfo = useInfoToken(tokenId);
 
   return useMemo(() => {
     if (!tokenId) return undefined;
 
-    return graphToken?.price;
-  }, [tokenId, graphToken]);
+    return tokenInfo?.price;
+  }, [tokenId, tokenInfo]);
 }
 
-export function useUSDPriceById(tokenId: string | undefined): number | undefined {
-  const graphToken = useInfoToken(tokenId);
-
-  return useMemo(() => {
-    if (!tokenId) return undefined;
-
-    if (graphToken) {
-      return Number(graphToken.price);
-    }
-
-    return undefined;
-  }, [tokenId, graphToken]);
+export function useUSDPriceById(tokenId: string | undefined) {
+  const [, token] = useToken(tokenId);
+  return useUSDPrice(token);
 }
 
 export function useUSDValue(currencyAmount: CurrencyAmount<Token> | undefined) {

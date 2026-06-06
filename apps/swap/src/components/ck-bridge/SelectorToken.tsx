@@ -25,7 +25,7 @@ interface SelectorTokenUIProps {
   hidden?: boolean;
   chain: BridgeChainType;
   balance?: BigNumber | string | Null;
-  priceUSD: number | undefined;
+  priceUSD: number | undefined | string;
   token: Token | Null;
   loading: boolean;
 }
@@ -150,7 +150,7 @@ interface SelectorTokenForTokenProps {
   token: Token | Null;
   hidden?: boolean;
   onClick?: (token: Token, chain: BridgeChainType) => void;
-  priceUSD: number | undefined;
+  priceUSD: number | undefined | string;
 }
 
 function SelectorTokenForToken({ token, onClick, hidden, chain, priceUSD }: SelectorTokenForTokenProps) {
@@ -175,7 +175,7 @@ interface SelectorTokenForErc20TokenProps {
   hidden?: boolean;
   chain: BridgeChainType;
   token: Token | Null;
-  priceUSD: number | undefined;
+  priceUSD: number | undefined | string;
   balance?: BigNumber;
   balancesLoading?: boolean;
 }
@@ -207,7 +207,7 @@ interface SelectorTokenForEthProps {
   hidden?: boolean;
   chain: BridgeChainType;
   token: Token | Null;
-  priceUSD: number | undefined;
+  priceUSD: number | undefined | string;
 }
 
 function SelectorTokenForEth({ token, onClick, hidden, chain, priceUSD }: SelectorTokenForEthProps) {
@@ -231,7 +231,7 @@ interface TokenSelectorNoneBalanceProps {
   hidden?: boolean;
   chain: BridgeChainType;
   token: Token | Null;
-  priceUSD: number | undefined;
+  priceUSD: number | undefined | string;
 }
 
 export const TokenSelectorNoneBalance = ({

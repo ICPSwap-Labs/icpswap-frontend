@@ -84,8 +84,8 @@ export interface PositionDetailsProps {
   manuallyInverted: boolean;
   setManuallyInverted: (manuallyInverted: boolean) => void;
   show: boolean | undefined;
-  token0USDPrice: number | undefined;
-  token1USDPrice: number | undefined;
+  token0USDPrice: number | undefined | string;
+  token1USDPrice: number | undefined | string;
   positionKey: string | undefined;
   feeUSDValue: string | undefined;
   feeAmount0: CurrencyAmount<Token> | undefined;
