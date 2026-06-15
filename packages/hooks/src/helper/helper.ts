@@ -36,3 +36,11 @@ export function useUserTokens({
     enabled: !isUndefinedOrNull(principal),
   });
 }
+
+export async function checkUserWalletTokens({ principal }: { principal: string }) {
+  return (
+    await icpswap_fetch_post<void>("/info/wallet/user/check", {
+      pid: principal,
+    })
+  ).data;
+}

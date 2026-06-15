@@ -1,4 +1,4 @@
-import { getUserTokens } from "@icpswap/hooks";
+import { getUserTokens, checkUserWalletTokens } from "@icpswap/hooks";
 import { BigNumber, nonUndefinedOrNull } from "@icpswap/utils";
 import { MessageTypes, useTips } from "hooks/index";
 import { useCallback, useMemo, useState } from "react";
@@ -20,6 +20,8 @@ export function useSyncYourTokensHandler() {
     setLoading(true);
 
     const result = await getUserTokens({ principal: principal.toString() });
+
+    checkUserWalletTokens({ principal: principal.toString() });
 
     if (result) {
       const allUserTokens = (result.tokens ?? [])
