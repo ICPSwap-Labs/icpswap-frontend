@@ -622,6 +622,8 @@ export default function AddLiquidity() {
                 price={price ? parseFloat((invertPrice ? price.invert() : price).toSignificant(8)) : undefined}
                 getRangeByPercent={getRangeByPercent}
                 pool={pool}
+                createPoolFee={pcmMetadata?.passcodePrice}
+                pcmToken={pcmToken}
               />
               <Box
                 mt={2}

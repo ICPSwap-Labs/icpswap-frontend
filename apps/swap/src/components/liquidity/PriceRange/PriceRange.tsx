@@ -2,7 +2,7 @@ import { usePoolPricePeriodRange } from "@icpswap/hooks";
 import type { Pool, Price, Token } from "@icpswap/swap-sdk";
 import { ChartTimeEnum, type Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
-import { BigNumber, isUndefinedOrNull } from "@icpswap/utils";
+import { BigNumber, formatAmount, isUndefinedOrNull, parseTokenAmount } from "@icpswap/utils";
 import { NumberTextField } from "components/index";
 import { CurrentPriceLabelForChart } from "components/liquidity/CurrentPriceLabelForChart";
 import { FullRangeWarning } from "components/liquidity/FullRangeWarning";
@@ -54,6 +54,8 @@ export interface PriceRangeProps {
   poolLoading?: boolean;
   getRangeByPercent: (value: string | number) => [string, string] | undefined;
   pool: Pool | Null;
+  createPoolFee: bigint | undefined;
+  pcmToken: Token | undefined;
 }
 
 export const PriceRange = memo(
@@ -79,6 +81,8 @@ export const PriceRange = memo(
     poolLoading,
     getRangeByPercent,
     pool,
+    createPoolFee,
+    pcmToken,
   }: PriceRangeProps) => {
     const { t } = useTranslation();
     const theme = useTheme();
@@ -198,7 +202,13 @@ export const PriceRange = memo(
                 }}
               >
                 <Typography color={theme.colors.warningDark} fontSize={12} lineHeight="16px">
-                  {t("liquidity.set.price.description")}
+                  {t("liquidity.set.price.description", {
+                    amount:
+                      createPoolFee && pcmToken
+                        ? formatAmount(parseTokenAmount(createPoolFee, pcmToken.decimals).toString())
+                        : "-",
+                    symbol: pcmToken?.symbol ?? "-",
+                  })}
                 </Typography>
               </Box>
               <Box mt={2}>

@@ -938,7 +938,7 @@
   "liquidity.position.value": "Position value",
   "liquidity.price.updates": "Price data updates hourly",
   "liquidity.set.price": "Set starting price",
-  "liquidity.set.price.description": "Before you can add liquidity, this pool needs to be initialized. Creating a trading pair incurs 1 ICP fee for setting up the Swap pool canister. To begin, select an initial price for the pool, determine your liquidity price range, and decide on the deposit amount. Please be aware that if the liquidity pool is being established for the first time, the creation of a new canister might require some time.",
+  "liquidity.set.price.description": "Before you can add liquidity, this pool needs to be initialized. Creating a trading pair incurs {{amount}} {{symbol}} fee for setting up the Swap pool canister. To begin, select an initial price for the pool, determine your liquidity price range, and decide on the deposit amount. Please be aware that if the liquidity pool is being established for the first time, the creation of a new canister might require some time.",
   "liquidity.set.price.range": "Set price range",
   "liquidity.sneed.locked.description": "Need to lock your liquidity? Check out the Sneedlock feature controlled by Sneed DAO:",
   "liquidity.staked.positions": "Staked positions",
