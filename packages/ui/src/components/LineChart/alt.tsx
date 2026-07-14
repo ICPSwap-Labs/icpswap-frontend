@@ -82,21 +82,26 @@ export function LineChartAlt({
       markLine !== undefined
         ? {
             silent: true,
-            symbol: "none",
+            symbol: ["none", "none"],
             lineStyle: {
               color: markLine.color ?? theme.colors.apr,
               width: 1,
               type: "dashed" as const,
             },
+            label: {
+              show: true,
+              position: "start",
+              formatter: (params) => params.name,
+              color: theme.palette.text.primary,
+              fontSize: 9,
+              backgroundColor: markLine.color ?? theme.colors.apr,
+              padding: [2, 6],
+              borderRadius: 4,
+            },
             data: [
               {
+                name: markLine.labelText,
                 yAxis: typeof markLine.y === "string" ? Number(markLine.y) : markLine.y,
-                label: {
-                  show: true,
-                  formatter: markLine.labelText,
-                  color: theme.palette.text.primary,
-                  fontSize: 12,
-                },
               },
             ],
           }
