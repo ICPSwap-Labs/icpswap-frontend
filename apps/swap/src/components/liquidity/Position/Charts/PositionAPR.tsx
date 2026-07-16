@@ -106,11 +106,7 @@ export function PositionAPRChart({ poolId, time: aprTime, positionId }: Position
                     ? {
                         y: lineY,
                         color: theme.colors.apr,
-                        labelText: `Avg ${
-                          new BigNumber(averageApr).isLessThan(1)
-                            ? numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 4)
-                            : numToPercent(new BigNumber(averageApr).dividedBy(100).toString(), 2)
-                        }`,
+                        labelText: `Avg ${new BigNumber(averageApr).toPrecision(2)}%`,
                       }
                     : undefined
                 }

@@ -93,9 +93,9 @@ export function LineChartAlt({
               position: "start",
               formatter: (params) => params.name,
               color: theme.palette.text.primary,
-              fontSize: 9,
+              fontSize: 11,
               backgroundColor: markLine.color ?? theme.colors.apr,
-              padding: [2, 6],
+              padding: [2, 2],
               borderRadius: 4,
             },
             data: [
@@ -111,7 +111,7 @@ export function LineChartAlt({
       {
         animation: false,
         grid: {
-          left: 4,
+          left: markLine !== undefined ? 18 : 4,
           right: 4,
           top: 4,
           bottom: showXAxis ? 28 : 4,

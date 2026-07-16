@@ -6,7 +6,7 @@ import Zoom, { ZoomOverlay } from "components/liquidity/PriceRangeChart/Zoom";
 import { useTheme } from "components/Mui";
 import type { Bound } from "constants/swap";
 import { max, scaleLinear, type ZoomTransform } from "d3";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const xAccessor = (d: ChartEntry) => d.price0;
 export const yAccessor = (d: ChartEntry) => d.activeLiquidity;
@@ -47,9 +47,8 @@ export function Chart({
   styles,
 }: LiquidityChartsProps) {
   const theme = useTheme();
-  const zoomRef = useRef<SVGRectElement | null>(null);
-
   const [zoom, setZoom] = useState<ZoomTransform | null>(null);
+  const [overlayElement, setOverlayElement] = useState<SVGRectElement | null>(null);
 
   const [innerHeight, innerWidth] = useMemo(
     () => [height - margins.top - margins.bottom, width - margins.left - margins.right],
@@ -85,7 +84,7 @@ export function Chart({
   return (
     <>
       <Zoom
-        svg={zoomRef.current}
+        svg={overlayElement}
         xScale={xScale}
         setZoom={setZoom}
         width={innerWidth}
@@ -166,7 +165,7 @@ export function Chart({
             <AxisBottom xScale={xScale} innerHeight={innerHeight} />
           </g>
 
-          <ZoomOverlay width={innerWidth} height={height} ref={zoomRef} />
+          <ZoomOverlay width={innerWidth} height={height} ref={setOverlayElement} />
         </g>
       </svg>
     </>

@@ -128,7 +128,7 @@ export function PoolAPRChart({ poolId, time: __time, height = "340px" }: PoolAPR
                     ? {
                         y: averageAprSvgY,
                         color: theme.colors.apr,
-                        labelText: `Avg ${new BigNumber(averageApr).toFixed(2)}%`,
+                        labelText: `Avg ${new BigNumber(averageApr).toPrecision(2)}%`,
                       }
                     : undefined
                 }
