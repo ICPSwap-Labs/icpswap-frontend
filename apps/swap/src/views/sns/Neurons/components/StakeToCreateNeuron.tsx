@@ -14,6 +14,7 @@ import type React from "react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipal } from "store/auth/hooks";
+import { useOisyDisabledTips } from "hooks/useOisyDisabledTips";
 
 export interface StakeProps {
   onStakeSuccess?: () => void;
@@ -117,9 +118,11 @@ export function StakeToCreateNeuron({ onStakeSuccess, token, governance_id, neur
       amount: `${parseTokenAmount(neuron_minimum_stake_e8s, 8).toString()} ${token?.symbol}`,
     });
 
+  const oisyButtonDisabled = useOisyDisabledTips({ page: "nns" });
+
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" size="small">
+      <Button onClick={() => setOpen(true)} variant="contained" size="small" disabled={oisyButtonDisabled}>
         {t("common.stake")}
       </Button>
 

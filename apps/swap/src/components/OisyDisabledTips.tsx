@@ -1,7 +1,7 @@
 import { TextButton } from "components/index";
 import { Typography } from "components/Mui";
 
-export type OisyDisabledPage = "ck-bridge" | "farm" | "stake";
+export type OisyDisabledPage = "ck-bridge" | "nns" | "farm" | "stake";
 
 export interface OisyDisabledTipsProps {
   page: OisyDisabledPage;
@@ -18,8 +18,14 @@ export function OisyDisabledTips({ page }: OisyDisabledTipsProps) {
         </>
       ) : page === "farm" || page === "stake" ? (
         <>
-          The Oisy wallet needs the targeted canister to support ICRC21. We'll add ICRC21 implementation for all Farm
-          and Staking Pools in the next update. Until then, use Internet Identity (II) or another ICP wallet.
+          The Oisy wallet requires the target canister to support ICRC21 in order to interact properly. Please use
+          Internet Identity (II) or another ICP wallet.
+        </>
+      ) : page === "nns" ? (
+        <>
+          The Oisy wallet requires the target canister to support ICRC21 in order to interact properly. Please use
+          Internet Identity (II) or another ICP wallet. Alternatively, you can access it through the NNS frontend:
+          <TextButton link="https://oisy.com">https://nns.ic0.app</TextButton>.
         </>
       ) : null}
     </Typography>
