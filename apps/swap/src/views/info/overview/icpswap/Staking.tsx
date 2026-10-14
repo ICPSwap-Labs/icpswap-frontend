@@ -65,7 +65,7 @@ export function Staking() {
           <Item
             label={t("common.total.rewarded.value")}
             value={rewardedValue ?? "--"}
-            tooltip={t`The total value of rewards distributed by finished pools.`}
+            tooltip={t("stake.total.value.rewarded.descriptions")}
           />
           <Item
             label={t("common.total.pools")}

@@ -56,7 +56,7 @@ export function ConfirmImport({ canisterId, open, onClose, onImportSuccessfully 
   const handleConfirm = () => {
     if (!token) return;
 
-    openSuccessTip(t`Imported successfully`);
+    openSuccessTip(t("imported.successfully"));
     updateTaggedTokens([canisterId]);
     if (onImportSuccessfully) onImportSuccessfully();
     onClose();

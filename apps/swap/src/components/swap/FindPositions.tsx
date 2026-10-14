@@ -169,7 +169,7 @@ export default function FindPositionsModal({ open, onClose }: FindPositionsModal
     updateStoreUserPositionPool([poolId]);
     updateUserPositionPoolId(poolId, true);
 
-    openTip("Imported successfully", TIP_SUCCESS);
+    openTip(t("imported.successfully"), TIP_SUCCESS);
 
     setLoading(false);
 

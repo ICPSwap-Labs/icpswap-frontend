@@ -23,7 +23,7 @@ export const TokenLocales: Locals = {
 };
 
 export const SwapLocales: Locals = {
-  "mint liquidity failed": i18n.t`Failed to mint liquidity`,
+  "mint liquidity failed": i18n.t("failed.mint.liquidity"),
   "collect failed": i18n.t`Failed to Collect`,
   "burn failed": i18n.t`Failed to burn`,
   "create pool task is busy, please try again later": i18n.t`Create pool task is busy, please try again later`,

@@ -154,7 +154,7 @@ export function GlobalData() {
         tooltip0={t("common.tvl.tips")}
         label1={t("common.total.rewarded.value")}
         value1={rewardedValue ?? "--"}
-        tooltip1={t`The total value of rewards distributed by finished pools.`}
+        tooltip1={t("stake.total.value.rewarded.descriptions")}
       />
 
       <Item

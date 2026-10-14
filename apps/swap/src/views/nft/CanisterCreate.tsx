@@ -81,7 +81,7 @@ export default function NFTCanisterCreate() {
       });
 
       if (approveStatus === "err") {
-        openErrorTip(t`Failed to approve, please try again.`);
+        openErrorTip(t("failed.approve"));
         return;
       }
 
@@ -245,7 +245,7 @@ export default function NFTCanisterCreate() {
                 fontSize="16px"
                 border="none"
                 placeholderSize="16px"
-                placeholder={t`Enter the canister description`}
+                placeholder={t("nft.create.canister.description")}
                 onChange={(value: string) => onFieldChange(value, "introduction")}
                 textFieldProps={{
                   slotProps: {
@@ -326,7 +326,7 @@ export default function NFTCanisterCreate() {
                       <FilledTextField
                         select
                         border="none"
-                        placeholder={t`Media`}
+                        placeholder={t("common.media")}
                         value={socialMediaLink.label}
                         onChange={(value) => onSocialMediaLinkChange(value, index)}
                         menus={SOCIAL_LINKS}

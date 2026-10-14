@@ -144,7 +144,7 @@ export function TokenInformation({ token, poolId }: TokenInformationProps) {
               </Typography>
             </Card>
             <Card
-              title={t`Circulating %`}
+              title={t("Circulating %")}
               fontSize="12px"
               tips={
                 <Flex vertical gap="8px 0" align="flex-start">

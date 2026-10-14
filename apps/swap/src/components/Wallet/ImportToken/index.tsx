@@ -101,7 +101,7 @@ export default function ImportTokenModal({ open, onClose, onImportSuccessfully }
 
     updateTokenStandard([{ canisterId: values.id, standard: values.standard as TOKEN_STANDARD }]);
     registerTokens([{ canisterId: values.id, standard: values.standard as TOKEN_STANDARD }]);
-    openSuccessTip(t`Imported successfully`);
+    openSuccessTip(t("imported.successfully"));
     saveTokenToWallet([values.id]);
     if (onImportSuccessfully) onImportSuccessfully();
     onClose();
