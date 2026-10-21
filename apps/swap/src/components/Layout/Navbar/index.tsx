@@ -1,14 +1,12 @@
-import { Box } from "components/Mui";
-
 import { MAX_NUMBER, routes } from "./config";
 import { ExceedRoutes } from "./ExceedRoutes";
 import { Routes } from "./Routes";
 
 export default function NavBar() {
   return (
-    <Box sx={{ display: "flex", gap: "0 8px" }}>
+    <nav className="flex h-full items-center gap-1" aria-label="ICPSwap">
       <Routes routes={routes} />
       {routes.length > MAX_NUMBER ? <ExceedRoutes routes={routes} /> : null}
-    </Box>
+    </nav>
   );
 }

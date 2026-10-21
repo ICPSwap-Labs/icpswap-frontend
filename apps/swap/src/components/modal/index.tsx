@@ -16,18 +16,21 @@ import i18n from "i18n/index";
 import type { ReactNode } from "react";
 import { isElement } from "react-is";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   titleContainer: {
     position: "relative",
+    paddingRight: "36px",
+    lineHeight: 1.4,
   },
   title: {
     fontSize: "20px",
     fontWeight: 700,
+    letterSpacing: "-0.035em",
     "@media (max-width: 640px)": {
       fontSize: "1rem",
     },
     "&.warning": {
-      color: "#D3625B",
+      color: "var(--color-error)",
     },
   },
   detailItem: {
@@ -43,13 +46,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: "50%",
     transform: "translate(0, -50%)",
     cursor: "pointer",
+    color: "color-mix(in srgb, var(--color-base-content) 48%, transparent)",
+    transition: "color 160ms ease",
     "&:hover": {
-      color: theme.colors.primaryMain,
+      color: "var(--color-primary)",
     },
     "&.warning": {
-      color: "#D3625B",
+      color: "var(--color-error)",
       "&:hover": {
-        color: "#D3625B",
+        color: "var(--color-error)",
       },
     },
   },
@@ -58,13 +63,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: "5px",
     top: "5px",
     cursor: "pointer",
+    color: "color-mix(in srgb, var(--color-base-content) 48%, transparent)",
+    transition: "color 160ms ease",
     "&:hover": {
-      color: theme.colors.primaryMain,
+      color: "var(--color-primary)",
     },
     "&.warning": {
-      color: "#D3625B",
+      color: "var(--color-error)",
       "&:hover": {
-        color: "#D3625B",
+        color: "var(--color-error)",
       },
     },
   },
@@ -126,23 +133,35 @@ export default function Modal({
       fullWidth={fullWidth}
       {...dialogProps}
       sx={{
+        "& .MuiBackdrop-root": {
+          background: "color-mix(in srgb, var(--color-neutral) 74%, transparent)",
+          backdropFilter: "blur(12px)",
+        },
         "& .MuiDialog-paper, & .MuiPaper-root": {
           padding: "0",
         },
+        "& .MuiDialog-paper": {
+          borderRadius: "24px",
+          border: "1px solid color-mix(in srgb, var(--color-base-content) 12%, transparent)",
+          boxShadow:
+            "0 32px 100px color-mix(in srgb, var(--color-neutral) 50%, transparent), 0 0 60px color-mix(in srgb, var(--color-primary) 7%, transparent)",
+          backgroundImage:
+            "radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--color-primary) 7%, transparent), transparent 55%)",
+        },
         "& .MuiDialogTitle-root": {
-          padding: "24px 24px 0 24px",
-          ...(matchDownMD ? { padding: "12px 12px 0 12px" } : {}),
+          padding: "28px 28px 0",
+          ...(matchDownMD ? { padding: "20px 20px 0" } : {}),
         },
         "& .MuiDialogContent-root": {
           position: "relative",
-          padding: contentPadding ? `${contentPadding}!important` : "24px!important",
-          ...(matchDownMD ? { padding: "12px", paddingTop: "12px!important" } : {}),
+          padding: contentPadding ? `${contentPadding}!important` : "24px 28px 28px!important",
+          ...(matchDownMD && !contentPadding ? { padding: "20px!important" } : {}),
         },
         ...{
           "& .MuiPaper-root ": {
             ...(background
               ? { backgroundColor: background === "level1" ? theme.palette.background.level1 : background }
-              : { backgroundColor: theme.palette.background.level2 }),
+              : { backgroundColor: "var(--color-base-100)" }),
           },
           ...(dialogProps?.sx || {}),
         },
@@ -181,14 +200,21 @@ export default function Modal({
           >
             {showCancel ? (
               <Box>
-                <Button fullWidth size="large" onClick={onCancel} variant="outlined">
+                <Button fullWidth size="large" onClick={onCancel} variant="outlined" className="btn btn-outline">
                   {cancelText}
                 </Button>
               </Box>
             ) : null}
             {showConfirm ? (
               <Box>
-                <Button disabled={confirmDisabled} fullWidth size="large" variant="contained" onClick={onConfirm}>
+                <Button
+                  disabled={confirmDisabled}
+                  fullWidth
+                  size="large"
+                  variant="contained"
+                  onClick={onConfirm}
+                  className="btn btn-primary"
+                >
                   {confirmText}
                 </Button>
               </Box>

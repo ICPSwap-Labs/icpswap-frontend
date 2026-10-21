@@ -4,7 +4,7 @@ import { getListProposals, useParsedQueryString } from "@icpswap/hooks";
 import type { ProposalData } from "@icpswap/types";
 import { nowInSeconds, shortenString } from "@icpswap/utils";
 import { Link, LoadingRow, Wrapper } from "components/index";
-import { Box, Typography, useTheme } from "components/Mui";
+import { Box, Typography } from "components/Mui";
 import { SelectNeuronFuncs } from "components/sns/SelectNeuronFuncs";
 import { SelectNeuronProposalStatus } from "components/sns/SelectNeuronProposalStatus";
 import { SelectSns } from "components/sns/SelectSNSTokens";
@@ -24,9 +24,16 @@ interface ProposalItemProps {
   latest_id: bigint | undefined;
 }
 
+const proposalStatusColors: Partial<Record<SnsProposalDecisionStatus, string>> = {
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN]: "var(--color-primary)",
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_ADOPTED]: "var(--color-success)",
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_EXECUTED]: "var(--color-success)",
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_FAILED]: "var(--color-error)",
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_REJECTED]: "var(--color-error)",
+};
+
 function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps) {
   const { t } = useTranslation();
-  const theme = useTheme();
 
   const { title, summary, seconds, isExecuted } = useMemo(() => {
     const __proposal = proposal.proposal[0];
@@ -68,15 +75,29 @@ function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps)
     }
   }, [proposal, t]);
 
+  const proposalStatus = getProposalStatus(proposal);
+  const statusColor =
+    (proposalStatus === undefined ? undefined : proposalStatusColors[proposalStatus]) ?? "var(--color-base-content)";
+
   return (
     <Box
+      className="card border border-base-300 bg-base-100"
       sx={{
-        background: theme.palette.background.level4,
-        borderRadius: "12px",
-        padding: "20px",
+        borderRadius: "18px",
+        padding: "24px",
         cursor: "pointer",
+        minHeight: "240px",
+        transition: "border-color 180ms ease, box-shadow 180ms ease",
+        "&:hover, &:focus-within": {
+          borderColor: "color-mix(in oklab, var(--color-primary) 45%, var(--color-base-300))",
+          boxShadow: "0 12px 32px -20px color-mix(in oklab, var(--color-primary) 25%, transparent)",
+        },
         "@media(max-width: 640px)": {
-          padding: "10px",
+          padding: "20px",
+          minHeight: "auto",
+        },
+        "@media(prefers-reduced-motion: reduce)": {
+          transition: "none",
         },
       }}
     >
@@ -86,30 +107,62 @@ function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps)
         height="100%"
         display="block"
       >
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>ID: {proposal.id[0]?.id.toString() ?? "--"}</Typography>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "12px" }}>
+          <Typography sx={{ fontSize: "12px", fontVariantNumeric: "tabular-nums", letterSpacing: "0.02em" }}>
+            ID: {proposal.id[0]?.id.toString() ?? "--"}
+          </Typography>
 
           <Box
+            className="badge badge-soft"
             sx={{
-              padding: "3px 10px",
-              borderRadius: "12px",
-              background: proposal_status_text === "Open" ? theme.colors.successDark : theme.palette.background.level1,
+              height: "26px",
+              padding: "4px 9px",
+              gap: "6px",
+              borderRadius: "7px",
+              color: statusColor,
+              border: `1px solid color-mix(in oklab, ${statusColor} 18%, transparent)`,
+              background: `color-mix(in oklab, ${statusColor} 9%, transparent)`,
             }}
           >
-            <Typography color="text.primary">{proposal_status_text}</Typography>
+            <Box
+              component="span"
+              aria-hidden
+              sx={{ width: "5px", height: "5px", borderRadius: "50%", background: "currentColor" }}
+            />
+            <Typography sx={{ color: "inherit", fontSize: "11px", fontWeight: 500 }}>{proposal_status_text}</Typography>
           </Box>
         </Box>
 
-        <Typography sx={{ color: "text.primary", wordBreak: "break-all", lineHeight: "16px", margin: "10px 0 0 0" }}>
+        <Typography
+          sx={{
+            color: "text.primary",
+            fontWeight: 600,
+            fontSize: "15px",
+            letterSpacing: "-0.02em",
+            wordBreak: "break-word",
+            lineHeight: "23px",
+            margin: "20px 0 0 0",
+          }}
+        >
           {title}
         </Typography>
 
-        <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px", wordBreak: "break-word", lineHeight: "16px" }}>
+        <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px", wordBreak: "break-word", lineHeight: "20px" }}>
           {summary ? shortenString(summary, 150) : "--"}
         </Typography>
 
         {isExecuted ? null : (
-          <Typography sx={{ margin: "20px 0 0 0" }}>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>
+          <Typography
+            sx={{
+              margin: "20px 0 0 0",
+              paddingTop: "14px",
+              borderTop: "1px solid var(--color-base-300)",
+              fontSize: "11px",
+              fontVariantNumeric: "tabular-nums",
+            }}
+          >
+            {seconds ? secondsToDuration({ seconds }) : "--"}
+          </Typography>
         )}
       </Link>
     </Box>
@@ -210,11 +263,13 @@ export default function Votes() {
       <Tabs />
 
       <Box
+        className="rounded-2xl border border-base-300 bg-base-100"
         sx={{
           display: "flex",
           alignItems: "center",
-          margin: "20px 0 0 0",
-          gap: "10px 20px",
+          margin: "24px 0 0 0",
+          padding: "16px",
+          gap: "12px",
           flexWrap: "wrap",
         }}
       >
@@ -225,7 +280,7 @@ export default function Votes() {
         <SelectNeuronProposalStatus governance_id={governance_id} onChange={handleProposalStatusFilter} />
       </Box>
 
-      <Box sx={{ width: "100%", margin: "20px 0 0 0" }}>
+      <Box sx={{ width: "100%", margin: "24px 0 0 0" }}>
         <InfiniteScroll
           style={{ width: "100%" }}
           dataLength={proposals?.length ?? 0}
@@ -238,7 +293,7 @@ export default function Votes() {
               width: "100%",
               display: "grid",
               gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "20px",
+              gap: "16px",
               "@media(max-width: 940px)": {
                 gridTemplateColumns: "1fr 1fr",
               },
@@ -274,7 +329,12 @@ export default function Votes() {
           </LoadingRow>
         </Box>
       ) : proposals && proposals.length === 0 ? (
-        <Typography sx={{ margin: "20px 0 0 0" }}>No Proposals</Typography>
+        <Typography
+          className="rounded-2xl border border-dashed border-base-300 bg-base-100"
+          sx={{ margin: "24px 0 0 0", padding: "56px 20px", textAlign: "center" }}
+        >
+          No Proposals
+        </Typography>
       ) : null}
     </Wrapper>
   );

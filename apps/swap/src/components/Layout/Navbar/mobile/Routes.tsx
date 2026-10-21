@@ -44,24 +44,43 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
             key={route.path ?? index}
             onClick={() => handleRouteClick(route)}
             sx={{
-              padding: "24px 16px",
-              borderBottom: "1px solid #29314F",
-              "&:last-type-of": {
-                borderBottom: "none",
+              padding: "18px 16px",
+              marginBottom: "4px",
+              borderRadius: "12px",
+              cursor: "pointer",
+              background: isActive(route)
+                ? "color-mix(in oklab, var(--color-primary) 10%, transparent)"
+                : "transparent",
+              border: "1px solid",
+              borderColor: isActive(route)
+                ? "color-mix(in oklab, var(--color-primary) 16%, transparent)"
+                : "transparent",
+              transition: "background 180ms ease, border-color 180ms ease",
+              "&:hover": {
+                background: "color-mix(in oklab, var(--color-primary) 7%, transparent)",
               },
             }}
           >
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography fontSize="16px" color="text.primary">
+              <Typography fontSize="15px" color="text.primary" sx={{ fontWeight: 500 }}>
                 {route.name}
               </Typography>
 
-              {route.subMenus ? <ChevronDown color="#8492C4" strokeWidth={1} /> : null}
+              {route.subMenus ? <ChevronDown color="var(--color-primary)" size={18} strokeWidth={1.5} /> : null}
             </Box>
 
             <Collapse in={collapseKey === routeKey(route.key)}>
               {route.subMenus?.length ? (
-                <Box sx={{ margin: "16px 0 0 0", display: "grid", gridTemplateColumns: "1fr", gap: "20px 0" }}>
+                <Box
+                  sx={{
+                    margin: "20px 0 0 2px",
+                    paddingLeft: "16px",
+                    borderLeft: "1px solid color-mix(in oklab, var(--color-primary) 24%, transparent)",
+                    display: "grid",
+                    gridTemplateColumns: "1fr",
+                    gap: "20px 0",
+                  }}
+                >
                   {(route.subMenus ?? []).map((subRoute) => {
                     const Icon = subRoute.icon;
 

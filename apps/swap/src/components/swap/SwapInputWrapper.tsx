@@ -3,7 +3,7 @@ import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
 import { Image } from "@icpswap/ui";
 import { BigNumber } from "@icpswap/utils";
-import { Box, useTheme } from "components/Mui";
+import { Box } from "components/Mui";
 import { SwapInputCurrency } from "components/swap/SwapInputCurrency";
 import { useSwapStore } from "components/swap/store";
 import { SWAP_FIELD } from "constants/swap";
@@ -63,7 +63,6 @@ export function SwapInputWrapper({
   poolId,
 }: SwapInputWrapperProps) {
   const navigate = useNavigate();
-  const theme = useTheme();
   const {
     independentField,
     typedValue,
@@ -141,17 +140,19 @@ export function SwapInputWrapper({
         />
 
         <Box
+          className="swap-direction-control"
           sx={{
             position: "absolute",
-            bottom: "-17px",
+            bottom: "-23px",
             left: "50%",
             transform: "translate(-50%, 0)",
             cursor: "pointer",
             overflow: "hidden",
-            width: "32px",
-            height: "32px",
-            background: ui === "pro" ? theme.palette.background.level3 : theme.palette.background.level1,
-            borderRadius: "12px",
+            width: "40px",
+            height: "40px",
+            background: "var(--color-base-100)",
+            border: "4px solid var(--color-base-100)",
+            borderRadius: "13px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -166,7 +167,7 @@ export function SwapInputWrapper({
         </Box>
       </Box>
 
-      <Box sx={{ marginTop: "6px" }}>
+      <Box sx={{ marginTop: "10px" }}>
         <SwapInputCurrency
           token={outputToken}
           currencyPrice={outputTokenPrice}

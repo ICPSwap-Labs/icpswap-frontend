@@ -289,7 +289,10 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   }, []);
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "6px 0" : "6px 0" }}>
+    <Box
+      className="swap-order-form"
+      sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "8px 0" : "12px 0" }}
+    >
       <SwapInputWrapper
         onMaxInput={handleMaxInput}
         onInput={handleInput}
@@ -352,6 +355,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
       />
 
       <AuthButton
+        className="btn btn-primary swap-submit-button"
         fullWidth
         variant="contained"
         size="large"
@@ -365,7 +369,11 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
           outOfCyclesDisabled
         }
         sx={{
-          borderRadius: "16px",
+          borderRadius: "14px",
+          height: ui === "pro" ? "48px" : "54px",
+          marginTop: "4px",
+          fontWeight: 600,
+          letterSpacing: "-0.01em",
         }}
       >
         {swapInputError ||

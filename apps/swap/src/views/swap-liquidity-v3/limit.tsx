@@ -1,6 +1,6 @@
 import type { Pool, Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
-import { Flex, MainCard, Wrapper } from "components/index";
+import { Flex, Wrapper } from "components/index";
 import { Box } from "components/Mui";
 import { SwapProEntry, SwapTabPanels, TABS } from "components/swap/index";
 import { LimitHelpTooltip, PlaceOrder, TransactionForSimpleMode } from "components/swap/limit-order";
@@ -55,46 +55,24 @@ export default function Limit() {
             vertical
             align="flex-start"
             sx={{
-              width: "570px",
+              width: "560px",
+              maxWidth: "100%",
             }}
           >
-            <MainCard
-              level={1}
-              sx={{
-                padding: "16px",
-                paddingBottom: "16px",
-                overflow: "visible",
-                "@media(max-width: 640px)": {
-                  padding: "16px",
-                  paddingBottom: "16px",
-                },
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  position: "relative",
-                  padding: "0",
-                  height: "32px",
-                  "@media(max-width: 640px)": {
-                    padding: "0",
-                  },
-                }}
-              >
+            <section className="card swap-trading-card bg-base-100 border border-base-300">
+              <div className="swap-card-toolbar flex items-center justify-between gap-3">
                 <SwapTabPanels currentTab={TABS.LIMIT} />
 
                 <Flex gap="0 4px">
                   <SwapProEntry inputToken={inputToken} outputToken={outputToken} limit />
                   <LimitHelpTooltip />
                 </Flex>
-              </Box>
+              </div>
 
-              <Box sx={{ margin: "16px 0 0 0" }}>
+              <Box sx={{ margin: "20px 0 0 0" }}>
                 <PlaceOrder />
               </Box>
-            </MainCard>
+            </section>
           </Flex>
         </Flex>
 

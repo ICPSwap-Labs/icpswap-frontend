@@ -30,17 +30,19 @@ const useStyles = ({ contained, background, fullHeight, multiline, borderRadius,
               : "none",
         background: background
           ? background === "level3"
-            ? theme.palette.background.level3
+            ? "var(--color-base-300)"
             : background === "level1"
-              ? theme.palette.background.level1
+              ? "var(--color-base-200)"
               : background
-          : theme.palette.background.level4,
+          : "var(--color-base-200)",
         borderRadius,
         padding: contained ? `7px 12px` : "3px 12px",
         gap: "0 5px",
         height: contained || multiline ? "auto" : fullHeight ? "100%" : "48px",
         ...(multiline ? { minHeight: "48px" } : {}),
         margin: label ? "12px 0 0 0" : "0",
+        transition: "border-color 180ms ease, box-shadow 180ms ease",
+        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--color-base-content) 6%, transparent)",
         "@media(max-width: 640px)": {
           padding: contained ? `4px 6px` : "0 6px",
         },
@@ -48,7 +50,11 @@ const useStyles = ({ contained, background, fullHeight, multiline, borderRadius,
           color: theme.palette.text.primary,
         },
         "&:hover": {
-          borderColor: "#ffffff",
+          borderColor: "color-mix(in srgb, var(--color-primary) 45%, transparent)",
+        },
+        "&:focus-within": {
+          borderColor: "var(--color-primary)",
+          boxShadow: "0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent)",
         },
       },
     };
@@ -220,7 +226,7 @@ function UIFilledTextField(
       {label ? <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} /> : null}
       <Box
         ref={outerBoxRef}
-        className={classes.inputBox}
+        className={`${classes.inputBox} ics-input`}
         sx={{
           ...(fullHeight ? { height: "100%" } : {}),
           ...(select ? { cursor: "pointer" } : {}),

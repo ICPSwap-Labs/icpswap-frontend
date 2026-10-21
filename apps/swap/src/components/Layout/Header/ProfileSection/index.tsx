@@ -1,14 +1,13 @@
 import { Flex } from "@icpswap/ui";
 import { shorten } from "@icpswap/utils";
 import { ConnectorImage } from "components/Image/index";
-import { Box, Button, Typography, useTheme } from "components/Mui";
+import { Box, Button, Typography } from "components/Mui";
 import { useWalletStore } from "components/Wallet/store";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipal, useShowConnector, useDisconnectManager, useWalletIsConnected } from "store/auth/hooks";
 
 export default function ProfileSection() {
   const { t } = useTranslation();
-  const theme = useTheme();
   const principal = useAccountPrincipal();
   const isConnected = useWalletIsConnected();
   const { openDrawer } = useWalletStore();
@@ -27,10 +26,11 @@ export default function ProfileSection() {
         {isConnected ? (
           <Flex
             gap="0 10px"
+            className="border border-base-content/10 transition-colors hover:border-primary/40"
             sx={{
-              padding: "4px 12px 4px 4px",
-              borderRadius: "48px",
-              background: theme.palette.background.level3,
+              padding: "6px 14px 6px 6px",
+              borderRadius: "12px",
+              background: "var(--color-base-200)",
               cursor: "pointer",
             }}
             onClick={openDrawer}
@@ -42,8 +42,17 @@ export default function ProfileSection() {
           </Flex>
         ) : (
           <Button
+            className="btn btn-primary"
             variant="contained"
-            sx={{ width: "141px", height: "40px", borderRadius: "48px" }}
+            sx={{
+              minWidth: "141px",
+              height: "40px",
+              borderRadius: "11px",
+              fontWeight: 600,
+              fontSize: "13px",
+              boxShadow: "0 0 24px color-mix(in oklab, var(--color-primary) 18%, transparent)",
+              "@media(max-width: 640px)": { minWidth: "126px", padding: "0 12px", fontSize: "12px" },
+            }}
             onClick={handleConnectWallet}
           >
             {t("common.connect.wallet")}

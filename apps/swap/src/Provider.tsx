@@ -7,7 +7,7 @@ import { StyledEngineProvider, ThemeProvider } from "components/Mui";
 import { SnackbarProvider } from "components/notistack";
 import { wagmiConfig } from "constants/wagmi";
 import i18n from "i18n/index";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import { useAppSelector } from "store/hooks";
 import TransactionsUpdater from "store/transactions/updater";
@@ -21,6 +21,11 @@ import "@nfid/identitykit/react/styles.css";
 export function AppWithProvider() {
   const customization = useAppSelector((state) => state.customization);
   const [queryClient] = useState(() => new QueryClient());
+
+  // Put the theme on html so portaled wallets, dialogs, and menus inherit it too.
+  useEffect(() => {
+    document.documentElement.dataset.theme = customization.mode === "dark" ? "icswap" : "icswap-light";
+  }, [customization.mode]);
 
   return (
     <I18nextProvider i18n={i18n}>

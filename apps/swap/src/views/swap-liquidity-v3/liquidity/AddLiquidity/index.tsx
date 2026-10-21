@@ -6,7 +6,7 @@ import { Flex } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Wrapper } from "components/index";
 import { InfoPool, PriceRange } from "components/liquidity/index";
-import { Box, makeStyles, type Theme, Typography } from "components/Mui";
+import { Box, makeStyles, Typography } from "components/Mui";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
 import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
@@ -39,7 +39,7 @@ import {
   useResetMintState,
 } from "store/swap/liquidity/hooks";
 import type { ExternalTipArgs } from "types/index";
-import { isDarkTheme, parseBackPath } from "utils/index";
+import { parseBackPath } from "utils/index";
 import { maxAmountFormat } from "utils/swap";
 
 const DISABLED_STYLE = {
@@ -47,16 +47,19 @@ const DISABLED_STYLE = {
   pointerEvents: "none",
 };
 
-const useStyle = makeStyles((theme: Theme) => {
+const useStyle = makeStyles(() => {
   return {
     container: {
       width: "920px",
-      backgroundColor: isDarkTheme(theme) ? theme.palette.background.level1 : theme.colors.lightGray50,
-      borderRadius: theme.radius,
-      padding: "24px",
+      maxWidth: "100%",
+      backgroundColor: "var(--color-base-100)",
+      border: "1px solid var(--color-base-300)",
+      borderRadius: "24px",
+      padding: "28px",
+      boxShadow: "0 24px 64px -32px #0006",
       "@media(max-width: 960px)": {
         width: "460px",
-        padding: "12px",
+        padding: "18px",
       },
     },
     topHeader: {
@@ -391,7 +394,7 @@ export default function AddLiquidity() {
   return (
     <Wrapper>
       <Flex fullWidth justify="center">
-        <Box className={classes.container}>
+        <Box className={`card ${classes.container}`}>
           <Flex justify="space-between">
             <ArrowLeft
               style={{

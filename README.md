@@ -6,8 +6,8 @@
 
 Ensure you have
 
-- [Node.js](https://nodejs.org) 18.x installed
-- [Pnpm](https://pnpm.io/) v8 installed
+- [Node.js](https://nodejs.org) 22.x installed
+- [Pnpm](https://pnpm.io/) v10.15.1 available through Corepack
 
 You need a **personal access token** to install some of our npm packages.
 
@@ -27,3 +27,17 @@ Then run the following:
 - `pnpm i` to install dependencies.
 - `pnpm run dev` to start the development server
 - `pnpm run build` to build
+
+## Local development without private package access
+
+With Node.js 22 and Corepack available, run `pnpm run install:local`, then `pnpm run dev` to preview the app without GitHub Packages credentials.
+
+This explicit local install uses a pnpm `readPackage` hook to substitute the public `@dfinity/auth-client@2.1.2` for `@honopu/auth-client` in installed dependencies. It generates an ignored `.local-dev/pnpm-lock.yaml` from the canonical lockfile and keeps all public dependency versions frozen. Production package manifests and `pnpm-lock.yaml` remain unchanged. Wallet sign-in with the public client is unverified because it may differ from the private fork.
+
+Use this fallback only for local development. Before producing a release, run the normal authenticated install above to restore the private client. CI and production must use the normal install; the local helper refuses to run in those environments.
+
+## Design system
+
+Tailwind CSS 4 and daisyUI 5 are compiled through Vite. The `icswap` and `icswap-light` themes in `apps/swap/src/styles.css` preserve the violet/indigo brand and follow the existing theme preference. Use daisyUI semantic colors (`base-100`, `primary`, `success`, etc.) for new UI. Shared components in `packages/ui/src` are included in Tailwind's source scanning.
+
+The MUI theme bridges existing trading controls and wallet dialogs to these colors, retaining their interaction behavior. Its standard palette slots use matching literal colors because MUI color helpers require them. CssBaseline supplies the reset; Tailwind Preflight is intentionally omitted to preserve third-party control sizing. Fonts are served locally, and motion respects the system's reduced-motion setting.

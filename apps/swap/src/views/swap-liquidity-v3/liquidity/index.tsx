@@ -48,20 +48,24 @@ function Liquidity() {
 
   return (
     <Wrapper>
-      <Typography sx={{ color: "text.primary", fontWeight: 500, fontSize: "32px" }}>
-        {t("swap.liquidity.pools.title")}
-      </Typography>
-      <Typography sx={{ fontSize: "16px", margin: "16px 0 0 0", lineHeight: "24px" }}>
-        {t("swap.liquidity.description")}
-      </Typography>
+      <div className="liquidity-page-heading border-b border-base-300 pb-8">
+        <Typography
+          sx={{ color: "text.primary", fontWeight: 600, fontSize: "32px", letterSpacing: "-0.04em", lineHeight: 1.25 }}
+        >
+          {t("swap.liquidity.pools.title")}
+        </Typography>
+        <Typography sx={{ fontSize: "14px", margin: "12px 0 0 0", lineHeight: "24px", maxWidth: "720px" }}>
+          {t("swap.liquidity.description")}
+        </Typography>
+      </div>
 
       <Flex
         fullWidth
         sx={{
-          margin: "56px 0 0 0",
+          margin: "28px 0 0 0",
           "@media(max-width: 640px)": {
             flexDirection: "column",
-            gap: "30px 0",
+            gap: "20px 0",
             justifyContent: "flex-start",
             alignItems: "flex-start",
           },
@@ -70,12 +74,12 @@ function Liquidity() {
       >
         <UnderLineTabList tabs={tabs} onChange={handleTabChange} activeTabValue={activeTab} />
 
-        <Button variant="contained" onClick={loadAddLiquidity}>
+        <Button className="btn btn-primary" variant="contained" onClick={loadAddLiquidity}>
           {t("swap.add.liquidity")}
         </Button>
       </Flex>
 
-      <Box sx={{ margin: "35px 0 0 0" }}>
+      <Box sx={{ margin: "24px 0 0 0" }}>
         <Box sx={{ display: activeTab === TabName.Positions ? "block" : "none" }}>
           {loadedTabs.includes(TabName.Positions) ? <Positions /> : null}
         </Box>

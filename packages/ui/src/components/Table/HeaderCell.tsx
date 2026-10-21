@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 import { DownArrow, UpArrow } from "../Arrow";
-import { type BoxProps, Typography, useTheme } from "../Mui";
+import { type BoxProps, Typography } from "../Mui";
 import HeaderContext from "./headerContext";
 import { SortDirection } from "./types";
 
@@ -17,8 +17,6 @@ export type HeaderCellProps = {
 };
 
 export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps) {
-  const theme = useTheme();
-
   const { sortChange, sortField, sortDirection } = useContext(HeaderContext);
 
   const arrow = useCallback(
@@ -40,12 +38,18 @@ export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps)
       sx={{
         cursor: "pointer",
         userSelect: "none",
-        color: theme.colors.dark400,
+        color: props.color ?? "color-mix(in srgb, var(--color-base-content) 52%, transparent)",
         display: "flex",
         alignItems: "center",
         justifyContent: props.align === "right" ? "flex-end" : "flex-start",
-        fontSize: "16px",
-        fontWeight: 400,
+        fontSize: "12px",
+        fontWeight: 500,
+        lineHeight: 1.5,
+        letterSpacing: "0.025em",
+        transition: "color 160ms ease",
+        "&:hover": {
+          color: "var(--color-primary)",
+        },
         "@media screen and (max-width: 600px)": {
           fontSize: "12px",
         },

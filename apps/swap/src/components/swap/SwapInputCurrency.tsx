@@ -134,18 +134,24 @@ export function SwapInputCurrency({
 
   return (
     <Box
+      className="swap-token-panel rounded-2xl border border-base-300"
       sx={{
-        backgroundColor: background === "level3" ? theme.palette.background.level3 : theme.palette.background.level1,
-        border: `1px solid ${theme.palette.background.level4}`,
-        borderRadius: "16px",
-        padding: "16px",
+        backgroundColor: background === "level3" ? "var(--color-base-200)" : "var(--color-base-100)",
+        borderColor: "var(--color-base-300)",
+        borderRadius: "18px",
+        padding: "22px 18px 18px",
         cursor: "pointer",
         [theme.breakpoints.down("sm")]: {
-          padding: "12px",
+          padding: "20px 14px 16px",
         },
         transform: transformLoading ? "scale(0.9887)" : "scale(1)",
         opacity: transformLoading ? 0.9 : 1,
-        transition: `all ${LOADING_TRANSFORM_DURATION}ms ease-in-out`,
+        transition: `transform ${LOADING_TRANSFORM_DURATION}ms ease-in-out, opacity ${LOADING_TRANSFORM_DURATION}ms ease-in-out, border-color 180ms ease, box-shadow 180ms ease`,
+        "&:hover": { borderColor: "color-mix(in oklab, var(--color-primary) 35%, var(--color-base-300))" },
+        "&:focus-within": {
+          borderColor: "color-mix(in oklab, var(--color-primary) 60%, var(--color-base-300))",
+          boxShadow: "0 0 0 3px color-mix(in oklab, var(--color-primary) 8%, transparent)",
+        },
       }}
       onClick={handleWrapperClick}
     >
@@ -166,7 +172,11 @@ export function SwapInputCurrency({
       </Box>
 
       {token ? (
-        <Flex fullWidth justify="space-between" sx={{ margin: "12px 0 0 0" }}>
+        <Flex
+          fullWidth
+          justify="space-between"
+          sx={{ margin: "18px 0 0 0", minHeight: "18px", gap: "8px", flexWrap: "wrap" }}
+        >
           <Flex gap="0 8px">
             {noLiquidity === false ? (
               nonUndefinedOrNull(unusedBalance) &&

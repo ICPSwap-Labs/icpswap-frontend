@@ -1,6 +1,7 @@
 export function themeTypography(theme: { [key: string]: any }) {
   return {
     fontFamily: theme.customization.fontFamily,
+    fontWeightMedium: 500,
     h6: {
       fontWeight: 500,
       color: theme.textSecondary,
@@ -49,7 +50,7 @@ export function themeTypography(theme: { [key: string]: any }) {
     body1: {
       fontSize: "0.875rem",
       fontWeight: 400,
-      lineHeight: "1.334em",
+      lineHeight: "1.5em",
       color: theme.textSecondary,
     },
     body2: {

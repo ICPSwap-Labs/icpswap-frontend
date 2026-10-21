@@ -13,12 +13,12 @@ const useStyles = makeStyles((theme: Theme) => {
       padding: "0 16px",
       "&:hover": {
         "& .MuiTypography-root": {
-          color: "#FFFFFF",
+          color: "var(--color-base-content)",
         },
       },
       "&.active": {
         "& .MuiTypography-root": {
-          color: "#FFFFFF",
+          color: "var(--color-base-content)",
         },
       },
       [theme.breakpoints.down("md")]: {
@@ -27,20 +27,24 @@ const useStyles = makeStyles((theme: Theme) => {
       },
     },
     more: {
-      padding: "0 17px",
+      padding: "0 12px",
+      height: "40px",
+      borderRadius: "12px",
       cursor: "pointer",
+      transition: "background 180ms ease",
       "&:hover": {
+        background: "color-mix(in oklab, var(--color-base-content) 5%, transparent)",
         "& .dot": {
-          background: "#fff",
+          background: "var(--color-primary)",
         },
       },
     },
     dot: {
-      width: "5px",
-      height: "5px",
-      background: theme.colors.darkTextSecondary,
+      width: "4px",
+      height: "4px",
+      background: "color-mix(in oklab, var(--color-base-content) 45%, transparent)",
       borderRadius: "50%",
-      marginRight: "6px",
+      marginRight: "4px",
       "&:last-child": {
         marginRight: "0px",
       },

@@ -16,15 +16,16 @@ import {
   useTheme,
 } from "../Mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((_theme: Theme) => ({
   title: {
     fontSize: "20px",
     fontWeight: 700,
+    letterSpacing: "-0.035em",
     "@media (max-width: 640px)": {
       fontSize: "1rem",
     },
     "&.warning": {
-      color: "#D3625B",
+      color: "var(--color-error)",
     },
   },
   closeButton: {
@@ -33,13 +34,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     top: "50%",
     transform: "translate(0, -50%)",
     cursor: "pointer",
+    color: "color-mix(in srgb, var(--color-base-content) 45%, transparent)",
+    transition: "color 160ms ease",
     "&:hover": {
-      color: theme.colors.primaryMain,
+      color: "var(--color-primary)",
     },
     "&.warning": {
-      color: "#D3625B",
+      color: "var(--color-error)",
       "&:hover": {
-        color: "#D3625B",
+        color: "var(--color-error)",
       },
     },
   },
@@ -48,13 +51,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: "5px",
     top: "5px",
     cursor: "pointer",
+    color: "color-mix(in srgb, var(--color-base-content) 45%, transparent)",
+    transition: "color 160ms ease",
     "&:hover": {
-      color: theme.colors.primaryMain,
+      color: "var(--color-primary)",
     },
     "&.warning": {
-      color: "#D3625B",
+      color: "var(--color-error)",
       "&:hover": {
-        color: "#D3625B",
+        color: "var(--color-error)",
       },
     },
   },
@@ -116,8 +121,16 @@ export function Modal({
       fullWidth={fullWidth}
       {...dialogProps}
       sx={{
+        "& .MuiBackdrop-root": {
+          backgroundColor: "color-mix(in srgb, var(--color-neutral) 72%, transparent)",
+          backdropFilter: "blur(10px)",
+        },
         "& .MuiDialog-paper, & .MuiPaper-root": {
           padding: "0",
+          borderRadius: "24px",
+          border: "1px solid color-mix(in srgb, var(--color-base-content) 12%, transparent)",
+          boxShadow:
+            "0 32px 100px color-mix(in srgb, var(--color-neutral) 45%, transparent), 0 0 60px color-mix(in srgb, var(--color-primary) 6%, transparent)",
         },
         "& .MuiDialogTitle-root": {
           padding: "24px 24px 0 24px",
@@ -134,7 +147,7 @@ export function Modal({
             width: dialogWidth,
             ...(background
               ? { backgroundColor: background === "level1" ? theme.palette.background.level1 : background }
-              : { backgroundColor: theme.palette.background.level2 }),
+              : { backgroundColor: "var(--color-base-100)" }),
           },
           ...(dialogProps?.sx || {}),
         },
@@ -171,13 +184,19 @@ export function Modal({
             }}
           >
             {showCancel ? (
-              <Button onClick={onCancel} variant="contained" className="secondary" size="large">
+              <Button onClick={onCancel} variant="contained" className="btn btn-ghost secondary" size="large">
                 {cancelText}
               </Button>
             ) : null}
 
             {showConfirm ? (
-              <Button disabled={confirmDisabled} variant="contained" onClick={onConfirm} size="large">
+              <Button
+                disabled={confirmDisabled}
+                variant="contained"
+                onClick={onConfirm}
+                size="large"
+                className="btn btn-primary"
+              >
                 {confirmText}
               </Button>
             ) : null}

@@ -1,20 +1,24 @@
-import { Box } from "components/Mui";
-
 export default function Background() {
   return (
-    <Box
-      sx={{
-        position: "fixed",
-        top: "0",
-        left: "0",
-        right: "0",
-        pointerEvents: "none",
-        transform: "unset",
-        background: "radial-gradient(30% 30% at 50% 0%,rgba(255, 143, 224, 0.1) 0, rgba(33, 41, 70, .1) 100%)",
-        width: "100vw",
-        height: "100vh",
-        zIndex: "-1",
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(ellipse at 10% 15%, color-mix(in oklab, var(--color-secondary) 9%, transparent), transparent 50%), radial-gradient(ellipse at 95% 35%, color-mix(in oklab, var(--color-primary) 7%, transparent), transparent 45%), var(--color-base-200)",
       }}
-    />
+    >
+      <div
+        className="absolute inset-0 opacity-[0.035]"
+        style={{
+          backgroundImage:
+            "linear-gradient(var(--color-base-content) 1px, transparent 1px), linear-gradient(90deg, var(--color-base-content) 1px, transparent 1px)",
+          backgroundSize: "72px 72px",
+          maskImage: "radial-gradient(ellipse at 50% 20%, #000, transparent 75%)",
+        }}
+      />
+      <div className="absolute -left-60 top-1/3 h-[600px] w-[600px] rounded-full border border-primary/5" />
+      <div className="absolute -left-44 top-[calc(33%_-_64px)] h-[600px] w-[600px] rounded-full border border-primary/5" />
+    </div>
   );
 }

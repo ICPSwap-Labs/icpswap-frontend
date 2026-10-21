@@ -59,18 +59,21 @@ export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
     >
       <Flex fullWidth justify="center" sx={{ height: "100%" }} align="flex-end">
         <Box
+          className="border-base-content/8"
           sx={{
             width: fullWidth ? "100%" : "1200px",
-            borderTop: `1px solid ${theme.palette.border.level4}`,
-            padding: "20px 0",
+            maxWidth: "100%",
+            minWidth: 0,
+            borderTop: "1px solid color-mix(in oklab, var(--color-base-content) 8%, transparent)",
+            padding: "22px 4px",
             "@media(max-width: 1200px)": {
               padding: "12px",
             },
           }}
         >
-          <Flex fullWidth justify="flex-end" gap="0 14px">
-            <Flex gap="0 5px">
-              <Typography fontSize="12px" sx={{ lineHeight: "12px" }}>
+          <Flex fullWidth justify="flex-end" gap="0 20px" sx={{ flexWrap: "wrap", rowGap: "10px" }}>
+            <Flex gap="0 8px">
+              <Typography fontSize="11px" sx={{ lineHeight: "12px", letterSpacing: "0.02em" }}>
                 {t("subnet.state", { subnet: ICPSwapSubnet.slice(0, 5) })}
               </Typography>
 
@@ -78,13 +81,15 @@ export function SubnetState({ fullWidth, wrapperSx }: SubnetStateProps) {
             </Flex>
 
             <Flex gap="0 5px">
-              <Typography fontSize="12px">{t("subnet.node.machines")}</Typography>
+              <Typography fontSize="11px" sx={{ letterSpacing: "0.02em" }}>
+                {t("subnet.node.machines")}
+              </Typography>
               <Link link={`https://dashboard.internetcomputer.org/subnet/${ICPSwapSubnet}`}>
                 <Flex gap="0 4px">
-                  <Typography color="text.primary" fontSize="12px">
+                  <Typography color="text.primary" fontSize="11px" sx={{ fontVariantNumeric: "tabular-nums" }}>
                     {totalNodeMachines ?? "--"}
                   </Typography>
-                  <ArrowUpRight size={14} strokeWidth={2} color={theme.colors.secondary} />
+                  <ArrowUpRight size={12} strokeWidth={2} color={theme.colors.secondary} />
                 </Flex>
               </Link>
             </Flex>

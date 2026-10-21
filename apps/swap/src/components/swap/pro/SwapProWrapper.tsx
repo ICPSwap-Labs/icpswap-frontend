@@ -1,4 +1,4 @@
-import { Box, type BoxProps, useTheme } from "components/Mui";
+import { Box, type BoxProps } from "components/Mui";
 import type React from "react";
 
 export interface SwapProCardWrapperProps {
@@ -16,14 +16,13 @@ export function SwapProCardWrapper({
   background = "level3",
   sx,
 }: SwapProCardWrapperProps) {
-  const theme = useTheme();
-
   return (
     <Box
+      className="card swap-pro-panel"
       sx={{
-        background: background === "level3" ? theme.palette.background.level3 : theme.palette.background.level2,
+        background: background === "level3" ? "var(--color-base-100)" : "var(--color-base-200)",
         padding,
-        borderRadius: "12px",
+        borderRadius: "16px",
         overflow,
         ...sx,
       }}

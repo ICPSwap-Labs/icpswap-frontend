@@ -33,7 +33,7 @@ export function theme(customization: { [key: string]: any }) {
     menuSelectedBack: "",
     divider: "",
     customization,
-    defaultGradient: `linear-gradient(89.44deg, ${colors.defaultGradientStart} -0.31%, ${colors.defaultGradientEnd} 91.14%)`,
+    defaultGradient: "linear-gradient(110deg, var(--color-secondary), var(--color-primary))",
     borderRadius: 12,
   };
 

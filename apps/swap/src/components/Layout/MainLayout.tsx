@@ -1,7 +1,6 @@
 import { Flex } from "@icpswap/ui";
 import Background from "components/Background";
 import { CkGlobalEvents } from "components/ck-bridge/GlobalEvents";
-import { Box, makeStyles, type Theme } from "components/Mui";
 import { WalletIndex } from "components/Wallet/WalletIndex";
 import { useMediaQuery640 } from "hooks/theme";
 import type React from "react";
@@ -13,48 +12,7 @@ import Header from "./Header";
 import { SubnetState } from "./SubnetState";
 import V3Event from "./V3Event";
 
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    content: {
-      background: "transparent",
-      width: "100%",
-      flexGrow: 1,
-      padding: "0 16px",
-      borderRadius: "8px",
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 0,
-      "&.pro-padding": {
-        padding: "0 12px",
-      },
-      "&.info": {
-        padding: 0,
-      },
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      [theme.breakpoints.down("md")]: {
-        padding: "0 16px",
-      },
-      [theme.breakpoints.down("sm")]: {
-        padding: "0 12px",
-        backgroundColor: "transparent",
-      },
-    },
-    mainContent: {
-      position: "relative",
-      minHeight: "calc(100vh - 64px)",
-      // For network state
-      paddingBottom: `${90 + 53}px`,
-      "&.pro": {
-        background: theme.palette.background.level1,
-      },
-    },
-  };
-});
-
 export function MainLayout({ children }: { children: React.ReactNode }) {
-  const classes = useStyles();
   const location = useLocation();
 
   const matchDown640 = useMediaQuery640();
@@ -68,6 +26,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Flex
+        className="border-base-content/8"
         fullWidth
         sx={{
           position: "sticky",
@@ -87,21 +46,25 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         </Flex>
       ) : null}
 
-      <Box className={`${classes.mainContent} ${location.pathname === "/swap/pro" ? "pro" : ""}`}>
+      <div
+        className={`relative min-h-[calc(100vh-76px)] pb-[143px] max-[960px]:min-h-[calc(100vh-64px)] ${
+          location.pathname === "/swap/pro" ? "bg-base-200" : ""
+        }`}
+      >
         {show && location.pathname.includes("/swap/v2") ? <V3Event onClick={() => setShow(false)} /> : null}
 
         <GlobalTips />
 
         <main
-          className={`${classes.content}${isSwapPro ? " pro-padding" : ""}${
-            location.pathname.includes("info") ? " info" : ""
+          className={`relative w-full grow ${
+            location.pathname.includes("info") ? "p-0" : isSwapPro ? "px-3" : "px-6 max-[960px]:px-4 max-[640px]:px-3"
           }`}
         >
           {children}
         </main>
 
         <SubnetState fullWidth={isSwapPro} wrapperSx={{ padding: isSwapPro ? "0 12px" : "0px" }} />
-      </Box>
+      </div>
 
       <Background />
 

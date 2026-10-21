@@ -11,7 +11,6 @@ const CHART_HEIGHT_MD = 350;
 const CHART_HEIGHT_UP = 290;
 
 const LINE_COLOR = "#5669DC";
-const AXIS_LABEL_COLOR = "#8492C4";
 
 export function ICSPriceChart() {
   const theme = useTheme();
@@ -93,10 +92,12 @@ export function ICSPriceChart() {
             axisLine: { show: false },
             axisTick: { show: false },
             axisLabel: {
-              color: AXIS_LABEL_COLOR,
+              color: theme.palette.text.secondary,
               fontSize: 12,
               fontFamily: "'Poppins','Roboto',sans-serif",
               fontWeight: 400,
+              hideOverlap: true,
+              margin: 14,
               formatter: (value: number) => dayjs(value).format("MM.DD h:mm A"),
             },
             splitLine: { show: false },
@@ -108,7 +109,7 @@ export function ICSPriceChart() {
             axisLine: { show: false },
             axisTick: { show: false },
             axisLabel: {
-              color: AXIS_LABEL_COLOR,
+              color: theme.palette.text.secondary,
               fontSize: 12,
               fontFamily: "'Poppins','Roboto',sans-serif",
               fontWeight: 400,
@@ -127,7 +128,7 @@ export function ICSPriceChart() {
             borderRadius: 12,
             padding: [8, 16],
             textStyle: {
-              color: "#fff",
+              color: theme.palette.text.primary,
               fontSize: 12,
               fontFamily: "'Poppins','Roboto',sans-serif",
             },
@@ -176,7 +177,7 @@ export function ICSPriceChart() {
     return () => {
       disposed = true;
     };
-  }, [seriesData, theme.palette.background.level1]);
+  }, [seriesData, theme.palette.background.level1, theme.palette.text.primary, theme.palette.text.secondary]);
 
   useEffect(() => {
     return () => {

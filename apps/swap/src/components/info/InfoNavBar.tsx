@@ -6,24 +6,32 @@ import { useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { type Route, routes } from "./nav.config";
 
-const linearGradient = "linear-gradient(89.44deg, #5569DB -0.31%, #8572FF 91.14%)";
+const linearGradient =
+  "linear-gradient(100deg, color-mix(in srgb, var(--color-secondary) 12%, transparent), color-mix(in srgb, var(--color-primary) 16%, transparent))";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
     container: {
-      background: theme.palette.background.level2,
-      borderBottom: `1px solid ${theme.palette.background.level4}`,
-      padding: "20px",
+      background: "color-mix(in srgb, var(--color-base-200) 86%, transparent)",
+      borderBottom: "1px solid color-mix(in srgb, var(--color-base-content) 7%, transparent)",
+      padding: "14px 20px",
+      backdropFilter: "blur(16px)",
       [theme.breakpoints.down("sm")]: {
-        padding: "10px",
+        padding: "10px 12px",
       },
     },
     navItem: {
       height: "40px",
-      borderRadius: "12px",
+      borderRadius: "10px",
       cursor: "pointer",
       padding: "0 16px",
-      background: theme.palette.background.level4,
+      background: "transparent",
+      position: "relative",
+      whiteSpace: "nowrap",
+      transition: "background 180ms ease, box-shadow 180ms ease",
+      "& .MuiTypography-root": {
+        transition: "color 180ms ease",
+      },
       [theme.breakpoints.down("sm")]: {
         height: "36px",
         padding: "0 10px",
@@ -31,17 +39,22 @@ const useStyles = makeStyles((theme: Theme) => {
       "&:hover": {
         background: linearGradient,
         "& .MuiTypography-root": {
-          color: "#FFFFFF",
+          color: "var(--color-base-content)",
         },
       },
       "&.active": {
         background: linearGradient,
+        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 20%, transparent)",
+        "& .MuiTypography-root": {
+          color: "var(--color-primary)",
+          fontWeight: 600,
+        },
       },
     },
     more: {
       padding: "0 17px",
-      background: theme.palette.background.level4,
-      borderRadius: "12px",
+      background: "var(--color-base-300)",
+      borderRadius: "10px",
       cursor: "pointer",
       "&:hover": {
         background: linearGradient,
@@ -50,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => {
     dot: {
       width: "5px",
       height: "5px",
-      background: "#fff",
+      background: "var(--color-base-content)",
       borderRadius: "50%",
       marginRight: "6px",
       "&:last-child": {
@@ -105,8 +118,8 @@ export function InfoNavBar() {
   }
 
   return (
-    <Box className={classes.container} sx={{ display: hidden() ? "none" : "block" }}>
-      <Flex fullWidth gap="0 12px">
+    <Box className={`ics-info-nav ${classes.container}`} sx={{ display: hidden() ? "none" : "block" }}>
+      <Flex fullWidth gap="0 4px" sx={{ maxWidth: "1280px", margin: "0 auto" }}>
         {routes.map((route, index) =>
           index >= RoutesNumber ? null : (
             <Flex
@@ -116,9 +129,10 @@ export function InfoNavBar() {
             >
               <Typography
                 sx={(theme) => ({
-                  fontSize: "16px",
+                  fontSize: "13px",
+                  fontWeight: 500,
                   [theme.breakpoints.down("sm")]: {
-                    fontSize: "14px",
+                    fontSize: "12px",
                   },
                 })}
                 color={isActive(route) ? "text.primary" : "text.secondary"}

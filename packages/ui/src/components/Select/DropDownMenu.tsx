@@ -24,9 +24,10 @@ export function MenuItemNodeWrapperUI({ menu, sx, onClick, children }: MenuItemN
         padding: "0 16px",
         cursor: "pointer",
         "&:hover": {
-          background: "#313D67",
+          background: "color-mix(in srgb, var(--color-primary) 12%, transparent)",
           color: "text.primary",
         },
+        transition: "background-color 160ms ease",
         ...sx,
       }}
       onClick={() => onClick(menu)}
@@ -246,9 +247,10 @@ export const __DropDownMenu = ({
       style={{
         width: menuWidth ?? "fit-content",
         minWidth: minMenuWidth ?? "fit-content",
-        background: theme.colors.darkLevel3,
-        border: "1px solid #49588E",
-        borderRadius: "12px",
+        background: "var(--color-base-100)",
+        border: "1px solid color-mix(in srgb, var(--color-base-content) 12%, transparent)",
+        borderRadius: "16px",
+        boxShadow: "0 16px 48px color-mix(in srgb, var(--color-neutral) 30%, transparent)",
         overflow: "hidden",
         zIndex: 100000,
       }}

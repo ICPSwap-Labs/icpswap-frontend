@@ -11,11 +11,15 @@ export function InfoWrapper({ children, sx }: InfoWrapperProps) {
   return (
     <Flex fullWidth justify="center">
       <Box
+        className="ics-info-content"
         sx={{
           width: "100%",
-          maxWidth: "1200px",
+          maxWidth: "1280px",
           position: "relative",
-          padding: "48px 0",
+          padding: "32px 24px 48px",
+          "@media(max-width: 640px)": {
+            padding: "20px 12px 32px",
+          },
           ...sx,
         }}
       >

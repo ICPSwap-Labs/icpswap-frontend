@@ -20,8 +20,10 @@ const useStyles = ({ contained, fullHeight, filled, padding }: StyleProps) => {
       inputBox: {
         display: "flex",
         alignItems: "center",
-        background: filled ? theme.palette.background.level4 : theme.palette.background.level1,
-        borderRadius: filled ? "8px" : "12px",
+        background: filled ? "var(--color-base-300)" : "var(--color-base-200)",
+        borderRadius: "12px",
+        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--color-base-content) 8%, transparent)",
+        transition: "background-color 180ms ease, box-shadow 180ms ease",
         padding: padding !== undefined ? padding : contained ? `9px 16px` : `${fullHeight ? "0px" : "12px"} 16px`,
         width: "100%",
         "& input": {
@@ -29,6 +31,10 @@ const useStyles = ({ contained, fullHeight, filled, padding }: StyleProps) => {
         },
         "&.none-background": {
           background: "transparent",
+          boxShadow: "none",
+        },
+        "&:hover": {
+          boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 35%, transparent)",
         },
       },
     };
@@ -97,7 +103,7 @@ export function SelectPanel({
   return (
     <Box
       ref={outerBoxRef}
-      className={`${classes.inputBox}${showBackground ? "" : " none-background"}`}
+      className={`ics-select ${classes.inputBox}${showBackground ? "" : " none-background"}`}
       sx={{
         ...(fullHeight ? { height: "100%" } : {}),
         ...(maxWidth ? { maxWidth: `${maxWidth}px` } : {}),
@@ -110,7 +116,7 @@ export function SelectPanel({
       {contained && label && (
         <Box>
           {required && (
-            <Typography sx={{ color: "#D3625B" }} fontSize={12} component="span">
+            <Typography sx={{ color: "var(--color-error)" }} fontSize={12} component="span">
               *
             </Typography>
           )}
@@ -128,7 +134,9 @@ export function SelectPanel({
               {panel ? panel(menu) : (menu?.selectLabel ?? menu?.label)}
             </Typography>
           ) : (
-            <Typography color="#4f5a7f">{placeholder}</Typography>
+            <Typography color="color-mix(in srgb, var(--color-base-content) 45%, transparent)">
+              {placeholder}
+            </Typography>
           )}
         </Box>
 

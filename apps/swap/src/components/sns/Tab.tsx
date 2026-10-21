@@ -16,5 +16,16 @@ export function Tabs() {
     ];
   }, [root_id]);
 
-  return <TabPanel tabs={tabs} />;
+  return (
+    <div className="border-b border-base-300 pb-6">
+      <TabPanel
+        tabs={tabs}
+        bg0="var(--color-base-200)"
+        bg1="color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100))"
+        borderRadius="10px"
+        padding0="5px"
+        padding1="0 24px"
+      />
+    </div>
+  );
 }

@@ -42,8 +42,9 @@ export default function Header({
       <Box
         {...props}
         sx={{
-          padding: padding ? `${padding}!important` : "20px 0",
-          borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
+          padding: padding ? `${padding}!important` : "18px 0",
+          borderBottom: borderBottom ?? "1px solid color-mix(in srgb, var(--color-base-content) 9%, transparent)",
+          fontVariantNumeric: "tabular-nums",
           ...(props.sx ?? {}),
         }}
       >

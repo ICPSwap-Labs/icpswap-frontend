@@ -11,9 +11,18 @@ import { isSafari } from "utils/index";
 const useStyles = makeStyles(() => {
   return {
     loadingWrapper: {
-      width: "40px",
-      height: "40px",
+      width: "36px",
+      height: "36px",
+      flexShrink: 0,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       overflow: "hidden",
+      "& img": {
+        width: "32px",
+        height: "32px",
+        objectFit: "contain",
+      },
       "&.loading": {
         animation: `$loading 1000ms`,
         animationIterationCount: "infinite",
@@ -101,22 +110,36 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
 
   return (
     <Box
+      className="ics-wallet-choice"
       sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        cursor: "pointer",
-        padding: "12px 16px",
-        background: "rgba(255, 255, 255, 0.08)",
-        borderRadius: "8px",
+        cursor: disabled ? "not-allowed" : "pointer",
+        padding: "12px 14px",
+        minHeight: "64px",
+        gap: "12px",
+        background: "var(--color-base-200)",
+        border: "1px solid color-mix(in srgb, var(--color-base-content) 8%, transparent)",
+        borderRadius: "12px",
+        opacity: disabled ? 0.45 : 1,
+        transition: "background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease",
+        "&:hover": disabled
+          ? {}
+          : {
+              backgroundColor: "color-mix(in srgb, var(--color-primary) 7%, var(--color-base-200))",
+              borderColor: "color-mix(in srgb, var(--color-primary) 40%, transparent)",
+              boxShadow: "0 4px 16px color-mix(in srgb, var(--color-primary) 6%, transparent)",
+            },
         [theme.breakpoints.down("md")]: {
-          padding: "8px 14px",
+          padding: "10px 14px",
+          minHeight: "58px",
         },
       }}
       onClick={handleConnect}
     >
       <Flex gap="0 8px">
-        <Typography color="text.primary" fontSize="14px" fontWeight={700}>
+        <Typography color="text.primary" fontSize="13px" fontWeight={500} sx={{ lineHeight: 1.4 }}>
           {label}
         </Typography>
       </Flex>

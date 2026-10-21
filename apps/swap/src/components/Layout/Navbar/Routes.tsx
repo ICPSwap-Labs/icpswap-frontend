@@ -63,19 +63,33 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
             <Box
               key={route.path ?? index}
               onClick={() => handleRouteClick(route)}
-              className={`${isActive(route) ? "active" : ""}`}
+              className={`relative rounded-xl transition-all duration-200 ${isActive(route) ? "active" : ""}`}
               sx={{
                 height: "40px",
                 cursor: "pointer",
-                padding: "0 16px",
+                padding: "0 13px",
+                border: "1px solid transparent",
                 "&:hover": {
+                  background: "color-mix(in oklab, var(--color-base-content) 5%, transparent)",
                   "& .MuiTypography-root": {
-                    color: "#FFFFFF",
+                    color: "var(--color-base-content)",
                   },
                 },
                 "&.active": {
+                  background: "color-mix(in oklab, var(--color-primary) 12%, transparent)",
+                  borderColor: "color-mix(in oklab, var(--color-primary) 18%, transparent)",
                   "& .MuiTypography-root": {
-                    color: "#FFFFFF",
+                    color: "var(--color-primary)",
+                  },
+                  "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    bottom: "-19px",
+                    left: "25%",
+                    width: "50%",
+                    height: "2px",
+                    background: "var(--color-primary)",
+                    boxShadow: "0 -2px 12px color-mix(in oklab, var(--color-primary) 50%, transparent)",
                   },
                 },
                 [theme.breakpoints.down("md")]: {
@@ -92,12 +106,12 @@ export function Routes({ routes, onMenuClick }: RoutesProps) {
                 onMouseLeave={handleMenuMouseLeave}
               >
                 <Typography
-                  sx={{ display: "flex", alignItems: "center", gap: "0 5px" }}
-                  fontSize={matchDownMD ? "14px" : "16px"}
+                  sx={{ display: "flex", alignItems: "center", gap: "0 6px", fontWeight: 500, whiteSpace: "nowrap" }}
+                  fontSize={matchDownMD ? "13px" : "14px"}
                   color={isActive(route) ? "text.primary" : "text.secondary"}
                 >
                   {route.name}
-                  {route.subMenus ? <ChevronDown size="18px" /> : null}
+                  {route.subMenus ? <ChevronDown size="14px" strokeWidth={1.7} /> : null}
                 </Typography>
 
                 <SubMenuPopper

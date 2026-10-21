@@ -6,7 +6,7 @@ export default {
   paper: "#ffffff",
 
   // primary
-  primaryLight: "#e3f2fd",
+  primaryLight: "#efecff",
   primary200: "#ffffff",
   primaryMain: "#8672FF",
   primaryDark: "#8672FF",
@@ -27,7 +27,7 @@ export default {
 
   // error
   errorLight: "#ef9a9a",
-  errorMain: "#f44336",
+  errorMain: "#e47b82",
 
   // orange
   orangeLight: "#fbe9e7",
@@ -39,7 +39,7 @@ export default {
   warningMain: "#ffe57f",
   warningDark: "#ffc107",
 
-  danger: "#D3625B",
+  danger: "#e47b82",
 
   warning: "#B79C4A",
 
@@ -56,43 +56,43 @@ export default {
   // -----------------------|| DARK THEME VARIANTS ||-----------------------//
 
   // paper & background
-  darkPaper: "#1a223f",
-  darkBackground: "#1a223f",
+  darkPaper: "#090e20",
+  darkBackground: "#090e20",
 
   // dark 800 & 900
-  darkLevel1: "#111936",
-  darkLevel2: "#1a223f",
-  darkLevel3: "#212946",
-  darkLevel4: "#29314f",
-  darkLevel5: "#273051",
-  wallet: "#1B223F",
+  darkLevel1: "#090e20",
+  darkLevel2: "#11182c",
+  darkLevel3: "#182138",
+  darkLevel4: "#202a43",
+  darkLevel5: "#26314d",
+  wallet: "#11182c",
 
   // text variants
-  darkTextPrimary: "#ffffff",
-  darkTextSecondary: "#8492c4",
-  darkTextTertiary: "#4F5A84",
+  darkTextPrimary: "#f1f3fc",
+  darkTextSecondary: "#a6b0cc",
+  darkTextTertiary: "#7e8aa8",
   darkTextFourth: "#29314F",
   darkTextFifth: "#212946",
 
   disable: "#4F5A84",
 
-  lightPrimaryMain: "#8672FF",
+  lightPrimaryMain: "#7059e8",
 
   lightTextTitle: "#212121",
-  lightTextPrimary: "#212121",
-  lightTextSecondary: "#757575",
+  lightTextPrimary: "#1a2340",
+  lightTextSecondary: "#636e8b",
   lightTextTertiary: "#9E9E9E",
   lightTextFourth: "#F5F5F5",
   lightTextFifth: "#FAFAFA",
 
-  lightLevel2: "#EFEFFF",
+  lightLevel2: "#f3f4fb",
   lightLevel4: "#FAFAFA",
   lightLevel5: "#FAFAFA",
 
   lightGray200: "#f5f5f5",
   lightGray50: "#fafafa",
 
-  lightGray200BorderColor: "#EFEFFF",
+  lightGray200BorderColor: "#e4e7f2",
 
   // primary dark
   darkPrimaryLight: "#e3f2fd",
@@ -117,5 +117,5 @@ export default {
   apr: "#54C081",
   success: "#54C081",
   "text.success": "#54C081",
-  color0: "#313A5A",
+  color0: "#202a43",
 };
