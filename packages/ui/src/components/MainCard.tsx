@@ -1,5 +1,6 @@
+import { useMemo } from "react";
 import type React from "react";
-import { Box, type BoxProps } from "./Mui";
+import { Box, type BoxProps, useTheme } from "./Mui";
 
 export type MainCardBorder = "level1" | "level2" | "level3" | "level4";
 
@@ -26,6 +27,61 @@ export function MainCard({
   borderRadius,
   className,
 }: MainCardProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+  const theme = useTheme();
+  const cardStyles = useMemo(() => {
+    const _border =
+      border === "level1"
+        ? theme.palette.background.level1
+        : border === "level2"
+          ? theme.palette.background.level2
+          : border === "level3"
+            ? theme.palette.background.level3
+            : border === "level4"
+              ? theme.palette.background.level4
+              : undefined;
+
+    switch (level) {
+      case 1:
+        return {
+          background: theme.palette.background.level1,
+          ...(_border ? { border: `1px solid ${_border}` } : {}),
+        };
+      case 2:
+        return {
+          background: theme.palette.background.level2,
+          ...(border ? { border: "2px solid rgba(255, 255, 255, 0.04)" } : {}),
+        };
+      case 3:
+        return {
+          background: theme.palette.background.level3,
+          ...(_border ? { border: `1px solid ${_border}` } : {}),
+        };
+      case 4:
+        return {
+          background: theme.palette.background.level4,
+          ...(_border ? { border: `1px solid ${_border}` } : {}),
+        };
+      case 5:
+        return {
+          background: "#273051",
+          border: "0.5px solid #404558",
+        };
+      default:
+        return {
+          background: theme.palette.background.level3,
+          ...(_border ? { border: `1px solid ${_border}` } : {}),
+        };
+    }
+  }, [
+    level,
+    border,
+    theme.palette.background.level1,
+    theme.palette.background.level2,
+    theme.palette.background.level3,
+    theme.palette.background.level4,
+  ]);
+
   const surface =
     level === 2
       ? "var(--color-base-200)"
@@ -33,24 +89,46 @@ export function MainCard({
         ? "var(--color-base-300)"
         : "var(--color-base-100)";
 
+  if (isClassicDesign) {
+    return (
+      <Box
+        id={id}
+        sx={{
+          backgroundColor: cardStyles.background,
+          ...(cardStyles.border ? { border: cardStyles.border } : {}),
+          borderRadius: borderRadius ?? "16px",
+          padding: padding ?? "24px",
+          width: "100%",
+          overflow: "hidden",
+          "@media(max-width: 640px)": {
+            padding: padding ?? "16px",
+          },
+          ...sx,
+        }}
+        onClick={onClick}
+        className={className}
+      >
+        {children}
+      </Box>
+    );
+  }
+
   return (
     <Box
       id={id}
       sx={{
         backgroundColor: surface,
         border: `1px solid color-mix(in srgb, var(--color-base-content) ${border ? "12%" : "7%"}, transparent)`,
-        borderRadius: borderRadius ?? "20px",
+        borderRadius: borderRadius ?? "8px",
         padding: padding ?? "24px",
         width: "100%",
         overflow: "hidden",
-        boxShadow:
-          "0 8px 32px color-mix(in srgb, var(--color-neutral) 8%, transparent), inset 0 1px 0 color-mix(in srgb, var(--color-base-content) 3%, transparent)",
-        transition: "border-color 180ms ease, box-shadow 180ms ease",
+        boxShadow: "none",
+        transition: "border-color 180ms ease, background-color 180ms ease",
         ...(onClick
           ? {
               "&:hover": {
-                borderColor: "color-mix(in srgb, var(--color-primary) 35%, transparent)",
-                boxShadow: "0 12px 36px color-mix(in srgb, var(--color-primary) 6%, transparent)",
+                borderColor: "var(--color-secondary)",
               },
             }
           : {}),

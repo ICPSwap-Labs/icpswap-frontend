@@ -18,14 +18,17 @@ export function themePalette(theme: { [key: string]: any }) {
     },
     secondary: {
       light: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryLight,
-      main: isDark ? theme.colors.darkSecondaryMain : theme.colors.secondaryMain,
-      dark: isDark ? theme.colors.darkSecondaryLight : theme.colors.secondaryMain,
+      main: isDark ? theme.colors.darkSecondaryMain : "#617b66",
+      dark: isDark ? theme.colors.darkSecondaryDark : "#4b6250",
       200: isDark ? theme.colors.darkSecondary200 : theme.colors.secondary200,
       800: isDark ? theme.colors.darkSecondary800 : theme.colors.secondary800,
     },
+    info: {
+      main: isDark ? "#9bbec7" : "#597f8b",
+    },
     error: {
       light: theme.colors.errorLight,
-      main: isDark ? theme.colors.errorMain : "#bb495b",
+      main: isDark ? theme.colors.errorMain : "#b2493a",
     },
     orange: {
       light: theme.colors.orangeLight,
@@ -34,12 +37,12 @@ export function themePalette(theme: { [key: string]: any }) {
     },
     warning: {
       light: theme.colors.warningLight,
-      main: isDark ? "#e9b96d" : "#a16c21",
+      main: isDark ? "#ddb46d" : "#966b27",
       dark: theme.colors.warningDark,
     },
     success: {
       light: theme.colors.successLight,
-      main: isDark ? theme.colors.successDark : "#248753",
+      main: isDark ? theme.colors.successDark : "#3f7c59",
       dark: theme.colors.successDark,
     },
     grey: {
@@ -83,7 +86,7 @@ export function themePalette(theme: { [key: string]: any }) {
     },
     background: {
       paper: theme.paper,
-      default: isDark ? theme.colors.darkPaper : "#f3f4fb",
+      default: isDark ? theme.colors.darkPaper : "#f1ede3",
       level1: "var(--color-base-200)",
       level2: "var(--color-base-100)",
       level3: "color-mix(in srgb, var(--color-base-100) 65%, var(--color-base-300))",
@@ -106,7 +109,7 @@ export function themePalette(theme: { [key: string]: any }) {
       level4: "var(--color-neutral)",
     },
     avatar: {
-      gray200BgColor: isDark ? { bgcolor: "#384368" } : { bgcolor: "transparent" },
+      gray200BgColor: isDark ? { bgcolor: "#343c36" } : { bgcolor: "transparent" },
     },
     loading: {
       background: "var(--color-base-300)",

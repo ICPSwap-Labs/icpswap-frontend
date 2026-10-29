@@ -29,7 +29,7 @@ export function SwapTabPanels({ currentTab }: SwapTabPanelsProps) {
   );
 
   return (
-    <div className="tabs tabs-box swap-mode-tabs" role="tablist">
+    <div className="tabs swap-mode-tabs" role="tablist">
       {Tabs.map((tab) => (
         <button
           type="button"

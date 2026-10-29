@@ -6,7 +6,7 @@ import { Flex } from "@icpswap/ui";
 import { BigNumber, isUndefinedOrNull, nonUndefinedOrNull } from "@icpswap/utils";
 import { Wrapper } from "components/index";
 import { InfoPool, PriceRange } from "components/liquidity/index";
-import { Box, makeStyles, Typography } from "components/Mui";
+import { Box, makeStyles, Typography, useTheme } from "components/Mui";
 import { ReclaimTips } from "components/ReclaimTips";
 import StepViewButton from "components/Steps/View";
 import { AddLiquidityConfirmModal } from "components/swap/AddLiquidityConfirmModal";
@@ -54,9 +54,9 @@ const useStyle = makeStyles(() => {
       maxWidth: "100%",
       backgroundColor: "var(--color-base-100)",
       border: "1px solid var(--color-base-300)",
-      borderRadius: "24px",
+      borderRadius: "4px",
       padding: "28px",
-      boxShadow: "0 24px 64px -32px #0006",
+      boxShadow: "none",
       "@media(max-width: 960px)": {
         width: "460px",
         padding: "18px",
@@ -77,6 +77,7 @@ const useStyle = makeStyles(() => {
 
 export default function AddLiquidity() {
   const { t } = useTranslation();
+  const theme = useTheme();
   const classes = useStyle();
   const navigate = useNavigate();
   const principal = useAccountPrincipal();
@@ -394,7 +395,13 @@ export default function AddLiquidity() {
   return (
     <Wrapper>
       <Flex fullWidth justify="center">
-        <Box className={`card ${classes.container}`}>
+        <Box
+          className={`card swap-liquidity-editor ${classes.container}`}
+          sx={{
+            "--swap-liquidity-surface":
+              theme.customization.mode === "dark" ? theme.palette.background.level1 : theme.colors.lightGray50,
+          }}
+        >
           <Flex justify="space-between">
             <ArrowLeft
               style={{

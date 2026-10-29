@@ -1,22 +1,21 @@
 import { Flex } from "@icpswap/ui";
-import { useTheme } from "components/Mui";
 
 export interface TransactionsEntryProps {
   onClick: () => void;
 }
 
 export function TransactionsEntry({ onClick }: TransactionsEntryProps) {
-  const theme = useTheme();
-
   return (
     <Flex
+      className="swap-toolbar-control"
       onClick={onClick}
       sx={{
-        width: "32px",
-        height: "32px",
+        width: "36px",
+        height: "36px",
         cursor: "pointer",
-        borderRadius: "40px",
-        background: theme.palette.background.level2,
+        borderRadius: "4px",
+        border: "1px solid var(--color-base-300)",
+        background: "transparent",
       }}
       justify="center"
     >

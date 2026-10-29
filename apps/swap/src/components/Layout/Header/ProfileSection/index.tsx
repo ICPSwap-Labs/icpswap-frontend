@@ -1,12 +1,15 @@
 import { Flex } from "@icpswap/ui";
 import { shorten } from "@icpswap/utils";
 import { ConnectorImage } from "components/Image/index";
-import { Box, Button, Typography } from "components/Mui";
+import { Box, Button, Typography, useTheme } from "components/Mui";
+import { useDesignVersion } from "hooks/useDesignVersion";
 import { useWalletStore } from "components/Wallet/store";
 import { useTranslation } from "react-i18next";
 import { useAccountPrincipal, useShowConnector, useDisconnectManager, useWalletIsConnected } from "store/auth/hooks";
 
 export default function ProfileSection() {
+  const { isClassicDesign } = useDesignVersion();
+  const theme = useTheme();
   const { t } = useTranslation();
   const principal = useAccountPrincipal();
   const isConnected = useWalletIsConnected();
@@ -26,11 +29,13 @@ export default function ProfileSection() {
         {isConnected ? (
           <Flex
             gap="0 10px"
-            className="border border-base-content/10 transition-colors hover:border-primary/40"
+            className={
+              isClassicDesign ? undefined : "border border-base-content/10 transition-colors hover:border-primary/40"
+            }
             sx={{
-              padding: "6px 14px 6px 6px",
-              borderRadius: "12px",
-              background: "var(--color-base-200)",
+              padding: isClassicDesign ? "4px 12px 4px 4px" : "6px 14px 6px 6px",
+              borderRadius: isClassicDesign ? "48px" : "6px",
+              background: isClassicDesign ? theme.palette.background.level3 : "var(--color-base-200)",
               cursor: "pointer",
             }}
             onClick={openDrawer}
@@ -46,12 +51,29 @@ export default function ProfileSection() {
             variant="contained"
             sx={{
               minWidth: "141px",
-              height: "40px",
-              borderRadius: "11px",
-              fontWeight: 600,
-              fontSize: "13px",
-              boxShadow: "0 0 24px color-mix(in oklab, var(--color-primary) 18%, transparent)",
-              "@media(max-width: 640px)": { minWidth: "126px", padding: "0 12px", fontSize: "12px" },
+              height: isClassicDesign ? "40px" : "36px",
+              borderRadius: isClassicDesign ? "48px" : "5px",
+              fontWeight: isClassicDesign ? 500 : 600,
+              fontSize: isClassicDesign ? "14px" : "12px",
+              background:
+                isClassicDesign && theme.palette.mode === "dark"
+                  ? "linear-gradient(89.44deg, var(--color-secondary) -0.31%, var(--color-primary) 91.14%)"
+                  : "var(--color-primary)",
+              color: "var(--color-primary-content)",
+              boxShadow: isClassicDesign ? undefined : "none",
+              ...(!isClassicDesign
+                ? {
+                    "&:hover": {
+                      background: "color-mix(in oklab, var(--color-primary) 90%, var(--color-base-content))",
+                      boxShadow: "none",
+                    },
+                  }
+                : {}),
+              "@media(max-width: 640px)": {
+                minWidth: isClassicDesign ? "141px" : "126px",
+                padding: "0 12px",
+                fontSize: isClassicDesign ? "14px" : "12px",
+              },
             }}
             onClick={handleConnectWallet}
           >

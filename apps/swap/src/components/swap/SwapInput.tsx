@@ -19,6 +19,7 @@ export const SwapInput = memo(({ value, align = "right", token, onBlur, onUserIn
 
   return (
     <NumberTextField
+      className="swap-amount-input"
       value={value ?? ""}
       fullWidth
       sx={{
@@ -39,6 +40,11 @@ export const SwapInput = memo(({ value, align = "right", token, onBlur, onUserIn
           WebkitTextFillColor: "var(--color-neutral-content)",
           opacity: 0.65,
           "@media(max-width: 640px)": { fontSize: "26px" },
+        },
+        "& input.Mui-disabled": {
+          color: "var(--color-base-content)",
+          WebkitTextFillColor: "var(--color-base-content)",
+          opacity: 1,
         },
       }}
       placeholder="0.0"

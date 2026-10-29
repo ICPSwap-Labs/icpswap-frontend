@@ -29,7 +29,7 @@ export type BarChartAltProps = {
 
 export function BarChartAlt({
   data,
-  color = "#5669dc",
+  color,
   setValue,
   setLabel,
   value,
@@ -45,6 +45,8 @@ export function BarChartAlt({
   ...rest
 }: BarChartAltProps) {
   const theme = useTheme();
+  const isClassicDesign = theme.customization?.designVersion !== "modern";
+  const seriesColor = color ?? (isClassicDesign ? "#5669dc" : theme.palette.secondary.main);
   const parsedValue = value;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<EChartsType | null>(null);
@@ -63,6 +65,7 @@ export function BarChartAlt({
     chart.setOption(
       {
         backgroundColor: "transparent",
+        ...(isClassicDesign ? {} : { textStyle: { fontFamily: "Manrope" } }),
         animation: false,
         grid: { left: 20, right: 30, top: 8, bottom: 28, containLabel: false },
         xAxis: {
@@ -122,11 +125,11 @@ export function BarChartAlt({
             data: values,
             barMaxWidth: 40,
             itemStyle: {
-              color,
+              color: seriesColor,
               borderRadius: [2, 2, 0, 0],
             },
             emphasis: {
-              itemStyle: { color, opacity: 0.8 },
+              itemStyle: { color: seriesColor, opacity: 0.8 },
             },
           },
         ],
@@ -143,7 +146,18 @@ export function BarChartAlt({
     return () => {
       chart.getZr().off("globalout", onLeave);
     };
-  }, [data, color, activeWindow, tickFormat, theme.palette.text.secondary, parsedValue, label, setValue, setLabel]);
+  }, [
+    data,
+    seriesColor,
+    isClassicDesign,
+    activeWindow,
+    tickFormat,
+    theme.palette.text.secondary,
+    parsedValue,
+    label,
+    setValue,
+    setLabel,
+  ]);
 
   useEffect(() => {
     return () => {

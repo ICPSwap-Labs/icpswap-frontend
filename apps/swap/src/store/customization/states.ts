@@ -7,7 +7,7 @@ export interface CustomizationState {
 }
 
 export const initialState: CustomizationState = {
-  fontFamily: `'Poppins','Roboto',sans-serif`,
+  fontFamily: `'Manrope',ui-sans-serif,system-ui,sans-serif`,
   mode: "dark",
   locale: "en",
   rtlLayout: false,

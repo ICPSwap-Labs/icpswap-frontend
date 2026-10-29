@@ -10,7 +10,7 @@ function LinkIcon() {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M4.09619 1.5H0.303301V0.5H5.3033H5.8033V1V6H4.8033V2.20711L0.707107 6.3033L0 5.59619L4.09619 1.5Z"
-        fill="#4F5A84"
+        fill="var(--color-neutral)"
       />
     </svg>
   );

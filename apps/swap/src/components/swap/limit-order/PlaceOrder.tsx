@@ -322,6 +322,7 @@ export const PlaceOrder = forwardRef(
     return (
       <Box
         className="swap-order-form"
+        data-ui={ui}
         sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "8px 0" : "12px 0" }}
       >
         <SwapInputWrapper
@@ -389,7 +390,7 @@ export const PlaceOrder = forwardRef(
           onClick={handleShowConfirmModal}
           disabled={invalid || isPoolNotChecked || !available}
           sx={{
-            borderRadius: "14px",
+            borderRadius: "4px",
             height: ui === "pro" ? "48px" : "54px",
             marginTop: "4px",
             fontWeight: 600,

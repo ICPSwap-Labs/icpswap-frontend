@@ -52,24 +52,25 @@ export default function Limit() {
       <Wrapper>
         <Flex fullWidth justify="center">
           <Flex
+            className="swap-workspace"
             vertical
             align="flex-start"
             sx={{
-              width: "560px",
+              width: "1000px",
               maxWidth: "100%",
             }}
           >
-            <section className="card swap-trading-card bg-base-100 border border-base-300">
+            <section className="swap-trading-card">
               <div className="swap-card-toolbar flex items-center justify-between gap-3">
                 <SwapTabPanels currentTab={TABS.LIMIT} />
 
-                <Flex gap="0 4px">
+                <Flex className="swap-toolbar-actions" gap="0 8px">
                   <SwapProEntry inputToken={inputToken} outputToken={outputToken} limit />
                   <LimitHelpTooltip />
                 </Flex>
               </div>
 
-              <Box sx={{ margin: "20px 0 0 0" }}>
+              <Box className="swap-card-content" sx={{ margin: "32px 0 0 0" }}>
                 <PlaceOrder />
               </Box>
             </section>

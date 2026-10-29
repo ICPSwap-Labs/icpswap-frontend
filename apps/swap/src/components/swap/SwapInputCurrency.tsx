@@ -81,14 +81,14 @@ export function SwapInputCurrency({
   const impactTier = impactColor(usdChange);
 
   const USDChangeColor = !new BigNumber(usdChange ?? 0).isLessThan(0)
-    ? "#54C081"
+    ? "var(--color-success)"
     : impactTier === 3
-      ? "#D7331A"
+      ? "var(--color-error)"
       : impactTier === 2
-        ? "#D3625B"
+        ? "var(--color-error)"
         : impactTier === 1
-          ? "#F7B231"
-          : "#8492c4";
+          ? "var(--color-warning)"
+          : "var(--color-neutral-content)";
 
   const maxWalletBalanceSpent = useBalanceMaxSpend({
     token,
@@ -134,29 +134,18 @@ export function SwapInputCurrency({
 
   return (
     <Box
-      className="swap-token-panel rounded-2xl border border-base-300"
+      className="swap-token-panel border border-base-300 bg-base-100"
+      data-surface={background}
       sx={{
-        backgroundColor: background === "level3" ? "var(--color-base-200)" : "var(--color-base-100)",
-        borderColor: "var(--color-base-300)",
-        borderRadius: "18px",
-        padding: "22px 18px 18px",
-        cursor: "pointer",
-        [theme.breakpoints.down("sm")]: {
-          padding: "20px 14px 16px",
-        },
+        "--swap-ticket-surface": theme.palette.background[background],
+        "--swap-ticket-outline": theme.palette.background.level4,
         transform: transformLoading ? "scale(0.9887)" : "scale(1)",
         opacity: transformLoading ? 0.9 : 1,
-        transition: `transform ${LOADING_TRANSFORM_DURATION}ms ease-in-out, opacity ${LOADING_TRANSFORM_DURATION}ms ease-in-out, border-color 180ms ease, box-shadow 180ms ease`,
-        "&:hover": { borderColor: "color-mix(in oklab, var(--color-primary) 35%, var(--color-base-300))" },
-        "&:focus-within": {
-          borderColor: "color-mix(in oklab, var(--color-primary) 60%, var(--color-base-300))",
-          boxShadow: "0 0 0 3px color-mix(in oklab, var(--color-primary) 8%, transparent)",
-        },
       }}
       onClick={handleWrapperClick}
     >
-      <Box sx={{ display: "flex", gap: "0 8px" }}>
-        <Flex align="center">
+      <Box className="swap-token-main">
+        <Flex className="swap-token-selector" align="center">
           <CurrencySelector
             currencyId={token?.address}
             onChange={onTokenChange}
@@ -166,16 +155,17 @@ export function SwapInputCurrency({
           />
         </Flex>
 
-        <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
+        <Box className="swap-amount-field" sx={{ display: "flex", flex: 1, minWidth: 0, alignItems: "center" }}>
           <SwapInput value={formattedAmount} token={token} onUserInput={handleWrappedInput} disabled={disabled} />
         </Box>
       </Box>
 
       {token ? (
         <Flex
+          className="swap-token-balances"
           fullWidth
           justify="space-between"
-          sx={{ margin: "18px 0 0 0", minHeight: "18px", gap: "8px", flexWrap: "wrap" }}
+          sx={{ margin: "20px 0 0 0", minHeight: "18px", gap: "8px", flexWrap: "wrap" }}
         >
           <Flex gap="0 8px">
             {noLiquidity === false ? (
@@ -254,7 +244,7 @@ export function SwapInputCurrency({
       ) : null}
 
       {token && isInput ? (
-        <Box sx={{ width: "40%", margin: "8px 0 0 0" }}>
+        <Box className="swap-balance-slider" sx={{ width: "100%", margin: "12px 0 0 0" }}>
           <TokenBalanceSlider
             value={formattedAmount}
             totalAmount={maxInputAmount?.toExact()}

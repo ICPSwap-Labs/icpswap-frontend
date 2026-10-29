@@ -1,3 +1,4 @@
+import { useDesignVersion } from "hooks/useDesignVersion";
 import { useTokensFromList } from "@icpswap/hooks";
 import type { Null } from "@icpswap/types";
 import { Flex, MainCard } from "@icpswap/ui";
@@ -11,8 +12,10 @@ import { Staking } from "./Staking";
 import { Swap } from "./Swap";
 
 export function ICPSwap() {
-  const { t } = useTranslation();
+  const { isClassicDesign } = useDesignVersion();
   const theme = useTheme();
+
+  const { t } = useTranslation();
 
   const [swapTVL, setSwapTVL] = useState<string | number | Null>(null);
   const [farmTVL, setFarmTVL] = useState<string | number | Null>(null);
@@ -26,31 +29,101 @@ export function ICPSwap() {
     }
   }, [swapTVL, farmTVL, stakeTVL]);
 
+  if (isClassicDesign) {
+    return (
+      <IcpswapContext.Provider value={{ swapTVL, farmTVL, stakeTVL, setFarmTVL, setStakeTVL, setSwapTVL }}>
+        <Box sx={{ width: "100%" }}>
+          <MainCard level={3}>
+            <Typography fontSize="18px" color="text.primary" fontWeight={500}>
+              ICPSwap
+            </Typography>
+
+            <Box
+              sx={{
+                background: theme.palette.background.level4,
+                borderRadius: "24px",
+                padding: "24px 0",
+                display: "flex",
+                margin: "32px 0 0 0",
+                border: "1px solid #38446C",
+              }}
+            >
+              <Flex sx={{ flex: "50%" }} vertical gap="16px 0" align="center">
+                <Typography>TVL</Typography>
+                <Typography sx={{ fontSize: "24px", fontWeight: 500, color: "text.primary" }}>
+                  {nonUndefinedOrNull(tvl) ? formatDollarAmount(tvl.toString()) : "--"}
+                </Typography>
+              </Flex>
+              <Flex sx={{ flex: "50%" }} vertical gap="16px 0">
+                <Typography>{t("common.token.list")}</Typography>
+                <Typography sx={{ fontSize: "24px", fontWeight: 500, color: "text.primary" }}>
+                  {t("info.overview.tokens", { amount: tokenList ? tokenList.length : "--" })}
+                </Typography>
+              </Flex>
+            </Box>
+
+            <Box
+              sx={{
+                margin: "24px 0 0 0",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "24px",
+                "@media(max-width: 640px)": {
+                  gridTemplateColumns: "1fr",
+                },
+              }}
+            >
+              <Swap />
+              <Staking />
+              <Farm />
+            </Box>
+          </MainCard>
+        </Box>
+      </IcpswapContext.Provider>
+    );
+  }
+
   return (
     <IcpswapContext.Provider value={{ swapTVL, farmTVL, stakeTVL, setFarmTVL, setStakeTVL, setSwapTVL }}>
       <Box sx={{ width: "100%" }}>
         <MainCard level={3}>
-          <Typography fontSize="18px" color="text.primary" fontWeight={500}>
+          <Typography fontSize="28px" color="text.primary" fontWeight={700} sx={{ letterSpacing: "-0.045em" }}>
             ICPSwap
           </Typography>
 
           <Box
             sx={{
-              background: theme.palette.background.level4,
-              borderRadius: "24px",
+              background: "transparent",
+              borderRadius: "0",
               padding: "24px 0",
               display: "flex",
               margin: "32px 0 0 0",
-              border: "1px solid #38446C",
+              borderTop: "1px solid var(--color-base-300)",
+              borderBottom: "1px solid var(--color-base-300)",
+              "& .MuiTypography-root:first-child": { fontSize: "11px", letterSpacing: "0.05em" },
+              "& .MuiTypography-root:last-child": {
+                fontFamily: "var(--font-mono, monospace)",
+                fontSize: "26px",
+                color: "var(--color-primary)",
+              },
             }}
           >
-            <Flex sx={{ flex: "50%" }} vertical gap="16px 0" align="center">
+            <Flex
+              sx={{ flex: "50%", borderRight: "1px solid var(--color-base-300)", "&:last-child": { borderRight: 0 } }}
+              vertical
+              gap="16px 0"
+              align="center"
+            >
               <Typography>TVL</Typography>
               <Typography sx={{ fontSize: "24px", fontWeight: 500, color: "text.primary" }}>
                 {nonUndefinedOrNull(tvl) ? formatDollarAmount(tvl.toString()) : "--"}
               </Typography>
             </Flex>
-            <Flex sx={{ flex: "50%" }} vertical gap="16px 0">
+            <Flex
+              sx={{ flex: "50%", borderRight: "1px solid var(--color-base-300)", "&:last-child": { borderRight: 0 } }}
+              vertical
+              gap="16px 0"
+            >
               <Typography>{t("common.token.list")}</Typography>
               <Typography sx={{ fontSize: "24px", fontWeight: 500, color: "text.primary" }}>
                 {t("info.overview.tokens", { amount: tokenList ? tokenList.length : "--" })}
@@ -63,7 +136,7 @@ export function ICPSwap() {
               margin: "24px 0 0 0",
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
-              gap: "24px",
+              gap: "16px",
               "@media(max-width: 640px)": {
                 gridTemplateColumns: "1fr",
               },

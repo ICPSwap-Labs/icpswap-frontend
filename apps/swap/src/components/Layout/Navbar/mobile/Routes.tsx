@@ -1,5 +1,6 @@
 import { Box, Collapse, Typography } from "components/Mui";
 import { useCallback, useState } from "react";
+import { useDesignVersion } from "hooks/useDesignVersion";
 import { ChevronDown } from "react-feather";
 import { useLocation } from "react-router-dom";
 
@@ -11,6 +12,7 @@ export interface RoutesProps {
 }
 
 export function Routes({ routes, onRouteClick }: RoutesProps) {
+  const { isClassicDesign } = useDesignVersion();
   const location = useLocation();
   const pathName = location.pathname;
   const [collapseKey, setCollapseKey] = useState<string | undefined>(undefined);
@@ -46,7 +48,7 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
             sx={{
               padding: "18px 16px",
               marginBottom: "4px",
-              borderRadius: "12px",
+              borderRadius: "5px",
               cursor: "pointer",
               background: isActive(route)
                 ? "color-mix(in oklab, var(--color-primary) 10%, transparent)"
@@ -59,14 +61,35 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
               "&:hover": {
                 background: "color-mix(in oklab, var(--color-primary) 7%, transparent)",
               },
+              ...(isClassicDesign
+                ? {
+                    padding: "24px 16px",
+                    marginBottom: 0,
+                    borderRadius: 0,
+                    border: "none",
+                    borderBottom: "1px solid var(--color-base-300)",
+                    background: "transparent",
+                    "&:hover": { background: "transparent" },
+                  }
+                : {}),
             }}
           >
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Typography fontSize="15px" color="text.primary" sx={{ fontWeight: 500 }}>
+              <Typography
+                fontSize={isClassicDesign ? "16px" : "14px"}
+                color="text.primary"
+                sx={{ fontWeight: isClassicDesign ? 400 : 500 }}
+              >
                 {route.name}
               </Typography>
 
-              {route.subMenus ? <ChevronDown color="var(--color-primary)" size={18} strokeWidth={1.5} /> : null}
+              {route.subMenus ? (
+                <ChevronDown
+                  color={isClassicDesign ? "var(--color-neutral-content)" : "var(--color-primary)"}
+                  size={isClassicDesign ? 24 : 18}
+                  strokeWidth={isClassicDesign ? 1 : 1.5}
+                />
+              ) : null}
             </Box>
 
             <Collapse in={collapseKey === routeKey(route.key)}>
@@ -79,6 +102,7 @@ export function Routes({ routes, onRouteClick }: RoutesProps) {
                     display: "grid",
                     gridTemplateColumns: "1fr",
                     gap: "20px 0",
+                    ...(isClassicDesign ? { margin: "16px 0 0 0", paddingLeft: 0, borderLeft: "none" } : {}),
                   }}
                 >
                   {(route.subMenus ?? []).map((subRoute) => {

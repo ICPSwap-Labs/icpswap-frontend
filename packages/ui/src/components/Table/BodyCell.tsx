@@ -1,4 +1,4 @@
-import { Typography, type TypographyProps } from "../Mui";
+import { Typography, type TypographyProps, useTheme } from "../Mui";
 
 export type BodyCellProps = {
   color?: string;
@@ -13,9 +13,37 @@ export type BodyCellProps = {
 };
 
 export default function BodyCell({ width, sub, sx, align, title, overflow, ...props }: BodyCellProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+
   const handleClick = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     if (props.onClick) props.onClick(event);
   };
+
+  if (isClassicDesign) {
+    return (
+      <Typography
+        sx={{
+          display: overflow ? "block" : "flex",
+          justifyContent: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start",
+          cursor: "pointer",
+          userSelect: "none",
+          fontSize: sub ? "14px" : "16px",
+          "@media screen and (max-width: 600px)": {
+            fontSize: sub ? "12px" : "14px",
+          },
+          maxWidth: width,
+          ...sx,
+        }}
+        color={props.color ?? (sub ? "text.secondary" : "text.primary")}
+        onClick={handleClick}
+        component="div"
+        title={title}
+        className={`${overflow ? "text-overflow-ellipsis" : ""}`}
+      >
+        {props.children}
+      </Typography>
+    );
+  }
 
   return (
     <Typography

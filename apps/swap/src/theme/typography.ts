@@ -1,6 +1,6 @@
 export function themeTypography(theme: { [key: string]: any }) {
   return {
-    fontFamily: theme.customization.fontFamily,
+    fontFamily: "'Manrope',ui-sans-serif,system-ui,sans-serif",
     fontWeightMedium: 500,
     h6: {
       fontWeight: 500,

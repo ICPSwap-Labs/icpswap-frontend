@@ -19,14 +19,13 @@ const useStyles = makeStyles(() => {
     listItem: {
       minHeight: "152px",
       padding: "20px",
-      borderRadius: "18px",
+      borderRadius: "4px",
       border: "1px solid var(--color-base-300)",
       background: "var(--color-base-100)",
       cursor: "pointer",
-      transition: "border-color 160ms ease, transform 160ms ease",
+      transition: "border-color 160ms ease",
       "&:hover": {
         borderColor: "color-mix(in oklab, var(--color-primary) 45%, var(--color-base-300))",
-        transform: "translateY(-2px)",
       },
     },
     poolName: {
@@ -38,7 +37,7 @@ const useStyles = makeStyles(() => {
     },
     feeAmount: {
       padding: "4px 7px",
-      borderRadius: "6px",
+      borderRadius: "3px",
       background: "color-mix(in oklab, var(--color-primary) 12%, transparent)",
       "& .MuiTypography-root": {
         color: "var(--color-primary)",
@@ -82,7 +81,7 @@ export default function PoolCard({
   }, [navigate, fee, token0, token1]);
 
   return (
-    <Box className={`card ${classes.listItem} list-item`} onClick={handlePoolClick}>
+    <Box className={`card swap-pool-card ${classes.listItem} list-item`} onClick={handlePoolClick}>
       <Box className="list-item-color-box" />
       <Grid container alignItems="center" className={`${classes.topBox}`}>
         <CurrenciesAvatar

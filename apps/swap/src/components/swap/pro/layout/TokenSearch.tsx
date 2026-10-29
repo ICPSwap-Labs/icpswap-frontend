@@ -240,7 +240,10 @@ export function TokenSearch({ open, onClose }: SearchProps) {
               />
             </Box>
             {matchDownSM ? (
-              <DialogCloseIcon sx={{ color: "#8492C4", cursor: "pointer" }} onClick={handleClose} />
+              <DialogCloseIcon
+                sx={{ color: "var(--color-neutral-content)", cursor: "pointer" }}
+                onClick={handleClose}
+              />
             ) : null}
           </Box>
 
@@ -345,7 +348,7 @@ export function TokenSearch({ open, onClose }: SearchProps) {
 
       {!matchDownSM ? (
         <Box sx={{ position: "absolute", top: "24px", right: "24px" }}>
-          <DialogCloseIcon sx={{ color: "#8492C4", cursor: "pointer" }} />
+          <DialogCloseIcon sx={{ color: "var(--color-neutral-content)", cursor: "pointer" }} />
         </Box>
       ) : null}
     </Box>

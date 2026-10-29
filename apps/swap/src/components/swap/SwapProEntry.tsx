@@ -2,7 +2,6 @@ import type { Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
 import { Flex } from "@icpswap/ui";
 import { nonUndefinedOrNull } from "@icpswap/utils";
-import { useTheme } from "components/Mui";
 import { Tab } from "constants/index";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +13,6 @@ export interface SwapProEntryProps {
 }
 
 export function SwapProEntry({ inputToken, outputToken, limit }: SwapProEntryProps) {
-  const theme = useTheme();
   const navigate = useNavigate();
 
   const handleToSwapPro = useCallback(() => {
@@ -29,14 +27,16 @@ export function SwapProEntry({ inputToken, outputToken, limit }: SwapProEntryPro
 
   return (
     <Flex
+      className="swap-toolbar-control"
       onClick={handleToSwapPro}
       sx={{
-        width: "32px",
-        height: "32px",
+        width: "36px",
+        height: "36px",
         cursor: "pointer",
         padding: "4px 8px",
-        borderRadius: "40px",
-        background: theme.palette.background.level2,
+        borderRadius: "4px",
+        border: "1px solid var(--color-base-300)",
+        background: "transparent",
       }}
     >
       <img width="16px" height="16px" src="/images/pro-entry.svg" alt="" />

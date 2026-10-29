@@ -1,6 +1,7 @@
 import { Flex, Link } from "@icpswap/ui";
 import { Box, Typography } from "components/Mui";
 import { X } from "react-feather";
+import { useDesignVersion } from "hooks/useDesignVersion";
 
 export interface AdsUIProps {
   onClose?: () => void;
@@ -10,16 +11,18 @@ export interface AdsUIProps {
 }
 
 export function AdsUI({ content, link, button_name, onClose }: AdsUIProps) {
+  const { isClassicDesign } = useDesignVersion();
   return (
     <Flex
-      className="border-b border-primary/15"
+      className={isClassicDesign ? undefined : "border-b border-primary/15"}
       sx={{
         position: "relative",
         width: "100%",
         height: "48px",
         padding: "0 36px",
-        background:
-          "linear-gradient(100deg, color-mix(in oklab, var(--color-secondary) 16%, var(--color-base-100)), color-mix(in oklab, var(--color-primary) 20%, var(--color-base-100)))",
+        background: isClassicDesign
+          ? "linear-gradient(90deg, rgba(71, 96, 255, 0.13) 0%, #533884 100%)"
+          : "color-mix(in oklab, var(--color-primary) 10%, var(--color-base-100))",
       }}
       align="center"
       justify="center"
@@ -27,9 +30,9 @@ export function AdsUI({ content, link, button_name, onClose }: AdsUIProps) {
     >
       <Typography
         sx={{
-          color: "var(--color-base-content)",
+          color: isClassicDesign ? "#ffffff" : "var(--color-base-content)",
           cursor: "pointer",
-          fontSize: "12px",
+          fontSize: isClassicDesign ? "14px" : "12px",
           lineHeight: 1.4,
           "@media(max-width: 640px)": { fontSize: "12px" },
         }}
@@ -40,14 +43,21 @@ export function AdsUI({ content, link, button_name, onClose }: AdsUIProps) {
       {button_name ? (
         <Link link={link}>
           <Box
-            className="btn btn-primary btn-xs"
+            className={isClassicDesign ? undefined : "btn btn-primary btn-xs"}
             sx={{
-              borderRadius: "6px",
-              padding: "5px 10px",
+              borderRadius: isClassicDesign ? "8px" : "6px",
+              padding: isClassicDesign ? "6px 12px" : "5px 10px",
+              ...(isClassicDesign ? { background: "#F7B231" } : {}),
               whiteSpace: "nowrap",
             }}
           >
-            <Typography sx={{ color: "var(--color-primary-content)", fontSize: "11px", fontWeight: 600 }}>
+            <Typography
+              sx={{
+                color: isClassicDesign ? "#111936" : "var(--color-primary-content)",
+                fontSize: isClassicDesign ? "14px" : "11px",
+                fontWeight: isClassicDesign ? 400 : 600,
+              }}
+            >
               {button_name}
             </Typography>
           </Box>
@@ -59,7 +69,7 @@ export function AdsUI({ content, link, button_name, onClose }: AdsUIProps) {
           sx={{ cursor: "pointer", width: "18px", height: "18px", position: "absolute", right: "8px", top: "8px" }}
           onClick={onClose}
         >
-          <X color="var(--color-base-content)" size={18} />
+          <X color={isClassicDesign ? "#ffffff" : "var(--color-base-content)"} size={18} />
         </Box>
       ) : null}
     </Flex>

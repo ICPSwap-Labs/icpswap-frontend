@@ -2,7 +2,18 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import type React from "react";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 
-import { Box, Grid, Menu, MenuItem, makeStyles, TextField, type TextFieldProps, type Theme, Typography } from "../Mui";
+import {
+  Box,
+  Grid,
+  Menu,
+  MenuItem,
+  makeStyles,
+  TextField,
+  type TextFieldProps,
+  type Theme,
+  Typography,
+  useTheme,
+} from "../Mui";
 import { NoData } from "../NoData";
 
 interface UseStylesProps {
@@ -17,47 +28,83 @@ interface UseStylesProps {
 
 const useStyles = ({ contained, background, fullHeight, multiline, borderRadius, label, border }: UseStylesProps) => {
   return makeStyles((theme: Theme) => {
-    return {
-      inputBox: {
-        display: label && contained ? "block" : "flex",
-        alignItems: "center",
-        border: contained
-          ? (border ?? theme.palette.border.normal)
-          : border === true
-            ? theme.palette.border.normal
-            : border === "border0"
-              ? theme.palette.border.border0
-              : "none",
-        background: background
-          ? background === "level3"
-            ? "var(--color-base-300)"
-            : background === "level1"
-              ? "var(--color-base-200)"
-              : background
-          : "var(--color-base-200)",
-        borderRadius,
-        padding: contained ? `7px 12px` : "3px 12px",
-        gap: "0 5px",
-        height: contained || multiline ? "auto" : fullHeight ? "100%" : "48px",
-        ...(multiline ? { minHeight: "48px" } : {}),
-        margin: label ? "12px 0 0 0" : "0",
-        transition: "border-color 180ms ease, box-shadow 180ms ease",
-        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--color-base-content) 6%, transparent)",
-        "@media(max-width: 640px)": {
-          padding: contained ? `4px 6px` : "0 6px",
-        },
-        "& input": {
-          color: theme.palette.text.primary,
-        },
-        "&:hover": {
-          borderColor: "color-mix(in srgb, var(--color-primary) 45%, transparent)",
-        },
-        "&:focus-within": {
-          borderColor: "var(--color-primary)",
-          boxShadow: "0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent)",
-        },
-      },
-    };
+    return theme.customization?.designVersion !== "modern"
+      ? {
+          inputBox: {
+            display: label && contained ? "block" : "flex",
+            alignItems: "center",
+            border: contained
+              ? (border ?? theme.palette.border.normal)
+              : border === true
+                ? theme.palette.border.normal
+                : border === "border0"
+                  ? theme.palette.border.border0
+                  : "none",
+            background: background
+              ? background === "level3"
+                ? theme.palette.background.level3
+                : background === "level1"
+                  ? theme.palette.background.level1
+                  : background
+              : theme.palette.background.level4,
+            borderRadius,
+            padding: contained ? `7px 12px` : "3px 12px",
+            gap: "0 5px",
+            height: contained || multiline ? "auto" : fullHeight ? "100%" : "48px",
+            ...(multiline ? { minHeight: "48px" } : {}),
+            margin: label ? "12px 0 0 0" : "0",
+            "@media(max-width: 640px)": {
+              padding: contained ? `4px 6px` : "0 6px",
+            },
+            "& input": {
+              color: theme.palette.text.primary,
+            },
+            "&:hover": {
+              borderColor: "#ffffff",
+            },
+          },
+        }
+      : {
+          inputBox: {
+            display: label && contained ? "block" : "flex",
+            alignItems: "center",
+            border: contained
+              ? (border ?? theme.palette.border.normal)
+              : border === true
+                ? theme.palette.border.normal
+                : border === "border0"
+                  ? theme.palette.border.border0
+                  : "none",
+            background: background
+              ? background === "level3"
+                ? "var(--color-base-300)"
+                : background === "level1"
+                  ? "var(--color-base-200)"
+                  : background
+              : "var(--color-base-200)",
+            borderRadius,
+            padding: contained ? `7px 12px` : "3px 12px",
+            gap: "0 5px",
+            height: contained || multiline ? "auto" : fullHeight ? "100%" : "48px",
+            ...(multiline ? { minHeight: "48px" } : {}),
+            margin: label ? "12px 0 0 0" : "0",
+            transition: "border-color 180ms ease, box-shadow 180ms ease",
+            boxShadow: "none",
+            "@media(max-width: 640px)": {
+              padding: contained ? `4px 6px` : "0 6px",
+            },
+            "& input": {
+              color: theme.palette.text.primary,
+            },
+            "&:hover": {
+              borderColor: "color-mix(in srgb, var(--color-primary) 45%, transparent)",
+            },
+            "&:focus-within": {
+              borderColor: "var(--color-primary)",
+              boxShadow: "inset 0 -2px 0 var(--color-primary)",
+            },
+          },
+        };
   });
 };
 
@@ -102,6 +149,24 @@ export interface FilledTextFieldLabelProps {
 }
 
 export function FilledTextFieldLabel({ label, required, labelSize = "16px" }: FilledTextFieldLabelProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+
+  if (isClassicDesign) {
+    return (
+      <Box>
+        {required && (
+          <Typography sx={{ color: "#D3625B" }} fontSize={labelSize} component="span">
+            *
+          </Typography>
+        )}
+
+        <Typography component="span" fontSize={labelSize}>
+          {label}
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       {required && (
@@ -164,7 +229,7 @@ function UIFilledTextField(
     maxWidth,
     fullHeight,
     disabled,
-    borderRadius = "8px",
+    borderRadius,
     contained = false,
     CustomNoData,
     menuDisabled,
@@ -180,6 +245,9 @@ function UIFilledTextField(
   }: FilledTextFieldProps,
   ref,
 ) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+  borderRadius ??= isClassicDesign ? "8px" : "6px";
+
   const classes = useStyles({ contained, background, fullHeight, borderRadius, border, label: !!label, multiline })();
   const [anchorEl, setAnchorEl] = useState(null);
   const inputRef = useRef<HTMLElement | null>(null);
@@ -220,6 +288,121 @@ function UIFilledTextField(
     if (onChange) onChange(value);
     setAnchorEl(null);
   };
+
+  if (isClassicDesign) {
+    return (
+      <Box>
+        {label ? <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} /> : null}
+        <Box
+          ref={outerBoxRef}
+          className={classes.inputBox}
+          sx={{
+            ...(fullHeight ? { height: "100%" } : {}),
+            ...(select ? { cursor: "pointer" } : {}),
+            ...(maxWidth ? { maxWidth: `${maxWidth}px` } : {}),
+          }}
+          onClick={handleOuterBoxClick}
+        >
+          {contained && <FilledTextFieldLabel required={required} label={label} labelSize={labelSize} />}
+          <Grid container alignItems="center" sx={{ flex: 1 }}>
+            <Grid item xs>
+              {!select ? (
+                <TextField
+                  sx={{
+                    "& input.MuiInputBase-input": {
+                      lineHeight: "1.15rem",
+                      fontSize: props.fontSize ?? "16px",
+                      "&.Mui-disabled": disabledTextColor
+                        ? {
+                            WebkitTextFillColor: disabledTextColor,
+                          }
+                        : {},
+                    },
+                    "& textarea": {
+                      lineHeight: "1.15rem",
+                      fontSize: props.fontSize ?? "16px",
+                    },
+                    "& input::placeholder": {
+                      fontSize: props.placeholderSize ?? "16px",
+                    },
+                    "& textarea::placeholder": {
+                      fontSize: props.placeholderSize ?? "16px",
+                    },
+                  }}
+                  inputRef={inputRef}
+                  {...props}
+                  variant="standard"
+                  onChange={({ target: { value } }) => onChange?.(value)}
+                  value={value}
+                  multiline={multiline}
+                  slotProps={{
+                    ...textFieldProps?.slotProps,
+                    input: {
+                      disableUnderline: true,
+                      autoComplete: "off",
+                      ...textFieldProps?.slotProps?.input,
+                    },
+                  }}
+                  fullWidth
+                  disabled={disabled}
+                  helperText={helperText}
+                  onFocus={onFocus}
+                  autoComplete="off"
+                />
+              ) : value ? (
+                <Value menus={menus} value={value} helperText={helperText} select={select} />
+              ) : (
+                <Typography
+                  sx={{
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                  color="#c5c5c5"
+                >
+                  {props.placeholder}
+                </Typography>
+              )}
+            </Grid>
+            {select && <KeyboardArrowDownIcon sx={{ cursor: "pointer" }} />}
+          </Grid>
+        </Box>
+
+        {Boolean(anchorEl) && (
+          <Menu
+            className="custom-select"
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            PaperProps={{
+              style: {
+                width: menuWidth,
+                transform: "translateY(10px)",
+              },
+            }}
+          >
+            {menus.map((menu, index) => (
+              <MenuItem
+                key={menu.value + index}
+                className={`${!!menuDisabled && menuDisabled(menu) ? "disabled" : ""}`}
+                onClick={() => {
+                  if (!!menuDisabled && menuDisabled(menu)) return;
+                  handleMenuItemClick(menu);
+                }}
+              >
+                {menu.label}
+              </MenuItem>
+            ))}
+            {menus.length === 0 ? CustomNoData || <NoData /> : null}
+          </Menu>
+        )}
+      </Box>
+    );
+  }
 
   return (
     <Box>

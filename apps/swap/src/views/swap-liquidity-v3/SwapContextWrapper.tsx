@@ -38,23 +38,24 @@ export function SwapContextWrapper() {
     <SwapUIWrapper>
       <Flex fullWidth justify="center" align="flex-start">
         <Box
+          className="swap-workspace"
           sx={{
-            width: "560px",
+            width: "1000px",
             maxWidth: "100%",
           }}
         >
-          <section className="card swap-trading-card bg-base-100 border border-base-300">
+          <section className="swap-trading-card">
             <div className="swap-card-toolbar flex items-center justify-between gap-3">
               <SwapTabPanels currentTab={TABS.SWAP} />
 
-              <Flex gap="0 4px">
+              <Flex className="swap-toolbar-actions" gap="0 8px">
                 <SwapTransactions />
                 <SwapProEntry inputToken={inputToken} outputToken={outputToken} />
                 <SwapSettings type="swap" />
               </Flex>
             </div>
 
-            <Box sx={{ margin: "20px 0 0 0" }}>
+            <Box className="swap-card-content" sx={{ margin: "32px 0 0 0" }}>
               <SwapWrapper ref={swapWrapperRef} />
             </Box>
           </section>

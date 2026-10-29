@@ -1,6 +1,6 @@
 import { Flex } from "@icpswap/ui";
 import { BigNumber } from "@icpswap/utils";
-import { Box, ClickAwayListener, Typography, useTheme } from "components/Mui";
+import { Box, ClickAwayListener, Typography } from "components/Mui";
 import { useState } from "react";
 import { useSlippageManager } from "store/swap/cache/hooks";
 
@@ -13,7 +13,6 @@ export interface SwapSettingsProps {
 }
 
 export function SwapSettings({ type, ui, position = "right" }: SwapSettingsProps) {
-  const theme = useTheme();
   const [settingShow, setSettingShow] = useState(false);
   const [slippageTolerance] = useSlippageManager(type);
 
@@ -36,14 +35,16 @@ export function SwapSettings({ type, ui, position = "right" }: SwapSettingsProps
         }}
       >
         <Flex
+          className={`swap-toolbar-control swap-settings-control${ui === "pro" ? " swap-settings-pro" : ""}`}
           gap="0 4px"
           onClick={handleToggleSettingShow}
           sx={{
             cursor: "pointer",
-            padding: "4px 8px",
-            borderRadius: "40px",
-            height: ui === "pro" ? "auto" : "32px",
-            background: ui === "pro" ? theme.palette.background.level1 : theme.palette.background.level2,
+            padding: "4px 10px",
+            borderRadius: "4px",
+            border: "1px solid var(--color-base-300)",
+            height: ui === "pro" ? "auto" : "36px",
+            background: ui === "pro" ? "var(--color-base-100)" : "transparent",
           }}
         >
           <Typography sx={{ fontSize: "12px", color: "text.primary" }}>
@@ -55,9 +56,10 @@ export function SwapSettings({ type, ui, position = "right" }: SwapSettingsProps
 
         {settingShow && (
           <Box
+            className="swap-settings-popover"
             sx={{
               position: "absolute",
-              top: "30px",
+              top: "42px",
               zIndex: 10,
               ...(position === "right" ? { right: 0 } : { left: 0 }),
             }}

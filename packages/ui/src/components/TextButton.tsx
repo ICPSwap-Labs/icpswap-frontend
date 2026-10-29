@@ -2,7 +2,7 @@ import { mockALinkAndOpen } from "@icpswap/utils";
 import { type ReactNode, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "./Link";
-import { Box, Typography } from "./Mui";
+import { Box, Typography, useTheme } from "./Mui";
 
 export interface ALinkProps {
   children: ReactNode;
@@ -63,13 +63,14 @@ export function ALink({
 }
 
 function ArrowIcon() {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
   return (
     <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         fillRule="evenodd"
         clipRule="evenodd"
         d="M6.43866 2.42969H1.15951V0.429688H8.85528H9.85528V1.42969V9.12545H7.85528V3.8415L1.94156 9.75521L0.527344 8.341L6.43866 2.42969Z"
-        fill="#5669DC"
+        fill={isClassicDesign ? "#5669DC" : "var(--color-primary)"}
       />
     </svg>
   );

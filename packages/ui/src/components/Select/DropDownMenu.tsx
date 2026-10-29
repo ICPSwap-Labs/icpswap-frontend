@@ -15,6 +15,30 @@ interface MenuItemNodeWrapperUIProps {
 }
 
 export function MenuItemNodeWrapperUI({ menu, sx, onClick, children }: MenuItemNodeWrapperUIProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+
+  if (isClassicDesign) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          height: "48px",
+          padding: "0 16px",
+          cursor: "pointer",
+          "&:hover": {
+            background: "#313D67",
+            color: "text.primary",
+          },
+          ...sx,
+        }}
+        onClick={() => onClick(menu)}
+      >
+        {children}
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -178,6 +202,7 @@ export const __DropDownMenu = ({
   anchor,
 }: DropDownMenuProps) => {
   const theme = useTheme();
+  const isClassicDesign = theme.customization?.designVersion !== "modern";
   const [search, setSearch] = useState<undefined | string>(undefined);
   const [filteredTokens, setFilteredTokens] = useState<{ [tokenId: string]: boolean }>({});
 
@@ -247,10 +272,12 @@ export const __DropDownMenu = ({
       style={{
         width: menuWidth ?? "fit-content",
         minWidth: minMenuWidth ?? "fit-content",
-        background: "var(--color-base-100)",
-        border: "1px solid color-mix(in srgb, var(--color-base-content) 12%, transparent)",
-        borderRadius: "16px",
-        boxShadow: "0 16px 48px color-mix(in srgb, var(--color-neutral) 30%, transparent)",
+        background: isClassicDesign ? theme.colors.darkLevel3 : "var(--color-base-100)",
+        border: isClassicDesign
+          ? "1px solid #49588E"
+          : "1px solid color-mix(in srgb, var(--color-base-content) 12%, transparent)",
+        borderRadius: isClassicDesign ? "12px" : "6px",
+        boxShadow: "none",
         overflow: "hidden",
         zIndex: 100000,
       }}

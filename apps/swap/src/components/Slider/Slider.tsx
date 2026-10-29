@@ -275,7 +275,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
                   height: "6px",
                   borderRadius: "50%",
                   cursor: "pointer",
-                  background: active ? theme.colors.success : (trackColor ?? "#38405D"),
+                  background: active ? theme.colors.success : (trackColor ?? "var(--color-neutral)"),
                   left: `${index * SLICE_PERCENT_THRESHOLD}%`,
                   transform: "translate(-50%, -50%)",
                   top: "50%",
@@ -293,7 +293,7 @@ export const Slider = ({ totalAmount, onAmountChange, width, trackColor, value }
               width: percentage ?? 0,
               height: "4px",
               borderRadius: "10px",
-              background: "#63D7B9",
+              background: "var(--color-success)",
               cursor: "pointer",
             }}
           />

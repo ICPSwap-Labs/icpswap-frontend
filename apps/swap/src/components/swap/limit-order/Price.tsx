@@ -283,10 +283,11 @@ export const SwapLimitPrice = forwardRef(
 
     return (
       <MainCard
+        className="swap-quote"
         border="level4"
         level={ui === "pro" ? 1 : 3}
         padding={ui === "pro" ? "16px" : "16px"}
-        borderRadius={ui === "pro" ? "12px" : undefined}
+        borderRadius="4px"
       >
         <Box sx={{ display: "grid", gap: "16px 0", gridTemplateColumns: "1fr" }}>
           <Flex fullWidth justify="space-between">

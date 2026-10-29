@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Box, type BoxProps, Typography } from "./Mui";
+import { Box, type BoxProps, Typography, useTheme } from "./Mui";
 
 export interface SmallTabButtonProps {
   children: ReactNode;
@@ -11,24 +11,45 @@ export interface SmallTabButtonProps {
   padding?: string;
 }
 
-export function SmallTabButton({
-  children,
-  active,
-  background,
-  borderRadius = "9px",
-  padding = "8px 12px",
-  onClick,
-}: SmallTabButtonProps) {
+export function SmallTabButton({ children, active, background, borderRadius, padding, onClick }: SmallTabButtonProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+  const theme = useTheme();
+  borderRadius ??= isClassicDesign ? "50px" : "4px";
+  padding ??= isClassicDesign ? "0 10px" : "8px 12px";
+
+  if (isClassicDesign) {
+    return (
+      <Typography
+        component="span"
+        color={active ? "text.primary" : "text.secondary"}
+        sx={{
+          background: active ? (background ?? theme.palette.background.level3) : "transparent",
+          borderRadius,
+          display: "flex",
+          justifyContent: "center",
+          fontSize: "14px",
+          fontWeight: 400,
+          padding,
+        }}
+        onClick={onClick}
+      >
+        {children}
+      </Typography>
+    );
+  }
+
   return (
     <Typography
       className={`tab ics-tab ${active ? "tab-active" : ""}`}
       component="span"
       color={active ? "text.primary" : "text.secondary"}
       sx={{
-        background: active
-          ? (background ?? "color-mix(in srgb, var(--color-primary) 15%, var(--color-base-100))")
-          : "transparent",
-        color: active ? "var(--color-base-content)" : "color-mix(in srgb, var(--color-base-content) 58%, transparent)",
+        background: active ? (background ?? "var(--color-secondary)") : "transparent",
+        color: active
+          ? background
+            ? "var(--color-base-content)"
+            : "var(--color-secondary-content)"
+          : "color-mix(in srgb, var(--color-base-content) 58%, transparent)",
         borderRadius,
         display: "flex",
         justifyContent: "center",
@@ -38,11 +59,11 @@ export function SmallTabButton({
         height: "auto",
         lineHeight: 1.4,
         whiteSpace: "nowrap",
-        transition: "background 180ms ease, color 180ms ease, box-shadow 180ms ease",
-        boxShadow: active ? "inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 20%, transparent)" : "none",
+        transition: "background 180ms ease, color 180ms ease",
+        boxShadow: "none",
         "&:hover": {
-          color: "var(--color-base-content)",
-          backgroundColor: "color-mix(in srgb, var(--color-primary) 10%, transparent)",
+          color: active && !background ? "var(--color-secondary-content)" : "var(--color-base-content)",
+          backgroundColor: active ? (background ?? "var(--color-secondary)") : "var(--color-base-300)",
         },
       }}
       onClick={onClick}
@@ -63,12 +84,36 @@ interface SmallTabsButtonWrapperProps {
 
 export function SmallTabsButtonWrapper({
   children,
-  borderRadius = "12px",
+  borderRadius,
   background,
-  padding = "4px",
+  padding,
   border = "none",
   sx,
 }: SmallTabsButtonWrapperProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+  const theme = useTheme();
+  borderRadius ??= isClassicDesign ? "50px" : "6px";
+  padding ??= isClassicDesign ? "2px" : "4px";
+
+  if (isClassicDesign) {
+    return (
+      <Box
+        sx={{
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          padding,
+          background: background ?? theme.palette.background.level4,
+          borderRadius,
+          border,
+          ...sx,
+        }}
+      >
+        {children}
+      </Box>
+    );
+  }
+
   return (
     <Box
       className="tabs tabs-box ics-tabs"
@@ -79,7 +124,7 @@ export function SmallTabsButtonWrapper({
         padding,
         background: background ?? "var(--color-base-200)",
         gap: "2px",
-        boxShadow: "inset 0 0 0 1px color-mix(in srgb, var(--color-base-content) 5%, transparent)",
+        boxShadow: "none",
         borderRadius,
         border,
         ...sx,

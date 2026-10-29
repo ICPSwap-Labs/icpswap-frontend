@@ -1,3 +1,4 @@
+import { useDesignVersion } from "hooks/useDesignVersion";
 import { Flex } from "@icpswap/ui";
 import { Box, type BoxProps } from "components/Mui";
 import type { ReactNode } from "react";
@@ -8,6 +9,26 @@ export interface InfoWrapperProps {
 }
 
 export function InfoWrapper({ children, sx }: InfoWrapperProps) {
+  const { isClassicDesign } = useDesignVersion();
+
+  if (isClassicDesign) {
+    return (
+      <Flex fullWidth justify="center">
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: "1200px",
+            position: "relative",
+            padding: "48px 0",
+            ...sx,
+          }}
+        >
+          {children}
+        </Box>
+      </Flex>
+    );
+  }
+
   return (
     <Flex fullWidth justify="center">
       <Box

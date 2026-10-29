@@ -1,6 +1,6 @@
 import { useCallback, useContext } from "react";
 import { DownArrow, UpArrow } from "../Arrow";
-import { type BoxProps, Typography } from "../Mui";
+import { type BoxProps, Typography, useTheme } from "../Mui";
 import HeaderContext from "./headerContext";
 import { SortDirection } from "./types";
 
@@ -17,6 +17,9 @@ export type HeaderCellProps = {
 };
 
 export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+  const theme = useTheme();
+
   const { sortChange, sortField, sortDirection } = useContext(HeaderContext);
 
   const arrow = useCallback(
@@ -32,6 +35,32 @@ export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps)
     }
     if (props.onClick) props.onClick(event);
   };
+
+  if (isClassicDesign) {
+    return (
+      <Typography
+        sx={{
+          cursor: "pointer",
+          userSelect: "none",
+          color: theme.colors.dark400,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: props.align === "right" ? "flex-end" : "flex-start",
+          fontSize: "16px",
+          fontWeight: 400,
+          "@media screen and (max-width: 600px)": {
+            fontSize: "12px",
+          },
+        }}
+        color={props.color}
+        onClick={handleClick}
+        component="div"
+        className={props?.className}
+      >
+        {props.children} {field ? arrow(field) : null}
+      </Typography>
+    );
+  }
 
   return (
     <Typography

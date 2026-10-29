@@ -1,6 +1,7 @@
 import { MenuItem, MenuWrapper } from "@icpswap/ui";
 import { Link } from "components/index";
 import { useState } from "react";
+import { useDesignVersion } from "hooks/useDesignVersion";
 
 import { type Route, routeKey } from "./config";
 import { SubMenuPopper } from "./SubMenuPopper";
@@ -14,6 +15,7 @@ export interface ExceedRoutesPopperProps {
 }
 
 export function ExceedRoutesPopper({ open, routes, anchor, onMenuClick, onClickAway }: ExceedRoutesPopperProps) {
+  const { isClassicDesign } = useDesignVersion();
   const [subMenuOpenKey, setSubMenuOpenKey] = useState<string | null>(null);
   const [subMenuTarget, setSubMenuTarget] = useState<any>(undefined);
 
@@ -40,7 +42,13 @@ export function ExceedRoutesPopper({ open, routes, anchor, onMenuClick, onClickA
   };
 
   return (
-    <MenuWrapper open={open} anchor={anchor} placement="bottom-start" onClickAway={onClickAway}>
+    <MenuWrapper
+      open={open}
+      anchor={anchor}
+      placement={isClassicDesign ? "bottom-start" : "right-start"}
+      onClickAway={onClickAway}
+      menuWidth={isClassicDesign ? undefined : "212px"}
+    >
       {routes.map((route, index) => (
         <Link key={route.path ?? index} to={route.path} link={route.link}>
           <MenuItem

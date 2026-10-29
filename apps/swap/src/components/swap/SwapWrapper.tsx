@@ -291,6 +291,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   return (
     <Box
       className="swap-order-form"
+      data-ui={ui}
       sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "8px 0" : "12px 0" }}
     >
       <SwapInputWrapper
@@ -318,10 +319,11 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
 
       {isLoadingRoute || (!isLoadingRoute && !!trade) ? (
         <MainCard
+          className="swap-quote"
           border="level4"
           level={ui === "pro" ? 1 : 3}
           padding={ui === "pro" ? "10px" : "16px"}
-          borderRadius={ui === "pro" ? "12px" : undefined}
+          borderRadius="4px"
         >
           <Box sx={{ display: "grid", gap: "20px 0", gridTemplateColumns: "1fr" }}>
             {isLoadingRoute ? (
@@ -369,7 +371,7 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
           outOfCyclesDisabled
         }
         sx={{
-          borderRadius: "14px",
+          borderRadius: "4px",
           height: ui === "pro" ? "48px" : "54px",
           marginTop: "4px",
           fontWeight: 600,

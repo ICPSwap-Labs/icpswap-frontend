@@ -1,3 +1,4 @@
+import { useDesignVersion } from "hooks/useDesignVersion";
 import DialogCloseIcon from "assets/images/icons/dialog-close";
 import {
   Box,
@@ -16,66 +17,122 @@ import i18n from "i18n/index";
 import type { ReactNode } from "react";
 import { isElement } from "react-is";
 
-const useStyles = makeStyles(() => ({
-  titleContainer: {
-    position: "relative",
-    paddingRight: "36px",
-    lineHeight: 1.4,
-  },
-  title: {
-    fontSize: "20px",
-    fontWeight: 700,
-    letterSpacing: "-0.035em",
-    "@media (max-width: 640px)": {
-      fontSize: "1rem",
-    },
-    "&.warning": {
-      color: "var(--color-error)",
-    },
-  },
-  detailItem: {
-    marginBottom: "24px",
-  },
-  value: {
-    textAlign: "right",
-    wordBreak: "break-all",
-  },
-  closeButton: {
-    position: "absolute",
-    right: 0,
-    top: "50%",
-    transform: "translate(0, -50%)",
-    cursor: "pointer",
-    color: "color-mix(in srgb, var(--color-base-content) 48%, transparent)",
-    transition: "color 160ms ease",
-    "&:hover": {
-      color: "var(--color-primary)",
-    },
-    "&.warning": {
-      color: "var(--color-error)",
-      "&:hover": {
-        color: "var(--color-error)",
-      },
-    },
-  },
-  closeButton1: {
-    position: "absolute",
-    right: "5px",
-    top: "5px",
-    cursor: "pointer",
-    color: "color-mix(in srgb, var(--color-base-content) 48%, transparent)",
-    transition: "color 160ms ease",
-    "&:hover": {
-      color: "var(--color-primary)",
-    },
-    "&.warning": {
-      color: "var(--color-error)",
-      "&:hover": {
-        color: "var(--color-error)",
-      },
-    },
-  },
-}));
+const useStyles = makeStyles((theme: Theme) => {
+  return theme.customization?.designVersion !== "modern"
+    ? {
+        titleContainer: {
+          position: "relative",
+        },
+        title: {
+          fontSize: "20px",
+          fontWeight: 700,
+          "@media (max-width: 640px)": {
+            fontSize: "1rem",
+          },
+          "&.warning": {
+            color: "#D3625B",
+          },
+        },
+        detailItem: {
+          marginBottom: "24px",
+        },
+        value: {
+          textAlign: "right",
+          wordBreak: "break-all",
+        },
+        closeButton: {
+          position: "absolute",
+          right: 0,
+          top: "50%",
+          transform: "translate(0, -50%)",
+          cursor: "pointer",
+          "&:hover": {
+            color: theme.colors.primaryMain,
+          },
+          "&.warning": {
+            color: "#D3625B",
+            "&:hover": {
+              color: "#D3625B",
+            },
+          },
+        },
+        closeButton1: {
+          position: "absolute",
+          right: "5px",
+          top: "5px",
+          cursor: "pointer",
+          "&:hover": {
+            color: theme.colors.primaryMain,
+          },
+          "&.warning": {
+            color: "#D3625B",
+            "&:hover": {
+              color: "#D3625B",
+            },
+          },
+        },
+      }
+    : {
+        titleContainer: {
+          position: "relative",
+          paddingRight: "36px",
+          lineHeight: 1.4,
+        },
+        title: {
+          fontSize: "20px",
+          fontWeight: 700,
+          letterSpacing: "-0.035em",
+          "@media (max-width: 640px)": {
+            fontSize: "1rem",
+          },
+          "&.warning": {
+            color: "var(--color-error)",
+          },
+        },
+        detailItem: {
+          marginBottom: "24px",
+        },
+        value: {
+          textAlign: "right",
+          wordBreak: "break-all",
+        },
+        closeButton: {
+          position: "absolute",
+          right: 0,
+          top: "50%",
+          transform: "translate(0, -50%)",
+          cursor: "pointer",
+          color: "color-mix(in srgb, var(--color-base-content) 48%, transparent)",
+          transition: "color 160ms ease",
+          "&:hover": {
+            color: "var(--color-primary)",
+          },
+          "&.warning": {
+            color: "var(--color-error)",
+            "&:hover": {
+              color: "var(--color-error)",
+            },
+          },
+        },
+        closeButton1: {
+          position: "absolute",
+          right: "5px",
+          top: "5px",
+          cursor: "pointer",
+          color: "color-mix(in srgb, var(--color-base-content) 48%, transparent)",
+          transition: "color 160ms ease",
+          "&:hover": {
+            color: "var(--color-primary)",
+          },
+          "&.warning": {
+            color: "var(--color-error)",
+            "&:hover": {
+              color: "var(--color-error)",
+            },
+          },
+        },
+      };
+});
 
 export interface ModalProps {
   title?: string | ReactNode;
@@ -119,11 +176,96 @@ export default function Modal({
   dialogProps,
   contentPadding,
 }: ModalProps) {
+  const { isClassicDesign } = useDesignVersion();
+
   const classes = useStyles();
   const theme = useTheme() as Theme;
   const matchDownMD = useMediaQueryMD();
 
   const down760 = useMediaQuery("(max-width:760px)");
+
+  if (isClassicDesign) {
+    return (
+      <Dialog
+        onClose={onClose}
+        open={open}
+        maxWidth={maxWidth}
+        fullWidth={fullWidth}
+        {...dialogProps}
+        sx={{
+          "& .MuiDialog-paper, & .MuiPaper-root": {
+            padding: "0",
+          },
+          "& .MuiDialogTitle-root": {
+            padding: "24px 24px 0 24px",
+            ...(matchDownMD ? { padding: "12px 12px 0 12px" } : {}),
+          },
+          "& .MuiDialogContent-root": {
+            position: "relative",
+            padding: contentPadding ? `${contentPadding}!important` : "24px!important",
+            ...(matchDownMD ? { padding: "12px", paddingTop: "12px!important" } : {}),
+          },
+          ...{
+            "& .MuiPaper-root ": {
+              ...(background
+                ? { backgroundColor: background === "level1" ? theme.palette.background.level1 : background }
+                : { backgroundColor: theme.palette.background.level2 }),
+            },
+            ...(dialogProps?.sx || {}),
+          },
+        }}
+      >
+        {title ? (
+          isElement(title) ? (
+            title
+          ) : (
+            <DialogTitle>
+              <Typography className={classes.titleContainer} component="div">
+                <Typography className={`${classes.title} ${type || ""}`} component="span" color="textPrimary">
+                  {title}
+                </Typography>
+                {showClose ? (
+                  <DialogCloseIcon onClick={onClose} className={`${classes.closeButton} ${type || ""}`} />
+                ) : null}
+              </Typography>
+            </DialogTitle>
+          )
+        ) : null}
+        <DialogContent>
+          {showClose && !title ? (
+            <DialogCloseIcon onClick={onClose} className={`${classes.closeButton1} ${type || ""} `} />
+          ) : null}
+          {children}
+
+          {showConfirm || showCancel ? (
+            <Box
+              mt="20px"
+              sx={{
+                display: "grid",
+                gridTemplateColumns: down760 ? "1fr" : showConfirm && showCancel ? "1fr 1fr" : "1fr",
+                gap: down760 ? "10px 0" : "0 10px",
+              }}
+            >
+              {showCancel ? (
+                <Box>
+                  <Button fullWidth size="large" onClick={onCancel} variant="outlined">
+                    {cancelText}
+                  </Button>
+                </Box>
+              ) : null}
+              {showConfirm ? (
+                <Box>
+                  <Button disabled={confirmDisabled} fullWidth size="large" variant="contained" onClick={onConfirm}>
+                    {confirmText}
+                  </Button>
+                </Box>
+              ) : null}
+            </Box>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog
@@ -135,18 +277,16 @@ export default function Modal({
       sx={{
         "& .MuiBackdrop-root": {
           background: "color-mix(in srgb, var(--color-neutral) 74%, transparent)",
-          backdropFilter: "blur(12px)",
+          backdropFilter: "blur(4px)",
         },
         "& .MuiDialog-paper, & .MuiPaper-root": {
           padding: "0",
         },
         "& .MuiDialog-paper": {
-          borderRadius: "24px",
+          borderRadius: "8px",
           border: "1px solid color-mix(in srgb, var(--color-base-content) 12%, transparent)",
-          boxShadow:
-            "0 32px 100px color-mix(in srgb, var(--color-neutral) 50%, transparent), 0 0 60px color-mix(in srgb, var(--color-primary) 7%, transparent)",
-          backgroundImage:
-            "radial-gradient(ellipse at 0% 0%, color-mix(in srgb, var(--color-primary) 7%, transparent), transparent 55%)",
+          boxShadow: "none",
+          backgroundImage: "none",
         },
         "& .MuiDialogTitle-root": {
           padding: "28px 28px 0",
