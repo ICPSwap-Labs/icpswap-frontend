@@ -1,0 +1,198 @@
+.ics-terminal-frame {
+  min-width: 0;
+}
+
+.ics-terminal-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 1100;
+  display: none;
+  width: 208px;
+  flex-direction: column;
+}
+
+.ics-terminal-nav > a {
+  width: 100%;
+}
+
+.ics-terminal-sidebar.is-collapsed {
+  width: 72px;
+}
+
+.ics-terminal-sidebar.is-collapsed .ics-terminal-nav-item {
+  justify-content: center;
+  gap: 0;
+}
+
+.ics-terminal-sidebar.is-collapsed .ics-terminal-nav-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ics-terminal-more-icon {
+  display: none;
+}
+
+.ics-terminal-sidebar.is-collapsed .ics-terminal-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.ics-terminal-sidebar.is-collapsed .ics-terminal-more-expanded {
+  display: none;
+}
+
+.ics-terminal-sidebar.is-collapsed .ics-terminal-more-icon {
+  display: block;
+}
+
+.ics-terminal-header {
+  height: 64px;
+  min-height: 64px;
+}
+
+.ics-classic-frame {
+  min-width: 0;
+}
+
+@media (max-width: 400px) {
+  .ics-design-header .ics-header-brand img {
+    width: 80px;
+  }
+}
+
+.ics-ecosystem-art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: var(--color-secondary);
+  stroke-width: 0.7;
+  stroke-linejoin: round;
+}
+
+.ics-ecosystem-grid {
+  stroke: currentColor;
+  opacity: 0.06;
+}
+
+.ics-ecosystem-registration {
+  stroke: currentColor;
+  opacity: 0.18;
+}
+
+.ics-ecosystem-structure {
+  animation: ics-ecosystem-float 36s ease-in-out infinite;
+}
+
+.ics-planet-atmosphere {
+  stroke: var(--color-primary);
+  opacity: 0.1;
+}
+
+.ics-planet-body {
+  fill: var(--color-base-100);
+}
+
+.ics-planet-land {
+  fill: var(--color-secondary);
+  fill-opacity: 0.32;
+  stroke: var(--color-secondary);
+  stroke-opacity: 0.45;
+  stroke-width: 0.45;
+}
+
+.ics-planet-outline {
+  stroke: currentColor;
+  opacity: 0.55;
+}
+
+.ics-planet-rim {
+  stroke: var(--color-primary);
+  opacity: 0.65;
+}
+
+.ics-planet-orbit {
+  stroke: currentColor;
+  opacity: 0.2;
+}
+
+.ics-planet-orbit-front {
+  stroke: currentColor;
+  opacity: 0.5;
+}
+
+.ics-planet-trace {
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 1.5 98.5;
+  opacity: 0.65;
+}
+
+.ics-planet-trace-copper {
+  color: var(--color-primary);
+  animation: ics-planet-circuit 84s linear infinite;
+}
+
+.ics-planet-trace-sage {
+  stroke-dashoffset: -48;
+  animation: ics-planet-circuit-return 108s linear infinite;
+}
+
+@keyframes ics-ecosystem-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes ics-planet-circuit {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes ics-planet-circuit-return {
+  from {
+    stroke-dashoffset: -48;
+  }
+  to {
+    stroke-dashoffset: 52;
+  }
+}
+
+@media (min-width: 1100px) {
+  .ics-terminal-sidebar {
+    display: flex;
+  }
+
+  .ics-terminal-frame {
+    margin-left: 208px;
+  }
+
+  .ics-terminal-frame.is-sidebar-collapsed {
+    margin-left: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ics-terminal-nav * {
+    transition: none !important;
+  }
+
+  .ics-ecosystem-art * {
+    animation: none !important;
+  }
+}
