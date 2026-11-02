@@ -15,6 +15,16 @@ import { SubnetState } from "./SubnetState";
 import V3Event from "./V3Event";
 import "./layout-design.css";
 
+const SIDEBAR_COLLAPSED_STORAGE_KEY = "icswap.sidebar.collapsed";
+
+function readSidebarCollapsed() {
+  try {
+    return window.localStorage.getItem(SIDEBAR_COLLAPSED_STORAGE_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const { isClassicDesign } = useDesignVersion();
@@ -22,7 +32,17 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const matchDown640 = useMediaQuery640();
 
   const [show, setShow] = useState(true);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(readSidebarCollapsed);
+
+  const handleToggleSidebar = () => {
+    const collapsed = !sidebarCollapsed;
+    setSidebarCollapsed(collapsed);
+    try {
+      window.localStorage.setItem(SIDEBAR_COLLAPSED_STORAGE_KEY, String(collapsed));
+    } catch {
+      // The toggle still works when browser storage is unavailable.
+    }
+  };
 
   const isSwapPro = useMemo(() => {
     return location.pathname === "/swap/pro";
@@ -47,10 +67,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           align="flex-start"
         >
           <Ads />
-          <Header
-            sidebarCollapsed={sidebarCollapsed}
-            onToggleSidebar={() => setSidebarCollapsed((collapsed) => !collapsed)}
-          />
+          <Header sidebarCollapsed={sidebarCollapsed} onToggleSidebar={handleToggleSidebar} />
         </Flex>
 
         {matchDown640 ? (

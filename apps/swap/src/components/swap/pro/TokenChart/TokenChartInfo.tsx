@@ -58,6 +58,7 @@ export interface TokenChartInfoProps {
 
 export function TokenChartInfo({ infoToken, tokenListInfo, inputToken, outputToken }: TokenChartInfoProps) {
   const { t } = useTranslation();
+  const isClassicDesign = useTheme().customization.designVersion === "classic";
   const matchDownSM = useMediaQuerySM();
   const { token } = useSwapProStore();
 
@@ -139,6 +140,7 @@ export function TokenChartInfo({ infoToken, tokenListInfo, inputToken, outputTok
           margin: "20px 0 0 0",
           display: "flex",
           justifyContent: "space-between",
+          ...(!isClassicDesign ? { alignItems: "center", gap: "12px", flexWrap: "wrap" } : {}),
           "@media(max-width: 640px)": {
             flexDirection: "column",
             gap: "8px 0",
@@ -163,7 +165,38 @@ export function TokenChartInfo({ infoToken, tokenListInfo, inputToken, outputTok
           </Box>
         ) : null}
 
-        <Box sx={{ display: "flex", gap: "0 10px" }}>
+        <Box
+          className="swap-pro-chart-actions"
+          sx={{
+            display: "flex",
+            gap: "0 10px",
+            ...(!isClassicDesign
+              ? {
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                  "& > a": { display: "inline-flex", alignItems: "center" },
+                  "& .MuiButton-root.secondary": {
+                    height: "36px",
+                    minHeight: "36px",
+                    padding: "0 12px",
+                    whiteSpace: "nowrap",
+                  },
+                  "& .MuiButton-root.secondary:not(.Mui-disabled)": {
+                    color: "var(--color-base-content)",
+                    background: "color-mix(in srgb, var(--color-primary) 10%, var(--color-base-100))",
+                    border: "1px solid color-mix(in srgb, var(--color-primary) 30%, var(--color-base-300))",
+                    "&:hover": {
+                      color: "var(--color-primary)",
+                      background: "color-mix(in srgb, var(--color-primary) 18%, var(--color-base-100))",
+                      borderColor: "var(--color-primary)",
+                    },
+                    "& svg": { color: "inherit", top: 0 },
+                  },
+                }
+              : {}),
+          }}
+        >
           <PriceAlertsIcon tokenId={tokenId} />
 
           {!matchDownSM ? <TokenChartsViewSelector /> : null}

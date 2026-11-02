@@ -50,6 +50,7 @@ const components = {
 
 export function WalletIndex() {
   const theme = useTheme();
+  const isClassicDesign = theme.customization.designVersion === "classic";
   const mediaQuery640 = useMediaQuery640();
   const principal = useAccountPrincipalString();
   const { open, setOpen, pages, setPages } = useWalletStore();
@@ -77,16 +78,24 @@ export function WalletIndex() {
     <>
       <Drawer
         anchor="right"
+        elevation={isClassicDesign ? 16 : 0}
         // Make sure the drawer is closed when user logout
         open={open && nonUndefinedOrNull(principal)}
         onClose={handleDrawerClose}
         sx={{
           width: "100%",
-          "& .MuiPaper-root": {
+          "& .MuiDrawer-paper": {
             width: "100%",
             maxWidth: `${WALLET_DRAWER_WIDTH}px`,
-            background: "transparent",
-            padding: "8px",
+            background: isClassicDesign || mediaQuery640 ? "transparent" : theme.palette.background.wallet,
+            padding: isClassicDesign ? "8px" : "0px",
+            ...(!isClassicDesign
+              ? {
+                  overflow: "hidden",
+                  boxShadow: "none",
+                  borderLeft: mediaQuery640 ? "none" : "1px solid var(--color-base-300)",
+                }
+              : {}),
           },
 
           "& ::-webkit-scrollbar-thumb": {
@@ -101,7 +110,7 @@ export function WalletIndex() {
           <Box
             sx={{
               background: theme.palette.background.wallet,
-              borderRadius: "24px",
+              borderRadius: isClassicDesign || mediaQuery640 ? "24px" : "0px",
               overflow: "hidden",
               width: "100%",
               height: "100%",

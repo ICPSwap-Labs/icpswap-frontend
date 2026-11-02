@@ -18,6 +18,7 @@ const tabs = [
 
 export function TokenAssetsWrapper() {
   const theme = useTheme();
+  const isClassicDesign = theme.customization.designVersion === "classic";
   const [activeTab, setActiveTab] = useState<TABS>(TABS.Assets);
 
   return (
@@ -46,7 +47,7 @@ export function TokenAssetsWrapper() {
         ) : null
       }
     >
-      <Box sx={{ background: theme.palette.background.wallet, borderRadius: "24px" }}>
+      <Box sx={{ background: theme.palette.background.wallet, borderRadius: isClassicDesign ? "24px" : "0px" }}>
         <Header />
       </Box>
 
