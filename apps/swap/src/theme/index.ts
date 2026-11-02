@@ -19,8 +19,9 @@ export interface ThemeOption {
 }
 
 export function theme(customization: { [key: string]: any }) {
-  if (customization.designVersion !== "modern") return classicTheme(customization);
+  if (customization.designVersion === "classic") return classicTheme(customization);
 
+  const modernCustomization = { ...customization, designVersion: "modern" };
   const themeOption: ThemeOption = {
     colors,
     fontSize,
@@ -35,7 +36,7 @@ export function theme(customization: { [key: string]: any }) {
     menuSelected: "",
     menuSelectedBack: "",
     divider: "",
-    customization,
+    customization: modernCustomization,
     defaultGradient: "var(--color-primary)",
     borderRadius: 6,
   };
@@ -83,7 +84,7 @@ export function theme(customization: { [key: string]: any }) {
     themeOption,
     colors,
     fontSize,
-    customization,
+    customization: modernCustomization,
     radius: Radius,
   });
 }

@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en" data-theme="icswap-classic" data-design="classic">
+<html lang="en" data-theme="icswap" data-design="modern">
   <head>
     <title>ICPSwap</title>
-    <link rel="icon" href="/images/design-classic/favicon.png" />
+    <link rel="icon" href="/favicon-copper.svg" />
     <!-- Meta Tags-->
     <meta charset="utf-8" />
-    <meta name="theme-color" content="#1a223f" />
+    <meta name="theme-color" content="#171a19" />
     <meta name="title" content="ICPSwap" />
     <meta name="description" content="ICPSwap" />
     <meta name="keywords" content="ICP ICPSwap ICS dfinity Dfinity DFX dfx" />
@@ -19,7 +19,7 @@
     <meta property="og:url" content="https://app.icpswap.com" />
     <meta property="og:title" content="ICPSwap - ICP" />
     <meta property="og:description" content="The Hub of Future Decentralized Finance on Internet Computer" />
-    <meta property="og:image" content="https://app.icpswap.com/images/design-classic/og_image.png" />
+    <meta property="og:image" content="https://app.icpswap.com/og_image.png" />
 
     <meta http-equiv="pragma" content="no-cache" />
     <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
@@ -29,7 +29,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="#2296f3" />
     <meta name="apple-mobile-web-app-title" content="ICPSwap" />
-    <link rel="apple-touch-icon" href="/images/design-classic/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
 
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0, user-scalable=0" />
     <meta name="referrer" content="origin" />
@@ -46,11 +46,11 @@
     />
 
     <script>
-      // Apply the saved design before first paint; unavailable storage defaults to the original.
+      // Apply the saved design before first paint; unavailable storage defaults to the new design.
       try {
-        if (localStorage.getItem("icswap.design.version") === "modern") {
-          document.documentElement.dataset.design = "modern";
-          document.documentElement.dataset.theme = "icswap";
+        if (localStorage.getItem("icswap.design.version") === "classic") {
+          document.documentElement.dataset.design = "classic";
+          document.documentElement.dataset.theme = "icswap-classic";
         }
       } catch {}
     </script>

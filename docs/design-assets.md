@@ -2,7 +2,7 @@
 
 First-party illustrations and icons use the graphite, copper, sage, and warm gold palette defined by the daisyUI themes in `apps/swap/src/styles.css`. SVG recoloring preserves paths, dimensions, and text. Inline icons use semantic CSS color variables.
 
-These recolored assets belong to the **New design**. The **Original design** is the default and selects preserved artwork from `public/images/design-classic` through `src/styles/classic-assets.css`. The header selector stores `classic` or `modern` under the local-storage key `icswap.design.version`; it does not store or reset wallet, token, or transaction state.
+These recolored assets belong to the **New design**, which is the default. The **Original design** selects preserved artwork from `public/images/design-classic` through `src/styles/classic-assets.css`. The header selector stores `classic` or `modern` under the local-storage key `icswap.design.version`; it does not store or reset wallet, token, or transaction state.
 
 Animated mascots, guide screenshots, and legacy raster artwork use the scoped display filter `apps/swap/public/images/legacy-palette.svg`. It remaps blue/violet accents while preserving source frames, timing, alpha, text, and other hues. Only the first-party image paths listed in `styles.css` receive the filter. Third-party wallet providers, chain logos, token metadata, SNS badges, and user content retain their identities.
 

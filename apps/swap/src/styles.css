@@ -16,8 +16,8 @@
 
 @plugin "daisyui/theme" {
   name: "icswap";
-  default: false;
-  prefersdark: false;
+  default: true;
+  prefersdark: true;
   color-scheme: dark;
 
   --color-base-100: #232724;
@@ -52,8 +52,8 @@
 
 @plugin "daisyui/theme" {
   name: "icswap-classic";
-  default: true;
-  prefersdark: true;
+  default: false;
+  prefersdark: false;
   color-scheme: dark;
 
   --color-base-100: #111936;
