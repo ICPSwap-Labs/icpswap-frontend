@@ -1,0 +1,423 @@
+/* Original artwork is selected by CSS so both designs share the same components. */
+
+html[data-design="classic"] img[src="/favicon.png"] {
+  content: url("/images/design-classic/favicon.png");
+}
+
+html[data-design="classic"] img[src="/images/boundary-error.svg"] {
+  content: url("/images/design-classic/boundary-error.svg");
+}
+
+html[data-design="classic"] img[src="/images/ck-bridge-switch.svg"] {
+  content: url("/images/design-classic/ck-bridge-switch.svg");
+}
+
+html[data-design="classic"] img[src="/images/connect/icpswap.svg"] {
+  content: url("/images/design-classic/connect/icpswap.svg");
+}
+
+html[data-design="classic"] img[src="/images/delete.svg"] {
+  content: url("/images/design-classic/delete.svg");
+}
+
+html[data-design="classic"] img[src="/images/dex_screener.svg"] {
+  content: url("/images/design-classic/dex_screener.svg");
+}
+
+html[data-design="classic"] img[src="/images/empty.svg"] {
+  content: url("/images/design-classic/empty.svg");
+}
+
+html[data-design="classic"] img[src="/images/external-link.svg"] {
+  content: url("/images/design-classic/external-link.svg");
+}
+
+html[data-design="classic"] img[src="/images/history.svg"] {
+  content: url("/images/design-classic/history.svg");
+}
+
+html[data-design="classic"] img[src="/images/icon-tagged.svg"] {
+  content: url("/images/design-classic/icon-tagged.svg");
+}
+
+html[data-design="classic"] img[src="/images/icon-un-tagged.svg"] {
+  content: url("/images/design-classic/icon-un-tagged.svg");
+}
+
+html[data-design="classic"] img[src="/images/icon_exchange.svg"] {
+  content: url("/images/design-classic/icon_exchange.svg");
+}
+
+html[data-design="classic"] img[src="/images/icon_exchange_pro.svg"] {
+  content: url("/images/design-classic/icon_exchange_pro.svg");
+}
+
+html[data-design="classic"] img[src="/images/icons/bulb.svg"] {
+  content: url("/images/design-classic/icons/bulb.svg");
+}
+
+html[data-design="classic"] img[src="/images/icons/dolphin.svg"] {
+  content: url("/images/design-classic/icons/dolphin.svg");
+}
+
+html[data-design="classic"] img[src="/images/icons/fish.svg"] {
+  content: url("/images/design-classic/icons/fish.svg");
+}
+
+html[data-design="classic"] img[src="/images/icons/whale.svg"] {
+  content: url("/images/design-classic/icons/whale.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/overview-farm.svg"] {
+  content: url("/images/design-classic/info/overview-farm.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/overview-stake.svg"] {
+  content: url("/images/design-classic/info/overview-stake.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/overview-swap.svg"] {
+  content: url("/images/design-classic/info/overview-swap.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/tools/Burn.svg"] {
+  content: url("/images/design-classic/info/tools/Burn.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/tools/LockedPositions.svg"] {
+  content: url("/images/design-classic/info/tools/LockedPositions.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/tools/PositionTransfer.svg"] {
+  content: url("/images/design-classic/info/tools/PositionTransfer.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/tools/Positions.svg"] {
+  content: url("/images/design-classic/info/tools/Positions.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/tools/SwapTransactions.svg"] {
+  content: url("/images/design-classic/info/tools/SwapTransactions.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/tools/UserPoolBalance.svg"] {
+  content: url("/images/design-classic/info/tools/UserPoolBalance.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/tools/WalletValuation.svg"] {
+  content: url("/images/design-classic/info/tools/WalletValuation.svg");
+}
+
+html[data-design="classic"] img[src="/images/info/tools/new-tokens-pools.svg"] {
+  content: url("/images/design-classic/info/tools/new-tokens-pools.svg");
+}
+
+html[data-design="classic"] img[src="/images/logout.svg"] {
+  content: url("/images/design-classic/logout.svg");
+}
+
+html[data-design="classic"] img[src="/images/notice_icon.svg"] {
+  content: url("/images/design-classic/notice_icon.svg");
+}
+
+html[data-design="classic"] img[src="/images/scroll-top.svg"] {
+  content: url("/images/design-classic/scroll-top.svg");
+}
+
+html[data-design="classic"] img[src="/images/swap-pro/token-list-dark.svg"] {
+  content: url("/images/design-classic/swap-pro/token-list-dark.svg");
+}
+
+html[data-design="classic"] img[src="/images/swap-pro/token-list.svg"] {
+  content: url("/images/design-classic/swap-pro/token-list.svg");
+}
+
+html[data-design="classic"] img[src="/images/swap/swap-error.svg"] {
+  content: url("/images/design-classic/swap/swap-error.svg");
+}
+
+html[data-design="classic"] img[src="/images/swap/swap-success.svg"] {
+  content: url("/images/design-classic/swap/swap-success.svg");
+}
+
+html[data-design="classic"] img[src="/images/swap/swap-successful.svg"] {
+  content: url("/images/design-classic/swap/swap-successful.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet.svg"] {
+  content: url("/images/design-classic/wallet.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/add-address.svg"] {
+  content: url("/images/design-classic/wallet/add-address.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/arrow.svg"] {
+  content: url("/images/design-classic/wallet/arrow.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/close.svg"] {
+  content: url("/images/design-classic/wallet/close.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/convert.svg"] {
+  content: url("/images/design-classic/wallet/convert.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/copy.svg"] {
+  content: url("/images/design-classic/wallet/copy.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/dot.svg"] {
+  content: url("/images/design-classic/wallet/dot.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/edit.svg"] {
+  content: url("/images/design-classic/wallet/edit.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/logout.svg"] {
+  content: url("/images/design-classic/wallet/logout.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/manage-token.svg"] {
+  content: url("/images/design-classic/wallet/manage-token.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/manage.svg"] {
+  content: url("/images/design-classic/wallet/manage.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/manage/convert.svg"] {
+  content: url("/images/design-classic/wallet/manage/convert.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/manage/send.svg"] {
+  content: url("/images/design-classic/wallet/manage/send.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/manage/swap.svg"] {
+  content: url("/images/design-classic/wallet/manage/swap.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/manage/transaction.svg"] {
+  content: url("/images/design-classic/wallet/manage/transaction.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/nft-import.svg"] {
+  content: url("/images/design-classic/wallet/nft-import.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/receive.svg"] {
+  content: url("/images/design-classic/wallet/receive.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/refresh.svg"] {
+  content: url("/images/design-classic/wallet/refresh.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/remove.svg"] {
+  content: url("/images/design-classic/wallet/remove.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/remove0.svg"] {
+  content: url("/images/design-classic/wallet/remove0.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/send.svg"] {
+  content: url("/images/design-classic/wallet/send.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/setting.svg"] {
+  content: url("/images/design-classic/wallet/setting.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/swap.svg"] {
+  content: url("/images/design-classic/wallet/swap.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/top_up.svg"] {
+  content: url("/images/design-classic/wallet/top_up.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/transactions.svg"] {
+  content: url("/images/design-classic/wallet/transactions.svg");
+}
+
+html[data-design="classic"] img[src="/images/wallet/warning.svg"] {
+  content: url("/images/design-classic/wallet/warning.svg");
+}
+
+html[data-design="classic"] img[src="/og_image.png"] {
+  content: url("/images/design-classic/og_image.png");
+}
+
+html[data-design="classic"] img[src*="/src/assets/icons/empty.svg"],
+html[data-design="classic"] img[src*="/assets/empty-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/icons/empty.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/icons/question.svg"],
+html[data-design="classic"] img[src*="/assets/question-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/icons/question.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/Maintenance.svg"],
+html[data-design="classic"] img[src*="/assets/Maintenance-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/Maintenance.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/auth/wallet_ICPSwap.jpg"],
+html[data-design="classic"] img[src*="/assets/wallet_ICPSwap-"][src$=".jpg"] {
+  content: url("/images/design-classic/source/assets/images/auth/wallet_ICPSwap.jpg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/auth/wallet_ICPSwap.png"],
+html[data-design="classic"] img[src*="/assets/wallet_ICPSwap-"][src$=".png"] {
+  content: url("/images/design-classic/source/assets/images/auth/wallet_ICPSwap.png");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/Burn.svg"],
+html[data-design="classic"] img[src*="/assets/Burn-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/Burn.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/Chat.svg"],
+html[data-design="classic"] img[src*="/assets/Chat-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/Chat.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/DAO.svg"],
+html[data-design="classic"] img[src*="/assets/DAO-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/DAO.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/Farms.svg"],
+html[data-design="classic"] img[src*="/assets/Farms-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/Farms.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/IDO.svg"],
+html[data-design="classic"] img[src*="/assets/IDO-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/IDO.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/Liquidity.svg"],
+html[data-design="classic"] img[src*="/assets/Liquidity-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/Liquidity.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/MintNFT.svg"],
+html[data-design="classic"] img[src*="/assets/MintNFT-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/MintNFT.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/More.svg"],
+html[data-design="classic"] img[src*="/assets/More-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/More.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/NFT.svg"],
+html[data-design="classic"] img[src*="/assets/NFT-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/NFT.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/NFTCanisters.svg"],
+html[data-design="classic"] img[src*="/assets/NFTCanisters-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/NFTCanisters.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/NFTPools.svg"],
+html[data-design="classic"] img[src*="/assets/NFTPools-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/NFTPools.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/Staking.svg"],
+html[data-design="classic"] img[src*="/assets/Staking-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/Staking.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/Token.svg"],
+html[data-design="classic"] img[src*="/assets/Token-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/Token.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/console/TokenPools.svg"],
+html[data-design="classic"] img[src*="/assets/TokenPools-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/console/TokenPools.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/icons/coming-soon-light.svg"],
+html[data-design="classic"] img[src*="/assets/coming-soon-light-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/icons/coming-soon-light.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/icons/coming-soon.svg"],
+html[data-design="classic"] img[src*="/assets/coming-soon-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/icons/coming-soon.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/icons/copy.svg"],
+html[data-design="classic"] img[src*="/assets/copy-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/icons/copy.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/info/overview-farm.svg"],
+html[data-design="classic"] img[src*="/assets/overview-farm-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/info/overview-farm.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/info/overview-stake.svg"],
+html[data-design="classic"] img[src*="/assets/overview-stake-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/info/overview-stake.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/info/overview-swap.svg"],
+html[data-design="classic"] img[src*="/assets/overview-swap-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/info/overview-swap.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/logo1.svg"],
+html[data-design="classic"] img[src*="/assets/logo1-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/logo1.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/nft/collection_demo.svg"],
+html[data-design="classic"] img[src*="/assets/collection_demo-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/nft/collection_demo.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/nft/verify.svg"],
+html[data-design="classic"] img[src*="/assets/verify-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/nft/verify.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/swap/back.svg"],
+html[data-design="classic"] img[src*="/assets/back-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/swap/back.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/swap/description.svg"],
+html[data-design="classic"] img[src*="/assets/description-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/swap/description.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/wallet/background0-dark.svg"],
+html[data-design="classic"] img[src*="/assets/background0-dark-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/wallet/background0-dark.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/wallet/background0-light.svg"],
+html[data-design="classic"] img[src*="/assets/background0-light-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/wallet/background0-light.svg");
+}
+
+html[data-design="classic"] img[src*="/src/assets/images/wallet/card-bg.svg"],
+html[data-design="classic"] img[src*="/assets/card-bg-"][src$=".svg"] {
+  content: url("/images/design-classic/source/assets/images/wallet/card-bg.svg");
+}
+
+html[data-design="classic"] img[src*="/src/components/swap/pro/layout/pro-logo.svg"],
+html[data-design="classic"] img[src*="/assets/pro-logo-"][src$=".svg"] {
+  content: url("/images/design-classic/source/components/swap/pro/layout/pro-logo.svg");
+}

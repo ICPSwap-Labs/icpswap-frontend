@@ -38,7 +38,7 @@ Use this fallback only for local development. Before producing a release, run th
 
 ## Design system
 
-Tailwind CSS 4 and daisyUI 5 are compiled through Vite. The header's **Design version** selector switches between **Original design** (`classic`, the default) and **New design** (`modern`). The selection is saved in local storage under `icswap.design.version` and synchronized across tabs. Missing, invalid, or unavailable storage falls back to the original design. Switching designs shares existing application and transaction state.
+Tailwind CSS 4 and daisyUI 5 are compiled through Vite. The header's **Design version** selector switches between **Original design** (`classic`) and **New design** (`modern`, the default). The selection is saved in local storage under `icswap.design.version` and synchronized across tabs. Missing, invalid, or unavailable storage falls back to the new design. Switching designs shares existing application and transaction state.
 
 The `icswap-classic` / `icswap-classic-light` themes preserve the original blue/violet palette, Poppins typography, compact trading layout, and horizontal navigation. The `icswap` / `icswap-light` themes retain the graphite/copper/sage redesign, Manrope and IBM Plex Mono, and desktop sidebar. Both layouts use Tailwind utilities and daisyUI semantic colors (`base-100`, `primary`, `success`, etc.) alongside the existing MUI controls. Shared components in `packages/ui/src` are included in Tailwind's source scanning.
 
