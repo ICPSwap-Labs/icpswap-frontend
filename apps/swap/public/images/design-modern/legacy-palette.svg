@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Map legacy blue/violet pixels onto the daisyUI graphite/copper/sage ramp.
+         Keep other hues and source alpha intact, including animated-image frames. -->
+    <filter id="icswap-palette" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 0 1 0 0" result="blue-red" />
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 -1 1 0 0" result="blue-green" />
+      <feComposite in="blue-red" in2="blue-green" operator="in" result="blue-mask" />
+      <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1 -1 0 0 0" result="red-green" />
+      <feComposite in="red-green" in2="blue-green" operator="in" result="violet-mask" />
+      <feComposite in="blue-mask" in2="violet-mask" operator="arithmetic" k2="1" k3="1" result="brand-mask" />
+      <feComponentTransfer in="brand-mask" result="palette-mask">
+        <feFuncA type="gamma" amplitude="8" exponent="0.5" offset="0" />
+      </feComponentTransfer>
+      <feColorMatrix in="SourceGraphic" type="saturate" values="0" result="luminance" />
+      <feComponentTransfer in="luminance" result="palette">
+        <feFuncR type="table" tableValues="0.09020 0.13725 0.20392 0.40000 0.78431 0.89804 0.90980 0.93333 0.98431 0.98431 1.00000" />
+        <feFuncG type="table" tableValues="0.10196 0.15294 0.23529 0.45490 0.55294 0.68235 0.81176 0.91765 0.97255 0.97255 1.00000" />
+        <feFuncB type="table" tableValues="0.09804 0.14118 0.21176 0.40784 0.34902 0.47059 0.61961 0.87059 0.94510 0.94510 1.00000" />
+      </feComponentTransfer>
+      <feComposite in="palette" in2="palette-mask" operator="in" result="recolored" />
+      <feComposite in="SourceGraphic" in2="palette-mask" operator="out" result="preserved" />
+      <feComposite in="recolored" in2="preserved" operator="arithmetic" k2="1" k3="1" />
+    </filter>
+  </defs>
+</svg>

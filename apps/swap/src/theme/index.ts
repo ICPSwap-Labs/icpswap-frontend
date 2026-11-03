@@ -3,6 +3,7 @@ import colors from "theme/colors";
 import { componentStyleOverrides } from "theme/compStyleOverride";
 import { themePalette } from "theme/palette";
 import { themeTypography } from "theme/typography";
+import { classicTheme } from "./classic";
 
 const fontSize = {
   xs: "0.75rem",
@@ -11,13 +12,16 @@ const fontSize = {
   lg: "1.25rem",
 };
 
-const Radius = 12;
+const Radius = 6;
 
 export interface ThemeOption {
   [key: string]: any;
 }
 
 export function theme(customization: { [key: string]: any }) {
+  if (customization.designVersion === "classic") return classicTheme(customization);
+
+  const modernCustomization = { ...customization, designVersion: "modern" };
   const themeOption: ThemeOption = {
     colors,
     fontSize,
@@ -32,9 +36,9 @@ export function theme(customization: { [key: string]: any }) {
     menuSelected: "",
     menuSelectedBack: "",
     divider: "",
-    customization,
-    defaultGradient: `linear-gradient(89.44deg, ${colors.defaultGradientStart} -0.31%, ${colors.defaultGradientEnd} 91.14%)`,
-    borderRadius: 12,
+    customization: modernCustomization,
+    defaultGradient: "var(--color-primary)",
+    borderRadius: 6,
   };
 
   switch (customization.mode) {
@@ -80,7 +84,7 @@ export function theme(customization: { [key: string]: any }) {
     themeOption,
     colors,
     fontSize,
-    customization,
+    customization: modernCustomization,
     radius: Radius,
   });
 }

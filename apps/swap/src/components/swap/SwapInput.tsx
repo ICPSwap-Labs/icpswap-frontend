@@ -19,18 +19,32 @@ export const SwapInput = memo(({ value, align = "right", token, onBlur, onUserIn
 
   return (
     <NumberTextField
+      className="swap-amount-input"
       value={value ?? ""}
       fullWidth
       sx={{
         "& input": {
           textAlign: align,
-          fontSize: "28px!important",
-          fontWeight: 600,
+          fontSize: "32px!important",
+          fontWeight: 500,
+          letterSpacing: "-0.04em",
+          fontVariantNumeric: "tabular-nums",
+          color: "var(--color-base-content)",
           padding: "0px",
+          "@media(max-width: 640px)": { fontSize: "26px!important" },
         },
         "& input::placeholder": {
-          fontSize: "28px",
-          fontWeight: 600,
+          fontSize: "32px",
+          fontWeight: 500,
+          color: "var(--color-neutral-content)",
+          WebkitTextFillColor: "var(--color-neutral-content)",
+          opacity: 0.65,
+          "@media(max-width: 640px)": { fontSize: "26px" },
+        },
+        "& input.Mui-disabled": {
+          color: "var(--color-base-content)",
+          WebkitTextFillColor: "var(--color-base-content)",
+          opacity: 1,
         },
       }}
       placeholder="0.0"

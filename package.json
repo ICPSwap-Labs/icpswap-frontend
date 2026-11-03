@@ -15,7 +15,8 @@
     "lint:fix": "oxlint -c .oxlintrc.json . --fix",
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
-    "test": "nx run-many -t test --exclude=@icpswap/swap"
+    "test": "nx run-many -t test --exclude=@icpswap/swap",
+    "install:local": "node scripts/install-local.cjs"
   },
   "resolutions": {
     "@babel/runtime": "7.25.0",
@@ -30,6 +31,7 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@nx/js": "^22.6.5",
+    "@tailwindcss/vite": "4.3.3",
     "@types/lodash": "^4.14.202",
     "@types/node": "^13.13.5",
     "@types/qs": "^6.9.4",
@@ -39,11 +41,13 @@
     "@types/react-router-dom": "5.3.3",
     "@vitejs/plugin-react": "^5.1.2",
     "cspell": "^8.6.1",
+    "daisyui": "5.7.50",
     "lefthook": "^2.1.5",
     "nx": "22.6.5",
     "oxfmt": "^0.45.0",
     "oxlint": "^1.60.0",
     "prettier": "3.0.3",
+    "tailwindcss": "4.3.3",
     "vite": "7.3.1",
     "vite-plugin-checker": "^0.12.0",
     "vite-plugin-commonjs": "0.10.4",

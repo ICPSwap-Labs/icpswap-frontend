@@ -17,6 +17,7 @@ export type HeaderCellProps = {
 };
 
 export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
   const theme = useTheme();
 
   const { sortChange, sortField, sortDirection } = useContext(HeaderContext);
@@ -35,17 +36,49 @@ export default function HeaderCell({ isSort, field, ...props }: HeaderCellProps)
     if (props.onClick) props.onClick(event);
   };
 
+  if (isClassicDesign) {
+    return (
+      <Typography
+        sx={{
+          cursor: "pointer",
+          userSelect: "none",
+          color: theme.colors.dark400,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: props.align === "right" ? "flex-end" : "flex-start",
+          fontSize: "16px",
+          fontWeight: 400,
+          "@media screen and (max-width: 600px)": {
+            fontSize: "12px",
+          },
+        }}
+        color={props.color}
+        onClick={handleClick}
+        component="div"
+        className={props?.className}
+      >
+        {props.children} {field ? arrow(field) : null}
+      </Typography>
+    );
+  }
+
   return (
     <Typography
       sx={{
         cursor: "pointer",
         userSelect: "none",
-        color: theme.colors.dark400,
+        color: props.color ?? "color-mix(in srgb, var(--color-base-content) 52%, transparent)",
         display: "flex",
         alignItems: "center",
         justifyContent: props.align === "right" ? "flex-end" : "flex-start",
-        fontSize: "16px",
-        fontWeight: 400,
+        fontSize: "12px",
+        fontWeight: 500,
+        lineHeight: 1.5,
+        letterSpacing: "0.025em",
+        transition: "color 160ms ease",
+        "&:hover": {
+          color: "var(--color-primary)",
+        },
         "@media screen and (max-width: 600px)": {
           fontSize: "12px",
         },

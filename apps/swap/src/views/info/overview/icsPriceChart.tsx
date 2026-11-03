@@ -1,3 +1,4 @@
+import { useDesignVersion } from "hooks/useDesignVersion";
 import { useTokenCharts } from "@icpswap/hooks";
 import { ICS } from "@icpswap/tokens";
 import { BigNumber, formatDollarAmount, toUnixTimestamp } from "@icpswap/utils";
@@ -10,10 +11,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 const CHART_HEIGHT_MD = 350;
 const CHART_HEIGHT_UP = 290;
 
-const LINE_COLOR = "#5669DC";
-const AXIS_LABEL_COLOR = "#8492C4";
-
 export function ICSPriceChart() {
+  const { isClassicDesign } = useDesignVersion();
   const theme = useTheme();
   const matchDownMD = useMediaQueryMD();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -79,91 +78,170 @@ export function ICSPriceChart() {
       }
 
       chartRef.current.setOption(
-        {
-          backgroundColor: "transparent",
-          grid: {
-            left: 4,
-            right: 8,
-            top: 12,
-            bottom: 4,
-            containLabel: true,
-          },
-          xAxis: {
-            type: "time",
-            axisLine: { show: false },
-            axisTick: { show: false },
-            axisLabel: {
-              color: AXIS_LABEL_COLOR,
-              fontSize: 12,
-              fontFamily: "'Poppins','Roboto',sans-serif",
-              fontWeight: 400,
-              formatter: (value: number) => dayjs(value).format("MM.DD h:mm A"),
-            },
-            splitLine: { show: false },
-          },
-          yAxis: {
-            type: "value",
-            position: "right",
-            scale: true,
-            axisLine: { show: false },
-            axisTick: { show: false },
-            axisLabel: {
-              color: AXIS_LABEL_COLOR,
-              fontSize: 12,
-              fontFamily: "'Poppins','Roboto',sans-serif",
-              fontWeight: 400,
-              formatter: (value: number) => new BigNumber(value).toFormat(6),
-            },
-            splitLine: { show: false },
-          },
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              type: "line",
-              lineStyle: { color: LINE_COLOR, opacity: 0.5 },
-            },
-            backgroundColor: theme.palette.background.level1,
-            borderWidth: 0,
-            borderRadius: 12,
-            padding: [8, 16],
-            textStyle: {
-              color: "#fff",
-              fontSize: 12,
-              fontFamily: "'Poppins','Roboto',sans-serif",
-            },
-            formatter: (params: unknown) => {
-              const arr = params as Array<{ value: [number, number] }>;
-              const p = arr[0];
-              if (!p?.value) return "";
-              const t = dayjs(p.value[0]).format("MM/DD/YYYY h:mm");
-              const v = formatDollarAmount(p.value[1]);
-              return `${t}<br/>${v}`;
-            },
-          },
-          series: [
-            {
-              type: "line",
-              smooth: true,
-              showSymbol: false,
-              symbolSize: 10,
-              lineStyle: { width: 3, color: LINE_COLOR },
-              areaStyle: {
-                color: {
-                  type: "linear",
-                  x: 0,
-                  y: 0,
-                  x2: 0,
-                  y2: 1,
-                  colorStops: [
-                    { offset: 0, color: "rgba(86, 105, 220, 0.5)" },
-                    { offset: 1, color: "rgba(17, 25, 54, 0)" },
-                  ],
+        isClassicDesign
+          ? {
+              backgroundColor: "transparent",
+              grid: {
+                left: 4,
+                right: 8,
+                top: 12,
+                bottom: 4,
+                containLabel: true,
+              },
+              xAxis: {
+                type: "time",
+                axisLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: {
+                  color: "#8492C4",
+                  fontSize: 12,
+                  fontFamily: "'Poppins','Roboto',sans-serif",
+                  fontWeight: 400,
+                  formatter: (value: number) => dayjs(value).format("MM.DD h:mm A"),
+                },
+                splitLine: { show: false },
+              },
+              yAxis: {
+                type: "value",
+                position: "right",
+                scale: true,
+                axisLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: {
+                  color: "#8492C4",
+                  fontSize: 12,
+                  fontFamily: "'Poppins','Roboto',sans-serif",
+                  fontWeight: 400,
+                  formatter: (value: number) => new BigNumber(value).toFormat(6),
+                },
+                splitLine: { show: false },
+              },
+              tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                  type: "line",
+                  lineStyle: { color: "#5669DC", opacity: 0.5 },
+                },
+                backgroundColor: theme.palette.background.level1,
+                borderWidth: 0,
+                borderRadius: 12,
+                padding: [8, 16],
+                textStyle: {
+                  color: "#fff",
+                  fontSize: 12,
+                  fontFamily: "'Poppins','Roboto',sans-serif",
+                },
+                formatter: (params: unknown) => {
+                  const arr = params as Array<{ value: [number, number] }>;
+                  const p = arr[0];
+                  if (!p?.value) return "";
+                  const t = dayjs(p.value[0]).format("MM/DD/YYYY h:mm");
+                  const v = formatDollarAmount(p.value[1]);
+                  return `${t}<br/>${v}`;
                 },
               },
-              data: seriesData,
+              series: [
+                {
+                  type: "line",
+                  smooth: true,
+                  showSymbol: false,
+                  symbolSize: 10,
+                  lineStyle: { width: 3, color: "#5669DC" },
+                  areaStyle: {
+                    color: {
+                      type: "linear",
+                      x: 0,
+                      y: 0,
+                      x2: 0,
+                      y2: 1,
+                      colorStops: [
+                        { offset: 0, color: "rgba(86, 105, 220, 0.5)" },
+                        { offset: 1, color: "rgba(17, 25, 54, 0)" },
+                      ],
+                    },
+                  },
+                  data: seriesData,
+                },
+              ],
+            }
+          : {
+              backgroundColor: "transparent",
+              grid: {
+                left: 4,
+                right: 8,
+                top: 12,
+                bottom: 4,
+                containLabel: true,
+              },
+              xAxis: {
+                type: "time",
+                axisLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: {
+                  color: theme.palette.text.secondary,
+                  fontSize: 12,
+                  fontFamily: "monospace",
+                  fontWeight: 400,
+                  hideOverlap: true,
+                  margin: 14,
+                  formatter: (value: number) => dayjs(value).format("MM.DD h:mm A"),
+                },
+                splitLine: { show: false },
+              },
+              yAxis: {
+                type: "value",
+                position: "right",
+                scale: true,
+                axisLine: { show: false },
+                axisTick: { show: false },
+                axisLabel: {
+                  color: theme.palette.text.secondary,
+                  fontSize: 12,
+                  fontFamily: "monospace",
+                  fontWeight: 400,
+                  formatter: (value: number) => new BigNumber(value).toFormat(6),
+                },
+                splitLine: { show: true, lineStyle: { color: theme.palette.divider, type: "dashed" } },
+              },
+              tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                  type: "line",
+                  lineStyle: { color: theme.palette.secondary.main, opacity: 0.5 },
+                },
+                backgroundColor: theme.palette.background.level1,
+                borderWidth: 0,
+                borderRadius: 4,
+                padding: [8, 16],
+                textStyle: {
+                  color: theme.palette.text.primary,
+                  fontSize: 12,
+                  fontFamily: "monospace",
+                },
+                formatter: (params: unknown) => {
+                  const arr = params as Array<{ value: [number, number] }>;
+                  const p = arr[0];
+                  if (!p?.value) return "";
+                  const t = dayjs(p.value[0]).format("MM/DD/YYYY h:mm");
+                  const v = formatDollarAmount(p.value[1]);
+                  return `${t}<br/>${v}`;
+                },
+              },
+              series: [
+                {
+                  type: "line",
+                  smooth: true,
+                  showSymbol: false,
+                  symbolSize: 10,
+                  lineStyle: { width: 2, color: theme.palette.secondary.main },
+                  areaStyle: {
+                    color: theme.palette.secondary.main,
+                    opacity: 0.08,
+                  },
+                  data: seriesData,
+                },
+              ],
             },
-          ],
-        },
         { notMerge: true },
       );
 
@@ -176,7 +254,15 @@ export function ICSPriceChart() {
     return () => {
       disposed = true;
     };
-  }, [seriesData, theme.palette.background.level1]);
+  }, [
+    seriesData,
+    isClassicDesign,
+    theme.palette.background.level1,
+    theme.palette.divider,
+    theme.palette.text.primary,
+    theme.palette.text.secondary,
+    theme.palette.secondary.main,
+  ]);
 
   useEffect(() => {
     return () => {

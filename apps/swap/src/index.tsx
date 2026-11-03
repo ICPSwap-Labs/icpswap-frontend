@@ -7,6 +7,7 @@ import "@nfid/identitykit/react/styles.css";
 import { AppWithProvider } from "./Provider";
 import * as serviceWorker from "./serviceWorker";
 import store, { persistor } from "./store/index";
+import "./styles.css";
 import "./assets/css/global.css";
 import { initGtag } from "./initGtag";
 

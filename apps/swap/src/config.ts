@@ -1,4 +1,4 @@
 export default {
-  fontFamily: `'Poppins','Roboto',sans-serif`,
+  fontFamily: `'Manrope',ui-sans-serif,system-ui,sans-serif`,
   rtlLayout: false,
 };

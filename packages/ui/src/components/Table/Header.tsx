@@ -1,7 +1,7 @@
 import type { Override } from "@icpswap/types";
 import { useCallback, useState } from "react";
 
-import { Box, type BoxProps } from "../Mui";
+import { Box, type BoxProps, useTheme } from "../Mui";
 import HeaderContext from "./headerContext";
 import { SortDirection } from "./types";
 
@@ -24,6 +24,8 @@ export default function Header({
   padding,
   ...props
 }: HeaderProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+
   const [sortField, setSortField] = useState(defaultSortFiled);
   const [sortDirection, setSortDirection] = useState(defaultSortDirection);
 
@@ -37,13 +39,31 @@ export default function Header({
     [onSortChange],
   );
 
+  if (isClassicDesign) {
+    return (
+      <HeaderContext.Provider value={{ sortChange, sortField, sortDirection }}>
+        <Box
+          {...props}
+          sx={{
+            padding: padding ? `${padding}!important` : "20px 0",
+            borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
+            ...(props.sx ?? {}),
+          }}
+        >
+          {children}
+        </Box>
+      </HeaderContext.Provider>
+    );
+  }
+
   return (
     <HeaderContext.Provider value={{ sortChange, sortField, sortDirection }}>
       <Box
         {...props}
         sx={{
-          padding: padding ? `${padding}!important` : "20px 0",
-          borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
+          padding: padding ? `${padding}!important` : "18px 0",
+          borderBottom: borderBottom ?? "1px solid color-mix(in srgb, var(--color-base-content) 9%, transparent)",
+          fontVariantNumeric: "tabular-nums",
           ...(props.sx ?? {}),
         }}
       >

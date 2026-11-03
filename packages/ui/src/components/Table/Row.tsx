@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { Box, type BoxProps } from "../Mui";
+import { Box, type BoxProps, useTheme } from "../Mui";
 
 export interface RowProps {
   borderBottom?: string;
@@ -12,12 +12,34 @@ export interface RowProps {
 }
 
 export default function Row({ borderBottom, padding, sx, children, className, onClick }: RowProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+
+  if (isClassicDesign) {
+    return (
+      <Box
+        className={className}
+        sx={{
+          padding: padding ? `${padding}!important` : "20px 0",
+          borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
+          ...sx,
+        }}
+        onClick={onClick}
+      >
+        {children}
+      </Box>
+    );
+  }
+
   return (
     <Box
-      className={className}
+      className={`ics-table-row ${className ?? ""}`}
       sx={{
         padding: padding ? `${padding}!important` : "20px 0",
-        borderBottom: borderBottom ?? "1px solid rgba(189, 200, 240, 0.082)",
+        borderBottom: borderBottom ?? "1px solid color-mix(in srgb, var(--color-base-content) 6%, transparent)",
+        transition: "background-color 160ms ease",
+        "&:hover": {
+          backgroundColor: "color-mix(in srgb, var(--color-primary) 4%, transparent)",
+        },
         ...sx,
       }}
       onClick={onClick}

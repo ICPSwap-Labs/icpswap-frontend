@@ -1,13 +1,13 @@
 import { formatDollarAmount } from "@icpswap/utils";
 import { CurrenciesAvatar } from "components/CurrenciesAvatar";
-import { Box, Grid, makeStyles, type Theme, Typography } from "components/Mui";
+import { Box, Grid, makeStyles, Typography } from "components/Mui";
 import { useToken } from "hooks/useCurrency";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { feeAmountToPercentage } from "utils/swap/index";
 
-const useStyles = makeStyles((theme: Theme) => {
+const useStyles = makeStyles(() => {
   return {
     topBox: {
       clear: "both",
@@ -17,23 +17,31 @@ const useStyles = makeStyles((theme: Theme) => {
       float: "left",
     },
     listItem: {
-      height: "140px",
-      padding: "18px",
-      borderRadius: `${theme.radius}px`,
+      minHeight: "152px",
+      padding: "20px",
+      borderRadius: "4px",
+      border: "1px solid var(--color-base-300)",
+      background: "var(--color-base-100)",
       cursor: "pointer",
+      transition: "border-color 160ms ease",
+      "&:hover": {
+        borderColor: "color-mix(in oklab, var(--color-primary) 45%, var(--color-base-300))",
+      },
     },
     poolName: {
       margin: "0 8px",
       "& .MuiTypography-root": {
-        color: "#fff",
-        fontWeight: 700,
+        color: "var(--color-base-content)",
+        fontWeight: 600,
       },
     },
     feeAmount: {
-      padding: "2px 4px",
-      borderRadius: "4px",
+      padding: "4px 7px",
+      borderRadius: "3px",
+      background: "color-mix(in oklab, var(--color-primary) 12%, transparent)",
       "& .MuiTypography-root": {
-        color: "#fff",
+        color: "var(--color-primary)",
+        fontSize: "11px",
       },
     },
     poolData: {
@@ -73,7 +81,7 @@ export default function PoolCard({
   }, [navigate, fee, token0, token1]);
 
   return (
-    <Box className={`${classes.listItem} list-item`} onClick={handlePoolClick}>
+    <Box className={`card swap-pool-card ${classes.listItem} list-item`} onClick={handlePoolClick}>
       <Box className="list-item-color-box" />
       <Grid container alignItems="center" className={`${classes.topBox}`}>
         <CurrenciesAvatar
@@ -98,7 +106,7 @@ export default function PoolCard({
             <Typography className="title">{t("common.tvl")}</Typography>
           </Grid>
           <Grid item mt={1} container justifyContent="flex-start">
-            <Typography className="value" color="#ffffff" fontWeight={700} fontSize={16}>
+            <Typography className="value tabular-nums" color="text.primary" fontWeight={600} fontSize={18}>
               {formatDollarAmount(tvlUSD)}
             </Typography>
           </Grid>
@@ -108,7 +116,7 @@ export default function PoolCard({
             <Typography className="title">{t("common.total.volume")}</Typography>
           </Grid>
           <Grid mt={1} item container justifyContent="flex-end">
-            <Typography className="value" color="#ffffff" fontWeight={700} fontSize={16}>
+            <Typography className="value tabular-nums" color="text.primary" fontWeight={600} fontSize={18}>
               {formatDollarAmount(totalVolumeUSD)}
             </Typography>
           </Grid>

@@ -1,3 +1,4 @@
+import { useDesignVersion } from "hooks/useDesignVersion";
 import { Flex } from "@icpswap/ui";
 import { Box, makeStyles, Typography, useTheme } from "components/Mui";
 import { Connector, IdentityKitConnector } from "constants/index";
@@ -8,26 +9,55 @@ import { useConnectManager, useShowConnector } from "store/auth/hooks";
 import { WalletConnector } from "utils/connector";
 import { isSafari } from "utils/index";
 
-const useStyles = makeStyles(() => {
-  return {
-    loadingWrapper: {
-      width: "40px",
-      height: "40px",
-      overflow: "hidden",
-      "&.loading": {
-        animation: `$loading 1000ms`,
-        animationIterationCount: "infinite",
-      },
-    },
-    "@keyframes loading": {
-      "0%": {
-        transform: "rotate(0deg)",
-      },
-      "100%": {
-        transform: "rotate(360deg)",
-      },
-    },
-  };
+const useStyles = makeStyles((theme: any) => {
+  return theme.customization?.designVersion !== "modern"
+    ? {
+        loadingWrapper: {
+          width: "40px",
+          height: "40px",
+          overflow: "hidden",
+          "&.loading": {
+            animation: `$loading 1000ms`,
+            animationIterationCount: "infinite",
+          },
+        },
+        "@keyframes loading": {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
+      }
+    : {
+        loadingWrapper: {
+          width: "36px",
+          height: "36px",
+          flexShrink: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
+          "& img": {
+            width: "32px",
+            height: "32px",
+            objectFit: "contain",
+          },
+          "&.loading": {
+            animation: `$loading 1000ms`,
+            animationIterationCount: "infinite",
+          },
+        },
+        "@keyframes loading": {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(360deg)",
+          },
+        },
+      };
 });
 
 export interface ConnectorProps {
@@ -38,6 +68,8 @@ export interface ConnectorProps {
 }
 
 export function ConnectorComponent({ label, value, logo, disabled }: ConnectorProps) {
+  const { isClassicDesign } = useDesignVersion();
+
   const { t } = useTranslation();
   const theme = useTheme();
   const classes = useStyles();
@@ -99,24 +131,67 @@ export function ConnectorComponent({ label, value, logo, disabled }: ConnectorPr
     }
   };
 
+  if (isClassicDesign) {
+    return (
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          cursor: "pointer",
+          padding: "12px 16px",
+          background: "rgba(255, 255, 255, 0.08)",
+          borderRadius: "8px",
+          [theme.breakpoints.down("md")]: {
+            padding: "8px 14px",
+          },
+        }}
+        onClick={handleConnect}
+      >
+        <Flex gap="0 8px">
+          <Typography color="text.primary" fontSize="14px" fontWeight={700}>
+            {label}
+          </Typography>
+        </Flex>
+
+        <Box className={`${classes.loadingWrapper}${loading ? " loading" : ""}`}>
+          <img width="40px" height="40px" src={logo} alt="" />
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <Box
+      className="ics-wallet-choice"
       sx={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        cursor: "pointer",
-        padding: "12px 16px",
-        background: "rgba(255, 255, 255, 0.08)",
-        borderRadius: "8px",
+        cursor: disabled ? "not-allowed" : "pointer",
+        padding: "12px 14px",
+        minHeight: "64px",
+        gap: "12px",
+        background: "var(--color-base-200)",
+        border: "1px solid color-mix(in srgb, var(--color-base-content) 8%, transparent)",
+        borderRadius: "6px",
+        opacity: disabled ? 0.45 : 1,
+        transition: "background-color 180ms ease, border-color 180ms ease",
+        "&:hover": disabled
+          ? {}
+          : {
+              backgroundColor: "var(--color-base-300)",
+              borderColor: "var(--color-secondary)",
+            },
         [theme.breakpoints.down("md")]: {
-          padding: "8px 14px",
+          padding: "10px 14px",
+          minHeight: "58px",
         },
       }}
       onClick={handleConnect}
     >
       <Flex gap="0 8px">
-        <Typography color="text.primary" fontSize="14px" fontWeight={700}>
+        <Typography color="text.primary" fontSize="13px" fontWeight={500} sx={{ lineHeight: 1.4 }}>
           {label}
         </Typography>
       </Flex>

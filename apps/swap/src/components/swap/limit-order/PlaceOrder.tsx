@@ -320,7 +320,11 @@ export const PlaceOrder = forwardRef(
     );
 
     return (
-      <Box sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "6px 0" : "6px 0" }}>
+      <Box
+        className="swap-order-form"
+        data-ui={ui}
+        sx={{ display: "flex", flexDirection: "column", gap: ui === "pro" ? "8px 0" : "12px 0" }}
+      >
         <SwapInputWrapper
           onMaxInput={handleMaxInput}
           onInput={handleInput}
@@ -379,13 +383,17 @@ export const PlaceOrder = forwardRef(
         <LimitSupported available={available} noLiquidity={noLiquidity} ui={ui} />
 
         <AuthButton
+          className="btn btn-primary swap-submit-button"
           fullWidth
           variant="contained"
           size="large"
           onClick={handleShowConfirmModal}
           disabled={invalid || isPoolNotChecked || !available}
           sx={{
-            borderRadius: "16px",
+            borderRadius: "4px",
+            height: ui === "pro" ? "48px" : "54px",
+            marginTop: "4px",
+            fontWeight: 600,
           }}
         >
           {swapInputError ||

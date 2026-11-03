@@ -1,9 +1,11 @@
 import { mockALinkAndOpen } from "@icpswap/utils";
-import { ReactComponent as Logo } from "assets/images/logo1.svg";
+import Logo from "components/Logo";
+import classicLogoMark from "assets/images/logo1.svg";
 import { MOBILE_MAX_NUMBER, type Route, routeKey, routes } from "components/Layout/Navbar/config";
 import { Routes } from "components/Layout/Navbar/mobile/Routes";
 import { Box, Collapse } from "components/Mui";
 import { useMemo, useState } from "react";
+import { useDesignVersion } from "hooks/useDesignVersion";
 import { ChevronDown, XCircle } from "react-feather";
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +14,7 @@ export interface MobileNavbarProps {
 }
 
 export default function MobileNavbar({ onClose }: MobileNavbarProps) {
+  const { isClassicDesign } = useDesignVersion();
   const navigate = useNavigate();
   const [collapseKey, setCollapseKey] = useState<string | undefined>(undefined);
   const [exceedOpen, setExceedOpen] = useState<boolean>(false);
@@ -48,35 +51,62 @@ export default function MobileNavbar({ onClose }: MobileNavbarProps) {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px" }}>
-        <Logo />
-        <XCircle style={{ cursor: "pointer" }} onClick={onClose} />
+      <Box
+        className={isClassicDesign ? undefined : "border-b border-base-content/8"}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: isClassicDesign ? "16px" : "22px 24px",
+        }}
+      >
+        {isClassicDesign ? (
+          <img src={classicLogoMark} width="32" height="32" alt="" />
+        ) : (
+          <Box sx={{ "& img": { width: "125px", height: "32px", objectFit: "contain" } }}>
+            <Logo />
+          </Box>
+        )}
+        <XCircle
+          size={isClassicDesign ? 24 : 22}
+          style={{ cursor: "pointer", color: "var(--color-base-content)", opacity: isClassicDesign ? 1 : 0.6 }}
+          onClick={onClose}
+        />
       </Box>
 
       {/* <Box sx={{ padding: "0 20px", margin: "32px 0 0 0" }}>
         <Box sx={{ width: "100%", height: "1px", background: "#29314F" }} />
       </Box> */}
 
-      <Box>
+      <Box sx={{ padding: isClassicDesign ? "0" : "16px 12px" }}>
         <Routes routes={noExceedRoutes} onRouteClick={handleRouteClick} />
 
         {exceedRoutes.length > 0 ? (
           <>
             <Box
               sx={{
-                padding: "24px 16px",
+                padding: isClassicDesign ? "24px 16px" : "20px 16px",
+                borderRadius: isClassicDesign ? 0 : "5px",
+                cursor: "pointer",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
+                "&:hover": { background: "var(--color-base-200)" },
               }}
               onClick={() => setExceedOpen(!exceedOpen)}
             >
               <Box sx={{ display: "flex", gap: "0 5px" }}>
-                <Box sx={{ width: "5px", height: "5px", borderRadius: "50%", background: "#fff" }} />
-                <Box sx={{ width: "5px", height: "5px", borderRadius: "50%", background: "#fff" }} />
-                <Box sx={{ width: "5px", height: "5px", borderRadius: "50%", background: "#fff" }} />
+                <Box
+                  sx={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--color-base-content)" }}
+                />
+                <Box
+                  sx={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--color-base-content)" }}
+                />
+                <Box
+                  sx={{ width: "4px", height: "4px", borderRadius: "50%", background: "var(--color-base-content)" }}
+                />
               </Box>
-              <ChevronDown color="#8492C4" strokeWidth={1} />
+              <ChevronDown color="var(--color-primary)" size={18} strokeWidth={1.5} />
             </Box>
 
             <Collapse in={exceedOpen}>

@@ -1,4 +1,4 @@
-import { Typography, type TypographyProps } from "../Mui";
+import { Typography, type TypographyProps, useTheme } from "../Mui";
 
 export type BodyCellProps = {
   color?: string;
@@ -13,9 +13,37 @@ export type BodyCellProps = {
 };
 
 export default function BodyCell({ width, sub, sx, align, title, overflow, ...props }: BodyCellProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
+
   const handleClick = (event: React.MouseEvent<HTMLSpanElement, MouseEvent>) => {
     if (props.onClick) props.onClick(event);
   };
+
+  if (isClassicDesign) {
+    return (
+      <Typography
+        sx={{
+          display: overflow ? "block" : "flex",
+          justifyContent: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start",
+          cursor: "pointer",
+          userSelect: "none",
+          fontSize: sub ? "14px" : "16px",
+          "@media screen and (max-width: 600px)": {
+            fontSize: sub ? "12px" : "14px",
+          },
+          maxWidth: width,
+          ...sx,
+        }}
+        color={props.color ?? (sub ? "text.secondary" : "text.primary")}
+        onClick={handleClick}
+        component="div"
+        title={title}
+        className={`${overflow ? "text-overflow-ellipsis" : ""}`}
+      >
+        {props.children}
+      </Typography>
+    );
+  }
 
   return (
     <Typography
@@ -24,7 +52,11 @@ export default function BodyCell({ width, sub, sx, align, title, overflow, ...pr
         justifyContent: align === "right" ? "flex-end" : align === "center" ? "center" : "flex-start",
         cursor: "pointer",
         userSelect: "none",
-        fontSize: sub ? "14px" : "16px",
+        fontSize: sub ? "13px" : "14px",
+        lineHeight: 1.5,
+        fontWeight: sub ? 400 : 500,
+        fontVariantNumeric: "tabular-nums",
+        letterSpacing: "-0.015em",
         "@media screen and (max-width: 600px)": {
           fontSize: sub ? "12px" : "14px",
         },
@@ -35,7 +67,7 @@ export default function BodyCell({ width, sub, sx, align, title, overflow, ...pr
       onClick={handleClick}
       component="div"
       title={title}
-      className={`${overflow ? "text-overflow-ellipsis" : ""}`}
+      className={`tabular-nums ${overflow ? "text-overflow-ellipsis" : ""}`}
     >
       {props.children}
     </Typography>

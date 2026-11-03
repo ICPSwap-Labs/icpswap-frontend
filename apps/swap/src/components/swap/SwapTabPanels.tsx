@@ -1,8 +1,7 @@
-import { Flex } from "@icpswap/ui";
-import { Box, Typography } from "components/Mui";
 import i18n from "i18n/index";
 import { useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./swap-design.css";
 
 export enum TABS {
   SWAP = "Swap",
@@ -30,33 +29,19 @@ export function SwapTabPanels({ currentTab }: SwapTabPanelsProps) {
   );
 
   return (
-    <Flex
-      gap="0 16px"
-      sx={{
-        "@media(max-width: 640px)": {
-          gap: "0 12px",
-        },
-      }}
-    >
+    <div className="tabs swap-mode-tabs" role="tablist">
       {Tabs.map((tab) => (
-        <Box
+        <button
+          type="button"
+          role="tab"
+          aria-selected={currentTab === tab.value}
           key={tab.value}
-          sx={{
-            cursor: "pointer",
-          }}
+          className={`tab ${currentTab === tab.value ? "tab-active" : ""}`}
           onClick={() => handleTabChange(tab.path)}
         >
-          <Typography
-            sx={{
-              fontSize: "16px",
-              fontWeight: currentTab === tab.value ? 600 : 400,
-              color: currentTab === tab.value ? "text.primary" : "text.secondary",
-            }}
-          >
-            {tab.label}
-          </Typography>
-        </Box>
+          {tab.label}
+        </button>
       ))}
-    </Flex>
+    </div>
   );
 }

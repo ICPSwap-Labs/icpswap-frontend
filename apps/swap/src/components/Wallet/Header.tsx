@@ -9,6 +9,7 @@ import { useAccount, useAccountPrincipalString } from "store/auth/hooks";
 
 export function Header() {
   const theme = useTheme();
+  const isClassicDesign = theme.customization.designVersion === "classic";
   const account = useAccount();
   const principal = useAccountPrincipalString();
 
@@ -17,8 +18,8 @@ export function Header() {
       sx={{
         padding: "16px 16px 24px 16px",
         background: theme.palette.background.level4,
-        borderTopRightRadius: "24px",
-        borderTopLeftRadius: "24px",
+        borderTopRightRadius: isClassicDesign ? "24px" : "0px",
+        borderTopLeftRadius: isClassicDesign ? "24px" : "0px",
       }}
     >
       <Flex justify="space-between" fullWidth>

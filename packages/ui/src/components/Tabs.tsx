@@ -11,28 +11,60 @@ export interface SmallTabButtonProps {
   padding?: string;
 }
 
-export function SmallTabButton({
-  children,
-  active,
-  background,
-  borderRadius = "50px",
-  padding = "0 10px",
-  onClick,
-}: SmallTabButtonProps) {
+export function SmallTabButton({ children, active, background, borderRadius, padding, onClick }: SmallTabButtonProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
   const theme = useTheme();
+  borderRadius ??= isClassicDesign ? "50px" : "4px";
+  padding ??= isClassicDesign ? "0 10px" : "8px 12px";
+
+  if (isClassicDesign) {
+    return (
+      <Typography
+        component="span"
+        color={active ? "text.primary" : "text.secondary"}
+        sx={{
+          background: active ? (background ?? theme.palette.background.level3) : "transparent",
+          borderRadius,
+          display: "flex",
+          justifyContent: "center",
+          fontSize: "14px",
+          fontWeight: 400,
+          padding,
+        }}
+        onClick={onClick}
+      >
+        {children}
+      </Typography>
+    );
+  }
 
   return (
     <Typography
+      className={`tab ics-tab ${active ? "tab-active" : ""}`}
       component="span"
       color={active ? "text.primary" : "text.secondary"}
       sx={{
-        background: active ? (background ?? theme.palette.background.level3) : "transparent",
+        background: active ? (background ?? "var(--color-secondary)") : "transparent",
+        color: active
+          ? background
+            ? "var(--color-base-content)"
+            : "var(--color-secondary-content)"
+          : "color-mix(in srgb, var(--color-base-content) 58%, transparent)",
         borderRadius,
         display: "flex",
         justifyContent: "center",
         fontSize: "14px",
-        fontWeight: 400,
+        fontWeight: active ? 600 : 500,
         padding,
+        height: "auto",
+        lineHeight: 1.4,
+        whiteSpace: "nowrap",
+        transition: "background 180ms ease, color 180ms ease",
+        boxShadow: "none",
+        "&:hover": {
+          color: active && !background ? "var(--color-secondary-content)" : "var(--color-base-content)",
+          backgroundColor: active ? (background ?? "var(--color-secondary)") : "var(--color-base-300)",
+        },
       }}
       onClick={onClick}
     >
@@ -52,22 +84,47 @@ interface SmallTabsButtonWrapperProps {
 
 export function SmallTabsButtonWrapper({
   children,
-  borderRadius = "50px",
+  borderRadius,
   background,
-  padding = "2px",
+  padding,
   border = "none",
   sx,
 }: SmallTabsButtonWrapperProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
   const theme = useTheme();
+  borderRadius ??= isClassicDesign ? "50px" : "6px";
+  padding ??= isClassicDesign ? "2px" : "4px";
+
+  if (isClassicDesign) {
+    return (
+      <Box
+        sx={{
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          padding,
+          background: background ?? theme.palette.background.level4,
+          borderRadius,
+          border,
+          ...sx,
+        }}
+      >
+        {children}
+      </Box>
+    );
+  }
 
   return (
     <Box
+      className="tabs tabs-box ics-tabs"
       sx={{
         cursor: "pointer",
         display: "flex",
         alignItems: "center",
         padding,
-        background: background ?? theme.palette.background.level4,
+        background: background ?? "var(--color-base-200)",
+        gap: "2px",
+        boxShadow: "none",
         borderRadius,
         border,
         ...sx,

@@ -40,7 +40,7 @@ export type LineChartAltProps = {
 
 export function LineChartAlt({
   data,
-  color = "#5669dc",
+  color,
   setValue,
   setLabel,
   value: _value,
@@ -63,6 +63,8 @@ export function LineChartAlt({
   ...rest
 }: LineChartAltProps) {
   const theme = useTheme();
+  const isClassicDesign = theme.customization?.designVersion !== "modern";
+  const seriesColor = color ?? (isClassicDesign ? "#5669dc" : theme.palette.secondary.main);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const chartRef = useRef<EChartsType | null>(null);
 
@@ -77,7 +79,7 @@ export function LineChartAlt({
     const categories = data.map((d) => d.time);
     const values = data.map((d) => Number(d.value));
 
-    const gradientTop = darken(0.36, color);
+    const gradientTop = darken(0.36, seriesColor);
     const markLineOpt =
       markLine !== undefined
         ? {
@@ -110,6 +112,7 @@ export function LineChartAlt({
     chart.setOption(
       {
         animation: false,
+        ...(isClassicDesign ? {} : { textStyle: { fontFamily: "Manrope" } }),
         grid: {
           left: markLine !== undefined ? 18 : 4,
           right: 4,
@@ -147,7 +150,10 @@ export function LineChartAlt({
         },
         tooltip: {
           trigger: "axis",
-          axisPointer: { type: "line", lineStyle: { color: "#8572FF", width: 1 } },
+          axisPointer: {
+            type: "line",
+            lineStyle: { color: isClassicDesign ? "#8572FF" : theme.palette.primary.main, width: 1 },
+          },
           show: showTooltip,
           showContent: showTooltipContent,
           backgroundColor: "transparent",
@@ -161,7 +167,7 @@ export function LineChartAlt({
             symbolSize: 10,
             showSymbol: false,
             symbol: "emptyCircle",
-            lineStyle: { width: 2, color },
+            lineStyle: { width: 2, color: seriesColor },
             areaStyle: {
               color: {
                 type: "linear",
@@ -171,7 +177,7 @@ export function LineChartAlt({
                 y2: 1,
                 colorStops: [
                   { offset: 0.05, color: `${gradientTop}80` },
-                  { offset: 1, color: `${color}00` },
+                  { offset: 1, color: `${seriesColor}00` },
                 ],
               },
             },
@@ -211,7 +217,8 @@ export function LineChartAlt({
     };
   }, [
     data,
-    color,
+    seriesColor,
+    isClassicDesign,
     showXAxis,
     showYAxis,
     tickFormat,
@@ -220,6 +227,7 @@ export function LineChartAlt({
     yTickFormatter,
     theme.palette.text.secondary,
     theme.palette.text.primary,
+    theme.palette.primary.main,
     theme.colors.apr,
     markLine,
     setValue,

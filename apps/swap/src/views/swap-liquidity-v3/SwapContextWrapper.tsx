@@ -1,5 +1,5 @@
 import { parseTokenAmount } from "@icpswap/utils";
-import { Flex, MainCard } from "components/index";
+import { Flex } from "components/index";
 import { Box } from "components/Mui";
 import {
   CreatePool,
@@ -38,48 +38,27 @@ export function SwapContextWrapper() {
     <SwapUIWrapper>
       <Flex fullWidth justify="center" align="flex-start">
         <Box
+          className="swap-workspace"
           sx={{
-            width: "570px",
+            width: "1000px",
+            maxWidth: "100%",
           }}
         >
-          <MainCard
-            level={1}
-            sx={{
-              padding: "16px",
-              paddingBottom: "16px",
-              overflow: "visible",
-              "@media(max-width: 640px)": {
-                padding: "16px",
-                paddingBottom: "16px",
-              },
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                position: "relative",
-                padding: "0",
-                height: "32px",
-                "@media(max-width: 640px)": {
-                  padding: "0",
-                },
-              }}
-            >
+          <section className="swap-trading-card">
+            <div className="swap-card-toolbar flex items-center justify-between gap-3">
               <SwapTabPanels currentTab={TABS.SWAP} />
 
-              <Flex gap="0 4px">
+              <Flex className="swap-toolbar-actions" gap="0 8px">
                 <SwapTransactions />
                 <SwapProEntry inputToken={inputToken} outputToken={outputToken} />
                 <SwapSettings type="swap" />
               </Flex>
-            </Box>
+            </div>
 
-            <Box sx={{ margin: "16px 0 0 0" }}>
+            <Box className="swap-card-content" sx={{ margin: "32px 0 0 0" }}>
               <SwapWrapper ref={swapWrapperRef} />
             </Box>
-          </MainCard>
+          </section>
 
           {isConnected && noLiquidity === false ? (
             <Flex

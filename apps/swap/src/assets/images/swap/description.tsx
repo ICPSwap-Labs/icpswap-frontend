@@ -1,6 +1,6 @@
 import { SvgIcon } from "components/Mui";
 
-export default ({ fillColor = "#4F5A84", ...props }) => {
+export default ({ fillColor = "var(--color-neutral)", ...props }) => {
   return (
     <SvgIcon viewBox="0 0 16 16" {...props}>
       <path

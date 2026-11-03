@@ -2,7 +2,7 @@ interface WaringIconProps {
   color?: string;
 }
 
-export function WaringIcon({ color = "#8492C4" }: WaringIconProps) {
+export function WaringIcon({ color = "var(--color-neutral-content)" }: WaringIconProps) {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
       <path

@@ -20,10 +20,12 @@ export function SwapProCardWrapper({
 
   return (
     <Box
+      className="card swap-pro-panel"
       sx={{
-        background: background === "level3" ? theme.palette.background.level3 : theme.palette.background.level2,
+        "--swap-pro-surface": theme.palette.background[background],
+        background: background === "level3" ? "var(--color-base-100)" : "var(--color-base-200)",
         padding,
-        borderRadius: "12px",
+        borderRadius: "4px",
         overflow,
         ...sx,
       }}

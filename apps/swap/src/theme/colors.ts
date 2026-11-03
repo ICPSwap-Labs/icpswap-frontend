@@ -3,119 +3,119 @@ export const lightColors = {};
 export const darkColors = {};
 
 export default {
-  paper: "#ffffff",
+  paper: "#fbf8f1",
 
   // primary
-  primaryLight: "#e3f2fd",
-  primary200: "#ffffff",
-  primaryMain: "#8672FF",
-  primaryDark: "#8672FF",
-  primary800: "#1565c0",
+  primaryLight: "#f3e3ce",
+  primary200: "#fbf8f1",
+  primaryMain: "#e5ae78",
+  primaryDark: "#ad733d",
+  primary800: "#7a4924",
 
   // secondary
-  secondaryLight: "#ffffff",
-  secondary200: "#b39ddb",
-  secondaryMain: "#5669dc",
-  secondary800: "#4527a0",
+  secondaryLight: "#e8ede3",
+  secondary200: "#c3d0be",
+  secondaryMain: "#a6bba3",
+  secondary800: "#4b6250",
 
-  secondary: "#5669dc",
+  secondary: "#a6bba3",
 
   // success
-  successLight: "#b9f6ca",
-  successMain: "#00e676",
-  successDark: "#54c081",
+  successLight: "#c4dfcf",
+  successMain: "#7fbd99",
+  successDark: "#7fbd99",
 
   // error
-  errorLight: "#ef9a9a",
-  errorMain: "#f44336",
+  errorLight: "#f0c6bd",
+  errorMain: "#dc8a7c",
 
   // orange
-  orangeLight: "#fbe9e7",
-  orangeMain: "#ffab91",
-  orangeDark: "#d84315",
+  orangeLight: "#f5e4ce",
+  orangeMain: "#e5ae78",
+  orangeDark: "#ad733d",
 
   // warning
-  warningLight: "#F2994A",
-  warningMain: "#ffe57f",
-  warningDark: "#ffc107",
+  warningLight: "#e8cf9e",
+  warningMain: "#ddb46d",
+  warningDark: "#af8136",
 
-  danger: "#D3625B",
+  danger: "#dc8a7c",
 
-  warning: "#B79C4A",
+  warning: "#ddb46d",
 
   // grey
-  grey50: "#fafafa",
-  grey100: "#f5f5f5",
-  grey200: "#eeeeee",
-  grey300: "#e0e0e0",
-  grey500: "#9e9e9e",
-  grey600: "#757575",
-  grey700: "#616161",
-  grey900: "#212121",
+  grey50: "#fbf8f1",
+  grey100: "#f1ede3",
+  grey200: "#ddd8ca",
+  grey300: "#d1cdbf",
+  grey500: "#8b9388",
+  grey600: "#697067",
+  grey700: "#515c52",
+  grey900: "#272f2c",
 
   // -----------------------|| DARK THEME VARIANTS ||-----------------------//
 
   // paper & background
-  darkPaper: "#1a223f",
-  darkBackground: "#1a223f",
+  darkPaper: "#171a19",
+  darkBackground: "#171a19",
 
   // dark 800 & 900
-  darkLevel1: "#111936",
-  darkLevel2: "#1a223f",
-  darkLevel3: "#212946",
-  darkLevel4: "#29314f",
-  darkLevel5: "#273051",
-  wallet: "#1B223F",
+  darkLevel1: "#171a19",
+  darkLevel2: "#232724",
+  darkLevel3: "#2c332d",
+  darkLevel4: "#343c36",
+  darkLevel5: "#3c463f",
+  wallet: "#232724",
 
   // text variants
-  darkTextPrimary: "#ffffff",
-  darkTextSecondary: "#8492c4",
-  darkTextTertiary: "#4F5A84",
-  darkTextFourth: "#29314F",
-  darkTextFifth: "#212946",
+  darkTextPrimary: "#eeeade",
+  darkTextSecondary: "#aab2a7",
+  darkTextTertiary: "#8b9588",
+  darkTextFourth: "#343c36",
+  darkTextFifth: "#2c332d",
 
-  disable: "#4F5A84",
+  disable: "#748071",
 
-  lightPrimaryMain: "#8672FF",
+  lightPrimaryMain: "#a86430",
 
-  lightTextTitle: "#212121",
-  lightTextPrimary: "#212121",
-  lightTextSecondary: "#757575",
-  lightTextTertiary: "#9E9E9E",
-  lightTextFourth: "#F5F5F5",
-  lightTextFifth: "#FAFAFA",
+  lightTextTitle: "#272f2c",
+  lightTextPrimary: "#272f2c",
+  lightTextSecondary: "#697067",
+  lightTextTertiary: "#8b9388",
+  lightTextFourth: "#ddd8ca",
+  lightTextFifth: "#f1ede3",
 
-  lightLevel2: "#EFEFFF",
-  lightLevel4: "#FAFAFA",
-  lightLevel5: "#FAFAFA",
+  lightLevel2: "#f1ede3",
+  lightLevel4: "#f1ede3",
+  lightLevel5: "#e8e3d7",
 
-  lightGray200: "#f5f5f5",
-  lightGray50: "#fafafa",
+  lightGray200: "#f1ede3",
+  lightGray50: "#fbf8f1",
 
-  lightGray200BorderColor: "#EFEFFF",
+  lightGray200BorderColor: "#ddd8ca",
 
   // primary dark
-  darkPrimaryLight: "#e3f2fd",
-  darkPrimaryMain: "#8672FF",
-  darkPrimaryDark: "#5669dc",
-  darkPrimary200: "#000001",
-  darkPrimary800: "#1565c0",
-  dark400: "#4F5A84",
+  darkPrimaryLight: "#f2d4b3",
+  darkPrimaryMain: "#e5ae78",
+  darkPrimaryDark: "#c28b56",
+  darkPrimary200: "#171a19",
+  darkPrimary800: "#a86430",
+  dark400: "#8b9588",
 
   // secondary dark
-  darkSecondaryLight: "#212946",
-  darkSecondaryMain: "#5669dc",
-  darkSecondaryDark: "#5669dc",
-  darkSecondary200: "#b39ddb",
-  darkSecondary800: "#6200ea",
+  darkSecondaryLight: "#2c332d",
+  darkSecondaryMain: "#a6bba3",
+  darkSecondaryDark: "#8ba287",
+  darkSecondary200: "#c3d0be",
+  darkSecondary800: "#617b66",
 
-  defaultGradientStart: "#5569db",
-  defaultGradientEnd: "#8572ff",
-  border0: "#4F5A84",
-  border1: "#353C5D",
+  defaultGradientStart: "#c28b56",
+  defaultGradientEnd: "#e5ae78",
+  border0: "#515e50",
+  border1: "#3c463f",
 
-  apr: "#54C081",
-  success: "#54C081",
-  "text.success": "#54C081",
-  color0: "#313A5A",
+  apr: "#7fbd99",
+  success: "#7fbd99",
+  "text.success": "#7fbd99",
+  color0: "#343c36",
 };

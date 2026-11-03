@@ -1,6 +1,5 @@
-import type React from "react";
 import { useMemo } from "react";
-
+import type React from "react";
 import { Box, type BoxProps, useTheme } from "./Mui";
 
 export type MainCardBorder = "level1" | "level2" | "level3" | "level4";
@@ -28,8 +27,8 @@ export function MainCard({
   borderRadius,
   className,
 }: MainCardProps) {
+  const isClassicDesign = useTheme().customization?.designVersion !== "modern";
   const theme = useTheme();
-
   const cardStyles = useMemo(() => {
     const _border =
       border === "level1"
@@ -83,23 +82,63 @@ export function MainCard({
     theme.palette.background.level4,
   ]);
 
+  const surface =
+    level === 2
+      ? "var(--color-base-200)"
+      : level === 4 || level === 5
+        ? "var(--color-base-300)"
+        : "var(--color-base-100)";
+
+  if (isClassicDesign) {
+    return (
+      <Box
+        id={id}
+        sx={{
+          backgroundColor: cardStyles.background,
+          ...(cardStyles.border ? { border: cardStyles.border } : {}),
+          borderRadius: borderRadius ?? "16px",
+          padding: padding ?? "24px",
+          width: "100%",
+          overflow: "hidden",
+          "@media(max-width: 640px)": {
+            padding: padding ?? "16px",
+          },
+          ...sx,
+        }}
+        onClick={onClick}
+        className={className}
+      >
+        {children}
+      </Box>
+    );
+  }
+
   return (
     <Box
       id={id}
       sx={{
-        backgroundColor: cardStyles.background,
-        ...(cardStyles.border ? { border: cardStyles.border } : {}),
-        borderRadius: borderRadius ?? "16px",
+        backgroundColor: surface,
+        border: `1px solid color-mix(in srgb, var(--color-base-content) ${border ? "12%" : "7%"}, transparent)`,
+        borderRadius: borderRadius ?? "8px",
         padding: padding ?? "24px",
         width: "100%",
         overflow: "hidden",
+        boxShadow: "none",
+        transition: "border-color 180ms ease, background-color 180ms ease",
+        ...(onClick
+          ? {
+              "&:hover": {
+                borderColor: "var(--color-secondary)",
+              },
+            }
+          : {}),
         "@media(max-width: 640px)": {
           padding: padding ?? "16px",
         },
         ...sx,
       }}
       onClick={onClick}
-      className={className}
+      className={`ics-card bg-base-100 ${className ?? ""}`}
     >
       {children}
     </Box>

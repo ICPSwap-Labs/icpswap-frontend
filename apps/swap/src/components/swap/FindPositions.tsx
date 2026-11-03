@@ -18,7 +18,7 @@ function AddIcon() {
         fillRule="evenodd"
         clipRule="evenodd"
         d="M9 1.5C9 0.671573 8.32843 0 7.5 0C6.67157 0 6 0.671573 6 1.5V6H1.5C0.671573 6 0 6.67157 0 7.5C0 8.32843 0.671573 9 1.5 9H6V13.5C6 14.3284 6.67157 15 7.5 15C8.32843 15 9 14.3284 9 13.5V9H13.5C14.3284 9 15 8.32843 15 7.5C15 6.67157 14.3284 6 13.5 6H9V1.5Z"
-        fill="#8492C4"
+        fill="var(--color-neutral-content)"
       />
     </svg>
   );
@@ -28,7 +28,10 @@ function ArrowIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_32599_39163)">
-        <path d="M11.06 5.72656L8 8.7799L4.94 5.72656L4 6.66656L8 10.6666L12 6.66656L11.06 5.72656Z" fill="#8492C4" />
+        <path
+          d="M11.06 5.72656L8 8.7799L4.94 5.72656L4 6.66656L8 10.6666L12 6.66656L11.06 5.72656Z"
+          fill="var(--color-neutral-content)"
+        />
       </g>
       <defs>
         <clipPath id="clip0_32599_39163">

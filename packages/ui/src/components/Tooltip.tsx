@@ -20,7 +20,7 @@ export function Tooltip({
   maxWidth,
   iconSize = "16px",
   children,
-  iconColor = "#8492C4",
+  iconColor = "var(--color-neutral-content)",
   placement,
   arrow = true,
 }: TooltipProps) {

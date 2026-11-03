@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "vite";
 import { analyzer } from "vite-bundle-analyzer";
 import checker from "vite-plugin-checker";
@@ -25,6 +26,8 @@ export default defineConfig(() => {
     },
     build: {
       outDir: "build",
+      // Keep stable image URLs so the modern artwork CSS can select its variants.
+      assetsInlineLimit: 0,
       rollupOptions: {
         output: {
           manualChunks: {
@@ -55,6 +58,7 @@ export default defineConfig(() => {
       },
     },
     plugins: [
+      tailwindcss(),
       analyzer({ analyzerMode: "static" }),
       react(),
       checker({

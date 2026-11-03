@@ -1,12 +1,12 @@
 import type { CurrencyAmount, Token } from "@icpswap/swap-sdk";
 import type { Null } from "@icpswap/types";
-import { Image } from "@icpswap/ui";
-import { Box, useTheme } from "components/Mui";
+import { Box } from "components/Mui";
 import { SWAP_FIELD } from "constants/swap";
 import type { UseCurrencyState } from "hooks/useCurrency";
 import { useSwapState } from "store/swap/hooks";
 
 import { SwapInputCurrency } from "../SwapInputCurrency";
+import { SwapDirectionIcon } from "../SwapDirectionIcon";
 
 export interface SwapInputWrapperProps {
   onInput: (value: string, type: "input" | "output") => void;
@@ -62,7 +62,6 @@ export function SwapInputWrapper({
   poolId,
   onSwitchTokens,
 }: SwapInputWrapperProps) {
-  const theme = useTheme();
   const { independentField, typedValue } = useSwapState();
 
   const dependentField = independentField === SWAP_FIELD.INPUT ? SWAP_FIELD.OUTPUT : SWAP_FIELD.INPUT;
@@ -73,8 +72,8 @@ export function SwapInputWrapper({
   };
 
   return (
-    <Box>
-      <Box sx={{ position: "relative" }}>
+    <Box className={`swap-asset-grid ${ui === "normal" ? "swap-asset-grid-wide" : ""}`}>
+      <Box className="swap-asset-input">
         <SwapInputCurrency
           noLiquidity={noLiquidity}
           token={inputToken}
@@ -93,34 +92,13 @@ export function SwapInputWrapper({
           maxInputAmount={maxInputAmount}
           poolId={poolId}
         />
-
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "-17px",
-            left: "50%",
-            transform: "translate(-50%, 0)",
-            cursor: "pointer",
-            overflow: "hidden",
-            width: "32px",
-            height: "32px",
-            background: ui === "pro" ? theme.palette.background.level3 : theme.palette.background.level1,
-            borderRadius: "12px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 10,
-          }}
-          onClick={onSwitchTokens}
-        >
-          <Image
-            src={ui === "pro" ? "/images/icon_exchange_pro.svg" : "/images/icon_exchange.svg"}
-            sx={{ width: "28px", height: "28px" }}
-          />
-        </Box>
       </Box>
 
-      <Box sx={{ marginTop: "6px" }}>
+      <Box component="button" type="button" className="btn btn-square swap-direction-control" onClick={onSwitchTokens}>
+        <SwapDirectionIcon />
+      </Box>
+
+      <Box className="swap-asset-output">
         <SwapInputCurrency
           token={outputToken}
           currencyPrice={tokenBPrice}

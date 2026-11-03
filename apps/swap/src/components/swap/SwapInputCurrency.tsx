@@ -81,14 +81,14 @@ export function SwapInputCurrency({
   const impactTier = impactColor(usdChange);
 
   const USDChangeColor = !new BigNumber(usdChange ?? 0).isLessThan(0)
-    ? "#54C081"
+    ? "var(--color-success)"
     : impactTier === 3
-      ? "#D7331A"
+      ? "var(--color-error)"
       : impactTier === 2
-        ? "#D3625B"
+        ? "var(--color-error)"
         : impactTier === 1
-          ? "#F7B231"
-          : "#8492c4";
+          ? "var(--color-warning)"
+          : "var(--color-neutral-content)";
 
   const maxWalletBalanceSpent = useBalanceMaxSpend({
     token,
@@ -134,23 +134,18 @@ export function SwapInputCurrency({
 
   return (
     <Box
+      className="swap-token-panel border border-base-300 bg-base-100"
+      data-surface={background}
       sx={{
-        backgroundColor: background === "level3" ? theme.palette.background.level3 : theme.palette.background.level1,
-        border: `1px solid ${theme.palette.background.level4}`,
-        borderRadius: "16px",
-        padding: "16px",
-        cursor: "pointer",
-        [theme.breakpoints.down("sm")]: {
-          padding: "12px",
-        },
+        "--swap-ticket-surface": theme.palette.background[background],
+        "--swap-ticket-outline": theme.palette.background.level4,
         transform: transformLoading ? "scale(0.9887)" : "scale(1)",
         opacity: transformLoading ? 0.9 : 1,
-        transition: `all ${LOADING_TRANSFORM_DURATION}ms ease-in-out`,
       }}
       onClick={handleWrapperClick}
     >
-      <Box sx={{ display: "flex", gap: "0 8px" }}>
-        <Flex align="center">
+      <Box className="swap-token-main">
+        <Flex className="swap-token-selector" align="center">
           <CurrencySelector
             currencyId={token?.address}
             onChange={onTokenChange}
@@ -160,13 +155,18 @@ export function SwapInputCurrency({
           />
         </Flex>
 
-        <Box sx={{ display: "flex", flex: 1, alignItems: "center" }}>
+        <Box className="swap-amount-field" sx={{ display: "flex", flex: 1, minWidth: 0, alignItems: "center" }}>
           <SwapInput value={formattedAmount} token={token} onUserInput={handleWrappedInput} disabled={disabled} />
         </Box>
       </Box>
 
       {token ? (
-        <Flex fullWidth justify="space-between" sx={{ margin: "12px 0 0 0" }}>
+        <Flex
+          className="swap-token-balances"
+          fullWidth
+          justify="space-between"
+          sx={{ margin: "20px 0 0 0", minHeight: "18px", gap: "8px", flexWrap: "wrap" }}
+        >
           <Flex gap="0 8px">
             {noLiquidity === false ? (
               nonUndefinedOrNull(unusedBalance) &&
@@ -244,7 +244,7 @@ export function SwapInputCurrency({
       ) : null}
 
       {token && isInput ? (
-        <Box sx={{ width: "40%", margin: "8px 0 0 0" }}>
+        <Box className="swap-balance-slider" sx={{ width: "100%", margin: "12px 0 0 0" }}>
           <TokenBalanceSlider
             value={formattedAmount}
             totalAmount={maxInputAmount?.toExact()}

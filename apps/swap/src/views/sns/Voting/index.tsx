@@ -1,3 +1,4 @@
+import { useDesignVersion } from "hooks/useDesignVersion";
 import { secondsToDuration } from "@dfinity/utils";
 import { SnsProposalDecisionStatus } from "@icpswap/constants";
 import { getListProposals, useParsedQueryString } from "@icpswap/hooks";
@@ -24,9 +25,19 @@ interface ProposalItemProps {
   latest_id: bigint | undefined;
 }
 
+const proposalStatusColors: Partial<Record<SnsProposalDecisionStatus, string>> = {
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_OPEN]: "var(--color-primary)",
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_ADOPTED]: "var(--color-success)",
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_EXECUTED]: "var(--color-success)",
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_FAILED]: "var(--color-error)",
+  [SnsProposalDecisionStatus.PROPOSAL_DECISION_STATUS_REJECTED]: "var(--color-error)",
+};
+
 function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps) {
-  const { t } = useTranslation();
+  const { isClassicDesign } = useDesignVersion();
   const theme = useTheme();
+
+  const { t } = useTranslation();
 
   const { title, summary, seconds, isExecuted } = useMemo(() => {
     const __proposal = proposal.proposal[0];
@@ -68,15 +79,70 @@ function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps)
     }
   }, [proposal, t]);
 
+  const proposalStatus = getProposalStatus(proposal);
+  const statusColor =
+    (proposalStatus === undefined ? undefined : proposalStatusColors[proposalStatus]) ?? "var(--color-base-content)";
+
+  if (isClassicDesign) {
+    return (
+      <Box
+        sx={{
+          background: theme.palette.background.level4,
+          borderRadius: "12px",
+          padding: "20px",
+          cursor: "pointer",
+          "@media(max-width: 640px)": {
+            padding: "10px",
+          },
+        }}
+      >
+        <Link
+          to={`/sns/voting/${governance_id}/${proposal_id}${latest_id ? `?latest_id=${latest_id}` : ""}`}
+          width="100%"
+          height="100%"
+          display="block"
+        >
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography>ID: {proposal.id[0]?.id.toString() ?? "--"}</Typography>
+
+            <Box
+              sx={{
+                padding: "3px 10px",
+                borderRadius: "12px",
+                background:
+                  proposal_status_text === "Open" ? theme.colors.successDark : theme.palette.background.level1,
+              }}
+            >
+              <Typography color="text.primary">{proposal_status_text}</Typography>
+            </Box>
+          </Box>
+
+          <Typography sx={{ color: "text.primary", wordBreak: "break-all", lineHeight: "16px", margin: "10px 0 0 0" }}>
+            {title}
+          </Typography>
+
+          <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px", wordBreak: "break-word", lineHeight: "16px" }}>
+            {summary ? shortenString(summary, 150) : "--"}
+          </Typography>
+
+          {isExecuted ? null : (
+            <Typography sx={{ margin: "20px 0 0 0" }}>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>
+          )}
+        </Link>
+      </Box>
+    );
+  }
+
   return (
     <Box
+      className="ics-proposal-row"
       sx={{
-        background: theme.palette.background.level4,
-        borderRadius: "12px",
-        padding: "20px",
+        background: "var(--color-base-100)",
+        borderBottom: "1px solid var(--color-base-300)",
         cursor: "pointer",
-        "@media(max-width: 640px)": {
-          padding: "10px",
+        transition: "background-color 180ms ease",
+        "&:hover, &:focus-within": {
+          backgroundColor: "color-mix(in srgb, var(--color-secondary) 5%, var(--color-base-100))",
         },
       }}
     >
@@ -86,31 +152,101 @@ function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps)
         height="100%"
         display="block"
       >
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography>ID: {proposal.id[0]?.id.toString() ?? "--"}</Typography>
-
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "128px minmax(0, 1fr) 160px",
+            gap: "28px",
+            padding: "28px",
+            "@media(max-width: 960px)": {
+              gridTemplateColumns: "110px minmax(0, 1fr)",
+              gap: "20px",
+              "& .proposal-duration": { gridColumn: "2", padding: 0, borderLeft: 0 },
+            },
+            "@media(max-width: 640px)": {
+              gridTemplateColumns: "1fr",
+              gap: "18px",
+              padding: "24px 20px",
+              "& .proposal-meta": { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+              "& .proposal-duration": { gridColumn: "1" },
+            },
+          }}
+        >
           <Box
-            sx={{
-              padding: "3px 10px",
-              borderRadius: "12px",
-              background: proposal_status_text === "Open" ? theme.colors.successDark : theme.palette.background.level1,
-            }}
+            className="proposal-meta"
+            sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "16px" }}
           >
-            <Typography color="text.primary">{proposal_status_text}</Typography>
+            <Typography
+              sx={{
+                fontSize: "12px",
+                fontFamily: "var(--font-mono, monospace)",
+                fontVariantNumeric: "tabular-nums",
+                letterSpacing: "0.02em",
+                color: "var(--color-secondary)",
+              }}
+            >
+              ID: {proposal.id[0]?.id.toString() ?? "--"}
+            </Typography>
+            <Box
+              className="badge badge-ghost"
+              sx={{
+                height: "auto",
+                padding: "0",
+                gap: "7px",
+                borderRadius: "0",
+                color: statusColor,
+                border: 0,
+                background: "transparent",
+              }}
+            >
+              <Box component="span" aria-hidden sx={{ width: "4px", height: "4px", background: "currentColor" }} />
+              <Typography sx={{ color: "inherit", fontSize: "11px", fontWeight: 500 }}>
+                {proposal_status_text}
+              </Typography>
+            </Box>
           </Box>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography
+              sx={{
+                color: "text.primary",
+                fontWeight: 600,
+                fontSize: "18px",
+                letterSpacing: "-0.035em",
+                wordBreak: "break-word",
+                lineHeight: 1.4,
+              }}
+            >
+              {title}
+            </Typography>
+            <Typography
+              sx={{
+                margin: "10px 0 0 0",
+                fontSize: "12px",
+                wordBreak: "break-word",
+                lineHeight: 1.75,
+                maxWidth: "72ch",
+              }}
+            >
+              {summary ? shortenString(summary, 150) : "--"}
+            </Typography>
+          </Box>
+          {isExecuted ? null : (
+            <Typography
+              className="proposal-duration"
+              sx={{
+                paddingLeft: "24px",
+                borderLeft: "1px solid var(--color-base-300)",
+                fontSize: "11px",
+                lineHeight: 1.6,
+                fontFamily: "var(--font-mono, monospace)",
+                fontVariantNumeric: "tabular-nums",
+                color: "var(--color-secondary)",
+              }}
+            >
+              {seconds ? secondsToDuration({ seconds }) : "--"}
+            </Typography>
+          )}
         </Box>
-
-        <Typography sx={{ color: "text.primary", wordBreak: "break-all", lineHeight: "16px", margin: "10px 0 0 0" }}>
-          {title}
-        </Typography>
-
-        <Typography sx={{ margin: "10px 0 0 0", fontSize: "12px", wordBreak: "break-word", lineHeight: "16px" }}>
-          {summary ? shortenString(summary, 150) : "--"}
-        </Typography>
-
-        {isExecuted ? null : (
-          <Typography sx={{ margin: "20px 0 0 0" }}>{seconds ? secondsToDuration({ seconds }) : "--"}</Typography>
-        )}
       </Link>
     </Box>
   );
@@ -119,6 +255,8 @@ function ProposalItem({ proposal, governance_id, latest_id }: ProposalItemProps)
 const sns_proposals_limit = 50;
 
 export default function Votes() {
+  const { isClassicDesign } = useDesignVersion();
+
   const navigate = useNavigate();
   const { root_id: root_id_url } = useParsedQueryString() as { root_id: string };
   const [loading, setLoading] = useState(false);
@@ -205,16 +343,94 @@ export default function Votes() {
     setExcludeFuncIds(exclude_ids);
   };
 
+  if (isClassicDesign) {
+    return (
+      <Wrapper>
+        <Tabs />
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            margin: "20px 0 0 0",
+            gap: "10px 20px",
+            flexWrap: "wrap",
+          }}
+        >
+          <SelectSns value={root_id} onChange={handleSelectNeuronChange} />
+
+          <SelectNeuronFuncs governance_id={governance_id} onConfirm={handleSelectNeuronFuncs} />
+
+          <SelectNeuronProposalStatus governance_id={governance_id} onChange={handleProposalStatusFilter} />
+        </Box>
+
+        <Box sx={{ width: "100%", margin: "20px 0 0 0" }}>
+          <InfiniteScroll
+            style={{ width: "100%" }}
+            dataLength={proposals?.length ?? 0}
+            next={fetch_proposals}
+            hasMore={!fetchDone}
+            loader={null}
+          >
+            <Box
+              sx={{
+                width: "100%",
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: "20px",
+                "@media(max-width: 940px)": {
+                  gridTemplateColumns: "1fr 1fr",
+                },
+                "@media(max-width: 640px)": {
+                  gridTemplateColumns: "1fr",
+                },
+              }}
+            >
+              {proposals?.map((proposal, index) => (
+                <ProposalItem
+                  key={proposal.id[0]?.id ? proposal.id[0]?.id.toString() : `proposal_${index}`}
+                  proposal={proposal}
+                  governance_id={governance_id}
+                  latest_id={proposals ? proposals[0].id[0]?.id : undefined}
+                />
+              ))}
+            </Box>
+          </InfiniteScroll>
+        </Box>
+
+        {loading ? (
+          <Box sx={{ margin: "20px 0 0 0" }}>
+            <LoadingRow>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </LoadingRow>
+          </Box>
+        ) : proposals && proposals.length === 0 ? (
+          <Typography sx={{ margin: "20px 0 0 0" }}>No Proposals</Typography>
+        ) : null}
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper>
       <Tabs />
 
       <Box
+        className="border-b border-base-300"
         sx={{
           display: "flex",
           alignItems: "center",
-          margin: "20px 0 0 0",
-          gap: "10px 20px",
+          margin: "0",
+          padding: "24px 0",
+          gap: "12px",
           flexWrap: "wrap",
         }}
       >
@@ -225,7 +441,7 @@ export default function Votes() {
         <SelectNeuronProposalStatus governance_id={governance_id} onChange={handleProposalStatusFilter} />
       </Box>
 
-      <Box sx={{ width: "100%", margin: "20px 0 0 0" }}>
+      <Box sx={{ width: "100%", margin: "24px 0 0 0" }}>
         <InfiniteScroll
           style={{ width: "100%" }}
           dataLength={proposals?.length ?? 0}
@@ -237,10 +453,13 @@ export default function Votes() {
             sx={{
               width: "100%",
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
-              gap: "20px",
+              gridTemplateColumns: "1fr",
+              gap: "0",
+              border: "1px solid var(--color-base-300)",
+              borderRadius: "6px",
+              overflow: "hidden",
               "@media(max-width: 940px)": {
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: "1fr",
               },
               "@media(max-width: 640px)": {
                 gridTemplateColumns: "1fr",
@@ -274,7 +493,12 @@ export default function Votes() {
           </LoadingRow>
         </Box>
       ) : proposals && proposals.length === 0 ? (
-        <Typography sx={{ margin: "20px 0 0 0" }}>No Proposals</Typography>
+        <Typography
+          className="border-y border-base-300 bg-base-100"
+          sx={{ margin: "24px 0 0 0", padding: "56px 20px", textAlign: "center" }}
+        >
+          No Proposals
+        </Typography>
       ) : null}
     </Wrapper>
   );

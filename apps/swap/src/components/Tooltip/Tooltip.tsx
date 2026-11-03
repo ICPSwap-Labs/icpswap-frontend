@@ -11,7 +11,13 @@ export interface TooltipProps {
   maxWidth?: string;
 }
 
-export function Tooltip({ tips, background, maxWidth, iconSize = "16px", iconColor = "#8492C4" }: TooltipProps) {
+export function Tooltip({
+  tips,
+  background,
+  maxWidth,
+  iconSize = "16px",
+  iconColor = "var(--color-neutral-content)",
+}: TooltipProps) {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {

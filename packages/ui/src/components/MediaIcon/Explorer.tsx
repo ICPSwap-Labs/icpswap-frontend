@@ -20,7 +20,7 @@ export default function ICScan({ width = 28 }: { width?: number }) {
         <rect x="3" y="3" width="14" height="14" fill="url(#pattern0_icsan)" />
       </mask>
       <g mask="url(#mask0_37537_40909)">
-        <circle cx="10" cy="10" r="10" fill="#8492C4" />
+        <circle cx="10" cy="10" r="10" fill="var(--color-neutral-content)" />
       </g>
       <defs>
         <pattern id="pattern0_icsan" patternContentUnits="objectBoundingBox" width="1" height="1">
