@@ -6,8 +6,8 @@
 
 Ensure you have
 
-- [Node.js](https://nodejs.org) 22.x installed
-- [Pnpm](https://pnpm.io/) v10.15.1 available through Corepack
+- [Node.js](https://nodejs.org) 18.x installed
+- [Pnpm](https://pnpm.io/) v8 installed
 
 You need a **personal access token** to install some of our npm packages.
 
