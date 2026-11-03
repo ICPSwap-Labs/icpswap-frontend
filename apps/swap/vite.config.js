@@ -26,7 +26,7 @@ export default defineConfig(() => {
     },
     build: {
       outDir: "build",
-      // Keep stable image URLs so the classic artwork CSS can select its originals.
+      // Keep stable image URLs so the modern artwork CSS can select its variants.
       assetsInlineLimit: 0,
       rollupOptions: {
         output: {

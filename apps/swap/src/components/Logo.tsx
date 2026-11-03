@@ -1,10 +1,10 @@
 import { useTheme } from "components/Mui";
 import { useDesignVersion } from "hooks/useDesignVersion";
 
-import classicLogoDark from "../assets/design-classic/logo-dark.svg";
-import classicLogoLight from "../assets/design-classic/logo-white.svg";
-import logoDark from "../assets/images/logo-dark.svg";
-import logo from "../assets/images/logo-white.svg";
+import classicLogoDark from "../assets/images/logo-dark.svg";
+import classicLogoLight from "../assets/images/logo-white.svg";
+import logoDark from "../assets/design-modern/logo-dark.svg";
+import logo from "../assets/design-modern/logo-white.svg";
 
 export default function Logo() {
   const theme = useTheme();

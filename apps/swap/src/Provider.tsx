@@ -42,10 +42,10 @@ function ThemedAppWithProvider() {
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", appTheme.palette.background.default);
     document
       .querySelector('link[rel="icon"]')
-      ?.setAttribute("href", isClassicDesign ? "/images/design-classic/favicon.png" : "/favicon-copper.svg");
+      ?.setAttribute("href", isClassicDesign ? "/favicon.png" : "/images/design-modern/favicon-copper.svg");
     document
       .querySelector('link[rel="apple-touch-icon"]')
-      ?.setAttribute("href", isClassicDesign ? "/images/design-classic/favicon.png" : "/favicon.png");
+      ?.setAttribute("href", isClassicDesign ? "/favicon.png" : "/images/design-modern/favicon.png");
   }, [customization.mode, designVersion, isClassicDesign, appTheme]);
 
   return (

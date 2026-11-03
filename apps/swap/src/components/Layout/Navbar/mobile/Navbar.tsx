@@ -1,6 +1,6 @@
 import { mockALinkAndOpen } from "@icpswap/utils";
 import Logo from "components/Logo";
-import classicLogoMark from "assets/design-classic/logo1.svg";
+import classicLogoMark from "assets/images/logo1.svg";
 import { MOBILE_MAX_NUMBER, type Route, routeKey, routes } from "components/Layout/Navbar/config";
 import { Routes } from "components/Layout/Navbar/mobile/Routes";
 import { Box, Collapse } from "components/Mui";

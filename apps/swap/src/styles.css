@@ -4,7 +4,7 @@
    the behavior and sizing of the wallet SDKs and trading controls. */
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
-@import "./styles/classic-assets.css";
+@import "./styles/modern-assets.css";
 
 @source "./";
 @source "../../../packages/ui/src";
@@ -237,7 +237,7 @@ html[data-design="modern"]
     img[src*="market_data"],
     img[src*="group_1174"]
   ) {
-  filter: url("/images/legacy-palette.svg#icswap-palette");
+  filter: url("/images/design-modern/legacy-palette.svg#icswap-palette");
 }
 
 @media (prefers-reduced-motion: reduce) {
