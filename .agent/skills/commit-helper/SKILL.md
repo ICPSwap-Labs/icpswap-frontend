@@ -1,6 +1,6 @@
 ---
-name: commit-msg-helper
-description: Generate Conventional Commit messages from git changes with clear subject/body structure. Use when the user asks to write, suggest, refine, or generate a commit message.
+name: commit-helper
+description: Use when the user asks to write, suggest, refine, split, or check a commit message — generates Conventional Commit messages from the actual git diff.
 ---
 
 # Commit Message Helper
@@ -76,3 +76,7 @@ fix(swap): prevent empty token symbol from breaking quote requests
 Guard quote payload construction to skip invalid token metadata and avoid
 backend request failures during edge-case token loads.
 ```
+
+## Source
+
+Local skill written for this repository (no upstream).
