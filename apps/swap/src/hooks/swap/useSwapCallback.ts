@@ -23,6 +23,7 @@ import { useStepContentManager } from "store/steps/hooks";
 import { useSlippageManager } from "store/swap/cache/hooks";
 import { useSwapFinalMetadataManager } from "store/swap/hooks";
 import type { OpenExternalTip } from "types/index";
+import { minimumAmountOutBySlippage } from "utils/swap/slippage";
 import { isUseTransfer } from "utils/token/index";
 
 export enum SwapCallbackState {
@@ -126,7 +127,8 @@ export function useSwapCalls() {
       for (const trade of trades) {
         for (const { route, inputAmount, outputAmount } of trade.swaps) {
           const actualSwapAmount = trade.maximumAmountIn(slippageTolerance, inputAmount).quotient.toString();
-          const amountOut = trade.minimumAmountOut(slippageTolerance, outputAmount).quotient.toString();
+          // Minimum amount out = output amount * (1 - slippage); keep it identical to the confirmation modal.
+          const amountOut = minimumAmountOutBySlippage(outputAmount, slippageTolerance).quotient.toString();
 
           const singleHop = route.pools.length === 1;
 

@@ -15,6 +15,7 @@ import { isElement } from "react-is";
 import colors from "theme/colors";
 import { feeAmountPercent } from "utils/swap/feeAmountPercent";
 import { computeRealizedLPFeePercent } from "utils/swap/prices";
+import { minimumAmountOutBySlippage } from "utils/swap/slippage";
 
 const useStyle = makeStyles((theme: Theme) => {
   return {
@@ -230,9 +231,11 @@ export function SwapConfirmModal({
         />
         <DetailItem
           label={t("swap.minimum.received")}
-          value={`${slippageTolerance ? trade?.minimumAmountOut(slippageTolerance).toSignificant(6) : "--"} ${
-            trade?.outputAmount.currency.symbol
-          }`}
+          value={`${
+            trade && slippageTolerance
+              ? minimumAmountOutBySlippage(trade.outputAmount, slippageTolerance).toSignificant(6)
+              : "--"
+          } ${trade?.outputAmount.currency.symbol ?? ""}`}
           tooltip={
             <Tooltip
               background="#ffffff"

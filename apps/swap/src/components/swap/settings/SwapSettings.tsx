@@ -3,8 +3,10 @@ import { Flex, NumberTextField, TextButton, Tooltip } from "components/index";
 import { Box, Card, InputAdornment, makeStyles, type Theme, Typography } from "components/Mui";
 import Toggle from "components/Toggle";
 import { getDefaultSlippageTolerance, MAX_SLIPPAGE_TOLERANCE, SLIPPAGE_TOLERANCE } from "constants/swap";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import colors from "theme/colors";
+import { getSlippageWarningLevel } from "utils/swap/slippage";
 import { useExpertModeManager, useMultipleApproveManager, useSlippageManager } from "store/swap/cache/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -115,6 +117,19 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
     setSlippageValue(new BigNumber(slippage.value).dividedBy(1000).toString());
   };
 
+  /**
+   * High/low slippage warning: shown below 0.05% or above 5%, so users do not end up with a slippage
+   * that is bound to fail or easy to sandwich. Copy matches the design
+   * ("Slippage set too low, Transaction may fail."); the high case mirrors it.
+   */
+  const slippageWarning = useMemo(() => {
+    const level = getSlippageWarningLevel(slippageValue);
+    if (level === "low") return t("swap.slippage.too.low");
+    if (level === "high") return t("swap.slippage.too.high");
+
+    return null;
+  }, [slippageValue, t]);
+
   const handleMultipleApproveAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (!value) return;
@@ -180,6 +195,12 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
             ))}
           </Flex>
         </Box>
+
+        {slippageWarning ? (
+          <Typography sx={{ margin: "8px 0 0 0", fontSize: "12px", color: colors.warningDark }}>
+            {slippageWarning}
+          </Typography>
+        ) : null}
       </Box>
       <Box mt={3}>
         <Flex fullWidth>

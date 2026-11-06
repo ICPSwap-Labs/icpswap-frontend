@@ -309,8 +309,14 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
   const inputError = useMemo(() => {
     if (isUndefinedOrNull(inputToken) || isUndefinedOrNull(outputToken)) return t("common.select.a.token");
     if (!parsedAmounts[SWAP_FIELD.INPUT]) return t("common.enter.input.amount");
-    if (!inputSwapAmount || formatTokenAmount(inputSwapAmount, inputToken.decimals).isLessThan(inputToken.transFee))
-      return t("common.error.amount.large.than.fee");
+    if (!inputSwapAmount) return t("common.enter.input.amount");
+
+    // Require the input amount to cover at least twice the transfer fee.
+    // `inputSwapAmount` and `transFee` are both in the token's smallest unit, so compare them directly
+    // (the previous implementation compared a human-readable amount with the raw fee, which misjudged).
+    const transferFee = __inputToken?.transFee ?? 0;
+    if (transferFee > 0 && new BigNumber(inputSwapAmount).isLessThan(new BigNumber(transferFee).multipliedBy(2)))
+      return t("swap.error.amount.below.twice.fee");
     if (tickError) return t("limit.error.invalid.tick");
 
     if (!inputCurrencyPrice) return t`Submit Limit Order`;
@@ -353,6 +359,7 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     pool,
     orderPriceTick,
     inputToken,
+    __inputToken?.transFee,
     minUseableTick,
     isInputTokenSorted,
     minSettableTick,

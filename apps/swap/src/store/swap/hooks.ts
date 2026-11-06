@@ -201,6 +201,16 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     if (isUndefinedOrNull(__inputToken) || isUndefinedOrNull(__outputToken)) return t("common.select.a.token");
     if (!parsedAmount) return t("common.enter.input.amount");
     if (!typedValue || typedValue === "0") return t("common.error.amount.large.than.fee");
+
+    // Require the input amount to cover at least twice the transfer fee, otherwise the button stays
+    // disabled. The fee is expressed in the token's smallest unit, so compare raw amounts only.
+    const transferFee = __inputToken?.transFee ?? 0;
+    const inputAmount = isExactIn ? parsedAmount : Trade?.trade?.inputAmount;
+    if (transferFee > 0 && inputAmount) {
+      const minimumRaw = BigInt(Math.round(transferFee * 2));
+      if (BigInt(inputAmount.quotient.toString()) < minimumRaw) return t("swap.error.amount.below.twice.fee");
+    }
+
     if (isUndefinedOrNull(inputTokenSubBalance) || isUndefinedOrNull(inputTokenUnusedBalance)) return t("common.swap");
     if (inputNumberCheck(typedValue) === false) return t("common.error.exceeds.limit");
     if (typeof Trade.available === "boolean" && !Trade.available) return t("swap.pool.not.available");
@@ -217,6 +227,7 @@ export function useSwapInfo({ refresh }: UseSwapInfoArgs) {
     inputTokenUnusedBalance,
     Trade,
     tokenInsufficient,
+    isExactIn,
     t,
   ]);
 
