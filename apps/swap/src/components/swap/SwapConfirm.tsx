@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { isElement } from "react-is";
 import colors from "theme/colors";
 import { feeAmountPercent } from "utils/swap/feeAmountPercent";
-import { computeRealizedLPFeePercent } from "utils/swap/prices";
+import { computeRealizedLPFeePercent, computeRealizedPriceImpact } from "utils/swap/prices";
 import { minimumAmountOutBySlippage } from "utils/swap/slippage";
 
 const useStyle = makeStyles((theme: Theme) => {
@@ -122,7 +122,8 @@ export function SwapConfirmModal({
     const realizedLpFeePercent = computeRealizedLPFeePercent(trade);
     // sub transferFee
     const realizedLPFee = trade.inputAmount.subtract(feeAmount).multiply(realizedLpFeePercent);
-    const priceImpact = trade.priceImpact.subtract(realizedLpFeePercent);
+    // Price impact excluding the LP fee, which is displayed on its own row
+    const priceImpact = computeRealizedPriceImpact(trade);
 
     return {
       priceImpact,

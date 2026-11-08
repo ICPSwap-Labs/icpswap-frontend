@@ -1,5 +1,5 @@
 import { Percent } from "@icpswap/swap-sdk";
-import { JSBI } from "utils/index";
+import JSBI from "jsbi";
 
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 

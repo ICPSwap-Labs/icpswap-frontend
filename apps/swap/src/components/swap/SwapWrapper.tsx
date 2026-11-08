@@ -24,7 +24,7 @@ import { useExpertModeManager } from "store/swap/cache/hooks";
 import { useCleanSwapState, useLoadDefaultParams, useSwapHandlers, useSwapInfo, useSwapState } from "store/swap/hooks";
 import type { ExternalTipArgs } from "types/index";
 import { maxAmountFormat } from "utils/swap/index";
-import { getImpactConfirm, warningSeverity } from "utils/swap/prices";
+import { computeRealizedPriceImpact, getImpactConfirm, warningSeverity } from "utils/swap/prices";
 
 export interface SwapWrapperRef {
   setInputAmount: (amount: string) => void;
@@ -264,8 +264,9 @@ export const SwapWrapper = forwardRef(({ ui = "normal" }: SwapWrapperProps, ref:
   }, [maxInputAmount, onUserInput]);
 
   const priceImpactSeverity = useMemo(() => {
-    const executionPriceImpact = trade?.priceImpact;
-    return warningSeverity(executionPriceImpact);
+    // Use the same fee-excluded value that the confirmation modal displays, so the warning
+    // thresholds match the number the user sees.
+    return warningSeverity(trade ? computeRealizedPriceImpact(trade) : undefined);
   }, [trade]);
 
   const priceImpactTooHigh = priceImpactSeverity > 3 && !isExpertMode;

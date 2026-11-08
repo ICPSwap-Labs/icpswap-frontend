@@ -10,18 +10,48 @@ import {
 import JSBI from "jsbi";
 
 const ONE_HUNDRED_PERCENT = new Percent(JSBI.BigInt(10000), JSBI.BigInt(10000));
+const ZERO_PERCENT = new Percent(JSBI.BigInt(0), JSBI.BigInt(10000));
 
-// computes realized lp fee as a percent
+/**
+ * Computes the realized LP fee as a percent, following Uniswap's V3 branch: every swap is weighted by
+ * its share of the trade input, and every hop compounds the fee, e.g. two hops of 0.3% / 0.05% give
+ * `1 - (1 - 0.003) * (1 - 0.0005)`.
+ *
+ * Weighting by `inputAmount` keeps split routes correct; iterating `trade.route.pools` (the previous
+ * implementation) only looked at one route and used the deprecated `trade.route` getter.
+ */
 export function computeRealizedLPFeePercent(trade: Trade<Token, Token, TradeType>): Percent {
-  const percent: Percent = ONE_HUNDRED_PERCENT.subtract(
-    trade.route.pools.reduce<Percent>(
-      (currentFee: Percent, pool): Percent =>
-        currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
-      ONE_HUNDRED_PERCENT,
-    ),
-  );
+  let percent: Percent = ZERO_PERCENT;
+
+  for (const swap of trade.swaps) {
+    const { numerator, denominator } = swap.inputAmount.divide(trade.inputAmount);
+    const overallPercent = new Percent(numerator, denominator);
+
+    const routeRealizedLPFeePercent = overallPercent.multiply(
+      ONE_HUNDRED_PERCENT.subtract(
+        swap.route.pools.reduce<Percent>(
+          (currentFee: Percent, pool): Percent =>
+            currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(pool.fee, 1_000_000))),
+          ONE_HUNDRED_PERCENT,
+        ),
+      ),
+    );
+
+    percent = percent.add(routeRealizedLPFeePercent);
+  }
 
   return new Percent(percent.numerator, percent.denominator);
+}
+
+/**
+ * Price impact excluding the LP fee, i.e. what the user loses to price movement alone.
+ *
+ * `trade.priceImpact` is measured against the pool mid price (which ignores fees), so it contains the
+ * LP fee as well; the UI shows the fee on its own row, hence the subtraction. Same as Uniswap's
+ * `computeRealizedPriceImpact`.
+ */
+export function computeRealizedPriceImpact(trade: Trade<Token, Token, TradeType>): Percent {
+  return trade.priceImpact.subtract(computeRealizedLPFeePercent(trade));
 }
 
 // computes price breakdown for the trade
@@ -48,6 +78,9 @@ const IMPACT_TIERS = [
 type WarningSeverity = 0 | 1 | 2 | 3 | 4;
 export function warningSeverity(priceImpact: Percent | undefined): WarningSeverity {
   if (!priceImpact) return 0;
+  // A favorable price (negative impact) must never raise a warning, same guard as Uniswap.
+  if (priceImpact.lessThan(0)) return 0;
+
   let impact: WarningSeverity = IMPACT_TIERS.length as WarningSeverity;
   for (const impactLevel of IMPACT_TIERS) {
     if (impactLevel.lessThan(priceImpact)) return impact;
