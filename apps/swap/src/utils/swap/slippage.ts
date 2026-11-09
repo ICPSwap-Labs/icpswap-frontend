@@ -1,9 +1,8 @@
 import { CurrencyAmount, Fraction, type Percent, type Token } from "@icpswap/swap-sdk";
 import { BigNumber } from "@icpswap/utils";
 
-/** Slippage warning thresholds (percentage values): below 0.05% trades tend to fail, above 5% the execution price can drift badly. */
+/** Warning threshold (percentage value): below 0.05% a swap reverts on any small price move. */
 export const MIN_SLIPPAGE_WARNING = 0.05;
-export const MAX_SLIPPAGE_WARNING = 5;
 
 /**
  * Minimum amount out = amount out × (1 - slippage tolerance).
@@ -22,18 +21,20 @@ export function minimumAmountOutBySlippage<T extends Token>(
 }
 
 /**
- * Returns "low" when the slippage is below {@link MIN_SLIPPAGE_WARNING} (0.05%) and "high" when it is
- * above {@link MAX_SLIPPAGE_WARNING} (5%); otherwise returns null.
+ * True when the slippage is too low, i.e. below {@link MIN_SLIPPAGE_WARNING} (0.05%): such a tight
+ * tolerance makes the transaction revert on any small price movement.
+ *
+ * A high slippage (above 5%) is intentionally NOT warned about: it does not make the swap fail, it
+ * only means a worse price may be accepted (fewer tokens received), which is the user's explicit
+ * choice in the settings panel.
  *
  * The argument is a percentage number ("5" means 5%). Empty or invalid input never warns.
  */
-export function getSlippageWarningLevel(value: string | number): "low" | "high" | null {
-  if (value === "") return null;
+export function isSlippageTooLow(value: string | number): boolean {
+  if (value === "") return false;
 
   const percent = new BigNumber(value);
-  if (!percent.isFinite()) return null;
-  if (percent.isLessThan(MIN_SLIPPAGE_WARNING)) return "low";
-  if (percent.isGreaterThan(MAX_SLIPPAGE_WARNING)) return "high";
+  if (!percent.isFinite()) return false;
 
-  return null;
+  return percent.isLessThan(MIN_SLIPPAGE_WARNING);
 }

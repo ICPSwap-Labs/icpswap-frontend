@@ -1334,7 +1334,6 @@
   "swap.revoke.approval.description": "ICRC2 standard tokens require an approval step when using swap. You can revoke this approval based on your security needs.",
   "swap.revoke.token.approval": "Revoke token approval",
   "swap.single.deposit.descriptions": "The market price is outside your specified price range. Single-asset deposit only.",
-  "swap.slippage.too.high": "Slippage set too high, Transaction may fail.",
   "swap.slippage.too.low": "Slippage set too low, Transaction may fail.",
   "swap.slippage.tolerance": "Slippage tolerance",
   "swap.submit": "Submit swap",

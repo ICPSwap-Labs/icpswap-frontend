@@ -1,6 +1,6 @@
 import { CurrencyAmount, Percent, Token } from "@icpswap/swap-sdk";
 import { describe, expect, it } from "vitest";
-import { getSlippageWarningLevel, minimumAmountOutBySlippage } from "./slippage";
+import { isSlippageTooLow, minimumAmountOutBySlippage } from "./slippage";
 
 const token = new Token({
   address: "ryjl3-tyaaa-aaaaa-aaaba-cai",
@@ -45,24 +45,25 @@ describe("minimumAmountOutBySlippage", () => {
   });
 });
 
-describe("getSlippageWarningLevel", () => {
+describe("isSlippageTooLow", () => {
   it("warns when slippage is below 0.05%", () => {
-    expect(getSlippageWarningLevel("0.04")).toBe("low");
-    expect(getSlippageWarningLevel(0)).toBe("low");
+    expect(isSlippageTooLow("0.04")).toBe(true);
+    expect(isSlippageTooLow(0)).toBe(true);
   });
 
-  it("does not warn exactly at the boundaries", () => {
-    expect(getSlippageWarningLevel("0.05")).toBeNull();
-    expect(getSlippageWarningLevel("5")).toBeNull();
+  it("does not warn at or above 0.05%", () => {
+    expect(isSlippageTooLow("0.05")).toBe(false);
+    expect(isSlippageTooLow("0.1")).toBe(false);
   });
 
-  it("warns when slippage is above 5%", () => {
-    expect(getSlippageWarningLevel("5.01")).toBe("high");
-    expect(getSlippageWarningLevel("50")).toBe("high");
+  it("never warns above 5% - a large tolerance is a trade-off, not a failure", () => {
+    expect(isSlippageTooLow("5")).toBe(false);
+    expect(isSlippageTooLow("5.01")).toBe(false);
+    expect(isSlippageTooLow("50")).toBe(false);
   });
 
   it("ignores empty or invalid input", () => {
-    expect(getSlippageWarningLevel("")).toBeNull();
-    expect(getSlippageWarningLevel("abc")).toBeNull();
+    expect(isSlippageTooLow("")).toBe(false);
+    expect(isSlippageTooLow("abc")).toBe(false);
   });
 });

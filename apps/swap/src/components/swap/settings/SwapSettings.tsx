@@ -6,7 +6,7 @@ import { getDefaultSlippageTolerance, MAX_SLIPPAGE_TOLERANCE, SLIPPAGE_TOLERANCE
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import colors from "theme/colors";
-import { getSlippageWarningLevel } from "utils/swap/slippage";
+import { isSlippageTooLow } from "utils/swap/slippage";
 import { useExpertModeManager, useMultipleApproveManager, useSlippageManager } from "store/swap/cache/hooks";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -118,17 +118,14 @@ export function SwapSettingCard({ type }: SwapSettingCardProps) {
   };
 
   /**
-   * High/low slippage warning: shown below 0.05% or above 5%, so users do not end up with a slippage
-   * that is bound to fail or easy to sandwich. Copy matches the design
-   * ("Slippage set too low, Transaction may fail."); the high case mirrors it.
+   * Only a too-low slippage is warned about: below 0.05% the swap reverts on any small price move.
+   * A high slippage is a deliberate trade-off (worse price, fewer tokens received), not a failure,
+   * so nothing is shown above 5%.
    */
-  const slippageWarning = useMemo(() => {
-    const level = getSlippageWarningLevel(slippageValue);
-    if (level === "low") return t("swap.slippage.too.low");
-    if (level === "high") return t("swap.slippage.too.high");
-
-    return null;
-  }, [slippageValue, t]);
+  const slippageWarning = useMemo(
+    () => (isSlippageTooLow(slippageValue) ? t("swap.slippage.too.low") : null),
+    [slippageValue, t],
+  );
 
   const handleMultipleApproveAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
