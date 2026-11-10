@@ -312,10 +312,11 @@ export function useLimitOrderInfo({ refresh }: UseSwapInfoArgs) {
     if (!inputSwapAmount) return t("common.enter.input.amount");
 
     // Require the input amount to cover at least twice the transfer fee.
-    // `inputSwapAmount` and `transFee` are both in the token's smallest unit, so compare them directly
-    // (the previous implementation compared a human-readable amount with the raw fee, which misjudged).
+    // Compare raw amounts only: `inputSwapAmount` above is human-readable, while `transFee` is in the
+    // token's smallest unit (20 ICP is 2_000_000_000, against a fee of e.g. 10_000).
     const transferFee = __inputToken?.transFee ?? 0;
-    if (transferFee > 0 && new BigNumber(inputSwapAmount).isLessThan(new BigNumber(transferFee).multipliedBy(2)))
+    const inputRawAmount = parsedAmounts[SWAP_FIELD.INPUT]?.quotient;
+    if (transferFee > 0 && inputRawAmount && BigInt(inputRawAmount.toString()) < BigInt(Math.round(transferFee * 2)))
       return t("swap.error.amount.below.twice.fee");
     if (tickError) return t("limit.error.invalid.tick");
 
